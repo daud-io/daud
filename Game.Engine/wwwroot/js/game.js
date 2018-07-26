@@ -13,6 +13,8 @@
         view = newView;
     };
 
+    var angle = 0.0;
+
     // Game Loop
     var gameLoop = function () {
         //console.log('game');
@@ -29,6 +31,13 @@
         renderer.view = view;
         renderer.draw();
         camera.end();
+
+        if (Game.Controls.left || Game.Controls.up)
+            angle -= 0.1;
+        if (Game.Controls.right || Game.Controls.down)
+            angle += 0.1;
+
+        connection.sendSteering(angle);
 
         renderFrame(gameLoop);
     }

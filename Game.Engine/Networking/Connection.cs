@@ -88,7 +88,7 @@
                 {
                     int playerSpeed = 10;
 
-                    player.GameObject.Momentum = Vector2.Transform(new Vector2(playerSpeed, 0), new Quaternion(0, 0, s.Angle, 0));
+                    player.GameObject.Momentum = Vector2.Transform(new Vector2(playerSpeed, 0), Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), s.Angle));
                 }
             }
         }
@@ -183,7 +183,14 @@
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    if (Socket != null)
+                        Socket.Dispose();
+                }
                 disposedValue = true;
+            }
         }
         void IDisposable.Dispose()
         {

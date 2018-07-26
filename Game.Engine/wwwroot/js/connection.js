@@ -26,7 +26,9 @@
             this.send({ Type: 4, Angle: angle });
         },
         send: function (obj) {
-            this.socket.send(JSON.stringify(obj));
+            if (this.socket.readyState === 1) {
+                this.socket.send(JSON.stringify(obj));
+            }
         },
         onOpen: function (event) {
             console.log('connected');
