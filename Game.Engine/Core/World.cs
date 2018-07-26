@@ -34,7 +34,6 @@
             {
                 obj.Position += obj.Momentum;
 
-
                 if (Math.Abs(obj.Position.X) > WorldSize.X / 2
                     || Math.Abs(obj.Position.Y) > WorldSize.Y / 2)
                 {
