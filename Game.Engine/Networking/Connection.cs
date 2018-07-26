@@ -85,16 +85,7 @@
                 var s = message as Steering;
 
                 if (player != null)
-                {
-                    float thrustAmount = 0.2f;
-
-                    // calculate a thrust vector from steering
-                    player.Thrust = 
-                        Vector2.Transform(
-                            new Vector2(thrustAmount, 0), 
-                            Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), s.Angle)
-                        );
-                }
+                    player.Angle = s.Angle;
             }
         }
 
