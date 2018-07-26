@@ -45,7 +45,6 @@
             switch (message.Type) {
                 case 3: // View
                     this.onView(message);
-                    this.sendSteering(this.angle);
                     break;
             }
         }
