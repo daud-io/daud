@@ -4,6 +4,13 @@
         up: false,
         right: false,
         down: false,
+        registerCanvas: function (canvas) {
+            canvas.addEventListener("mousemove", function (e) {
+                Game.Controls.mouseX = e.clientX;
+                Game.Controls.mouseY = e.clientY;
+            });
+
+        }
     };
 
     window.addEventListener("keydown", function (e) {
@@ -39,4 +46,5 @@
                 break;
         }
     }, false);
+
 }).call(this);
