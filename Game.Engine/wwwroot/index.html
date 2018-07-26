@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+    <style>
+        canvas {
+            border: 1px solid #d3d3d3;
+            background-color: #f1f1f1;
+        }
+    </style>    
+</head>
+<body>
+    <pre id="debug">
+
+    </pre>
+
+    <canvas id="gameCanvas" width="1000" height="500"></canvas>
+
+
+
+    <!--
+    <script type="text/javascript" src="js/render.js"></script>
+        -->
+
+    <script type="text/javascript" src="js/init.js"></script>
+    <script type="text/javascript" src="js/connection.js"></script>
+    <script type="text/javascript" src="js/renderer.js"></script>
+    <script type="text/javascript" src="js/camera.js"></script>
+    <script type="text/javascript" src="js/game.js"></script>
+
+
+    <script type="text/javascript">
+        var canvas = document.getElementById('gameCanvas');
+
+                    /*var render = new Render(canvas);
+                    window.core.onView = render.onView;*/
+
+    </script>
+</body>
+</html>
