@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  game:
+    build:
+      context: ./Game.Engine/bin/Debug/netcoreapp2.1/publish
+    ports:
+      - "8080:80"

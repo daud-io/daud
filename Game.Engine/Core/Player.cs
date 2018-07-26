@@ -10,6 +10,9 @@
         public Vector2 Thrust { get; set; } = new Vector2(0,0);
         public PlayerView View { get; set; } = null;
         public GameObject GameObject { get; set; } = null;
+        public float Angle { get; set; } = 0;
+
+        public bool BoostRequested { get; set; } = false;
 
         public void Step(World world)
         {
@@ -22,17 +25,26 @@
 
             View.Position = GameObject?.Position;
 
-
             // apply thrust
             int MAX_SPEED = 3;
 
-            GameObject.Angle = (float)Math.Atan2(Thrust.Y, Thrust.X);
+            float thrustAmount = 0.2f;
+
+            // calculate a thrust vector from steering
+            Thrust =
+                Vector2.Transform(
+                    new Vector2(thrustAmount, 0),
+                    Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), Angle)
+                );
+
 
             var x = Vector2.Add(GameObject.Momentum, Thrust);
-            if (Math.Abs(Vector2.Distance(x, Vector2.Zero)) > MAX_SPEED)
-                x = Vector2.Multiply(Vector2.Normalize(x), MAX_SPEED);
+            var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
+            if (currentSpeed > MAX_SPEED)
+                x = Vector2.Multiply(Vector2.Normalize(x), ((MAX_SPEED+currentSpeed)/2));
 
             GameObject.Momentum = x;
+            GameObject.Angle = Angle;
         }
     }
 }
