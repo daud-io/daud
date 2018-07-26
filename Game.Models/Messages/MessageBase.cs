@@ -11,7 +11,7 @@
             Ping,
             Spawn,
             View,
-            Steering
+            ControlInput
         }
 
         public readonly static Dictionary<MessageTypes, Type> MessageTypeMap = 
@@ -21,7 +21,7 @@
                 { MessageTypes.Ping,        typeof(Ping) },
                 { MessageTypes.Spawn,       typeof(Spawn) },
                 { MessageTypes.View,        typeof(View) },
-                { MessageTypes.Steering,    typeof(Steering) }
+                { MessageTypes.ControlInput,    typeof(ControlInput) }
             };
 
         public abstract MessageTypes Type { get; }

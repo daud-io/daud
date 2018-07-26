@@ -22,8 +22,8 @@
         sendSpawn: function (name) {
             this.send({ Type: 2, Name: name });
         },
-        sendSteering: function(angle) {
-            this.send({ Type: 4, Angle: angle });
+        sendControl: function(angle, boost) {
+            this.send({ Type: 4, Angle: angle, BoostRequested: boost });
         },
         send: function (obj) {
             if (this.socket.readyState === 1) {

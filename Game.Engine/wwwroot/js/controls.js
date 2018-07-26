@@ -4,6 +4,7 @@
         up: false,
         right: false,
         down: false,
+        boost: false,
         registerCanvas: function (canvas) {
             canvas.addEventListener("mousemove", function (e) {
                 Game.Controls.mouseX = e.clientX;
@@ -27,7 +28,12 @@
             case 40: // down arrow
                 Game.Controls.down = true;
                 break;
+            case 83: // s
+                Game.Controls.boost = true;
+                break;
         }
+
+        console.log(e.keyCode);
     }, false);
 
     window.addEventListener("keyup", function (e) {
@@ -43,6 +49,9 @@
                 break;
             case 40: // down arrow
                 Game.Controls.down = false;
+                break;
+            case 83: // s
+                Game.Controls.boost = false;
                 break;
         }
     }, false);

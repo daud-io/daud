@@ -6,27 +6,35 @@
     var background = new Game.Background(canvas, context, {});
     var renderFrame = requestAnimationFrame;
     var camera = new Game.Camera(context);
+    var interpolator = new Game.Interpolator();
 
     Game.Controls.registerCanvas(canvas);
 
     var view = false;
+    var lastFrameTime = false;
 
     var connection = new Game.Connection();
     connection.onView = function (newView) {
         view = newView;
+        interpolator.newFrame();
+        lastFrameTime = performance.now();
     };
 
     var angle = 0.0;
 
     // Game Loop
     var gameLoop = function () {
+        var currentTime = performance.now();
+
         //console.log('game');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
         if (view && view.PlayerView) {
             var pv = view.PlayerView;
 
-            camera.moveTo(pv.Position.X, pv.Position.Y);
+            var position = interpolator.projectObject(pv, currentTime);
+
+            camera.moveTo(position.X, position.Y);
             camera.zoomTo(1000);
         }
 
@@ -34,7 +42,7 @@
         background.draw();
 
         renderer.view = view;
-        renderer.draw();
+        renderer.draw(interpolator, currentTime);
         camera.end();
 
 
@@ -46,7 +54,7 @@
 
 
             var theta = Math.atan2(dy, dx);
-            console.log([Game.Controls.mouseX, Game.Controls.mouseY, theta]);
+            //console.log([Game.Controls.mouseX, Game.Controls.mouseY, theta]);
 
             angle = theta;
         }
@@ -58,7 +66,7 @@
             angle += 0.1;
         */
 
-        connection.sendSteering(angle);
+        connection.sendControl(angle, Game.Controls.boost);
 
         renderFrame(gameLoop);
     }

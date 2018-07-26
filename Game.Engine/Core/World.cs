@@ -15,15 +15,14 @@
         public Vector2 WorldSize = new Vector2(2000, 2000);
 
         private readonly Timer heartbeat;
-        private const int FREQUENCY = 20;
-
+        private const int MS_PER_FRAME = 40;
 
         public World()
         {
             heartbeat = new Timer((state) =>
             {
                 Step();
-            }, null, 0, FREQUENCY);
+            }, null, 0, MS_PER_FRAME);
         }
 
         public void Step()
@@ -31,8 +30,13 @@
             Time++;
 
             lock (Objects)
+            {
+                foreach (var player in Players)
+                    player.Step(this);
+
                 foreach (var obj in Objects)
                 {
+                    obj.LastPosition = obj.Position;
                     obj.Position += obj.Momentum;
 
                     if (Math.Abs(obj.Position.X) > WorldSize.X / 2
@@ -54,9 +58,9 @@
                     }
                 }
 
-            foreach (var player in Players)
-                player.Step(this);
-
+                foreach (var player in Players)
+                    player.SetupView(this);
+            }
             // update some stuff.
         }
 

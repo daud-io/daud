@@ -8,7 +8,7 @@
     };
 
     Renderer.prototype = {
-        draw: function () {
+        draw: function (interpolator, currentTime) {
             if (this.view && this.view.PlayerView) {
                 var pv = this.view.PlayerView;
                 var ctx = this.context;
@@ -27,15 +27,10 @@
                 for (var i = 0; i < pv.Objects.length; i++) {
                     var object = pv.Objects[i];
 
-                    ctx.lineWidth = 1;
-                    ctx.fillStyle = object.color || "red";
-
-                    ctx.beginPath();
-                    ctx.arc(object.Position.X, object.Position.Y, 20, 0, Math.PI * 2);
-                    ctx.fill();
+                    var position = interpolator.projectObject(object, currentTime);
 
                     ctx.save();
-                    ctx.translate(object.Position.X, object.Position.Y);
+                    ctx.translate(position.X, position.Y);
                     ctx.rotate(object.Angle);
                     ctx.drawImage(this.ship, -width / 2, -height / 2, width, height);
                     ctx.restore();

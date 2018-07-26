@@ -80,12 +80,16 @@
                 };
                 world.AddPlayer(player);
             }
-            else if (message is Steering)
+            else if (message is ControlInput)
             {
-                var s = message as Steering;
+                var s = message as ControlInput;
 
                 if (player != null)
+                {
                     player.Angle = s.Angle;
+                    player.BoostRequested = s.BoostRequested;
+                }
+
             }
         }
 

@@ -16,6 +16,40 @@
 
         public void Step(World world)
         {
+            bool isBoosting = BoostRequested;
+
+            // calculate a thrust vector from steering
+            float thrustAmount = 0.4f;
+
+            if (isBoosting)
+                thrustAmount *= 4;
+
+            Thrust =
+                Vector2.Transform(
+                    new Vector2(thrustAmount, 0),
+                    Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), Angle)
+                );
+
+
+
+            float boostSpeed = 20;
+
+            float speedLimit = isBoosting
+                ? boostSpeed
+                : 6;
+
+
+            var x = Vector2.Add(GameObject.Momentum, Thrust);
+            var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
+            if (currentSpeed > speedLimit)
+                x = Vector2.Multiply(Vector2.Normalize(x), ((speedLimit+3*currentSpeed)/4));
+
+            GameObject.Momentum = x;
+            GameObject.Angle = Angle;
+        }
+
+        public void SetupView(World world)
+        {
             View = View ?? new PlayerView();
 
             View.Time = world.Time;
@@ -24,27 +58,8 @@
             View.Objects = world.Objects;
 
             View.Position = GameObject?.Position;
-
-            // apply thrust
-            int MAX_SPEED = 3;
-
-            float thrustAmount = 0.2f;
-
-            // calculate a thrust vector from steering
-            Thrust =
-                Vector2.Transform(
-                    new Vector2(thrustAmount, 0),
-                    Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), Angle)
-                );
-
-
-            var x = Vector2.Add(GameObject.Momentum, Thrust);
-            var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
-            if (currentSpeed > MAX_SPEED)
-                x = Vector2.Multiply(Vector2.Normalize(x), ((MAX_SPEED+currentSpeed)/2));
-
-            GameObject.Momentum = x;
-            GameObject.Angle = Angle;
+            View.LastPosition = GameObject?.LastPosition;
+            View.Momentum = GameObject?.Momentum;
         }
     }
 }
