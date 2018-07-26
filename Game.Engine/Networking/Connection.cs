@@ -86,12 +86,12 @@
 
                 if (player != null)
                 {
-                    int playerSpeed = 1;
+                    float thrustAmount = 0.2f;
 
                     // calculate a thrust vector from steering
                     player.Thrust = 
                         Vector2.Transform(
-                            new Vector2(playerSpeed, 0), 
+                            new Vector2(thrustAmount, 0), 
                             Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), s.Angle)
                         );
                 }

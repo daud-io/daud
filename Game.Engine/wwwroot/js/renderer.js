@@ -3,6 +3,8 @@
         settings = settings || {};
         this.context = context;
         this.view = false;
+        this.ship = new Image();
+        this.ship.src = "img/ship.png";
     };
 
     Renderer.prototype = {
@@ -19,6 +21,9 @@
                 ctx.stroke();
                 ctx.restore();
 
+                var width = this.ship.width;
+                var height = this.ship.height;
+
                 for (var i = 0; i < pv.Objects.length; i++) {
                     var object = pv.Objects[i];
 
@@ -28,6 +33,12 @@
                     ctx.beginPath();
                     ctx.arc(object.Position.X, object.Position.Y, 20, 0, Math.PI * 2);
                     ctx.fill();
+
+                    ctx.save();
+                    ctx.translate(object.Position.X, object.Position.Y);
+                    ctx.rotate(object.Angle);
+                    ctx.drawImage(this.ship, -width / 2, -height / 2, width, height);
+                    ctx.restore();
                 }
             }
         }

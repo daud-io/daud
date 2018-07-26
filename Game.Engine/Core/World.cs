@@ -30,32 +30,33 @@
         {
             Time++;
 
-            foreach (var obj in Objects)
-            {
-                obj.Position += obj.Momentum;
-
-                if (Math.Abs(obj.Position.X) > WorldSize.X / 2
-                    || Math.Abs(obj.Position.Y) > WorldSize.Y / 2)
+            lock (Objects)
+                foreach (var obj in Objects)
                 {
+                    obj.Position += obj.Momentum;
 
-                    var newPosition = obj.Position;
+                    if (Math.Abs(obj.Position.X) > WorldSize.X / 2
+                        || Math.Abs(obj.Position.Y) > WorldSize.Y / 2)
+                    {
 
-                    if (newPosition.X > WorldSize.X / 2)
-                        newPosition.X = WorldSize.X / -2;
-                    if (newPosition.X < WorldSize.X / -2)
-                        newPosition.X = WorldSize.X / 2;
-                    if (newPosition.Y > WorldSize.Y / 2)
-                        newPosition.Y = WorldSize.Y / -2;
-                    if (newPosition.Y < WorldSize.Y / -2)
-                        newPosition.Y = WorldSize.Y / 2;
+                        var newPosition = obj.Position;
 
-                    obj.Position = newPosition;
+                        if (newPosition.X > WorldSize.X / 2)
+                            newPosition.X = WorldSize.X / -2;
+                        if (newPosition.X < WorldSize.X / -2)
+                            newPosition.X = WorldSize.X / 2;
+                        if (newPosition.Y > WorldSize.Y / 2)
+                            newPosition.Y = WorldSize.Y / -2;
+                        if (newPosition.Y < WorldSize.Y / -2)
+                            newPosition.Y = WorldSize.Y / 2;
+
+                        obj.Position = newPosition;
+                    }
                 }
-            }
 
             foreach (var player in Players)
                 player.Step(this);
-            
+
             // update some stuff.
         }
 
@@ -79,13 +80,15 @@
                 }
             };
 
-            Objects.Add(player.GameObject);
+            lock (Objects)
+                Objects.Add(player.GameObject);
         }
 
         public void RemovePlayer(Player player)
         {
             Players.Remove(player);
-            Objects.Remove(player.GameObject);
+            lock (Objects)
+                Objects.Remove(player.GameObject);
         }
 
         public int PlayerCount

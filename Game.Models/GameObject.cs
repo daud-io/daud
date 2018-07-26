@@ -6,5 +6,6 @@ namespace Game.Models
     {
         public Vector2 Position { get; set; } = new Vector2(0, 0);
         public Vector2 Momentum { get; set; } = new Vector2(0, 0);
+        public float Angle { get; set; } = 0;
     }
 }

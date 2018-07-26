@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.Models;
+    using System;
     using System.Numerics;
 
     public class Player
@@ -21,15 +22,14 @@
 
             View.Position = GameObject?.Position;
 
-            var momentum = GameObject.Momentum;
-            var thrust = Thrust;
 
+            // apply thrust
+            int MAX_SPEED = 3;
 
-            var x = Vector2.Add(momentum, thrust);
+            GameObject.Angle = (float)Math.Atan2(Thrust.Y, Thrust.X);
 
-            int MAX_SPEED = 10;
-
-            if (Vector2.Distance(momentum, Vector2.Zero) > MAX_SPEED)
+            var x = Vector2.Add(GameObject.Momentum, Thrust);
+            if (Math.Abs(Vector2.Distance(x, Vector2.Zero)) > MAX_SPEED)
                 x = Vector2.Multiply(Vector2.Normalize(x), MAX_SPEED);
 
             GameObject.Momentum = x;

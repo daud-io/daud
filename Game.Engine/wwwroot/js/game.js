@@ -44,7 +44,10 @@
             var dy = Game.Controls.mouseY - cy
             var dx = Game.Controls.mouseX - cx
 
+
             var theta = Math.atan2(dy, dx);
+            console.log([Game.Controls.mouseX, Game.Controls.mouseY, theta]);
+
             angle = theta;
         }
 
