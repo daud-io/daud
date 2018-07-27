@@ -18,14 +18,28 @@
         public bool ShootRequested { get; set; } = false;
 
         private const int SHOOT_COOLDOWN_TIME = 500;
+        private const int MAX_BOOST_TIME = 100;
 
         public long ShootCooldown { get; set; } = 0;
+
+        public long BoostTimer { get; set; } = 100;
 
         public int Score { get; set; } = 0;
 
         public void Step(World world)
         {
             bool isBoosting = BoostRequested;
+
+            BoostTimer += isBoosting ? -1 : 3;
+            if(BoostTimer < 0) {
+                isBoosting = false;
+                BoostTimer = 0;
+            }
+            Console.WriteLine(BoostTimer);
+            if(BoostTimer > MAX_BOOST_TIME) {
+                BoostTimer = MAX_BOOST_TIME;
+            }
+
             bool isShooting = ShootRequested && ShootCooldown < world.Time;
 
             // calculate a thrust vector from steering
