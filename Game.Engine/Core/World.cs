@@ -14,7 +14,7 @@
         public List<GameObject> Objects { get; } = new List<GameObject>();
         public long Time { get; private set; } = 0;
         public long FrameNumber { get; private set; } = 0;
-        public Vector2 WorldSize = new Vector2(2000, 2000);
+        public Vector2 WorldSize = new Vector2(6000, 6000);
 
         public Leaderboard Leaderboard { get; set; } = null;
         public bool IsLeaderboardNew = false;
@@ -53,12 +53,12 @@
                     IsLeaderboardNew = true;
                 }
 
-                foreach (var player in Players)
+                foreach (var player in Players.ToList())
                     player.Step(this);
                 foreach (var bullet in Bullets.ToArray())
                     bullet.Step(this);
 
-                foreach (var obj in Objects)
+                foreach (var obj in Objects.ToList())
                 {
                     obj.LastPosition = obj.Position;
                     obj.Position += obj.Momentum;
@@ -81,8 +81,7 @@
                         obj.LastPosition = newPosition;
                     }
                 }
-
-                foreach (var player in Players)
+                foreach (var player in Players.ToList())
                     player.SetupView(this);
             }
             // update some stuff.
@@ -90,33 +89,38 @@
 
         public void AddPlayer(Player player)
         {
-            Players.Add(player);
-
-            var r = new Random();
-
-            player.GameObject = new GameObject
-            {
-                Position = new Vector2
-                {
-                    X = r.Next(-1000, 1000),
-                    Y = r.Next(-1000, 1000)
-                },
-                Momentum = new Vector2
-                {
-                    X = 0,
-                    Y = 0
-                }
-            };
-
             lock (Objects)
+            {
+
+                Players.Add(player);
+
+                var r = new Random();
+
+                player.GameObject = new GameObject
+                {
+                    Position = new Vector2
+                    {
+                        X = r.Next(-1000, 1000),
+                        Y = r.Next(-1000, 1000)
+                    },
+                    Momentum = new Vector2
+                    {
+                        X = 0,
+                        Y = 0
+                    }
+                };
+
                 Objects.Add(player.GameObject);
+            }
         }
 
         public void RemovePlayer(Player player)
         {
-            Players.Remove(player);
             lock (Objects)
+            {
+                Players.Remove(player);
                 Objects.Remove(player.GameObject);
+            }
         }
 
         public int PlayerCount
