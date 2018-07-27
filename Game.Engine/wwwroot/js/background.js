@@ -9,8 +9,14 @@
 
     Background.prototype = {
         draw: function () {
-            this.context.fillStyle = this.context.createPattern(this.img, 'repeat');
-            this.context.fillRect(-100000, -100000, 200000, 200000); 
+            var ctx = this.context;
+
+            ctx.save();
+            ctx.scale(4, 4);
+            ctx.fillStyle = this.context.createPattern(this.img, 'repeat');
+            ctx.fillRect(-100000, -100000, 200000, 200000); 
+            ctx.restore();
+            
         }
     };
 

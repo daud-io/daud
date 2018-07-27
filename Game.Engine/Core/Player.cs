@@ -29,7 +29,7 @@
             bool isShooting = ShootRequested && ShootCooldown < world.Time;
 
             // calculate a thrust vector from steering
-            float thrustAmount = 2;
+            float thrustAmount = 8;
 
             if (isBoosting)
                 thrustAmount *= 4;
@@ -41,11 +41,11 @@
                 );
 
 
-            float boostSpeed = 20;
+            float boostSpeed = 30;
 
             float speedLimit = isBoosting
                 ? boostSpeed
-                : 6;
+                : 20;
 
             var x = Vector2.Add(GameObject.Momentum, Thrust);
             var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
@@ -56,7 +56,7 @@
             {
                 ShootCooldown = world.Time + SHOOT_COOLDOWN_TIME;
 
-                var bulletSpeed = 50;
+                var bulletSpeed = 70;
                 var bulletMomentum = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle)) * bulletSpeed;
 
                 var bullet = new Bullet(world, new Vector2(GameObject.Position.X, GameObject.Position.Y), bulletMomentum, GameObject.Angle);
