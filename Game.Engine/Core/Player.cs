@@ -43,10 +43,10 @@
             bool isShooting = ShootRequested && ShootCooldown < world.Time;
 
             // calculate a thrust vector from steering
-            float thrustAmount = 8;
+            float thrustAmount = 6;
 
             if (isBoosting)
-                thrustAmount *= 4;
+                thrustAmount *= 2;
 
             Thrust =
                 Vector2.Transform(
@@ -55,11 +55,11 @@
                 );
 
 
-            float boostSpeed = 30;
+            float boostSpeed = 20;
 
             float speedLimit = isBoosting
                 ? boostSpeed
-                : 20;
+                : 12;
 
             var x = Vector2.Add(GameObject.Momentum, Thrust);
             var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
