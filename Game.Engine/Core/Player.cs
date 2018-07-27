@@ -15,10 +15,16 @@
         public float Angle { get; set; } = 0;
 
         public bool BoostRequested { get; set; } = false;
+        public bool ShootRequested { get; set; } = false;
+
+        private const int SHOOT_COOLDOWN_TIME = 500;
+
+        public long ShootCooldown { get; set; } = 0;
 
         public void Step(World world)
         {
             bool isBoosting = BoostRequested;
+            bool isShooting = ShootRequested && ShootCooldown < world.Time;
 
             // calculate a thrust vector from steering
             float thrustAmount = 0.4f;
@@ -44,6 +50,16 @@
             if (currentSpeed > speedLimit)
                 x = Vector2.Multiply(Vector2.Normalize(x), ((speedLimit+3*currentSpeed)/4));
 
+            if (isShooting)
+            {
+                ShootCooldown = world.Time + SHOOT_COOLDOWN_TIME;
+
+                var bulletSpeed = 20;
+                var bulletMomentum = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle)) * bulletSpeed;
+
+                var bullet = new Bullet(world, new Vector2(GameObject.Position.X, GameObject.Position.Y), bulletMomentum, GameObject.Angle);
+            }
+
             GameObject.Momentum = x;
             GameObject.Angle = Angle;
             GameObject.Caption = Name;
@@ -65,7 +81,7 @@
                     Momentum = o.Momentum,
                     ObjectType = o.ObjectType,
                     Position = o.Position,
-                    Caption = this.GameObject == o
+                    Caption = false && this.GameObject == o
                         ? null
                         : o.Caption,
                     Sprite = o.Sprite

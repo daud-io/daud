@@ -5,13 +5,23 @@
         right: false,
         down: false,
         boost: false,
+        shoot: false,
         registerCanvas: function (canvas) {
             canvas.addEventListener("mousemove", function (e) {
                 Game.Controls.mouseX = e.clientX;
                 Game.Controls.mouseY = e.clientY;
             });
+
+            canvas.addEventListener("mousedown", function (e) {
+                Game.Controls.shoot = true;
+                e.preventDefault();
+                return false;
+            });
+            canvas.addEventListener("mouseup", function (e) {
+                Game.Controls.shoot = false;
+            });
         },
-        ship: "ship1"
+        ship: "ship_gray"
     };
 
     window.addEventListener("keydown", function (e) {

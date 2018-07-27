@@ -22,11 +22,12 @@
         sendSpawn: function (name) {
             this.send({ Type: 2, Name: name });
         },
-        sendControl: function(angle, boost, nick, ship) {
+        sendControl: function (angle, boost, shoot, nick, ship) {
             this.send({
                 Type: 4,
                 Angle: angle,
                 BoostRequested: boost,
+                ShootRequested: shoot,
                 Name: nick,
                 Ship: ship
             });

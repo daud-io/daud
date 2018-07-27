@@ -19,7 +19,13 @@
         interpolator.newFrame();
         lastFrameTime = performance.now();
 
-        connection.sendControl(angle, Game.Controls.boost, Game.Controls.nick, Game.Controls.ship);
+        connection.sendControl(
+            angle,
+            Game.Controls.boost,
+            Game.Controls.shoot,
+            Game.Controls.nick,
+            Game.Controls.ship
+        );
 
     };
 

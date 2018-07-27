@@ -9,6 +9,7 @@
     public class World : IDisposable
     {
         public List<Player> Players { get; } = new List<Player>();
+        public List<Bullet> Bullets { get; } = new List<Bullet>();
         public List<GameObject> Objects { get; } = new List<GameObject>();
         public long Time { get; private set; } = 0;
 
@@ -27,12 +28,14 @@
 
         public void Step()
         {
-            Time++;
+            Time+= MS_PER_FRAME;
 
             lock (Objects)
             {
                 foreach (var player in Players)
                     player.Step(this);
+                foreach (var bullet in Bullets.ToArray())
+                    bullet.Step(this);
 
                 foreach (var obj in Objects)
                 {

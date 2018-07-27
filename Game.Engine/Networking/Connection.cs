@@ -89,6 +89,7 @@
                 {
                     player.Angle = s.Angle;
                     player.BoostRequested = s.BoostRequested;
+                    player.ShootRequested = s.ShootRequested;
                     player.Name = s.Name;
                     player.Ship = s.Ship;
                 }

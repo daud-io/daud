@@ -17,7 +17,8 @@
             'ship_pink': sprite("ship_pink"),
             'ship_red': sprite("ship_red"),
             'ship_cyan': sprite("ship_cyan"),
-            'ship_yellow': sprite("ship_yellow")
+            'ship_yellow': sprite("ship_yellow"),
+            'bullet': sprite("torpedo")
         };
     };
 
