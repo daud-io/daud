@@ -2,7 +2,7 @@
     var Background = function (canvas, context, settings) {
         settings = settings || {};
         this.img = new Image();
-        this.img.src = 'img/bg.jpg';
+        this.img.src = 'img/bg.png';
         this.context = context;
         this.canvas = canvas;
     };

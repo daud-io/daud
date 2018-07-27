@@ -33,10 +33,11 @@
 
         public async Task StepAsync()
         {
-            await this.SendAsync(new View
+            var view = new View
             {
                 PlayerView = player.View
-            }, default(CancellationToken));
+            };
+            await this.SendAsync(view, default(CancellationToken));
         }
 
         private async Task SendAsync(MessageBase message, CancellationToken cancellationToken)
@@ -88,8 +89,9 @@
                 {
                     player.Angle = s.Angle;
                     player.BoostRequested = s.BoostRequested;
+                    player.Name = s.Name;
+                    player.Ship = s.Ship;
                 }
-
             }
         }
 

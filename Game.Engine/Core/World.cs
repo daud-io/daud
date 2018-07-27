@@ -55,6 +55,7 @@
                             newPosition.Y = WorldSize.Y / 2;
 
                         obj.Position = newPosition;
+                        obj.LastPosition = newPosition;
                     }
                 }
 
@@ -79,8 +80,8 @@
                 },
                 Momentum = new Vector2
                 {
-                    X = r.Next(-10, 10),
-                    Y = r.Next(-10, 10)
+                    X = 0,
+                    Y = 0
                 }
             };
 

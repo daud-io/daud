@@ -2,11 +2,13 @@
 {
     using Game.Models;
     using System;
+    using System.Linq;
     using System.Numerics;
 
     public class Player
     {
         public string Name { get; set; } = null;
+        public string Ship { get; set; } = null;
         public Vector2 Thrust { get; set; } = new Vector2(0,0);
         public PlayerView View { get; set; } = null;
         public GameObject GameObject { get; set; } = null;
@@ -31,13 +33,11 @@
                 );
 
 
-
             float boostSpeed = 20;
 
             float speedLimit = isBoosting
                 ? boostSpeed
                 : 6;
-
 
             var x = Vector2.Add(GameObject.Momentum, Thrust);
             var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
@@ -46,20 +46,35 @@
 
             GameObject.Momentum = x;
             GameObject.Angle = Angle;
+            GameObject.Caption = Name;
+            GameObject.Sprite = Ship;
         }
 
         public void SetupView(World world)
         {
-            View = View ?? new PlayerView();
+            var v = new PlayerView
+            {
 
-            View.Time = world.Time;
-            View.PlayerCount = world.PlayerCount;
+                Time = world.Time,
+                PlayerCount = world.PlayerCount,
 
-            View.Objects = world.Objects;
+                Objects = world.Objects.Select(o => new GameObject
+                {
+                    Angle = o.Angle,
+                    LastPosition = o.LastPosition,
+                    Momentum = o.Momentum,
+                    ObjectType = o.ObjectType,
+                    Position = o.Position,
+                    Caption = o.Caption,
+                    Sprite = o.Sprite
+                }).ToArray(),
 
-            View.Position = GameObject?.Position;
-            View.LastPosition = GameObject?.LastPosition;
-            View.Momentum = GameObject?.Momentum;
+                Position = GameObject?.Position,
+                LastPosition = GameObject?.LastPosition,
+                Momentum = GameObject?.Momentum
+            };
+
+            View = v;
         }
     }
 }

@@ -18,6 +18,9 @@
         view = newView;
         interpolator.newFrame();
         lastFrameTime = performance.now();
+
+        connection.sendControl(angle, Game.Controls.boost, Game.Controls.nick, Game.Controls.ship);
+
     };
 
     var angle = 0.0;
@@ -66,7 +69,6 @@
             angle += 0.1;
         */
 
-        connection.sendControl(angle, Game.Controls.boost);
 
         renderFrame(gameLoop);
     }

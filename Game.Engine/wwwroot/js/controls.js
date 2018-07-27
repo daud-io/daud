@@ -10,8 +10,8 @@
                 Game.Controls.mouseX = e.clientX;
                 Game.Controls.mouseY = e.clientY;
             });
-
-        }
+        },
+        ship: "ship1"
     };
 
     window.addEventListener("keydown", function (e) {
@@ -55,5 +55,15 @@
                 break;
         }
     }, false);
+
+    var selector = document.getElementById('shipSelector');
+    selector.addEventListener("change", function (e) {
+        Game.Controls.ship = selector.value;
+    });
+
+    var nick = document.getElementById('nick');
+    nick.addEventListener("change", function (e) {
+        Game.Controls.nick = nick.value;
+    });
 
 }).call(this);

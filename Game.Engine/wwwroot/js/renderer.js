@@ -3,8 +3,21 @@
         settings = settings || {};
         this.context = context;
         this.view = false;
+
+        var sprite = function (name) {
+            var img = new Image();
+            img.src = "img/" + name + ".png";
+
+            return img;
+        }
+
+        this.sprites = {
+            'ship1': sprite("ship1"),
+            'ship2': sprite("ship2")
+        };
+
         this.ship = new Image();
-        this.ship.src = "img/ship.png";
+        this.ship.src = "img/ship2.png";
     };
 
     Renderer.prototype = {
@@ -21,18 +34,22 @@
                 ctx.stroke();
                 ctx.restore();
 
-                var width = this.ship.width;
-                var height = this.ship.height;
-
                 for (var i = 0; i < pv.Objects.length; i++) {
                     var object = pv.Objects[i];
+
+                    var ship = this.sprites[object.Sprite]
+                    if (!ship)
+                        ship = this.sprites["ship1"];
+
+                    var width = ship.width;
+                    var height = ship.height;
 
                     var position = interpolator.projectObject(object, currentTime);
 
                     ctx.save();
                     ctx.translate(position.X, position.Y);
                     ctx.rotate(object.Angle);
-                    ctx.drawImage(this.ship, -width / 2, -height / 2, width, height);
+                    ctx.drawImage(ship, -width / 2, -height / 2, width, height);
                     ctx.restore();
                 }
             }

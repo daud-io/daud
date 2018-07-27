@@ -22,8 +22,14 @@
         sendSpawn: function (name) {
             this.send({ Type: 2, Name: name });
         },
-        sendControl: function(angle, boost) {
-            this.send({ Type: 4, Angle: angle, BoostRequested: boost });
+        sendControl: function(angle, boost, nick, ship) {
+            this.send({
+                Type: 4,
+                Angle: angle,
+                BoostRequested: boost,
+                Name: nick,
+                Ship: ship
+            });
         },
         send: function (obj) {
             if (this.socket.readyState === 1) {

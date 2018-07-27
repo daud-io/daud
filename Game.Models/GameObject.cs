@@ -7,6 +7,9 @@ namespace Game.Models
         public Vector2 Position { get; set; } = new Vector2(0, 0);
         public Vector2 LastPosition { get; set; } = new Vector2(0, 0);
         public Vector2 Momentum { get; set; } = new Vector2(0, 0);
+        public string ObjectType { get; set; } = null;
         public float Angle { get; set; } = 0;
+        public string Sprite { get; set; } = null;
+        public string Caption { get; set; } = null;
     }
 }
