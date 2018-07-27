@@ -65,7 +65,9 @@
                     Momentum = o.Momentum,
                     ObjectType = o.ObjectType,
                     Position = o.Position,
-                    Caption = o.Caption,
+                    Caption = this.GameObject == o
+                        ? null
+                        : o.Caption,
                     Sprite = o.Sprite
                 }).ToArray(),
 

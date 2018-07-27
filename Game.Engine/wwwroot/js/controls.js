@@ -56,14 +56,52 @@
         }
     }, false);
 
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + encodeURIComponent(cvalue) + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var ca = document.cookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return decodeURIComponent(c.substring(name.length, c.length));
+            }
+        }
+        return false;
+    }
+
+    function save() {
+        setCookie("nick", Game.Controls.nick);
+        setCookie("ship", Game.Controls.ship);
+    }
+
     var selector = document.getElementById('shipSelector');
     selector.addEventListener("change", function (e) {
         Game.Controls.ship = selector.value;
+
+        save();
     });
 
     var nick = document.getElementById('nick');
     nick.addEventListener("change", function (e) {
         Game.Controls.nick = nick.value;
+
+        save();
     });
+
+    var savedNick = getCookie("nick");
+    var savedShip = getCookie("ship");
+
+    if (savedNick !== false)
+        Game.Controls.nick = nick.value = savedNick;
+
 
 }).call(this);

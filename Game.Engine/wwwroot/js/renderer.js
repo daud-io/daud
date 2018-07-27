@@ -10,14 +10,15 @@
 
             return img;
         }
-
         this.sprites = {
-            'ship1': sprite("ship1"),
-            'ship2': sprite("ship2")
+            'ship0': sprite("ship0"),
+            'ship_gray': sprite("ship_gray"),
+            'ship_orange': sprite("ship_orange"),
+            'ship_pink': sprite("ship_pink"),
+            'ship_red': sprite("ship_red"),
+            'ship_cyan': sprite("ship_cyan"),
+            'ship_yellow': sprite("ship_yellow")
         };
-
-        this.ship = new Image();
-        this.ship.src = "img/ship2.png";
     };
 
     Renderer.prototype = {
@@ -39,7 +40,7 @@
 
                     var ship = this.sprites[object.Sprite]
                     if (!ship)
-                        ship = this.sprites["ship1"];
+                        ship = this.sprites["ship_gray"];
 
                     var width = ship.width;
                     var height = ship.height;
@@ -51,6 +52,15 @@
                     ctx.rotate(object.Angle);
                     ctx.drawImage(ship, -width / 2, -height / 2, width, height);
                     ctx.restore();
+
+                    if (object.Caption) {
+                        ctx.font = "20px sans-serif";
+                        ctx.fillStyle = "white";
+                        ctx.textAlign = "center";
+                        ctx.fillText(object.Caption, position.X, position.Y + 75); 
+                    }
+
+
                 }
             }
         }
