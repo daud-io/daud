@@ -33,12 +33,12 @@
                 ctx.beginPath();
                 ctx.lineWidth = 40;
                 ctx.strokeStyle = "blue";
-                //ctx.rect(-1000, -1000, 2000, 2000);
+                ctx.rect(-3000, -3000, 6000, 6000);
                 ctx.stroke();
                 ctx.restore();
 
                 
-                ctx.font = "10px sans-serif";
+                ctx.font = "24px sans-serif";
                 ctx.fillStyle = "white";
                 ctx.textAlign = "center";
 
@@ -57,12 +57,12 @@
                     ctx.save();
                     ctx.translate(position.X, position.Y);
                     ctx.rotate(object.Angle);
-                    ctx.scale(0.5, 0.5);
+                    //ctx.scale(0.8, 0.8);
                     ctx.drawImage(ship, -width / 2, -height / 2, width, height);
                     ctx.restore();
 
                     if (object.Caption) {
-                        ctx.fillText(object.Caption, position.X, position.Y + 40);
+                        ctx.fillText(object.Caption, position.X, position.Y + 70);
                     }
 
 

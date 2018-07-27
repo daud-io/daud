@@ -10,7 +10,7 @@
     Background.prototype = {
         draw: function () {
             this.context.fillStyle = this.context.createPattern(this.img, 'repeat');
-            this.context.fillRect(-1000, -1000, 2000, 2000); 
+            this.context.fillRect(-100000, -100000, 200000, 200000); 
         }
     };
 
