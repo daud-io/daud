@@ -57,15 +57,13 @@
                     ctx.save();
                     ctx.translate(position.X, position.Y);
                     ctx.rotate(object.Angle);
-                    //ctx.scale(0.8, 0.8);
+                    ctx.scale(1.3, 1.3);
                     ctx.drawImage(ship, -width / 2, -height / 2, width, height);
                     ctx.restore();
 
                     if (object.Caption) {
-                        ctx.fillText(object.Caption, position.X, position.Y + 70);
+                        ctx.fillText(object.Caption, position.X, position.Y + 90);
                     }
-
-
                 }
             }
         }

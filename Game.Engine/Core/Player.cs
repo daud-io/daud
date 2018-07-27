@@ -55,7 +55,7 @@
                 );
 
 
-            float boostSpeed = 20;
+            float boostSpeed = 40;
 
             float speedLimit = isBoosting
                 ? boostSpeed
