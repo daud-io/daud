@@ -113,5 +113,8 @@
     if (savedNick !== false)
         Game.Controls.nick = nick.value = savedNick;
 
+    if (savedShip !== false)
+        Game.Controls.ship = selector.value = savedShip;
+
 
 }).call(this);
