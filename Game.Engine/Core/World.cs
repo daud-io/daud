@@ -3,6 +3,7 @@
     using Game.Models;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Numerics;
     using System.Threading;
 
@@ -12,8 +13,11 @@
         public List<Bullet> Bullets { get; } = new List<Bullet>();
         public List<GameObject> Objects { get; } = new List<GameObject>();
         public long Time { get; private set; } = 0;
-
+        public long FrameNumber { get; private set; } = 0;
         public Vector2 WorldSize = new Vector2(2000, 2000);
+
+        public Leaderboard Leaderboard { get; set; } = null;
+        public bool IsLeaderboardNew = false;
 
         private readonly Timer heartbeat;
         private const int MS_PER_FRAME = 40;
@@ -28,10 +32,27 @@
 
         public void Step()
         {
-            Time+= MS_PER_FRAME;
+            Time += MS_PER_FRAME;
+            FrameNumber += 1;
 
             lock (Objects)
             {
+                IsLeaderboardNew = false;
+                if (FrameNumber % 20 == 0)
+                {
+                    Leaderboard = new Leaderboard
+                    {
+                        Entries = Players.Select(p => new Leaderboard.Entry
+                            {
+                                Name = p.Name,
+                                Score = p.Score
+                            })
+                            .OrderByDescending(e => e.Score)
+                            .ToList()
+                    };
+                    IsLeaderboardNew = true;
+                }
+
                 foreach (var player in Players)
                     player.Step(this);
                 foreach (var bullet in Bullets.ToArray())
@@ -45,7 +66,6 @@
                     if (Math.Abs(obj.Position.X) > WorldSize.X / 2
                         || Math.Abs(obj.Position.Y) > WorldSize.Y / 2)
                     {
-
                         var newPosition = obj.Position;
 
                         if (newPosition.X > WorldSize.X / 2)

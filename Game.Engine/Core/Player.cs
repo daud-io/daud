@@ -21,13 +21,15 @@
 
         public long ShootCooldown { get; set; } = 0;
 
+        public int Score { get; set; } = 0;
+
         public void Step(World world)
         {
             bool isBoosting = BoostRequested;
             bool isShooting = ShootRequested && ShootCooldown < world.Time;
 
             // calculate a thrust vector from steering
-            float thrustAmount = 0.4f;
+            float thrustAmount = 2;
 
             if (isBoosting)
                 thrustAmount *= 4;
@@ -58,6 +60,7 @@
                 var bulletMomentum = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle)) * bulletSpeed;
 
                 var bullet = new Bullet(world, new Vector2(GameObject.Position.X, GameObject.Position.Y), bulletMomentum, GameObject.Angle);
+                bullet.Owner = this;
             }
 
             GameObject.Momentum = x;
@@ -89,7 +92,10 @@
 
                 Position = GameObject?.Position,
                 LastPosition = GameObject?.LastPosition,
-                Momentum = GameObject?.Momentum
+                Momentum = GameObject?.Momentum,
+                Leaderboard = world.IsLeaderboardNew
+                    ? world.Leaderboard
+                    : null
             };
 
             View = v;

@@ -12,6 +12,8 @@
         public Vector2? LastPosition { get; set; }
         public Vector2? Momentum { get; set; }
 
+        public Leaderboard Leaderboard { get; set; }
+
         public IEnumerable<GameObject> Objects { get; set; }
     }
 }

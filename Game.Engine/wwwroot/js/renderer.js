@@ -28,13 +28,19 @@
                 var pv = this.view.PlayerView;
                 var ctx = this.context;
 
+                // edge of the universe
                 ctx.save();
                 ctx.beginPath();
                 ctx.lineWidth = 40;
                 ctx.strokeStyle = "blue";
-                ctx.rect(-1000, -1000, 2000, 2000);
+                //ctx.rect(-1000, -1000, 2000, 2000);
                 ctx.stroke();
                 ctx.restore();
+
+                
+                ctx.font = "10px sans-serif";
+                ctx.fillStyle = "white";
+                ctx.textAlign = "center";
 
                 for (var i = 0; i < pv.Objects.length; i++) {
                     var object = pv.Objects[i];
@@ -51,14 +57,12 @@
                     ctx.save();
                     ctx.translate(position.X, position.Y);
                     ctx.rotate(object.Angle);
+                    ctx.scale(0.5, 0.5);
                     ctx.drawImage(ship, -width / 2, -height / 2, width, height);
                     ctx.restore();
 
                     if (object.Caption) {
-                        ctx.font = "20px sans-serif";
-                        ctx.fillStyle = "white";
-                        ctx.textAlign = "center";
-                        ctx.fillText(object.Caption, position.X, position.Y + 75); 
+                        ctx.fillText(object.Caption, position.X, position.Y + 40);
                     }
 
 

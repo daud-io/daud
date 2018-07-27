@@ -1,5 +1,4 @@
 ﻿(function () {
-    // prepare our game canvas
     var canvas = document.getElementById("gameCanvas");
     var context = canvas.getContext("2d");
     var renderer = new Game.Renderer(context, {});
@@ -7,6 +6,7 @@
     var renderFrame = requestAnimationFrame;
     var camera = new Game.Camera(context);
     var interpolator = new Game.Interpolator();
+    var leaderboard = new Game.Leaderboard(canvas, context);
 
     Game.Controls.registerCanvas(canvas);
 
@@ -18,6 +18,11 @@
         view = newView;
         interpolator.newFrame();
         lastFrameTime = performance.now();
+
+        if (view &&
+            view.PlayerView &&
+            view.PlayerView.Leaderboard != null)
+            leaderboard.setData(view.PlayerView.Leaderboard);
 
         connection.sendControl(
             angle,
@@ -38,13 +43,15 @@
         //console.log('game');
         context.clearRect(0, 0, canvas.width, canvas.height);
 
+
+
         if (view && view.PlayerView) {
             var pv = view.PlayerView;
 
             var position = interpolator.projectObject(pv, currentTime);
 
             camera.moveTo(position.X, position.Y);
-            camera.zoomTo(1000);
+            camera.zoomTo(3000);
         }
 
         camera.begin();
@@ -54,6 +61,8 @@
         renderer.draw(interpolator, currentTime);
         camera.end();
 
+
+        leaderboard.draw();
 
         if (Game.Controls.mouseX) {
             var cx = canvas.width / 2;
