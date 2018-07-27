@@ -89,33 +89,38 @@
 
         public void AddPlayer(Player player)
         {
-            Players.Add(player);
-
-            var r = new Random();
-
-            player.GameObject = new GameObject
-            {
-                Position = new Vector2
-                {
-                    X = r.Next(-1000, 1000),
-                    Y = r.Next(-1000, 1000)
-                },
-                Momentum = new Vector2
-                {
-                    X = 0,
-                    Y = 0
-                }
-            };
-
             lock (Objects)
+            {
+
+                Players.Add(player);
+
+                var r = new Random();
+
+                player.GameObject = new GameObject
+                {
+                    Position = new Vector2
+                    {
+                        X = r.Next(-1000, 1000),
+                        Y = r.Next(-1000, 1000)
+                    },
+                    Momentum = new Vector2
+                    {
+                        X = 0,
+                        Y = 0
+                    }
+                };
+
                 Objects.Add(player.GameObject);
+            }
         }
 
         public void RemovePlayer(Player player)
         {
-            Players.Remove(player);
             lock (Objects)
+            {
+                Players.Remove(player);
                 Objects.Remove(player.GameObject);
+            }
         }
 
         public int PlayerCount

@@ -22,7 +22,7 @@
             world.Objects.Add(this.GameObject);
             world.Bullets.Add(this);
 
-            EndOfLife = world.Time + 3000;
+            EndOfLife = world.Time + 2000;
         }
 
         public void Step(World world)
