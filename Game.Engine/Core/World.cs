@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.Engine.Bots;
     using Game.Models;
     using System;
     using System.Collections.Generic;
@@ -28,6 +29,11 @@
             {
                 Step();
             }, null, 0, MS_PER_FRAME);
+
+            var bot = new Robot();
+            bot.Name = "oooh, shiny!";
+            AddPlayer(bot);
+
         }
 
         public void Step()

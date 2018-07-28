@@ -26,7 +26,7 @@
 
         public int Score { get; set; } = 0;
 
-        public void Step(World world)
+        public virtual void Step(World world)
         {
             bool isBoosting = BoostRequested;
 
@@ -82,7 +82,7 @@
             GameObject.Sprite = Ship;
         }
 
-        public void SetupView(World world)
+        public virtual void SetupView(World world)
         {
             var v = new PlayerView
             {
