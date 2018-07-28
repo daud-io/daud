@@ -35,7 +35,6 @@
                 isBoosting = false;
                 BoostTimer = 0;
             }
-            Console.WriteLine(BoostTimer);
             if(BoostTimer > MAX_BOOST_TIME) {
                 BoostTimer = MAX_BOOST_TIME;
             }
