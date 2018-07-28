@@ -69,13 +69,13 @@
                         var newPosition = obj.Position;
 
                         if (newPosition.X > WorldSize.X / 2)
-                            newPosition.X = WorldSize.X / -2;
+                            newPosition.X *= -1;
                         if (newPosition.X < WorldSize.X / -2)
-                            newPosition.X = WorldSize.X / 2;
+                            newPosition.X *= -1;
                         if (newPosition.Y > WorldSize.Y / 2)
-                            newPosition.Y = WorldSize.Y / -2;
+                            newPosition.Y *= -1;
                         if (newPosition.Y < WorldSize.Y / -2)
-                            newPosition.Y = WorldSize.Y / 2;
+                            newPosition.Y *= -1;
 
                         obj.Position = newPosition;
                         obj.LastPosition = newPosition;
