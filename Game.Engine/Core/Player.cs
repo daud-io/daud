@@ -82,6 +82,16 @@
             GameObject.Sprite = Ship;
         }
 
+        public virtual void Hit(Bullet bullet)
+        {
+
+        }
+
+        public virtual void Init(World world)
+        {
+
+        }
+
         public virtual void SetupView(World world)
         {
             var v = new PlayerView

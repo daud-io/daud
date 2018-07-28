@@ -30,9 +30,16 @@
                 Step();
             }, null, 0, MS_PER_FRAME);
 
-            var bot = new Robot();
-            bot.Name = "oooh, shiny!";
-            AddPlayer(bot);
+
+            for (int i = 1; i < 2; i++)
+            {
+                var bot = new Robot
+                {
+                    Name = $"Daudelin #{i}",
+                    Ship = "ship0"
+                };
+                AddPlayer(bot);
+            }
 
         }
 
@@ -75,13 +82,13 @@
                         var newPosition = obj.Position;
 
                         if (newPosition.X > WorldSize.X / 2)
-                            newPosition.X *= -1;
+                            newPosition.X = (-WorldSize.X / 2) + (newPosition.X - WorldSize.X / 2);
                         if (newPosition.X < WorldSize.X / -2)
-                            newPosition.X *= -1;
+                            newPosition.X = (WorldSize.X / 2) + (newPosition.X + WorldSize.X / 2);
                         if (newPosition.Y > WorldSize.Y / 2)
-                            newPosition.Y *= -1;
+                            newPosition.Y = (-WorldSize.Y / 2) + (newPosition.Y - WorldSize.Y / 2);
                         if (newPosition.Y < WorldSize.Y / -2)
-                            newPosition.Y *= -1;
+                            newPosition.Y = (WorldSize.Y / 2) + (newPosition.Y + WorldSize.Y / 2);
 
                         obj.Position = newPosition;
                         obj.LastPosition = newPosition;
@@ -113,8 +120,10 @@
                     {
                         X = 0,
                         Y = 0
-                    }
+                    },
+                    ObjectType = "player"
                 };
+                player.Init(this);
 
                 Objects.Add(player.GameObject);
             }

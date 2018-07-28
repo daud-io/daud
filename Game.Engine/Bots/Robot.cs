@@ -20,6 +20,14 @@
             base.Step(world);
         }
 
+        public override void Hit(Bullet bullet)
+        {
+            var r = new Random();
+
+            GameObject.Position = new Vector2(r.Next(-2000, 2000), r.Next(-2000, 2000));
+            GameObject.LastPosition = GameObject.Position;
+        }
+
         public override void SetupView(World world)
         {
             

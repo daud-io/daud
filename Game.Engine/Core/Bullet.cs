@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.Models;
+    using System.Linq;
     using System.Numerics;
 
     public class Bullet
@@ -31,12 +32,17 @@
             {
                 if (obj != GameObject)
                 {
-
                     if (obj != this.Owner.GameObject && obj.ObjectType != "bullet")
-                    {
+                    { 
+
                         int COLLISON_DISTANCE = 100;
                         if (Vector2.Distance(obj.Position, GameObject.Position) < COLLISON_DISTANCE)
                         {
+
+                            var player = world.Players.FirstOrDefault(p => p.GameObject == obj);
+                            if (player != null)
+                                player.Hit(this);
+
                             this.Owner.Score++;
                             EndOfLife = world.Time;
                         }

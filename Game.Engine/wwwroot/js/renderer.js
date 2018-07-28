@@ -33,7 +33,7 @@
                 ctx.beginPath();
                 ctx.lineWidth = 40;
                 ctx.strokeStyle = "blue";
-                // ctx.rect(-3000, -3000, 6000, 6000);
+                ctx.rect(-3000, -3000, 6000, 6000);
                 ctx.stroke();
                 ctx.restore();
 
