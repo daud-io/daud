@@ -142,6 +142,8 @@
                 ObjectType = "player"
             };
 
+            Health = MaxHealth;
+
             world.Objects.Add(GameObject);
             IsAlive = true;
         }
