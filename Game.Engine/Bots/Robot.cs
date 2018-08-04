@@ -8,10 +8,14 @@
     {
         public Robot(World world) : base(world)
         {
-
+            ShootCooldownTime = 800;
+            MaxHealth = 50;
+            BaseThrust = 2;
         }
         public override void Step()
         {
+            base.ShootRequested = true;
+
             foreach (var obj in world.Objects)
             {
                 if (obj != this.GameObject && obj.ObjectType == "player")
@@ -21,7 +25,6 @@
                 }
             }
 
-            base.ShootRequested = true;
 
             base.Step();
         }
