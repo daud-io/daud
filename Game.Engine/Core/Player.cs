@@ -2,6 +2,7 @@
 {
     using Game.Models;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
 
@@ -37,6 +38,8 @@
         public bool IsAlive { get; set; } = false;
 
         public GameObject Killer { get; set; }
+
+        public List<string> Messages = new List<string>();
 
         protected readonly World world;
 
@@ -110,16 +113,25 @@
             GameObject.Health = Health / MaxHealth;
         }
 
+        public void SendMessage(string message)
+        {
+            Messages.Add(message);
+        }
+
         public virtual void Hit(Bullet bullet)
         {
             Health -= HealthHitCost;
 
-            if (Health <= 0)
+            if (Health <= 0 && IsAlive)
             {
                 Die();
 
                 bullet.Owner.Score += 55;
+
                 this.Killer = bullet.Owner.GameObject;
+
+                bullet.Owner.SendMessage($"You Killed {this.Name}");
+                this.SendMessage($"Killed by {bullet.Owner.Name}");
             }
         }
 
@@ -205,8 +217,11 @@
                 Leaderboard = world.IsLeaderboardNew
                     ? world.Leaderboard
                     : null,
-                IsAlive = IsAlive
+                IsAlive = IsAlive,
+                Messages = Messages.ToList()
             };
+
+            Messages.Clear();
 
             View = v;
         }

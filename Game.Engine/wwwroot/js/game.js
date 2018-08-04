@@ -13,6 +13,10 @@
     var view = false;
     var lastFrameTime = false;
 
+    var log = function (message) {
+        document.getElementById('log').prepend(document.createTextNode(message + '\n'));
+    };
+
     var connection = new Game.Connection();
     connection.onView = function (newView) {
         view = newView;
@@ -20,9 +24,17 @@
         lastFrameTime = performance.now();
 
         if (view &&
-            view.PlayerView &&
-            view.PlayerView.Leaderboard != null)
-            leaderboard.setData(view.PlayerView.Leaderboard);
+            view.PlayerView)
+        {
+            if (view.PlayerView.Leaderboard != null)
+                leaderboard.setData(view.PlayerView.Leaderboard);
+
+            if (view.PlayerView.Messages) {
+                var messages = view.PlayerView.Messages;
+                for (var i = 0; i < messages.length; i++)
+                    log(messages[i]);
+            }
+        }
 
         connection.sendControl(
             angle,
@@ -31,7 +43,6 @@
             Game.Controls.nick,
             Game.Controls.ship
         );
-
     };
 
     document.getElementById('spawn').addEventListener("click", function () {
