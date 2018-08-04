@@ -20,6 +20,8 @@
             canvas.addEventListener("mouseup", function (e) {
                 Game.Controls.shoot = false;
             });
+
+            Game.Controls.canvas = canvas;
         },
         ship: "ship_gray"
     };
@@ -42,8 +44,6 @@
                 Game.Controls.boost = true;
                 break;
         }
-
-        console.log(e.keyCode);
     }, false);
 
     window.addEventListener("keyup", function (e) {
@@ -103,7 +103,7 @@
     var nick = document.getElementById('nick');
     nick.addEventListener("change", function (e) {
         Game.Controls.nick = nick.value;
-
+        Game.Controls.canvas.focus();
         save();
     });
 

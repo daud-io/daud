@@ -27,18 +27,20 @@
         {
             heartbeat = new Timer((state) =>
             {
+                //Console.WriteLine($"Frame: {FrameNumber}");
                 Step();
             }, null, 0, MS_PER_FRAME);
 
 
             for (int i = 1; i < 2; i++)
             {
-                var bot = new Robot
+                var bot = new Robot(this)
                 {
                     Name = $"Daudelin #{i}",
                     Ship = "ship0"
                 };
                 AddPlayer(bot);
+                bot.Spawn();
             }
 
         }
@@ -55,21 +57,23 @@
                 {
                     Leaderboard = new Leaderboard
                     {
-                        Entries = Players.Select(p => new Leaderboard.Entry
-                            {
-                                Name = p.Name,
-                                Score = p.Score
-                            })
-                            .OrderByDescending(e => e.Score)
-                            .ToList()
+                        Entries = Players
+                            .Where(p => p.IsAlive)
+                            .Select(p => new Leaderboard.Entry
+                                {
+                                    Name = p.Name,
+                                    Score = p.Score
+                                })
+                                .OrderByDescending(e => e.Score)
+                                .ToList()
                     };
                     IsLeaderboardNew = true;
                 }
 
                 foreach (var player in Players.ToList())
-                    player.Step(this);
+                    player.Step();
                 foreach (var bullet in Bullets.ToArray())
-                    bullet.Step(this);
+                    bullet.Step();
 
                 foreach (var obj in Objects.ToList())
                 {
@@ -95,7 +99,7 @@
                     }
                 }
                 foreach (var player in Players.ToList())
-                    player.SetupView(this);
+                    player.SetupView();
             }
             // update some stuff.
         }
@@ -103,39 +107,13 @@
         public void AddPlayer(Player player)
         {
             lock (Objects)
-            {
-
-                Players.Add(player);
-
-                var r = new Random();
-
-                player.GameObject = new GameObject
-                {
-                    Position = new Vector2
-                    {
-                        X = r.Next(-1000, 1000),
-                        Y = r.Next(-1000, 1000)
-                    },
-                    Momentum = new Vector2
-                    {
-                        X = 0,
-                        Y = 0
-                    },
-                    ObjectType = "player"
-                };
-                player.Init(this);
-
-                Objects.Add(player.GameObject);
-            }
+                player.Init();
         }
 
         public void RemovePlayer(Player player)
         {
             lock (Objects)
-            {
-                Players.Remove(player);
-                Objects.Remove(player.GameObject);
-            }
+                player.Deinit();
         }
 
         public int PlayerCount
@@ -152,32 +130,13 @@
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
-            {
                 if (disposing)
-                {
                     heartbeat.Dispose();
-                }
-
-                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
-                // TODO: set large fields to null.
-
                 disposedValue = true;
-            }
         }
-
-        // TODO: override a finalizer only if Dispose(bool disposing) above has code to free unmanaged resources.
-        // ~World() {
-        //   // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-        //   Dispose(false);
-        // }
-
-        // This code added to correctly implement the disposable pattern.
         void IDisposable.Dispose()
         {
-            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
             Dispose(true);
-            // TODO: uncomment the following line if the finalizer is overridden above.
-            // GC.SuppressFinalize(this);
         }
         #endregion
     }

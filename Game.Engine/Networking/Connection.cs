@@ -10,7 +10,6 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Net.WebSockets;
-    using System.Numerics;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -33,11 +32,14 @@
 
         public async Task StepAsync()
         {
-            var view = new View
+            if (player != null)
             {
-                PlayerView = player.View
-            };
-            await this.SendAsync(view, default(CancellationToken));
+                var view = new View
+                {
+                    PlayerView = player.View
+                };
+                await this.SendAsync(view, default(CancellationToken));
+            }
         }
 
         private async Task SendAsync(MessageBase message, CancellationToken cancellationToken)
@@ -53,11 +55,15 @@
             await WebsocketSendingSemaphore.WaitAsync();
             try
             {
+                var start = DateTime.Now;
+
                 await Socket.SendAsync(
                     buffer, 
                     WebSocketMessageType.Text, 
                     endOfMessage: true, 
                     cancellationToken: cancellationToken);
+
+                //Console.WriteLine($"{DateTime.Now.Subtract(start).TotalMilliseconds}ms in send");
             }
             finally
             {
@@ -75,11 +81,16 @@
             {
                 var s = message as Spawn;
 
-                player = new Player
+                if (player == null)
                 {
-                    Name = s.Name
-                };
-                world.AddPlayer(player);
+                    player = new Player(world)
+                    {
+                        Name = s.Name
+                    };
+                    world.AddPlayer(player);
+                }
+
+                player.Spawn();
             }
             else if (message is ControlInput)
             {

@@ -30,11 +30,16 @@
         public float MaxHealth { get; set; } = 100;
         public float Health { get; set; } = 0;
         public float HealthHitCost { get; set; } = 20;
-        public bool IsAlive { get; set; } = true;
+        public bool IsAlive { get; set; } = false;
 
+        protected readonly World world;
 
+        public Player(World world)
+        {
+            this.world = world;
+        }
 
-        public virtual void Step(World world)
+        public virtual void Step()
         {
             bool isBoosting = BoostRequested;
 
@@ -47,52 +52,55 @@
                 BoostTimer = MAX_BOOST_TIME;
             }
 
-
-            bool isShooting = ShootRequested && ShootCooldown < world.Time;
-
-            // calculate a thrust vector from steering
-            float thrustAmount = 6;
-
-            if (isBoosting)
-                thrustAmount *= 2;
-
-            Thrust =
-                Vector2.Transform(
-                    new Vector2(thrustAmount, 0),
-                    Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), Angle)
-                );
-
-
-            float boostSpeed = 40;
-
-            float speedLimit = isBoosting
-                ? boostSpeed
-                : 12;
-
-            var x = Vector2.Add(GameObject.Momentum, Thrust);
-            var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
-            if (currentSpeed > speedLimit)
-                x = Vector2.Multiply(Vector2.Normalize(x), ((speedLimit+3*currentSpeed)/4));
-
-            if (isShooting)
-            {
-                ShootCooldown = world.Time + SHOOT_COOLDOWN_TIME;
-
-                var bulletSpeed = 70;
-                var bulletMomentum = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle)) * bulletSpeed;
-
-                var bullet = new Bullet(world, new Vector2(GameObject.Position.X, GameObject.Position.Y), bulletMomentum, Angle);
-                bullet.Owner = this;
-            }
-
             Health = Math.Min(Health, MaxHealth);
             Health = Math.Max(Health, 0);
 
             if (IsAlive)
-                Health = Math.Min(Health + HealthRegenerationPerFrame, MaxHealth);
+            {
+                bool isShooting = ShootRequested && ShootCooldown < world.Time;
 
-            GameObject.Momentum = x;
-            GameObject.Angle = Angle;
+                // calculate a thrust vector from steering
+                float thrustAmount = 6;
+
+                if (isBoosting)
+                    thrustAmount *= 2;
+
+                Thrust =
+                    Vector2.Transform(
+                        new Vector2(thrustAmount, 0),
+                        Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), Angle)
+                    );
+
+
+                float boostSpeed = 40;
+
+                float speedLimit = isBoosting
+                    ? boostSpeed
+                    : 12;
+
+                var x = Vector2.Add(GameObject.Momentum, Thrust);
+                var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
+                if (currentSpeed > speedLimit)
+                    x = Vector2.Multiply(Vector2.Normalize(x), ((speedLimit+3*currentSpeed)/4));
+
+                if (isShooting)
+                {
+                    ShootCooldown = world.Time + SHOOT_COOLDOWN_TIME;
+
+                    var bulletSpeed = 70;
+                    var bulletMomentum = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle)) * bulletSpeed;
+
+                    var bullet = new Bullet(world, new Vector2(GameObject.Position.X, GameObject.Position.Y), bulletMomentum, Angle)
+                    {
+                        Owner = this
+                    };
+                }
+
+                Health = Math.Min(Health + HealthRegenerationPerFrame, MaxHealth);
+                GameObject.Momentum = x;
+                GameObject.Angle = Angle;
+            }
+
             GameObject.Caption = Name;
             GameObject.Sprite = Ship;
             GameObject.Health = Health / MaxHealth;
@@ -101,18 +109,66 @@
         public virtual void Hit(Bullet bullet)
         {
             Health -= HealthHitCost;
+
+            if (Health <= 0)
+            {
+                Die();
+
+                bullet.Owner.Score += 55;
+            }
         }
 
-        public virtual void Init(World world)
+        public void Spawn()
         {
+            if (IsAlive) return;
 
+            var r = new Random();
+
+            GameObject = new GameObject
+            {
+                Position = new Vector2
+                {
+                    X = r.Next(-1000, 1000),
+                    Y = r.Next(-1000, 1000)
+                },
+                Momentum = new Vector2
+                {
+                    X = 0,
+                    Y = 0
+                },
+                ObjectType = "player"
+            };
+
+            world.Objects.Add(GameObject);
+            IsAlive = true;
         }
 
-        public virtual void SetupView(World world)
+        public virtual void Init()
+        {
+            world.Players.Add(this);
+        }
+
+        public virtual void Die()
+        {
+            IsAlive = false;
+
+            Score /= 2;
+
+            if (GameObject != null
+                && world.Objects.Contains(GameObject))
+                world.Objects.Remove(GameObject);
+        }
+
+        public virtual void Deinit()
+        {
+            Die();
+            world.Players.Remove(this);
+        }
+
+        public virtual void SetupView()
         {
             var v = new PlayerView
             {
-
                 Time = world.Time,
                 PlayerCount = world.PlayerCount,
 
@@ -130,9 +186,9 @@
                     Health = o.Health
                 }).ToArray(),
 
-                Position = GameObject?.Position,
-                LastPosition = GameObject?.LastPosition,
-                Momentum = GameObject?.Momentum,
+                Position = GameObject?.Position ?? new Vector2(0,0),
+                LastPosition = GameObject?.LastPosition ?? new Vector2(0, 0),
+                Momentum = GameObject?.Momentum ?? new Vector2(0, 0),
                 Leaderboard = world.IsLeaderboardNew
                     ? world.Leaderboard
                     : null,

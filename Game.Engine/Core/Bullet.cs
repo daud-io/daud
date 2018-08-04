@@ -9,9 +9,11 @@
         public GameObject GameObject { get; set; } = null;
         public long EndOfLife { get; set; } = 0;
         public Player Owner { get; set; } = null;
+        protected readonly World world;
 
         public Bullet(World world, Vector2 position, Vector2 momentum, float angle)
         {
+            this.world = world;
             this.GameObject = new GameObject
             {
                 Position = position,
@@ -26,9 +28,9 @@
             EndOfLife = world.Time + 2000;
         }
 
-        public void Step(World world)
+        public void Step()
         {
-            foreach (var obj in world.Objects)
+            foreach (var obj in world.Objects.ToList())
             {
                 if (obj != GameObject)
                 {

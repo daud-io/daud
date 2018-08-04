@@ -51,8 +51,6 @@
 
             if (this.reloading)
                 window.location.reload();
-
-            this.sendSpawn();
         },
         onClose: function (event) {
             console.log('disconnected');

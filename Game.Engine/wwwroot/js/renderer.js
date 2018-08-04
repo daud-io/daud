@@ -47,7 +47,10 @@
                 for (var i = 0; i < pv.Objects.length; i++) {
                     var object = pv.Objects[i];
 
-                    var ship = this.sprites[object.Sprite]
+                    var ship = object.Sprite != null
+                        ? this.sprites[object.Sprite]
+                        : false;
+
                     if (!ship)
                         ship = this.sprites["ship_gray"];
 

@@ -34,6 +34,11 @@
 
     };
 
+    document.getElementById('spawn').addEventListener("click", function () {
+        connection.sendSpawn(Game.Controls.nick);
+    });
+
+
     var angle = 0.0;
 
     // Game Loop

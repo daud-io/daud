@@ -6,34 +6,41 @@
 
     public class Robot : Player
     {
-        public override void Step(World world)
+        public Robot(World world) : base(world)
+        {
+
+        }
+        public override void Step()
         {
             foreach (var obj in world.Objects)
             {
-                if (obj != this.GameObject)
+                if (obj != this.GameObject && obj.ObjectType == "player")
                 {
                     var delta = Vector2.Subtract(obj.Position, this.GameObject.Position);
                     Angle = (float)Math.Atan2(delta.Y, delta.X);
                 }
             }
 
-            base.Step(world);
+            base.ShootRequested = true;
+
+            base.Step();
         }
 
         public override void Hit(Bullet bullet)
         {
-            /*var r = new Random();
-
-            GameObject.Position = new Vector2(r.Next(-2000, 2000), r.Next(-2000, 2000));
-            GameObject.LastPosition = GameObject.Position;
-            */
-
             base.Hit(bullet);
         }
 
-        public override void SetupView(World world)
+        public override void SetupView()
         {
             
+        }
+
+        public override void Die()
+        {
+            base.Die();
+
+            this.Spawn();
         }
     }
 }
