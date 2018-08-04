@@ -32,6 +32,8 @@
         public float HealthHitCost { get; set; } = 20;
         public bool IsAlive { get; set; } = false;
 
+        public GameObject Killer { get; set; }
+
         protected readonly World world;
 
         public Player(World world)
@@ -115,6 +117,7 @@
                 Die();
 
                 bullet.Owner.Score += 55;
+                this.Killer = bullet.Owner.GameObject;
             }
         }
 
@@ -186,9 +189,15 @@
                     Health = o.Health
                 }).ToArray(),
 
-                Position = GameObject?.Position ?? new Vector2(0,0),
-                LastPosition = GameObject?.LastPosition ?? new Vector2(0, 0),
-                Momentum = GameObject?.Momentum ?? new Vector2(0, 0),
+                Position = IsAlive 
+                    ? GameObject?.Position ?? new Vector2(0,0)
+                    : Killer?.Position ?? new Vector2(0, 0),
+                LastPosition = IsAlive
+                    ? GameObject?.LastPosition ?? new Vector2(0, 0)
+                    : Killer?.LastPosition ?? new Vector2(0, 0),
+                Momentum = IsAlive
+                    ? GameObject?.Momentum ?? new Vector2(0, 0)
+                    : new Vector2(0, 0),
                 Leaderboard = world.IsLeaderboardNew
                     ? world.Leaderboard
                     : null,
