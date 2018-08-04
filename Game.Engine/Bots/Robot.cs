@@ -22,10 +22,13 @@
 
         public override void Hit(Bullet bullet)
         {
-            var r = new Random();
+            /*var r = new Random();
 
             GameObject.Position = new Vector2(r.Next(-2000, 2000), r.Next(-2000, 2000));
             GameObject.LastPosition = GameObject.Position;
+            */
+
+            base.Hit(bullet);
         }
 
         public override void SetupView(World world)

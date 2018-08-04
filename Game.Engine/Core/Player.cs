@@ -26,6 +26,14 @@
 
         public int Score { get; set; } = 0;
 
+        public float HealthRegenerationPerFrame { get; set; } = 0.3f;
+        public float MaxHealth { get; set; } = 100;
+        public float Health { get; set; } = 0;
+        public float HealthHitCost { get; set; } = 20;
+        public bool IsAlive { get; set; } = true;
+
+
+
         public virtual void Step(World world)
         {
             bool isBoosting = BoostRequested;
@@ -38,6 +46,7 @@
             if(BoostTimer > MAX_BOOST_TIME) {
                 BoostTimer = MAX_BOOST_TIME;
             }
+
 
             bool isShooting = ShootRequested && ShootCooldown < world.Time;
 
@@ -76,15 +85,22 @@
                 bullet.Owner = this;
             }
 
+            Health = Math.Min(Health, MaxHealth);
+            Health = Math.Max(Health, 0);
+
+            if (IsAlive)
+                Health = Math.Min(Health + HealthRegenerationPerFrame, MaxHealth);
+
             GameObject.Momentum = x;
             GameObject.Angle = Angle;
             GameObject.Caption = Name;
             GameObject.Sprite = Ship;
+            GameObject.Health = Health / MaxHealth;
         }
 
         public virtual void Hit(Bullet bullet)
         {
-
+            Health -= HealthHitCost;
         }
 
         public virtual void Init(World world)
@@ -110,7 +126,8 @@
                     Caption = false && this.GameObject == o
                         ? null
                         : o.Caption,
-                    Sprite = o.Sprite
+                    Sprite = o.Sprite,
+                    Health = o.Health
                 }).ToArray(),
 
                 Position = GameObject?.Position,
@@ -118,7 +135,8 @@
                 Momentum = GameObject?.Momentum,
                 Leaderboard = world.IsLeaderboardNew
                     ? world.Leaderboard
-                    : null
+                    : null,
+                IsAlive = IsAlive
             };
 
             View = v;

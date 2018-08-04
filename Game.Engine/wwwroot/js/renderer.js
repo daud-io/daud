@@ -41,7 +41,9 @@
                 ctx.font = "24px sans-serif";
                 ctx.fillStyle = "white";
                 ctx.textAlign = "center";
-
+                ctx.strokeStyle = "white";
+                ctx.lineWidth = 6;
+                
                 for (var i = 0; i < pv.Objects.length; i++) {
                     var object = pv.Objects[i];
 
@@ -63,6 +65,16 @@
 
                     if (object.Caption) {
                         ctx.fillText(object.Caption, position.X, position.Y + 90);
+                    }
+                    if (object.Health) {
+                        var offset = { X: 0, Y: 100 };
+                        var width = 200;
+                        var height = 30;
+
+                        ctx.beginPath();
+                        ctx.rect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width, height);
+                        ctx.stroke();
+                        ctx.fillRect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width * object.Health, height);
                     }
                 }
             }
