@@ -50,6 +50,14 @@
     });
 
 
+    window.addEventListener("resize", function () {
+        var width = window.innerWidth - 20;
+        var height = width * 9/16;
+
+        canvas.width = width;
+        canvas.height = height;
+    });
+
     var angle = 0.0;
 
     // Game Loop
