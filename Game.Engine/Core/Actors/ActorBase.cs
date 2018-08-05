@@ -3,6 +3,7 @@
     public abstract class ActorBase
     {
         protected World world = null;
+        protected bool Deinitialized = false;
 
         public virtual void Init(World world)
         {
@@ -12,6 +13,7 @@
 
         public virtual void Deinit()
         {
+            Deinitialized = true;
             this.world.Actors.Remove(this);
         }
 

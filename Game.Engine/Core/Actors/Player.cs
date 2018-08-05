@@ -73,7 +73,6 @@
                         Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), Angle)
                     );
 
-
                 float speedLimit = isBoosting
                     ? MaxSpeedBoost
                     : MaxSpeed;
@@ -118,13 +117,15 @@
 
             if (Health <= 0 && IsAlive)
             {
-                Deinit();
+                Die();
+
+                Random r = new Random();
 
                 bullet.Owner.Score += 55;
 
                 this.Killer = bullet.Owner.GameObject;
 
-                bullet.Owner.SendMessage($"You Killed {this.Name}");
+                bullet.Owner.SendMessage($"You Killed {this.Name} - ${r.Next()}");
                 this.SendMessage($"Killed by {bullet.Owner.Name}");
             }
         }

@@ -35,18 +35,8 @@
                 Step();
             }, null, 0, MS_PER_FRAME);
 
-
-            for (int i = 1; i < 2; i++)
-            {
-                var bot = new Robot()
-                {
-                    Name = $"Daudelin #{i}",
-                    Ship = "ship0"
-                };
-                bot.Init(this);
-                bot.Spawn();
-            }
-
+            var tender = new RobotTender();
+            tender.Init(this);
         }
 
         public void Step()
