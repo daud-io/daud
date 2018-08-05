@@ -59,6 +59,44 @@
 
                     var position = interpolator.projectObject(object, currentTime);
 
+
+                    if (object.Caption) {
+                        ctx.fillText(object.Caption, position.X, position.Y + 90);
+                    }
+
+                    ctx.save();
+                    ctx.fillStyle = "rgba(0,255,0,0.2)";
+
+                    if (object.Health) {
+                        var healthBar = false;
+                        var healthRing = true;
+
+                        if (healthBar) {
+                            var offset = { X: 0, Y: 100 };
+                            var width = 200;
+                            var height = 30;
+
+                            ctx.beginPath();
+                            ctx.rect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width, height);
+                            ctx.stroke();
+                            ctx.fillRect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width * object.Health, height);
+                        }
+
+                        if (healthRing) {
+                            if (object.Health < 0.33)
+                                ctx.fillStyle = "rgba(255, 128, 128, 0.2)";
+                            else if (object.Health < 0.66)
+                                ctx.fillStyle = "rgba(128, 128, 255, 0.5)";
+                            else 
+                                ctx.fillStyle = "rgba(0, 255, 0, 0.2)";
+
+                            ctx.beginPath();
+                            ctx.arc(position.X, position.Y, 90.0 * object.Health, 0, 2 * Math.PI);
+                            ctx.fill();
+                        }
+                    }
+                    ctx.restore();
+
                     ctx.save();
                     ctx.translate(position.X, position.Y);
                     ctx.rotate(object.Angle);
@@ -66,19 +104,6 @@
                     ctx.drawImage(ship, -width / 2, -height / 2, width, height);
                     ctx.restore();
 
-                    if (object.Caption) {
-                        ctx.fillText(object.Caption, position.X, position.Y + 90);
-                    }
-                    if (object.Health) {
-                        var offset = { X: 0, Y: 100 };
-                        var width = 200;
-                        var height = 30;
-
-                        ctx.beginPath();
-                        ctx.rect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width, height);
-                        ctx.stroke();
-                        ctx.fillRect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width * object.Health, height);
-                    }
                 }
             }
         }
