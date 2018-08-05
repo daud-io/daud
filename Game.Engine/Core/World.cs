@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
-    using Game.Engine.Bots;
+    using Game.Engine.Core.Actors;
+    using Game.Engine.Core.Actors.Bots;
     using Game.Models;
     using System;
     using System.Collections.Generic;
@@ -10,9 +11,12 @@
 
     public class World : IDisposable
     {
+        public List<ActorBase> Actors { get; } = new List<ActorBase>();
         public List<Player> Players { get; } = new List<Player>();
         public List<Bullet> Bullets { get; } = new List<Bullet>();
+
         public List<GameObject> Objects { get; } = new List<GameObject>();
+
         public long Time { get; private set; } = 0;
         public long FrameNumber { get; private set; } = 0;
         public Vector2 WorldSize = new Vector2(6000, 6000);
@@ -34,12 +38,12 @@
 
             for (int i = 1; i < 2; i++)
             {
-                var bot = new Robot(this)
+                var bot = new Robot()
                 {
                     Name = $"Daudelin #{i}",
                     Ship = "ship0"
                 };
-                AddPlayer(bot);
+                bot.Init(this);
                 bot.Spawn();
             }
 
@@ -70,10 +74,11 @@
                     IsLeaderboardNew = true;
                 }
 
-                foreach (var player in Players.ToList())
-                    player.Step();
-                foreach (var bullet in Bullets.ToArray())
-                    bullet.Step();
+                foreach (var actor in Actors.ToList())
+                    actor.PreStep();
+
+                foreach (var actor in Actors.ToList())
+                    actor.Step();
 
                 foreach (var obj in Objects.ToList())
                 {
@@ -98,22 +103,10 @@
                         obj.LastPosition = newPosition;
                     }
                 }
-                foreach (var player in Players.ToList())
-                    player.SetupView();
+
+                foreach (var actor in Actors.ToList())
+                    actor.PostStep();
             }
-            // update some stuff.
-        }
-
-        public void AddPlayer(Player player)
-        {
-            lock (Objects)
-                player.Init();
-        }
-
-        public void RemovePlayer(Player player)
-        {
-            lock (Objects)
-                player.Deinit();
         }
 
         public int PlayerCount

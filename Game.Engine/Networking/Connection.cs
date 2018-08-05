@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Networking
 {
     using Game.Engine.Core;
+    using Game.Engine.Core.Actors;
     using Game.Models.Messages;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
@@ -83,11 +84,11 @@
 
                 if (player == null)
                 {
-                    player = new Player(world)
+                    player = new Player()
                     {
                         Name = s.Name
                     };
-                    world.AddPlayer(player);
+                    player.Init(world);
                 }
 
                 player.Spawn();
@@ -126,7 +127,7 @@
                 ConnectionHeartbeat.Unregister(this);
 
                 if (player != null)
-                    world.RemovePlayer(player);
+                    player.Deinit();
             }
         }
 

@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core
+﻿namespace Game.Engine.Core.Actors
 {
     using Game.Models;
     using System;
@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Numerics;
 
-    public class Player
+    public class Player : ActorBase
     {
         public string Name { get; set; } = null;
         public string Ship { get; set; } = null;
@@ -41,14 +41,7 @@
 
         public List<string> Messages = new List<string>();
 
-        protected readonly World world;
-
-        public Player(World world)
-        {
-            this.world = world;
-        }
-
-        public virtual void Step()
+        public override void Step()
         {
             bool isBoosting = BoostRequested;
 
@@ -97,10 +90,11 @@
                     var bulletSpeed = 70;
                     var bulletMomentum = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle)) * bulletSpeed;
 
-                    var bullet = new Bullet(world, new Vector2(GameObject.Position.X, GameObject.Position.Y), bulletMomentum, Angle)
+                    var bullet = new Bullet(new Vector2(GameObject.Position.X, GameObject.Position.Y), bulletMomentum, Angle)
                     {
                         Owner = this
                     };
+                    bullet.Init(world);
                 }
 
                 Health = Math.Min(Health + HealthRegenerationPerFrame, MaxHealth);
@@ -124,7 +118,7 @@
 
             if (Health <= 0 && IsAlive)
             {
-                Die();
+                Deinit();
 
                 bullet.Owner.Score += 55;
 
@@ -162,9 +156,17 @@
             IsAlive = true;
         }
 
-        public virtual void Init()
+        public override void Init(World world)
         {
+            base.Init(world);
             world.Players.Add(this);
+        }
+
+        public override void Deinit()
+        {
+            Die();
+            world.Players.Remove(this);
+            base.Deinit();
         }
 
         public virtual void Die()
@@ -178,13 +180,8 @@
                 world.Objects.Remove(GameObject);
         }
 
-        public virtual void Deinit()
-        {
-            Die();
-            world.Players.Remove(this);
-        }
 
-        public virtual void SetupView()
+        public override void PostStep()
         {
             var v = new PlayerView
             {

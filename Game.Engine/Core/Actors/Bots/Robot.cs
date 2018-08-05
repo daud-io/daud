@@ -1,12 +1,11 @@
-﻿namespace Game.Engine.Bots
+﻿namespace Game.Engine.Core.Actors.Bots
 {
-    using Game.Engine.Core;
     using System;
     using System.Numerics;
 
     public class Robot : Player
     {
-        public Robot(World world) : base(world)
+        public Robot() : base()
         {
             ShootCooldownTime = 800;
             MaxHealth = 50;
@@ -34,9 +33,8 @@
             base.Hit(bullet);
         }
 
-        public override void SetupView()
+        public override void PostStep()
         {
-            
         }
 
         public override void Die()
