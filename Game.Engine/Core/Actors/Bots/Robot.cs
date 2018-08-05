@@ -24,7 +24,8 @@
 
             foreach (var player in
                 world.Players.OrderByDescending(p => p.Score)
-                    .Where(p => !p.Name?.StartsWith("Daud") ?? false)
+                    .Where(p => !p.Name?.StartsWith("Daud") ?? true)
+                    .Where(p => p.IsAlive)
                     )
             {
                 var delta = Vector2.Subtract(player.GameObject.Position, this.GameObject.Position);

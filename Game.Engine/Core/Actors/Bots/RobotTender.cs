@@ -22,7 +22,7 @@
 
         public override void Step()
         {
-            var leader = world.Leaderboard?.Entries.FirstOrDefault();
+            var leader = world.Leaderboard?.Entries.FirstOrDefault(e => !e.Name.StartsWith("Daud"));
 
             int desired = leader != null
                 ? leader.Score / 500 + 1
