@@ -52,7 +52,7 @@
 
     window.addEventListener("resize", function () {
         var width = window.innerWidth - 20;
-        var height = window.innerHe  - 20;
+        var height = width * 9/16;
 
         canvas.width = width;
         canvas.height = height;
