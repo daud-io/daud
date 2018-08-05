@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core.Actors.Bots
 {
     using System;
+    using System.Linq;
     using System.Numerics;
 
     public class Robot : Player
@@ -21,16 +22,14 @@
 
             base.ShootRequested = true;
 
-            foreach (var obj in world.Objects)
+            foreach (var player in
+                world.Players.OrderByDescending(p => p.Score)
+                    .Where(p => !p.Name?.StartsWith("Daud") ?? false)
+                    )
             {
-                if (obj != this.GameObject
-                    && obj.ObjectType == "player"
-                    && !(obj.Caption?.StartsWith("Daud") ?? false)
-                )
-                {
-                    var delta = Vector2.Subtract(obj.Position, this.GameObject.Position);
-                    Angle = (float)Math.Atan2(delta.Y, delta.X);
-                }
+                var delta = Vector2.Subtract(player.GameObject.Position, this.GameObject.Position);
+                Angle = (float)Math.Atan2(delta.Y, delta.X);
+                break;
             }
 
             base.Step();
