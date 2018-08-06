@@ -7,6 +7,7 @@
     var camera = new Game.Camera(context);
     var interpolator = new Game.Interpolator();
     var leaderboard = new Game.Leaderboard(canvas, context);
+    var angle = 0.0;
 
     Game.Controls.registerCanvas(canvas);
 
@@ -35,15 +36,35 @@
                     log(messages[i]);
             }
         }
-
-        connection.sendControl(
-            angle,
-            Game.Controls.boost,
-            Game.Controls.shoot,
-            Game.Controls.nick,
-            Game.Controls.ship
-        );
     };
+
+    var lastControl = {};
+
+    setInterval(function () {
+        if (
+            angle != lastControl.angle
+            || Game.Controls.boost != lastControl.boost
+            || Game.Controls.shoot != lastControl.shoot
+            || Game.Controls.nick != lastControl.nick
+            || Game.Controls.ship != lastControl.ship
+        ) {
+            connection.sendControl(
+                angle,
+                Game.Controls.boost,
+                Game.Controls.shoot,
+                Game.Controls.nick,
+                Game.Controls.ship
+            );
+
+            lastControl = {
+                angle: angle,
+                boost: Game.Controls.boost,
+                shoot: Game.Controls.shoot,
+                nick: Game.Controls.nick,
+                ship: Game.Controls.ship
+            };
+        }
+    }, 10);
 
     document.getElementById('spawn').addEventListener("click", function () {
         connection.sendSpawn(Game.Controls.nick);
@@ -65,7 +86,6 @@
         sizeCanvas();
     });
 
-    var angle = 0.0;
 
     // Game Loop
     var gameLoop = function () {
