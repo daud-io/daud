@@ -86,7 +86,7 @@
                 {
                     ShootCooldown = world.Time + ShootCooldownTime;
 
-                    var bulletSpeed = 70;
+                    var bulletSpeed = 50;
                     var bulletMomentum = new Vector2((float)Math.Cos(Angle), (float)Math.Sin(Angle)) * bulletSpeed;
 
                     var bullet = new Bullet(new Vector2(GameObject.Position.X, GameObject.Position.Y), bulletMomentum, Angle)

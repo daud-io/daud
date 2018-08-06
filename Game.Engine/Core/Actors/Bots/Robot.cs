@@ -6,6 +6,8 @@
 
     public class Robot : Player
     {
+        private float Wander = 0;
+
         public Robot() : base()
         {
             ShootCooldownTime = 800;
@@ -22,14 +24,19 @@
 
             base.ShootRequested = true;
 
+
             foreach (var player in
                 world.Players.OrderByDescending(p => p.Score)
                     .Where(p => !p.Name?.StartsWith("Daud") ?? true)
                     .Where(p => p.IsAlive)
                     )
             {
+
+                if (world.FrameNumber % 10 == 0)
+                    Wander = (float)(new Random().Next(-1, 1) * Math.PI/15);
+
                 var delta = Vector2.Subtract(player.GameObject.Position, this.GameObject.Position);
-                Angle = (float)Math.Atan2(delta.Y, delta.X);
+                Angle = (float)Math.Atan2(delta.Y, delta.X) + Wander;
                 break;
             }
 
