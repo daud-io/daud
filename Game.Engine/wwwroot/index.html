@@ -3,17 +3,18 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-    <style>
-        canvas {
-            border: 1px solid #d3d3d3;
-            background-color: #f1f1f1;
-        }
-    </style>    
+    <link rel="stylesheet" type="text/css" href="css/game.css">
 </head>
 <body>
 
     <div>
         <canvas id="gameCanvas" width="1000" height="500"></canvas>
+        <div class='ansible'>
+            <div id='panel'>
+                <input type="checkbox" class="pin" />
+                <ul id='ansiblelinks'></ul>
+            </div>
+        </div>
     </div>
 
     <input type="text" id="nick" />
@@ -30,6 +31,11 @@
 
     <input type="button" id="spawn" value="spawn" />
     <pre id="log"></pre>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha256-3edrmyuQ0w65f8gfBsqowzjJe2iM6n0nKciPUp8y+7E="
+            crossorigin="anonymous"></script>
+
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/interpolator.js"></script>
     <script type="text/javascript" src="js/leaderboard.js"></script>
@@ -39,5 +45,8 @@
     <script type="text/javascript" src="js/renderer.js"></script>
     <script type="text/javascript" src="js/camera.js"></script>
     <script type="text/javascript" src="js/game.js"></script>
+
+    <script type="text/javascript" src="js/panel.js"></script>
+
 </body>
 </html>

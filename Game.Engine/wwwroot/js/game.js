@@ -50,12 +50,19 @@
     });
 
 
-    window.addEventListener("resize", function () {
+    var sizeCanvas = function () {
         var width = window.innerWidth - 20;
-        var height = width * 9/16;
+        var height = width * 9 / 16;
 
         canvas.width = width;
         canvas.height = height;
+
+    };
+
+    sizeCanvas();
+
+    window.addEventListener("resize", function () {
+        sizeCanvas();
     });
 
     var angle = 0.0;

@@ -2,6 +2,7 @@
 {
     using Game.Engine.Core.Actors;
     using Game.Engine.Core.Actors.Bots;
+    using Game.Engine.Networking;
     using Game.Models;
     using System;
     using System.Collections.Generic;
@@ -33,6 +34,8 @@
             {
                 //Console.WriteLine($"Frame: {FrameNumber}");
                 Step();
+
+                ConnectionHeartbeat.Step();
             }, null, 0, MS_PER_FRAME);
 
             var tender = new RobotTender();

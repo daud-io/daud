@@ -31,7 +31,7 @@
             this.Logger = logger;
         }
 
-        public async Task StepAsync()
+        public async Task StepAsync(CancellationToken cancellationToken)
         {
             if (player != null)
             {
@@ -39,7 +39,7 @@
                 {
                     PlayerView = player.View
                 };
-                await this.SendAsync(view, default(CancellationToken));
+                await this.SendAsync(view, cancellationToken);
             }
         }
 

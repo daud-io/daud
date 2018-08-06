@@ -1,6 +1,8 @@
 ﻿namespace Game.Engine.Networking
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -8,25 +10,40 @@
     {
         private volatile static List<Connection> Connections = new List<Connection>();
         private static readonly Timer heartbeat;
-        private const int FREQUENCY = 20;
+        private const int FREQUENCY = 40;
 
         static ConnectionHeartbeat()
         {
-            heartbeat = new Timer((state) =>
+            /*heartbeat = new Timer((state) =>
             {
                 Step();
-            }, null, 0, FREQUENCY);
+            }, null, 0, FREQUENCY);*/
         }
 
-        private static void Step()
+        public static void Step()
         {
             lock (Connections)
             {
-                Task.Run(async () =>
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(FREQUENCY);
+
+                var cancellationToken = cts.Token;
+                var start = DateTime.Now.Ticks;
+                try
                 {
-                    foreach (var connection in Connections)
-                        await connection.StepAsync();
-                });
+                    Task.WhenAll(Connections.Select(c => c.StepAsync(cancellationToken)));
+                }
+                catch (Exception)
+                {
+
+                }
+
+                long networkTicks = DateTime.Now.Ticks - start;
+
+                if (networkTicks/10000 > 10)
+                {
+                    Console.WriteLine($"Network Ticks: {networkTicks}");
+                }
             }
         }
 
