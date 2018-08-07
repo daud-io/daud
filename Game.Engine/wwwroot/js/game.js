@@ -29,13 +29,20 @@
         if (view &&
             view.PlayerView)
         {
-            if (view.PlayerView.Leaderboard != null)
-                leaderboard.setData(view.PlayerView.Leaderboard);
 
-            if (view.PlayerView.Messages) {
-                var messages = view.PlayerView.Messages;
+            var pv = view.PlayerView;
+
+            if (pv.Leaderboard != null)
+                leaderboard.setData(pv.Leaderboard);
+
+            if (pv.Messages) {
+                var messages = pv.Messages;
                 for (var i = 0; i < messages.length; i++)
                     log(messages[i]);
+            }
+
+            if (pv.Hook) {
+                Game.Hook = pv.Hook;
             }
         }
     };

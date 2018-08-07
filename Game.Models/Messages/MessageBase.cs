@@ -11,17 +11,19 @@
             Ping,
             Spawn,
             View,
-            ControlInput
+            ControlInput,
+            Hook
         }
 
         public readonly static Dictionary<MessageTypes, Type> MessageTypeMap = 
             new Dictionary<MessageTypes, Type>
             {
-                { MessageTypes.Hello,       typeof(Hello) },
-                { MessageTypes.Ping,        typeof(Ping) },
-                { MessageTypes.Spawn,       typeof(Spawn) },
-                { MessageTypes.View,        typeof(View) },
-                { MessageTypes.ControlInput,    typeof(ControlInput) }
+                { MessageTypes.Hello,           typeof(Hello) },
+                { MessageTypes.Ping,            typeof(Ping) },
+                { MessageTypes.Spawn,           typeof(Spawn) },
+                { MessageTypes.View,            typeof(View) },
+                { MessageTypes.ControlInput,    typeof(ControlInput) },
+                { MessageTypes.Hook,            typeof(Hook) }
             };
 
         public abstract MessageTypes Type { get; }

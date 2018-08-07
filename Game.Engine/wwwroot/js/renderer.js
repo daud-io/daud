@@ -91,7 +91,8 @@
                                 ctx.fillStyle = "rgba(0, 255, 0, 0.2)";
 
                             ctx.beginPath();
-                            ctx.arc(position.X, position.Y, 90.0 * object.Health, 0, 2 * Math.PI);
+                            ctx.arc(position.X, position.Y, 60 + 90.0 * object.Health, 0, 2 * Math.PI, false);
+                            ctx.arc(position.X, position.Y, 60, 0, 2 * Math.PI, true);
                             ctx.fill();
                         }
                     }

@@ -4,6 +4,7 @@
     using Game.Engine.Core.Actors.Bots;
     using Game.Engine.Networking;
     using Game.Models;
+    using Game.Models.Messages;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -14,7 +15,6 @@
     {
         public List<ActorBase> Actors { get; } = new List<ActorBase>();
         public List<Player> Players { get; } = new List<Player>();
-        public List<Bullet> Bullets { get; } = new List<Bullet>();
 
         public List<GameObject> Objects { get; } = new List<GameObject>();
 
@@ -25,11 +25,29 @@
         public Leaderboard Leaderboard { get; set; } = null;
         public bool IsLeaderboardNew = false;
 
+        public Hook Hook { get; set; } = null;
+        public bool IsHookNew = false;
+
         private readonly Timer heartbeat;
         private const int MS_PER_FRAME = 40;
 
         public World()
         {
+            Hook = new Hook
+            {
+                BaseThrust = 6,
+                HealthHitCost = 20,
+                MaxBoostTime = 100,
+                HealthRegenerationPerFrame = 0.3f,
+                MaxSpeed = 12,
+                MaxSpeedBoost = 40,
+                MaxHealth = 100,
+                ShootCooldownTime = 500,
+                ShootCooldownTimeBot = 800,
+                MaxHealthBot = 50,
+                BaseThrustBot = 2
+            };
+
             heartbeat = new Timer((state) =>
             {
                 //Console.WriteLine($"Frame: {FrameNumber}");
@@ -101,6 +119,7 @@
                     actor.PostStep();
             }
         }
+
 
         public int PlayerCount
         {

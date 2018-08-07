@@ -8,11 +8,12 @@
     {
         private float Wander = 0;
 
+        public override int ShootCooldownTime { get => world.Hook.ShootCooldownTimeBot; }
+        public override float MaxHealth { get => world.Hook.MaxHealthBot; }
+        public override int BaseThrust { get => world.Hook.BaseThrustBot; }
+
         public Robot() : base()
         {
-            ShootCooldownTime = 800;
-            MaxHealth = 50;
-            BaseThrust = 2;
         }
 
         public override void Step()

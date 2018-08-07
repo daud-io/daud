@@ -106,6 +106,11 @@
                     player.Ship = s.Ship;
                 }
             }
+            else if (message is Hook)
+            {
+                var hook = message as Hook;
+                world.Hook = hook;  
+            }
         }
 
         public async Task ConnectAsync(HttpContext httpContext, WebSocket socket, CancellationToken cancellationToken = default(CancellationToken))

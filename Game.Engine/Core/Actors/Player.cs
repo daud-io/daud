@@ -18,12 +18,12 @@
         public bool BoostRequested { get; set; } = false;
         public bool ShootRequested { get; set; } = false;
 
-        protected int ShootCooldownTime = 500;
-        protected int MaxBoostTime = 100;
+        public virtual int ShootCooldownTime { get => world.Hook.ShootCooldownTime; }
+        public virtual int MaxBoostTime { get => world.Hook.MaxBoostTime; }
 
-        protected int BaseThrust = 6;
-        protected int MaxSpeed = 12;
-        protected int MaxSpeedBoost = 40;
+        public virtual int BaseThrust { get => world.Hook.BaseThrust; }
+        public virtual int MaxSpeed { get => world.Hook.MaxSpeed; }
+        public virtual int MaxSpeedBoost { get => world.Hook.MaxSpeedBoost; }
 
         public long ShootCooldown { get; set; } = 0;
 
@@ -31,10 +31,10 @@
 
         public int Score { get; set; } = 0;
 
-        public float HealthRegenerationPerFrame { get; set; } = 0.3f;
-        public float MaxHealth { get; set; } = 100;
+        public virtual float HealthRegenerationPerFrame { get => world.Hook.HealthRegenerationPerFrame; }
+        public virtual float MaxHealth { get => world.Hook.MaxHealth; }
         public float Health { get; set; } = 0;
-        public float HealthHitCost { get; set; } = 20;
+        public virtual float HealthHitCost { get => world.Hook.HealthHitCost; }
         public bool IsAlive { get; set; } = false;
 
         public GameObject Killer { get; set; }
@@ -216,7 +216,10 @@
                     ? world.Leaderboard
                     : null,
                 IsAlive = IsAlive,
-                Messages = Messages.ToList()
+                Messages = Messages.ToList(),
+                Hook = world.FrameNumber % 20 == 0
+                    ? world.Hook
+                    : null
             };
 
             Messages.Clear();

@@ -1,5 +1,6 @@
 ﻿namespace Game.Models
 {
+    using Game.Models.Messages;
     using System.Collections.Generic;
     using System.Numerics;
 
@@ -19,5 +20,7 @@
 
         public IEnumerable<GameObject> Objects { get; set; }
         public IEnumerable<string> Messages { get; set; }
+
+        public Hook Hook { get; set; }
     }
 }
