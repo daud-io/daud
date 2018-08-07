@@ -19,6 +19,8 @@
     };
 
     var connection = new Game.Connection();
+    window.Game.primaryConnection = connection;
+
     connection.onView = function (newView) {
         view = newView;
         interpolator.newFrame();
@@ -90,11 +92,8 @@
     // Game Loop
     var gameLoop = function () {
         var currentTime = performance.now();
-
         //console.log('game');
         context.clearRect(0, 0, canvas.width, canvas.height);
-
-
 
         if (view && view.PlayerView) {
             var pv = view.PlayerView;

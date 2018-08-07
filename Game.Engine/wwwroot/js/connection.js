@@ -4,8 +4,15 @@
         this.onView = function (view) { };
 
         this.reloading = false;
+        this.connected = false;
         this.connect();
 
+        var self = this;
+        setInterval(function () {
+            if (self.connected) {
+                self.sendPing();
+            }
+        }, 1000);
     }
 
     Connection.prototype = {
@@ -28,6 +35,10 @@
             this.socket.onclose = function (event) { self.onClose(event); };
 
         },
+        sendPing: function () {
+            this.send({ Type: 1 });
+            this.pingSent = performance.now();
+        },
         sendSpawn: function (name) {
             this.send({ Type: 2, Name: name });
         },
@@ -47,6 +58,7 @@
             }
         },
         onOpen: function (event) {
+            this.connected = true;
             console.log('connected');
 
             if (this.reloading)
@@ -54,17 +66,21 @@
         },
         onClose: function (event) {
             console.log('disconnected');
-
+            this.connected = false;
             this.reloading = true;
             this.connect();
         },
         onMessage: function (event) {
+
             var json = event.data;
             var message = JSON.parse(json);
 
             switch (message.Type) {
                 case 3: // View
                     this.onView(message);
+                    break;
+                case 1: // Ping
+                    this.latency = performance.now() - this.pingSent;
                     break;
             }
         }
