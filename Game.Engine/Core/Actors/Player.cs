@@ -184,6 +184,8 @@
 
         public override void PostStep()
         {
+            var leader = world.Players.OrderByDescending(p => p.Score).FirstOrDefault(p => p.IsAlive);
+
             var v = new PlayerView
             {
                 Time = world.Time,
@@ -205,10 +207,10 @@
 
                 Position = IsAlive 
                     ? GameObject?.Position ?? new Vector2(0,0)
-                    : Killer?.Position ?? new Vector2(0, 0),
+                    : leader?.GameObject?.Position ?? new Vector2(0, 0),
                 LastPosition = IsAlive
                     ? GameObject?.LastPosition ?? new Vector2(0, 0)
-                    : Killer?.LastPosition ?? new Vector2(0, 0),
+                    : leader?.GameObject?.LastPosition ?? new Vector2(0, 0),
                 Momentum = IsAlive
                     ? GameObject?.Momentum ?? new Vector2(0, 0)
                     : new Vector2(0, 0),
