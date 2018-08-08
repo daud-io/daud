@@ -80,3 +80,14 @@ canvas {
     width: 20px;
     height: 20px;
 }
+
+label
+{
+    float: left;
+}
+
+.attribute-slider {
+    margin-left: 20px;
+    width: 100px;
+    display: inline-block;
+}
