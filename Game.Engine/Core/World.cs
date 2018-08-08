@@ -45,7 +45,9 @@
                 ShootCooldownTime = 500,
                 ShootCooldownTimeBot = 800,
                 MaxHealthBot = 50,
-                BaseThrustBot = 2
+                BaseThrustBot = 2,
+                BulletLife = 2000,
+                BulletSpeed = 50
             };
 
             heartbeat = new Timer((state) =>

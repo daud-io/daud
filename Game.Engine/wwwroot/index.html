@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div>
+    <div style="position: relative">
         <canvas id="gameCanvas" width="1000" height="500"></canvas>
         <div class='ansible'>
             <div id='panel'>
@@ -31,7 +31,7 @@
     </select>
 
     <input type="button" id="spawn" value="spawn" />
-    <pre id="log"></pre>
+    <pre id="log" style="height: 200px; overflow: auto"></pre>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
@@ -51,6 +51,7 @@
     <script type="text/javascript" src="js/camera.js"></script>
     <script type="text/javascript" src="js/game.js"></script>
 
+    
     <script type="text/javascript" src="js/panel.js"></script>
     <script type="text/javascript" src="js/serverinfo.js"></script>
 

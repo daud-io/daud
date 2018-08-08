@@ -26,7 +26,7 @@
         {
             base.Init(world);
 
-            EndOfLife = world.Time + 2000;
+            EndOfLife = world.Time + world.Hook.BulletLife;
             world.Objects.Add(this.GameObject);
         }
 

@@ -15,5 +15,7 @@
         public int ShootCooldownTimeBot { get; set; }
         public float MaxHealth { get; set; }
         public float MaxHealthBot { get; set; }
+        public int BulletLife { get; set; }
+        public int BulletSpeed { get; set; }
     }
 }

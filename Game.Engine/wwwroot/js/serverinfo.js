@@ -46,7 +46,7 @@
         return updater;
     }
 
-    attributes.push(buildAttribute("thrust", "BaseThrust", 0, 20, .5));
+    attributes.push(buildAttribute("thrust", "BaseThrust", 0, 10, .25));
     attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 20, .5));
 
     attributes.push(buildAttribute("hit cost", "HealthHitCost", 0, 100, 1));
@@ -61,6 +61,9 @@
 
     attributes.push(buildAttribute("max health", "MaxHealth", 0, 500, 1));
     attributes.push(buildAttribute("max health(bot)", "MaxHealthBot", 0, 500, 1));
+
+    attributes.push(buildAttribute("bullet speed", "BulletSpeed", 0, 150, 1));
+    attributes.push(buildAttribute("bullet life", "BulletLife", 0, 25000, 1));
     
     
     setInterval(function () {

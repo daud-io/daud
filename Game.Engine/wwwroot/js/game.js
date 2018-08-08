@@ -90,6 +90,10 @@
         canvas.width = width;
         canvas.height = height;
 
+        /*$('#panel').css('right', canvas.width - 10);
+        $('#panel').css('left', canvas.width - 10 - 300);
+        $('#panel').css('bottom', canvas.height - 10);*/
+
     };
 
     sizeCanvas();

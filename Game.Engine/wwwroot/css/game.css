@@ -17,21 +17,12 @@ canvas {
     overflow-wrap: normal;
 }
 
-.ansible {
-    top: 0;
-    left: 0;
-    z-index: 90000;
-    vertical-align: middle;
-    height: 100vh;
-    position: absolute;
-}
-
 #panel {
     z-index: 90000;
     display: none;
     position: absolute;
-    bottom: 30px;
-    left: 5px;
+    bottom: 10px;
+    right: 10px;
     width: 300px;
     background-color: rgba(0, 0, 255, 0.3);
     border: solid 1px rgba(0, 0, 255, 0.9);
@@ -45,6 +36,7 @@ canvas {
     #panel ul {
         width: 300px;
         padding: 10px;
+        list-style-type: none;
     }
 
 .ansible .serverlinks a {
