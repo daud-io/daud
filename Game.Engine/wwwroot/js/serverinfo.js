@@ -51,7 +51,7 @@
 
     attributes.push(buildAttribute("hit cost", "HealthHitCost", 0, 100, 1));
     attributes.push(buildAttribute("boost time", "MaxBoostTime", 0, 1000, 10));
-    attributes.push(buildAttribute("health regen", "HealthRegenerationPerFrame", 0, 10, 0.3));
+    attributes.push(buildAttribute("health regen", "HealthRegenerationPerFrame", 0, 2, 0.1));
 
     attributes.push(buildAttribute("max speed", "MaxSpeed", 0, 100, 1));
     attributes.push(buildAttribute("max speed boost", "MaxSpeedBoost", 0, 100, 1));
@@ -64,6 +64,9 @@
 
     attributes.push(buildAttribute("bullet speed", "BulletSpeed", 0, 150, 1));
     attributes.push(buildAttribute("bullet life", "BulletLife", 0, 25000, 1));
+
+    attributes.push(buildAttribute("bot per X", "BotPerXPoints", 100, 20000, 1));
+    attributes.push(buildAttribute("bot base", "BotBase", 0, 25, 1));
     
     
     setInterval(function () {

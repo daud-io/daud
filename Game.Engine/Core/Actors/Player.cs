@@ -57,6 +57,8 @@
             Health = Math.Min(Health, MaxHealth);
             Health = Math.Max(Health, 0);
 
+            GameObject.Size = (int)(60 + (Health / MaxHealth) * 90);
+
             if (IsAlive)
             {
                 bool isShooting = ShootRequested && ShootCooldown < world.Time;

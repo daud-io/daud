@@ -17,5 +17,7 @@
         public float MaxHealthBot { get; set; }
         public int BulletLife { get; set; }
         public int BulletSpeed { get; set; }
+        public int BotBase { get; set; }
+        public int BotPerXPoints { get; set; }
     }
 }

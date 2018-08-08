@@ -12,5 +12,6 @@ namespace Game.Models
         public string Sprite { get; set; } = null;
         public string Caption { get; set; } = null;
         public float Health { get; set; } = 0;
+        public int Size { get; set; } = 0;
     }
 }

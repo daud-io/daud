@@ -44,11 +44,8 @@
                 {
                     if (obj != this.Owner.GameObject && obj.ObjectType != "bullet")
                     {
-
-                        int COLLISON_DISTANCE = 100;
-                        if (Vector2.Distance(obj.Position, GameObject.Position) < COLLISON_DISTANCE)
+                        if (Vector2.Distance(obj.Position, GameObject.Position) < obj.Size)
                         {
-
                             var player = world.Players.FirstOrDefault(p => p.GameObject == obj);
                             if (player != null)
                                 player.Hit(this);

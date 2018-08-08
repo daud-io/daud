@@ -47,7 +47,9 @@
                 MaxHealthBot = 50,
                 BaseThrustBot = 2,
                 BulletLife = 2000,
-                BulletSpeed = 50
+                BulletSpeed = 50,
+                BotPerXPoints = 500,
+                BotBase = 1
             };
 
             heartbeat = new Timer((state) =>

@@ -25,7 +25,7 @@
             var leader = world.Leaderboard?.Entries.FirstOrDefault(e => !e.Name?.StartsWith("Daud") ?? true);
 
             int desired = leader != null
-                ? leader.Score / 500 + 1
+                ? (leader.Score / world.Hook.BotPerXPoints) + world.Hook.BotBase
                 : 1;
 
             while (Robots.Count < desired)
