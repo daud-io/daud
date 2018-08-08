@@ -2,36 +2,67 @@
     var latencyDisplay = $('<li></li>');
     $('#ansiblelinks').append(latencyDisplay);
 
+    var attributes = [];
 
-    var labelText = "thrust";
+    var buildAttribute = function(labelText, propertyName, min, max, step)
+    {
+        var li = $('<li></li>');
+        var label = $('<label></label>');
+        li.append(label);
 
-    var li = $('<li></li>');
-    var label = $('<label></label>');
-    li.append(label);
+        var slider = $('<div class="attribute-slider"></div>');
+        var draw = function (value) {
+            value = value || slider.slider('value');
 
-    var slider = $('<div class="attribute-slider"></div>');
-    var update = function () {
-        label.text(labelText + '(' + slider.slider('value') + ') : ');
+            label.text(labelText + '(' + (value) + ') : ');
+        };
+
+        slider.slider({
+            min: min,
+            max: max,
+            value: min,
+            step: step,
+            slide: function (event, ui) {
+
+                if (Game && Game.Hook) {
+                    Game.Hook[propertyName] = ui.value;
+                    Game.Hook.New = true;
+                    //console.log(Game.Hook);
+                }
+                draw();
+            }
+        });
+        draw();
+
+        li.append(slider);
+        $('#ansiblelinks').append(li);
+
+        var updater = {
+            update: function (hook) {
+                slider.slider('value', hook[propertyName]);
+                draw();
+            }
+        };
+        return updater;
     }
-    slider.slider({
-        min: 0,
-        max: 20,
-        slider: function (event, ui) {
-            update();
-        }
-    });
-    update();
 
-    li.append(slider);
+    attributes.push(buildAttribute("thrust", "BaseThrust", 0, 20, .5));
+    attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 20, .5));
 
+    attributes.push(buildAttribute("hit cost", "HealthHitCost", 0, 100, 1));
+    attributes.push(buildAttribute("boost time", "MaxBoostTime", 0, 1000, 10));
+    attributes.push(buildAttribute("health regen", "HealthRegenerationPerFrame", 0, 10, 0.3));
 
-    $('#ansiblelinks').append(li);
+    attributes.push(buildAttribute("max speed", "MaxSpeed", 0, 100, 1));
+    attributes.push(buildAttribute("max speed boost", "MaxSpeedBoost", 0, 100, 1));
+
+    attributes.push(buildAttribute("shot cooldown", "ShootCooldownTime", 0, 5000, 1));
+    attributes.push(buildAttribute("shot cool(bot)", "ShootCooldownTimeBot", 0, 5000, 1));
+
+    attributes.push(buildAttribute("max health", "MaxHealth", 0, 500, 1));
+    attributes.push(buildAttribute("max health(bot)", "MaxHealthBot", 0, 500, 1));
     
-    var MaxBoostTime = $('<li></li>');
-    $('#ansiblelinks').append(MaxBoostTime);
-
-
-
+    
     setInterval(function () {
         var connection = window.Game.primaryConnection;
 
@@ -41,8 +72,9 @@
             latencyDisplay.text('ping: n/a');
 
         if (Game.Hook) {
-            //BaseThrust.text('base thrust: ' + (Game.Hook.BaseThrust));
-            MaxBoostTime.text('max boost time: ' + (Game.Hook.MaxBoostTime));
+            for (var i = 0; i < attributes.length; i++) {
+                attributes[i].update(Game.Hook);
+            }
         }
     }, 1000);
 });

@@ -35,6 +35,9 @@
             this.socket.onclose = function (event) { self.onClose(event); };
 
         },
+        sendHook: function (hook) {
+            this.send(hook);
+        },
         sendPing: function () {
             this.send({ Type: 1 });
             this.pingSent = performance.now();

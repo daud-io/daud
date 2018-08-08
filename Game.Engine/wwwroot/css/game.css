@@ -81,9 +81,9 @@ canvas {
     height: 20px;
 }
 
-label
-{
-    float: left;
+label {
+    width: 150px;
+    display: inline-block;
 }
 
 .attribute-slider {

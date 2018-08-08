@@ -40,7 +40,10 @@
                 for (var i = 0; i < messages.length; i++)
                     log(messages[i]);
             }
-
+            if (Game.Hook && Game.Hook.New) {
+                connection.sendHook(Game.Hook);
+                Game.Hook.New = false;
+            }
             if (pv.Hook) {
                 Game.Hook = pv.Hook;
             }
