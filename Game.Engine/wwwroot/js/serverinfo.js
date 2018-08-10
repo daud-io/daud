@@ -2,6 +2,9 @@
     var latencyDisplay = $('<li></li>');
     $('#ansiblelinks').append(latencyDisplay);
 
+    var bandwidthDisplay = $('<li></li>');
+    $('#ansiblelinks').append(bandwidthDisplay);
+
     var attributes = [];
 
     var buildAttribute = function(labelText, propertyName, min, max, step)
@@ -72,8 +75,13 @@
     setInterval(function () {
         var connection = window.Game.primaryConnection;
 
-        if (connection != null)
+        if (connection != null) {
+            bandwidthDisplay.text('bandwidth: '
+                + Math.floor(connection.statBytesUpPerSecond / 102.4) / 10 * 8 + 'Kb/s up '
+                + Math.floor(connection.statBytesDownPerSecond / 102.4) / 10 * 8 + 'Kb/s down'
+            );
             latencyDisplay.text('ping: ' + (connection.latency ? (Math.floor(connection.latency * 100) / 100) + ' ms' : 'n/a'));
+        }
         else
             latencyDisplay.text('ping: n/a');
 

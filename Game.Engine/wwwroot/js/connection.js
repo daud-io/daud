@@ -7,11 +7,22 @@
         this.connected = false;
         this.connect();
 
+        this.statBytesUp = 0;
+        this.statBytesDown = 0;
+        this.statBytesDownPerSecond = 0;
+        this.statBytesUpPerSecond = 0;
+
         var self = this;
         setInterval(function () {
             if (self.connected) {
                 self.sendPing();
             }
+
+            self.statBytesDownPerSecond = self.statBytesDown;
+            self.statBytesUpPerSecond = self.statBytesUp;
+
+            self.statBytesUp = 0;
+            self.statBytesDown = 0;
         }, 1000);
     }
 
@@ -57,7 +68,10 @@
         },
         send: function (obj) {
             if (this.socket.readyState === 1) {
-                this.socket.send(JSON.stringify(obj));
+                var s = JSON.stringify(obj);
+                this.socket.send(s);
+
+                this.statBytesUp += s.length;
             }
         },
         onOpen: function (event) {
@@ -76,6 +90,8 @@
         onMessage: function (event) {
 
             var json = event.data;
+            this.statBytesDown += json.length;
+
             var message = JSON.parse(json);
 
             switch (message.Type) {
