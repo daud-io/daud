@@ -127,7 +127,7 @@
 
                 this.Killer = bullet.Owner.GameObject;
 
-                bullet.Owner.SendMessage($"You Killed {this.Name} - ${r.Next()}");
+                bullet.Owner.SendMessage($"You Killed {this.Name}");
                 this.SendMessage($"Killed by {bullet.Owner.Name}");
             }
         }
