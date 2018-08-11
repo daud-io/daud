@@ -18,6 +18,7 @@
 
         public Leaderboard Leaderboard { get; set; }
 
+        public IEnumerable<ProjectedBody> Updates { get; set; }
         public IEnumerable<GameObject> Objects { get; set; }
         public IEnumerable<string> Messages { get; set; }
 

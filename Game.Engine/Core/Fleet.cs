@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Newtonsoft.Json;
     using System;
     using System.Numerics;
 
@@ -12,16 +13,23 @@
         public virtual int MaxHealth { get => World.Hook.MaxHealth; }
         public virtual float HealthRegenerationPerFrame { get => World.Hook.HealthRegenerationPerFrame; }
 
+        [JsonIgnore]
         public Player Owner { get; set; }
 
+        [JsonIgnore]
         public float Health { get; set; }
 
+        [JsonIgnore]
         public int SizeMinimum { get; set; }
+        [JsonIgnore]
         public int SizeMaximum { get; set; }
 
+        [JsonIgnore]
         public bool BoostRequested { get; set; }
+        [JsonIgnore]
         public bool ShootRequested { get; set; }
 
+        [JsonIgnore]
         public long TimeReloaded { get; set; } = 0;
 
         public override void Step()

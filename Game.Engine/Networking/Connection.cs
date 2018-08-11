@@ -19,9 +19,11 @@
 
     public class Connection : IDisposable
     {
+        private static readonly List<Connection> connections = new List<Connection>();
+
         private readonly ILogger<Connection> Logger = null;
         private readonly SemaphoreSlim WebsocketSendingSemaphore = new SemaphoreSlim(1, 1);
-        private static readonly List<Connection> connections = new List<Connection>();
+        private readonly BodyCache BodyCache = new BodyCache();
 
         private WebSocket Socket = null;
 
@@ -41,11 +43,34 @@
                 //var leader = world.Players.OrderByDescending(p => p.Score).FirstOrDefault(p => p.IsAlive);
 
                 var myFleet = player?.Fleet;
+                IEnumerable<ProjectedBody> updatedBodies = null;
+
+                if (myFleet != null)
+                {
+                    var halfViewport = new Vector2(200, 200);
+
+                    var updates = BodyCache.Update(
+                        world.Bodies, 
+                        world.Time, 
+                        Vector2.Subtract(player.Fleet.Position, halfViewport), 
+                        Vector2.Add(player.Fleet.Position, halfViewport)
+                    );
+
+                    var updatedBuckets = updates.Take(50);
+                    foreach (var update in updatedBuckets)
+                    {
+                        update.BodyClient = update.BodyUpdated.Clone();
+                    }
+
+                    updatedBodies = updatedBuckets.Select(b => b.BodyClient);
+                }
 
                 var playerView = new PlayerView
                 {
                     Time = world.Time,
                     PlayerCount = 1,
+
+                    Updates = updatedBodies.ToList(),
 
                     Objects = world.Bodies.Select(o => new GameObject
                     {
