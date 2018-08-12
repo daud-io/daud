@@ -42,12 +42,12 @@
 
                 //var leader = world.Players.OrderByDescending(p => p.Score).FirstOrDefault(p => p.IsAlive);
 
-                var myFleet = player?.Fleet;
+                var followPlayer = player?.Fleet;
                 IEnumerable<ProjectedBody> updatedBodies = null;
 
-                if (myFleet != null)
+                if (followPlayer != null)
                 {
-                    var halfViewport = new Vector2(200, 200);
+                    var halfViewport = new Vector2(2000, 2000);
 
                     var updates = BodyCache.Update(
                         world.Bodies, 
@@ -56,7 +56,7 @@
                         Vector2.Add(player.Fleet.Position, halfViewport)
                     );
 
-                    var updatedBuckets = updates.Take(50);
+                    var updatedBuckets = updates.Take(5);
                     foreach (var update in updatedBuckets)
                     {
                         update.BodyClient = update.BodyUpdated.Clone();
@@ -72,9 +72,9 @@
 
                     Updates = updatedBodies.ToList(),
 
-                    DefinitionTime = myFleet?.DefinitionTime ?? 0,
-                    OriginalPosition = myFleet?.OriginalPosition ?? new Vector2(0, 0),
-                    Momentum = myFleet?.Momentum ?? new Vector2(0, 0),
+                    DefinitionTime = followPlayer?.DefinitionTime ?? 0,
+                    OriginalPosition = followPlayer?.OriginalPosition ?? new Vector2(0, 0),
+                    Momentum = followPlayer?.Momentum ?? new Vector2(0, 0),
                     Leaderboard = null,
                     IsAlive = player?.IsAlive ?? false,
                     Messages = player?.GetMessages(),
@@ -86,7 +86,9 @@
                     PlayerView = playerView
                 };
 
-                await this.SendAsync(view, cancellationToken);
+                if (playerView.Updates.Any())
+                    await this.SendAsync(view, cancellationToken);
+
             }
         }
 
