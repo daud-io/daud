@@ -1,10 +1,11 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.Models;
     using Newtonsoft.Json;
     using System;
     using System.Numerics;
 
-    public class Fleet : ActorBody
+    public class Fleet : ActorBody, ICollide
     {
         public virtual int ShootCooldownTime { get => World.Hook.ShootCooldownTime; }
         public virtual int BaseThrust { get => World.Hook.BaseThrust; }
@@ -31,6 +32,41 @@
 
         [JsonIgnore]
         public long TimeReloaded { get; set; } = 0;
+
+        public void CollisionExecute(ProjectedBody projectedBody)
+        {
+            Health -= HealthHitCost;
+
+            if (Health <= 0 && IsAlive)
+            {
+                Die();
+
+                Random r = new Random();
+
+                bullet.Owner.Score += 55;
+
+                this.Killer = bullet.Owner.GameObject;
+
+                bullet.Owner.SendMessage($"You Killed {this.Name}");
+                this.SendMessage($"Killed by {bullet.Owner.Name}");
+            }
+        }
+
+        public bool IsCollision(ProjectedBody projectedBody)
+        {
+
+            if (projectedBody is Bullet bullet)
+            {
+                if (bullet.Owner == this)
+                    return false;
+
+                if ((Vector2.Distance(projectedBody.Position, this.Position)
+                        <= this.Size + projectedBody.Size))
+                    return true;
+            }
+
+            return false;
+        }
 
         public override void Step()
         {

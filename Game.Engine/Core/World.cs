@@ -6,6 +6,8 @@
     using Game.Models.Messages;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Numerics;
     using System.Threading;
 
     public class World : IDisposable
@@ -70,6 +72,23 @@
         {
             return _id++;
         }
+
+        public IEnumerable<ProjectedBody> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)
+        {
+            if (maximumDistance == 0)
+                return this.Bodies;
+            else
+            {
+                if (offsetSize)
+                    return this.Bodies
+                        .Where(b => (Vector2.Distance(b.Position, point) - b.Size) < maximumDistance);
+                else
+                    return this.Bodies
+                        .Where(b => Vector2.Distance(b.Position, point) < maximumDistance);
+
+            }
+        }
+
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

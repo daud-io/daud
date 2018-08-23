@@ -32,7 +32,6 @@
 
             var worldPlayers = GetWorldPlayers(World);
             worldPlayers.Remove(this);
-
         }
 
         public void Init(World world)

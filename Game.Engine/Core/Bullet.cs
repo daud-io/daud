@@ -2,6 +2,7 @@
 {
     using Newtonsoft.Json;
     using System;
+    using System.Linq;
     using System.Numerics;
 
     public class Bullet : ActorBody
@@ -9,7 +10,7 @@
         [JsonIgnore]
         public Fleet Owner { get; set; }
         public long TimeDeath { get; set; }
-
+        
         public static void FireFrom(Fleet fleet)
         {
             var world = fleet.World;
@@ -31,6 +32,12 @@
 
         public override void Step()
         {
+            var collisionSet = World.BodiesNear(this.Position, this.Size, offsetSize: true);
+            if (collisionSet.Any())
+            {
+                collisionSet.Where(b => b.)
+            }
+
             if (World.Time >= TimeDeath)
                 Deinit();
         }
