@@ -10,7 +10,7 @@
     {
         private volatile static List<Connection> Connections = new List<Connection>();
         private static readonly Timer heartbeat;
-        private const int FREQUENCY = 1000;
+        private const int FREQUENCY = 40;
 
         static ConnectionHeartbeat()
         {

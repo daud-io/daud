@@ -1,6 +1,5 @@
 ﻿namespace Game.Engine.Core
 {
-    using Game.Engine.Core.Actors.Bots;
     using Game.Engine.Networking;
     using Game.Models;
     using Game.Models.Messages;
@@ -24,33 +23,26 @@
         public World()
         {
             Hook = Hook.Default;
-            
             InitializeStepTimer();
-
-            var tender = new RobotTender();
-            tender.Init(this);
-
         }
 
         public void Step()
         {
-            lock (this.Bodies)
-            {
-                Time = DateTime.Now.Ticks / 10000;
+            Time = DateTime.Now.Ticks / 10000;
+            Console.WriteLine(Time);
 
-                foreach (var body in Bodies)
-                    body.Project(Time);
+            foreach (var body in Bodies)
+                body.Project(Time);
 
-                foreach (var actor in Actors.ToArray())
-                    actor.Step();
+            foreach (var actor in Actors.ToArray())
+                actor.Step();
 
-                foreach (var body in Bodies)
-                    if (body.IsDirty)
-                    {
-                        body.DefinitionTime = this.Time;
-                        body.OriginalPosition = body.Position;
-                        body.IsDirty = false;
-                    }
+            foreach (var body in Bodies)
+                if (body.IsDirty)
+                {
+                    body.DefinitionTime = this.Time;
+                    body.OriginalPosition = body.Position;
+                    body.IsDirty = false;
                 }
         }
 
