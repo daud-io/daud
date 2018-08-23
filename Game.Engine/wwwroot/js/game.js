@@ -39,10 +39,8 @@
 
     Game.Controls.registerCanvas(canvas);
 
-    var cache = new Game.Cache();
     var view = false;
     var lastFrameTime = false;
-    var serverTimeOffset = 0;
 
     var log = function (message) {
         document.getElementById('log').prepend(document.createTextNode(message + '\n'));
@@ -53,15 +51,18 @@
 
     connection.onView = function (newView) {
         view = newView;
+        interpolator.newFrame();
         lastFrameTime = performance.now();
+
         if (view &&
             view.PlayerView)
         {
+
             var pv = view.PlayerView;
 
-            serverTimeOffset = pv.Time - lastFrameTime;
-
-            cache.update(pv.Updates, []);
+            if (pv.Updates.length > 0) {
+                console.log('updated');
+            }
 
             if (pv.Leaderboard != null)
                 leaderboard.setData(pv.Leaderboard);
@@ -144,10 +145,9 @@
         if (view && view.PlayerView) {
             var pv = view.PlayerView;
 
-            var position = interpolator.projectObject(pv, currentTime+serverTimeOffset);
+            var position = interpolator.projectObject(pv, currentTime);
 
             camera.moveTo(position.X, position.Y);
-            //console.log(position);
             camera.zoomTo(3000);
         }
 
@@ -155,8 +155,9 @@
         background.draw();
 
         renderer.view = view;
-        renderer.draw(cache, interpolator, currentTime+serverTimeOffset);
+        renderer.draw(interpolator, currentTime);
         camera.end();
+
 
         leaderboard.draw();
 

@@ -23,7 +23,7 @@
     };
 
     Renderer.prototype = {
-        draw: function (cache, interpolator, currentTime) {
+        draw: function (interpolator, currentTime) {
             if (this.view && this.view.PlayerView) {
                 var pv = this.view.PlayerView;
                 var ctx = this.context;
@@ -36,15 +36,16 @@
                 ctx.rect(-3000, -3000, 6000, 6000);
                 ctx.stroke();
                 ctx.restore();
+
                 
                 ctx.font = "24px sans-serif";
                 ctx.fillStyle = "white";
                 ctx.textAlign = "center";
                 ctx.strokeStyle = "white";
                 ctx.lineWidth = 6;
-
-                cache.foreach(function (body) {
-                    var object = body;
+                
+                for (var i = 0; i < pv.Objects.length; i++) {
+                    var object = pv.Objects[i];
 
                     var ship = object.Sprite != null
                         ? this.sprites[object.Sprite]
@@ -57,6 +58,7 @@
                     var height = ship.height;
 
                     var position = interpolator.projectObject(object, currentTime);
+
 
                     if (object.Caption) {
                         ctx.fillText(object.Caption, position.X, position.Y + 90);
@@ -103,7 +105,7 @@
                     ctx.drawImage(ship, -width / 2, -height / 2, width, height);
                     ctx.restore();
 
-                }, this);
+                }
             }
         }
     };

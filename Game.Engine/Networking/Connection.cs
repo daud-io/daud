@@ -72,8 +72,19 @@
 
                     Updates = updatedBodies.ToList(),
 
-                    DefinitionTime = myFleet?.DefinitionTime ?? 0,
-                    OriginalPosition = myFleet?.OriginalPosition ?? new Vector2(0, 0),
+                    Objects = world.Bodies.Select(o => new GameObject
+                    {
+                        Angle = o.Angle,
+                        Position = o.Position,
+                        LastPosition = o.Position,
+                        Momentum = o.Momentum,
+                        Caption = o.Caption,
+                        Sprite = o.Sprite,
+                        Health = o.Size
+                    }).ToArray(),
+
+                    Position = myFleet?.Position ?? new Vector2(0, 0),
+                    LastPosition = myFleet?.Position ?? new Vector2(0, 0),
                     Momentum = myFleet?.Momentum ?? new Vector2(0, 0),
                     Leaderboard = null,
                     IsAlive = player?.IsAlive ?? false,
