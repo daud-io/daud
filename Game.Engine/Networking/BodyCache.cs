@@ -10,64 +10,49 @@
     {
         private readonly Dictionary<long, Bucket> Buckets = new Dictionary<long, Bucket>();
 
-        public IEnumerable<Bucket> Update(IEnumerable<ProjectedBody> bodies, long time, Vector2 windowTopLeft, Vector2 windowBottomRight)
+        public void Update(IEnumerable<GameObject> Objects, long time)
         {
-            // this should be some more efficient query r-trees or something
-            var filtered = bodies.Where(b =>
-                b.Position.X >= windowTopLeft.X
-                && b.Position.Y >= windowTopLeft.Y
-                && b.Position.X <= windowBottomRight.X
-                && b.Position.Y <= windowBottomRight.Y
-            );
+            CreateMissingBuckets(Objects);
 
-            // update cache items and flag missing ones as stale
-            UpdateLocalBodies(filtered);
-
-            // project the current bodies and calculate errors
             foreach (var bucket in Buckets.Values)
+            {
                 bucket.Project(time);
+            }
 
-            // find the bodies with the largest error
-            return Buckets.Values
+            var staleBuckets = Buckets.Values
                 .Where(b => b.Error > 0)
                 .OrderByDescending(b => b.Error);
         }
 
-        private void UpdateLocalBodies(IEnumerable<ProjectedBody> bodies)
+        private void CreateMissingBuckets(IEnumerable<GameObject> Objects)
         {
-            foreach (var bucket in Buckets.Values)
-                bucket.Stale = true;
-
-            foreach (var obj in bodies)
+            foreach (var go in Objects)
             {
                 Bucket bucket = null;
 
-                if (Buckets.ContainsKey(obj.ID))
-                {
-                    Buckets[obj.ID].Stale = false;
-                    Buckets[obj.ID].BodyUpdated = obj;
-                }
+                if (Buckets.ContainsKey(go.ID))
+                    bucket = Buckets[go.ID];
                 else
                 {
                     bucket = new Bucket
                     {
-                        BodyUpdated = obj,
-                        Stale = false
+                        BodyUpdated = new ProjectedBody
+                        {
+                            ID = go.ID
+                        }
                     };
-                    Buckets.Add(obj.ID, bucket);
+                    Buckets.Add(go.ID, bucket);
                 }
             }
         }
 
-        public class Bucket
+        class Bucket
         {
             public ProjectedBody BodyUpdated { get; set; }
             public ProjectedBody BodyClient { get; set; }
 
             public float Error { get; set; }
-            public bool Stale { get; set; }
 
-            private const int DISTANCE_THRESHOLD = 2;
             private const float WEIGHT_DISTANCE = 1;
             private const float WEIGHT_ANGLE = 1;
             private const float WEIGHT_CAPTION = 1;
@@ -76,22 +61,15 @@
 
             public void Project(long time)
             {
+                BodyUpdated.Project(time);
                 if (BodyClient != null)
                 {
-                    if (BodyClient.DefinitionTime == BodyUpdated.DefinitionTime)
-                        Error = 0;
-                    else
-                    {
-                        BodyClient.Project(time);
-                        var distance = Vector2.Distance(BodyClient.Position, BodyUpdated.Position);
-                        Error =
-                            distance > DISTANCE_THRESHOLD
-                                ? WEIGHT_DISTANCE * distance
-                                : 0
-                            + WEIGHT_ANGLE * Math.Abs(BodyClient.Angle - BodyUpdated.Angle)
-                            + WEIGHT_CAPTION * (BodyClient.Caption != BodyUpdated.Caption ? 1 : 0)
-                            + WEIGHT_SPRITE * (BodyClient.Sprite != BodyUpdated.Sprite ? 1 : 0);
-                    }
+                    BodyClient.Project(time);
+                    Error =
+                        WEIGHT_DISTANCE * Vector2.Distance(BodyClient.Position, BodyUpdated.Position)
+                        + WEIGHT_ANGLE * Math.Abs(BodyClient.Angle - BodyUpdated.Angle)
+                        + WEIGHT_CAPTION * (BodyClient.Caption != BodyUpdated.Caption ? 1 : 0)
+                        + WEIGHT_SPRITE * (BodyClient.Sprite != BodyUpdated.Sprite ? 1 : 0);
                 }
                 else
                     Error = WEIGHT_MISSING;

@@ -1,12 +1,10 @@
 ﻿namespace Game.Engine.Core
 {
-    using Newtonsoft.Json;
     using System;
     using System.Numerics;
 
     public class Bullet : ActorBody
     {
-        [JsonIgnore]
         public Fleet Owner { get; set; }
         public long TimeDeath { get; set; }
 
