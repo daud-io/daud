@@ -1,7 +1,7 @@
 ﻿namespace Game.Engine.Networking
 {
     using Game.Engine.Core;
-    using Game.Models;
+    using Game.Engine.Core.Actors;
     using Game.Models.Messages;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
@@ -10,9 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Net.WebSockets;
-    using System.Numerics;
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
@@ -21,7 +19,7 @@
     {
         private readonly ILogger<Connection> Logger = null;
         private readonly SemaphoreSlim WebsocketSendingSemaphore = new SemaphoreSlim(1, 1);
-        private static readonly List<Connection> connections = new List<Connection>();
+        private static List<Connection> connections = new List<Connection>();
 
         private WebSocket Socket = null;
 
@@ -37,41 +35,10 @@
         {
             if (player != null)
             {
-
-                //var leader = world.Players.OrderByDescending(p => p.Score).FirstOrDefault(p => p.IsAlive);
-
-                var myFleet = player?.Fleet;
-
-                var playerView = new PlayerView
-                {
-                    Time = world.Time,
-                    PlayerCount = 1,
-
-                    Objects = world.Bodies.Select(o => new GameObject
-                    {
-                        Angle = o.Angle,
-                        Position = o.Position,
-                        LastPosition = o.Position,
-                        Momentum = o.Momentum,
-                        Caption = o.Caption,
-                        Sprite = o.Sprite,
-                        Health = o.Size
-                    }).ToArray(),
-
-                    Position = myFleet?.Position ?? new Vector2(0, 0),
-                    LastPosition = myFleet?.Position ?? new Vector2(0, 0),
-                    Momentum = myFleet?.Momentum ?? new Vector2(0, 0),
-                    Leaderboard = null,
-                    IsAlive = player?.IsAlive ?? false,
-                    Messages = player?.GetMessages(),
-                    Hook = null
-                };
-
                 var view = new View
                 {
-                    PlayerView = playerView
+                    PlayerView = player.View
                 };
-
                 await this.SendAsync(view, cancellationToken);
             }
         }
@@ -117,7 +84,10 @@
 
                 if (player == null)
                 {
-                    player = new Player();
+                    player = new Player()
+                    {
+                        Name = s.Name
+                    };
                     player.Init(world);
                 }
 
@@ -126,8 +96,15 @@
             else if (message is ControlInput)
             {
                 var s = message as ControlInput;
+
                 if (player != null)
-                    player.SetControl(s);
+                {
+                    player.Angle = s.Angle;
+                    player.BoostRequested = s.BoostRequested;
+                    player.ShootRequested = s.ShootRequested;
+                    player.Name = s.Name;
+                    player.Ship = s.Ship;
+                }
             }
             else if (message is Hook)
             {

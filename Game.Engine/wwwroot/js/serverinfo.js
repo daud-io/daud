@@ -75,7 +75,7 @@
     setInterval(function () {
         var connection = window.Game.primaryConnection;
 
-        if (connection !== null) {
+        if (connection != null) {
             bandwidthDisplay.text('bandwidth: '
                 + Math.floor(connection.statBytesUpPerSecond / 102.4) / 10 * 8 + 'Kb/s up '
                 + Math.floor(connection.statBytesDownPerSecond / 102.4) / 10 * 8 + 'Kb/s down'
