@@ -26,7 +26,9 @@
 
                 var trueAngle = (float)Math.Atan2(delta.Y, delta.X); ;
                 var quantized = (int)(trueAngle * 100) / 100f;
-                Fleet.Angle = quantized;
+                this.ControlInput.Angle = quantized;
+
+                this.SetControl(ControlInput);
                 break;
             }
             

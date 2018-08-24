@@ -13,6 +13,7 @@
         public virtual int MaxSpeedBoost { get => World.Hook.MaxSpeedBoost; }
         public virtual int MaxHealth { get => World.Hook.MaxHealth; }
         public virtual float HealthRegenerationPerFrame { get => World.Hook.HealthRegenerationPerFrame; }
+        public virtual int HealthHitCost { get => World.Hook.HealthHitCost; }
 
         [JsonIgnore]
         public Player Owner { get; set; }
@@ -33,23 +34,27 @@
         [JsonIgnore]
         public long TimeReloaded { get; set; } = 0;
 
+        private void Die(Player player, Fleet fleet, Bullet bullet)
+        {
+            player.Score += 55;
+
+            player.SendMessage($"You Killed {this.Owner.Name}");
+            this.Owner.SendMessage($"Killed by {player.Name}");
+
+            this.Owner.IsAlive = false;
+            Deinit();
+        }
+
         public void CollisionExecute(ProjectedBody projectedBody)
         {
+            var bullet = projectedBody as Bullet;
+            var fleet = bullet?.Owner;
+            var player = fleet?.Owner;
+
             Health -= HealthHitCost;
 
-            if (Health <= 0 && IsAlive)
-            {
-                Die();
-
-                Random r = new Random();
-
-                bullet.Owner.Score += 55;
-
-                this.Killer = bullet.Owner.GameObject;
-
-                bullet.Owner.SendMessage($"You Killed {this.Name}");
-                this.SendMessage($"Killed by {bullet.Owner.Name}");
-            }
+            if (Health <= 0)
+                Die(player, fleet, bullet);
         }
 
         public bool IsCollision(ProjectedBody projectedBody)
@@ -111,6 +116,7 @@
             }
 
             Health = Math.Min(Health + HealthRegenerationPerFrame, MaxHealth);
+            this.Size = (int)(60 + (Health / MaxHealth * 90));
         }
     }   
 }

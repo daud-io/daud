@@ -39,10 +39,16 @@
         {
             if (player != null)
             {
-
-                //var leader = world.Players.OrderByDescending(p => p.Score).FirstOrDefault(p => p.IsAlive);
-
+                
                 var followPlayer = player?.Fleet;
+
+                if (followPlayer == null)
+                    followPlayer = Player.GetWorldPlayers(world)
+                        .Where(p => p.IsAlive)
+                        .OrderByDescending(p => p.Score)
+                        .FirstOrDefault()
+                        ?.Fleet;
+
                 IEnumerable<ProjectedBody> updatedBodies = null;
 
                 if (followPlayer != null)
@@ -57,6 +63,7 @@
                     );
 
                     var updatedBuckets = updates.Take(5);
+                    
                     foreach (var update in updatedBuckets)
                     {
                         update.BodyClient = update.BodyUpdated.Clone();
@@ -71,6 +78,7 @@
                     PlayerCount = 1,
 
                     Updates = updatedBodies.ToList(),
+                    Deletes = BodyCache.CollectStaleBuckets().Select(b => b.BodyUpdated.ID),
 
                     DefinitionTime = followPlayer?.DefinitionTime ?? 0,
                     OriginalPosition = followPlayer?.OriginalPosition ?? new Vector2(0, 0),
@@ -86,9 +94,8 @@
                     PlayerView = playerView
                 };
 
-                if (playerView.Updates.Any())
+                if (playerView.Updates.Any() || playerView.Deletes.Any())
                     await this.SendAsync(view, cancellationToken);
-
             }
         }
 

@@ -26,6 +26,7 @@
                 Angle = fleet.Angle,
                 Owner = fleet,
                 Sprite = "bullet",
+                Size = 20
             };
             bullet.Init(world);
         }
@@ -35,7 +36,14 @@
             var collisionSet = World.BodiesNear(this.Position, this.Size, offsetSize: true);
             if (collisionSet.Any())
             {
-                collisionSet.Where(b => b.)
+                foreach (var hit in collisionSet.OfType<ICollide>()
+                    .Where(c => c.IsCollision(this))
+                    .ToList())
+                {
+                    hit.CollisionExecute(this);
+
+                    TimeDeath = World.Time;
+                }
             }
 
             if (World.Time >= TimeDeath)

@@ -29,6 +29,7 @@
 
             // find the bodies with the largest error
             return Buckets.Values
+                .Where(b => !b.Stale)
                 .Where(b => b.Error > 0)
                 .OrderByDescending(b => b.Error);
         }
@@ -57,6 +58,15 @@
                     Buckets.Add(obj.ID, bucket);
                 }
             }
+        }
+
+        public IEnumerable<Bucket> CollectStaleBuckets()
+        {
+            var stale = Buckets.Values.Where(b => b.Stale).ToList();
+            foreach (var b in stale)
+                Buckets.Remove(b.BodyUpdated.ID);
+
+            return stale;
         }
 
         public class Bucket

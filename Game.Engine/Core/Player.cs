@@ -43,6 +43,14 @@
             worldPlayers.Add(this);
         }
 
+        public string Name
+        {
+            get
+            {
+                return this.ControlInput?.Name ?? "Unknown Fleet";
+            }
+        }
+
         public static List<Player> GetWorldPlayers(World world)
         {
             List<Player> worldPlayers = null;
@@ -93,6 +101,11 @@
                 Fleet = null;
                 IsAlive = false;
             }
+        }
+
+        public void SendMessage(string message)
+        {
+            this.Messages.Add(message);
         }
 
         public List<string> GetMessages()
