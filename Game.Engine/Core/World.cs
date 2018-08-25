@@ -1,136 +1,66 @@
 ﻿namespace Game.Engine.Core
 {
-    using Game.Engine.Core.Actors;
-    using Game.Engine.Core.Actors.Bots;
     using Game.Engine.Networking;
     using Game.Models;
     using Game.Models.Messages;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Numerics;
     using System.Threading;
 
     public class World : IDisposable
     {
-        public List<ActorBase> Actors { get; } = new List<ActorBase>();
-        public List<Player> Players { get; } = new List<Player>();
-
-        public List<GameObject> Objects { get; } = new List<GameObject>();
-
         public long Time { get; private set; } = 0;
-        public long FrameNumber { get; private set; } = 0;
-        public Vector2 WorldSize = new Vector2(6000, 6000);
-
-        public Leaderboard Leaderboard { get; set; } = null;
-        public bool IsLeaderboardNew = false;
 
         public Hook Hook { get; set; } = null;
-        public bool IsHookNew = false;
 
-        private readonly Timer heartbeat;
-        private const int MS_PER_FRAME = 40;
+        private Timer Heartbeat = null;
+
+        private readonly List<IDisposable> Disposables = new List<IDisposable>();
+
+        public List<ProjectedBody> Bodies = new List<ProjectedBody>();
+        public List<IActor> Actors = new List<IActor>();
 
         public World()
         {
-            Hook = new Hook
-            {
-                BaseThrust = 6,
-                HealthHitCost = 20,
-                MaxBoostTime = 100,
-                HealthRegenerationPerFrame = 0.3f,
-                MaxSpeed = 12,
-                MaxSpeedBoost = 40,
-                MaxHealth = 100,
-                ShootCooldownTime = 500,
-                ShootCooldownTimeBot = 800,
-                MaxHealthBot = 50,
-                BaseThrustBot = 2,
-                BulletLife = 2000,
-                BulletSpeed = 50,
-                BotPerXPoints = 500,
-                BotBase = 1
-            };
-
-            heartbeat = new Timer((state) =>
-            {
-                //Console.WriteLine($"Frame: {FrameNumber}");
-                Step();
-
-                ConnectionHeartbeat.Step();
-            }, null, 0, MS_PER_FRAME);
-
-            var tender = new RobotTender();
-            tender.Init(this);
+            Hook = Hook.Default;
+            InitializeStepTimer();
         }
 
         public void Step()
         {
-            Time += MS_PER_FRAME;
-            FrameNumber += 1;
+            Time = DateTime.Now.Ticks / 10000;
+            Console.WriteLine(Time);
 
-            lock (Objects)
-            {
-                IsLeaderboardNew = false;
-                if (FrameNumber % 20 == 0)
+            foreach (var body in Bodies)
+                body.Project(Time);
+
+            foreach (var actor in Actors.ToArray())
+                actor.Step();
+
+            foreach (var body in Bodies)
+                if (body.IsDirty)
                 {
-                    Leaderboard = new Leaderboard
-                    {
-                        Entries = Players
-                            .Where(p => p.IsAlive)
-                            .Select(p => new Leaderboard.Entry
-                                {
-                                    Name = p.Name,
-                                    Score = p.Score
-                                })
-                                .OrderByDescending(e => e.Score)
-                                .ToList()
-                    };
-                    IsLeaderboardNew = true;
+                    body.DefinitionTime = this.Time;
+                    body.OriginalPosition = body.Position;
+                    body.IsDirty = false;
                 }
-
-                foreach (var actor in Actors.ToList())
-                    actor.PreStep();
-
-                foreach (var actor in Actors.ToList())
-                    actor.Step();
-
-                foreach (var obj in Objects.ToList())
-                {
-                    obj.LastPosition = obj.Position;
-                    obj.Position += obj.Momentum;
-
-                    if (Math.Abs(obj.Position.X) > WorldSize.X / 2
-                        || Math.Abs(obj.Position.Y) > WorldSize.Y / 2)
-                    {
-                        var newPosition = obj.Position;
-
-                        if (newPosition.X > WorldSize.X / 2)
-                            newPosition.X = (-WorldSize.X / 2) + (newPosition.X - WorldSize.X / 2);
-                        if (newPosition.X < WorldSize.X / -2)
-                            newPosition.X = (WorldSize.X / 2) + (newPosition.X + WorldSize.X / 2);
-                        if (newPosition.Y > WorldSize.Y / 2)
-                            newPosition.Y = (-WorldSize.Y / 2) + (newPosition.Y - WorldSize.Y / 2);
-                        if (newPosition.Y < WorldSize.Y / -2)
-                            newPosition.Y = (WorldSize.Y / 2) + (newPosition.Y + WorldSize.Y / 2);
-
-                        obj.Position = newPosition;
-                        obj.LastPosition = newPosition;
-                    }
-                }
-
-                foreach (var actor in Actors.ToList())
-                    actor.PostStep();
-            }
         }
 
-
-        public int PlayerCount
+        private void InitializeStepTimer()
         {
-            get
+            Heartbeat = new Timer((state) =>
             {
-                return Players.Count;
-            }
+                Step();
+                ConnectionHeartbeat.Step();
+
+            }, null, 0, Hook.StepTime);
+            Disposables.Add(Heartbeat);
+        }
+
+        private long _id = 0;
+        public long NextID()
+        {
+            return _id++;
         }
 
         #region IDisposable Support
@@ -140,8 +70,9 @@
         {
             if (!disposedValue)
                 if (disposing)
-                    heartbeat.Dispose();
-                disposedValue = true;
+                    foreach (var d in Disposables)
+                        d.Dispose();
+            disposedValue = true;
         }
         void IDisposable.Dispose()
         {

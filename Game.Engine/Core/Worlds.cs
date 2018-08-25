@@ -2,7 +2,7 @@
 {
     public static class Worlds
     {
-        private static World Default = new World();
+        private static readonly World Default = new World();
 
         public static World Find()
         {

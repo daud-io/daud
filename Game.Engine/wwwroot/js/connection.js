@@ -55,6 +55,7 @@
         },
         sendSpawn: function (name) {
             this.send({ Type: 2, Name: name });
+            console.log('spawned');
         },
         sendControl: function (angle, boost, shoot, nick, ship) {
             this.send({
@@ -90,12 +91,13 @@
         onMessage: function (event) {
 
             var json = event.data;
-            this.statBytesDown += json.length;
+            this.statBytesDown += event.data.length;
 
             var message = JSON.parse(json);
 
             switch (message.Type) {
                 case 3: // View
+                    //console.log('view');
                     this.onView(message);
                     break;
                 case 1: // Ping
