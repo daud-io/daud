@@ -77,7 +77,8 @@
                         .Select(p => new Leaderboard.Entry
                         {
                             Name = p.Name,
-                            Score = p.Score
+                            Score = p.Score,
+                            Color = p.Fleet?.Color ?? "white"
                         })
                             .OrderByDescending(e => e.Score)
                             .Take(10)

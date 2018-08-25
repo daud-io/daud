@@ -41,6 +41,20 @@
             }
         }
 
+        private string _color { get; set; }
+        public virtual string Color
+        {
+            get
+            {
+                return _color;
+            }
+            set
+            {
+                IsDirty = _color != value;
+                _color = value;
+            }
+        }
+
         private string _caption { get; set; }
         public virtual string Caption
         {

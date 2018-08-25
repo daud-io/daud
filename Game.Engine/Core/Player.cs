@@ -26,6 +26,40 @@
                 && input.Name.Length > 15)
                 input.Name = input.Name.Substring(0, 15);
 
+            switch (input.Ship)
+            {
+                case "ship_cyan":
+                    input.Color = "rgba(0,255,255,.2)";
+                    break;
+                case "ship_gray":
+                    input.Color = "rgba(128,128,128,.2)";
+                    break;
+                case "ship_green":
+                    input.Color = "rgba(0,255,0,.2)";
+                    break;
+                case "ship_orange":
+                    input.Color = "rgba(255,140,0,.2)";
+                    break;
+                case "ship_pink":
+                    input.Color = "rgba(255,105,180,.2)";
+                    break;
+                case "ship_red":
+                    input.Color = "rgba(255,0,0,.2)";
+                    break;
+                case "ship_yellow":
+                    input.Color = "rgba(255,255,0,.2)";
+                    break;
+                case "ship0":
+                    input.Color = "rgba(0,255,0,.2)";
+                    break;
+                default:
+                    input.Ship = "ship_gray";
+                    input.Color = "rgba(128,128,128,.2)";
+
+                    break;
+            }
+
+
             this.ControlInput = input;
             this.IsControlNew = true;
         }
@@ -80,6 +114,7 @@
                 Fleet.Angle = ControlInput.Angle;
                 Fleet.Caption = ControlInput.Name;
                 Fleet.Sprite = ControlInput.Ship;
+                Fleet.Color = ControlInput.Color;
                 Fleet.BoostRequested = ControlInput.BoostRequested;
                 Fleet.ShootRequested = ControlInput.ShootRequested;
             }

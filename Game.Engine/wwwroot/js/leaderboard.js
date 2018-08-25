@@ -20,13 +20,20 @@
 
                 var width = 200;
                 var rowHeight = 28;
-                var rightMargin = 40;
+                var margin = 40;
 
                 for (var i = 0; i < this.data.Entries.length; i++) {
                     var entry = this.data.Entries[i];
 
+                    ctx.fillStyle = "white";
+
+
                     ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width, rowHeight + (i * rowHeight)); 
-                    ctx.fillText(entry.Score, this.canvas.width - rightMargin, rowHeight + (i * rowHeight)); 
+                    ctx.fillText(entry.Score, this.canvas.width - margin, rowHeight + (i * rowHeight)); 
+
+                    ctx.fillStyle = entry.Color;
+                    ctx.fillRect(this.canvas.width - width - rowHeight, (i * rowHeight) + 10, rowHeight, rowHeight);
+
                 }
             }
         }

@@ -73,6 +73,9 @@
                 if (bullet.Owner == this)
                     return false;
 
+                if (bullet.Color == this.Color)
+                    return false;
+
                 if ((Vector2.Distance(projectedBody.Position, this.Position)
                         <= this.Size + projectedBody.Size))
                     return true;

@@ -83,12 +83,14 @@
 
                         if (healthRing) {
 
-                            if (health < 0.33)
+                            /*if (health < 0.33)
                                 ctx.fillStyle = "rgba(255, 128, 128, 0.2)";
                             else if (health < 0.66)
                                 ctx.fillStyle = "rgba(128, 128, 255, 0.5)";
                             else 
-                                ctx.fillStyle = "rgba(0, 255, 0, 0.2)";
+                                ctx.fillStyle = "rgba(0, 255, 0, 0.2)";*/
+
+                            ctx.fillStyle = object.Color;
 
                             ctx.beginPath();
                             ctx.arc(position.X, position.Y, 60 + 90.0 * health, 0, 2 * Math.PI, false);

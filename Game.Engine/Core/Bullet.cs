@@ -26,7 +26,8 @@
                 Angle = fleet.Angle,
                 Owner = fleet,
                 Sprite = "bullet",
-                Size = 20
+                Size = 20,
+                Color = fleet.Color
             };
             bullet.Init(world);
         }
