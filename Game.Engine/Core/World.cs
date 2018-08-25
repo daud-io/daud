@@ -22,7 +22,10 @@
 
         public List<ProjectedBody> Bodies = new List<ProjectedBody>();
         public List<IActor> Actors = new List<IActor>();
-        
+
+        private long TimeLeaderboardRecalc = 0;
+        public Leaderboard Leaderboard = null;
+
 
         public World()
         {
@@ -58,7 +61,29 @@
                         body.OriginalPosition = body.Position;
                         body.IsDirty = false;
                     }
-                }
+
+                ProcessLeaderboard();
+            }
+        }
+
+        private void ProcessLeaderboard()
+        {
+            if (Time >= TimeLeaderboardRecalc)
+            {
+                Leaderboard = new Leaderboard
+                {
+                    Entries = Player.GetWorldPlayers(this)
+                        .Where(p => p.IsAlive)
+                        .Select(p => new Leaderboard.Entry
+                        {
+                            Name = p.Name,
+                            Score = p.Score
+                        })
+                            .OrderByDescending(e => e.Score)
+                            .ToList()
+                };
+                TimeLeaderboardRecalc += 750;
+            }
         }
 
         private void WrapAroundWorld(ProjectedBody body)

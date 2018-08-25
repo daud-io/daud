@@ -31,6 +31,7 @@
         private Player player = null;
 
         private int HookHash = 0;
+        private int LeaderHash = 0;
 
         public Connection(ILogger<Connection> logger)
         {
@@ -41,7 +42,6 @@
         {
             if (player != null)
             {
-                
                 var followPlayer = player?.Fleet;
 
                 if (followPlayer == null)
@@ -75,6 +75,7 @@
                 }
 
                 var newHash = world.Hook.GetHashCode();
+                var newLeaderHash = world.Leaderboard?.GetHashCode() ?? 0;
                 var playerView = new PlayerView
                 {
                     Time = world.Time,
@@ -86,14 +87,17 @@
                     DefinitionTime = followPlayer?.DefinitionTime ?? 0,
                     OriginalPosition = followPlayer?.OriginalPosition ?? new Vector2(0, 0),
                     Momentum = followPlayer?.Momentum ?? new Vector2(0, 0),
-                    Leaderboard = null,
                     IsAlive = player?.IsAlive ?? false,
                     Messages = player?.GetMessages(),
                     Hook = HookHash != newHash
                         ? world.Hook
+                        : null,
+                    Leaderboard = LeaderHash != newLeaderHash
+                        ? world.Leaderboard
                         : null
                 };
                 HookHash = newHash;
+                LeaderHash= newLeaderHash;
 
                 var view = new View
                 {

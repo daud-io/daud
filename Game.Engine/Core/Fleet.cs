@@ -8,9 +8,9 @@
     public class Fleet : ActorBody, ICollide
     {
         public virtual int ShootCooldownTime { get => World.Hook.ShootCooldownTime; }
-        public virtual int BaseThrust { get => World.Hook.BaseThrust; }
-        public virtual int MaxSpeed { get => World.Hook.MaxSpeed; }
-        public virtual int MaxSpeedBoost { get => World.Hook.MaxSpeedBoost; }
+        public virtual float BaseThrust { get => World.Hook.BaseThrust; }
+        public virtual float MaxSpeed { get => World.Hook.MaxSpeed; }
+        public virtual float MaxSpeedBoost { get => World.Hook.MaxSpeedBoost; }
         public virtual int MaxHealth { get => World.Hook.MaxHealth; }
         public virtual float HealthRegenerationPerFrame { get => World.Hook.HealthRegenerationPerFrame; }
         public virtual int HealthHitCost { get => World.Hook.HealthHitCost; }
@@ -82,7 +82,7 @@
             var isShooting = ShootRequested && World.Time >= TimeReloaded;
             var isBoosting = BoostRequested;
 
-            float thrustAmount = BaseThrust / 40.0f;
+            float thrustAmount = BaseThrust;
 
             if (isBoosting)
                 thrustAmount *= 2;
@@ -94,8 +94,8 @@
                 );
 
             float speedLimit = isBoosting
-                ? MaxSpeedBoost / 40
-                : MaxSpeed / 40;
+                ? MaxSpeedBoost
+                : MaxSpeed;
 
             var x = Vector2.Add(this.Momentum, Thrust);
             var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));

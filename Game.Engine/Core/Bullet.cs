@@ -21,7 +21,7 @@
                 Momentum = new Vector2(
                         (float)Math.Cos(fleet.Angle),
                         (float)Math.Sin(fleet.Angle)
-                    ) * world.Hook.BulletSpeed / 40f,
+                    ) * world.Hook.BulletSpeed,
                 Position = fleet.Position,
                 Angle = fleet.Angle,
                 Owner = fleet,
