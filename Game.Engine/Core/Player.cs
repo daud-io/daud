@@ -67,6 +67,9 @@
 
         public virtual void Step()
         {
+            if (!IsAlive)
+                return;
+
             if (this.IsControlNew)
             {
                 Fleet.Angle = ControlInput.Angle;
@@ -93,6 +96,7 @@
             }
         }
 
+        
         public void Die()
         {
             if (IsAlive)

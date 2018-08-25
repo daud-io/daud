@@ -41,9 +41,10 @@
             player.SendMessage($"You Killed {this.Owner.Name}");
             this.Owner.SendMessage($"Killed by {player.Name}");
 
-            this.Owner.IsAlive = false;
+            this.Owner.Die();
             Deinit();
         }
+
 
         public void CollisionExecute(ProjectedBody projectedBody)
         {
@@ -71,6 +72,18 @@
             }
 
             return false;
+        }
+
+        public override void Init(World world)
+        {
+            base.Init(world);
+            this.Health = MaxHealth;
+
+            var random = new Random();
+            this.Position = new Vector2(
+                random.Next(-world.WorldSize, world.WorldSize),
+                random.Next(-world.WorldSize, world.WorldSize)
+            );
         }
 
         public override void Step()

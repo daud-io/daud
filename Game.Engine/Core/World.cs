@@ -25,7 +25,7 @@
 
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
-
+        public int WorldSize = 3000;
 
         public World()
         {
@@ -88,18 +88,16 @@
 
         private void WrapAroundWorld(ProjectedBody body)
         {
-            var worldSize = 3000;
-
             var position = body.Position;
 
-            if (position.X > worldSize)
-                position.X -= 2 * worldSize;
-            if (position.X < -worldSize)
-                position.X += 2 * worldSize;
-            if (position.Y > worldSize)
-                position.Y -= 2 * worldSize;
-            if (position.Y < -worldSize)
-                position.Y += 2 * worldSize;
+            if (position.X > WorldSize)
+                position.X -= 2 * WorldSize;
+            if (position.X < -WorldSize)
+                position.X += 2 * WorldSize;
+            if (position.Y > WorldSize)
+                position.Y -= 2 * WorldSize;
+            if (position.Y < -WorldSize)
+                position.Y += 2 * WorldSize;
 
             if (position.X != body.Position.X
                 || position.Y != body.Position.Y)
@@ -126,15 +124,18 @@
         public IEnumerable<ProjectedBody> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)
         {
             if (maximumDistance == 0)
-                return this.Bodies;
+                return this.Bodies
+                    .ToList();
             else
             {
                 if (offsetSize)
                     return this.Bodies
-                        .Where(b => (Vector2.Distance(b.Position, point) - b.Size) < maximumDistance);
+                        .Where(b => (Vector2.Distance(b.Position, point) - b.Size) < maximumDistance)
+                        .ToList();
                 else
                     return this.Bodies
-                        .Where(b => Vector2.Distance(b.Position, point) < maximumDistance);
+                        .Where(b => Vector2.Distance(b.Position, point) < maximumDistance)
+                        .ToList();
 
             }
         }

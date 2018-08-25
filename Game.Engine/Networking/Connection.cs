@@ -42,10 +42,10 @@
         {
             if (player != null)
             {
-                var followPlayer = player?.Fleet;
+                var followFleet = player?.Fleet;
 
-                if (followPlayer == null)
-                    followPlayer = Player.GetWorldPlayers(world)
+                if (followFleet == null)
+                    followFleet = Player.GetWorldPlayers(world)
                         .Where(p => p.IsAlive)
                         .OrderByDescending(p => p.Score)
                         .FirstOrDefault()
@@ -53,18 +53,18 @@
 
                 IEnumerable<ProjectedBody> updatedBodies = null;
 
-                if (followPlayer != null)
+                if (followFleet != null)
                 {
                     var halfViewport = new Vector2(2000, 2000);
 
                     var updates = BodyCache.Update(
                         world.Bodies, 
                         world.Time, 
-                        Vector2.Subtract(player.Fleet.Position, halfViewport), 
-                        Vector2.Add(player.Fleet.Position, halfViewport)
+                        Vector2.Subtract(followFleet.Position, halfViewport), 
+                        Vector2.Add(followFleet.Position, halfViewport)
                     );
 
-                    var updatedBuckets = updates.Take(5);
+                    var updatedBuckets = updates.Take(10);
                     
                     foreach (var update in updatedBuckets)
                     {
@@ -84,9 +84,9 @@
                     Updates = updatedBodies.ToList(),
                     Deletes = BodyCache.CollectStaleBuckets().Select(b => b.BodyUpdated.ID),
 
-                    DefinitionTime = followPlayer?.DefinitionTime ?? 0,
-                    OriginalPosition = followPlayer?.OriginalPosition ?? new Vector2(0, 0),
-                    Momentum = followPlayer?.Momentum ?? new Vector2(0, 0),
+                    DefinitionTime = followFleet?.DefinitionTime ?? 0,
+                    OriginalPosition = followFleet?.OriginalPosition ?? new Vector2(0, 0),
+                    Momentum = followFleet?.Momentum ?? new Vector2(0, 0),
                     IsAlive = player?.IsAlive ?? false,
                     Messages = player?.GetMessages(),
                     Hook = HookHash != newHash

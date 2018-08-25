@@ -15,7 +15,7 @@
             this.Exists = false;
         }
 
-        public void Init(World world)
+        public virtual void Init(World world)
         {
             World = world;
             this.ID = world.NextID();
