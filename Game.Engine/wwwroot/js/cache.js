@@ -16,7 +16,7 @@
             for (var i = 0; i < updates.length; i++) {
                 var update = updates[i];
 
-                this.bodies['b-' + update.id] = update;
+                this.bodies['b-' + update.ID] = update;
             }
         },
         foreach: function (action, thisObj) {
