@@ -21,6 +21,11 @@
 
         public void SetControl(ControlInput input)
         {
+            // max length on names
+            if (input.Name != null
+                && input.Name.Length > 15)
+                input.Name = input.Name.Substring(0, 15);
+
             this.ControlInput = input;
             this.IsControlNew = true;
         }
