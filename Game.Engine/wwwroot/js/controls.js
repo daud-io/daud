@@ -43,6 +43,9 @@
             case 83: // s
                 Game.Controls.boost = true;
                 break;
+            case 32: // space
+                Game.Controls.shoot = true;
+                break;
         }
     }, false);
 
@@ -62,6 +65,9 @@
                 break;
             case 83: // s
                 Game.Controls.boost = false;
+                break;
+            case 32: // space
+                Game.Controls.shoot = false;
                 break;
         }
     }, false);
