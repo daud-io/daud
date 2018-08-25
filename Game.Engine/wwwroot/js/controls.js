@@ -1,4 +1,20 @@
 ﻿(function () {
+
+    var selector = document.getElementById('shipSelector');
+    selector.addEventListener("change", function (e) {
+        Game.Controls.ship = selector.value;
+
+        save();
+    });
+
+    var nick = document.getElementById('nick');
+    nick.addEventListener("change", function (e) {
+        Game.Controls.nick = nick.value;
+        Game.Controls.canvas.focus();
+        save();
+    });
+
+
     Game.Controls = {
         left: false,
         up: false,
@@ -14,6 +30,7 @@
 
             canvas.addEventListener("mousedown", function (e) {
                 Game.Controls.shoot = true;
+                selector.focus();
                 e.preventDefault();
                 return false;
             });
@@ -99,20 +116,6 @@
         setCookie("ship", Game.Controls.ship);
     }
 
-    var selector = document.getElementById('shipSelector');
-    selector.addEventListener("change", function (e) {
-        Game.Controls.ship = selector.value;
-
-        save();
-    });
-
-    var nick = document.getElementById('nick');
-    nick.addEventListener("change", function (e) {
-        Game.Controls.nick = nick.value;
-        Game.Controls.canvas.focus();
-        save();
-    });
-
     var savedNick = getCookie("nick");
     var savedShip = getCookie("ship");
 
@@ -121,6 +124,7 @@
 
     if (savedShip !== false)
         Game.Controls.ship = selector.value = savedShip;
+
 
 
 }).call(this);
