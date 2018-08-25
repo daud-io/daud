@@ -30,6 +30,8 @@
         private World world = null;
         private Player player = null;
 
+        private int HookHash = 0;
+
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
@@ -72,6 +74,7 @@
                     updatedBodies = updatedBuckets.Select(b => b.BodyClient);
                 }
 
+                var newHash = world.Hook.GetHashCode();
                 var playerView = new PlayerView
                 {
                     Time = world.Time,
@@ -86,8 +89,11 @@
                     Leaderboard = null,
                     IsAlive = player?.IsAlive ?? false,
                     Messages = player?.GetMessages(),
-                    Hook = null
+                    Hook = HookHash != newHash
+                        ? world.Hook
+                        : null
                 };
+                HookHash = newHash;
 
                 var view = new View
                 {
