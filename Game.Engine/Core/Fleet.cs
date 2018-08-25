@@ -7,12 +7,19 @@
 
     public class Fleet : ActorBody, ICollide
     {
+        [JsonIgnore]
         public virtual int ShootCooldownTime { get => World.Hook.ShootCooldownTime; }
+        [JsonIgnore]
         public virtual float BaseThrust { get => World.Hook.BaseThrust; }
+        [JsonIgnore]
         public virtual float MaxSpeed { get => World.Hook.MaxSpeed; }
+        [JsonIgnore]
         public virtual float MaxSpeedBoost { get => World.Hook.MaxSpeedBoost; }
+        [JsonIgnore]
         public virtual int MaxHealth { get => World.Hook.MaxHealth; }
+        [JsonIgnore]
         public virtual float HealthRegenerationPerFrame { get => World.Hook.HealthRegenerationPerFrame; }
+        [JsonIgnore]
         public virtual int HealthHitCost { get => World.Hook.HealthHitCost; }
 
         [JsonIgnore]

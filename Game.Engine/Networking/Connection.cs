@@ -31,7 +31,7 @@
         private Player player = null;
 
         private int HookHash = 0;
-        private int LeaderHash = 0;
+        private long LeaderboardTime = 0;
 
         public Connection(ILogger<Connection> logger)
         {
@@ -75,7 +75,7 @@
                 }
 
                 var newHash = world.Hook.GetHashCode();
-                var newLeaderHash = world.Leaderboard?.GetHashCode() ?? 0;
+
                 var playerView = new PlayerView
                 {
                     Time = world.Time,
@@ -92,12 +92,12 @@
                     Hook = HookHash != newHash
                         ? world.Hook
                         : null,
-                    Leaderboard = LeaderHash != newLeaderHash
+                    Leaderboard = LeaderboardTime != (world.Leaderboard?.Time ?? 0)
                         ? world.Leaderboard
                         : null
                 };
                 HookHash = newHash;
-                LeaderHash= newLeaderHash;
+                LeaderboardTime = (world.Leaderboard?.Time ?? 0);
 
                 var view = new View
                 {

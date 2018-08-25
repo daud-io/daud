@@ -80,7 +80,8 @@
                             Score = p.Score
                         })
                             .OrderByDescending(e => e.Score)
-                            .ToList()
+                            .ToList(),
+                    Time = this.Time
                 };
                 TimeLeaderboardRecalc += 750;
             }
