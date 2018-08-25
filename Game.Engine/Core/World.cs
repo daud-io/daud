@@ -22,6 +22,7 @@
 
         public List<ProjectedBody> Bodies = new List<ProjectedBody>();
         public List<IActor> Actors = new List<IActor>();
+        
 
         public World()
         {
@@ -36,12 +37,16 @@
 
         public void Step()
         {
+
             lock (this.Bodies)
             {
                 Time = DateTime.Now.Ticks / 10000;
 
                 foreach (var body in Bodies)
+                {
                     body.Project(Time);
+                    WrapAroundWorld(body);
+                }
 
                 foreach (var actor in Actors.ToArray())
                     actor.Step();
@@ -54,6 +59,26 @@
                         body.IsDirty = false;
                     }
                 }
+        }
+
+        private void WrapAroundWorld(ProjectedBody body)
+        {
+            var worldSize = 3000;
+
+            var position = body.Position;
+
+            if (position.X > worldSize)
+                position.X -= 2 * worldSize;
+            if (position.X < -worldSize)
+                position.X += 2 * worldSize;
+            if (position.Y > worldSize)
+                position.Y -= 2 * worldSize;
+            if (position.Y < -worldSize)
+                position.Y += 2 * worldSize;
+
+            if (position.X != body.Position.X
+                || position.Y != body.Position.Y)
+                body.Position = position;
         }
 
         private void InitializeStepTimer()

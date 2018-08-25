@@ -28,7 +28,7 @@
 
         public void Step()
         {
-            int desired = 1;
+            int desired = World.Hook.BotBase;
 
             while (Robots.Count < desired)
                 AddRobot();
