@@ -12,19 +12,23 @@
         {
             var bot = new Robot()
             {
+                ControlInput = new Models.Messages.ControlInput
+                {
+                    Ship = "ship0",
+                    Name = $"Daudelin #{this.Robots.Count}"
+                }
             };
+
             bot.Init(World);
 
             bot.Spawn();
-            bot.Fleet.Caption = $"Daudelin #{this.Robots.Count}";
-            bot.Fleet.Sprite = "ship0";
 
             this.Robots.Add(bot);
         }
 
         public void Step()
         {
-            int desired = 10;
+            int desired = World.Hook.BotBase;
 
             while (Robots.Count < desired)
                 AddRobot();

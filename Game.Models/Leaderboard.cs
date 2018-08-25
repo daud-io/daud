@@ -5,6 +5,7 @@
     public class Leaderboard
     {
         public List<Entry> Entries { get; set; }
+        public long Time { get; set; } = 0;
 
         public class Entry
         {

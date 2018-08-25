@@ -32,7 +32,6 @@
 
             var worldPlayers = GetWorldPlayers(World);
             worldPlayers.Remove(this);
-
         }
 
         public void Init(World world)
@@ -42,6 +41,14 @@
 
             var worldPlayers = GetWorldPlayers(world);
             worldPlayers.Add(this);
+        }
+
+        public string Name
+        {
+            get
+            {
+                return this.ControlInput?.Name ?? "Unknown Fleet";
+            }
         }
 
         public static List<Player> GetWorldPlayers(World world)
@@ -60,6 +67,9 @@
 
         public virtual void Step()
         {
+            if (!IsAlive)
+                return;
+
             if (this.IsControlNew)
             {
                 Fleet.Angle = ControlInput.Angle;
@@ -86,6 +96,7 @@
             }
         }
 
+        
         public void Die()
         {
             if (IsAlive)
@@ -94,6 +105,11 @@
                 Fleet = null;
                 IsAlive = false;
             }
+        }
+
+        public void SendMessage(string message)
+        {
+            this.Messages.Add(message);
         }
 
         public List<string> GetMessages()

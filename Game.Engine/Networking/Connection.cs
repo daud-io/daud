@@ -30,6 +30,9 @@
         private World world = null;
         private Player player = null;
 
+        private int HookHash = 0;
+        private long LeaderboardTime = 0;
+
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
@@ -39,24 +42,30 @@
         {
             if (player != null)
             {
+                var followFleet = player?.Fleet;
 
-                //var leader = world.Players.OrderByDescending(p => p.Score).FirstOrDefault(p => p.IsAlive);
+                if (followFleet == null)
+                    followFleet = Player.GetWorldPlayers(world)
+                        .Where(p => p.IsAlive)
+                        .OrderByDescending(p => p.Score)
+                        .FirstOrDefault()
+                        ?.Fleet;
 
-                var followPlayer = player?.Fleet;
                 IEnumerable<ProjectedBody> updatedBodies = null;
 
-                if (followPlayer != null)
+                if (followFleet != null)
                 {
                     var halfViewport = new Vector2(2000, 2000);
 
                     var updates = BodyCache.Update(
                         world.Bodies, 
                         world.Time, 
-                        Vector2.Subtract(player.Fleet.Position, halfViewport), 
-                        Vector2.Add(player.Fleet.Position, halfViewport)
+                        Vector2.Subtract(followFleet.Position, halfViewport), 
+                        Vector2.Add(followFleet.Position, halfViewport)
                     );
 
-                    var updatedBuckets = updates.Take(5);
+                    var updatedBuckets = updates.Take(10);
+                    
                     foreach (var update in updatedBuckets)
                     {
                         update.BodyClient = update.BodyUpdated.Clone();
@@ -65,30 +74,38 @@
                     updatedBodies = updatedBuckets.Select(b => b.BodyClient);
                 }
 
+                var newHash = world.Hook.GetHashCode();
+
                 var playerView = new PlayerView
                 {
                     Time = world.Time,
                     PlayerCount = 1,
 
                     Updates = updatedBodies.ToList(),
+                    Deletes = BodyCache.CollectStaleBuckets().Select(b => b.BodyUpdated.ID),
 
-                    DefinitionTime = followPlayer?.DefinitionTime ?? 0,
-                    OriginalPosition = followPlayer?.OriginalPosition ?? new Vector2(0, 0),
-                    Momentum = followPlayer?.Momentum ?? new Vector2(0, 0),
-                    Leaderboard = null,
+                    DefinitionTime = followFleet?.DefinitionTime ?? 0,
+                    OriginalPosition = followFleet?.OriginalPosition ?? new Vector2(0, 0),
+                    Momentum = followFleet?.Momentum ?? new Vector2(0, 0),
                     IsAlive = player?.IsAlive ?? false,
                     Messages = player?.GetMessages(),
-                    Hook = null
+                    Hook = HookHash != newHash
+                        ? world.Hook
+                        : null,
+                    Leaderboard = LeaderboardTime != (world.Leaderboard?.Time ?? 0)
+                        ? world.Leaderboard
+                        : null
                 };
+                HookHash = newHash;
+                LeaderboardTime = (world.Leaderboard?.Time ?? 0);
 
                 var view = new View
                 {
                     PlayerView = playerView
                 };
 
-                if (playerView.Updates.Any())
+                if (playerView.Updates.Any() || playerView.Deletes.Any())
                     await this.SendAsync(view, cancellationToken);
-
             }
         }
 

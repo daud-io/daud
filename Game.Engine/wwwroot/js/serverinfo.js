@@ -49,15 +49,15 @@
         return updater;
     }
 
-    attributes.push(buildAttribute("thrust", "BaseThrust", 0, 10, .25));
-    attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 20, .5));
+    attributes.push(buildAttribute("thrust", "BaseThrust", 0, 1, .025));
+    attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 1, .025));
 
     attributes.push(buildAttribute("hit cost", "HealthHitCost", 0, 100, 1));
     attributes.push(buildAttribute("boost time", "MaxBoostTime", 0, 1000, 10));
     attributes.push(buildAttribute("health regen", "HealthRegenerationPerFrame", 0, 2, 0.1));
 
-    attributes.push(buildAttribute("max speed", "MaxSpeed", 0, 100, 1));
-    attributes.push(buildAttribute("max speed boost", "MaxSpeedBoost", 0, 100, 1));
+    attributes.push(buildAttribute("max speed", "MaxSpeed", 0, 3, 0.2));
+    attributes.push(buildAttribute("max speed boost", "MaxSpeedBoost", 0, 3, 0.2));
 
     attributes.push(buildAttribute("shot cooldown", "ShootCooldownTime", 0, 5000, 1));
     attributes.push(buildAttribute("shot cool(bot)", "ShootCooldownTimeBot", 0, 5000, 1));
@@ -65,7 +65,7 @@
     attributes.push(buildAttribute("max health", "MaxHealth", 0, 500, 1));
     attributes.push(buildAttribute("max health(bot)", "MaxHealthBot", 0, 500, 1));
 
-    attributes.push(buildAttribute("bullet speed", "BulletSpeed", 0, 150, 1));
+    attributes.push(buildAttribute("bullet speed", "BulletSpeed", 0, 3, 0.1));
     attributes.push(buildAttribute("bullet life", "BulletLife", 0, 25000, 1));
 
     attributes.push(buildAttribute("bot per X", "BotPerXPoints", 100, 20000, 1));

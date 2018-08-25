@@ -61,7 +61,7 @@
 
             serverTimeOffset = pv.Time - lastFrameTime;
 
-            cache.update(pv.Updates, []);
+            cache.update(pv.Updates, pv.Deletes);
 
             if (pv.Leaderboard != null)
                 leaderboard.setData(pv.Leaderboard);
