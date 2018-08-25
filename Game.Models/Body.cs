@@ -1,12 +1,16 @@
 ﻿namespace Game.Models
 {
+    using Newtonsoft.Json;
     using System.Numerics;
 
     public class Body
     {
         public long ID { get; set; }
         public long DefinitionTime { get; set; }
+
+        [JsonIgnore]
         public bool Exists { get; set; }
+        [JsonIgnore]
         public bool IsDirty { get; set; } = true;
 
         private int _size { get; set; }

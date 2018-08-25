@@ -1,9 +1,11 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.Models;
+    using Newtonsoft.Json;
 
     public abstract class ActorBody : ProjectedBody, IActor
     {
+        [JsonIgnore]
         public World World = null;
 
         public void Deinit()

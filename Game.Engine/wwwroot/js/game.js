@@ -60,6 +60,10 @@
 
             var pv = view.PlayerView;
 
+            if (pv.Updates.length > 0) {
+                console.log('updated');
+            }
+
             if (pv.Leaderboard != null)
                 leaderboard.setData(pv.Leaderboard);
 
