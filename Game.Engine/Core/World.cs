@@ -80,6 +80,7 @@
                             Score = p.Score
                         })
                             .OrderByDescending(e => e.Score)
+                            .Take(10)
                             .ToList(),
                     Time = this.Time
                 };
