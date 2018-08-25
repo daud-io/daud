@@ -8,6 +8,8 @@
         public World World = null;
         public Fleet Fleet = null;
 
+        public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
+
         public int Score { get; set; }
 
         public ControlInput ControlInput { get; set; }
@@ -27,15 +29,36 @@
         {
             Die();
             World.Actors.Remove(this);
+
+            var worldPlayers = GetWorldPlayers(World);
+            worldPlayers.Remove(this);
+
         }
 
         public void Init(World world)
         {
             World = world;
             world.Actors.Add(this);
+
+            var worldPlayers = GetWorldPlayers(world);
+            worldPlayers.Add(this);
         }
 
-        public void Step()
+        public static List<Player> GetWorldPlayers(World world)
+        {
+            List<Player> worldPlayers = null;
+            if (!Players.ContainsKey(world))
+            {
+                worldPlayers = new List<Player>();
+                Players.Add(world, worldPlayers);
+            }
+            else
+                worldPlayers = Players[world];
+
+            return worldPlayers;
+        }
+
+        public virtual void Step()
         {
             if (this.IsControlNew)
             {
