@@ -11,7 +11,6 @@
             for (var i = 0; i < deletes.length; i++) {
                 var deleteKey = deletes[i];
                 delete this.bodies['b-' + deleteKey];
-                console.log('deleted: ' + deleteKey);
                 this.count--;
             }
 
@@ -24,8 +23,6 @@
                 if (!existing)
                     this.count++;
             }
-
-            console.log(this.bodies);
         },
         foreach: function (action, thisObj) {
 
