@@ -16,7 +16,6 @@
             if (!IsAlive)
                 this.Spawn();
 
-
             foreach (var player in
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
                     .Where(p => !p.Fleet?.Caption?.StartsWith("Daud") ?? true)

@@ -4,11 +4,15 @@
         this.context = context;
         this.view = false;
 
-        var sprite = function (name) {
+        var sprite = function (name, scale, scaleToSize) {
             var img = new Image();
             img.src = "img/" + name + ".png";
 
-            return img;
+            return {
+                image: img,
+                scale: scale || 1.3,
+                scaleToSize: scaleToSize || false
+            }
         }
         this.sprites = {
             'ship0': sprite("ship0"),
@@ -18,7 +22,8 @@
             'ship_red': sprite("ship_red"),
             'ship_cyan': sprite("ship_cyan"),
             'ship_yellow': sprite("ship_yellow"),
-            'bullet': sprite("torpedo")
+            'bullet': sprite("torpedo"),
+            'obstacle': sprite("obstacle", 0.005, true)
         };
     };
 
@@ -53,8 +58,8 @@
                     if (!ship)
                         ship = this.sprites["ship_gray"];
 
-                    var width = ship.width;
-                    var height = ship.height;
+                    var width = ship.image.width;
+                    var height = ship.image.height;
 
                     var position = interpolator.projectObject(object, currentTime);
 
@@ -65,7 +70,7 @@
                     ctx.save();
                     ctx.fillStyle = "rgba(0,255,0,0.2)";
 
-                    var health = (object.Size) / 150;
+                    var health = object.Size;
                     if (health) {
                         var healthBar = false;
                         var healthRing = true;
@@ -93,8 +98,8 @@
                             ctx.fillStyle = object.Color;
 
                             ctx.beginPath();
-                            ctx.arc(position.X, position.Y, 60 + 90.0 * health, 0, 2 * Math.PI, false);
-                            ctx.arc(position.X, position.Y, 60, 0, 2 * Math.PI, true);
+                            ctx.arc(position.X, position.Y, health, 0, 2 * Math.PI, false);
+                            //ctx.arc(position.X, position.Y, 60, 0, 2 * Math.PI, true);
                             ctx.fill();
                         }
                     }
@@ -103,8 +108,12 @@
                     ctx.save();
                     ctx.translate(position.X, position.Y);
                     ctx.rotate(object.Angle);
-                    ctx.scale(1.3, 1.3);
-                    ctx.drawImage(ship, -width / 2, -height / 2, width, height);
+                    ctx.scale(ship.scale, ship.scale);
+
+                    if (ship.scaleToSize)
+                        ctx.scale(object.Size, object.Size);
+
+                    ctx.drawImage(ship.image, -width / 2, -height / 2, width, height);
                     ctx.restore();
 
                 }, this);

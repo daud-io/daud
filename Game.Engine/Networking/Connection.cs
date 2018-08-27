@@ -58,54 +58,54 @@
                     var halfViewport = new Vector2(2000, 2000);
 
                     var updates = BodyCache.Update(
-                        world.Bodies, 
-                        world.Time, 
-                        Vector2.Subtract(followFleet.Position, halfViewport), 
+                        world.Bodies,
+                        world.Time,
+                        Vector2.Subtract(followFleet.Position, halfViewport),
                         Vector2.Add(followFleet.Position, halfViewport)
                     );
 
                     var updatedBuckets = updates.Take(10);
-                    
+
                     foreach (var update in updatedBuckets)
                     {
                         update.BodyClient = update.BodyUpdated.Clone();
                     }
 
                     updatedBodies = updatedBuckets.Select(b => b.BodyClient);
+
+                    var newHash = world.Hook.GetHashCode();
+
+                    var playerView = new PlayerView
+                    {
+                        Time = world.Time,
+                        PlayerCount = 1,
+
+                        Updates = updatedBodies.ToList(),
+                        Deletes = BodyCache.CollectStaleBuckets().Select(b => b.BodyUpdated.ID),
+
+                        DefinitionTime = followFleet?.DefinitionTime ?? 0,
+                        OriginalPosition = followFleet?.OriginalPosition ?? new Vector2(0, 0),
+                        Momentum = followFleet?.Momentum ?? new Vector2(0, 0),
+                        IsAlive = player?.IsAlive ?? false,
+                        Messages = player?.GetMessages(),
+                        Hook = HookHash != newHash
+                            ? world.Hook
+                            : null,
+                        Leaderboard = LeaderboardTime != (world.Leaderboard?.Time ?? 0)
+                            ? world.Leaderboard
+                            : null
+                    };
+                    HookHash = newHash;
+                    LeaderboardTime = (world.Leaderboard?.Time ?? 0);
+
+                    var view = new View
+                    {
+                        PlayerView = playerView
+                    };
+
+                    if (playerView.Updates.Any() || playerView.Deletes.Any())
+                        await this.SendAsync(view, cancellationToken);
                 }
-
-                var newHash = world.Hook.GetHashCode();
-
-                var playerView = new PlayerView
-                {
-                    Time = world.Time,
-                    PlayerCount = 1,
-
-                    Updates = updatedBodies.ToList(),
-                    Deletes = BodyCache.CollectStaleBuckets().Select(b => b.BodyUpdated.ID),
-
-                    DefinitionTime = followFleet?.DefinitionTime ?? 0,
-                    OriginalPosition = followFleet?.OriginalPosition ?? new Vector2(0, 0),
-                    Momentum = followFleet?.Momentum ?? new Vector2(0, 0),
-                    IsAlive = player?.IsAlive ?? false,
-                    Messages = player?.GetMessages(),
-                    Hook = HookHash != newHash
-                        ? world.Hook
-                        : null,
-                    Leaderboard = LeaderboardTime != (world.Leaderboard?.Time ?? 0)
-                        ? world.Leaderboard
-                        : null
-                };
-                HookHash = newHash;
-                LeaderboardTime = (world.Leaderboard?.Time ?? 0);
-
-                var view = new View
-                {
-                    PlayerView = playerView
-                };
-
-                if (playerView.Updates.Any() || playerView.Deletes.Any())
-                    await this.SendAsync(view, cancellationToken);
             }
         }
 

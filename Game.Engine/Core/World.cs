@@ -33,8 +33,11 @@
             
             InitializeStepTimer();
 
-            var tender = new RobotTender();
-            tender.Init(this);
+            var robotTender = new RobotTender();
+            robotTender.Init(this);
+
+            var objstacleTender = new ObstacleTender();
+            objstacleTender.Init(this);
 
         }
 
@@ -143,6 +146,15 @@
             }
         }
 
+        public Vector2 RandomPosition()
+        {
+            var r = new Random();
+            return new Vector2
+            {
+                X = r.Next(-WorldSize, WorldSize),
+                Y = r.Next(-WorldSize, WorldSize)
+            };
+        }
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

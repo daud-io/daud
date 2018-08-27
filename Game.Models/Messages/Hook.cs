@@ -25,7 +25,10 @@
                     BulletSpeed = 1.2f,
                     BotPerXPoints = 500,
                     BotBase = 1,
-                    StepTime = 40
+                    StepTime = 40,
+                    Obstacles = 4,
+                    ObstacleMaxMomentum = 0.1f,
+                    ObstacleMaxSize = 1000
                 };
             }
         }
@@ -46,6 +49,9 @@
         public float BulletSpeed { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
+        public int Obstacles { get; set; }
+        public float ObstacleMaxMomentum { get; set; }
+        public int ObstacleMaxSize { get; set; }
 
         public int StepTime { get; set; }
     }
