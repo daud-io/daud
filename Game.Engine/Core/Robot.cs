@@ -21,6 +21,8 @@
                     return;
             }
 
+            this.ControlInput.Color = "green";
+
             foreach (var player in
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
                     .Where(p => !p.Fleet?.Caption?.StartsWith("Daud") ?? true)

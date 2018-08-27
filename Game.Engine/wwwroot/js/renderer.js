@@ -95,7 +95,7 @@
                             else 
                                 ctx.fillStyle = "rgba(0, 255, 0, 0.2)";*/
 
-                            ctx.fillStyle = object.Color;
+                            ctx.fillStyle = this.colorValue(object.Color);
 
                             ctx.beginPath();
                             ctx.arc(position.X, position.Y, health, 0, 2 * Math.PI, false);
@@ -117,6 +117,31 @@
                     ctx.restore();
 
                 }, this);
+            }
+        },
+        colorValue: function (colorName) {
+            switch (colorName) {
+                case "cyan":
+                    return "rgba(0,255,255,.2)";
+                    break;
+                case "gray":
+                    return "rgba(128,128,128,.2)";
+                    break;
+                case "green":
+                    return "rgba(0,255,0,.2)";
+                    break;
+                case "orange":
+                    return "rgba(255,140,0,.2)";
+                    break;
+                case "pink":
+                    return "rgba(255,105,180,.2)";
+                    break;
+                case "red":
+                    return "rgba(255,0,0,.2)";
+                    break;
+                case "yellow":
+                    return "rgba(255,255,0,.2)";
+                    break;
             }
         }
     };

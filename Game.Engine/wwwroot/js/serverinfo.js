@@ -7,6 +7,40 @@
 
     var attributes = [];
 
+    var buildAttributeToggle = function (labelText, propertyName) {
+        var li = $('<li></li>');
+        var label = $('<label></label>');
+        li.append(label);
+
+        var check = $('<input type="checkbox" />');
+        var draw = function (value) {
+            value = value || check.prop('checked');
+            label.text(labelText + '(' + (value) + ') : ');
+        };
+
+        check.on('change', function (event) {
+            if (Game && Game.Hook) {
+                Game.Hook[propertyName] = check.prop('checked');
+                Game.Hook.New = true;
+            }
+            draw();
+        });
+
+        draw();
+
+        li.append(check);
+        $('#ansiblelinks').append(li);
+
+        var updater = {
+            update: function (hook) {
+                check.prop('checked', hook[propertyName]);
+                draw();
+            }
+        };
+        return updater;
+    }
+
+
     var buildAttribute = function(labelText, propertyName, min, max, step)
     {
         var li = $('<li></li>');
@@ -72,6 +106,8 @@
     attributes.push(buildAttribute("bot base", "BotBase", 0, 25, 1));
 
     attributes.push(buildAttribute("obstacles", "Obstacles", 0, 25, 1));
+
+    attributes.push(buildAttributeToggle("team mode", "TeamMode"));
     
     
     setInterval(function () {

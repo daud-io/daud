@@ -90,13 +90,15 @@
             || Game.Controls.shoot != lastControl.shoot
             || Game.Controls.nick != lastControl.nick
             || Game.Controls.ship != lastControl.ship
+            || Game.Controls.color != lastControl.color
         ) {
             connection.sendControl(
                 angle,
                 Game.Controls.boost,
                 Game.Controls.shoot,
                 Game.Controls.nick,
-                Game.Controls.ship
+                Game.Controls.ship,
+                Game.Controls.color
             );
 
             lastControl = {
@@ -104,7 +106,8 @@
                 boost: Game.Controls.boost,
                 shoot: Game.Controls.shoot,
                 nick: Game.Controls.nick,
-                ship: Game.Controls.ship
+                ship: Game.Controls.ship,
+                color: Game.Controls.color
             };
         }
     }, 10);

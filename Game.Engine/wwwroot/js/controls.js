@@ -1,16 +1,18 @@
 ﻿(function () {
 
-    var selector = document.getElementById('shipSelector');
-    selector.addEventListener("change", function (e) {
-        Game.Controls.ship = selector.value;
+    var selector = $('#shipSelector');
+    selector.on("change", function (e) {
+        Game.Controls.ship = selector.val();
+        Game.Controls.color = selector.find(':selected').attr('colorName');
 
         save();
     });
 
-    var nick = document.getElementById('nick');
-    nick.addEventListener("change", function (e) {
-        Game.Controls.nick = nick.value;
+    var nick = $('#nick');
+    nick.on("change", function (e) {
+        Game.Controls.nick = nick.val();
         Game.Controls.canvas.focus();
+
         save();
     });
 
@@ -119,12 +121,14 @@
     var savedNick = getCookie("nick");
     var savedShip = getCookie("ship");
 
-    if (savedNick !== false)
-        Game.Controls.nick = nick.value = savedNick;
+    if (savedNick !== false) {
+        nick.val(savedNick);
+        Game.Controls.nick = savedNick;
+    }
 
-    if (savedShip !== false)
-        Game.Controls.ship = selector.value = savedShip;
-
-
+    if (savedShip !== false) {
+        selector.val(savedShip);
+        selector.trigger('change');
+    }
 
 }).call(this);

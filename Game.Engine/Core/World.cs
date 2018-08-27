@@ -73,21 +73,42 @@
         {
             if (Time >= TimeLeaderboardRecalc)
             {
-                Leaderboard = new Leaderboard
+                if (Hook.TeamMode)
                 {
-                    Entries = Player.GetWorldPlayers(this)
-                        .Where(p => p.IsAlive)
-                        .Select(p => new Leaderboard.Entry
-                        {
-                            Name = p.Name,
-                            Score = p.Score,
-                            Color = p.Fleet?.Color ?? "white"
-                        })
-                            .OrderByDescending(e => e.Score)
-                            .Take(10)
-                            .ToList(),
-                    Time = this.Time
-                };
+                    Leaderboard = new Leaderboard
+                    {
+                        Entries = Player.GetWorldPlayers(this)
+                            .Where(p => p.IsAlive)
+                            .GroupBy(p => p.Fleet.Color)
+                            .Select(g => new Leaderboard.Entry
+                            {
+                                Name = g.Key,
+                                Score = g.Sum(p => p.Score),
+                                Color = g.Key ?? "white"
+                            })
+                                .OrderByDescending(e => e.Score)
+                                .Take(10)
+                                .ToList(),
+                        Time = this.Time
+                    };
+
+                }
+                else
+                    Leaderboard = new Leaderboard
+                    {
+                        Entries = Player.GetWorldPlayers(this)
+                            .Where(p => p.IsAlive)
+                            .Select(p => new Leaderboard.Entry
+                            {
+                                Name = p.Name,
+                                Score = p.Score,
+                                Color = p.Fleet?.Color ?? "white"
+                            })
+                                .OrderByDescending(e => e.Score)
+                                .Take(10)
+                                .ToList(),
+                        Time = this.Time
+                    };
                 TimeLeaderboardRecalc += 750;
             }
         }

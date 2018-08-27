@@ -28,7 +28,8 @@
                     StepTime = 40,
                     Obstacles = 4,
                     ObstacleMaxMomentum = 0.1f,
-                    ObstacleMaxSize = 1000
+                    ObstacleMaxSize = 1000,
+                    TeamMode = true
                 };
             }
         }
@@ -52,6 +53,8 @@
         public int Obstacles { get; set; }
         public float ObstacleMaxMomentum { get; set; }
         public int ObstacleMaxSize { get; set; }
+
+        public bool TeamMode { get; set; }
 
         public int StepTime { get; set; }
     }

@@ -57,14 +57,15 @@
             this.send({ Type: 2, Name: name });
             console.log('spawned');
         },
-        sendControl: function (angle, boost, shoot, nick, ship) {
+        sendControl: function (angle, boost, shoot, nick, ship, color) {
             this.send({
                 Type: 4,
                 Angle: angle,
                 BoostRequested: boost,
                 ShootRequested: shoot,
                 Name: nick,
-                Ship: ship
+                Ship: ship,
+                Color: color
             });
         },
         send: function (obj) {
