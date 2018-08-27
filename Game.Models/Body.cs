@@ -22,7 +22,7 @@
             }
             set
             {
-                IsDirty = _size != value;
+                IsDirty = IsDirty || _size != value;
                 _size = value;
             }
         }
@@ -36,7 +36,7 @@
             }
             set
             {
-                IsDirty = _sprite != value;
+                IsDirty = IsDirty || _sprite != value;
                 _sprite = value;
             }
         }
@@ -50,7 +50,7 @@
             }
             set
             {
-                IsDirty = _color != value;
+                IsDirty = IsDirty || _color != value;
                 _color = value;
             }
         }
@@ -64,7 +64,7 @@
             }
             set
             {
-                IsDirty = _caption != value;
+                IsDirty = IsDirty || _caption != value;
                 _caption = value;
             }
         }
@@ -78,7 +78,7 @@
             }
             set
             {
-                IsDirty = _angle != value;
+                IsDirty = IsDirty || _angle != value;
                 _angle = value;
             }
         }
@@ -92,7 +92,7 @@
             }
             set
             {
-                IsDirty = _momentum != value;
+                IsDirty = IsDirty || _momentum != value;
                 _momentum = value;
             }
         }
@@ -106,7 +106,7 @@
             }
             set
             {
-                IsDirty = _originalPosition != value;
+                IsDirty = IsDirty || _originalPosition != value;
                 _originalPosition = value;
             }
         }

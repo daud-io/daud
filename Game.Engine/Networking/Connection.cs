@@ -150,8 +150,11 @@
 
                 if (player == null)
                 {
-                    player = new Player();
-                    player.Init(world);
+                    lock (world.Bodies)
+                    {
+                        player = new Player();
+                        player.Init(world);
+                    }
                 }
 
                 player.Spawn();

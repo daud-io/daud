@@ -16,6 +16,7 @@
         }
         this.sprites = {
             'ship0': sprite("ship0"),
+            'ship_green': sprite("ship_green"),
             'ship_gray': sprite("ship_gray"),
             'ship_orange': sprite("ship_orange"),
             'ship_pink': sprite("ship_pink"),
@@ -55,11 +56,6 @@
                         ? this.sprites[object.Sprite]
                         : false;
 
-                    if (!ship)
-                        ship = this.sprites["ship_gray"];
-
-                    var width = ship.image.width;
-                    var height = ship.image.height;
 
                     var position = interpolator.projectObject(object, currentTime);
 
@@ -107,13 +103,20 @@
 
                     ctx.save();
                     ctx.translate(position.X, position.Y);
-                    ctx.rotate(object.Angle);
-                    ctx.scale(ship.scale, ship.scale);
 
-                    if (ship.scaleToSize)
-                        ctx.scale(object.Size, object.Size);
+                    if (ship) {
+                        var width = ship.image.width;
+                        var height = ship.image.height;
 
-                    ctx.drawImage(ship.image, -width / 2, -height / 2, width, height);
+                        ctx.rotate(object.Angle);
+                        ctx.scale(ship.scale, ship.scale);
+
+                        if (ship.scaleToSize)
+                            ctx.scale(object.Size, object.Size);
+
+                        ctx.drawImage(ship.image, -width / 2, -height / 2, width, height);
+                    }
+
                     ctx.restore();
 
                 }, this);

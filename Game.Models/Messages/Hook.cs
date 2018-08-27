@@ -26,7 +26,7 @@
                     BotPerXPoints = 500,
                     BotBase = 1,
                     StepTime = 40,
-                    Obstacles = 4,
+                    Obstacles = 6,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 1000,
                     TeamMode = true
