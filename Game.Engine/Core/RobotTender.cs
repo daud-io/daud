@@ -37,6 +37,7 @@
             {
                 var robot = Robots[Robots.Count - 1];
                 Robots.Remove(robot);
+                robot.AutoSpawn = false;
                 robot.Die();
                 robot.Deinit();
             }

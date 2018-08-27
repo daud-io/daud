@@ -1,12 +1,12 @@
 ﻿namespace Game.Engine.Core.Actors.Bots
 {
-    using Game.Models.Messages;
     using System;
     using System.Linq;
     using System.Numerics;
 
     public class Robot : Player
     {
+        public bool AutoSpawn { get; set; } = true;
         public Robot() : base()
         {
         }
@@ -14,7 +14,12 @@
         public override void Step()
         {
             if (!IsAlive)
-                this.Spawn();
+            {
+                if (AutoSpawn)
+                    this.Spawn();
+                else
+                    return;
+            }
 
             foreach (var player in
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
