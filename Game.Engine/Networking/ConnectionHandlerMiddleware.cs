@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
+    using Newtonsoft.Json;
     using System;
     using System.Threading.Tasks;
 
@@ -26,7 +27,13 @@
                     using (var webSocket = await context.WebSockets.AcceptWebSocketAsync())
                         await connection.ConnectAsync(context, webSocket);
                 else
+                {
+                    Console.WriteLine("request to websocket endpoint was not a websocket request");
+
+                    Console.WriteLine(JsonConvert.SerializeObject(context.Request.Headers));
+
                     context.Response.StatusCode = 400;
+                }
             }
             else
                 await Next(context);
