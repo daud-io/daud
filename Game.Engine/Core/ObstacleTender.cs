@@ -15,7 +15,7 @@
 
             var obstacle = new Obstacle()
             {
-                OriginalPosition = World.RandomPosition(),
+                Position = World.RandomPosition(),
                 Momentum = new Vector2(
                     (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
                     (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)

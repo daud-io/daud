@@ -3,9 +3,10 @@
     using Game.Models;
     using Newtonsoft.Json;
     using System;
+    using System.Collections.Generic;
     using System.Numerics;
 
-    public class Fleet : ActorBody, ICollide
+    public class Fleet : ActorBody
     {
         [JsonIgnore]
         public virtual int ShootCooldownTime { get => World.Hook.ShootCooldownTime; }
@@ -15,23 +16,9 @@
         public virtual float MaxSpeed { get => World.Hook.MaxSpeed; }
         [JsonIgnore]
         public virtual float MaxSpeedBoost { get => World.Hook.MaxSpeedBoost; }
-        [JsonIgnore]
-        public virtual int MaxHealth { get => World.Hook.MaxHealth; }
-        [JsonIgnore]
-        public virtual float HealthRegenerationPerFrame { get => World.Hook.HealthRegenerationPerFrame; }
-        [JsonIgnore]
-        public virtual int HealthHitCost { get => World.Hook.HealthHitCost; }
 
         [JsonIgnore]
         public Player Owner { get; set; }
-
-        [JsonIgnore]
-        public float Health { get; set; }
-
-        [JsonIgnore]
-        public int SizeMinimum { get; set; }
-        [JsonIgnore]
-        public int SizeMaximum { get; set; }
 
         [JsonIgnore]
         public bool BoostRequested { get; set; }
@@ -40,6 +27,9 @@
 
         [JsonIgnore]
         public long TimeReloaded { get; set; } = 0;
+
+        [JsonIgnore]
+        public List<Ship> Ships { get; set; } = new List<Ship>();
 
         private void Die(Player player, Fleet fleet, Bullet bullet)
         {
@@ -52,55 +42,55 @@
             Deinit();
         }
 
-
-        public void CollisionExecute(ProjectedBody projectedBody)
+        public override void Deinit()
         {
-            var bullet = projectedBody as Bullet;
-            var fleet = bullet?.Owner;
-            var player = fleet?.Owner;
+            foreach (var ship in Ships)
+                ship.Deinit();
 
-            Health -= HealthHitCost;
-
-            if (Health <= 0)
-                Die(player, fleet, bullet);
+            base.Deinit();
         }
 
-        public bool IsCollision(ProjectedBody projectedBody)
+        public void ShipDeath(Player player, Ship ship, Bullet bullet)
         {
+            Ships.Remove(ship);
 
-            if (projectedBody is Bullet bullet)
+            if (Ships.Count == 0)
+                Die(player, bullet.Owner.Owner, bullet);
+
+        }
+
+        public Ship AddShip(Vector2 offset)
+        {
+            var ship = new Ship()
             {
-                if (bullet.Owner == this)
-                    return false;
+                Owner = this,
+                Position = Vector2.Add(this.Position, offset),
+                Momentum = this.Momentum
+            };
+            
+            ship.Init(World);
+            Ships.Add(ship);
 
-                if (World.Hook.TeamMode && bullet.Color == this.Color)
-                    return false;
-
-                if ((Vector2.Distance(projectedBody.Position, this.Position)
-                        <= this.Size + projectedBody.Size))
-                    return true;
-            }
-
-            return false;
+            return ship;
         }
 
         public override void Init(World world)
         {
-            base.Init(world);
-            this.Health = MaxHealth;
+            this.Position = world.RandomPosition();
 
-            var random = new Random();
-            this.Position = new Vector2(
-                random.Next(-world.WorldSize, world.WorldSize),
-                random.Next(-world.WorldSize, world.WorldSize)
-            );
+            base.Init(world);
+
+            this.AddShip(new Vector2(100, 100));
+            this.AddShip(new Vector2(-100, -100));
+
         }
 
         public override void Step()
         {
-            Health = Math.Max(Math.Min(Health, MaxHealth), 0);
+            /*Health = Math.Max(Math.Min(Health, MaxHealth), 0);
 
             Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum-SizeMinimum));
+            */
 
             var isShooting = ShootRequested && World.Time >= TimeReloaded;
             var isBoosting = BoostRequested;
@@ -125,21 +115,24 @@
             if (currentSpeed > speedLimit)
                 x = Vector2.Multiply(Vector2.Normalize(x), ((speedLimit + 3 * currentSpeed) / 4));
 
-            if (!Momentum.Equals(x))
+            Momentum = x;
+
+            foreach (var ship in Ships)
             {
-                Momentum = x;
-                DefinitionTime = World.Time;
+                ship.Momentum = x;
+                ship.Angle = Angle;
             }
 
             if (isShooting)
             {
                 TimeReloaded = World.Time + ShootCooldownTime;
 
-                Bullet.FireFrom(this);
+                foreach (var ship in Ships)
+                    Bullet.FireFrom(ship);
             }
 
-            Health = Math.Min(Health + HealthRegenerationPerFrame, MaxHealth);
-            this.Size = (int)(60 + (Health / MaxHealth * 90));
+            /*Health = Math.Min(Health + HealthRegenerationPerFrame, MaxHealth);
+            this.Size = (int)(60 + (Health / MaxHealth * 90));*/
         }
     }   
 }

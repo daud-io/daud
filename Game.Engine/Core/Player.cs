@@ -79,7 +79,12 @@
             {
                 Fleet.Angle = ControlInput.Angle;
                 Fleet.Caption = ControlInput.Name;
-                Fleet.Sprite = ControlInput.Ship;
+
+                foreach(var ship in Fleet.Ships)
+                {
+                    ship.Sprite = ControlInput.Ship;
+                    ship.Color = ControlInput.Color;
+                }
                 Fleet.Color = ControlInput.Color;
                 Fleet.BoostRequested = ControlInput.BoostRequested;
                 Fleet.ShootRequested = ControlInput.ShootRequested;
@@ -96,7 +101,8 @@
 
                 Fleet = new Fleet
                 {
-                    Owner = this
+                    Owner = this,
+                    Position = World.RandomPosition()
                 };
                 Fleet.Init(World);
             }

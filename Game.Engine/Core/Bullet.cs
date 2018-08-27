@@ -8,26 +8,26 @@
     public class Bullet : ActorBody
     {
         [JsonIgnore]
-        public Fleet Owner { get; set; }
+        public Ship Owner { get; set; }
         public long TimeDeath { get; set; }
         
-        public static void FireFrom(Fleet fleet)
+        public static void FireFrom(Ship ship)
         {
-            var world = fleet.World;
+            var world = ship.World;
 
             var bullet = new Bullet
             {
                 TimeDeath = world.Time + world.Hook.BulletLife,
                 Momentum = new Vector2(
-                        (float)Math.Cos(fleet.Angle),
-                        (float)Math.Sin(fleet.Angle)
+                        (float)Math.Cos(ship.Angle),
+                        (float)Math.Sin(ship.Angle)
                     ) * world.Hook.BulletSpeed,
-                Position = fleet.Position,
-                Angle = fleet.Angle,
-                Owner = fleet,
+                Position = ship.Position,
+                Angle = ship.Angle,
+                Owner = ship,
                 Sprite = "bullet",
                 Size = 20,
-                Color = fleet.Color
+                Color = ship.Color
             };
             bullet.Init(world);
         }
