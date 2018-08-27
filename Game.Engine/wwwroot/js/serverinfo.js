@@ -70,6 +70,8 @@
 
     attributes.push(buildAttribute("bot per X", "BotPerXPoints", 100, 20000, 1));
     attributes.push(buildAttribute("bot base", "BotBase", 0, 25, 1));
+
+    attributes.push(buildAttribute("obstacles", "Obstacles", 0, 25, 1));
     
     
     setInterval(function () {
