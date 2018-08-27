@@ -24,9 +24,9 @@
                     BulletLife = 2000,
                     BulletSpeed = 1.2f,
                     BotPerXPoints = 500,
-                    BotBase = 0,
+                    BotBase = 1,
                     StepTime = 40,
-                    Obstacles = 0,
+                    Obstacles = 6,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 1000,
                     TeamMode = true
