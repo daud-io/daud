@@ -22,17 +22,21 @@
             if (context.Request.Path == "/api/v1/connect")
             {
                 if (context.WebSockets.IsWebSocketRequest)
+                {
+                    Console.WriteLine(JsonConvert.SerializeObject(context.Request.Headers));
+
                     using (var scope = ServiceProvider.CreateScope())
                     using (var connection = scope.ServiceProvider.GetService<Connection>())
                     using (var webSocket = await context.WebSockets.AcceptWebSocketAsync())
                         await connection.ConnectAsync(context, webSocket);
+                }
                 else
                 {
                     Console.WriteLine("request to websocket endpoint was not a websocket request");
 
                     Console.WriteLine(JsonConvert.SerializeObject(context.Request.Headers));
 
-                    context.Response.StatusCode = 400;
+                    context.Response.StatusCode = 426; // upgrade required
                 }
             }
             else
