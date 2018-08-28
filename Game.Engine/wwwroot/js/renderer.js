@@ -39,7 +39,9 @@
                 ctx.beginPath();
                 ctx.lineWidth = 40;
                 ctx.strokeStyle = "blue";
-                ctx.rect(-3000, -3000, 6000, 6000);
+                var worldSize = 6000;
+
+                ctx.rect(-worldSize, -worldSize, 2*worldSize, 2*worldSize);
                 ctx.stroke();
                 ctx.restore();
                 
@@ -69,7 +71,7 @@
                     var health = object.Size;
                     if (health) {
                         var healthBar = false;
-                        var healthRing = true;
+                        var healthRing = false;
 
                         if (healthBar) {
                             var offset = { X: 0, Y: 100 };

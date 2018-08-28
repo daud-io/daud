@@ -55,7 +55,7 @@
 
                 if (followFleet != null)
                 {
-                    var halfViewport = new Vector2(2000, 2000);
+                    var halfViewport = new Vector2(3000, 3000);
 
                     var updates = BodyCache.Update(
                         world.Bodies,
@@ -65,6 +65,7 @@
                     );
 
                     var updatedBuckets = updates.Take(10);
+                    //var updatedBuckets = updates;
 
                     foreach (var update in updatedBuckets)
                     {

@@ -142,7 +142,7 @@
         requestAnimationFrame(gameLoop);
         var currentTime = performance.now();
         //console.log('game');
-        context.clearRect(0, 0, canvas.width, canvas.height);
+        //context.clearRect(0, 0, canvas.width, canvas.height);
 
         if (view && view.PlayerView) {
             var pv = view.PlayerView;
@@ -151,7 +151,7 @@
 
             camera.moveTo(position.X, position.Y);
             //console.log(position);
-            camera.zoomTo(3000);
+            camera.zoomTo(5000);
         }
 
         camera.begin();

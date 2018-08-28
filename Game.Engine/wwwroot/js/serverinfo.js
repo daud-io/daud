@@ -108,6 +108,12 @@
     attributes.push(buildAttribute("obstacles", "Obstacles", 0, 25, 1));
 
     attributes.push(buildAttributeToggle("team mode", "TeamMode"));
+
+    attributes.push(buildAttribute("flocking", "FlockWeight", 0, 0.2, 0.01));
+    attributes.push(buildAttribute("cohesion", "FlockCohesion", 0, 20, 0.01));
+    attributes.push(buildAttribute("separation", "FlockSeparation", 0, 20, 0.01));
+    attributes.push(buildAttribute("separation distance", "FlockSeparationMinimumDistance", 0, 400, 20));
+    attributes.push(buildAttribute("alignment", "FlockAlignment", 0, 0.2, 0.01));
     
     
     setInterval(function () {

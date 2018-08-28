@@ -47,6 +47,10 @@
 
             this.Owner.ShipDeath(player, this, bullet);
 
+            var random = new Random();
+            if (random.NextDouble() < 0.3)
+                fleet.AddShip();
+
             Deinit();
         }
 
@@ -67,12 +71,19 @@
         {
             if (projectedBody is Bullet bullet)
             {
+                // if it came from this ship
                 if (bullet.Owner == this)
                     return false;
 
+                // if it came from this fleet
+                if (bullet.Owner?.Owner == this?.Owner)
+                    return false;
+
+                // team mode ensures that bullets of like colors do no harm
                 if (World.Hook.TeamMode && bullet.Color == this.Color)
                     return false;
 
+                // did it actually hit
                 if ((Vector2.Distance(projectedBody.Position, this.Position)
                         <= this.Size + projectedBody.Size))
                     return true;

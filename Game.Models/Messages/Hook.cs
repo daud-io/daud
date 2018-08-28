@@ -10,8 +10,8 @@
             {
                 return new Hook
                 {
-                    BaseThrust = 0.15f,
-                    HealthHitCost = 20,
+                    BaseThrust = 0.075f,
+                    HealthHitCost = 100,
                     MaxBoostTime = 100,
                     HealthRegenerationPerFrame = 0.3f,
                     MaxSpeed = 0.3f,
@@ -29,7 +29,13 @@
                     Obstacles = 6,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 1000,
-                    TeamMode = true
+                    TeamMode = true,
+
+                    FlockAlignment = 0.0f,
+                    FlockCohesion = 3.69f,
+                    FlockSeparation = 0.2f,
+                    FlockSeparationMinimumDistance = 180,
+                    FlockWeight = 0.14f
                 };
             }
         }
@@ -55,6 +61,14 @@
         public int ObstacleMaxSize { get; set; }
 
         public bool TeamMode { get; set; }
+
+
+        public float FlockAlignment { get; set; }
+        public float FlockCohesion { get; set; }
+        public float FlockSeparation { get; set; }
+        public int FlockSeparationMinimumDistance { get; set; }
+        public float FlockWeight { get; set; }
+
 
         public int StepTime { get; set; }
     }
