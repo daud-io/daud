@@ -1,0 +1,37 @@
+﻿namespace Game.Engine.Networking.FlatBuffers;
+
+table WorldView
+{
+	time:long;
+	playerCount:short;
+	isAlive:bool = true;
+	updates:[Body];
+	deletes:[long];
+	messages:[Message];
+	camera:[Body];
+}
+
+table Body
+{
+	id:long;
+	definitionTime:long;
+	size:int;
+	sprite:string;
+	color: string;
+	caption: string;
+	angle: float;
+	momentum:Vec2;
+	orignialPosition:Vec2;
+}
+
+table Message
+{
+	message:string;
+}
+
+struct Vec2 {
+	x:float;
+	y:float;
+}
+
+root_type WorldView;
