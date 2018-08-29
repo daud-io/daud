@@ -22,7 +22,7 @@
                     BulletLife = 2000,
                     BulletSpeed = 1.2f,
                     BotPerXPoints = 500,
-                    BotBase = 1,
+                    BotBase = 4,
                     StepTime = 40,
                     Obstacles = 6,
                     ObstacleMaxMomentum = 0.1f,

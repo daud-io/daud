@@ -83,45 +83,31 @@
     };
 
     connection.onView = function (newView) {
+        viewCounter++;
+
         view = {};
         lastFrameTime = performance.now();
-        if (newView) {
-            view.time = newView.time().toFloat64()
-            serverTimeOffset = view.time - lastFrameTime;
+        view.time = newView.time().toFloat64()
+        serverTimeOffset = view.time - lastFrameTime;
 
-            var updatesLength = newView.updatesLength();
-            var updates = [];
-            for (var i = 0; i < updatesLength; i++) {
-                var update = newView.updates(i);
+        var updatesLength = newView.updatesLength();
+        var updates = [];
+        for (var i = 0; i < updatesLength; i++) {
+            var update = newView.updates(i);
 
-                updates.push(bodyFromServer(update));
-            }
-
-            var deletes = [];
-            var deletesLength = newView.deletesLength();
-            for (var i = 0; i < deletesLength; i++)
-                deletes.push(newView.deletes(i));
-            
-            cache.update(updates, deletes);
-
-            view.camera = bodyFromServer(newView.camera());
-
-            /*if (pv.Leaderboard != null)
-                leaderboard.setData(pv.Leaderboard);
-
-            if (pv.Messages) {
-                var messages = pv.Messages;
-                for (var i = 0; i < messages.length; i++)
-                    log(messages[i]);
-            }
-            if (Game.Hook && Game.Hook.New) {
-                connection.sendHook(Game.Hook);
-                Game.Hook.New = false;
-            }
-            if (pv.Hook) {
-                Game.Hook = pv.Hook;
-            }*/
+            updates.push(bodyFromServer(update));
         }
+
+        updateCounter += updatesLength;
+
+        var deletes = [];
+        var deletesLength = newView.deletesLength();
+        for (var i = 0; i < deletesLength; i++)
+            deletes.push(newView.deletes(i));
+            
+        cache.update(updates, deletes);
+
+        view.camera = bodyFromServer(newView.camera());
     };
 
     var lastControl = {};
@@ -179,20 +165,39 @@
         sizeCanvas();
     });
 
+    Game.Stats = {
+        framesPerSecond: 0,
+        viewsPerSecond: 0,
+        updatesPerSecond: 0
+    };
+
+    var frameCounter = 0;
+    var viewCounter = 0;
+    var updateCounter = 0;
+
+    setInterval(function () {
+        Game.Stats.framesPerSecond = frameCounter;
+        Game.Stats.viewsPerSecond = viewCounter;
+        Game.Stats.updatesPerSecond = updateCounter;
+
+        if (frameCounter == 0) {
+            console.log('backgrounded');
+        }
+        frameCounter = 0;
+        viewCounter = 0;
+        updateCounter = 0;
+    }, 1000);
 
     // Game Loop
     function gameLoop() {
         requestAnimationFrame(gameLoop);
         var currentTime = performance.now();
-        //console.log('game');
-        //context.clearRect(0, 0, canvas.width, canvas.height);
+        frameCounter++;
 
         if (view) {
-
             var position = interpolator.projectObject(view.camera, currentTime + serverTimeOffset);
 
             camera.moveTo(position.X, position.Y);
-            //console.log(position);
             camera.zoomTo(5000);
         }
 
@@ -201,6 +206,7 @@
 
         renderer.view = view;
         renderer.draw(cache, interpolator, currentTime + serverTimeOffset);
+
         camera.end();
 
         leaderboard.draw();

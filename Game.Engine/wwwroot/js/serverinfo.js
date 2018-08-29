@@ -5,6 +5,9 @@
     var bandwidthDisplay = $('<li></li>');
     $('#ansiblelinks').append(bandwidthDisplay);
 
+    var statsDisplay = $('<li></li>');
+    $('#ansiblelinks').append(statsDisplay);
+
     var attributes = [];
 
     var buildAttributeToggle = function (labelText, propertyName) {
@@ -83,6 +86,7 @@
         return updater;
     }
 
+    /*
     attributes.push(buildAttribute("thrust", "BaseThrust", 0, 1, .025));
     attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 1, .025));
 
@@ -115,10 +119,16 @@
     attributes.push(buildAttribute("separation", "FlockSeparation", 0, 40, 0.01));
     attributes.push(buildAttribute("sep  dist", "FlockSeparationMinimumDistance", 0, 400, 20));
     attributes.push(buildAttribute("alignment", "FlockAlignment", 0, 0.2, 0.01));
-    
+    */
     
     setInterval(function () {
         var connection = window.Game.primaryConnection;
+
+        statsDisplay.text(
+            'vps:' + Game.Stats.viewsPerSecond +
+            ' ups:' + Game.Stats.updatesPerSecond +
+            ' fps:' + Game.Stats.framesPerSecond
+        );
 
         if (connection !== null) {
             bandwidthDisplay.text('bandwidth: '
