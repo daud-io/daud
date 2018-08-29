@@ -81,63 +81,94 @@
                     var builder = new FlatBufferBuilder(1);
 
                     // define camera
-                    PhysicalBody.StartPhysicalBody(builder);
-                    PhysicalBody.AddDefinitionTime(builder, followFleet?.DefinitionTime ?? 0);
+                    NetBody.StartNetBody(builder);
+                    NetBody.AddDefinitionTime(builder, followFleet?.DefinitionTime ?? 0);
                     var momentum = followFleet?.Momentum ?? new Vector2(0, 0);
                     if (followFleet.Momentum != null)
-                        PhysicalBody.AddMomentum(builder, FromVector(builder, followFleet.Momentum));
+                        NetBody.AddMomentum(builder, FromVector(builder, followFleet.Momentum));
 
                     if (followFleet.OriginalPosition != null)
-                        PhysicalBody.AddOriginalPosition(builder, FromVector(builder, followFleet.OriginalPosition));
+                        NetBody.AddOriginalPosition(builder, FromVector(builder, followFleet.OriginalPosition));
 
-                    var cameraBody = PhysicalBody.EndPhysicalBody(builder);
+                    var cameraBody = NetBody.EndNetBody(builder);
 
-                    var updateVector = WorldView.CreateUpdatesVector(builder, updatedBodies.Select(u =>
+                    var updateVector = NetWorldView.CreateUpdatesVector(builder, updatedBodies.Select(u =>
                     {
 
                         var stringSprite = builder.CreateString(u.Sprite ?? string.Empty);
                         var stringColor = builder.CreateString(u.Color ?? string.Empty);
                         var stringCaption = builder.CreateString(u.Caption ?? string.Empty);
 
-                        PhysicalBody.StartPhysicalBody(builder);
-                        PhysicalBody.AddId(builder, u.ID);
-                        PhysicalBody.AddDefinitionTime(builder, u.DefinitionTime);
-                        PhysicalBody.AddSize(builder, u.Size);
-                        PhysicalBody.AddSprite(builder, stringSprite);
-                        PhysicalBody.AddColor(builder, stringColor);
-                        PhysicalBody.AddCaption(builder, stringCaption);
-                        PhysicalBody.AddAngle(builder, u.Angle);
-                        PhysicalBody.AddMomentum(builder, FromVector(builder, u.Momentum));
-                        PhysicalBody.AddOriginalPosition(builder, FromVector(builder, u.OriginalPosition));
+                        NetBody.StartNetBody(builder);
+                        NetBody.AddId(builder, u.ID);
+                        NetBody.AddDefinitionTime(builder, u.DefinitionTime);
+                        NetBody.AddSize(builder, u.Size);
+                        NetBody.AddSprite(builder, stringSprite);
+                        NetBody.AddColor(builder, stringColor);
+                        NetBody.AddCaption(builder, stringCaption);
+                        NetBody.AddAngle(builder, u.Angle);
+                        NetBody.AddMomentum(builder, FromVector(builder, u.Momentum));
+                        NetBody.AddOriginalPosition(builder, FromVector(builder, u.OriginalPosition));
 
-                        return PhysicalBody.EndPhysicalBody(builder);
+                        return NetBody.EndNetBody(builder);
                     }).ToArray());
 
-                    var deletesVector = WorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
+                    var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
                         b.BodyUpdated.ID
                     ).ToArray());
 
-                    WorldView.StartWorldView(builder);
-                    WorldView.AddCamera(builder, cameraBody);
-                    WorldView.AddIsAlive(builder, player?.IsAlive ?? false);
-                    WorldView.AddTime(builder, world.Time);
+                    NetWorldView.StartNetWorldView(builder);
+                    NetWorldView.AddCamera(builder, cameraBody);
+                    NetWorldView.AddIsAlive(builder, player?.IsAlive ?? false);
+                    NetWorldView.AddTime(builder, world.Time);
 
-                    WorldView.AddUpdates(builder, updateVector);
+                    NetWorldView.AddUpdates(builder, updateVector);
 
-                    WorldView.AddDeletes(builder, deletesVector);
+                    NetWorldView.AddDeletes(builder, deletesVector);
 
-                    var worldView = WorldView.EndWorldView(builder);
+                    var worldView = NetWorldView.EndNetWorldView(builder);
+
+
 
                     // messages, hook, leaderboard
 
                     HookHash = newHash;
-                    LeaderboardTime = (world.Leaderboard?.Time ?? 0);
 
-                    var q = Quantum.CreateQuantum(builder, AllMessages.WorldView, worldView.Value);
+                    var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetWorldView, worldView.Value);
                     builder.Finish(q.Value);
 
 
                     // if(updates.Any())
+                    await this.SendAsync(builder.DataBuffer, cancellationToken);
+                }
+
+                if (LeaderboardTime != (world.Leaderboard?.Time ?? 0))
+                {
+                    LeaderboardTime = (world.Leaderboard?.Time ?? 0);
+
+                    var builder = new FlatBufferBuilder(1);
+
+                    var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
+                    {
+                        var stringName = builder.CreateString(e.Name);
+                        var stringColor = builder.CreateString(e.Color);
+
+                        NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
+                        NetLeaderboardEntry.AddName(builder, stringName);
+                        NetLeaderboardEntry.AddColor(builder, stringColor);
+                        NetLeaderboardEntry.AddScore(builder, e.Score);
+
+                        return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
+                    }).ToArray());
+
+                    var stringType = builder.CreateString(world.Leaderboard.Type ?? string.Empty);
+                    NetLeaderboard.StartNetLeaderboard(builder);
+                    NetLeaderboard.AddEntries(builder, entriesVector);
+                    NetLeaderboard.AddType(builder, stringType);
+
+                    var leaderboardOffset = NetLeaderboard.EndNetLeaderboard(builder);
+
+                    builder.Finish(NetQuantum.CreateNetQuantum(builder, AllMessages.NetLeaderboard, leaderboardOffset.Value).Value);
                     await this.SendAsync(builder.DataBuffer, cancellationToken);
                 }
             }
@@ -166,22 +197,22 @@
             }
         }
 
-        private async Task HandleIncomingMessage(Quantum quantum)
+        private async Task HandleIncomingMessage(NetQuantum quantum)
         {
             switch (quantum.MessageType)
             {
-                case AllMessages.Ping:
-                    var ping = quantum.Message<FlatBuffers.Ping>().Value;
+                case AllMessages.NetPing:
+                    var ping = quantum.Message<NetPing>().Value;
                     var builder = new FlatBufferBuilder(1);
-                    var pong = FlatBuffers.Ping.CreatePing(builder, world.Time);
-                    var q = Quantum.CreateQuantum(builder, AllMessages.Ping, pong.Value);
+                    var pong = NetPing.CreateNetPing(builder, world.Time);
+                    var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
                     builder.Finish(q.Value);
 
                     await SendAsync(builder.DataBuffer, default(CancellationToken));
                     break;
 
-                case AllMessages.Spawn:
-                    var spawn = quantum.Message<FlatBuffers.Spawn>().Value;
+                case AllMessages.NetSpawn:
+                    var spawn = quantum.Message<NetSpawn>().Value;
 
                     if (player == null)
                     {
@@ -195,9 +226,9 @@
                     player.Spawn(spawn.Name, spawn.Ship, spawn.Color);
 
                     break;
-                case AllMessages.ControlInput:
-                    var input = quantum.Message<FlatBuffers.ControlInput>().Value;
-                    player?.SetControl(new Game.Engine.Core.ControlInput
+                case AllMessages.NetControlInput:
+                    var input = quantum.Message<NetControlInput>().Value;
+                    player?.SetControl(new ControlInput
                     {
                         Angle = input.Angle,
                         BoostRequested = input.Boost,
@@ -221,7 +252,7 @@
             world = Worlds.Find();
 
             var builder = new FlatBufferBuilder(1);
-            var ping = FlatBuffers.Ping.CreatePing(builder, world.Time);
+            var ping = NetPing.CreateNetPing(builder, world.Time);
             builder.Finish(ping.Value);
 
             await this.SendAsync(builder.DataBuffer, cancellationToken);
@@ -241,7 +272,7 @@
             }
         }
 
-        private async Task<bool> StartReadAsync(Func<Quantum, Task> onReceive, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<bool> StartReadAsync(Func<NetQuantum, Task> onReceive, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
@@ -270,7 +301,7 @@
                             {
                                 var bytes = ms.GetBuffer();
                                 var dataBuffer = new ByteBuffer(bytes);
-                                var quantum = Quantum.GetRootAsQuantum(dataBuffer);
+                                var quantum = NetQuantum.GetRootAsNetQuantum(dataBuffer);
 
                                 await onReceive(quantum);
 

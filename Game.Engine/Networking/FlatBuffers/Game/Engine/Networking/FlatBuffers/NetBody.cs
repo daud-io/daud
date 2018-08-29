@@ -8,14 +8,14 @@ namespace Game.Engine.Networking.FlatBuffers
 using global::System;
 using global::Google.FlatBuffers;
 
-public struct PhysicalBody : IFlatbufferObject
+public struct NetBody : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static PhysicalBody GetRootAsPhysicalBody(ByteBuffer _bb) { return GetRootAsPhysicalBody(_bb, new PhysicalBody()); }
-  public static PhysicalBody GetRootAsPhysicalBody(ByteBuffer _bb, PhysicalBody obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static NetBody GetRootAsNetBody(ByteBuffer _bb) { return GetRootAsNetBody(_bb, new NetBody()); }
+  public static NetBody GetRootAsNetBody(ByteBuffer _bb, NetBody obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-  public PhysicalBody __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public NetBody __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public int Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public long DefinitionTime { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
@@ -30,7 +30,7 @@ public struct PhysicalBody : IFlatbufferObject
   public Vec2? Momentum { get { int o = __p.__offset(18); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public Vec2? OriginalPosition { get { int o = __p.__offset(20); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
-  public static void StartPhysicalBody(FlatBufferBuilder builder) { builder.StartObject(9); }
+  public static void StartNetBody(FlatBufferBuilder builder) { builder.StartObject(9); }
   public static void AddId(FlatBufferBuilder builder, int id) { builder.AddInt(0, id, 0); }
   public static void AddDefinitionTime(FlatBufferBuilder builder, long definitionTime) { builder.AddLong(1, definitionTime, 0); }
   public static void AddSize(FlatBufferBuilder builder, int size) { builder.AddInt(2, size, 0); }
@@ -40,9 +40,9 @@ public struct PhysicalBody : IFlatbufferObject
   public static void AddAngle(FlatBufferBuilder builder, float angle) { builder.AddFloat(6, angle, 0.0f); }
   public static void AddMomentum(FlatBufferBuilder builder, Offset<Vec2> momentumOffset) { builder.AddStruct(7, momentumOffset.Value, 0); }
   public static void AddOriginalPosition(FlatBufferBuilder builder, Offset<Vec2> originalPositionOffset) { builder.AddStruct(8, originalPositionOffset.Value, 0); }
-  public static Offset<PhysicalBody> EndPhysicalBody(FlatBufferBuilder builder) {
+  public static Offset<NetBody> EndNetBody(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return new Offset<PhysicalBody>(o);
+    return new Offset<NetBody>(o);
   }
 };
 

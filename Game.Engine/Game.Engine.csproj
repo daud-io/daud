@@ -5,14 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\js\game_generated.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\js\game_generated.js" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="KdSoft.FlatBuffers" Version="1.9.3" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />

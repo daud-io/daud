@@ -8,63 +8,63 @@ namespace Game.Engine.Networking.FlatBuffers
 using global::System;
 using global::Google.FlatBuffers;
 
-public struct WorldView : IFlatbufferObject
+public struct NetWorldView : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static WorldView GetRootAsWorldView(ByteBuffer _bb) { return GetRootAsWorldView(_bb, new WorldView()); }
-  public static WorldView GetRootAsWorldView(ByteBuffer _bb, WorldView obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static NetWorldView GetRootAsNetWorldView(ByteBuffer _bb) { return GetRootAsNetWorldView(_bb, new NetWorldView()); }
+  public static NetWorldView GetRootAsNetWorldView(ByteBuffer _bb, NetWorldView obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-  public WorldView __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public NetWorldView __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public long Time { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   public short PlayerCount { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetShort(o + __p.bb_pos) : (short)0; } }
   public bool IsAlive { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
-  public PhysicalBody? Updates(int j) { int o = __p.__offset(10); return o != 0 ? (PhysicalBody?)(new PhysicalBody()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public NetBody? Updates(int j) { int o = __p.__offset(10); return o != 0 ? (NetBody?)(new NetBody()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int UpdatesLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
   public int Deletes(int j) { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(__p.__vector(o) + j * 4) : (int)0; }
   public int DeletesLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
   public ArraySegment<byte>? GetDeletesBytes() { return __p.__vector_as_arraysegment(12); }
-  public Announcement? Announcements(int j) { int o = __p.__offset(14); return o != 0 ? (Announcement?)(new Announcement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public NetAnnouncement? Announcements(int j) { int o = __p.__offset(14); return o != 0 ? (NetAnnouncement?)(new NetAnnouncement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int AnnouncementsLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public PhysicalBody? Camera { get { int o = __p.__offset(16); return o != 0 ? (PhysicalBody?)(new PhysicalBody()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public NetBody? Camera { get { int o = __p.__offset(16); return o != 0 ? (NetBody?)(new NetBody()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
-  public static Offset<WorldView> CreateWorldView(FlatBufferBuilder builder,
+  public static Offset<NetWorldView> CreateNetWorldView(FlatBufferBuilder builder,
       long time = 0,
       short playerCount = 0,
       bool isAlive = true,
       VectorOffset updatesOffset = default(VectorOffset),
       VectorOffset deletesOffset = default(VectorOffset),
       VectorOffset announcementsOffset = default(VectorOffset),
-      Offset<PhysicalBody> cameraOffset = default(Offset<PhysicalBody>)) {
+      Offset<NetBody> cameraOffset = default(Offset<NetBody>)) {
     builder.StartObject(7);
-    WorldView.AddTime(builder, time);
-    WorldView.AddCamera(builder, cameraOffset);
-    WorldView.AddAnnouncements(builder, announcementsOffset);
-    WorldView.AddDeletes(builder, deletesOffset);
-    WorldView.AddUpdates(builder, updatesOffset);
-    WorldView.AddPlayerCount(builder, playerCount);
-    WorldView.AddIsAlive(builder, isAlive);
-    return WorldView.EndWorldView(builder);
+    NetWorldView.AddTime(builder, time);
+    NetWorldView.AddCamera(builder, cameraOffset);
+    NetWorldView.AddAnnouncements(builder, announcementsOffset);
+    NetWorldView.AddDeletes(builder, deletesOffset);
+    NetWorldView.AddUpdates(builder, updatesOffset);
+    NetWorldView.AddPlayerCount(builder, playerCount);
+    NetWorldView.AddIsAlive(builder, isAlive);
+    return NetWorldView.EndNetWorldView(builder);
   }
 
-  public static void StartWorldView(FlatBufferBuilder builder) { builder.StartObject(7); }
+  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(7); }
   public static void AddTime(FlatBufferBuilder builder, long time) { builder.AddLong(0, time, 0); }
   public static void AddPlayerCount(FlatBufferBuilder builder, short playerCount) { builder.AddShort(1, playerCount, 0); }
   public static void AddIsAlive(FlatBufferBuilder builder, bool isAlive) { builder.AddBool(2, isAlive, true); }
   public static void AddUpdates(FlatBufferBuilder builder, VectorOffset updatesOffset) { builder.AddOffset(3, updatesOffset.Value, 0); }
-  public static VectorOffset CreateUpdatesVector(FlatBufferBuilder builder, Offset<PhysicalBody>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateUpdatesVector(FlatBufferBuilder builder, Offset<NetBody>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartUpdatesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddDeletes(FlatBufferBuilder builder, VectorOffset deletesOffset) { builder.AddOffset(4, deletesOffset.Value, 0); }
   public static VectorOffset CreateDeletesVector(FlatBufferBuilder builder, int[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddInt(data[i]); return builder.EndVector(); }
   public static void StartDeletesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddAnnouncements(FlatBufferBuilder builder, VectorOffset announcementsOffset) { builder.AddOffset(5, announcementsOffset.Value, 0); }
-  public static VectorOffset CreateAnnouncementsVector(FlatBufferBuilder builder, Offset<Announcement>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateAnnouncementsVector(FlatBufferBuilder builder, Offset<NetAnnouncement>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartAnnouncementsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCamera(FlatBufferBuilder builder, Offset<PhysicalBody> cameraOffset) { builder.AddOffset(6, cameraOffset.Value, 0); }
-  public static Offset<WorldView> EndWorldView(FlatBufferBuilder builder) {
+  public static void AddCamera(FlatBufferBuilder builder, Offset<NetBody> cameraOffset) { builder.AddOffset(6, cameraOffset.Value, 0); }
+  public static Offset<NetWorldView> EndNetWorldView(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return new Offset<WorldView>(o);
+    return new Offset<NetWorldView>(o);
   }
 };
 

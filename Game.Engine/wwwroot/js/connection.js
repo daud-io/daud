@@ -2,6 +2,7 @@
     var Connection = function() {
 
         this.onView = function (view) { };
+        this.onLeaderboard = function (leaderboard) { };
 
         this.reloading = false;
         this.connected = false;
@@ -55,25 +56,24 @@
 
             var builder = new flatbuffers.Builder(0);
 
-            Game.Engine.Networking.FlatBuffers.Ping.startPing(builder);
+            Game.Engine.Networking.FlatBuffers.NetPing.startNetPing(builder);
 
             this.pingSent = performance.now();
 
             //Game.Engine.Networking.FlatBuffers.Ping.addTime(builder, this.pingSent);
-            var ping = Game.Engine.Networking.FlatBuffers.Ping.endPing(builder);
+            var ping = Game.Engine.Networking.FlatBuffers.NetPing.endNetPing(builder);
 
 
-            Game.Engine.Networking.FlatBuffers.Quantum.startQuantum(builder);
-            Game.Engine.Networking.FlatBuffers.Quantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.Ping);
-            Game.Engine.Networking.FlatBuffers.Quantum.addMessage(builder, ping);
-            var quantum = Game.Engine.Networking.FlatBuffers.Quantum.endQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.startNetQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.NetPing);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessage(builder, ping);
+            var quantum = Game.Engine.Networking.FlatBuffers.NetQuantum.endNetQuantum(builder);
 
             builder.finish(quantum);
 
             this.send(builder.asUint8Array());
         },
         sendSpawn: function (name, color, ship) {
-            console.log('spawned');
 
             var builder = new flatbuffers.Builder(0);
 
@@ -81,35 +81,36 @@
             var stringName = builder.createString(name || "unknown");
             var stringShip = builder.createString(ship || "ship_gray");
 
-            Game.Engine.Networking.FlatBuffers.Spawn.startSpawn(builder);
-            Game.Engine.Networking.FlatBuffers.Spawn.addColor(builder, stringColor);
-            Game.Engine.Networking.FlatBuffers.Spawn.addName(builder, stringName);
-            Game.Engine.Networking.FlatBuffers.Spawn.addShip(builder, stringShip);
-            var spawn = Game.Engine.Networking.FlatBuffers.Spawn.endSpawn(builder);
+            Game.Engine.Networking.FlatBuffers.NetSpawn.startNetSpawn(builder);
+            Game.Engine.Networking.FlatBuffers.NetSpawn.addColor(builder, stringColor);
+            Game.Engine.Networking.FlatBuffers.NetSpawn.addName(builder, stringName);
+            Game.Engine.Networking.FlatBuffers.NetSpawn.addShip(builder, stringShip);
+            var spawn = Game.Engine.Networking.FlatBuffers.NetSpawn.endNetSpawn(builder);
 
-            Game.Engine.Networking.FlatBuffers.Quantum.startQuantum(builder);
-            Game.Engine.Networking.FlatBuffers.Quantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.Spawn);
-            Game.Engine.Networking.FlatBuffers.Quantum.addMessage(builder, spawn);
-            var quantum = Game.Engine.Networking.FlatBuffers.Quantum.endQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.startNetQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.NetSpawn);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessage(builder, spawn);
+            var quantum = Game.Engine.Networking.FlatBuffers.NetQuantum.endNetQuantum(builder);
 
             builder.finish(quantum);
 
             this.send(builder.asUint8Array());
+            console.log('spawned');
 
         },
         sendControl: function (angle, boost, shoot) {
             var builder = new flatbuffers.Builder(0);
 
-            Game.Engine.Networking.FlatBuffers.ControlInput.startControlInput(builder);
-            Game.Engine.Networking.FlatBuffers.ControlInput.addAngle(builder, angle);
-            Game.Engine.Networking.FlatBuffers.ControlInput.addBoost(builder, boost);
-            Game.Engine.Networking.FlatBuffers.ControlInput.addShoot(builder, shoot);
-            var input = Game.Engine.Networking.FlatBuffers.ControlInput.endControlInput(builder);
+            Game.Engine.Networking.FlatBuffers.NetControlInput.startNetControlInput(builder);
+            Game.Engine.Networking.FlatBuffers.NetControlInput.addAngle(builder, angle);
+            Game.Engine.Networking.FlatBuffers.NetControlInput.addBoost(builder, boost);
+            Game.Engine.Networking.FlatBuffers.NetControlInput.addShoot(builder, shoot);
+            var input = Game.Engine.Networking.FlatBuffers.NetControlInput.endNetControlInput(builder);
 
-            Game.Engine.Networking.FlatBuffers.Quantum.startQuantum(builder);
-            Game.Engine.Networking.FlatBuffers.Quantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.ControlInput);
-            Game.Engine.Networking.FlatBuffers.Quantum.addMessage(builder, input);
-            var quantum = Game.Engine.Networking.FlatBuffers.Quantum.endQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.startNetQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.NetControlInput);
+            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessage(builder, input);
+            var quantum = Game.Engine.Networking.FlatBuffers.NetQuantum.endNetQuantum(builder);
 
             builder.finish(quantum);
 
@@ -141,19 +142,39 @@
 
             this.statBytesDown += data.byteLength;
 
-            var quantum = Game.Engine.Networking.FlatBuffers.Quantum.getRootAsQuantum(buf);
+            var quantum = Game.Engine.Networking.FlatBuffers.NetQuantum.getRootAsNetQuantum(buf);
 
             var messageType = quantum.messageType();
 
             switch (messageType) {
-                case Game.Engine.Networking.FlatBuffers.AllMessages.WorldView:
+                case Game.Engine.Networking.FlatBuffers.AllMessages.NetWorldView:
 
-                    var message = quantum.message(new Game.Engine.Networking.FlatBuffers.WorldView());
+                    var message = quantum.message(new Game.Engine.Networking.FlatBuffers.NetWorldView());
 
                     this.onView(message);
                     break;
-                case Game.Engine.Networking.FlatBuffers.AllMessages.Ping: // Ping
+                case Game.Engine.Networking.FlatBuffers.AllMessages.NetPing: // Ping
                     this.latency = performance.now() - this.pingSent;
+                    break;
+                case Game.Engine.Networking.FlatBuffers.AllMessages.NetLeaderboard:
+                    var message = quantum.message(new Game.Engine.Networking.FlatBuffers.NetLeaderboard());
+
+                    var entriesLength = message.entriesLength();
+                    var entries = [];
+                    for (var i = 0; i < entriesLength; i++) {
+                        var entry = message.entries(i);
+
+                        entries.push({
+                            Name: entry.name(),
+                            Color: entry.color(),
+                            Score: entry.score()
+                        });
+                    }
+
+                    this.onLeaderboard({
+                        Type: message.type(),
+                        Entries: entries
+                    });
                     break;
             }
         }

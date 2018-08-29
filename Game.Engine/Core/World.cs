@@ -106,7 +106,7 @@
                                 .ToList(),
                         Time = this.Time
                     };
-                TimeLeaderboardRecalc += 750;
+                TimeLeaderboardRecalc = this.Time + 750;
             }
         }
 

@@ -1,49 +1,64 @@
 ﻿namespace Game.Engine.Networking.FlatBuffers;
 
-union AllMessages {
-	WorldView,
-	Hello,
-	Spawn,
-	ControlInput,
-	Ping
+union AllMessages
+{
+	NetWorldView,
+	NetHello,
+	NetSpawn,
+	NetControlInput,
+	NetPing,
+	NetLeaderboard
 }
 
-table Hello
+table NetLeaderboard
+{
+	type:string;
+	entries:[NetLeaderboardEntry];
+}
+
+table NetLeaderboardEntry
+{
+	name: string;
+	score: int;
+	color: string;
+}
+
+table NetHello
 {
 	time:long;
 }
 
-table Spawn
+table NetSpawn
 {
 	name:string;
 	ship:string;
 	color:string;
 }
 
-table ControlInput
+table NetControlInput
 {
 	angle:float;
 	boost:bool;
 	shoot:bool;
 }
 
-table Ping
+table NetPing
 {
 	time:long;
 }
 
-table WorldView
+table NetWorldView
 {
 	time:long;
 	playerCount:short;
 	isAlive:bool = true;
-	updates:[PhysicalBody];
+	updates:[NetBody];
 	deletes:[int];
-	announcements:[Announcement];
-	camera:PhysicalBody;
+	announcements:[NetAnnouncement];
+	camera:NetBody;
 }
 
-table PhysicalBody
+table NetBody
 {
 	id:int;
 	definitionTime:long;
@@ -56,7 +71,7 @@ table PhysicalBody
 	originalPosition:Vec2;
 }
 
-table Announcement
+table NetAnnouncement
 {
 	Text:string;
 }
@@ -66,9 +81,9 @@ struct Vec2 {
 	y:float;
 }
 
-table Quantum
+table NetQuantum
 {
 	message: AllMessages;
 }
 
-root_type Quantum;
+root_type NetQuantum;

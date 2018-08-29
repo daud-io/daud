@@ -78,6 +78,10 @@
         return newBody;
     }
 
+    connection.onLeaderboard = function (lb) {
+        leaderboard.setData(lb);
+    };
+
     connection.onView = function (newView) {
         view = {};
         lastFrameTime = performance.now();
@@ -85,7 +89,6 @@
             view.time = newView.time().toFloat64()
             serverTimeOffset = view.time - lastFrameTime;
 
-            var updatesRaw = newView.updates();
             var updatesLength = newView.updatesLength();
             var updates = [];
             for (var i = 0; i < updatesLength; i++) {
@@ -208,11 +211,7 @@
             var dy = Game.Controls.mouseY - cy
             var dx = Game.Controls.mouseX - cx
 
-
-            var theta = Math.atan2(dy, dx);
-            //console.log([Game.Controls.mouseX, Game.Controls.mouseY, theta]);
-
-            angle = theta;
+            angle = Math.atan2(dy, dx);
         }
 
         /*
