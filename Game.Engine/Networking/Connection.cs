@@ -64,7 +64,7 @@
                         Vector2.Add(followFleet.Position, halfViewport)
                     );
 
-                    var updatedBuckets = updates.Take(10);
+                    var updatedBuckets = updates.Take(30);
                     //var updatedBuckets = updates;
 
                     foreach (var update in updatedBuckets)

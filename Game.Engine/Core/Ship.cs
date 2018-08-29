@@ -27,6 +27,7 @@
         [JsonIgnore]
         public int SizeMaximum { get; set; }
 
+
         public Ship()
         {
         }

@@ -32,10 +32,13 @@
                     TeamMode = true,
 
                     FlockAlignment = 0.0f,
-                    FlockCohesion = 3.69f,
-                    FlockSeparation = 0.2f,
-                    FlockSeparationMinimumDistance = 180,
-                    FlockWeight = 0.14f
+                    FlockCohesion = 0.002f,
+                    FlockCohesionMaximumDistance = 2000,
+                    FlockSeparation = 40f,
+                    FlockSeparationMinimumDistance = 200,
+                    FlockWeight = 0.14f,
+
+                    FlockSpeed = 0
                 };
             }
         }
@@ -65,9 +68,12 @@
 
         public float FlockAlignment { get; set; }
         public float FlockCohesion { get; set; }
+        public int FlockCohesionMaximumDistance { get; set; }
         public float FlockSeparation { get; set; }
         public int FlockSeparationMinimumDistance { get; set; }
         public float FlockWeight { get; set; }
+        public int FlockSpeed { get; set; }
+
 
 
         public int StepTime { get; set; }

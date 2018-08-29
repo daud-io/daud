@@ -28,6 +28,9 @@
         [JsonIgnore]
         public long TimeReloaded { get; set; } = 0;
 
+        private long NextFlockingTime = 0;
+
+
         [JsonIgnore]
         public List<Ship> Ships { get; set; } = new List<Ship>();
 
@@ -91,6 +94,10 @@
             this.AddShip();
             this.AddShip();
             this.AddShip();
+            this.AddShip();
+            this.AddShip();
+            this.AddShip();
+            this.AddShip();
         }
 
         public override void Step()
@@ -148,16 +155,21 @@
             if (Ships.Count < 2)
                 return;
 
-            var shipFlockingVector =
-                (World.Hook.FlockCohesion * Cohesion(ship))
-                + (World.Hook.FlockAlignment * Alignment(ship))
-                + (World.Hook.FlockSeparation * Separation(ship, World.Hook.FlockSeparationMinimumDistance));
+            if (World.Time >= NextFlockingTime)
+            {
+                NextFlockingTime = World.Time + World.Hook.FlockSpeed;
 
-            var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
+                var shipFlockingVector =
+                    (World.Hook.FlockCohesion * Cohesion(ship, World.Hook.FlockCohesionMaximumDistance))
+                    + (World.Hook.FlockAlignment * Alignment(ship))
+                    + (World.Hook.FlockSeparation * Separation(ship, World.Hook.FlockSeparationMinimumDistance));
 
-            steeringVector += World.Hook.FlockWeight * shipFlockingVector;
+                var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
 
-            ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+                steeringVector += World.Hook.FlockWeight * shipFlockingVector;
+
+                ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            }
         }
 
         private Vector2 FleetCenterNaive(Ship except = null)
@@ -172,13 +184,33 @@
             return accumlator;
         }
 
-        private Vector2 Cohesion(Ship ship)
+        private Vector2 Cohesion(Ship ship, int maximumDistance)
         {
-            var exclusiveCenter = FleetCenterNaive(ship);
+            var exclusiveCenter = Vector2.Zero;
+            int shipsIncluded = 0;
+            foreach (var shipOther in Ships)
+            {
+                if (shipOther != ship)
+                {
+                    var distance = Vector2.Distance(ship.Position, shipOther.Position);
+                    if (distance < maximumDistance)
+                    {
+                        exclusiveCenter += shipOther.Position;
+                        shipsIncluded++;
+                    }
+                }
+            }
 
-            var relative = exclusiveCenter - ship.Position;
+            if (shipsIncluded > 0)
+            {
+                exclusiveCenter /= shipsIncluded;
+                var relative = exclusiveCenter - ship.Position;
+                var distance = Vector2.Distance(ship.Position, exclusiveCenter);
 
-            return Vector2.Normalize(relative);
+                return Vector2.Normalize(relative) * distance;
+            }
+            else
+                return Vector2.Zero;
         }
 
         private Vector2 Separation(Ship ship, int minimumDistance)
@@ -186,13 +218,17 @@
             var accumulator = Vector2.Zero;
             foreach (var shipOther in Ships)
             {
-                var distance = Vector2.Distance(ship.Position, shipOther.Position);
-                if (distance < minimumDistance)
+                if (shipOther != ship)
                 {
-                    if (distance < 1)
-                        distance = 1;
+                    var distance = Vector2.Distance(ship.Position, shipOther.Position);
+                    if (distance < minimumDistance)
+                    {
+                        if (distance < 1)
+                            distance = 1;
 
-                    accumulator += (ship.Position - shipOther.Position) / distance*2;
+                        accumulator += (ship.Position - shipOther.Position) / (distance* distance);
+                        //accumulator -= (shipOther.Position - ship.Position);
+                    }
                 }
             }
 
