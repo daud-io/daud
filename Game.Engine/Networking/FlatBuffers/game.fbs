@@ -1,0 +1,89 @@
+﻿namespace Game.Engine.Networking.FlatBuffers;
+
+union AllMessages
+{
+	NetWorldView,
+	NetHello,
+	NetSpawn,
+	NetControlInput,
+	NetPing,
+	NetLeaderboard
+}
+
+table NetLeaderboard
+{
+	type:string;
+	entries:[NetLeaderboardEntry];
+}
+
+table NetLeaderboardEntry
+{
+	name: string;
+	score: int;
+	color: string;
+}
+
+table NetHello
+{
+	time:long;
+}
+
+table NetSpawn
+{
+	name:string;
+	ship:string;
+	color:string;
+}
+
+table NetControlInput
+{
+	angle:float;
+	boost:bool;
+	shoot:bool;
+}
+
+table NetPing
+{
+	time:long;
+}
+
+table NetWorldView
+{
+	time:long;
+	playerCount:short;
+	isAlive:bool = true;
+	updates:[NetBody];
+	deletes:[int];
+	announcements:[NetAnnouncement];
+	camera:NetBody;
+}
+
+table NetBody
+{
+	id:int;
+	definitionTime:long;
+	size:int;
+	sprite:string;
+	color: string;
+	caption: string;
+	angle: float;
+	momentum:Vec2;
+	originalPosition:Vec2;
+}
+
+table NetAnnouncement
+{
+	Text:string;
+}
+
+struct Vec2 {
+	x:float;
+	y:float;
+}
+
+table NetQuantum
+{
+	message: AllMessages;
+}
+
+root_type NetQuantum;

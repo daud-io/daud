@@ -1,11 +1,11 @@
-﻿namespace Game.Models
+﻿namespace Game.Engine.Core
 {
     using Newtonsoft.Json;
     using System.Numerics;
 
     public class Body
     {
-        public long ID { get; set; }
+        public int ID { get; set; }
         public long DefinitionTime { get; set; }
 
         [JsonIgnore]

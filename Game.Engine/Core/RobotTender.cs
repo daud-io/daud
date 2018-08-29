@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core.Actors.Bots
+﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -12,16 +12,14 @@
         {
             var bot = new Robot()
             {
-                ControlInput = new Models.Messages.ControlInput
-                {
-                    Ship = "ship0",
-                    Name = $"Daudelin #{this.Robots.Count}"
-                }
+                ShipSprite = "ship0",
+                Name = $"Daudelin #{this.Robots.Count}",
+                ControlInput = new ControlInput()
             };
 
             bot.Init(World);
 
-            bot.Spawn();
+            bot.Spawn(bot.Name, bot.ShipSprite, "green");
 
             this.Robots.Add(bot);
         }

@@ -1,6 +1,5 @@
 ﻿namespace Game.Engine.Networking
 {
-    using Game.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;

@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core.Actors.Bots
+﻿namespace Game.Engine.Core
 {
     using System;
     using System.Linq;
@@ -16,17 +16,17 @@
             if (!IsAlive)
             {
                 if (AutoSpawn)
-                    this.Spawn();
+                    this.Spawn(Name, ShipSprite, "green");
                 else
                     return;
             }
-
-            this.ControlInput.Color = "green";
 
             foreach (var player in
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
                     .Where(p => !p.Fleet?.Caption?.StartsWith("Daud") ?? true)
                     .Where(p => p.IsAlive)
+                    .OrderBy(p => Vector2.Distance(p.Fleet.Position, this.Fleet.Position))
+                    .Take(1)
                 )
             {
                 var delta = Vector2.Subtract(player.Fleet.Position, this.Fleet.Position);

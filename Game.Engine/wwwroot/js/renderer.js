@@ -30,8 +30,8 @@
 
     Renderer.prototype = {
         draw: function (cache, interpolator, currentTime) {
-            if (this.view && this.view.PlayerView) {
-                var pv = this.view.PlayerView;
+            if (this.view) {
+                var pv = this.view;
                 var ctx = this.context;
 
                 // edge of the universe

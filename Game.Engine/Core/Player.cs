@@ -1,6 +1,5 @@
 ﻿namespace Game.Engine.Core
 {
-    using Game.Models.Messages;
     using System.Collections.Generic;
 
     public class Player : IActor
@@ -19,13 +18,10 @@
 
         public bool IsAlive { get; set; } = false;
 
+        public string ShipSprite { get; set; }
+
         public void SetControl(ControlInput input)
         {
-            // max length on names
-            if (input.Name != null
-                && input.Name.Length > 15)
-                input.Name = input.Name.Substring(0, 15);
-
             this.ControlInput = input;
             this.IsControlNew = true;
         }
@@ -48,13 +44,7 @@
             worldPlayers.Add(this);
         }
 
-        public string Name
-        {
-            get
-            {
-                return this.ControlInput?.Name ?? "Unknown Fleet";
-            }
-        }
+        public string Name { get; set; }
 
         public static List<Player> GetWorldPlayers(World world)
         {
@@ -78,14 +68,13 @@
             if (this.IsControlNew)
             {
                 Fleet.Angle = ControlInput.Angle;
-                Fleet.Caption = ControlInput.Name;
 
                 foreach(var ship in Fleet.Ships)
                 {
-                    ship.Sprite = ControlInput.Ship;
-                    ship.Color = ControlInput.Color;
+                    ship.Sprite = ShipSprite;
+                    ship.Color = Fleet.Color;
                 }
-                Fleet.Color = ControlInput.Color;
+                
                 Fleet.BoostRequested = ControlInput.BoostRequested;
                 Fleet.ShootRequested = ControlInput.ShootRequested;
             }
@@ -93,8 +82,12 @@
             this.IsControlNew = false;
         }
 
-        public void Spawn()
+        public void Spawn(string name, string sprite, string color)
         {
+            if (name != null
+                && name.Length > 15)
+                name = name.Substring(0, 15);
+
             if (!IsAlive)
             {
                 IsAlive = true;
@@ -102,12 +95,15 @@
                 Fleet = new Fleet
                 {
                     Owner = this,
-                    Position = World.RandomPosition()
+                    Position = World.RandomPosition(),
+                    Caption = name,
+                    Color = color
                 };
+                ShipSprite = sprite;
+
                 Fleet.Init(World);
             }
         }
-
         
         public void Die()
         {

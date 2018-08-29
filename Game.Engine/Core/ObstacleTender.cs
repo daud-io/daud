@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core.Actors.Bots
+﻿namespace Game.Engine.Core
 {
     using System;
     using System.Collections.Generic;

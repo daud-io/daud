@@ -1,6 +1,5 @@
 ﻿namespace Game.Engine.Core
 {
-    using Game.Models;
     using System.Numerics;
 
     public class Obstacle : ActorBody, ICollide

@@ -1,4 +1,4 @@
-﻿namespace Game.Models
+﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
 
@@ -6,6 +6,7 @@
     {
         public List<Entry> Entries { get; set; }
         public long Time { get; set; } = 0;
+        public string Type { get; set; }
 
         public class Entry
         {
