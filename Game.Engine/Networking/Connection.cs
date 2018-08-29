@@ -1,8 +1,10 @@
 ﻿namespace Game.Engine.Networking
 {
     using Game.Engine.Core;
+    using Game.Engine.Networking.FlatBuffers;
     using Game.Models;
     using Game.Models.Messages;
+    using global::FlatBuffers;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
@@ -38,6 +40,11 @@
             this.Logger = logger;
         }
 
+        private Offset<Vec2> FromVector(FlatBufferBuilder builder, Vector2 vector)
+        {
+            return Vec2.CreateVec2(builder, vector.X, vector.Y);
+        }
+
         public async Task StepAsync(CancellationToken cancellationToken)
         {
             if (player != null)
@@ -51,7 +58,7 @@
                         .FirstOrDefault()
                         ?.Fleet;
 
-                IEnumerable<ProjectedBody> updatedBodies = null;
+                ProjectedBody[] updatedBodies = null;
 
                 if (followFleet != null)
                 {
@@ -72,54 +79,79 @@
                         update.BodyClient = update.BodyUpdated.Clone();
                     }
 
-                    updatedBodies = updatedBuckets.Select(b => b.BodyClient);
+                    updatedBodies = updatedBuckets.Select(b => b.BodyClient).ToArray();
 
                     var newHash = world.Hook.GetHashCode();
 
-                    var playerView = new PlayerView
+                    var builder = new FlatBufferBuilder(1);
+
+                    // define camera
+                    PhysicalBody.StartPhysicalBody(builder);
+                    PhysicalBody.AddDefinitionTime(builder, followFleet?.DefinitionTime ?? 0);
+                    var momentum = followFleet?.Momentum ?? new Vector2(0, 0);
+                    if (followFleet.Momentum != null)
+                        PhysicalBody.AddMomentum(builder, FromVector(builder, followFleet.Momentum));
+
+                    if (followFleet.OriginalPosition != null)
+                        PhysicalBody.AddOriginalPosition(builder, FromVector(builder, followFleet.OriginalPosition));
+
+                    var cameraBody = PhysicalBody.EndPhysicalBody(builder);
+
+                    var updateVector = WorldView.CreateUpdatesVector(builder, updatedBodies.Select(u =>
                     {
-                        Time = world.Time,
-                        PlayerCount = 1,
 
-                        Updates = updatedBodies.ToList(),
-                        Deletes = BodyCache.CollectStaleBuckets().Select(b => b.BodyUpdated.ID),
+                        var stringSprite = builder.CreateString(u.Sprite ?? string.Empty);
+                        var stringColor = builder.CreateString(u.Color ?? string.Empty);
+                        var stringCaption = builder.CreateString(u.Caption ?? string.Empty);
 
-                        DefinitionTime = followFleet?.DefinitionTime ?? 0,
-                        OriginalPosition = followFleet?.OriginalPosition ?? new Vector2(0, 0),
-                        Momentum = followFleet?.Momentum ?? new Vector2(0, 0),
-                        IsAlive = player?.IsAlive ?? false,
-                        Messages = player?.GetMessages(),
-                        Hook = HookHash != newHash
-                            ? world.Hook
-                            : null,
-                        Leaderboard = LeaderboardTime != (world.Leaderboard?.Time ?? 0)
-                            ? world.Leaderboard
-                            : null
-                    };
+                        PhysicalBody.StartPhysicalBody(builder);
+                        PhysicalBody.AddId(builder, u.ID);
+                        PhysicalBody.AddDefinitionTime(builder, u.DefinitionTime);
+                        PhysicalBody.AddSize(builder, u.Size);
+                        PhysicalBody.AddSprite(builder, stringSprite);
+                        PhysicalBody.AddColor(builder, stringColor);
+                        PhysicalBody.AddCaption(builder, stringCaption);
+                        PhysicalBody.AddAngle(builder, u.Angle);
+                        PhysicalBody.AddMomentum(builder, FromVector(builder, u.Momentum));
+                        PhysicalBody.AddOriginalPosition(builder, FromVector(builder, u.OriginalPosition));
+
+                        return PhysicalBody.EndPhysicalBody(builder);
+                    }).ToArray());
+
+                    var deletesVector = WorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
+                        b.BodyUpdated.ID
+                    ).ToArray());
+
+                    WorldView.StartWorldView(builder);
+                    WorldView.AddCamera(builder, cameraBody);
+                    WorldView.AddIsAlive(builder, player?.IsAlive ?? false);
+                    WorldView.AddTime(builder, world.Time);
+
+                    WorldView.AddUpdates(builder, updateVector);
+
+                    WorldView.AddDeletes(builder, deletesVector);
+
+                    var worldView = WorldView.EndWorldView(builder);
+
+                    // messages, hook, leaderboard
+
                     HookHash = newHash;
                     LeaderboardTime = (world.Leaderboard?.Time ?? 0);
 
-                    var view = new View
-                    {
-                        PlayerView = playerView
-                    };
+                    var q = Quantum.CreateQuantum(builder, AllMessages.WorldView, worldView.Value);
+                    builder.Finish(q.Value);
 
-                    if (playerView.Updates.Any() || playerView.Deletes.Any())
-                        await this.SendAsync(view, cancellationToken);
+
+                    // if(updates.Any())
+                    await this.SendAsync(builder.DataBuffer, cancellationToken);
                 }
             }
         }
 
-        private async Task SendAsync(MessageBase message, CancellationToken cancellationToken)
+        private async Task SendAsync(ByteBuffer message, CancellationToken cancellationToken)
         {
-            var bytes = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(message));
-            var buffer = new ArraySegment<byte>(bytes, 0, bytes.Length);
+            var buffer = message.ToSizedArray();
 
-            await SendAsync(buffer, cancellationToken);
-        }
-
-        public async Task SendAsync(ArraySegment<byte> buffer, CancellationToken cancellationToken)
-        {
             await WebsocketSendingSemaphore.WaitAsync();
             try
             {
@@ -127,7 +159,7 @@
 
                 await Socket.SendAsync(
                     buffer, 
-                    WebSocketMessageType.Text, 
+                    WebSocketMessageType.Binary, 
                     endOfMessage: true, 
                     cancellationToken: cancellationToken);
 
@@ -139,38 +171,52 @@
             }
         }
 
-        private async Task HandleIncomingMessage(MessageBase message)
+        private async Task HandleIncomingMessage(Quantum quantum)
         {
-            if (message is Ping)
+            switch (quantum.MessageType)
             {
-                await SendAsync(message, default(CancellationToken));
-            }
-            else if (message is Spawn)
-            {
-                var s = message as Spawn;
+                case AllMessages.Ping:
+                    var ping = quantum.Message<FlatBuffers.Ping>().Value;
+                    var builder = new FlatBufferBuilder(1);
+                    var pong = FlatBuffers.Ping.CreatePing(builder, world.Time);
+                    var q = Quantum.CreateQuantum(builder, AllMessages.Ping, pong.Value);
+                    builder.Finish(q.Value);
 
-                if (player == null)
-                {
-                    lock (world.Bodies)
+                    await SendAsync(builder.DataBuffer, default(CancellationToken));
+                    break;
+
+                case AllMessages.Spawn:
+                    var spawn = quantum.Message<FlatBuffers.Spawn>().Value;
+
+                    if (player == null)
                     {
-                        player = new Player();
-                        player.Init(world);
+                        lock (world.Bodies)
+                        {
+                            player = new Player();
+                            player.Init(world);
+                        }
                     }
-                }
 
-                player.Spawn();
+                    player.Spawn(spawn.Name, spawn.Ship, spawn.Color);
+
+                    break;
+                case AllMessages.ControlInput:
+                    var input = quantum.Message<FlatBuffers.ControlInput>().Value;
+                    player?.SetControl(new Models.Messages.ControlInput
+                    {
+                        Angle = input.Angle,
+                        BoostRequested = input.Boost,
+                        ShootRequested = input.Shoot
+                    });
+                    break;
             }
-            else if (message is ControlInput)
-            {
-                var s = message as ControlInput;
-                if (player != null)
-                    player.SetControl(s);
-            }
+
+            /*
             else if (message is Hook)
             {
                 var hook = message as Hook;
                 world.Hook = hook;  
-            }
+            }*/
         }
 
         public async Task ConnectAsync(HttpContext httpContext, WebSocket socket, CancellationToken cancellationToken = default(CancellationToken))
@@ -179,7 +225,11 @@
 
             world = Worlds.Find();
 
-            await this.SendAsync(new Hello(), cancellationToken);
+            var builder = new FlatBufferBuilder(1);
+            var ping = FlatBuffers.Ping.CreatePing(builder, world.Time);
+            builder.Finish(ping.Value);
+
+            await this.SendAsync(builder.DataBuffer, cancellationToken);
 
             ConnectionHeartbeat.Register(this);
 
@@ -196,12 +246,12 @@
             }
         }
 
-        private async Task<bool> StartReadAsync(Func<MessageBase, Task> onReceive, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task<bool> StartReadAsync(Func<Quantum, Task> onReceive, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
                 var buffer = new byte[1024 * 4];
-                WebSocketReceiveResult result = new WebSocketReceiveResult(0, WebSocketMessageType.Text, false);
+                WebSocketReceiveResult result = new WebSocketReceiveResult(0, WebSocketMessageType.Binary, false);
 
                 while (!result.CloseStatus.HasValue && Socket.State == WebSocketState.Open)
                 {
@@ -224,15 +274,10 @@
                             if (result.EndOfMessage)
                             {
                                 var bytes = ms.GetBuffer();
-                                var json = Encoding.UTF8.GetString(bytes, 0, (int)ms.Length);
-                                var item = JObject.Parse(json);
+                                var dataBuffer = new ByteBuffer(bytes);
+                                var quantum = Quantum.GetRootAsQuantum(dataBuffer);
 
-                                var enumType = (MessageBase.MessageTypes)item["Type"].Value<int>();
-                                var type = MessageBase.MessageTypeMap[enumType];
-
-                                MessageBase message = item.ToObject(type) as MessageBase;
-
-                                await onReceive(message);
+                                await onReceive(quantum);
 
                                 result = new WebSocketReceiveResult(0, WebSocketMessageType.Text, false);
                             }

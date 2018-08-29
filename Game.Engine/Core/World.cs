@@ -48,13 +48,13 @@
             {
                 Time = DateTime.Now.Ticks / 10000;
 
-                foreach (var body in Bodies)
+                foreach (var body in Bodies.ToList())
                 {
                     body.Project(Time);
                     WrapAroundWorld(body);
                 }
 
-                foreach (var actor in Actors.ToArray())
+                foreach (var actor in Actors.ToList())
                     actor.Step();
 
                 foreach (var body in Bodies)
@@ -142,8 +142,8 @@
             Disposables.Add(Heartbeat);
         }
 
-        private long _id = 0;
-        public long NextID()
+        private int _id = 0;
+        public int NextID()
         {
             return _id++;
         }

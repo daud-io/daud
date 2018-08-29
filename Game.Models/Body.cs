@@ -5,7 +5,7 @@
 
     public class Body
     {
-        public long ID { get; set; }
+        public int ID { get; set; }
         public long DefinitionTime { get; set; }
 
         [JsonIgnore]

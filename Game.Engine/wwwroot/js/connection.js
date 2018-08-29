@@ -39,6 +39,8 @@
             url += "/api/v1/connect";
 
             this.socket = new WebSocket(url);
+            this.socket.binaryType = "arraybuffer";
+
             var self = this;
 
             this.socket.onmessage = function (event) { self.onMessage(event); };
@@ -47,33 +49,76 @@
 
         },
         sendHook: function (hook) {
-            this.send(hook);
+            //this.send(hook);
         },
         sendPing: function () {
-            this.send({ Type: 1 });
-            this.pingSent = performance.now();
-        },
-        sendSpawn: function (name) {
-            this.send({ Type: 2, Name: name });
-            console.log('spawned');
-        },
-        sendControl: function (angle, boost, shoot, nick, ship, color) {
-            this.send({
-                Type: 4,
-                Angle: angle,
-                BoostRequested: boost,
-                ShootRequested: shoot,
-                Name: nick,
-                Ship: ship,
-                Color: color
-            });
-        },
-        send: function (obj) {
-            if (this.socket.readyState === 1) {
-                var s = JSON.stringify(obj);
-                this.socket.send(s);
 
-                this.statBytesUp += s.length;
+            var builder = new flatbuffers.Builder(0);
+
+            Game.Engine.Networking.FlatBuffers.Ping.startPing(builder);
+
+            this.pingSent = performance.now();
+
+            //Game.Engine.Networking.FlatBuffers.Ping.addTime(builder, this.pingSent);
+            var ping = Game.Engine.Networking.FlatBuffers.Ping.endPing(builder);
+
+
+            Game.Engine.Networking.FlatBuffers.Quantum.startQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.Quantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.Ping);
+            Game.Engine.Networking.FlatBuffers.Quantum.addMessage(builder, ping);
+            var quantum = Game.Engine.Networking.FlatBuffers.Quantum.endQuantum(builder);
+
+            builder.finish(quantum);
+
+            this.send(builder.asUint8Array());
+        },
+        sendSpawn: function (name, color, ship) {
+            console.log('spawned');
+
+            var builder = new flatbuffers.Builder(0);
+
+            var stringColor = builder.createString(color || "gray");
+            var stringName = builder.createString(name || "unknown");
+            var stringShip = builder.createString(ship || "ship_gray");
+
+            Game.Engine.Networking.FlatBuffers.Spawn.startSpawn(builder);
+            Game.Engine.Networking.FlatBuffers.Spawn.addColor(builder, stringColor);
+            Game.Engine.Networking.FlatBuffers.Spawn.addName(builder, stringName);
+            Game.Engine.Networking.FlatBuffers.Spawn.addShip(builder, stringShip);
+            var spawn = Game.Engine.Networking.FlatBuffers.Spawn.endSpawn(builder);
+
+            Game.Engine.Networking.FlatBuffers.Quantum.startQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.Quantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.Spawn);
+            Game.Engine.Networking.FlatBuffers.Quantum.addMessage(builder, spawn);
+            var quantum = Game.Engine.Networking.FlatBuffers.Quantum.endQuantum(builder);
+
+            builder.finish(quantum);
+
+            this.send(builder.asUint8Array());
+
+        },
+        sendControl: function (angle, boost, shoot) {
+            var builder = new flatbuffers.Builder(0);
+
+            Game.Engine.Networking.FlatBuffers.ControlInput.startControlInput(builder);
+            Game.Engine.Networking.FlatBuffers.ControlInput.addAngle(builder, angle);
+            Game.Engine.Networking.FlatBuffers.ControlInput.addBoost(builder, boost);
+            Game.Engine.Networking.FlatBuffers.ControlInput.addShoot(builder, shoot);
+            var input = Game.Engine.Networking.FlatBuffers.ControlInput.endControlInput(builder);
+
+            Game.Engine.Networking.FlatBuffers.Quantum.startQuantum(builder);
+            Game.Engine.Networking.FlatBuffers.Quantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.ControlInput);
+            Game.Engine.Networking.FlatBuffers.Quantum.addMessage(builder, input);
+            var quantum = Game.Engine.Networking.FlatBuffers.Quantum.endQuantum(builder);
+
+            builder.finish(quantum);
+
+            this.send(builder.asUint8Array());
+        },
+        send: function (databuffer) {
+            if (this.socket.readyState === 1) {
+                this.socket.send(databuffer);
+                this.statBytesUp += databuffer.length;
             }
         },
         onOpen: function (event) {
@@ -86,22 +131,28 @@
         onClose: function (event) {
             console.log('disconnected');
             this.connected = false;
-            this.reloading = true;
-            this.connect();
+            /*this.reloading = true;
+            this.connect();*/
         },
         onMessage: function (event) {
 
-            var json = event.data;
             this.statBytesDown += event.data.length;
 
-            var message = JSON.parse(json);
+            var data = new Uint8Array(event.data);
+            var buf = new flatbuffers.ByteBuffer(data);
 
-            switch (message.Type) {
-                case 3: // View
-                    //console.log('view');
+            var quantum = Game.Engine.Networking.FlatBuffers.Quantum.getRootAsQuantum(buf);
+
+            var messageType = quantum.messageType();
+
+            switch (messageType) {
+                case Game.Engine.Networking.FlatBuffers.AllMessages.WorldView:
+
+                    var message = quantum.message(new Game.Engine.Networking.FlatBuffers.WorldView());
+
                     this.onView(message);
                     break;
-                case 1: // Ping
+                case Game.Engine.Networking.FlatBuffers.AllMessages.Ping: // Ping
                     this.latency = performance.now() - this.pingSent;
                     break;
             }

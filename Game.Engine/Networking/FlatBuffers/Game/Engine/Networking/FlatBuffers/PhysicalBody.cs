@@ -8,16 +8,16 @@ namespace Game.Engine.Networking.FlatBuffers
 using global::System;
 using global::FlatBuffers;
 
-public struct Body : IFlatbufferObject
+public struct PhysicalBody : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public static Body GetRootAsBody(ByteBuffer _bb) { return GetRootAsBody(_bb, new Body()); }
-  public static Body GetRootAsBody(ByteBuffer _bb, Body obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public static PhysicalBody GetRootAsPhysicalBody(ByteBuffer _bb) { return GetRootAsPhysicalBody(_bb, new PhysicalBody()); }
+  public static PhysicalBody GetRootAsPhysicalBody(ByteBuffer _bb, PhysicalBody obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
   public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
-  public Body __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+  public PhysicalBody __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public long Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  public int Id { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public long DefinitionTime { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
   public int Size { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public string Sprite { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
@@ -28,10 +28,10 @@ public struct Body : IFlatbufferObject
   public ArraySegment<byte>? GetCaptionBytes() { return __p.__vector_as_arraysegment(14); }
   public float Angle { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public Vec2? Momentum { get { int o = __p.__offset(18); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  public Vec2? OrignialPosition { get { int o = __p.__offset(20); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public Vec2? OriginalPosition { get { int o = __p.__offset(20); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
-  public static void StartBody(FlatBufferBuilder builder) { builder.StartObject(9); }
-  public static void AddId(FlatBufferBuilder builder, long id) { builder.AddLong(0, id, 0); }
+  public static void StartPhysicalBody(FlatBufferBuilder builder) { builder.StartObject(9); }
+  public static void AddId(FlatBufferBuilder builder, int id) { builder.AddInt(0, id, 0); }
   public static void AddDefinitionTime(FlatBufferBuilder builder, long definitionTime) { builder.AddLong(1, definitionTime, 0); }
   public static void AddSize(FlatBufferBuilder builder, int size) { builder.AddInt(2, size, 0); }
   public static void AddSprite(FlatBufferBuilder builder, StringOffset spriteOffset) { builder.AddOffset(3, spriteOffset.Value, 0); }
@@ -39,10 +39,10 @@ public struct Body : IFlatbufferObject
   public static void AddCaption(FlatBufferBuilder builder, StringOffset captionOffset) { builder.AddOffset(5, captionOffset.Value, 0); }
   public static void AddAngle(FlatBufferBuilder builder, float angle) { builder.AddFloat(6, angle, 0.0f); }
   public static void AddMomentum(FlatBufferBuilder builder, Offset<Vec2> momentumOffset) { builder.AddStruct(7, momentumOffset.Value, 0); }
-  public static void AddOrignialPosition(FlatBufferBuilder builder, Offset<Vec2> orignialPositionOffset) { builder.AddStruct(8, orignialPositionOffset.Value, 0); }
-  public static Offset<Body> EndBody(FlatBufferBuilder builder) {
+  public static void AddOriginalPosition(FlatBufferBuilder builder, Offset<Vec2> originalPositionOffset) { builder.AddStruct(8, originalPositionOffset.Value, 0); }
+  public static Offset<PhysicalBody> EndPhysicalBody(FlatBufferBuilder builder) {
     int o = builder.EndObject();
-    return new Offset<Body>(o);
+    return new Offset<PhysicalBody>(o);
   }
 };
 

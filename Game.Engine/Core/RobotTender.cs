@@ -12,11 +12,9 @@
         {
             var bot = new Robot()
             {
-                ControlInput = new Models.Messages.ControlInput
-                {
-                    Ship = "ship0",
-                    Name = $"Daudelin #{this.Robots.Count}"
-                }
+                ShipSprite = "ship0",
+                Name = $"Daudelin #{this.Robots.Count}",
+                ControlInput = new Models.Messages.ControlInput()
             };
 
             bot.Init(World);

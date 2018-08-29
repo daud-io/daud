@@ -51,19 +51,59 @@
     var connection = new Game.Connection();
     window.Game.primaryConnection = connection;
 
+    var bodyFromServer = function (body) {
+
+        var originalPosition = body.originalPosition();
+        var momentum = body.momentum();
+
+        var newBody = {
+            ID: body.id(),
+            DefinitionTime: body.definitionTime().toFloat64(),
+            Size: body.size(),
+            Sprite: body.sprite(),
+            Color: body.color(),
+            Caption: body.caption(),
+            Angle: body.angle(),
+            Momentum: {
+                X: momentum.x(),
+                Y: momentum.y()
+            },
+            OriginalPosition: {
+
+                X: originalPosition.x(),
+                Y: originalPosition.y()
+            }
+        };
+
+        return newBody;
+    }
+
     connection.onView = function (newView) {
-        view = newView;
+        view = {};
         lastFrameTime = performance.now();
-        if (view &&
-            view.PlayerView)
-        {
-            var pv = view.PlayerView;
+        if (newView) {
+            view.time = newView.time().toFloat64()
+            serverTimeOffset = view.time - lastFrameTime;
 
-            serverTimeOffset = pv.Time - lastFrameTime;
+            var updatesRaw = newView.updates();
+            var updatesLength = newView.updatesLength();
+            var updates = [];
+            for (var i = 0; i < updatesLength; i++) {
+                var update = newView.updates(i);
 
-            cache.update(pv.Updates, pv.Deletes);
+                updates.push(bodyFromServer(update));
+            }
 
-            if (pv.Leaderboard != null)
+            var deletes = [];
+            var deletesLength = newView.deletesLength();
+            for (var i = 0; i < deletesLength; i++)
+                deletes.push(newView.deletes(i));
+            
+            cache.update(updates, deletes);
+
+            view.camera = bodyFromServer(newView.camera());
+
+            /*if (pv.Leaderboard != null)
                 leaderboard.setData(pv.Leaderboard);
 
             if (pv.Messages) {
@@ -77,7 +117,7 @@
             }
             if (pv.Hook) {
                 Game.Hook = pv.Hook;
-            }
+            }*/
         }
     };
 
@@ -113,7 +153,7 @@
     }, 10);
 
     document.getElementById('spawn').addEventListener("click", function () {
-        connection.sendSpawn(Game.Controls.nick);
+        connection.sendSpawn(Game.Controls.nick, Game.Controls.color, Game.Controls.ship);
     });
 
 
@@ -144,10 +184,9 @@
         //console.log('game');
         //context.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (view && view.PlayerView) {
-            var pv = view.PlayerView;
+        if (view) {
 
-            var position = interpolator.projectObject(pv, currentTime+serverTimeOffset);
+            var position = interpolator.projectObject(view.camera, currentTime + serverTimeOffset);
 
             camera.moveTo(position.X, position.Y);
             //console.log(position);
@@ -158,7 +197,7 @@
         background.draw();
 
         renderer.view = view;
-        renderer.draw(cache, interpolator, currentTime+serverTimeOffset);
+        renderer.draw(cache, interpolator, currentTime + serverTimeOffset);
         camera.end();
 
         leaderboard.draw();

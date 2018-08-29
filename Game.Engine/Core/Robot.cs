@@ -21,7 +21,7 @@
                     return;
             }
 
-            this.ControlInput.Color = "green";
+            this.Fleet.Color = "green";
 
             foreach (var player in
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)

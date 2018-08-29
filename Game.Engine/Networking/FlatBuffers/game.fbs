@@ -1,19 +1,51 @@
 ﻿namespace Game.Engine.Networking.FlatBuffers;
 
+union AllMessages {
+	WorldView,
+	Hello,
+	Spawn,
+	ControlInput,
+	Ping
+}
+
+table Hello
+{
+	time:long;
+}
+
+table Spawn
+{
+	name:string;
+	ship:string;
+	color:string;
+}
+
+table ControlInput
+{
+	angle:float;
+	boost:bool;
+	shoot:bool;
+}
+
+table Ping
+{
+	time:long;
+}
+
 table WorldView
 {
 	time:long;
 	playerCount:short;
 	isAlive:bool = true;
-	updates:[Body];
-	deletes:[long];
-	messages:[Message];
-	camera:[Body];
+	updates:[PhysicalBody];
+	deletes:[int];
+	announcements:[Announcement];
+	camera:PhysicalBody;
 }
 
-table Body
+table PhysicalBody
 {
-	id:long;
+	id:int;
 	definitionTime:long;
 	size:int;
 	sprite:string;
@@ -21,12 +53,12 @@ table Body
 	caption: string;
 	angle: float;
 	momentum:Vec2;
-	orignialPosition:Vec2;
+	originalPosition:Vec2;
 }
 
-table Message
+table Announcement
 {
-	message:string;
+	Text:string;
 }
 
 struct Vec2 {
@@ -34,4 +66,9 @@ struct Vec2 {
 	y:float;
 }
 
-root_type WorldView;
+table Quantum
+{
+	message: AllMessages;
+}
+
+root_type Quantum;
