@@ -1,9 +1,7 @@
-﻿namespace Game.Models.Messages
+﻿namespace Game.Engine.Core
 {
-    public class ControlInput : MessageBase
+    public class ControlInput
     {
-        public override MessageTypes Type => MessageTypes.ControlInput;
-
         public float Angle { get; set; }
         public bool BoostRequested { get; set; }
         public bool ShootRequested { get; set; }

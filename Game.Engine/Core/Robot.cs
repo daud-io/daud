@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core.Actors.Bots
+﻿namespace Game.Engine.Core
 {
     using System;
     using System.Linq;
@@ -16,12 +16,10 @@
             if (!IsAlive)
             {
                 if (AutoSpawn)
-                    this.Spawn();
+                    this.Spawn(Name, ShipSprite, "green");
                 else
                     return;
             }
-
-            this.Fleet.Color = "green";
 
             foreach (var player in
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)

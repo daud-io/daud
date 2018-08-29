@@ -1,6 +1,5 @@
 ﻿namespace Game.Engine.Core
 {
-    using Game.Models.Messages;
     using System.Collections.Generic;
 
     public class Player : IActor
@@ -69,7 +68,6 @@
             if (this.IsControlNew)
             {
                 Fleet.Angle = ControlInput.Angle;
-                Fleet.Caption = Name;
 
                 foreach(var ship in Fleet.Ships)
                 {
@@ -84,9 +82,8 @@
             this.IsControlNew = false;
         }
 
-        public void Spawn(string name = null, string sprite = null, string color = null)
+        public void Spawn(string name, string sprite, string color)
         {
-
             if (name != null
                 && name.Length > 15)
                 name = name.Substring(0, 15);

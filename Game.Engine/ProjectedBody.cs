@@ -1,5 +1,6 @@
-﻿namespace Game.Models
+﻿namespace Game.Engine
 {
+    using Game.Engine.Core;
     using Newtonsoft.Json;
     using System.Numerics;
 

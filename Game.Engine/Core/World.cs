@@ -1,9 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
-    using Game.Engine.Core.Actors.Bots;
     using Game.Engine.Networking;
-    using Game.Models;
-    using Game.Models.Messages;
     using System;
     using System.Collections.Generic;
     using System.Linq;

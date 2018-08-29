@@ -6,7 +6,7 @@ namespace Game.Engine.Networking.FlatBuffers
 {
 
 using global::System;
-using global::FlatBuffers;
+using global::Google.FlatBuffers;
 
 public struct Vec2 : IFlatbufferObject
 {

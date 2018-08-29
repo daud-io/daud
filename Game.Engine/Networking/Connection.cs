@@ -2,20 +2,15 @@
 {
     using Game.Engine.Core;
     using Game.Engine.Networking.FlatBuffers;
-    using Game.Models;
-    using Game.Models.Messages;
-    using global::FlatBuffers;
+    using Google.FlatBuffers;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Net.WebSockets;
     using System.Numerics;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -202,7 +197,7 @@
                     break;
                 case AllMessages.ControlInput:
                     var input = quantum.Message<FlatBuffers.ControlInput>().Value;
-                    player?.SetControl(new Models.Messages.ControlInput
+                    player?.SetControl(new Game.Engine.Core.ControlInput
                     {
                         Angle = input.Angle,
                         BoostRequested = input.Boost,

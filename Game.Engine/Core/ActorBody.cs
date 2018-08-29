@@ -1,6 +1,5 @@
 ﻿namespace Game.Engine.Core
 {
-    using Game.Models;
     using Newtonsoft.Json;
 
     public abstract class ActorBody : ProjectedBody, IActor

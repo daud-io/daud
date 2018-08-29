@@ -1,4 +1,4 @@
-﻿namespace Game.Models
+﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
 

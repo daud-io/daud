@@ -1,9 +1,7 @@
-﻿namespace Game.Models.Messages
+﻿namespace Game.Engine.Core
 {
-    public class Hook : MessageBase
+    public class Hook
     {
-        public override MessageTypes Type => MessageTypes.Hook;
-
         public static Hook Default
         {
             get

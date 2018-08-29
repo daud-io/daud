@@ -131,15 +131,15 @@
         onClose: function (event) {
             console.log('disconnected');
             this.connected = false;
-            /*this.reloading = true;
-            this.connect();*/
+            this.reloading = true;
+            this.connect();
         },
         onMessage: function (event) {
 
-            this.statBytesDown += event.data.length;
-
             var data = new Uint8Array(event.data);
             var buf = new flatbuffers.ByteBuffer(data);
+
+            this.statBytesDown += data.byteLength;
 
             var quantum = Game.Engine.Networking.FlatBuffers.Quantum.getRootAsQuantum(buf);
 
