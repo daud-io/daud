@@ -214,15 +214,6 @@
                 case AllMessages.NetSpawn:
                     var spawn = quantum.Message<NetSpawn>().Value;
 
-                    if (player == null)
-                    {
-                        lock (world.Bodies)
-                        {
-                            player = new Player();
-                            player.Init(world);
-                        }
-                    }
-
                     player.Spawn(spawn.Name, spawn.Ship, spawn.Color);
 
                     break;
@@ -261,6 +252,12 @@
 
             try
             {
+                lock (world.Bodies)
+                {
+                    player = new Player();
+                    player.Init(world);
+                }
+
                 await StartReadAsync(this.HandleIncomingMessage, cancellationToken);
             }
             finally

@@ -36,13 +36,24 @@
 
                 // edge of the universe
                 ctx.save();
+
+                var worldSize = 6000;
+
                 ctx.beginPath();
                 ctx.lineWidth = 40;
                 ctx.strokeStyle = "blue";
-                var worldSize = 6000;
-
                 ctx.rect(-worldSize, -worldSize, 2*worldSize, 2*worldSize);
                 ctx.stroke();
+
+
+                var edgeWidth = 4000;
+                ctx.beginPath();
+                ctx.lineWidth = edgeWidth*2;
+                ctx.strokeStyle = "rgba(255,0,0,0.1)";
+                ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
+                ctx.stroke();
+
+
                 ctx.restore();
                 
                 ctx.font = "24px sans-serif";
