@@ -88,6 +88,19 @@
         view = {};
         lastFrameTime = performance.now();
         view.time = newView.time().toFloat64()
+
+        view.isAlive = newView.isAlive();
+
+        if (view.isAlive) {
+            $(document.body)
+                .removeClass('dead')
+                .addClass('alive');
+        } else {
+            $(document.body)
+                .removeClass('alive')
+                .addClass('dead');
+        }
+
         serverTimeOffset = view.time - lastFrameTime;
 
         var updatesLength = newView.updatesLength();

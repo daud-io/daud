@@ -19,21 +19,24 @@
         </div>
     </div>
 
-    <input type="text" id="nick" maxlength="15" />
+    <div class="spawnscreen">
+        <input type="text" id="nick" maxlength="15" />
 
-    <select id="shipSelector">
-        <option value="ship_gray" colorName="gray">gray</option>
-        <option value="ship_green" colorName="green">green</option>
-        <option value="ship_orange" colorName="orange">orange</option>
-        <option value="ship_pink" colorName="pink">pink</option>
-        <option value="ship_red" colorName="red">red</option>
-        <option value="ship_cyan" colorName="cyan">cyan</option>
-        <option value="ship_yellow" colorName="yellow">yellow</option>
-        <option value="ship0" colorName="green">the other one</option>
-    </select>
+        <select id="shipSelector">
+            <option value="ship_gray" colorName="gray">gray</option>
+            <option value="ship_green" colorName="green">green</option>
+            <option value="ship_orange" colorName="orange">orange</option>
+            <option value="ship_pink" colorName="pink">pink</option>
+            <option value="ship_red" colorName="red">red</option>
+            <option value="ship_cyan" colorName="cyan">cyan</option>
+            <option value="ship_yellow" colorName="yellow">yellow</option>
+            <option value="ship0" colorName="green">the other one</option>
+        </select>
 
-    <input type="button" id="spawn" value="spawn" />
-    <pre id="log" style="height: 200px; overflow: auto"></pre>
+        <input type="button" id="spawn" value="spawn" />
+
+    </div>
+    <pre id="log" style="display: none; overflow: auto"></pre>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
