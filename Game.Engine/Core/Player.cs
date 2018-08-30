@@ -68,13 +68,6 @@
             if (this.IsControlNew)
             {
                 Fleet.Angle = ControlInput.Angle;
-
-                foreach(var ship in Fleet.Ships)
-                {
-                    ship.Sprite = ShipSprite;
-                    ship.Color = Fleet.Color;
-                }
-                
                 Fleet.BoostRequested = ControlInput.BoostRequested;
                 Fleet.ShootRequested = ControlInput.ShootRequested;
             }
@@ -109,6 +102,8 @@
         {
             if (IsAlive)
             {
+                Score /= 2;
+
                 Fleet.Deinit();
                 Fleet = null;
                 IsAlive = false;

@@ -34,7 +34,7 @@
         [JsonIgnore]
         public List<Ship> Ships { get; set; } = new List<Ship>();
 
-        private void Die(Player player, Fleet fleet, Bullet bullet)
+        private void Die(Player player)
         {
             player.Score += 55;
 
@@ -58,7 +58,7 @@
             Ships.Remove(ship);
 
             if (Ships.Count == 0)
-                Die(player, bullet.Owner.Owner, bullet);
+                Die(player);
 
         }
 
@@ -76,9 +76,11 @@
             {
                 Owner = this,
                 Position = Vector2.Add(this.Position, offset),
-                Momentum = this.Momentum
+                Momentum = this.Momentum,
+                Sprite = this.Owner.ShipSprite,
+                Color = this.Color
             };
-            
+
             ship.Init(World);
             Ships.Add(ship);
 
@@ -105,7 +107,6 @@
             var isShooting = ShootRequested && World.Time >= TimeReloaded;
             var isBoosting = BoostRequested;
 
-
             foreach (var ship in Ships)
             {
                 ship.Angle = Angle;
@@ -116,6 +117,8 @@
 
                 if (isBoosting)
                     thrustAmount *= 2;
+
+                
 
                 var thrust =
                     Vector2.Transform(

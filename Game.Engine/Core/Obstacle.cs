@@ -16,6 +16,11 @@
 
         public override void Step()
         {
+            if (World.DistanceOutOfBounds(Position) > 0)
+            {
+                var speed = Momentum.Length();
+                Momentum = Vector2.Normalize(Vector2.Zero - Position) * speed;
+            }
         }
     }
 }

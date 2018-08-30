@@ -48,7 +48,8 @@
                 foreach (var body in Bodies.ToList())
                 {
                     body.Project(Time);
-                    WrapAroundWorld(body);
+
+                    //WrapAroundWorld(body);
                 }
 
                 foreach (var actor in Actors.ToList())
@@ -64,6 +65,13 @@
 
                 ProcessLeaderboard();
             }
+        }
+
+        public float DistanceOutOfBounds(Vector2 position)
+        {
+            var pos = Vector2.Abs(position);
+
+            return Math.Max(pos.X - WorldSize, Math.Max(pos.Y - WorldSize, 0));
         }
 
         private void ProcessLeaderboard()

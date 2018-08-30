@@ -100,6 +100,14 @@
 
             Health = Math.Min(Health + HealthRegenerationPerFrame, MaxHealth);
             this.Size = (int)(60 + (Health / MaxHealth * 90));
+
+            var oob = World.DistanceOutOfBounds(Position);
+
+            if (oob > 100)
+                this.Momentum *= 1 - (oob / 1500);
+
+            if (oob > 700)
+                Die(this.Owner.Owner, this.Owner, null);
         }
     }   
 }
