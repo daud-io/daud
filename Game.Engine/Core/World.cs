@@ -94,11 +94,13 @@
                                 .OrderByDescending(e => e.Score)
                                 .Take(10)
                                 .ToList(),
+                        Type = "Team",
                         Time = this.Time
                     };
 
                 }
                 else
+                {
                     Leaderboard = new Leaderboard
                     {
                         Entries = Player.GetWorldPlayers(this)
@@ -112,8 +114,11 @@
                                 .OrderByDescending(e => e.Score)
                                 .Take(10)
                                 .ToList(),
+                        Type = "FFA",
                         Time = this.Time
                     };
+                }
+
                 TimeLeaderboardRecalc = this.Time + 750;
             }
         }

@@ -6,35 +6,57 @@
     <link rel="stylesheet" type="text/css" href="css/game.css">
     <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
 </head>
-<body>
-    <div class="noselect">
-        <div style="position: relative">
-            <canvas id="gameCanvas" width="1000" height="500"></canvas>
-            <div class='ansible'>
-                <div id='panel'>
-                    <input type="checkbox" class="pin" />
-                    <ul id='ansiblelinks'></ul>
+<body class="loading">
+    <div id="gamewrapperouter">
+        <div id="gamewrapperinner">
+            <div class="noselect">
+                <div style="position: relative">
+                    <canvas id="gameCanvas" width="1000" height="500"></canvas>
+                    <div class='ansible'>
+                        <div id='panel'>
+                            <input type="checkbox" class="pin" />
+                            <ul id='ansiblelinks'></ul>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div class="spawnscreen">
+                <div class="controls">
+
+                    <div>
+                        <img id="logo" src="img/header.png" />
+                    </div>
+
+                    <input placeholder="nickname" type="text" id="nick" maxlength="15" />
+
+                    <select id="shipSelector">
+                        <option value="ship_gray" colorName="gray">gray</option>
+                        <option value="ship_green" colorName="green">green</option>
+                        <option value="ship_orange" colorName="orange">orange</option>
+                        <option value="ship_pink" colorName="pink">pink</option>
+                        <option value="ship_red" colorName="red">red</option>
+                        <option value="ship_cyan" colorName="cyan">cyan</option>
+                        <option value="ship_yellow" colorName="yellow">yellow</option>
+                        <option value="ship0" colorName="green">the other one</option>
+                    </select>
+
+                    <input type="button" id="spawn" value="LAUNCH!" />
+
+                </div>
+
+                <div class="social">
+                    <div id="twitterpated"></div>
+                    <div>
+                        <a href="https://discord.gg/SwTHz8g">
+                            <img id="discord" src="img/discord.png" />
+                        </a>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
-    </div>
-
-    <div class="spawnscreen">
-        <input type="text" id="nick" maxlength="15" />
-
-        <select id="shipSelector">
-            <option value="ship_gray" colorName="gray">gray</option>
-            <option value="ship_green" colorName="green">green</option>
-            <option value="ship_orange" colorName="orange">orange</option>
-            <option value="ship_pink" colorName="pink">pink</option>
-            <option value="ship_red" colorName="red">red</option>
-            <option value="ship_cyan" colorName="cyan">cyan</option>
-            <option value="ship_yellow" colorName="yellow">yellow</option>
-            <option value="ship0" colorName="green">the other one</option>
-        </select>
-
-        <input type="button" id="spawn" value="spawn" />
-
     </div>
     <pre id="log" style="display: none; overflow: auto"></pre>
 
@@ -58,8 +80,8 @@
     <script type="text/javascript" src="js/renderer.js"></script>
     <script type="text/javascript" src="js/camera.js"></script>
     <script type="text/javascript" src="js/game.js"></script>
-
-
+    
+    <script type="text/javascript" src="js/intro.js"></script>
     <script type="text/javascript" src="js/panel.js"></script>
     <script type="text/javascript" src="js/serverinfo.js"></script>
 

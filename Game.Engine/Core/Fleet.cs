@@ -36,10 +36,13 @@
 
         private void Die(Player player)
         {
-            player.Score += 55;
+            if (player != null)
+            {
+                player.Score += 55;
 
-            player.SendMessage($"You Killed {this.Owner.Name}");
-            this.Owner.SendMessage($"Killed by {player.Name}");
+                player.SendMessage($"You Killed {this.Owner.Name}");
+                this.Owner.SendMessage($"Killed by {player.Name}");
+            }
 
             this.Owner.Die();
             Deinit();
@@ -62,8 +65,11 @@
 
         }
 
-        public Ship AddShip()
+        public void AddShip()
         {
+            if (!this.Owner.IsAlive)
+                return;
+
             var random = new Random();
 
             var offset = new Vector2
@@ -83,8 +89,6 @@
 
             ship.Init(World);
             Ships.Add(ship);
-
-            return ship;
         }
 
         public override void Init(World world)

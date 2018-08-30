@@ -81,6 +81,8 @@
                 && name.Length > 15)
                 name = name.Substring(0, 15);
 
+            this.Name = name;
+
             if (!IsAlive)
             {
                 IsAlive = true;

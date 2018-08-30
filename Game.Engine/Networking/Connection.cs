@@ -49,7 +49,7 @@
                 if (followFleet == null)
                     followFleet = Player.GetWorldPlayers(world)
                         .Where(p => p.IsAlive)
-                        .OrderByDescending(p => p.Score)
+                        .OrderByDescending(p => p.Score * 10000 + (10000-p.Fleet.ID))
                         .FirstOrDefault()
                         ?.Fleet;
 
@@ -150,8 +150,8 @@
 
                     var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
                     {
-                        var stringName = builder.CreateString(e.Name);
-                        var stringColor = builder.CreateString(e.Color);
+                        var stringName = builder.CreateString(e.Name ?? string.Empty);
+                        var stringColor = builder.CreateString(e.Color ?? string.Empty);
 
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                         NetLeaderboardEntry.AddName(builder, stringName);

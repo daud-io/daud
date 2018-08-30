@@ -22,12 +22,21 @@
         up: false,
         right: false,
         down: false,
-        boost: false,
+        boost: true,
         shoot: false,
         registerCanvas: function (canvas) {
+
+            var getMousePos = function (canvas, evt) {
+                var rect = canvas.getBoundingClientRect();
+                return {
+                    x: evt.clientX - rect.left,
+                    y: evt.clientY - rect.top
+                };
+            };
             canvas.addEventListener("mousemove", function (e) {
-                Game.Controls.mouseX = e.clientX;
-                Game.Controls.mouseY = e.clientY;
+                var pos = getMousePos(canvas, e);
+                Game.Controls.mouseX = pos.x;
+                Game.Controls.mouseY = pos.y;
             });
 
             canvas.addEventListener("mousedown", function (e) {
@@ -83,7 +92,7 @@
                 Game.Controls.down = false;
                 break;
             case 83: // s
-                Game.Controls.boost = false;
+                //Game.Controls.boost = false;
                 break;
             case 32: // space
                 Game.Controls.shoot = false;

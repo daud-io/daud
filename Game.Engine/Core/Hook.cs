@@ -27,7 +27,7 @@
                     Obstacles = 6,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 1000,
-                    TeamMode = true,
+                    TeamMode = false,
 
                     FlockAlignment = 0.0f,
                     FlockCohesion = 0.002f,

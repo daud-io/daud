@@ -12,7 +12,7 @@
         },
         draw: function () {
             var ctx = this.context;
-
+            ctx.save();
             if (this.data && this.data.Entries) {
                 ctx.font = "12pt sans-serif";
                 ctx.fillStyle = "white";
@@ -36,6 +36,8 @@
 
                 }
             }
+
+            ctx.restore();
         }
     };
 

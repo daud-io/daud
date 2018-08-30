@@ -2,6 +2,7 @@
 {
     using Newtonsoft.Json;
     using System;
+    using System.Linq;
     using System.Numerics;
 
     public class Ship : ActorBody, ICollide
@@ -43,13 +44,15 @@
 
         private void Die(Player player, Fleet fleet, Bullet bullet)
         {
-            player.Score += 1;
+            if (player != null)
+                player.Score += 1;
 
             this.Owner.ShipDeath(player, this, bullet);
 
             var random = new Random();
             if (random.NextDouble() < 0.3)
-                fleet.AddShip();
+                if (fleet?.Ships?.Any() ?? false)
+                    fleet.AddShip();
 
             Deinit();
         }
@@ -107,7 +110,7 @@
                 this.Momentum *= 1 - (oob / 1500);
 
             if (oob > 700)
-                Die(this.Owner.Owner, this.Owner, null);
+                Die(null, null, null);
         }
     }   
 }

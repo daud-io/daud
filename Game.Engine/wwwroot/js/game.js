@@ -79,6 +79,7 @@
     }
 
     connection.onLeaderboard = function (lb) {
+        //console.log('new leaderboard');
         leaderboard.setData(lb);
     };
 
@@ -91,6 +92,7 @@
 
         view.isAlive = newView.isAlive();
 
+        $(document.body).remove("loading");
         if (view.isAlive) {
             $(document.body)
                 .removeClass('dead')
@@ -160,7 +162,7 @@
 
 
     var sizeCanvas = function () {
-        var width = window.innerWidth - 20;
+        var width = window.innerWidth;
         var height = width * 9 / 16;
 
         canvas.width = width;
