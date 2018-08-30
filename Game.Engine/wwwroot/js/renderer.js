@@ -38,6 +38,7 @@
                 ctx.save();
 
                 var worldSize = 6000;
+                var edgeWidth = 4000;
 
                 ctx.beginPath();
                 ctx.lineWidth = 40;
@@ -45,18 +46,15 @@
                 ctx.rect(-worldSize, -worldSize, 2*worldSize, 2*worldSize);
                 ctx.stroke();
 
-
-                var edgeWidth = 4000;
                 ctx.beginPath();
                 ctx.lineWidth = edgeWidth*2;
                 ctx.strokeStyle = "rgba(255,0,0,0.1)";
                 ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
                 ctx.stroke();
 
-
                 ctx.restore();
                 
-                ctx.font = "24px sans-serif";
+                ctx.font = "48px sans-serif";
                 ctx.fillStyle = "white";
                 ctx.textAlign = "center";
                 ctx.strokeStyle = "white";
@@ -68,7 +66,6 @@
                     var ship = object.Sprite != null
                         ? this.sprites[object.Sprite]
                         : false;
-
 
                     var position = interpolator.projectObject(object, currentTime);
 
