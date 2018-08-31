@@ -9,16 +9,18 @@
                 return new Hook
                 {
                     BaseThrust = 0.075f,
+                    BaseThrustBot = 0.03f,
+                    MaxSpeed = 0.5f,
+                    MaxSpeedBot = 0.3f,
+                    MaxSpeedBoost = 3.5f,
+
                     HealthHitCost = 100,
                     MaxBoostTime = 100,
                     HealthRegenerationPerFrame = 0.3f,
-                    MaxSpeed = 0.3f,
-                    MaxSpeedBoost = 1f,
                     MaxHealth = 100,
                     ShootCooldownTime = 500,
                     ShootCooldownTimeBot = 800,
                     MaxHealthBot = 50,
-                    BaseThrustBot = 0.10f,
                     BulletLife = 2000,
                     BulletSpeed = 1.2f,
                     BotPerXPoints = 500,
@@ -48,6 +50,7 @@
         public int MaxBoostTime { get; set; }
         public float HealthRegenerationPerFrame { get; set; }
         public float MaxSpeed { get; set; }
+        public float MaxSpeedBot { get; set; }
         public float MaxSpeedBoost { get; set; }
         public int ShootCooldownTime { get; set; }
         public int ShootCooldownTimeBot { get; set; }

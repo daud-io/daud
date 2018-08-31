@@ -1,6 +1,5 @@
 ﻿namespace Game.Engine.Core
 {
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -8,30 +7,23 @@
 
     public class Fleet : ActorBody
     {
-        [JsonIgnore]
         public virtual int ShootCooldownTime { get => World.Hook.ShootCooldownTime; }
-        [JsonIgnore]
         public virtual float BaseThrust { get => World.Hook.BaseThrust; }
-        [JsonIgnore]
         public virtual float MaxSpeed { get => World.Hook.MaxSpeed; }
-        [JsonIgnore]
         public virtual float MaxSpeedBoost { get => World.Hook.MaxSpeedBoost; }
 
-        [JsonIgnore]
         public Player Owner { get; set; }
 
-        [JsonIgnore]
         public bool BoostRequested { get; set; }
-        [JsonIgnore]
         public bool ShootRequested { get; set; }
 
-        [JsonIgnore]
         public long TimeReloaded { get; set; } = 0;
+        public long BoostCooldownTime { get; set; } = 0;
+        public long BoostingUntil { get; set; } = 0;
+        public Vector2 BoostVector { get; set; }
 
         private long NextFlockingTime = 0;
 
-
-        [JsonIgnore]
         public List<Ship> Ships { get; set; } = new List<Ship>();
 
         private void Die(Player player)
@@ -109,7 +101,14 @@
         public override void Step()
         {
             var isShooting = ShootRequested && World.Time >= TimeReloaded;
-            var isBoosting = BoostRequested;
+            var isBoosting = World.Time < BoostingUntil;
+
+            if (World.Time > BoostCooldownTime && BoostRequested)
+            {
+                BoostCooldownTime = World.Time + 1500;
+                BoostingUntil = World.Time + 750;
+                BoostVector = Vector2.Normalize(Momentum) * 0.02f;
+            }
 
             foreach (var ship in Ships)
             {
@@ -120,9 +119,7 @@
                 float thrustAmount = BaseThrust;
 
                 if (isBoosting)
-                    thrustAmount *= 2;
-
-                
+                    thrustAmount *= 1.5f;
 
                 var thrust =
                     Vector2.Transform(
@@ -138,6 +135,9 @@
                 var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
                 if (currentSpeed > speedLimit)
                     x = Vector2.Multiply(Vector2.Normalize(x), ((speedLimit + 3 * currentSpeed) / 4));
+
+                if (isBoosting)
+                    x += BoostVector;
 
                 ship.Momentum = x;
                 Momentum = x;

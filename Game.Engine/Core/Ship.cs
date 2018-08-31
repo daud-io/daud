@@ -1,36 +1,20 @@
 ﻿namespace Game.Engine.Core
 {
-    using Newtonsoft.Json;
     using System;
     using System.Linq;
     using System.Numerics;
 
     public class Ship : ActorBody, ICollide
     {
-        [JsonIgnore]
         public virtual int HealthHitCost { get => World.Hook.HealthHitCost; }
-
-        [JsonIgnore]
         public virtual int MaxHealth { get => World.Hook.MaxHealth; }
-
-        [JsonIgnore]
         public virtual float HealthRegenerationPerFrame { get => World.Hook.HealthRegenerationPerFrame; }
 
-        [JsonIgnore]
         public Fleet Owner { get; set; }
 
-        [JsonIgnore]
         public float Health { get; set; }
-
-        [JsonIgnore]
         public int SizeMinimum { get; set; }
-        [JsonIgnore]
         public int SizeMaximum { get; set; }
-
-
-        public Ship()
-        {
-        }
 
         public override void Init(World world)
         {

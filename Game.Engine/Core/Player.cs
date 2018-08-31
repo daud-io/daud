@@ -75,6 +75,17 @@
             this.IsControlNew = false;
         }
 
+        protected virtual Fleet CreateFleet(string name, string color)
+        {
+            return new Fleet
+            {
+                Owner = this,
+                Position = World.RandomPosition(),
+                Caption = name,
+                Color = color
+            };
+        }
+
         public void Spawn(string name, string sprite, string color)
         {
             if (name != null
@@ -87,13 +98,8 @@
             {
                 IsAlive = true;
 
-                Fleet = new Fleet
-                {
-                    Owner = this,
-                    Position = World.RandomPosition(),
-                    Caption = name,
-                    Color = color
-                };
+                Fleet = CreateFleet(name, color);
+
                 ShipSprite = sprite;
 
                 Fleet.Init(World);

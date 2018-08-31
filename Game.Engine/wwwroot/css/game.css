@@ -55,8 +55,17 @@ canvas {
     margin: 30px;
 }
 
-#twitterpated
-{
+#hintbox {
+    color: white;
+    font-size: 14pt;
+}
+
+#twitterpated a:visited,
+#twitterpated a {
+    color: white;
+}
+
+#twitterpated {
     float: left;
     left: 30px;
     width: 500px;
@@ -67,7 +76,9 @@ canvas {
 
 #twitterpated .date
 {
-
+    float: left;
+    color: #111111;
+    margin-right: 1em;
 }
 
 

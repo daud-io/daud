@@ -22,7 +22,7 @@
         up: false,
         right: false,
         down: false,
-        boost: true,
+        boost: false,
         shoot: false,
         registerCanvas: function (canvas) {
 
@@ -92,7 +92,7 @@
                 Game.Controls.down = false;
                 break;
             case 83: // s
-                //Game.Controls.boost = false;
+                Game.Controls.boost = false;
                 break;
             case 32: // space
                 Game.Controls.shoot = false;

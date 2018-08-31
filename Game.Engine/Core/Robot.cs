@@ -11,6 +11,18 @@
         {
         }
 
+        protected override Fleet CreateFleet(string name, string color)
+        {
+            return new RobotFleet
+            {
+                Owner = this,
+                Position = World.RandomPosition(),
+                Caption = name,
+                Color = color
+            };
+
+        }
+
         public override void Step()
         {
             if (!IsAlive)
