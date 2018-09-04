@@ -20,7 +20,7 @@
                     (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
                     (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
                 ),
-                Size = r.Next(0, World.Hook.ObstacleMaxSize),
+                Size = r.Next(300, World.Hook.ObstacleMaxSize),
                 Sprite = "obstacle",
                 Color = "rgba(128,128,128,.2)"
             };

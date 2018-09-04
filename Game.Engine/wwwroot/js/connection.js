@@ -16,6 +16,7 @@
         var self = this;
         this.fb = Game.Engine.Networking.FlatBuffers;
         this.latency = 0;
+        this.simulateLatency = 0;
 
         setInterval(function () {
             if (self.connected) {
@@ -47,7 +48,16 @@
 
             var self = this;
 
-            this.socket.onmessage = function (event) { self.onMessage(event); };
+            this.socket.onmessage = function (event) {
+                if (self.simulateLatency > 0) {
+                    setTimeout(function () {
+                        self.onMessage(event);
+                    }, self.simulateLatency);
+                }
+                else
+                    self.onMessage(event);
+
+            };
             this.socket.onopen = function (event) { self.onOpen(event); };
             this.socket.onclose = function (event) { self.onClose(event); };
 
@@ -121,7 +131,15 @@
         },
         send: function (databuffer) {
             if (this.socket.readyState === 1) {
-                this.socket.send(databuffer);
+                var self = this;
+                if (this.simulateLatency > 0) {
+                    setTimeout(function () {
+                        self.socket.send(databuffer);
+                    }, this.simulateLatency)
+                }
+                else
+                    this.socket.send(databuffer);
+
                 this.statBytesUp += databuffer.length;
             }
         },

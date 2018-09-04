@@ -23,8 +23,8 @@
             'ship_red': sprite("ship_red"),
             'ship_cyan': sprite("ship_cyan"),
             'ship_yellow': sprite("ship_yellow"),
-            'bullet': sprite("torpedo"),
-            'obstacle': sprite("obstacle", 0.005, true)
+            'bullet': sprite("torpedo", 0.02, true),
+            'obstacle': sprite("obstacle", 0.0028, true)
         };
     };
 
@@ -69,9 +69,9 @@
 
                     var position = interpolator.projectObject(object, currentTime);
 
-                    if (object.Caption) {
+                    /*if (object.Caption) {
                         ctx.fillText(object.Caption, position.X, position.Y + 90);
-                    }
+                    }*/
 
                     ctx.save();
                     ctx.fillStyle = "rgba(0,255,0,0.2)";
@@ -129,6 +129,13 @@
 
                     ctx.restore();
 
+                }, this);
+
+                cache.foreach(function (body) {
+                    var position = interpolator.projectObject(body, currentTime);
+                    if (body.Caption) {
+                        ctx.fillText(body.Caption, position.X, position.Y + 90);
+                    }
                 }, this);
             }
         },

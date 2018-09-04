@@ -5,7 +5,7 @@
         this.img.src = 'img/bg.png';
         this.context = context;
 
-        this.parallaxFactor = 5;
+        this.parallaxFactor = 50;
 
         var self = this;
         this.img.onload = function () {
@@ -21,9 +21,9 @@
             y /= this.parallaxFactor;
 
             ctx.save();
-            ctx.scale(2, 2);
+            ctx.scale(10, 10);
             ctx.fillStyle = this.pattern;
-            ctx.translate(x, y)
+            ctx.translate(-x, -y)
             ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000); 
             ctx.restore();
         }
