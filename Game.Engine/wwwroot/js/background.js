@@ -25,6 +25,9 @@
             ctx.fillStyle = this.pattern;
             ctx.translate(-x, -y)
             ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000); 
+            ctx.translate(-2 * x, -2 * y)
+            ctx.globalAlpha = 0.4;
+            ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000); 
             ctx.restore();
         }
     };
