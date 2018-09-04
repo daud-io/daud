@@ -20,8 +20,8 @@
 
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 500,
-                    ShotSpeedM = -0.02f,
-                    ShotSpeedB = 1.3f,
+                    ShotSpeedM = -0.035f,
+                    ShotSpeedB = 1.5f,
 
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
