@@ -7,10 +7,13 @@
 
     public class Fleet : ActorBody
     {
-        public virtual int ShootCooldownTime { get => World.Hook.ShootCooldownTime; }
-        public virtual float BaseThrust { get => World.Hook.BaseThrust; }
-        public virtual float MaxSpeed { get => World.Hook.MaxSpeed; }
-        public virtual float MaxSpeedBoost { get => World.Hook.MaxSpeedBoost; }
+        public virtual float ShotCooldownTimeM { get => World.Hook.ShotCooldownTimeM; }
+        public virtual float ShotCooldownTimeB { get => World.Hook.ShotCooldownTimeB; }
+        public virtual float ShotSpeedM { get => World.Hook.ShotSpeedM; }
+        public virtual float ShotSpeedB { get => World.Hook.ShotSpeedB; }
+        public virtual float BaseThrustM { get => World.Hook.BaseThrustM; }
+        public virtual float BaseThrustB { get => World.Hook.BaseThrustB; }
+        public virtual float BoostThrust { get => World.Hook.BoostThrust; }
 
         public Player Owner { get; set; }
 
@@ -19,10 +22,7 @@
 
         public long TimeReloaded { get; set; } = 0;
         public long BoostCooldownTime { get; set; } = 0;
-        public long BoostingUntil { get; set; } = 0;
-        public Vector2 BoostVector { get; set; }
-
-        private long NextFlockingTime = 0;
+        public long BoostUntil { get; set; } = 0;
 
         public List<Ship> Ships { get; set; } = new List<Ship>();
 
@@ -72,7 +72,7 @@
 
             var ship = new Ship()
             {
-                Owner = this,
+                Fleet = this,
                 Position = Vector2.Add(this.Position, offset),
                 Momentum = this.Momentum,
                 Sprite = this.Owner.ShipSprite,
@@ -89,25 +89,32 @@
 
             base.Init(world);
 
-            this.AddShip();
-            this.AddShip();
-            this.AddShip();
-            this.AddShip();
-            this.AddShip();
-            this.AddShip();
-            this.AddShip();
+            for(int i=0; i<world.Hook.SpawnShipCount; i++)
+                this.AddShip();
+
         }
 
         public override void Step()
         {
             var isShooting = ShootRequested && World.Time >= TimeReloaded;
-            var isBoosting = World.Time < BoostingUntil;
+            var isBoosting = World.Time < BoostUntil;
+            var isBoostInitial = false;
 
             if (World.Time > BoostCooldownTime && BoostRequested)
             {
-                BoostCooldownTime = World.Time + 1500;
-                BoostingUntil = World.Time + 750;
-                BoostVector = Vector2.Normalize(Momentum) * 0.02f;
+                BoostCooldownTime = World.Time + World.Hook.BoostCooldownTime;
+                BoostUntil = World.Time + World.Hook.BoostDuration;
+                isBoostInitial = true;
+                var shipLoss = (int)MathF.Floor(Ships.Count / 2);
+                for (int i = 0; i < shipLoss; i++)
+                {
+                    var ship = Ships.First();
+                    ship.Fleet = null;
+                    ship.Sprite = "ship0";
+                    ship.Abandoned = true;
+                    ship.ThrustAmount = 0;
+                    Ships.Remove(ship);
+                }
             }
 
             foreach (var ship in Ships)
@@ -116,41 +123,33 @@
 
                 Flock(ship);
 
-                float thrustAmount = BaseThrust;
+                ship.ThrustAmount = isBoosting
+                    ? BoostThrust
+                    : BaseThrustM * Ships.Count + BaseThrustB;
 
-                if (isBoosting)
-                    thrustAmount *= 1.5f;
+                ship.Drag = isBoosting
+                    ? 1.0f
+                    : World.Hook.Drag;
 
-                var thrust =
-                    Vector2.Transform(
-                        new Vector2(thrustAmount, 0),
-                        Quaternion.CreateFromAxisAngle(new Vector3(0, 0, 1), ship.Angle)
-                    );
+                if (isBoostInitial)
+                {
 
-                float speedLimit = isBoosting
-                    ? MaxSpeedBoost
-                    : MaxSpeed;
-
-                var x = Vector2.Add(ship.Momentum, thrust);
-                var currentSpeed = Math.Abs(Vector2.Distance(x, Vector2.Zero));
-                if (currentSpeed > speedLimit)
-                    x = Vector2.Multiply(Vector2.Normalize(x), ((speedLimit + 3 * currentSpeed) / 4));
-
-                if (isBoosting)
-                    x += BoostVector;
-
-                ship.Momentum = x;
-                Momentum = x;
+                    ship.Momentum += Vector2.Normalize(ship.Momentum) * World.Hook.BoostSpeed;
+                }
             }
 
             var fleetCenter = FleetCenterNaive(null);
             var cameraVector = fleetCenter - Position;
 
-            this.Momentum += cameraVector * 0.005f;
+            this.Momentum = Vector2.Zero;
+            foreach(var ship in Ships)
+                this.Momentum += ship.Momentum;
+            this.Momentum /= Ships.Count;
+
 
             if (isShooting)
             {
-                TimeReloaded = World.Time + ShootCooldownTime;
+                TimeReloaded = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
 
                 foreach (var ship in Ships)
                     Bullet.FireFrom(ship);
@@ -162,21 +161,16 @@
             if (Ships.Count < 2)
                 return;
 
-            if (World.Time >= NextFlockingTime)
-            {
-                NextFlockingTime = World.Time + World.Hook.FlockSpeed;
+            var shipFlockingVector =
+                (World.Hook.FlockCohesion * Cohesion(ship, World.Hook.FlockCohesionMaximumDistance))
+                + (World.Hook.FlockAlignment * Alignment(ship))
+                + (World.Hook.FlockSeparation * Separation(ship, World.Hook.FlockSeparationMinimumDistance));
 
-                var shipFlockingVector =
-                    (World.Hook.FlockCohesion * Cohesion(ship, World.Hook.FlockCohesionMaximumDistance))
-                    + (World.Hook.FlockAlignment * Alignment(ship))
-                    + (World.Hook.FlockSeparation * Separation(ship, World.Hook.FlockSeparationMinimumDistance));
+            var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
 
-                var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
+            steeringVector += World.Hook.FlockWeight * shipFlockingVector;
 
-                steeringVector += World.Hook.FlockWeight * shipFlockingVector;
-
-                ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
-            }
+            ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
         }
 
         private Vector2 FleetCenterNaive(Ship except = null)

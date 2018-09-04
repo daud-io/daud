@@ -14,6 +14,9 @@
         this.statBytesUpPerSecond = 0;
 
         var self = this;
+        this.fb = Game.Engine.Networking.FlatBuffers;
+        this.latency = 0;
+
         setInterval(function () {
             if (self.connected) {
                 self.sendPing();
@@ -56,18 +59,18 @@
 
             var builder = new flatbuffers.Builder(0);
 
-            Game.Engine.Networking.FlatBuffers.NetPing.startNetPing(builder);
+            this.fb.NetPing.startNetPing(builder);
 
             this.pingSent = performance.now();
 
-            //Game.Engine.Networking.FlatBuffers.Ping.addTime(builder, this.pingSent);
-            var ping = Game.Engine.Networking.FlatBuffers.NetPing.endNetPing(builder);
+            //this.fb.Ping.addTime(builder, this.pingSent);
+            var ping = this.fb.NetPing.endNetPing(builder);
 
 
-            Game.Engine.Networking.FlatBuffers.NetQuantum.startNetQuantum(builder);
-            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.NetPing);
-            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessage(builder, ping);
-            var quantum = Game.Engine.Networking.FlatBuffers.NetQuantum.endNetQuantum(builder);
+            this.fb.NetQuantum.startNetQuantum(builder);
+            this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetPing);
+            this.fb.NetQuantum.addMessage(builder, ping);
+            var quantum = this.fb.NetQuantum.endNetQuantum(builder);
 
             builder.finish(quantum);
 
@@ -81,16 +84,16 @@
             var stringName = builder.createString(name || "unknown");
             var stringShip = builder.createString(ship || "ship_gray");
 
-            Game.Engine.Networking.FlatBuffers.NetSpawn.startNetSpawn(builder);
-            Game.Engine.Networking.FlatBuffers.NetSpawn.addColor(builder, stringColor);
-            Game.Engine.Networking.FlatBuffers.NetSpawn.addName(builder, stringName);
-            Game.Engine.Networking.FlatBuffers.NetSpawn.addShip(builder, stringShip);
-            var spawn = Game.Engine.Networking.FlatBuffers.NetSpawn.endNetSpawn(builder);
+            this.fb.NetSpawn.startNetSpawn(builder);
+            this.fb.NetSpawn.addColor(builder, stringColor);
+            this.fb.NetSpawn.addName(builder, stringName);
+            this.fb.NetSpawn.addShip(builder, stringShip);
+            var spawn = this.fb.NetSpawn.endNetSpawn(builder);
 
-            Game.Engine.Networking.FlatBuffers.NetQuantum.startNetQuantum(builder);
-            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.NetSpawn);
-            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessage(builder, spawn);
-            var quantum = Game.Engine.Networking.FlatBuffers.NetQuantum.endNetQuantum(builder);
+            this.fb.NetQuantum.startNetQuantum(builder);
+            this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetSpawn);
+            this.fb.NetQuantum.addMessage(builder, spawn);
+            var quantum = this.fb.NetQuantum.endNetQuantum(builder);
 
             builder.finish(quantum);
 
@@ -101,16 +104,16 @@
         sendControl: function (angle, boost, shoot) {
             var builder = new flatbuffers.Builder(0);
 
-            Game.Engine.Networking.FlatBuffers.NetControlInput.startNetControlInput(builder);
-            Game.Engine.Networking.FlatBuffers.NetControlInput.addAngle(builder, angle);
-            Game.Engine.Networking.FlatBuffers.NetControlInput.addBoost(builder, boost);
-            Game.Engine.Networking.FlatBuffers.NetControlInput.addShoot(builder, shoot);
-            var input = Game.Engine.Networking.FlatBuffers.NetControlInput.endNetControlInput(builder);
+            this.fb.NetControlInput.startNetControlInput(builder);
+            this.fb.NetControlInput.addAngle(builder, angle);
+            this.fb.NetControlInput.addBoost(builder, boost);
+            this.fb.NetControlInput.addShoot(builder, shoot);
+            var input = this.fb.NetControlInput.endNetControlInput(builder);
 
-            Game.Engine.Networking.FlatBuffers.NetQuantum.startNetQuantum(builder);
-            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessageType(builder, Game.Engine.Networking.FlatBuffers.AllMessages.NetControlInput);
-            Game.Engine.Networking.FlatBuffers.NetQuantum.addMessage(builder, input);
-            var quantum = Game.Engine.Networking.FlatBuffers.NetQuantum.endNetQuantum(builder);
+            this.fb.NetQuantum.startNetQuantum(builder);
+            this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetControlInput);
+            this.fb.NetQuantum.addMessage(builder, input);
+            var quantum = this.fb.NetQuantum.endNetQuantum(builder);
 
             builder.finish(quantum);
 
@@ -142,22 +145,22 @@
 
             this.statBytesDown += data.byteLength;
 
-            var quantum = Game.Engine.Networking.FlatBuffers.NetQuantum.getRootAsNetQuantum(buf);
+            var quantum = this.fb.NetQuantum.getRootAsNetQuantum(buf);
 
             var messageType = quantum.messageType();
 
             switch (messageType) {
-                case Game.Engine.Networking.FlatBuffers.AllMessages.NetWorldView:
+                case this.fb.AllMessages.NetWorldView:
 
-                    var message = quantum.message(new Game.Engine.Networking.FlatBuffers.NetWorldView());
+                    var message = quantum.message(new this.fb.NetWorldView());
 
                     this.onView(message);
                     break;
-                case Game.Engine.Networking.FlatBuffers.AllMessages.NetPing: // Ping
+                case this.fb.AllMessages.NetPing: // Ping
                     this.latency = performance.now() - this.pingSent;
                     break;
-                case Game.Engine.Networking.FlatBuffers.AllMessages.NetLeaderboard:
-                    var message = quantum.message(new Game.Engine.Networking.FlatBuffers.NetLeaderboard());
+                case this.fb.AllMessages.NetLeaderboard:
+                    var message = quantum.message(new this.fb.NetLeaderboard());
 
                     var entriesLength = message.entriesLength();
                     var entries = [];

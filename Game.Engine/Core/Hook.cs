@@ -8,21 +8,27 @@
             {
                 return new Hook
                 {
-                    BaseThrust = 0.075f,
-                    BaseThrustBot = 0.03f,
-                    MaxSpeed = 0.5f,
-                    MaxSpeedBot = 0.3f,
-                    MaxSpeedBoost = 3.5f,
+                    BaseThrustM = -0.003f,
+                    BaseThrustB = 0.13f,
+
+                    Drag = 0.90f,
+
+                    BoostThrust = 0.1f,
+                    BoostCooldownTime = 1200,
+                    BoostSpeed = 1f,
+                    BoostDuration = 500,
+
+                    ShotCooldownTimeM = 20,
+                    ShotCooldownTimeB = 500,
+                    ShotSpeedM = -0.02f,
+                    ShotSpeedB = 1.3f,
 
                     HealthHitCost = 100,
-                    MaxBoostTime = 100,
-                    HealthRegenerationPerFrame = 0.3f,
+                    HealthRegenerationPerFrame = 0.0f,
                     MaxHealth = 100,
-                    ShootCooldownTime = 500,
-                    ShootCooldownTimeBot = 800,
+
                     MaxHealthBot = 50,
                     BulletLife = 2000,
-                    BulletSpeed = 1.2f,
                     BotPerXPoints = 500,
                     BotBase = 4,
                     StepTime = 40,
@@ -31,6 +37,8 @@
                     ObstacleMaxSize = 1000,
                     TeamMode = false,
 
+                    SpawnShipCount = 3,
+
                     FlockAlignment = 0.0f,
                     FlockCohesion = 0.002f,
                     FlockCohesionMaximumDistance = 2000,
@@ -38,26 +46,39 @@
                     FlockSeparationMinimumDistance = 200,
                     FlockWeight = 0.14f,
 
+                    ShipGainBySizeB = 1.03f,
+                    ShipGainBySizeM = -0.03f,
+
                     FlockSpeed = 0
                 };
             }
         }
 
-        public float BaseThrust { get; set; }
-        public float BaseThrustBot { get; set; }
+        public float BaseThrustM { get; set; }
+        public float BaseThrustB { get; set; }
+
+        public float BoostThrust { get; set; }
+
+        public int BoostCooldownTime { get; set; }
+        public int BoostDuration { get; set; }
+        public float BoostSpeed { get; set; }
+
+        public float Drag { get; set; }
 
         public int HealthHitCost { get; set; }
-        public int MaxBoostTime { get; set; }
         public float HealthRegenerationPerFrame { get; set; }
-        public float MaxSpeed { get; set; }
-        public float MaxSpeedBot { get; set; }
-        public float MaxSpeedBoost { get; set; }
-        public int ShootCooldownTime { get; set; }
-        public int ShootCooldownTimeBot { get; set; }
+
+        public int SpawnShipCount { get; set; }
+
+        public float ShotCooldownTimeM { get; set; }
+        public float ShotCooldownTimeB { get; set; }
+
+        public float ShotSpeedM { get; set; }
+        public float ShotSpeedB { get; set; }
+
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }
         public int BulletLife { get; set; }
-        public float BulletSpeed { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
         public int Obstacles { get; set; }
@@ -75,8 +96,12 @@
         public float FlockWeight { get; set; }
         public int FlockSpeed { get; set; }
 
+        public float ShipGainBySizeM { get; set; }
+        public float ShipGainBySizeB { get; set; }
 
 
         public int StepTime { get; set; }
+        public float OutOfBoundsBorder { get; set; } = 100;
+        public float OutOfBoundsDecayDistance { get; set; } = 1500;
     }
 }

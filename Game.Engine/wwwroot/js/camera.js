@@ -36,8 +36,8 @@
             this.aspectRatio = this.context.canvas.width / this.context.canvas.height;
             this.viewport.width = this.distance * Math.tan(this.fieldOfView);
             this.viewport.height = this.viewport.width / this.aspectRatio;
-            this.viewport.left = this.lookat[0] - (this.viewport.width / 2.0);
-            this.viewport.top = this.lookat[1] - (this.viewport.height / 2.0);
+            this.viewport.left = this.lookat[0] - this.viewport.width / 2.0;
+            this.viewport.top = this.lookat[1] - this.viewport.height / 2.0;
             this.viewport.right = this.viewport.left + this.viewport.width;
             this.viewport.bottom = this.viewport.top + this.viewport.height;
             this.viewport.scale[0] = this.context.canvas.width / this.viewport.width;
@@ -54,14 +54,14 @@
         },
         screenToWorld: function (x, y, obj) {
             obj = obj || {};
-            obj.x = (x / this.viewport.scale[0]) + this.viewport.left;
-            obj.y = (y / this.viewport.scale[1]) + this.viewport.top;
+            obj.x = x / this.viewport.scale[0] + this.viewport.left;
+            obj.y = y / this.viewport.scale[1] + this.viewport.top;
             return obj;
         },
         worldToScreen: function (x, y, obj) {
             obj = obj || {};
-            obj.x = (x - this.viewport.left) * (this.viewport.scale[0]);
-            obj.y = (y - this.viewport.top) * (this.viewport.scale[1]);
+            obj.x = (x - this.viewport.left) * this.viewport.scale[0];
+            obj.y = (y - this.viewport.top) * this.viewport.scale[1];
             return obj;
         }
     };

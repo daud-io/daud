@@ -4,19 +4,28 @@
         this.img = new Image();
         this.img.src = 'img/bg.png';
         this.context = context;
+
+        this.parallaxFactor = 5;
+
+        var self = this;
+        this.img.onload = function () {
+            self.pattern = self.context.createPattern(self.img, 'repeat');
+        };
         this.canvas = canvas;
     };
 
     Background.prototype = {
-        draw: function () {
+        draw: function (x, y) {
             var ctx = this.context;
+            x /= this.parallaxFactor;
+            y /= this.parallaxFactor;
 
             ctx.save();
-            ctx.scale(4, 4);
-            ctx.fillStyle = this.context.createPattern(this.img, 'repeat');
-            ctx.fillRect(-100000, -100000, 200000, 200000); 
+            ctx.scale(2, 2);
+            ctx.fillStyle = this.pattern;
+            ctx.translate(x, y)
+            ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000); 
             ctx.restore();
-            
         }
     };
 

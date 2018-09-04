@@ -42,7 +42,8 @@
     var cache = new Game.Cache();
     var view = false;
     var lastFrameTime = false;
-    var serverTimeOffset = 0;
+    var serverTimeOffset = false;
+    var pingAdjusted = false;
 
     var log = function (message) {
         document.getElementById('log').prepend(document.createTextNode(message + '\n'));
@@ -76,7 +77,7 @@
         };
 
         return newBody;
-    }
+    };
 
     connection.onLeaderboard = function (lb) {
         //console.log('new leaderboard');
@@ -87,8 +88,7 @@
         viewCounter++;
 
         view = {};
-        lastFrameTime = performance.now();
-        view.time = newView.time().toFloat64()
+        view.time = newView.time().toFloat64();
 
         view.isAlive = newView.isAlive();
 
@@ -103,12 +103,16 @@
                 .addClass('dead');
         }
 
-        serverTimeOffset = view.time - lastFrameTime;
+        lastFrameTime = performance.now();
+        if (serverTimeOffset === false || (pingAdjusted !== true && connection.latency != 0)) {
+            serverTimeOffset = view.time - lastFrameTime + connection.latency/2;
+            pingAdjusted = connection.latency != 0;
+        }
 
         var updatesLength = newView.updatesLength();
         var updates = [];
-        for (var i = 0; i < updatesLength; i++) {
-            var update = newView.updates(i);
+        for (var u = 0; u < updatesLength; u++) {
+            var update = newView.updates(u);
 
             updates.push(bodyFromServer(update));
         }
@@ -117,8 +121,8 @@
 
         var deletes = [];
         var deletesLength = newView.deletesLength();
-        for (var i = 0; i < deletesLength; i++)
-            deletes.push(newView.deletes(i));
+        for (var d = 0; d < deletesLength; d++)
+            deletes.push(newView.deletes(d));
             
         cache.update(updates, deletes);
 
@@ -129,12 +133,12 @@
 
     setInterval(function () {
         if (
-            angle != lastControl.angle
-            || Game.Controls.boost != lastControl.boost
-            || Game.Controls.shoot != lastControl.shoot
-            || Game.Controls.nick != lastControl.nick
-            || Game.Controls.ship != lastControl.ship
-            || Game.Controls.color != lastControl.color
+            angle !== lastControl.angle
+            || Game.Controls.boost !== lastControl.boost
+            || Game.Controls.shoot !== lastControl.shoot
+            || Game.Controls.nick !== lastControl.nick
+            || Game.Controls.ship !== lastControl.ship
+            || Game.Controls.color !== lastControl.color
         ) {
             connection.sendControl(
                 angle,
@@ -195,7 +199,7 @@
         Game.Stats.viewsPerSecond = viewCounter;
         Game.Stats.updatesPerSecond = updateCounter;
 
-        if (frameCounter == 0) {
+        if (frameCounter === 0) {
             console.log('backgrounded');
         }
         frameCounter = 0;
@@ -208,17 +212,17 @@
         requestAnimationFrame(gameLoop);
         var currentTime = performance.now();
         frameCounter++;
+        var position = { X: 0, Y: 0 };
 
         if (view) {
-            var position = interpolator.projectObject(view.camera, currentTime + serverTimeOffset);
+            position = interpolator.projectObject(view.camera, currentTime + serverTimeOffset);
 
             camera.moveTo(position.X, position.Y);
             camera.zoomTo(5000);
         }
 
         camera.begin();
-        background.draw();
-
+        background.draw(position.X, position.Y);
         renderer.view = view;
         renderer.draw(cache, interpolator, currentTime + serverTimeOffset);
 
@@ -229,8 +233,8 @@
         if (Game.Controls.mouseX) {
             var cx = canvas.width / 2;
             var cy = canvas.height / 2;
-            var dy = Game.Controls.mouseY - cy
-            var dx = Game.Controls.mouseX - cx
+            var dy = Game.Controls.mouseY - cy;
+            var dx = Game.Controls.mouseX - cx;
 
             angle = Math.atan2(dy, dx);
         }
