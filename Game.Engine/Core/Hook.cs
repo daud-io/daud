@@ -31,7 +31,7 @@
                     MaxHealthBot = 50,
                     BulletLife = 2000,
                     BotPerXPoints = 500,
-                    BotBase = 4,
+                    BotBase = 0,
                     StepTime = 40,
                     Obstacles = 6,
                     ObstacleMaxMomentum = 0.1f,
@@ -40,9 +40,9 @@
 
                     SpawnShipCount = 3,
 
-                    FlockAlignment = 0.0f,
+                    FlockAlignment = .5f,
                     FlockCohesion = 0.002f,
-                    FlockCohesionMaximumDistance = 2000,
+                    FlockCohesionMaximumDistance = 600,
                     FlockSeparation = 40f,
                     FlockSeparationMinimumDistance = 200,
                     FlockWeight = 0.14f,
@@ -83,7 +83,9 @@
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
         public int Obstacles { get; set; }
-        public int Pickups { get; set; } = 25;
+        public int Pickups { get; set; } = 5;
+        public int Fishes { get; set; } = 100;
+
         public float ObstacleMaxMomentum { get; set; }
         public int ObstacleMaxSize { get; set; }
 

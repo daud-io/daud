@@ -21,6 +21,9 @@
 
         public bool Abandoned { get; set; }
 
+        protected bool IsOOB = false;
+        private long TimeDeath = 0;
+
         public override void Init(World world)
         {
             base.Init(world);
@@ -28,6 +31,7 @@
             SizeMinimum = 90;
             SizeMaximum = 90;
             Health = MaxHealth;
+            Drag = World.Hook.Drag;
         }
 
         private void Die(Player player, Fleet fleet, Bullet bullet)
@@ -50,7 +54,7 @@
             Deinit();
         }
 
-        public void CollisionExecute(ProjectedBody projectedBody)
+        public virtual void CollisionExecute(ProjectedBody projectedBody)
         {
             var bullet = projectedBody as Bullet;
             var fleet = bullet?.OwnedByFleet;
@@ -90,10 +94,11 @@
         {
             base.Step();
 
-            if (Abandoned)
-            {
+            if (Abandoned && TimeDeath == 0)
+                TimeDeath = World.Time + 20000;
 
-            };
+            if (TimeDeath > 0 && World.Time > TimeDeath)
+                Die(null, null, null);
 
             Health = Math.Max(Math.Min(Health, MaxHealth), 0) + HealthRegenerationPerFrame;
             Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum-SizeMinimum));
@@ -110,13 +115,15 @@
         {
             var oob = World.DistanceOutOfBounds(Position);
 
+            IsOOB = oob > 0;
+
             if (oob > World.Hook.OutOfBoundsBorder)
                 this.Momentum *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
 
             if (oob > 700)
                 Die(null, null, null);
 
-        }
 
+        }
     }   
 }

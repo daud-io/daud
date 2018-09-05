@@ -1,11 +1,13 @@
 ﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class ObstacleTender : IActor
     {
         private readonly List<Obstacle> Obstacles = new List<Obstacle>();
         private readonly List<Pickup> Pickups = new List<Pickup>();
+        private readonly List<Fish> Fishes = new List<Fish>();
         private World World = null;
 
         private void AddObstacle()
@@ -34,10 +36,24 @@
             Pickup.Deinit();
         }
 
+        private void AddFish()
+        {
+            var fish = new Fish(World);
+            this.Fishes.Add(fish);
+        }
+
+        private void RemoveFish()
+        {
+            var fish = Fishes[Fishes.Count - 1];
+            Fishes.Remove(fish);
+            fish.Deinit();
+        }
+
         public void Step()
         {
             int desiredObstacles = World.Hook.Obstacles;
             int desiredPickups = World.Hook.Pickups;
+            int desiredFishes = World.Hook.Fishes;
 
             while (Obstacles.Count < desiredObstacles)
                 AddObstacle();
@@ -50,6 +66,15 @@
 
             while (Pickups.Count > desiredPickups)
                 RemovePickup();
+
+            foreach (var fish in Fishes.Where(f => !f.Exists).ToList())
+                Fishes.Remove(fish);
+
+            while (Fishes.Count < desiredFishes)
+                AddFish();
+
+            while (Fishes.Count > desiredFishes)
+                RemoveFish();
         }
 
         public void Init(World world)

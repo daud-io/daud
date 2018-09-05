@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.Engine.Core.Steering;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -140,7 +141,7 @@
                 }
             }
 
-            var fleetCenter = FleetCenterNaive(null);
+            var fleetCenter = Flocking.FleetCenterNaive(Ships, null);
             var cameraVector = fleetCenter - Position;
 
             this.Momentum = Vector2.Zero;
@@ -166,87 +167,15 @@
                 return;
 
             var shipFlockingVector =
-                (World.Hook.FlockCohesion * Cohesion(ship, World.Hook.FlockCohesionMaximumDistance))
-                + (World.Hook.FlockAlignment * Alignment(ship))
-                + (World.Hook.FlockSeparation * Separation(ship, World.Hook.FlockSeparationMinimumDistance));
+                (World.Hook.FlockCohesion * Flocking.Cohesion(Ships, ship, World.Hook.FlockCohesionMaximumDistance))
+                + (World.Hook.FlockAlignment * Flocking.Alignment(Ships, ship))
+                + (World.Hook.FlockSeparation * Flocking.Separation(Ships, ship, World.Hook.FlockSeparationMinimumDistance));
 
             var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
 
             steeringVector += World.Hook.FlockWeight * shipFlockingVector;
 
             ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
-        }
-
-        private Vector2 FleetCenterNaive(Ship except = null)
-        {
-            Vector2 accumlator = Vector2.Zero;
-
-            foreach (var ship in Ships.Where(s => s != except))
-                accumlator += ship.Position;
-
-            accumlator /= Ships.Count;
-
-            return accumlator;
-        }
-
-        private Vector2 Cohesion(Ship ship, int maximumDistance)
-        {
-            var exclusiveCenter = Vector2.Zero;
-            int shipsIncluded = 0;
-            foreach (var shipOther in Ships)
-            {
-                if (shipOther != ship)
-                {
-                    var distance = Vector2.Distance(ship.Position, shipOther.Position);
-                    if (distance < maximumDistance)
-                    {
-                        exclusiveCenter += shipOther.Position;
-                        shipsIncluded++;
-                    }
-                }
-            }
-
-            if (shipsIncluded > 0)
-            {
-                exclusiveCenter /= shipsIncluded;
-                var relative = exclusiveCenter - ship.Position;
-                var distance = Vector2.Distance(ship.Position, exclusiveCenter);
-
-                return Vector2.Normalize(relative) * distance;
-            }
-            else
-                return Vector2.Zero;
-        }
-
-        private Vector2 Separation(Ship ship, int minimumDistance)
-        {
-            var accumulator = Vector2.Zero;
-            foreach (var shipOther in Ships)
-            {
-                if (shipOther != ship)
-                {
-                    var distance = Vector2.Distance(ship.Position, shipOther.Position);
-                    if (distance < minimumDistance)
-                    {
-                        if (distance < 1)
-                            distance = 1;
-
-                        accumulator += (ship.Position - shipOther.Position) / (distance* distance);
-                        //accumulator -= (shipOther.Position - ship.Position);
-                    }
-                }
-            }
-
-            return accumulator;
-        }
-
-        private Vector2 Alignment(Ship ship)
-        {
-            var accumulator = Vector2.Zero;
-            foreach (var shipOther in Ships)
-                accumulator += shipOther.Momentum;
-
-            return accumulator / (Ships.Count-1);
         }
     }
 }

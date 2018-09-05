@@ -23,6 +23,7 @@
             'ship_red': sprite("ship_red"),
             'ship_cyan': sprite("ship_cyan"),
             'ship_yellow': sprite("ship_yellow"),
+            'fish': sprite("ship0", .005, true),
             'bullet': sprite("bullet", 0.02, true),
             'seeker': sprite("seeker", 0.02, true),
             'obstacle': sprite("obstacle", 0.0028, true)

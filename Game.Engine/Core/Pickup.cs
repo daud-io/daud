@@ -30,9 +30,12 @@
             var ship = projectedBody as Ship;
             var fleet = ship.Fleet;
 
-            // powerup the fleet
-            fleet.Pickup = this;
-            Randomize();
+            if (fleet != null)
+            {
+                // powerup the fleet
+                fleet.Pickup = this;
+                Randomize();
+            }
         }
 
         public bool IsCollision(ProjectedBody projectedBody)

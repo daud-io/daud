@@ -44,7 +44,7 @@
         {
             if (player != null)
             {
-                var followFleet = player?.Fleet;
+                ProjectedBody followFleet = player?.Fleet;
 
                 if (followFleet == null)
                     followFleet = Player.GetWorldPlayers(world)
@@ -52,6 +52,12 @@
                         .OrderByDescending(p => p.Score * 10000 + (10000-p.Fleet.ID))
                         .FirstOrDefault()
                         ?.Fleet;
+
+                if (followFleet == null)
+                    followFleet = player?.World.Bodies.OfType<Ship>().FirstOrDefault();
+
+                if (followFleet == null)
+                    followFleet = player?.World.Bodies.FirstOrDefault();
 
                 ProjectedBody[] updatedBodies = null;
 
