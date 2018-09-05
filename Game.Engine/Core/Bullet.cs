@@ -1,19 +1,18 @@
 ﻿namespace Game.Engine.Core
 {
-    using Newtonsoft.Json;
     using System;
     using System.Linq;
     using System.Numerics;
 
     public class Bullet : ActorBody
     {
-        [JsonIgnore]
         public Fleet OwnedByFleet { get; set; }
         public long TimeDeath { get; set; }
 
         public bool Seeker { get; set; } = false;
 
         public float ThrustAmount { get; set; }
+        public float ThrustAngle { get; set; }
 
         public float Drag { get => World.Hook.Drag; }
 
@@ -53,16 +52,18 @@
                 if (target != null)
                 {
                     var delta = target.Position - Position;
-                    Angle = MathF.Atan2(delta.Y, delta.X);
+                    ThrustAngle = MathF.Atan2(delta.Y, delta.X);
+
+                    Angle = MathF.Atan2(Momentum.Y, Momentum.X);
                 }
             }
             else
             {
-
+                ThrustAngle = Angle;
             }
 
 
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
+            var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount;
             Momentum = (Momentum + thrust) * Drag;
 
 
