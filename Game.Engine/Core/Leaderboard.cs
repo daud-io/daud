@@ -8,6 +8,8 @@
         public long Time { get; set; } = 0;
         public string Type { get; set; }
 
+        public Entry ArenaRecord { get; set; }
+
         public class Entry
         {
             public int Score { get; set; }

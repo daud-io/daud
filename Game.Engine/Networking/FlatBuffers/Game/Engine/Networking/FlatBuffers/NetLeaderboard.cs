@@ -21,21 +21,25 @@ public struct NetLeaderboard : IFlatbufferObject
   public ArraySegment<byte>? GetTypeBytes() { return __p.__vector_as_arraysegment(4); }
   public NetLeaderboardEntry? Entries(int j) { int o = __p.__offset(6); return o != 0 ? (NetLeaderboardEntry?)(new NetLeaderboardEntry()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int EntriesLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public NetLeaderboardEntry? Record { get { int o = __p.__offset(8); return o != 0 ? (NetLeaderboardEntry?)(new NetLeaderboardEntry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
 
   public static Offset<NetLeaderboard> CreateNetLeaderboard(FlatBufferBuilder builder,
       StringOffset typeOffset = default(StringOffset),
-      VectorOffset entriesOffset = default(VectorOffset)) {
-    builder.StartObject(2);
+      VectorOffset entriesOffset = default(VectorOffset),
+      Offset<NetLeaderboardEntry> recordOffset = default(Offset<NetLeaderboardEntry>)) {
+    builder.StartObject(3);
+    NetLeaderboard.AddRecord(builder, recordOffset);
     NetLeaderboard.AddEntries(builder, entriesOffset);
     NetLeaderboard.AddType(builder, typeOffset);
     return NetLeaderboard.EndNetLeaderboard(builder);
   }
 
-  public static void StartNetLeaderboard(FlatBufferBuilder builder) { builder.StartObject(2); }
+  public static void StartNetLeaderboard(FlatBufferBuilder builder) { builder.StartObject(3); }
   public static void AddType(FlatBufferBuilder builder, StringOffset typeOffset) { builder.AddOffset(0, typeOffset.Value, 0); }
   public static void AddEntries(FlatBufferBuilder builder, VectorOffset entriesOffset) { builder.AddOffset(1, entriesOffset.Value, 0); }
   public static VectorOffset CreateEntriesVector(FlatBufferBuilder builder, Offset<NetLeaderboardEntry>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartEntriesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddRecord(FlatBufferBuilder builder, Offset<NetLeaderboardEntry> recordOffset) { builder.AddOffset(2, recordOffset.Value, 0); }
   public static Offset<NetLeaderboard> EndNetLeaderboard(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetLeaderboard>(o);

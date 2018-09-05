@@ -36,14 +36,12 @@
     var interpolator = new Game.Interpolator();
     var leaderboard = new Game.Leaderboard(canvas, context);
     var angle = 0.0;
-
-    Game.Controls.registerCanvas(canvas);
-
     var cache = new Game.Cache();
     var view = false;
     var lastFrameTime = false;
     var serverTimeOffset = false;
-    var pingAdjusted = false;
+
+    Game.Controls.registerCanvas(canvas);
 
     var log = function (message) {
         document.getElementById('log').prepend(document.createTextNode(message + '\n'));
@@ -104,10 +102,9 @@
         }
 
         lastFrameTime = performance.now();
-        if (serverTimeOffset === false || (pingAdjusted !== true && connection.latency != 0)) {
-            serverTimeOffset = view.time - lastFrameTime + connection.latency/2;
-            pingAdjusted = connection.latency != 0;
-        }
+        var thisOffset = view.time - lastFrameTime + connection.latency/2;
+        if (serverTimeOffset === false || thisOffset < serverTimeOffset)
+            serverTimeOffset = thisOffset;
 
         var updatesLength = newView.updatesLength();
         var updates = [];

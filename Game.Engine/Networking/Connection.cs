@@ -148,10 +148,20 @@
 
                     var builder = new FlatBufferBuilder(1);
 
+                    var stringName = builder.CreateString(world.Leaderboard.ArenaRecord.Name ?? " ");
+                    var stringColor = builder.CreateString(world.Leaderboard.ArenaRecord.Color ?? " ");
+
+                    NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
+                    NetLeaderboardEntry.AddColor(builder, stringColor);
+                    NetLeaderboardEntry.AddName(builder, stringName);
+                    NetLeaderboardEntry.AddScore(builder, world.Leaderboard.ArenaRecord.Score);
+                    var record = NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
+
+                    
                     var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
                     {
-                        var stringName = builder.CreateString(e.Name ?? string.Empty);
-                        var stringColor = builder.CreateString(e.Color ?? string.Empty);
+                        stringName = builder.CreateString(e.Name ?? string.Empty);
+                        stringColor = builder.CreateString(e.Color ?? string.Empty);
 
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                         NetLeaderboardEntry.AddName(builder, stringName);
@@ -165,6 +175,7 @@
                     NetLeaderboard.StartNetLeaderboard(builder);
                     NetLeaderboard.AddEntries(builder, entriesVector);
                     NetLeaderboard.AddType(builder, stringType);
+                    NetLeaderboard.AddRecord(builder, record);
 
                     var leaderboardOffset = NetLeaderboard.EndNetLeaderboard(builder);
 

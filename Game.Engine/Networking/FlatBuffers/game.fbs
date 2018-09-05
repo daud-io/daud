@@ -14,6 +14,7 @@ table NetLeaderboard
 {
 	type:string;
 	entries:[NetLeaderboardEntry];
+	record:NetLeaderboardEntry;
 }
 
 table NetLeaderboardEntry

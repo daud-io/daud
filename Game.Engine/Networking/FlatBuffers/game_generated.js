@@ -100,10 +100,19 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.entriesLength = func
 };
 
 /**
+ * @param {Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry=} obj
+ * @returns {Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.record = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.startNetLeaderboard = function(builder) {
-  builder.startObject(2);
+  builder.startObject(3);
 };
 
 /**
@@ -141,6 +150,14 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.createEntriesVector = function
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.startEntriesVector = function(builder, numElems) {
   builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} recordOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboard.addRecord = function(builder, recordOffset) {
+  builder.addFieldOffset(2, recordOffset, 0);
 };
 
 /**

@@ -115,8 +115,15 @@
                                 .Take(10)
                                 .ToList(),
                         Type = "FFA",
-                        Time = this.Time
+                        Time = this.Time,
+                        ArenaRecord = Leaderboard?.ArenaRecord
+                            ?? new Leaderboard.Entry()
                     };
+
+                    var firstPlace = Leaderboard.Entries.First();
+                    if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
+                        Leaderboard.ArenaRecord = firstPlace;
+
                 }
 
                 TimeLeaderboardRecalc = this.Time + 750;

@@ -192,9 +192,15 @@
                         });
                     }
 
+                    var record = message.record();
                     this.onLeaderboard({
                         Type: message.type(),
-                        Entries: entries
+                        Entries: entries,
+                        Record: {
+                            Name: record.name(),
+                            Color: record.color(),
+                            Score: record.score()
+                        }
                     });
                     break;
             }
