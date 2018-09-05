@@ -22,7 +22,7 @@
                     ShotCooldownTimeB = 500,
 
                     ShotThrustM = -0.0035f,
-                    ShotThrustB = 0.3f,
+                    ShotThrustB = 0.21f,
 
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
