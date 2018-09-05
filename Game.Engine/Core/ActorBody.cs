@@ -45,6 +45,7 @@
                     .ToList())
                 {
                     hit.CollisionExecute(this);
+                    Collided(hit);
                 }
             }
         }
