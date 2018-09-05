@@ -100,7 +100,6 @@
 
                     var updateVector = NetWorldView.CreateUpdatesVector(builder, updatedBodies.Select(u =>
                     {
-
                         var stringSprite = builder.CreateString(u.Sprite ?? string.Empty);
                         var stringColor = builder.CreateString(u.Color ?? string.Empty);
                         var stringCaption = builder.CreateString(u.Caption ?? string.Empty);
@@ -112,7 +111,8 @@
                         NetBody.AddSprite(builder, stringSprite);
                         NetBody.AddColor(builder, stringColor);
                         NetBody.AddCaption(builder, stringCaption);
-                        NetBody.AddAngle(builder, u.Angle);
+                        NetBody.AddOriginalAngle(builder, u.OriginalAngle);
+                        NetBody.AddAngularVelocity(builder, u.AngularVelocity);
                         NetBody.AddMomentum(builder, FromVector(builder, u.Momentum));
                         NetBody.AddOriginalPosition(builder, FromVector(builder, u.OriginalPosition));
 

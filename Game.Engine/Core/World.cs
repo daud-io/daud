@@ -60,6 +60,7 @@
                     {
                         body.DefinitionTime = this.Time;
                         body.OriginalPosition = body.Position;
+                        body.OriginalAngle = body.Angle;
                         body.IsDirty = false;
                     }
 

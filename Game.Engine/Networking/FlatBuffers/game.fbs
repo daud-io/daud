@@ -67,7 +67,8 @@ table NetBody
 	sprite:string;
 	color: string;
 	caption: string;
-	angle: float;
+	originalAngle: float;
+	angularVelocity: float;
 	momentum:Vec2;
 	originalPosition:Vec2;
 }

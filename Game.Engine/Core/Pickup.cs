@@ -5,12 +5,15 @@
 
     public class Pickup : ActorBody, ICollide
     {
+        public string BulletSprite { get; set; }
+
         public Pickup(World world)
         {
             this.Init(world);
 
             Size = 100;
-            Sprite = "seeker";
+            Sprite = "seeker_pickup";
+            BulletSprite = "seeker";
             Color = "rgba(128,128,128,.2)";
             Randomize();
         }
@@ -53,9 +56,7 @@
 
         public override void Step()
         {
-            int revolution = 4000;
-            Angle = (World.Time % revolution) / (float)revolution
-                * MathF.PI * 2;
+            AngularVelocity = 0.005f;
 
             if (World.DistanceOutOfBounds(Position) > 0)
             {

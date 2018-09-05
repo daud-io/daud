@@ -8,9 +8,7 @@
         public int ID { get; set; }
         public long DefinitionTime { get; set; }
 
-        [JsonIgnore]
         public bool Exists { get; set; }
-        [JsonIgnore]
         public bool IsDirty { get; set; } = true;
 
         private int _size { get; set; }
@@ -69,17 +67,31 @@
             }
         }
 
-        private float _angle { get; set; }
-        public virtual float Angle
+        private float _anuglarVelocity { get; set; }
+        public virtual float AngularVelocity
         {
             get
             {
-                return _angle;
+                return _anuglarVelocity;
             }
             set
             {
-                IsDirty = IsDirty || _angle != value;
-                _angle = value;
+                IsDirty = IsDirty || _anuglarVelocity != value;
+                _anuglarVelocity = value;
+            }
+        }
+
+        private float _originalAngle { get; set; }
+        public virtual float OriginalAngle
+        {
+            get
+            {
+                return _originalAngle;
+            }
+            set
+            {
+                IsDirty = IsDirty || _originalAngle != value;
+                _originalAngle = value;
             }
         }
 

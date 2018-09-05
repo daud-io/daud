@@ -68,7 +68,8 @@
             Sprite: body.sprite(),
             Color: body.color(),
             Caption: body.caption(),
-            Angle: body.angle(),
+            OriginalAngle: body.originalAngle(),
+            AngularVelocity: body.angularVelocity(),
             Momentum: {
                 X: momentum.x(),
                 Y: momentum.y()

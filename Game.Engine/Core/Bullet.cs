@@ -28,7 +28,7 @@
                 Position = ship.Position,
                 Angle = ship.Angle,
                 OwnedByFleet = ship.Fleet,
-                Sprite = ship.Fleet.Pickup?.Sprite ?? "bullet",
+                Sprite = ship.Fleet.Pickup?.BulletSprite ?? "bullet",
                 Size = ship.Fleet.Pickup?.Size ?? 20,
                 Color = ship.Color,
                 Seeker = ship.Fleet.Pickup != null,
@@ -55,6 +55,10 @@
                     var delta = target.Position - Position;
                     Angle = MathF.Atan2(delta.Y, delta.X);
                 }
+            }
+            else
+            {
+
             }
 
 
