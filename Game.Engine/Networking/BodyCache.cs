@@ -78,7 +78,7 @@
 
             private const int DISTANCE_THRESHOLD = 2;
             private const float WEIGHT_DISTANCE = 1;
-            private const float WEIGHT_ANGLE = 1;
+            private const float WEIGHT_ANGLE = 10;
             private const float WEIGHT_CAPTION = 1;
             private const float WEIGHT_SPRITE = 1;
             private const float WEIGHT_MISSING = float.MaxValue;

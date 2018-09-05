@@ -168,7 +168,6 @@
 
             var shipFlockingVector =
                 (World.Hook.FlockCohesion * Flocking.Cohesion(Ships, ship, World.Hook.FlockCohesionMaximumDistance))
-                + (World.Hook.FlockAlignment * Flocking.Alignment(Ships, ship))
                 + (World.Hook.FlockSeparation * Flocking.Separation(Ships, ship, World.Hook.FlockSeparationMinimumDistance));
 
             var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));

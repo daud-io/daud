@@ -5,7 +5,7 @@
     }
 
     Cache.prototype = {
-        update: function (updates, deletes) {
+        update: function (updates, deletes, time) {
 
             // delete objects that should no longer exist
             for (var i = 0; i < deletes.length; i++) {
@@ -19,6 +19,12 @@
                 var update = updates[i];
                 var existing = this.bodies['b-' + update.ID];
                 this.bodies['b-' + update.ID] = update;
+                if (existing) {
+
+                    existing.previous = false;
+                    existing.obsolete = time;
+                    update.previous = existing;
+                }
 
                 if (!existing)
                     this.count++;

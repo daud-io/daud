@@ -41,6 +41,7 @@
     var lastFrameTime = false;
     var serverTimeOffset = false;
     var lastOffset = false;
+    var gameTime = false;
 
     var lagDetectionTimes = [1000, 3000, 10000];
     var scheduleLagCheck = function (delay) {
@@ -135,7 +136,7 @@
         for (var d = 0; d < deletesLength; d++)
             deletes.push(newView.deletes(d));
             
-        cache.update(updates, deletes);
+        cache.update(updates, deletes, gameTime);
 
         view.camera = bodyFromServer(newView.camera());
     };
@@ -222,11 +223,12 @@
     function gameLoop() {
         requestAnimationFrame(gameLoop);
         var currentTime = performance.now();
+        gameTime = currentTime + serverTimeOffset;
         frameCounter++;
         var position = { X: 0, Y: 0 };
 
         if (view) {
-            position = interpolator.projectObject(view.camera, currentTime + serverTimeOffset);
+            position = interpolator.projectObject(view.camera, gameTime);
 
             camera.moveTo(position.X, position.Y);
             camera.zoomTo(5000);
@@ -235,7 +237,7 @@
         camera.begin();
         background.draw(position.X, position.Y);
         renderer.view = view;
-        renderer.draw(cache, interpolator, currentTime + serverTimeOffset);
+        renderer.draw(cache, interpolator, gameTime);
 
         camera.end();
 
