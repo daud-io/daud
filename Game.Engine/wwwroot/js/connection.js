@@ -3,7 +3,7 @@
 
         this.onView = function (view) { };
         this.onLeaderboard = function (leaderboard) { };
-
+        this.onConnected = function () { };
         this.reloading = false;
         this.connected = false;
         this.connect();
@@ -146,6 +146,7 @@
         onOpen: function (event) {
             this.connected = true;
             console.log('connected');
+            this.onConnected();
 
             if (this.reloading)
                 window.location.reload();

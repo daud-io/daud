@@ -40,6 +40,12 @@
     var view = false;
     var lastFrameTime = false;
     var serverTimeOffset = false;
+    var lastOffset = false;
+
+    var lagDetectionTimes = [1000, 3000, 10000];
+    var scheduleLagCheck = function (delay) {
+        setTimeout(function () { serverTimeOffset = lastOffset; }, delay);
+    };
 
     Game.Controls.registerCanvas(canvas);
 
@@ -77,6 +83,11 @@
         return newBody;
     };
 
+    connection.onConnected = function () {
+        for (var i = 0; i < lagDetectionTimes.length; i++)
+            scheduleLagCheck(lagDetectionTimes[i]);
+    };
+
     connection.onLeaderboard = function (lb) {
         //console.log('new leaderboard');
         leaderboard.setData(lb);
@@ -90,6 +101,7 @@
 
         view.isAlive = newView.isAlive();
 
+        // this is probably very slow and should be optimized
         $(document.body).remove("loading");
         if (view.isAlive) {
             $(document.body)
@@ -103,7 +115,8 @@
 
         lastFrameTime = performance.now();
         var thisOffset = view.time - lastFrameTime + connection.latency/2;
-        if (serverTimeOffset === false || thisOffset < serverTimeOffset)
+        lastOffset = thisOffset;
+        if (serverTimeOffset === false)
             serverTimeOffset = thisOffset;
 
         var updatesLength = newView.updatesLength();

@@ -20,8 +20,9 @@
 
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 500,
-                    ShotSpeedM = -0.035f,
-                    ShotSpeedB = 1.5f,
+
+                    ShotThrustM = -0.0035f,
+                    ShotThrustB = 0.3f,
 
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
@@ -46,8 +47,8 @@
                     FlockSeparationMinimumDistance = 200,
                     FlockWeight = 0.14f,
 
-                    ShipGainBySizeB = 1.03f,
                     ShipGainBySizeM = -0.03f,
+                    ShipGainBySizeB = 1.03f,
 
                     FlockSpeed = 0
                 };
@@ -73,8 +74,8 @@
         public float ShotCooldownTimeM { get; set; }
         public float ShotCooldownTimeB { get; set; }
 
-        public float ShotSpeedM { get; set; }
-        public float ShotSpeedB { get; set; }
+        public float ShotThrustM { get; set; }
+        public float ShotThrustB { get; set; }
 
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }
@@ -106,7 +107,5 @@
         public int StepTime { get; set; }
         public float OutOfBoundsBorder { get; set; } = 100;
         public float OutOfBoundsDecayDistance { get; set; } = 1500;
-
-        public float BulletThrust { get; set; } = 0.2f;
     }
 }

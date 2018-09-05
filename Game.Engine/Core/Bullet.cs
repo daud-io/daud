@@ -13,31 +13,26 @@
 
         public bool Seeker { get; set; } = false;
 
-        public float ThrustAmount { get => World.Hook.BulletThrust; }
+        public float ThrustAmount { get; set; }
+
         public float Drag { get => World.Hook.Drag; }
 
         public static void FireFrom(Ship ship)
         {
             var world = ship.World;
 
-            var shotSpeed = ship.Fleet.ShotSpeedM
-                * ship.Fleet.Ships.Count()
-                + ship.Fleet.ShotSpeedB;
-
             var bullet = new Bullet
             {
                 TimeDeath = world.Time + world.Hook.BulletLife,
-                Momentum = new Vector2(
-                        (float)Math.Cos(ship.Angle),
-                        (float)Math.Sin(ship.Angle)
-                    ) * shotSpeed,
+                Momentum = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * Vector2.Distance(ship.Momentum, Vector2.Zero),
                 Position = ship.Position,
                 Angle = ship.Angle,
                 OwnedByFleet = ship.Fleet,
                 Sprite = ship.Fleet.Pickup?.Sprite ?? "bullet",
                 Size = ship.Fleet.Pickup?.Size ?? 20,
                 Color = ship.Color,
-                Seeker = ship.Fleet.Pickup != null
+                Seeker = ship.Fleet.Pickup != null,
+                ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB
             };
             bullet.Init(world);
         }
