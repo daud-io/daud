@@ -26,6 +26,8 @@
 
         public List<Ship> Ships { get; set; } = new List<Ship>();
 
+        public Pickup Pickup = null;
+
         private void Die(Player player)
         {
             if (player != null)
@@ -153,6 +155,8 @@
 
                 foreach (var ship in Ships)
                     Bullet.FireFrom(ship);
+
+                this.Pickup = null;
             }
         }
 

@@ -10,7 +10,12 @@
         [JsonIgnore]
         public Fleet OwnedByFleet { get; set; }
         public long TimeDeath { get; set; }
-        
+
+        public bool Seeker { get; set; } = false;
+
+        public float ThrustAmount { get => World.Hook.BulletThrust; }
+        public float Drag { get => World.Hook.Drag; }
+
         public static void FireFrom(Ship ship)
         {
             var world = ship.World;
@@ -29,30 +34,46 @@
                 Position = ship.Position,
                 Angle = ship.Angle,
                 OwnedByFleet = ship.Fleet,
-                Sprite = "bullet",
-                Size = 20,
-                Color = ship.Color
+                Sprite = ship.Fleet.Pickup?.Sprite ?? "bullet",
+                Size = ship.Fleet.Pickup?.Size ?? 20,
+                Color = ship.Color,
+                Seeker = ship.Fleet.Pickup != null
             };
             bullet.Init(world);
         }
 
         public override void Step()
         {
-            var collisionSet = World.BodiesNear(this.Position, this.Size, offsetSize: true);
-            if (collisionSet.Any())
-            {
-                foreach (var hit in collisionSet.OfType<ICollide>()
-                    .Where(c => c.IsCollision(this))
-                    .ToList())
-                {
-                    hit.CollisionExecute(this);
+            base.Step();
 
-                    TimeDeath = World.Time;
+            if (Seeker)
+            {
+                var targets = World.BodiesNear(this.Position, World.Hook.SeekerRange, offsetSize: true);
+
+                var target = targets
+                    .OfType<Ship>()
+                    .Where(s => s.Fleet != OwnedByFleet)
+                    .OrderBy(s => Vector2.Distance(s.Position, Position))
+                    .FirstOrDefault();
+                if (target != null)
+                {
+                    var delta = target.Position - Position;
+                    Angle = MathF.Atan2(delta.Y, delta.X);
                 }
             }
 
+
+            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
+            Momentum = (Momentum + thrust) * Drag;
+
+
             if (World.Time >= TimeDeath)
                 Deinit();
+        }
+
+        protected override void Collided(ICollide otherObject)
+        {
+            TimeDeath = World.Time;
         }
     }
 }

@@ -82,6 +82,7 @@
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
         public int Obstacles { get; set; }
+        public int Pickups { get; set; } = 25;
         public float ObstacleMaxMomentum { get; set; }
         public int ObstacleMaxSize { get; set; }
 
@@ -96,6 +97,8 @@
         public float FlockWeight { get; set; }
         public int FlockSpeed { get; set; }
 
+        public int SeekerRange { get; set; } = 2000;
+
         public float ShipGainBySizeM { get; set; }
         public float ShipGainBySizeB { get; set; }
 
@@ -103,5 +106,7 @@
         public int StepTime { get; set; }
         public float OutOfBoundsBorder { get; set; } = 100;
         public float OutOfBoundsDecayDistance { get; set; } = 1500;
+
+        public float BulletThrust { get; set; } = 0.2f;
     }
 }

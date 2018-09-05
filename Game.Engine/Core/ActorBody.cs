@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Newtonsoft.Json;
+    using System.Linq;
 
     public abstract class ActorBody : ProjectedBody, IActor
     {
@@ -31,6 +32,26 @@
             this.Exists = true;
         }
 
-        public abstract void Step();
+        public virtual void Step()
+        {
+            var collisionSet =
+                World.BodiesNear(this.Position, this.Size, offsetSize: true)
+                .Where(b => b != this);
+
+            if (collisionSet.Any())
+            {
+                foreach (var hit in collisionSet.OfType<ICollide>()
+                    .Where(c => c.IsCollision(this))
+                    .ToList())
+                {
+                    hit.CollisionExecute(this);
+                }
+            }
+        }
+
+        protected virtual void Collided(ICollide otherObject)
+        {
+
+        }
     }
 }

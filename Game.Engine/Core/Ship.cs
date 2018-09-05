@@ -85,6 +85,7 @@
 
         public override void Step()
         {
+            base.Step();
 
             if (Abandoned)
             {

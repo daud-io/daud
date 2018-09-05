@@ -120,7 +120,7 @@
                             ?? new Leaderboard.Entry()
                     };
 
-                    var firstPlace = Leaderboard.Entries.First();
+                    var firstPlace = Leaderboard.Entries.FirstOrDefault();
                     if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
                         Leaderboard.ArenaRecord = firstPlace;
 
