@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
+    using System;
 
     public class Player : IActor
     {
@@ -17,6 +18,12 @@
         public List<string> Messages { get; set; } = new List<string>();
 
         public bool IsAlive { get; set; } = false;
+
+        public bool IsInvulnerable { get; set; } = false;
+
+        public long spawnTime;
+
+        public const int invulnTime = 5000;
 
         public string ShipSprite { get; set; }
 
@@ -42,6 +49,9 @@
 
             var worldPlayers = GetWorldPlayers(world);
             worldPlayers.Add(this);
+
+            IsInvulnerable = true;
+            spawnTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         }
 
         public string Name { get; set; }
@@ -73,6 +83,10 @@
             }
 
             this.IsControlNew = false;
+
+            if(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond > spawnTime + invulnTime) {
+                IsInvulnerable = false;
+            }
         }
 
         protected virtual Fleet CreateFleet(string name, string color)

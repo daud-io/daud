@@ -56,10 +56,13 @@
             var fleet = bullet?.OwnedByFleet;
             var player = fleet?.Owner;
 
-            Health -= HealthHitCost;
+            if (!player.IsInvulnerable)
+            {
+                Health -= HealthHitCost;
 
-            if (Health <= 0)
-                Die(player, fleet, bullet);
+                if (Health <= 0)
+                    Die(player, fleet, bullet);
+            }
         }
 
         public bool IsCollision(ProjectedBody projectedBody)
