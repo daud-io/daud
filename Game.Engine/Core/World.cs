@@ -110,7 +110,8 @@
                             {
                                 Name = p.Name,
                                 Score = p.Score,
-                                Color = p.Fleet?.Color ?? "white"
+                                Color = p.Fleet?.Color ?? "white",
+                                Position = p.Fleet.Position
                             })
                                 .OrderByDescending(e => e.Score)
                                 .Take(10)
@@ -124,10 +125,9 @@
                     var firstPlace = Leaderboard.Entries.FirstOrDefault();
                     if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
                         Leaderboard.ArenaRecord = firstPlace;
-
                 }
 
-                TimeLeaderboardRecalc = this.Time + 750;
+                TimeLeaderboardRecalc = this.Time + Hook.LeaderboardRefresh;
             }
         }
 

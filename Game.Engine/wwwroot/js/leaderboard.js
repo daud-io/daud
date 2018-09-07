@@ -10,7 +10,7 @@
         setData: function (data) {
             this.data = data;
         },
-        draw: function () {
+        draw: function (relativeTo) {
             var ctx = this.context;
             ctx.save();
             if (this.data && this.data.Entries) {
@@ -21,6 +21,7 @@
                 var width = 200;
                 var rowHeight = 28;
                 var margin = 20;
+                var arrow = Game.Renderer.sprites['arrow'];
 
                 for (var i = 0; i < this.data.Entries.length; i++) {
                     var entry = this.data.Entries[i];
@@ -32,8 +33,26 @@
                     ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + (i * rowHeight)); 
 
                     ctx.fillStyle = entry.Color;
-                    ctx.fillRect(this.canvas.width - width - rowHeight, (i * rowHeight) + 10, rowHeight, rowHeight);
 
+                    var x = this.canvas.width - width - rowHeight;
+                    var y = (i * rowHeight) + 10, rowHeight;
+
+                    ctx.fillRect(x, y, rowHeight, rowHeight);
+
+
+                    if (relativeTo) {
+                        var angle = Math.atan2(entry.Position.Y - relativeTo.Y, entry.Position.X - relativeTo.X);
+
+                        ctx.save();
+                        ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
+                        var w = arrow.image.width;
+                        var h = arrow.image.height;
+                        ctx.rotate(angle);
+                        ctx.scale(arrow.scale, arrow.scale);
+                        ctx.drawImage(arrow.image, -w / 2, -h/ 2, w, h);
+                        ctx.restore();
+                        
+                    }
                 }
 
                 if (this.data.Record) {

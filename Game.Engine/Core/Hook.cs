@@ -90,7 +90,7 @@
         public int ObstacleMaxSize { get; set; }
 
         public bool TeamMode { get; set; }
-
+        public int LeaderboardRefresh { get; set; } = 750;
 
         public float FlockAlignment { get; set; }
         public float FlockCohesion { get; set; }

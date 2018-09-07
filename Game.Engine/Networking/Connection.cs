@@ -189,6 +189,7 @@
                         NetLeaderboardEntry.AddName(builder, stringName);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
                         NetLeaderboardEntry.AddScore(builder, e.Score);
+                        NetLeaderboardEntry.AddPosition(builder, FromVector(builder, e.Position));
 
                         return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
                     }).ToArray());

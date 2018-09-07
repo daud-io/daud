@@ -189,7 +189,11 @@
                         entries.push({
                             Name: entry.name(),
                             Color: entry.color(),
-                            Score: entry.score()
+                            Score: entry.score(),
+                            Position: {
+                                X: entry.position().x(),
+                                Y: entry.position().y()
+                            }
                         });
                     }
 

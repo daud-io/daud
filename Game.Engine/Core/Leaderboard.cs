@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
+    using System.Numerics;
 
     public class Leaderboard
     {
@@ -15,6 +16,7 @@
             public int Score { get; set; }
             public string Name { get; set; }
             public string Color { get; set; } = "white";
+            public Vector2 Position { get; set; }
         }
     }
 }

@@ -35,11 +35,13 @@ canvas {
 }
 
 .loading .spawnscreen,
+.dead.spectating .spawnscreen,
 .alive .spawnscreen {
     display: none;
 }
 
 .dead .spawnscreen {
+    animation: fadein 2s;
     display: block;
     position: absolute;
     text-align: center;
@@ -48,6 +50,16 @@ canvas {
     height: 100%;
     background-color: rgba(0,0,255,0.2);
     top: 0;
+}
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 #logo

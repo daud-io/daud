@@ -14,7 +14,7 @@
                 scaleToSize: scaleToSize || false
             }
         }
-        this.sprites = {
+        Renderer.sprites = {
             'ship0': sprite("ship0"),
             'ship_green': sprite("ship_green"),
             'ship_gray': sprite("ship_gray"),
@@ -27,7 +27,8 @@
             'bullet': sprite("bullet", 0.02, true),
             'seeker': sprite("seeker", 0.02, true),
             'seeker_pickup': sprite("seeker_pickup", 0.02, true),
-            'obstacle': sprite("obstacle", 0.0028, true)
+            'obstacle': sprite("obstacle", 0.0028, true),
+            'arrow': sprite("arrow", 0.03)
         };
     };
 
@@ -67,7 +68,7 @@
                     var object = body;
 
                     var ship = object.Sprite != null
-                        ? this.sprites[object.Sprite]
+                        ? Renderer.sprites[object.Sprite]
                         : false;
 
                     var position = interpolator.projectObject(object, currentTime);

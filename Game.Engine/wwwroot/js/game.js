@@ -147,6 +147,16 @@
         connection.sendSpawn(Game.Controls.nick, Game.Controls.color, Game.Controls.ship);
     });
 
+    document.getElementById('spectate').addEventListener("click", function () {
+        $(document.body).addClass('spectating');
+    });
+
+    $(document).on('keydown', function (e) {
+        if (e.keyCode == 27 || e.which == 27)
+            $(document.body).removeClass('spectating');
+    });
+
+
 
     var sizeCanvas = function () {
         var width = window.innerWidth;
@@ -211,7 +221,7 @@
 
         camera.end();
 
-        leaderboard.draw();
+        leaderboard.draw(position);
 
         if (Game.Controls.mouseX) {
             var cx = canvas.width / 2;
