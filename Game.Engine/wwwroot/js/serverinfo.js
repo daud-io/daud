@@ -127,7 +127,8 @@
         statsDisplay.text(
             'vps:' + Game.Stats.viewsPerSecond +
             ' ups:' + Game.Stats.updatesPerSecond +
-            ' fps:' + Game.Stats.framesPerSecond
+            ' fps:' + Game.Stats.framesPerSecond +
+            ' cs:' + Game.Cache.count
         );
 
         if (connection !== null) {

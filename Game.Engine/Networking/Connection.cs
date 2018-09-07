@@ -59,7 +59,6 @@
                 if (followFleet == null)
                     followFleet = player?.World.Bodies.FirstOrDefault();
 
-                ProjectedBody[] updatedBodies = null;
 
                 if (followFleet != null)
                 {
@@ -74,13 +73,6 @@
 
                     var updatedBuckets = updates.Take(30);
                     //var updatedBuckets = updates;
-
-                    foreach (var update in updatedBuckets)
-                    {
-                        update.BodyClient = update.BodyUpdated.Clone();
-                    }
-
-                    updatedBodies = updatedBuckets.Select(b => b.BodyClient).ToArray();
 
                     var newHash = world.Hook.GetHashCode();
 
@@ -98,26 +90,50 @@
 
                     var cameraBody = NetBody.EndNetBody(builder);
 
-                    var updateVector = NetWorldView.CreateUpdatesVector(builder, updatedBodies.Select(u =>
+                    var updateVector = NetWorldView.CreateUpdatesVector(builder, updatedBuckets.Select(b =>
                     {
-                        var stringSprite = builder.CreateString(u.Sprite ?? string.Empty);
-                        var stringColor = builder.CreateString(u.Color ?? string.Empty);
-                        var stringCaption = builder.CreateString(u.Caption ?? string.Empty);
+                        var s = b.BodyUpdated;
+                        var c = b.BodyClient;
+
+                        StringOffset stringSprite = new StringOffset();
+                        StringOffset stringColor = new StringOffset();
+                        StringOffset stringCaption = new StringOffset();
+
+                        if (s.Sprite != c?.Sprite)
+                            stringSprite = builder.CreateString(s.Sprite ?? string.Empty);
+                        if (s.Color != c?.Color)
+                            stringColor = builder.CreateString(s.Color ?? string.Empty);
+                        if (s.Caption != c?.Caption)
+                            stringCaption = builder.CreateString(s.Caption ?? string.Empty);
 
                         NetBody.StartNetBody(builder);
-                        NetBody.AddId(builder, u.ID);
-                        NetBody.AddDefinitionTime(builder, u.DefinitionTime);
-                        NetBody.AddSize(builder, u.Size);
-                        NetBody.AddSprite(builder, stringSprite);
-                        NetBody.AddColor(builder, stringColor);
-                        NetBody.AddCaption(builder, stringCaption);
-                        NetBody.AddOriginalAngle(builder, u.OriginalAngle);
-                        NetBody.AddAngularVelocity(builder, u.AngularVelocity);
-                        NetBody.AddMomentum(builder, FromVector(builder, u.Momentum));
-                        NetBody.AddOriginalPosition(builder, FromVector(builder, u.OriginalPosition));
+                        NetBody.AddId(builder, s.ID);
+                        NetBody.AddDefinitionTime(builder, s.DefinitionTime);
+
+                        if (s.Size != c?.Size)
+                            NetBody.AddSize(builder, s.Size);
+
+                        if (s.Sprite != c?.Sprite)
+                            NetBody.AddSprite(builder, stringSprite);
+                        if (s.Color != c?.Color)
+                            NetBody.AddColor(builder, stringColor);
+                        if (s.Caption != c?.Caption)
+                            NetBody.AddCaption(builder, stringCaption);
+
+                        if (s.OriginalAngle != c?.OriginalAngle)
+                            NetBody.AddOriginalAngle(builder, s.OriginalAngle);
+
+                        if (s.AngularVelocity != c?.AngularVelocity)
+                            NetBody.AddAngularVelocity(builder, s.AngularVelocity);
+
+                        NetBody.AddMomentum(builder, FromVector(builder, s.Momentum));
+                        NetBody.AddOriginalPosition(builder, FromVector(builder, s.OriginalPosition));
 
                         return NetBody.EndNetBody(builder);
                     }).ToArray());
+
+                    foreach (var update in updatedBuckets)
+                        update.BodyClient = update.BodyUpdated.Clone();
 
                     var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
                         b.BodyUpdated.ID

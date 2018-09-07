@@ -1,7 +1,7 @@
 ﻿(function () {
     var Cache = function () {
         this.bodies = {};
-        this.count = 0;
+        Cache.count = 0;
     }
 
     Cache.prototype = {
@@ -11,23 +11,40 @@
             for (var i = 0; i < deletes.length; i++) {
                 var deleteKey = deletes[i];
                 delete this.bodies['b-' + deleteKey];
-                this.count--;
+                Cache.count--;
             }
 
             // update objects that should be here
             for (var i = 0; i < updates.length; i++) {
                 var update = updates[i];
                 var existing = this.bodies['b-' + update.ID];
+
                 this.bodies['b-' + update.ID] = update;
                 if (existing) {
 
                     existing.previous = false;
                     existing.obsolete = time;
                     update.previous = existing;
+
+                    if (update.Size === -1)
+                        update.Size = existing.Size;
+
+                    if (update.Sprite === null)
+                        update.Sprite = existing.Sprite;
+                    if (update.Caption === null)
+                        update.Caption = existing.Caption;
+                    if (update.Color === null)
+                        update.Color = existing.Color;
+
+                    if (update.OriginalAngle === -999)
+                        update.OriginalAngle = existing.OriginalAngle;
+                    if (update.AngularVelocity === -999)
+                        update.AngularVelocity = existing.AngularVelocity;
+
                 }
 
                 if (!existing)
-                    this.count++;
+                    Cache.count++;
             }
         },
         foreach: function (action, thisObj) {

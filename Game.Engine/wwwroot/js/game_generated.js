@@ -231,10 +231,19 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.color = functio
 };
 
 /**
+ * @param {Game.Engine.Networking.FlatBuffers.Vec2=} obj
+ * @returns {Game.Engine.Networking.FlatBuffers.Vec2|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.position = function(obj) {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.Vec2).__init(this.bb_pos + offset, this.bb) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.startNetLeaderboardEntry = function(builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 };
 
 /**
@@ -259,6 +268,14 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addScore = function(build
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addColor = function(builder, colorOffset) {
   builder.addFieldOffset(2, colorOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} positionOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addPosition = function(builder, positionOffset) {
+  builder.addFieldStruct(3, positionOffset, 0);
 };
 
 /**
@@ -925,7 +942,7 @@ Game.Engine.Networking.FlatBuffers.NetBody.prototype.definitionTime = function()
  */
 Game.Engine.Networking.FlatBuffers.NetBody.prototype.size = function() {
   var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb.readInt32(this.bb_pos + offset) : -1;
 };
 
 /**
@@ -960,7 +977,7 @@ Game.Engine.Networking.FlatBuffers.NetBody.prototype.caption = function(optional
  */
 Game.Engine.Networking.FlatBuffers.NetBody.prototype.originalAngle = function() {
   var offset = this.bb.__offset(this.bb_pos, 16);
-  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : -999.0;
 };
 
 /**
@@ -968,7 +985,7 @@ Game.Engine.Networking.FlatBuffers.NetBody.prototype.originalAngle = function() 
  */
 Game.Engine.Networking.FlatBuffers.NetBody.prototype.angularVelocity = function() {
   var offset = this.bb.__offset(this.bb_pos, 18);
-  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : -999.0;
 };
 
 /**
@@ -1017,7 +1034,7 @@ Game.Engine.Networking.FlatBuffers.NetBody.addDefinitionTime = function(builder,
  * @param {number} size
  */
 Game.Engine.Networking.FlatBuffers.NetBody.addSize = function(builder, size) {
-  builder.addFieldInt32(2, size, 0);
+  builder.addFieldInt32(2, size, -1);
 };
 
 /**
@@ -1049,7 +1066,7 @@ Game.Engine.Networking.FlatBuffers.NetBody.addCaption = function(builder, captio
  * @param {number} originalAngle
  */
 Game.Engine.Networking.FlatBuffers.NetBody.addOriginalAngle = function(builder, originalAngle) {
-  builder.addFieldFloat32(6, originalAngle, 0.0);
+  builder.addFieldFloat32(6, originalAngle, -999.0);
 };
 
 /**
@@ -1057,7 +1074,7 @@ Game.Engine.Networking.FlatBuffers.NetBody.addOriginalAngle = function(builder, 
  * @param {number} angularVelocity
  */
 Game.Engine.Networking.FlatBuffers.NetBody.addAngularVelocity = function(builder, angularVelocity) {
-  builder.addFieldFloat32(7, angularVelocity, 0.0);
+  builder.addFieldFloat32(7, angularVelocity, -999.0);
 };
 
 /**

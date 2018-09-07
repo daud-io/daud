@@ -1,33 +1,4 @@
 ﻿(function () {
-    var lastTime = 0,
-        vendors = ['ms', 'moz', 'webkit', 'o'],
-        x,
-        length,
-        currTime,
-        timeToCall;
-
-    for (x = 0, length = vendors.length; x < length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-        window.cancelAnimationFrame =
-            window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-    }
-
-    if (!window.requestAnimationFrame)
-        window.requestAnimationFrame = function (callback, element) {
-            currTime = new Date().getTime();
-            timeToCall = Math.max(0, 16 - (currTime - lastTime));
-            lastTime = currTime + timeToCall;
-            return window.setTimeout(function () { callback(currTime + timeToCall); },
-                timeToCall);
-        };
-
-    if (!window.cancelAnimationFrame)
-        window.cancelAnimationFrame = function (id) {
-            clearTimeout(id);
-        };
-}());
-
-(function () {
     var canvas = document.getElementById("gameCanvas");
     var context = canvas.getContext("2d");
     var renderer = new Game.Renderer(context, {});
@@ -222,8 +193,7 @@
     // Game Loop
     function gameLoop() {
         requestAnimationFrame(gameLoop);
-        var currentTime = performance.now();
-        gameTime = currentTime + serverTimeOffset;
+        gameTime = performance.now() + serverTimeOffset;
         frameCounter++;
         var position = { X: 0, Y: 0 };
 
@@ -261,4 +231,5 @@
     }
 
     requestAnimationFrame(gameLoop);
+    
 })();

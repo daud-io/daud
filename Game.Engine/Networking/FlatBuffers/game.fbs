@@ -22,6 +22,7 @@ table NetLeaderboardEntry
 	name: string;
 	score: int;
 	color: string;
+	position: Vec2;
 }
 
 table NetHello
@@ -63,12 +64,12 @@ table NetBody
 {
 	id:int;
 	definitionTime:long;
-	size:int;
-	sprite:string;
+	size:int = -1;
+	sprite: string;
 	color: string;
 	caption: string;
-	originalAngle: float;
-	angularVelocity: float;
+	originalAngle: float = -999;
+	angularVelocity: float = -999;
 	momentum:Vec2;
 	originalPosition:Vec2;
 }
