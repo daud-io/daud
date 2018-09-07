@@ -16,6 +16,8 @@
 
         public float Drag { get => World.Hook.Drag; }
 
+        public bool Consumed { get; set; }
+
         public static void FireFrom(Ship ship)
         {
             var world = ship.World;
@@ -74,6 +76,7 @@
         protected override void Collided(ICollide otherObject)
         {
             TimeDeath = World.Time;
+
         }
     }
 }

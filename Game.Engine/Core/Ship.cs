@@ -59,6 +59,7 @@
             var bullet = projectedBody as Bullet;
             var fleet = bullet?.OwnedByFleet;
             var player = fleet?.Owner;
+            bullet.Consumed = true;
 
             if (!player.IsInvulnerable)
             {
@@ -73,6 +74,10 @@
         {
             if (projectedBody is Bullet bullet)
             {
+                // avoid "piercing" shots
+                if (bullet.Consumed)
+                    return false;
+
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.Fleet)
                     return false;
