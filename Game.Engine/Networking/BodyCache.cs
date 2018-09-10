@@ -17,7 +17,7 @@
                 && b.Position.Y >= windowTopLeft.Y
                 && b.Position.X <= windowBottomRight.X
                 && b.Position.Y <= windowBottomRight.Y
-            );
+            ).ToList();
 
             // update cache items and flag missing ones as stale
             UpdateLocalBodies(filtered);

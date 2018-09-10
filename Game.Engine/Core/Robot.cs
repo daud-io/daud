@@ -33,26 +33,30 @@
                     return;
             }
 
-            foreach (var player in
+            var player =
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
                     .Where(p => !p.Fleet?.Caption?.StartsWith("Daud") ?? true)
                     .Where(p => p.IsAlive)
                     .Where(p => (p.Fleet?.Ships?.Count() ?? 0) > 0)
                     .OrderBy(p => Vector2.Distance(p.Fleet.Position, this.Fleet.Position))
-                    .Take(1)
-                )
-            {
+                    .FirstOrDefault();
+
+            if (player != null)
+            { 
                 var delta = Vector2.Subtract(player.Fleet.Position, this.Fleet.Position);
 
-                var trueAngle = (float)Math.Atan2(delta.Y, delta.X); ;
+                var trueAngle = (float)Math.Atan2(delta.Y, delta.X);
                 var quantized = (int)(trueAngle * 100) / 100f;
                 this.ControlInput.Angle = quantized;
                 this.ControlInput.ShootRequested = true;
 
                 this.SetControl(ControlInput);
-                break;
             }
-            
+            else
+            {
+                this.ControlInput.Angle = (float)Math.Atan2(-Fleet.Position.Y, -Fleet.Position.X);
+                this.SetControl(ControlInput);
+            }
 
             base.Step();
         }

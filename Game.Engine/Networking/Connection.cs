@@ -61,6 +61,7 @@
 
                 if (followFleet == null)
                     followFleet = Player.GetWorldPlayers(world)
+                        .ToList()
                         .Where(p => p.IsAlive)
                         .OrderByDescending(p => p.Score * 10000 + (10000-p.Fleet.ID))
                         .FirstOrDefault()

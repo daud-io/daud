@@ -29,7 +29,7 @@
                 Position = ship.Position,
                 Angle = ship.Angle,
                 OwnedByFleet = ship.Fleet,
-                Sprite = ship.Fleet.Pickup?.BulletSprite ?? "bullet",
+                Sprite = ship.Fleet.Pickup?.BulletSprite ?? "bullet_" + ship.Fleet.Color,
                 Size = ship.Fleet.Pickup?.Size ?? 20,
                 Color = ship.Color,
                 Seeker = ship.Fleet.Pickup != null,
