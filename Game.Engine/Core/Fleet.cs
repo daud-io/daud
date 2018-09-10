@@ -103,7 +103,7 @@
             var isBoosting = World.Time < BoostUntil;
             var isBoostInitial = false;
 
-            if (World.Time > BoostCooldownTime && BoostRequested)
+            if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
             {
                 BoostCooldownTime = World.Time + World.Hook.BoostCooldownTime;
                 BoostUntil = World.Time + World.Hook.BoostDuration;
