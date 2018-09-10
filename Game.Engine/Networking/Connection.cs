@@ -5,6 +5,7 @@
     using Google.FlatBuffers;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
+    using Nito.AsyncEx;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -30,9 +31,21 @@
         private int HookHash = 0;
         private long LeaderboardTime = 0;
 
+        public AsyncAutoResetEvent WorldUpdateEvent = null;
+
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
+            WorldUpdateEvent = new AsyncAutoResetEvent();
+        }
+
+        public async Task StartSynchronizing(CancellationToken cancellationToken)
+        {
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await WorldUpdateEvent.WaitAsync(cancellationToken);
+                await StepAsync(cancellationToken);
+            }
         }
 
         private Offset<Vec2> FromVector(FlatBufferBuilder builder, Vector2 vector)
@@ -270,6 +283,8 @@
             }*/
         }
 
+
+
         public async Task ConnectAsync(HttpContext httpContext, WebSocket socket, CancellationToken cancellationToken = default(CancellationToken))
         {
             Socket = socket;
@@ -292,7 +307,11 @@
                     player.Init(world);
                 }
 
-                await StartReadAsync(this.HandleIncomingMessage, cancellationToken);
+                var updateTask = StartSynchronizing(cancellationToken);
+                var readTask = StartReadAsync(this.HandleIncomingMessage, cancellationToken);
+
+                await Task.WhenAny(updateTask, readTask);
+
             }
             finally
             {

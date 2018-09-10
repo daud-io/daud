@@ -40,10 +40,10 @@
 
         public void Step()
         {
-
             lock (this.Bodies)
             {
-                Time = DateTime.Now.Ticks / 10000;
+                var start = DateTime.Now;
+                Time = start.Ticks / 10000;
 
                 foreach (var body in Bodies.ToList())
                 {
@@ -65,6 +65,10 @@
                     }
 
                 ProcessLeaderboard();
+
+                var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
+                if (elapsed > Hook.StepTime * 0.5f)
+                    Console.WriteLine("50% processing time warning");
             }
         }
 
@@ -98,7 +102,6 @@
                         Type = "Team",
                         Time = this.Time
                     };
-
                 }
                 else
                 {
