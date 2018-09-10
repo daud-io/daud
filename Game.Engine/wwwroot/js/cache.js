@@ -10,8 +10,11 @@
             // delete objects that should no longer exist
             for (var i = 0; i < deletes.length; i++) {
                 var deleteKey = deletes[i];
-                delete this.bodies['b-' + deleteKey];
-                Cache.count--;
+                var key = 'b-' + deleteKey;
+                if (key in this.bodies)
+                    Cache.count--;
+                delete this.bodies[key];
+                
             }
 
             // update objects that should be here
