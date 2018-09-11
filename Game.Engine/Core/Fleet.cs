@@ -25,6 +25,8 @@
         public long BoostCooldownTime { get; set; } = 0;
         public long BoostUntil { get; set; } = 0;
 
+        public Vector2 AimTarget { get; set; }
+
         public List<Ship> Ships { get; set; } = new List<Ship>();
 
         public Pickup Pickup = null;
@@ -122,7 +124,10 @@
 
             foreach (var ship in Ships)
             {
-                ship.Angle = Angle;
+
+                var shipTargetVector = this.Position + AimTarget - ship.Position;
+
+                ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
 
                 Flock(ship);
 

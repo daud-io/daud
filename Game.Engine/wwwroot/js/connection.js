@@ -111,13 +111,16 @@
             console.log('spawned');
 
         },
-        sendControl: function (angle, boost, shoot) {
+        sendControl: function (angle, boost, shoot, x, y) {
             var builder = new flatbuffers.Builder(0);
 
             this.fb.NetControlInput.startNetControlInput(builder);
             this.fb.NetControlInput.addAngle(builder, angle);
             this.fb.NetControlInput.addBoost(builder, boost);
             this.fb.NetControlInput.addShoot(builder, shoot);
+            this.fb.NetControlInput.addX(builder, x);
+            this.fb.NetControlInput.addY(builder, y);
+
             var input = this.fb.NetControlInput.endNetControlInput(builder);
 
             this.fb.NetQuantum.startNetQuantum(builder);

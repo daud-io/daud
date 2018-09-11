@@ -18,24 +18,32 @@ public struct NetControlInput : IFlatbufferObject
   public NetControlInput __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public float Angle { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
-  public bool Boost { get { int o = __p.__offset(6); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public bool Shoot { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public float X { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public float Y { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
+  public bool Boost { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public bool Shoot { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static Offset<NetControlInput> CreateNetControlInput(FlatBufferBuilder builder,
       float angle = 0.0f,
+      float x = 0.0f,
+      float y = 0.0f,
       bool boost = false,
       bool shoot = false) {
-    builder.StartObject(3);
+    builder.StartObject(5);
+    NetControlInput.AddY(builder, y);
+    NetControlInput.AddX(builder, x);
     NetControlInput.AddAngle(builder, angle);
     NetControlInput.AddShoot(builder, shoot);
     NetControlInput.AddBoost(builder, boost);
     return NetControlInput.EndNetControlInput(builder);
   }
 
-  public static void StartNetControlInput(FlatBufferBuilder builder) { builder.StartObject(3); }
+  public static void StartNetControlInput(FlatBufferBuilder builder) { builder.StartObject(5); }
   public static void AddAngle(FlatBufferBuilder builder, float angle) { builder.AddFloat(0, angle, 0.0f); }
-  public static void AddBoost(FlatBufferBuilder builder, bool boost) { builder.AddBool(1, boost, false); }
-  public static void AddShoot(FlatBufferBuilder builder, bool shoot) { builder.AddBool(2, shoot, false); }
+  public static void AddX(FlatBufferBuilder builder, float x) { builder.AddFloat(1, x, 0.0f); }
+  public static void AddY(FlatBufferBuilder builder, float y) { builder.AddFloat(2, y, 0.0f); }
+  public static void AddBoost(FlatBufferBuilder builder, bool boost) { builder.AddBool(3, boost, false); }
+  public static void AddShoot(FlatBufferBuilder builder, bool shoot) { builder.AddBool(4, shoot, false); }
   public static Offset<NetControlInput> EndNetControlInput(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetControlInput>(o);

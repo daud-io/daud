@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine
 {
     using Game.Engine.Core;
+    using System;
     using System.Numerics;
 
     public class ProjectedBody : Body
@@ -14,6 +15,8 @@
             {
                 if (_position != value)
                 {
+                    if (float.IsNaN(value.X))
+                        throw new Exception("Invalid position");
                     _position = value;
                     IsDirty = true;
                 }

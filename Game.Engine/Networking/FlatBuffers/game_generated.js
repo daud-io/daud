@@ -500,10 +500,26 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.angle = function() 
 };
 
 /**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.x = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.y = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.readFloat32(this.bb_pos + offset) : 0.0;
+};
+
+/**
  * @returns {boolean}
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.boost = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
+  var offset = this.bb.__offset(this.bb_pos, 10);
   return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
 
@@ -511,7 +527,7 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.boost = function() 
  * @returns {boolean}
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.shoot = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
+  var offset = this.bb.__offset(this.bb_pos, 12);
   return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
 
@@ -519,7 +535,7 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.shoot = function() 
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.startNetControlInput = function(builder) {
-  builder.startObject(3);
+  builder.startObject(5);
 };
 
 /**
@@ -532,10 +548,26 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.addAngle = function(builder, 
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {number} x
+ */
+Game.Engine.Networking.FlatBuffers.NetControlInput.addX = function(builder, x) {
+  builder.addFieldFloat32(1, x, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} y
+ */
+Game.Engine.Networking.FlatBuffers.NetControlInput.addY = function(builder, y) {
+  builder.addFieldFloat32(2, y, 0.0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {boolean} boost
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.addBoost = function(builder, boost) {
-  builder.addFieldInt8(1, +boost, +false);
+  builder.addFieldInt8(3, +boost, +false);
 };
 
 /**
@@ -543,7 +575,7 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.addBoost = function(builder, 
  * @param {boolean} shoot
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.addShoot = function(builder, shoot) {
-  builder.addFieldInt8(2, +shoot, +false);
+  builder.addFieldInt8(4, +shoot, +false);
 };
 
 /**

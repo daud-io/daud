@@ -48,6 +48,8 @@
                 var trueAngle = (float)Math.Atan2(delta.Y, delta.X);
                 var quantized = (int)(trueAngle * 100) / 100f;
                 this.ControlInput.Angle = quantized;
+                this.ControlInput.Position = delta;
+
                 this.ControlInput.ShootRequested = true;
 
                 this.SetControl(ControlInput);

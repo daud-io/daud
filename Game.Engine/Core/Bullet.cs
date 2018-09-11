@@ -22,6 +22,11 @@
         {
             var world = ship.World;
 
+            if (float.IsNaN(ship.Position.X))
+            {
+                return;
+            }
+
             var bullet = new Bullet
             {
                 TimeDeath = world.Time + world.Hook.BulletLife,

@@ -270,6 +270,7 @@
                     player?.SetControl(new ControlInput
                     {
                         Angle = input.Angle,
+                        Position = new Vector2(input.X, input.Y),
                         BoostRequested = input.Boost,
                         ShootRequested = input.Shoot
                     });

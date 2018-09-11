@@ -31,11 +31,11 @@
                     MaxHealthBot = 50,
                     BulletLife = 2000,
                     BotPerXPoints = 500,
-                    BotBase = 4,
+                    BotBase = 2,
                     StepTime = 40,
                     Obstacles = 6,
                     ObstacleMaxMomentum = 0.1f,
-                    ObstacleMaxSize = 1000,
+                    ObstacleMaxSize = 600,
                     TeamMode = false,
 
                     SpawnShipCount = 3,
@@ -43,7 +43,7 @@
                     FlockAlignment = .5f,
                     FlockCohesion = 0.002f,
                     FlockCohesionMaximumDistance = 600,
-                    FlockSeparation = 40f,
+                    FlockSeparation = 80f,
                     FlockSeparationMinimumDistance = 200,
                     FlockWeight = 0.14f,
 

@@ -115,30 +115,27 @@
     var lastControl = {};
 
     setInterval(function () {
+
         if (
             angle !== lastControl.angle
+            || aimTarget.X !== aimTarget.X
+            || aimTarget.Y !== aimTarget.Y
             || Game.Controls.boost !== lastControl.boost
             || Game.Controls.shoot !== lastControl.shoot
-            || Game.Controls.nick !== lastControl.nick
-            || Game.Controls.ship !== lastControl.ship
-            || Game.Controls.color !== lastControl.color
         ) {
             connection.sendControl(
                 angle,
                 Game.Controls.boost,
                 Game.Controls.shoot,
-                Game.Controls.nick,
-                Game.Controls.ship,
-                Game.Controls.color
+                aimTarget.X,
+                aimTarget.Y
             );
 
             lastControl = {
                 angle: angle,
+                aimTarget: aimTarget,
                 boost: Game.Controls.boost,
-                shoot: Game.Controls.shoot,
-                nick: Game.Controls.nick,
-                ship: Game.Controls.ship,
-                color: Game.Controls.color
+                shoot: Game.Controls.shoot
             };
         }
     }, 10);
@@ -224,12 +221,23 @@
         leaderboard.draw(position);
 
         if (Game.Controls.mouseX) {
+
             var cx = canvas.width / 2;
             var cy = canvas.height / 2;
             var dy = Game.Controls.mouseY - cy;
             var dx = Game.Controls.mouseX - cx;
 
+            var pos = camera.screenToWorld(Game.Controls.mouseX, Game.Controls.mouseY);
+            /*console.log({
+                X: position.X - pos.x,
+                Y: position.Y - pos.y
+            });*/
+
             angle = Math.atan2(dy, dx);
+            aimTarget = {
+                X: pos.x - position.X,
+                Y: pos.y - position.Y
+            };
         }
 
         /*
