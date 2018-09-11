@@ -7,6 +7,8 @@
     var interpolator = new Game.Interpolator();
     var leaderboard = new Game.Leaderboard(canvas, context);
     var angle = 0.0;
+    var aimTarget = { X: 0, Y: 0 };
+
     var cache = new Game.Cache();
     var view = false;
     var lastFrameTime = false;
