@@ -50,8 +50,6 @@
             var worldPlayers = GetWorldPlayers(world);
             worldPlayers.Add(this);
 
-            IsInvulnerable = true;
-            spawnTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         }
 
         public string Name { get; set; }
@@ -84,8 +82,7 @@
             }
 
             this.IsControlNew = false;
-
-            if(DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond > spawnTime + invulnTime) {
+            if (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond > spawnTime + invulnTime) {
                 IsInvulnerable = false;
             }
         }
@@ -119,6 +116,10 @@
 
                 Fleet.Init(World);
             }
+
+            IsInvulnerable = true;
+            spawnTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+
         }
         
         public void Die()
