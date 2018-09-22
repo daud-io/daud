@@ -2,6 +2,7 @@
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.Configuration;
 
     public class Program
     {
@@ -12,7 +13,10 @@
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5000")
+                .UseConfiguration(new ConfigurationBuilder()
+                    .AddJsonFile("hosting.json", optional:true)
+                    .Build()
+                )
                 .UseStartup<Startup>();
     }
 }

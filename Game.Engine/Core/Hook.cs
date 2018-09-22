@@ -29,7 +29,7 @@
                     MaxHealth = 100,
 
                     MaxHealthBot = 50,
-                    BulletLife = 2000,
+                    BulletLife = 3000,
                     BotPerXPoints = 500,
                     BotBase = 0,
                     StepTime = 40,

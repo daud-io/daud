@@ -116,6 +116,7 @@
                     var ship = Ships.First();
                     ship.Fleet = null;
                     ship.Sprite = "ship_gray";
+                    ship.Color = "gray";
                     ship.Abandoned = true;
                     ship.ThrustAmount = 0;
                     Ships.Remove(ship);

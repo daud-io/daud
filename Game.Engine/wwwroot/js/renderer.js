@@ -24,7 +24,6 @@
             'ship_cyan': sprite("ship_cyan"),
             'ship_yellow': sprite("ship_yellow"),
             'bullet_green': sprite("bullet_green", 0.03, true),
-            'bullet_gray': sprite("bullet_gray", 0.03, true),
             'bullet_orange': sprite("bullet_orange", 0.03, true),
             'bullet_pink': sprite("bullet_pink", 0.03, true),
             'bullet_red': sprite("bullet_red", 0.03, true),

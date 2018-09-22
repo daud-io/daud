@@ -184,13 +184,13 @@
 
                     var builder = new FlatBufferBuilder(1);
 
-                    var stringName = builder.CreateString(world.Leaderboard.ArenaRecord.Name ?? " ");
-                    var stringColor = builder.CreateString(world.Leaderboard.ArenaRecord.Color ?? " ");
+                    var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
+                    var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
 
                     NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                     NetLeaderboardEntry.AddColor(builder, stringColor);
                     NetLeaderboardEntry.AddName(builder, stringName);
-                    NetLeaderboardEntry.AddScore(builder, world.Leaderboard.ArenaRecord.Score);
+                    NetLeaderboardEntry.AddScore(builder, world.Leaderboard?.ArenaRecord?.Score ?? 0);
                     var record = NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
 
                     

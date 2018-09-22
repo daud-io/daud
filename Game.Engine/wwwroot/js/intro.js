@@ -21,6 +21,7 @@
             dateSpan.append(date);
             div.append(dateSpan);
             div.append($(html));
+            div.find('a').attr('target', '_top');
 
 
             $('#twitterpated').append(div);
