@@ -3,14 +3,6 @@
     "EndPoints": {
       "Http": {
         "Url": "http://*:5000"
-      },
-
-      "Https": {
-        "Url": "https://*:5001",
-        "Certificate": {
-          "Path": "",
-          "Password": ""
-        }
       }
     }
   }
