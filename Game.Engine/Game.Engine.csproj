@@ -5,6 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\game_generated.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\game_generated.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="KdSoft.FlatBuffers" Version="1.9.3" />
     <PackageReference Include="Nito.AsyncEx" Version="5.0.0-pre-05" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
@@ -12,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Game.API.Models\Game.API.Common.csproj" />
     <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
   </ItemGroup>
 

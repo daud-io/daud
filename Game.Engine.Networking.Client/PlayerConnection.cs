@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Networking.Client
+﻿namespace Game.API.Client
 {
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
@@ -8,8 +8,9 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class GameConnection
+    class PlayerConnection
     {
+
         private WebSocket Socket = null;
 
         public async Task<ClientWebSocket> Connect(string server, CancellationToken cancellationToken = default(CancellationToken))
@@ -92,8 +93,5 @@
             }
             catch (Exception) { }
         }
-
-
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Game.Util
 {
-    using Documents.Clients.Tools.Commands;
+    using Game.Util.Commands;
     using McMaster.Extensions.CommandLineUtils;
     using System;
     using System.Threading.Tasks;

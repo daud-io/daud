@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Game.Util": {
+      "commandName": "Project",
+      "commandLineArgs": "server health"
+    }
+  }
+}

@@ -3,13 +3,14 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ConsoleTableExt" Version="2.0.1" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Game.Engine.Networking.Client\Game.Engine.Networking.Client.csproj" />
+    <ProjectReference Include="..\Game.Engine.Networking.Client\Game.API.Client.csproj" />
   </ItemGroup>
-
 </Project>

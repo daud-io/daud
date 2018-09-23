@@ -1,6 +1,8 @@
 ﻿namespace Game.Util
 {
-    using Game.Engine.Networking.Client;
+    using ConsoleTableExt;
+    using Game.API.Client;
+    using Game.Util.Commands;
     using McMaster.Extensions.CommandLineUtils;
     using System;
     using System.Collections.Generic;
@@ -41,7 +43,7 @@
             return 0;
         }
 
-        public GameConnection API
+        public APIClient API
         {
             get
             {
@@ -95,61 +97,6 @@
             else
                 Console.WriteLine($"{name} has no data");
         }
-
-        protected void RenderPrivileges(string setFor, IDictionary<string, IDictionary<string, IEnumerable<ACLModel>>> privileges)
-        {
-            var rows = privileges.SelectMany(p =>
-                    p.Value.SelectMany(v =>
-                        v.Value.Select(a =>
-                            new
-                            {
-                                @for = setFor,
-                                right = v.Key,
-                                key = a.OverrideKey,
-                                identifiers = string.Join(" ", a.RequiredIdentifiers.OrderBy(i => i))
-                            }
-                        )
-                    )
-                )
-                .OrderBy(r => r.@for)
-                .ThenBy(r => r.right)
-                .ThenBy(r => r.key);
-
-            Table("Privileges",
-                rows
-            );
-
-        }
-
-        private string GetPart(string[] parts, int index)
-        {
-            return string.IsNullOrWhiteSpace(parts[index]) ? null : parts[index];
-        }
-
-        protected T GetIdentifier<T>(string identifier, params Action<T, string>[] map)
-            where T : class, IIdentifier, new()
-        {
-            if (identifier == null)
-                return null;
-
-            var parts = identifier.Split('/');
-            var model = new T();
-            for (int i = map.Length - 1; i >= 0; i--)
-            {
-                var endOffset = (map.Length - 1) - i;
-                var partIndex = (parts.Length-1) - endOffset;
-
-                var part = (partIndex >= 0) && string.IsNullOrWhiteSpace(parts[partIndex]) ? null : parts[partIndex];
-                map[i](model, part);
-
-            }
-
-            if (!model.IsValid)
-                throw new Exception($"{typeof(T).Name} is invalid");
-
-            return model;
-        }
-
 
         protected T GetParent<T>()
             where T: CommandBase
