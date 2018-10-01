@@ -170,11 +170,12 @@
             var quantum = this.fb.NetQuantum.getRootAsNetQuantum(buf);
 
             var messageType = quantum.messageType();
+            var message = false;
 
             switch (messageType) {
                 case this.fb.AllMessages.NetWorldView:
 
-                    var message = quantum.message(new this.fb.NetWorldView());
+                    message = quantum.message(new this.fb.NetWorldView());
 
                     this.onView(message);
                     break;
@@ -182,7 +183,7 @@
                     this.latency = performance.now() - this.pingSent;
                     break;
                 case this.fb.AllMessages.NetLeaderboard:
-                    var message = quantum.message(new this.fb.NetLeaderboard());
+                    message = quantum.message(new this.fb.NetLeaderboard());
 
                     var entriesLength = message.entriesLength();
                     var entries = [];

@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Game.API.Models\Game.API.Common.csproj" />
+    <ProjectReference Include="..\Game.Engine.Networking.Client\Game.API.Client.csproj" />
+  </ItemGroup>
+</Project>

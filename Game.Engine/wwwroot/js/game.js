@@ -89,7 +89,11 @@
         }
 
         lastFrameTime = performance.now();
-        var thisOffset = view.time - lastFrameTime + connection.latency/2;
+        var latency = connection.latency || 0;
+        var thisOffset = view.time - lastFrameTime + latency / 2;
+        if (isNaN(thisOffset)) {
+            var i = 0;
+        }
         lastOffset = thisOffset;
         if (serverTimeOffset === false)
             serverTimeOffset = thisOffset;
@@ -234,6 +238,10 @@
                 X: position.X - pos.x,
                 Y: position.Y - pos.y
             });*/
+
+            if (isNaN(pos.x) || isNaN(position.X)) {
+                var i = 0;
+            }
 
             angle = Math.atan2(dy, dx);
             aimTarget = {

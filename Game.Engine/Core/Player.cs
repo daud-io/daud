@@ -76,6 +76,9 @@
             if (this.IsControlNew)
             {
                 Fleet.Angle = ControlInput.Angle;
+                if (float.IsNaN(ControlInput.Position.X))
+                    ControlInput.Position = new System.Numerics.Vector2(0, 0);
+
                 Fleet.AimTarget = ControlInput.Position;
                 Fleet.BoostRequested = ControlInput.BoostRequested;
                 Fleet.ShootRequested = ControlInput.ShootRequested;

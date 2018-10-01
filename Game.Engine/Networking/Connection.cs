@@ -245,18 +245,22 @@
             }
         }
 
+        private async Task SendPingAsync()
+        {
+            var builder = new FlatBufferBuilder(1);
+            var pong = NetPing.CreateNetPing(builder, world.Time);
+            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
+            builder.Finish(q.Value);
+
+            await SendAsync(builder.DataBuffer, default(CancellationToken));
+        }
+
         private async Task HandleIncomingMessage(NetQuantum quantum)
         {
             switch (quantum.MessageType)
             {
                 case AllMessages.NetPing:
-                    var ping = quantum.Message<NetPing>().Value;
-                    var builder = new FlatBufferBuilder(1);
-                    var pong = NetPing.CreateNetPing(builder, world.Time);
-                    var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
-                    builder.Finish(q.Value);
-
-                    await SendAsync(builder.DataBuffer, default(CancellationToken));
+                    await SendPingAsync();
                     break;
 
                 case AllMessages.NetSpawn:
@@ -294,10 +298,7 @@
             world = Worlds.Find();
 
             var builder = new FlatBufferBuilder(1);
-            var ping = NetPing.CreateNetPing(builder, world.Time);
-            builder.Finish(ping.Value);
-
-            await this.SendAsync(builder.DataBuffer, cancellationToken);
+            await SendPingAsync();
 
             ConnectionHeartbeat.Register(this);
 

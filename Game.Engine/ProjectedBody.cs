@@ -34,6 +34,9 @@
             {
                 if (_angle != value)
                 {
+                    if (float.IsNaN(value))
+                        throw new Exception("Invalid angle");
+
                     _angle = value;
                     IsDirty = true;
                 }
@@ -53,6 +56,9 @@
             var timeDelta = (time - this.DefinitionTime);
 
             _position = Vector2.Add(OriginalPosition, Vector2.Multiply(Momentum, timeDelta));
+            if (float.IsNaN(_position.X))
+                throw new Exception("Invalid position");
+
             _angle = OriginalAngle + timeDelta * AngularVelocity;
         }
 

@@ -101,6 +101,8 @@
 
         public override void Step()
         {
+
+            
             var isShooting = ShootRequested && World.Time >= TimeReloaded;
             var isBoosting = World.Time < BoostUntil;
             var isBoostInitial = false;
@@ -153,7 +155,10 @@
             this.Momentum = Vector2.Zero;
             foreach(var ship in Ships)
                 this.Momentum += ship.Momentum;
-            this.Momentum /= Ships.Count;
+            if (Ships.Count == 0)
+                this.Momentum = new Vector2(0, 0);
+            else
+                this.Momentum /= Ships.Count;
 
 
             if (isShooting)
@@ -165,6 +170,12 @@
 
                 this.Pickup = null;
             }
+
+            if (float.IsNaN(this.Position.X))
+            {
+
+            }
+
         }
 
         private void Flock(Ship ship)

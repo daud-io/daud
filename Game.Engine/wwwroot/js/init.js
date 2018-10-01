@@ -1,2 +1,4 @@
-﻿// wrapper for our game "classes", "methods" and "objects"
-window.Game = window.Game || {};
+﻿(function () {
+    // wrapper for our game "classes", "methods" and "objects"
+    window.Game = window.Game || {};
+})();

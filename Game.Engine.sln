@@ -5,6 +5,16 @@ VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Engine", "Game.Engine\Game.Engine.csproj", "{3AD01CCA-F212-4EE1-8718-2250D4869A53}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Engine.Networking.FlatBuffers", "Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj", "{D405B0D3-9210-4724-849F-914200BCEA28}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.API.Client", "Game.Engine.Networking.Client\Game.API.Client.csproj", "{5C32AAAD-76E3-4B97-906C-B391A4EB0E6B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Util", "Game.Util\Game.Util.csproj", "{F689805C-86CD-4B08-BA38-8946D9599A5D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.API.Common", "Game.API.Models\Game.API.Common.csproj", "{61B30F92-3466-4A38-A50B-C8F4A4BA5FC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.Robots", "Game.Robots\Game.Robots.csproj", "{D0600DFB-F0A1-456E-A386-F916210B66EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +25,26 @@ Global
 		{3AD01CCA-F212-4EE1-8718-2250D4869A53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AD01CCA-F212-4EE1-8718-2250D4869A53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AD01CCA-F212-4EE1-8718-2250D4869A53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D405B0D3-9210-4724-849F-914200BCEA28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D405B0D3-9210-4724-849F-914200BCEA28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D405B0D3-9210-4724-849F-914200BCEA28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D405B0D3-9210-4724-849F-914200BCEA28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C32AAAD-76E3-4B97-906C-B391A4EB0E6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C32AAAD-76E3-4B97-906C-B391A4EB0E6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C32AAAD-76E3-4B97-906C-B391A4EB0E6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C32AAAD-76E3-4B97-906C-B391A4EB0E6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F689805C-86CD-4B08-BA38-8946D9599A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F689805C-86CD-4B08-BA38-8946D9599A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F689805C-86CD-4B08-BA38-8946D9599A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F689805C-86CD-4B08-BA38-8946D9599A5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61B30F92-3466-4A38-A50B-C8F4A4BA5FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61B30F92-3466-4A38-A50B-C8F4A4BA5FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61B30F92-3466-4A38-A50B-C8F4A4BA5FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61B30F92-3466-4A38-A50B-C8F4A4BA5FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0600DFB-F0A1-456E-A386-F916210B66EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0600DFB-F0A1-456E-A386-F916210B66EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0600DFB-F0A1-456E-A386-F916210B66EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0600DFB-F0A1-456E-A386-F916210B66EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -125,8 +125,8 @@
                     ctx.translate(position.X, position.Y);
 
                     if (ship) {
-                        var width = ship.image.width;
-                        var height = ship.image.height;
+                        shipWidth = ship.image.width;
+                        shipHeight = ship.image.height;
 
                         ctx.rotate(position.Angle);
                         ctx.scale(ship.scale, ship.scale);
@@ -134,7 +134,7 @@
                         if (ship.scaleToSize)
                             ctx.scale(object.Size, object.Size);
 
-                        ctx.drawImage(ship.image, -width / 2, -height / 2, width, height);
+                        ctx.drawImage(ship.image, -shipWidth / 2, -shipHeight / 2, shipWidth, shipHeight);
                     }
 
                     ctx.restore();
@@ -153,25 +153,18 @@
             switch (colorName) {
                 case "cyan":
                     return "rgba(0,255,255,.2)";
-                    break;
                 case "gray":
                     return "rgba(128,128,128,.2)";
-                    break;
                 case "green":
                     return "rgba(0,255,0,.2)";
-                    break;
                 case "orange":
                     return "rgba(255,140,0,.2)";
-                    break;
                 case "pink":
                     return "rgba(255,105,180,.2)";
-                    break;
                 case "red":
                     return "rgba(255,0,0,.2)";
-                    break;
                 case "yellow":
                     return "rgba(255,255,0,.2)";
-                    break;
             }
         }
     };
