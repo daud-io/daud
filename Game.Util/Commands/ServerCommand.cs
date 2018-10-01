@@ -4,22 +4,32 @@
     using System;
     using System.Threading.Tasks;
 
-    [Subcommand("health", typeof(Health))]
+    [Subcommand("get", typeof(Get))]
+    [Subcommand("reset", typeof(Reset))]
     class ServerCommand : CommandBase
     {
-        class Health : CommandBase
+        class Get : CommandBase
         {
             protected async override Task ExecuteAsync()
             {
                 var started = DateTime.Now;
 
-                var healthy = await API.Server.HealthGetAsync();
+                var server = await API.Server.ServerGetAsync();
 
-                Table("Health", new
+                Table("Server", new
                 {
                     Server = API.BaseURL.ToString(),
-                    ms = DateTime.Now.Subtract(started).TotalMilliseconds
+                    ms = DateTime.Now.Subtract(started).TotalMilliseconds,
+                    Players = server.PlayerCount
                 });
+            }
+        }
+
+        class Reset : CommandBase
+        {
+            protected async override Task ExecuteAsync()
+            {
+                await API.Server.ServerResetAsync();
             }
         }
     }

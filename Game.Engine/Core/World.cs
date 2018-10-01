@@ -47,13 +47,15 @@
 
                 foreach (var body in Bodies.ToList())
                 {
-                    body.Project(Time);
+                    if (body != null)
+                        body.Project(Time);
 
                     //WrapAroundWorld(body);
                 }
 
                 foreach (var actor in Actors.ToList())
-                    actor.Step();
+                    if (actor != null)
+                        actor.Step();
 
                 foreach (var body in Bodies)
                     if (body.IsDirty)

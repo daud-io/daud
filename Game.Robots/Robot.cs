@@ -39,7 +39,7 @@
         {
             if (AutoSpawn)
             {
-                if (DateTime.Now.Subtract(LastSpawn).TotalMilliseconds < RESPAWN_FALLOFF)
+                if (DateTime.Now.Subtract(LastSpawn).TotalMilliseconds > RESPAWN_FALLOFF)
                 {
                     await Connection.SpawnAsync("Robot", "ship0", "green");
                     LastSpawn = DateTime.Now;

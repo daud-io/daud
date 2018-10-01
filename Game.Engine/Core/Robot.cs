@@ -34,7 +34,6 @@
             }
 
 
-            return;
             var player =
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
                     .Where(p => !p.Fleet?.Caption?.StartsWith("Daud") ?? true)

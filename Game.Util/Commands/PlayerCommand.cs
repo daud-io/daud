@@ -2,6 +2,7 @@
 {
     using Game.Robots;
     using McMaster.Extensions.CommandLineUtils;
+    using System.Collections.Generic;
     using System.Threading.Tasks;
 
     [Subcommand("test", typeof(Test))]
@@ -11,10 +12,17 @@
         {
             protected async override Task ExecuteAsync()
             {
-                var player = await API.Player.ConnectAsync();
-                var robot = new Robot(player);
+                var tasks = new List<Task>();
 
-                await robot.Start();
+                for (int i = 0; i < 20; i++)
+                {
+                    var player = await API.Player.ConnectAsync();
+                    var robot = new Robot(player);
+
+                    tasks.Add(robot.Start());
+                };
+
+                await Task.WhenAll(tasks);
             }
         }
     }

@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "player test"
+      "commandLineArgs": "--context local server reset"
     }
   }
 }

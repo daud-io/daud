@@ -55,6 +55,8 @@
                 };
             };
 
+            app.UseAuthentication();
+
             app.UseMvc();
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions

@@ -20,6 +20,8 @@
 
         public bool IsAlive { get; private set; } = false;
 
+        public int SimulateReceiveLatency = 2000;
+
         private readonly BodyCache Cache = new BodyCache();
 
         public Func<Task> OnView { get; set; } = null;
@@ -104,7 +106,7 @@
             NetSpawn.AddColor(builder, stringColor);
 
             var spawn = NetSpawn.EndNetSpawn(builder);
-            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, spawn.Value);
+            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetSpawn, spawn.Value);
             builder.Finish(q.Value);
 
             await SendAsync(builder.DataBuffer, default(CancellationToken));
@@ -170,6 +172,9 @@
 
                 while (!result.CloseStatus.HasValue && Socket.State == WebSocketState.Open)
                 {
+                    if (SimulateReceiveLatency > 0)
+                        await Task.Delay(SimulateReceiveLatency);
+
                     int maxlength = 1024 * 1024 * 1;
                     using (var ms = new MemoryStream())
                     {

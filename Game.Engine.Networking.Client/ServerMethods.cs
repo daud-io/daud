@@ -1,5 +1,6 @@
 ﻿namespace Game.API.Client
 {
+    using Game.API.Common.Models;
     using System;
     using System.Net.Http;
     using System.Threading;
@@ -13,14 +14,24 @@
             this.APIClient = apiClient;
         }
 
-        public async Task<bool> HealthGetAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Server> ServerGetAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {
-                var started = DateTime.Now;
-                await APIClient.APICallAsync<bool>(HttpMethod.Get, APIEndpoint.HealthGet, cancellationToken: cancellationToken);
-                var totaltime = DateTime.Now.Subtract(started).TotalMilliseconds;
+                var server = await APIClient.APICallAsync<Server>(HttpMethod.Get, APIEndpoint.ServerGet, cancellationToken: cancellationToken);
+                return server;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
+        public async Task<bool> ServerResetAsync()
+        {
+            try
+            {
+                await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.ServerReset);
                 return true;
             }
             catch (Exception)

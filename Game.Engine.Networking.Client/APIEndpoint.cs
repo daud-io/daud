@@ -10,7 +10,8 @@
         public virtual string Endpoint { get; private set; }
 
         public static APIEndpoint UserAuthenticate { get => new APIEndpoint("/api/v1/user/authenticate"); }
-        public static APIEndpoint HealthGet { get => new APIEndpoint("/api/v1/server"); }
+        public static APIEndpoint ServerGet { get => new APIEndpoint("/api/v1/server"); }
+        public static APIEndpoint ServerReset { get => new APIEndpoint("/api/v1/server/reset"); }
         public static APIEndpoint PlayerConnect { get => new APIEndpoint("/api/v1/connect"); }
     }
 }

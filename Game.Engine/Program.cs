@@ -3,12 +3,21 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     public class Program
     {
-        public static void Main(string[] args)
+        private static CancellationTokenSource cts = new CancellationTokenSource();
+
+        public static void Abort()
         {
-            CreateWebHostBuilder(args).Build().Run();
+            cts.Cancel();
+        }
+
+        public async static Task Main(string[] args)
+        {
+            await CreateWebHostBuilder(args).Build().RunAsync(cts.Token);
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
