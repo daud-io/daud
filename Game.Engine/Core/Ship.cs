@@ -61,7 +61,7 @@
             var player = fleet?.Owner;
             bullet.Consumed = true;
 
-            if (!player.IsInvulnerable)
+            if (!this.Fleet?.Owner?.IsInvulnerable ?? true)
             {
                 Health -= HealthHitCost;
 

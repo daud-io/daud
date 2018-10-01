@@ -18,13 +18,18 @@
         private const int PING_TIMER_MS = 1000;
         private readonly SemaphoreSlim WebsocketSendingSemaphore = new SemaphoreSlim(1, 1);
 
+        public bool ControlIsBoosting { get; set; }
+        public bool ControlIsShooting { get; set; }
+        public Vector2 ControlAimTarget { get; set; }
+
         public bool IsAlive { get; private set; } = false;
 
-        public int SimulateReceiveLatency = 2000;
+        public int SimulateReceiveLatency = 0;
 
         private readonly BodyCache Cache = new BodyCache();
 
         public Func<Task> OnView { get; set; } = null;
+        public Func<Task> OnConnected { get; set; } = null;
 
         public PlayerConnection(APIClient apiClient)
         {
@@ -34,12 +39,44 @@
 
         private void PingEntry(object state)
         {
-
+            Task.Run(async () =>
+            {
+                await this.SendPingAsync();
+            }).Wait();
         }
 
         private async Task HandleNetPing(NetPing netPing)
         {
-            Console.WriteLine("Ping");
+            //Console.WriteLine("Ping");
+        }
+
+        private async Task SendPingAsync()
+        {
+            var builder = new FlatBufferBuilder(1);
+            var ping = NetPing.CreateNetPing(builder, DateTime.Now.Ticks);
+            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, ping.Value);
+            builder.Finish(q.Value);
+
+            await SendAsync(builder.DataBuffer, default(CancellationToken));
+        }
+
+        public async Task SendControlInputAsync()
+        {
+            var builder = new FlatBufferBuilder(1);
+            NetControlInput.StartNetControlInput(builder);
+
+            NetControlInput.AddAngle(builder, 0);
+            NetControlInput.AddBoost(builder, ControlIsBoosting);
+            NetControlInput.AddX(builder, ControlAimTarget.X);
+            NetControlInput.AddY(builder, ControlAimTarget.Y);
+            NetControlInput.AddShoot(builder, ControlIsShooting);
+
+            var controlInput = NetControlInput.EndNetControlInput(builder);
+
+            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetControlInput, controlInput.Value);
+            builder.Finish(q.Value);
+
+            await SendAsync(builder.DataBuffer, default(CancellationToken));
         }
 
         private async Task HandleNetWorldView(NetWorldView netWorldView)
@@ -135,6 +172,9 @@
         public async Task ConnectAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             Socket = await APIClient.ConnectWebSocket(APIEndpoint.PlayerConnect, cancellationToken: cancellationToken);
+
+            if (OnConnected != null)
+                await OnConnected();
         }
 
         private async Task HandleIncomingMessage(NetQuantum netQuantum)

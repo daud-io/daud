@@ -2,6 +2,7 @@
 {
     using Game.API.Client;
     using System;
+    using System.Numerics;
     using System.Threading.Tasks;
 
     public class Robot
@@ -10,6 +11,9 @@
         private DateTime LastSpawn = DateTime.MinValue;
         private readonly PlayerConnection Connection;
         private const int RESPAWN_FALLOFF = 1000;
+        private DateTime Born = DateTime.Now;
+
+        public bool AutoFire { get; set; } = false;
 
         public Robot(PlayerConnection connection)
         {
@@ -32,7 +36,12 @@
 
         private async Task StepAliveAsync()
         {
-            Console.WriteLine("Hooray! I'm alive!");
+            float angle = (float)(DateTime.Now.Subtract(Born).TotalMilliseconds / 1000.0f) * MathF.PI * 2;
+
+            this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 100;
+            this.Connection.ControlIsShooting = true;
+
+            await this.Connection.SendControlInputAsync();
         }
 
         private async Task StepDeadAsync()

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System;
+    using System.Linq;
 
     public class Player : IActor
     {
@@ -21,9 +22,8 @@
 
         public bool IsInvulnerable { get; set; } = false;
 
-        public long spawnTime;
-
-        public const int invulnTime = 5000;
+        public long SpawnTime;
+        public const int InvulnerableTime = 2000;
 
         public string ShipSprite { get; set; }
 
@@ -85,9 +85,22 @@
             }
 
             this.IsControlNew = false;
-            if (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond > spawnTime + invulnTime) {
-                IsInvulnerable = false;
+
+            if (IsInvulnerable)
+            {
+
+                if (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond > SpawnTime + InvulnerableTime)
+                    IsInvulnerable = false;
+
+                bool flash = (World.Time - this.SpawnTime) % 300 > 200;
+
+                foreach (var ship in Fleet.Ships)
+                    ship.Sprite = flash && IsInvulnerable
+                        ? "ship_flash"
+                        : Fleet.Owner?.ShipSprite;
+
             }
+
         }
 
         protected virtual Fleet CreateFleet(string name, string color)
@@ -121,8 +134,7 @@
             }
 
             IsInvulnerable = true;
-            spawnTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
-
+            SpawnTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         }
         
         public void Die()

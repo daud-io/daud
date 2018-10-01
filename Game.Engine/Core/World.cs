@@ -180,10 +180,12 @@
             {
                 if (offsetSize)
                     return this.Bodies
+                        .Where(b => b != null)
                         .Where(b => (Vector2.Distance(b.Position, point) - b.Size) < maximumDistance)
                         .ToList();
                 else
                     return this.Bodies
+                        .Where(b => b != null)
                         .Where(b => Vector2.Distance(b.Position, point) < maximumDistance)
                         .ToList();
 
