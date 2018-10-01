@@ -31,7 +31,7 @@
                     MaxHealthBot = 50,
                     BulletLife = 3000,
                     BotPerXPoints = 500,
-                    BotBase = 10,
+                    BotBase = 1,
                     StepTime = 40,
                     Obstacles = 6,
                     ObstacleMaxMomentum = 0.1f,

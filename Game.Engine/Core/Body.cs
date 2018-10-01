@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Newtonsoft.Json;
+    using System;
     using System.Numerics;
 
     public class Body
@@ -104,6 +105,8 @@
             }
             set
             {
+                if (float.IsNaN(value.X))
+                    throw new Exception("Invalid position");
                 IsDirty = IsDirty || _momentum != value;
                 _momentum = value;
             }

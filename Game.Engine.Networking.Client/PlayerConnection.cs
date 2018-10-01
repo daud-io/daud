@@ -3,8 +3,10 @@
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Net.WebSockets;
+    using System.Numerics;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -14,16 +16,118 @@
         private readonly Timer PingTimer;
         private ClientWebSocket Socket = null;
         private const int PING_TIMER_MS = 1000;
+        private readonly SemaphoreSlim WebsocketSendingSemaphore = new SemaphoreSlim(1, 1);
+
+        public bool IsAlive { get; private set; } = false;
+
+        private readonly BodyCache Cache = new BodyCache();
+
+        public Func<Task> OnView { get; set; } = null;
 
         public PlayerConnection(APIClient apiClient)
         {
             APIClient = apiClient;
-            PingTimer = new Timer(this.Ping, null, 1000, PING_TIMER_MS);
+            PingTimer = new Timer(this.PingEntry, null, 1000, PING_TIMER_MS);
         }
 
-        private void Ping(object state)
+        private void PingEntry(object state)
         {
 
+        }
+
+        private async Task HandleNetPing(NetPing netPing)
+        {
+            Console.WriteLine("Ping");
+        }
+
+        private async Task HandleNetWorldView(NetWorldView netWorldView)
+        {
+            var updates = new List<ProjectedBody>();
+
+            for (int i = 0; i < netWorldView.UpdatesLength; i++)
+            {
+                var netBodyNullable = netWorldView.Updates(i);
+                if (netBodyNullable.HasValue)
+                {
+                    var netBody = netBodyNullable.Value;
+
+                    updates.Add(new ProjectedBody
+                    {
+                        ID = netBody.Id,
+                        DefinitionTime = netBody.DefinitionTime,
+
+                        OriginalAngle = netBody.OriginalAngle,
+                        AngularVelocity = netBody.AngularVelocity,
+
+                        OriginalPosition = FromNetVector(netBody.OriginalPosition.Value),
+
+                        Momentum = FromNetVector(netBody.Momentum.Value),
+                        Caption = netBody.Caption,
+                        Color = netBody.Color,
+                        Sprite = netBody.Sprite,
+                        Size = netBody.Size
+                    });
+                }
+            }
+            var deletes = new List<int>();
+            for (int i = 0; i < netWorldView.DeletesLength; i++)
+                deletes.Add(netWorldView.Deletes(i));
+
+            Cache.Update(updates, deletes);
+
+            IsAlive = netWorldView.IsAlive;
+
+            if (OnView != null)
+                await OnView();
+        }
+
+        private Vector2 FromNetVector(Vec2 vec2)
+        {
+            return new Vector2
+            {
+                X = vec2.X,
+                Y = vec2.Y
+            };
+        }
+
+        public async Task SpawnAsync(string name, string sprite, string color)
+        {
+            var builder = new FlatBufferBuilder(1);
+
+            var stringName = builder.CreateString(name ?? string.Empty);
+            var stringSprite = builder.CreateString(sprite ?? string.Empty);
+            var stringColor = builder.CreateString(color ?? string.Empty);
+
+            NetSpawn.StartNetSpawn(builder);
+            NetSpawn.AddName(builder, stringName);
+            NetSpawn.AddShip(builder, stringSprite);
+            NetSpawn.AddColor(builder, stringColor);
+
+            var spawn = NetSpawn.EndNetSpawn(builder);
+            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, spawn.Value);
+            builder.Finish(q.Value);
+
+            await SendAsync(builder.DataBuffer, default(CancellationToken));
+        }
+
+        private async Task SendAsync(ByteBuffer byteBuffer, CancellationToken cancellationToken=default(CancellationToken))
+        {
+            var buffer = byteBuffer.ToSizedArray();
+            await WebsocketSendingSemaphore.WaitAsync();
+            try
+            {
+                var start = DateTime.Now;
+
+                await Socket.SendAsync(
+                    buffer,
+                    WebSocketMessageType.Binary,
+                    endOfMessage: true,
+                    cancellationToken: cancellationToken);
+            }
+            finally
+            {
+                WebsocketSendingSemaphore.Release();
+            }
         }
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default(CancellationToken))
@@ -31,24 +135,22 @@
             Socket = await APIClient.ConnectWebSocket(APIEndpoint.PlayerConnect, cancellationToken: cancellationToken);
         }
 
-        private Task HandleIncomingMessage(NetQuantum netQuantum)
+        private async Task HandleIncomingMessage(NetQuantum netQuantum)
         {
             switch (netQuantum.MessageType)
             {
                 case AllMessages.NetPing:
-                    var ping = netQuantum.Message<NetPing>().Value;
-                    Console.WriteLine("Received NetPing");
+                    await HandleNetPing(netQuantum.Message<NetPing>().Value);
                     break;
+
                 case AllMessages.NetWorldView:
-                    var view = netQuantum.Message<NetWorldView>().Value;
-                    Console.WriteLine("Received NetWorldView");
+                    await HandleNetWorldView(netQuantum.Message<NetWorldView>().Value);
                     break;
+
                 default:
                     Console.WriteLine("Received other: " + netQuantum.MessageType.ToString());
                     break;
             }
-
-            return Task.FromResult(0);
         }
 
         public async Task<bool> ListenAsync()
