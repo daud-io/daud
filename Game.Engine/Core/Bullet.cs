@@ -63,15 +63,19 @@
 
                     Angle = MathF.Atan2(Momentum.Y, Momentum.X);
                 }
+
+                var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount;
+                Momentum = (Momentum + thrust) * Drag;
+
             }
             else
             {
                 ThrustAngle = Angle;
+                var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount*10;
+                Momentum = thrust;
             }
 
 
-            var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount;
-            Momentum = (Momentum + thrust) * Drag;
 
 
             if (World.Time >= TimeDeath)

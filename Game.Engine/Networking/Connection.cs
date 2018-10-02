@@ -73,7 +73,6 @@
                 if (followFleet == null)
                     followFleet = player?.World.Bodies.FirstOrDefault();
 
-
                 if (followFleet != null)
                 {
                     var halfViewport = new Vector2(3000, 3000);
@@ -85,8 +84,16 @@
                         Vector2.Add(followFleet.Position, halfViewport)
                     );
 
-                    var updatedBuckets = updates.Take(30);
+                    var updatedBuckets = updates.Take(60);
                     //var updatedBuckets = updates;
+
+                    var groups = updatedBuckets.GroupBy(b => b.BodyUpdated.Sprite, b => b).OrderBy(g => g.Key);
+                    /*var report = "";
+
+                    foreach (var group in groups)
+                        report += $"{group.Key} {group.Count()}\n";
+
+                    Console.WriteLine(report);*/
 
                     var newHash = world.Hook.GetHashCode();
 
