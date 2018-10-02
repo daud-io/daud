@@ -11,7 +11,7 @@
         private DateTime LastSpawn = DateTime.MinValue;
         private readonly PlayerConnection Connection;
         private const int RESPAWN_FALLOFF = 1000;
-        private DateTime Born = DateTime.Now;
+        private readonly DateTime Born = DateTime.Now;
 
         public bool AutoFire { get; set; } = false;
 

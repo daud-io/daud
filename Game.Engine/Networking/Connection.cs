@@ -328,7 +328,7 @@
                 ConnectionHeartbeat.Unregister(this);
 
                 if (player != null)
-                    player.Deinit();
+                    player.PendingDestruction = true;
             }
         }
 

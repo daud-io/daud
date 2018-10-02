@@ -24,7 +24,17 @@
             this.Robots.Add(bot);
         }
 
-        public void Step()
+        public void Think()
+        {
+        }
+
+        public void Init(World world)
+        {
+            this.World = world;
+            this.World.Actors.Add(this);
+        }
+
+        public void CreateDestroy()
         {
             int desired = World.Hook.BotBase;
 
@@ -37,17 +47,11 @@
                 Robots.Remove(robot);
                 robot.AutoSpawn = false;
                 robot.Die();
-                robot.Deinit();
+                robot.Destroy();
             }
         }
 
-        public void Init(World world)
-        {
-            this.World = world;
-            this.World.Actors.Add(this);
-        }
-
-        public void Deinit()
+        public void Destroy()
         {
             this.World.Actors.Remove(this);
         }

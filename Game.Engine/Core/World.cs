@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Numerics;
     using System.Threading;
+    using RBush;
 
     public class World : IDisposable
     {
@@ -17,12 +18,17 @@
 
         private readonly List<IDisposable> Disposables = new List<IDisposable>();
 
+
+        private RBush<ProjectedBody> RTree = new RBush<ProjectedBody>();
+
         public List<ProjectedBody> Bodies = new List<ProjectedBody>();
         public List<IActor> Actors = new List<IActor>();
 
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
         public int WorldSize = 6000;
+
+        private bool Processing = false;
 
         public World()
         {
@@ -40,22 +46,33 @@
 
         public void Step()
         {
+            if (Processing)
+                throw new Exception("Reentered");
+
+            Processing = true;
             lock (this.Bodies)
             {
                 var start = DateTime.Now;
                 Time = start.Ticks / 10000;
 
-                foreach (var body in Bodies.ToList())
-                {
-                    if (body != null)
-                        body.Project(Time);
 
-                    //WrapAroundWorld(body);
+                RTree.Clear();
+                foreach (var body in Bodies)
+                    body.Project(Time);
+
+                RTree.BulkLoad(Bodies);
+
+                var origActors = Actors.ToList();
+                foreach (var actor in Actors)
+                {
+                    int actors = Actors.Count();
+                    actor.Think();
+                    if (Actors.Count() != actors)
+                        throw new Exception("Collection modified in think time");
                 }
 
                 foreach (var actor in Actors.ToList())
-                    if (actor != null)
-                        actor.Step();
+                    actor.CreateDestroy();
 
                 foreach (var body in Bodies)
                     if (body.IsDirty)
@@ -69,9 +86,14 @@
                 ProcessLeaderboard();
 
                 var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
-                if (elapsed > Hook.StepTime * 0.5f)
+                if (elapsed > Hook.StepTime)
+                    Console.WriteLine("100% processing time warning");
+                else if (elapsed > Hook.StepTime * 0.8f)
+                    Console.WriteLine("80% processing time warning");
+                else if (elapsed > Hook.StepTime * 0.5f)
                     Console.WriteLine("50% processing time warning");
             }
+            Processing = false;
         }
 
         public float DistanceOutOfBounds(Vector2 position)
@@ -158,6 +180,9 @@
         {
             Heartbeat = new Timer((state) =>
             {
+                if (Processing)
+                    return;
+
                 Step();
                 ConnectionHeartbeat.Step();
 
@@ -174,10 +199,16 @@
         public IEnumerable<ProjectedBody> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)
         {
             if (maximumDistance == 0)
-                return this.Bodies
-                    .ToList();
+                return this.Bodies;
             else
             {
+                return RTree.Search(new Envelope(
+                    point.X - maximumDistance/2,
+                    point.Y - maximumDistance/2,
+                    point.X + maximumDistance/2,
+                    point.Y + maximumDistance/2
+                ));
+
                 if (offsetSize)
                     return this.Bodies
                         .Where(b => b != null)

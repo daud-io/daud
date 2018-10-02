@@ -20,7 +20,7 @@
         {
             var obstacle = Obstacles[Obstacles.Count - 1];
             Obstacles.Remove(obstacle);
-            obstacle.Deinit();
+            obstacle.Destroy();
         }
 
         private void AddPickup()
@@ -33,7 +33,7 @@
         {
             var Pickup = Pickups[Pickups.Count - 1];
             Pickups.Remove(Pickup);
-            Pickup.Deinit();
+            Pickup.Destroy();
         }
 
         private void AddFish()
@@ -46,10 +46,14 @@
         {
             var fish = Fishes[Fishes.Count - 1];
             Fishes.Remove(fish);
-            fish.Deinit();
+            fish.Destroy();
         }
 
-        public void Step()
+        public void Think()
+        {
+        }
+
+        public void CreateDestroy()
         {
             int desiredObstacles = World.Hook.Obstacles;
             int desiredPickups = World.Hook.Pickups;
@@ -83,9 +87,11 @@
             this.World.Actors.Add(this);
         }
 
-        public void Deinit()
+        public void Destroy()
         {
             this.World.Actors.Remove(this);
         }
+
+
     }
 }

@@ -28,6 +28,9 @@
         public Vector2 AimTarget { get; set; }
 
         public List<Ship> Ships { get; set; } = new List<Ship>();
+        public List<Ship> NewShips { get; set; } = new List<Ship>();
+
+        public List<Bullet> NewBullets { get; set; } = new List<Bullet>();
 
         public Pickup Pickup = null;
 
@@ -42,24 +45,22 @@
             }
 
             this.Owner.Die();
-            Deinit();
+
+            PendingDestruction = true;
         }
 
-        public override void Deinit()
+        public override void Destroy()
         {
-            foreach (var ship in Ships)
-                ship.Deinit();
+            foreach (var ship in Ships.ToList())
+                ship.Destroy();
 
-            base.Deinit();
+            base.Destroy();
         }
 
         public void ShipDeath(Player player, Ship ship, Bullet bullet)
         {
-            Ships.Remove(ship);
-
-            if (Ships.Count == 0)
+            if (!Ships.Where(s => !s.PendingDestruction).Any())
                 Die(player);
-
         }
 
         public void AddShip()
@@ -84,8 +85,7 @@
                 Color = this.Color
             };
 
-            ship.Init(World);
-            Ships.Add(ship);
+            NewShips.Add(ship);
         }
 
         public override void Init(World world)
@@ -99,10 +99,25 @@
 
         }
 
-        public override void Step()
+        public override void CreateDestroy()
         {
+            base.CreateDestroy();
 
-            
+            foreach (var ship in NewShips)
+            {
+                ship.Init(World);
+                Ships.Add(ship);
+            }
+            NewShips.Clear();
+
+            foreach (var bullet in NewBullets)
+                bullet.Init(World);
+
+            NewBullets.Clear();
+        }
+
+        public override void Think()
+        {
             var isShooting = ShootRequested && World.Time >= TimeReloaded;
             var isBoosting = World.Time < BoostUntil;
             var isBoostInitial = false;
@@ -143,10 +158,7 @@
                     : World.Hook.Drag;
 
                 if (isBoostInitial)
-                {
-
                     ship.Momentum += Vector2.Normalize(ship.Momentum) * World.Hook.BoostSpeed;
-                }
             }
 
             var fleetCenter = Flocking.FleetCenterNaive(Ships, null);
@@ -166,15 +178,13 @@
                 TimeReloaded = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
 
                 foreach (var ship in Ships)
-                    Bullet.FireFrom(ship);
+                    NewBullets.Add(Bullet.FireFrom(ship));
 
                 this.Pickup = null;
             }
 
             if (float.IsNaN(this.Position.X))
-            {
-
-            }
+                throw new Exception("Invalid Position");
 
         }
 

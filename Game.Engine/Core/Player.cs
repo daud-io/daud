@@ -1,8 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
-    using System.Collections.Generic;
     using System;
-    using System.Linq;
+    using System.Collections.Generic;
 
     public class Player : IActor
     {
@@ -26,6 +25,9 @@
         public const int InvulnerableTime = 2000;
 
         public string ShipSprite { get; set; }
+        public string Color { get; set; }
+        public bool PendingDestruction { get; set; } = false;
+        private bool IsSpawning = false;
 
         public void SetControl(ControlInput input)
         {
@@ -33,9 +35,43 @@
             this.IsControlNew = true;
         }
 
-        public void Deinit()
+        public virtual void CreateDestroy()
+        {
+            if (PendingDestruction)
+            {
+                Destroy();
+                PendingDestruction = false;
+            }
+
+            if (IsSpawning)
+            {
+
+            }
+            if (IsSpawning && !IsAlive && Fleet == null)
+            {
+                IsSpawning = false;
+
+                IsAlive = true;
+
+                Fleet = CreateFleet(Name, Color);
+
+                Fleet.Init(World);
+
+                IsInvulnerable = true;
+                SpawnTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            }
+        }
+
+        public void Destroy()
         {
             Die();
+
+            if (Fleet != null)
+            {
+                Fleet.Destroy();
+                Fleet = null;
+            }
+
             World.Actors.Remove(this);
 
             var worldPlayers = GetWorldPlayers(World);
@@ -68,7 +104,7 @@
             return worldPlayers;
         }
 
-        public virtual void Step()
+        public virtual void Think()
         {
             if (!IsAlive)
                 return;
@@ -120,21 +156,11 @@
                 && name.Length > 15)
                 name = name.Substring(0, 15);
 
-            this.Name = name;
+            Name = name;
+            ShipSprite = sprite;
+            Color = color;
+            IsSpawning = true;
 
-            if (!IsAlive)
-            {
-                IsAlive = true;
-
-                Fleet = CreateFleet(name, color);
-
-                ShipSprite = sprite;
-
-                Fleet.Init(World);
-            }
-
-            IsInvulnerable = true;
-            SpawnTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
         }
         
         public void Die()
@@ -142,8 +168,9 @@
             if (IsAlive)
             {
                 Score /= 2;
+                if (Fleet != null)
+                    Fleet.PendingDestruction = true;
 
-                Fleet.Deinit();
                 Fleet = null;
                 IsAlive = false;
             }

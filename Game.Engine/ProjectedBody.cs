@@ -1,14 +1,17 @@
 ﻿namespace Game.Engine
 {
     using Game.Engine.Core;
+    using RBush;
     using System;
     using System.Numerics;
 
-    public class ProjectedBody : Body
+    public class ProjectedBody : Body, ISpatialData
     {
         public long ProjectedTime { get; set; }
-
         private Vector2 _position { get; set; } = new Vector2(0, 0);
+
+        public Envelope Envelope;
+
         public virtual Vector2 Position
         {
             set
@@ -47,6 +50,8 @@
             }
         }
 
+        ref readonly Envelope ISpatialData.Envelope => ref this.Envelope;
+
         public void Project(long time)
         {
             ProjectedTime = time;
@@ -60,6 +65,8 @@
                 throw new Exception("Invalid position");
 
             _angle = OriginalAngle + timeDelta * AngularVelocity;
+
+            Envelope = new Envelope(_position.X - Size/2, _position.Y - Size / 2, _position.X + Size / 2, _position.Y + Size / 2);
         }
 
         public ProjectedBody Clone()

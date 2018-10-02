@@ -34,13 +34,17 @@
             Drag = World.Hook.Drag;
         }
 
+        public override void Destroy()
+        {
+            base.Destroy();
+            if (Fleet?.Ships?.Contains(this) ?? false)
+                Fleet.Ships.Remove(this);
+        }
+
         private void Die(Player player, Fleet fleet, Bullet bullet)
         {
             if (player != null)
                 player.Score += 1;
-
-            if (this.Fleet != null)
-                this.Fleet.ShipDeath(player, this, bullet);
 
             if (fleet != null)
             {
@@ -51,7 +55,11 @@
                         fleet.AddShip();
             }
 
-            Deinit();
+            PendingDestruction = true;
+
+            if (this.Fleet != null)
+                this.Fleet.ShipDeath(player, this, bullet);
+
         }
 
         public virtual void CollisionExecute(ProjectedBody projectedBody)
@@ -95,9 +103,9 @@
             return false;
         }
 
-        public override void Step()
+        public override void Think()
         {
-            base.Step();
+            base.Think();
 
             if (Abandoned && TimeDeath == 0)
                 TimeDeath = World.Time + 20000;

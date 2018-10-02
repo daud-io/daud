@@ -8,7 +8,9 @@
         [JsonIgnore]
         public World World = null;
 
-        public virtual void Deinit()
+        public bool PendingDestruction { get; set; } = false;
+
+        public virtual void Destroy()
         {
             if (this.Exists)
             {
@@ -33,7 +35,7 @@
             this.Exists = true;
         }
 
-        public virtual void Step()
+        public virtual void Think()
         {
             var collisionSet =
                 World.BodiesNear(this.Position, this.Size, offsetSize: true)
@@ -48,6 +50,15 @@
                     hit.CollisionExecute(this);
                     Collided(hit);
                 }
+            }
+        }
+
+        public virtual void CreateDestroy()
+        {
+            if (PendingDestruction)
+            {
+                PendingDestruction = false;
+                Destroy();
             }
         }
 

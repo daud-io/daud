@@ -31,7 +31,7 @@
                 < (projectedBody.Size + this.Size);
         }
 
-        public override void Step()
+        public override void Think()
         {
             if (World.DistanceOutOfBounds(Position) > 0)
             {

@@ -54,7 +54,7 @@
             return false;
         }
 
-        public override void Step()
+        public override void Think()
         {
             AngularVelocity = 0.005f;
 

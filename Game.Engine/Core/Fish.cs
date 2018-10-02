@@ -28,9 +28,9 @@
             ThrustAmount = World.Hook.BaseThrustB;
         }
 
-        public override void Step()
+        public override void Think()
         {
-            base.Step();
+            base.Think();
             Flock();
         }
 

@@ -23,16 +23,19 @@
 
         }
 
-        public override void Step()
+        public override void CreateDestroy()
         {
+            base.CreateDestroy();
+
             if (!IsAlive)
-            {
                 if (AutoSpawn)
                     this.Spawn(Name, ShipSprite, "green");
-                else
-                    return;
-            }
+        }
 
+        public override void Think()
+        {
+            if (!IsAlive)
+                return;
 
             var player =
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
@@ -70,7 +73,7 @@
                 this.SetControl(ControlInput);
             }
 
-            base.Step();
+            base.Think();
         }
     }
 }

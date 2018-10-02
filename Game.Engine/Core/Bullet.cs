@@ -18,14 +18,9 @@
 
         public bool Consumed { get; set; }
 
-        public static void FireFrom(Ship ship)
+        public static Bullet FireFrom(Ship ship)
         {
             var world = ship.World;
-
-            if (float.IsNaN(ship.Position.X))
-            {
-                return;
-            }
 
             var bullet = new Bullet
             {
@@ -40,12 +35,13 @@
                 Seeker = ship.Fleet.Pickup != null,
                 ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB
             };
-            bullet.Init(world);
+
+            return bullet;
         }
 
-        public override void Step()
+        public override void Think()
         {
-            base.Step();
+            base.Think();
 
             if (Seeker)
             {
@@ -75,17 +71,13 @@
                 Momentum = thrust;
             }
 
-
-
-
             if (World.Time >= TimeDeath)
-                Deinit();
+                PendingDestruction = true;
         }
 
         protected override void Collided(ICollide otherObject)
         {
             TimeDeath = World.Time;
-
         }
     }
 }
