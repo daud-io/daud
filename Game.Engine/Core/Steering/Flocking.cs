@@ -42,10 +42,10 @@
                 var relative = exclusiveCenter - ship.Position;
                 var distance = Vector2.Distance(ship.Position, exclusiveCenter);
 
-                var vec = Vector2.Normalize(relative) * distance;
+                if (relative == Vector2.Zero)
+                    return Vector2.Zero;
 
-                if (float.IsNaN(vec.X))
-                    throw new System.Exception("Bad position");
+                var vec = Vector2.Normalize(relative) * distance;
 
                 return vec;
             }

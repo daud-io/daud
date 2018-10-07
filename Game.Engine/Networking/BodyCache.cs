@@ -9,7 +9,7 @@
     {
         private readonly Dictionary<long, Bucket> Buckets = new Dictionary<long, Bucket>();
 
-        public IEnumerable<Bucket> Update(IEnumerable<ProjectedBody> bodies, long time, Vector2 windowTopLeft, Vector2 windowBottomRight)
+        public IEnumerable<Bucket> Update(IEnumerable<ProjectedBody> bodies, uint time, Vector2 windowTopLeft, Vector2 windowBottomRight)
         {
             // this should be some more efficient query r-trees or something
             var filtered = bodies.Where(b =>
@@ -83,7 +83,7 @@
             private const float WEIGHT_SPRITE = 1;
             private const float WEIGHT_MISSING = float.MaxValue;
 
-            public void Project(long time)
+            public void Project(uint time)
             {
                 if (BodyClient != null)
                 {

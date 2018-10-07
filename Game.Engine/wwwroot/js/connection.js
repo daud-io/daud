@@ -155,6 +155,7 @@
                 window.location.reload();
         },
         onClose: function (event) {
+
             console.log('disconnected');
             this.connected = false;
             this.reloading = true;
@@ -180,7 +181,9 @@
                     this.onView(message);
                     break;
                 case this.fb.AllMessages.NetPing: // Ping
-                    this.latency = performance.now() - this.pingSent;
+                    if (this.pingSent)
+                        this.latency = performance.now() - this.pingSent;
+
                     break;
                 case this.fb.AllMessages.NetLeaderboard:
                     message = quantum.message(new this.fb.NetLeaderboard());

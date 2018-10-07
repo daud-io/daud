@@ -53,7 +53,7 @@
         private async Task SendPingAsync()
         {
             var builder = new FlatBufferBuilder(1);
-            var ping = NetPing.CreateNetPing(builder, DateTime.Now.Ticks);
+            var ping = NetPing.CreateNetPing(builder, 0);
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, ping.Value);
             builder.Finish(q.Value);
 
@@ -98,17 +98,14 @@
                         OriginalAngle = netBody.OriginalAngle,
                         AngularVelocity = netBody.AngularVelocity,
 
-                        OriginalPosition = FromNetVector(netBody.OriginalPosition.Value),
+                        OriginalPosition = FromNetVector(netBody.OriginalPosition),
 
-                        Momentum = FromNetVector(netBody.Momentum.Value),
-                        Caption = netBody.Caption,
-                        Color = netBody.Color,
-                        Sprite = netBody.Sprite,
+                        Momentum = FromNetVector(netBody.Velocity) * 10f,
                         Size = netBody.Size
                     });
                 }
             }
-            var deletes = new List<int>();
+            var deletes = new List<uint>();
             for (int i = 0; i < netWorldView.DeletesLength; i++)
                 deletes.Add(netWorldView.Deletes(i));
 

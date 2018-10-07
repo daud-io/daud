@@ -48,9 +48,9 @@
             }
         }
 
-        private Offset<Vec2> FromVector(FlatBufferBuilder builder, Vector2 vector)
+        private Offset<Vec2> FromPositionVector(FlatBufferBuilder builder, Vector2 vector)
         {
-            return Vec2.CreateVec2(builder, vector.X, vector.Y);
+            return Vec2.CreateVec2(builder, (short)vector.X, (short)vector.Y);
         }
 
         public async Task StepAsync(CancellationToken cancellationToken)
@@ -84,7 +84,7 @@
                         Vector2.Add(followFleet.Position, halfViewport)
                     );
 
-                    var updatedBuckets = updates.Take(60);
+                    var updatedBuckets = updates.Take(100);
                     //var updatedBuckets = updates;
 
                     var groups = updatedBuckets.GroupBy(b => b.BodyUpdated.Sprite, b => b).OrderBy(g => g.Key);
@@ -98,25 +98,15 @@
                     var newHash = world.Hook.GetHashCode();
 
                     var builder = new FlatBufferBuilder(1);
+                    float VELOCITY_SCALE_FACTOR = 10f;
 
-                    // define camera
-                    NetBody.StartNetBody(builder);
-                    NetBody.AddDefinitionTime(builder, followFleet?.DefinitionTime ?? 0);
-                    var momentum = followFleet?.Momentum ?? new Vector2(0, 0);
-                    if (followFleet.Momentum != null)
-                        NetBody.AddMomentum(builder, FromVector(builder, followFleet.Momentum));
-
-                    if (followFleet.OriginalPosition != null)
-                        NetBody.AddOriginalPosition(builder, FromVector(builder, followFleet.OriginalPosition));
-
-                    var cameraBody = NetBody.EndNetBody(builder);
-
-                    var updateVector = NetWorldView.CreateUpdatesVector(builder, updatedBuckets.Select(b =>
+                    NetWorldView.StartUpdatesVector(builder, updatedBuckets.Count());
+                    foreach (var b in updatedBuckets)
                     {
                         var s = b.BodyUpdated;
                         var c = b.BodyClient;
 
-                        StringOffset stringSprite = new StringOffset();
+                        /*StringOffset stringSprite = new StringOffset();
                         StringOffset stringColor = new StringOffset();
                         StringOffset stringCaption = new StringOffset();
 
@@ -126,32 +116,25 @@
                             stringColor = builder.CreateString(s.Color ?? string.Empty);
                         if (s.Caption != c?.Caption)
                             stringCaption = builder.CreateString(s.Caption ?? string.Empty);
+                            */
+                        
+                        var body = NetBody.CreateNetBody(builder,
+                            Id: s.ID,
+                            DefinitionTime: s.DefinitionTime,
+                            originalPosition_X: (short)s.OriginalPosition.X,
+                            originalPosition_Y: (short)s.OriginalPosition.Y,
+                            velocity_X: (short)(s.Momentum.X* VELOCITY_SCALE_FACTOR),
+                            velocity_Y: (short)(s.Momentum.Y* VELOCITY_SCALE_FACTOR),
+                            OriginalAngle: (sbyte)(s.OriginalAngle / MathF.PI * 127),
+                            AngularVelocity: (sbyte)(s.AngularVelocity * VELOCITY_SCALE_FACTOR / MathF.PI * 127),
+                            Size: (byte)(s.Size / 5),
+                            Sprite: Sprites.SpriteIndex(s.Sprite),
+                            Mode: 0,
+                            Group: 0);
+                    }
 
-                        NetBody.StartNetBody(builder);
-                        NetBody.AddId(builder, s.ID);
-                        NetBody.AddDefinitionTime(builder, s.DefinitionTime);
+                    var updatesVector = builder.EndVector();
 
-                        if (s.Size != c?.Size)
-                            NetBody.AddSize(builder, s.Size);
-
-                        if (s.Sprite != c?.Sprite)
-                            NetBody.AddSprite(builder, stringSprite);
-                        if (s.Color != c?.Color)
-                            NetBody.AddColor(builder, stringColor);
-                        if (s.Caption != c?.Caption)
-                            NetBody.AddCaption(builder, stringCaption);
-
-                        if (s.OriginalAngle != c?.OriginalAngle)
-                            NetBody.AddOriginalAngle(builder, s.OriginalAngle);
-
-                        if (s.AngularVelocity != c?.AngularVelocity)
-                            NetBody.AddAngularVelocity(builder, s.AngularVelocity);
-
-                        NetBody.AddMomentum(builder, FromVector(builder, s.Momentum));
-                        NetBody.AddOriginalPosition(builder, FromVector(builder, s.OriginalPosition));
-
-                        return NetBody.EndNetBody(builder);
-                    }).ToArray());
 
                     foreach (var update in updatedBuckets)
                         update.BodyClient = update.BodyUpdated.Clone();
@@ -161,27 +144,38 @@
                     ).ToArray());
 
                     NetWorldView.StartNetWorldView(builder);
+
+                    // define camera
+                    var cameraBody = NetBody.CreateNetBody(
+                        builder,
+                        Id: 0,
+                        DefinitionTime: followFleet?.DefinitionTime ?? 0,
+                        originalPosition_X: (short)(followFleet?.OriginalPosition.X ?? 0),
+                        originalPosition_Y: (short)(followFleet?.OriginalPosition.Y ?? 0),
+                        velocity_X: (short)(followFleet?.Momentum.X * VELOCITY_SCALE_FACTOR ?? 0),
+                        velocity_Y: (short)(followFleet?.Momentum.Y * VELOCITY_SCALE_FACTOR ?? 0),
+                        OriginalAngle: (sbyte)(followFleet?.OriginalAngle / MathF.PI / 127 ?? 0),
+                        AngularVelocity: 0,
+                        Size: 0,
+                        Sprite: 0,
+                        Mode: 0,
+                        Group: 0
+                    );
+
                     NetWorldView.AddCamera(builder, cameraBody);
                     NetWorldView.AddIsAlive(builder, player?.IsAlive ?? false);
                     NetWorldView.AddTime(builder, world.Time);
 
-                    NetWorldView.AddUpdates(builder, updateVector);
-
+                    NetWorldView.AddUpdates(builder, updatesVector);
                     NetWorldView.AddDeletes(builder, deletesVector);
 
                     var worldView = NetWorldView.EndNetWorldView(builder);
-
-
-
-                    // messages, hook, leaderboard
 
                     HookHash = newHash;
 
                     var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetWorldView, worldView.Value);
                     builder.Finish(q.Value);
 
-
-                    // if(updates.Any())
                     await this.SendAsync(builder.DataBuffer, cancellationToken);
                 }
 
@@ -210,7 +204,7 @@
                         NetLeaderboardEntry.AddName(builder, stringName);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
                         NetLeaderboardEntry.AddScore(builder, e.Score);
-                        NetLeaderboardEntry.AddPosition(builder, FromVector(builder, e.Position));
+                        NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
 
                         return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
                     }).ToArray());

@@ -3,7 +3,6 @@
 union AllMessages
 {
 	NetWorldView,
-	NetHello,
 	NetSpawn,
 	NetControlInput,
 	NetPing,
@@ -25,11 +24,6 @@ table NetLeaderboardEntry
 	position: Vec2;
 }
 
-table NetHello
-{
-	time:long;
-}
-
 table NetSpawn
 {
 	name:string;
@@ -48,42 +42,50 @@ table NetControlInput
 
 table NetPing
 {
-	time:long;
+	time:uint;
 }
 
 table NetWorldView
 {
-	time:long;
-	playerCount:short;
+	time:uint;
+	camera:NetBody;
 	isAlive:bool = true;
 	updates:[NetBody];
-	deletes:[int];
+	deletes:[uint];
+    groups:[NetGroup];
 	announcements:[NetAnnouncement];
-	camera:NetBody;
 }
 
-table NetBody
+table NetGroup
 {
-	id:int;
-	definitionTime:long;
-	size:int = -1;
-	sprite: string;
-	color: string;
-	caption: string;
-	originalAngle: float = -999;
-	angularVelocity: float = -999;
-	momentum:Vec2;
+    group:uint;
+    type:ubyte;
+    caption:string;
+}
+
+struct Vec2
+{
+	x:short;
+	y:short;
+}
+
+struct NetBody
+{
+	id:uint;
+	definitionTime:uint;
 	originalPosition:Vec2;
+	velocity:Vec2;
+	originalAngle:byte;
+	angularVelocity:byte;
+	size:ubyte;
+	sprite:ubyte;
+	mode:ubyte;
+    group:uint;
 }
 
 table NetAnnouncement
 {
 	Text:string;
-}
-
-struct Vec2 {
-	x:float;
-	y:float;
 }
 
 table NetQuantum

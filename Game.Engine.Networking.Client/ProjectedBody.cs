@@ -4,7 +4,7 @@
 
     public class ProjectedBody
     {
-        public int ID { get; set; }
+        public uint ID { get; set; }
         public long DefinitionTime { get; set; }
 
         public float OriginalAngle { get; set; }

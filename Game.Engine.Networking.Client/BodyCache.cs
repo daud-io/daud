@@ -4,8 +4,8 @@
 
     public class BodyCache
     {
-        private readonly Dictionary<int, ProjectedBody> _bodies = new Dictionary<int, ProjectedBody>();
-        public void Update(IEnumerable<ProjectedBody> updates, IEnumerable<int> deletes)
+        private readonly Dictionary<uint, ProjectedBody> _bodies = new Dictionary<uint, ProjectedBody>();
+        public void Update(IEnumerable<ProjectedBody> updates, IEnumerable<uint> deletes)
         {
             foreach (var id in deletes)
                 _bodies.Remove(id);
@@ -17,19 +17,12 @@
                 else
                 {
                     var existing = _bodies[update.ID];
-                    if (update.Size != -1)
-                        existing.Size = update.Size;
-                    if (update.Sprite != null)
-                        existing.Sprite = update.Sprite;
-                    if (update.Caption != null)
-                        existing.Caption = update.Caption;
-                    if (update.Color != null)
-                        existing.Color = update.Color;
-
-                    if (update.OriginalAngle != -999)
-                        existing.OriginalAngle = update.OriginalAngle;
-                    if (update.AngularVelocity != -999)
-                        existing.AngularVelocity = update.AngularVelocity;
+                    existing.Size = update.Size;
+                    existing.Sprite = update.Sprite;
+                    existing.Caption = update.Caption;
+                    existing.Color = update.Color;
+                    existing.OriginalAngle = update.OriginalAngle;
+                    existing.AngularVelocity = update.AngularVelocity;
                 }
             }
         }

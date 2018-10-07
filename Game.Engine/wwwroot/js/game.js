@@ -33,27 +33,29 @@
     var bodyFromServer = function (body) {
 
         var originalPosition = body.originalPosition();
-        var momentum = body.momentum();
+        var momentum = body.velocity();
 
         var newBody = {
             ID: body.id(),
-            DefinitionTime: body.definitionTime().toFloat64(),
-            Size: body.size(),
-            Sprite: body.sprite(),
-            Color: body.color(),
-            Caption: body.caption(),
-            OriginalAngle: body.originalAngle(),
-            AngularVelocity: body.angularVelocity(),
+            DefinitionTime: body.definitionTime(),
+            Size: body.size() * 5,
+            Sprite: Game.Renderer.spriteIndices[body.sprite()], //body.sprite(),
+            Color: 'red', //body.color(),
+            Caption: '', //body.caption(),
+            OriginalAngle: body.originalAngle() / 127 * Math.PI,
+            AngularVelocity: body.angularVelocity() / 127  * Math.PI / 10,
             Momentum: {
                 X: momentum.x(),
                 Y: momentum.y()
             },
             OriginalPosition: {
-
                 X: originalPosition.x(),
                 Y: originalPosition.y()
             }
         };
+
+        newBody.Momentum.X /= 10;
+        newBody.Momentum.Y /= 10;
 
         return newBody;
     };
@@ -72,7 +74,7 @@
         viewCounter++;
 
         view = {};
-        view.time = newView.time().toFloat64();
+        view.time = newView.time();
 
         view.isAlive = newView.isAlive();
 

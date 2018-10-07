@@ -52,7 +52,7 @@
 
         ref readonly Envelope ISpatialData.Envelope => ref this.Envelope;
 
-        public void Project(long time)
+        public void Project(uint time)
         {
             ProjectedTime = time;
             if (DefinitionTime == 0)

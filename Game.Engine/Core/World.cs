@@ -10,7 +10,8 @@
 
     public class World : IDisposable
     {
-        public long Time { get; private set; } = 0;
+        public uint Time { get; private set; } = 0;
+        private long OffsetTicks = 0;
 
         public Hook Hook { get; set; } = null;
 
@@ -32,6 +33,7 @@
 
         public World()
         {
+            OffsetTicks = DateTime.Now.Ticks;
             Hook = Hook.Default;
             
             InitializeStepTimer();
@@ -53,8 +55,7 @@
             lock (this.Bodies)
             {
                 var start = DateTime.Now;
-                Time = start.Ticks / 10000;
-
+                Time = (uint)((start.Ticks - OffsetTicks) / 10000);
 
                 RTree.Clear();
                 foreach (var body in Bodies)
@@ -190,8 +191,8 @@
             Disposables.Add(Heartbeat);
         }
 
-        private int _id = 0;
-        public int NextID()
+        private uint _id = 0;
+        public uint NextID()
         {
             return _id++;
         }

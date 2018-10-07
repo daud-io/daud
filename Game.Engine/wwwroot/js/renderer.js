@@ -14,6 +14,7 @@
                 scaleToSize: scaleToSize || false
             }
         }
+
         Renderer.sprites = {
             'ship0': sprite("ship0"),
             'ship_green': sprite("ship_green"),
@@ -37,6 +38,30 @@
             'obstacle': sprite("obstacle", 0.0028, true),
             'arrow': sprite("arrow", 0.03)
         };
+
+        Renderer.spriteIndices = [
+            "ship0",
+            "ship_green",
+            "ship_gray",
+            "ship_orange",
+            "ship_pink",
+            "ship_red",
+            "ship_cyan",
+            "ship_yellow",
+            "ship_flash",
+            "bullet_green",
+            "bullet_orange",
+            "bullet_pink",
+            "bullet_red",
+            "bullet_cyan",
+            "bullet_yellow",
+            "fish",
+            "bullet",
+            "seeker",
+            "seeker_pickup",
+            "obstacle",
+            "arrow"
+        ];
     };
 
     Renderer.prototype = {

@@ -30,11 +30,10 @@ Game.Engine.Networking.FlatBuffers = Game.Engine.Networking.FlatBuffers || {};
 Game.Engine.Networking.FlatBuffers.AllMessages = {
   NONE: 0,
   NetWorldView: 1,
-  NetHello: 2,
-  NetSpawn: 3,
-  NetControlInput: 4,
-  NetPing: 5,
-  NetLeaderboard: 6
+  NetSpawn: 2,
+  NetControlInput: 3,
+  NetPing: 4,
+  NetLeaderboard: 5
 };
 
 /**
@@ -283,73 +282,6 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addPosition = function(bu
  * @returns {flatbuffers.Offset}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.endNetLeaderboardEntry = function(builder) {
-  var offset = builder.endObject();
-  return offset;
-};
-
-/**
- * @constructor
- */
-Game.Engine.Networking.FlatBuffers.NetHello = function() {
-  /**
-   * @type {flatbuffers.ByteBuffer}
-   */
-  this.bb = null;
-
-  /**
-   * @type {number}
-   */
-  this.bb_pos = 0;
-};
-
-/**
- * @param {number} i
- * @param {flatbuffers.ByteBuffer} bb
- * @returns {Game.Engine.Networking.FlatBuffers.NetHello}
- */
-Game.Engine.Networking.FlatBuffers.NetHello.prototype.__init = function(i, bb) {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {Game.Engine.Networking.FlatBuffers.NetHello=} obj
- * @returns {Game.Engine.Networking.FlatBuffers.NetHello}
- */
-Game.Engine.Networking.FlatBuffers.NetHello.getRootAsNetHello = function(bb, obj) {
-  return (obj || new Game.Engine.Networking.FlatBuffers.NetHello).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
- * @returns {flatbuffers.Long}
- */
-Game.Engine.Networking.FlatBuffers.NetHello.prototype.time = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt64(this.bb_pos + offset) : this.bb.createLong(0, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- */
-Game.Engine.Networking.FlatBuffers.NetHello.startNetHello = function(builder) {
-  builder.startObject(1);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Long} time
- */
-Game.Engine.Networking.FlatBuffers.NetHello.addTime = function(builder, time) {
-  builder.addFieldInt64(0, time, builder.createLong(0, 0));
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @returns {flatbuffers.Offset}
- */
-Game.Engine.Networking.FlatBuffers.NetHello.endNetHello = function(builder) {
   var offset = builder.endObject();
   return offset;
 };
@@ -623,11 +555,11 @@ Game.Engine.Networking.FlatBuffers.NetPing.getRootAsNetPing = function(bb, obj) 
 };
 
 /**
- * @returns {flatbuffers.Long}
+ * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetPing.prototype.time = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -639,10 +571,10 @@ Game.Engine.Networking.FlatBuffers.NetPing.startNetPing = function(builder) {
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Long} time
+ * @param {number} time
  */
 Game.Engine.Networking.FlatBuffers.NetPing.addTime = function(builder, time) {
-  builder.addFieldInt64(0, time, builder.createLong(0, 0));
+  builder.addFieldInt32(0, time, 0);
 };
 
 /**
@@ -690,19 +622,20 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.getRootAsNetWorldView = function
 };
 
 /**
- * @returns {flatbuffers.Long}
+ * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.time = function() {
   var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt64(this.bb_pos + offset) : this.bb.createLong(0, 0);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
 };
 
 /**
- * @returns {number}
+ * @param {Game.Engine.Networking.FlatBuffers.NetBody=} obj
+ * @returns {Game.Engine.Networking.FlatBuffers.NetBody|null}
  */
-Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.playerCount = function() {
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.camera = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? this.bb.readInt16(this.bb_pos + offset) : 0;
+  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetBody).__init(this.bb_pos + offset, this.bb) : null;
 };
 
 /**
@@ -720,7 +653,7 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.isAlive = function() {
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.updates = function(index, obj) {
   var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetBody).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetBody).__init(this.bb.__vector(this.bb_pos + offset) + index * 28, this.bb) : null;
 };
 
 /**
@@ -737,7 +670,7 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.updatesLength = functi
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.deletes = function(index) {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? this.bb.readInt32(this.bb.__vector(this.bb_pos + offset) + index * 4) : 0;
+  return offset ? this.bb.readUint32(this.bb.__vector(this.bb_pos + offset) + index * 4) : 0;
 };
 
 /**
@@ -749,11 +682,29 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.deletesLength = functi
 };
 
 /**
- * @returns {Int32Array}
+ * @returns {Uint32Array}
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.deletesArray = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? new Int32Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+  return offset ? new Uint32Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param {number} index
+ * @param {Game.Engine.Networking.FlatBuffers.NetGroup=} obj
+ * @returns {Game.Engine.Networking.FlatBuffers.NetGroup}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.groups = function(index, obj) {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetGroup).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.groupsLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -762,7 +713,7 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.deletesArray = functio
  * @returns {Game.Engine.Networking.FlatBuffers.NetAnnouncement}
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.announcements = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
+  var offset = this.bb.__offset(this.bb_pos, 16);
   return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetAnnouncement).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -770,17 +721,8 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.announcements = functi
  * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.announcementsLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 14);
-  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
-};
-
-/**
- * @param {Game.Engine.Networking.FlatBuffers.NetBody=} obj
- * @returns {Game.Engine.Networking.FlatBuffers.NetBody|null}
- */
-Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.camera = function(obj) {
   var offset = this.bb.__offset(this.bb_pos, 16);
-  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetBody).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
 /**
@@ -792,18 +734,18 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.startNetWorldView = function(bui
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Long} time
+ * @param {number} time
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.addTime = function(builder, time) {
-  builder.addFieldInt64(0, time, builder.createLong(0, 0));
+  builder.addFieldInt32(0, time, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {number} playerCount
+ * @param {flatbuffers.Offset} cameraOffset
  */
-Game.Engine.Networking.FlatBuffers.NetWorldView.addPlayerCount = function(builder, playerCount) {
-  builder.addFieldInt16(1, playerCount, 0);
+Game.Engine.Networking.FlatBuffers.NetWorldView.addCamera = function(builder, cameraOffset) {
+  builder.addFieldStruct(1, cameraOffset, 0);
 };
 
 /**
@@ -824,23 +766,10 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.addUpdates = function(builder, u
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {Array.<flatbuffers.Offset>} data
- * @returns {flatbuffers.Offset}
- */
-Game.Engine.Networking.FlatBuffers.NetWorldView.createUpdatesVector = function(builder, data) {
-  builder.startVector(4, data.length, 4);
-  for (var i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]);
-  }
-  return builder.endVector();
-};
-
-/**
- * @param {flatbuffers.Builder} builder
  * @param {number} numElems
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.startUpdatesVector = function(builder, numElems) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(28, numElems, 4);
 };
 
 /**
@@ -874,10 +803,39 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.startDeletesVector = function(bu
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} groupsOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.addGroups = function(builder, groupsOffset) {
+  builder.addFieldOffset(5, groupsOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<flatbuffers.Offset>} data
+ * @returns {flatbuffers.Offset}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.createGroupsVector = function(builder, data) {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.startGroupsVector = function(builder, numElems) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} announcementsOffset
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.addAnnouncements = function(builder, announcementsOffset) {
-  builder.addFieldOffset(5, announcementsOffset, 0);
+  builder.addFieldOffset(6, announcementsOffset, 0);
 };
 
 /**
@@ -903,19 +861,164 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.startAnnouncementsVector = funct
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} cameraOffset
+ * @returns {flatbuffers.Offset}
  */
-Game.Engine.Networking.FlatBuffers.NetWorldView.addCamera = function(builder, cameraOffset) {
-  builder.addFieldOffset(6, cameraOffset, 0);
+Game.Engine.Networking.FlatBuffers.NetWorldView.endNetWorldView = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {Game.Engine.Networking.FlatBuffers.NetGroup}
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {Game.Engine.Networking.FlatBuffers.NetGroup=} obj
+ * @returns {Game.Engine.Networking.FlatBuffers.NetGroup}
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.getRootAsNetGroup = function(bb, obj) {
+  return (obj || new Game.Engine.Networking.FlatBuffers.NetGroup).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.prototype.group = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.prototype.type = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.prototype.caption = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.startNetGroup = function(builder) {
+  builder.startObject(3);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} group
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.addGroup = function(builder, group) {
+  builder.addFieldInt32(0, group, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} type
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.addType = function(builder, type) {
+  builder.addFieldInt8(1, type, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} captionOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.addCaption = function(builder, captionOffset) {
+  builder.addFieldOffset(2, captionOffset, 0);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @returns {flatbuffers.Offset}
  */
-Game.Engine.Networking.FlatBuffers.NetWorldView.endNetWorldView = function(builder) {
+Game.Engine.Networking.FlatBuffers.NetGroup.endNetGroup = function(builder) {
   var offset = builder.endObject();
   return offset;
+};
+
+/**
+ * @constructor
+ */
+Game.Engine.Networking.FlatBuffers.Vec2 = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {Game.Engine.Networking.FlatBuffers.Vec2}
+ */
+Game.Engine.Networking.FlatBuffers.Vec2.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.Vec2.prototype.x = function() {
+  return this.bb.readInt16(this.bb_pos);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.Vec2.prototype.y = function() {
+  return this.bb.readInt16(this.bb_pos + 2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} x
+ * @param {number} y
+ * @returns {flatbuffers.Offset}
+ */
+Game.Engine.Networking.FlatBuffers.Vec2.createVec2 = function(builder, x, y) {
+  builder.prep(2, 4);
+  builder.writeInt16(y);
+  builder.writeInt16(x);
+  return builder.offset();
 };
 
 /**
@@ -945,88 +1048,17 @@ Game.Engine.Networking.FlatBuffers.NetBody.prototype.__init = function(i, bb) {
 };
 
 /**
- * @param {flatbuffers.ByteBuffer} bb
- * @param {Game.Engine.Networking.FlatBuffers.NetBody=} obj
- * @returns {Game.Engine.Networking.FlatBuffers.NetBody}
- */
-Game.Engine.Networking.FlatBuffers.NetBody.getRootAsNetBody = function(bb, obj) {
-  return (obj || new Game.Engine.Networking.FlatBuffers.NetBody).__init(bb.readInt32(bb.position()) + bb.position(), bb);
-};
-
-/**
  * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetBody.prototype.id = function() {
-  var offset = this.bb.__offset(this.bb_pos, 4);
-  return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
+  return this.bb.readUint32(this.bb_pos);
 };
 
 /**
- * @returns {flatbuffers.Long}
+ * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetBody.prototype.definitionTime = function() {
-  var offset = this.bb.__offset(this.bb_pos, 6);
-  return offset ? this.bb.readInt64(this.bb_pos + offset) : this.bb.createLong(0, 0);
-};
-
-/**
- * @returns {number}
- */
-Game.Engine.Networking.FlatBuffers.NetBody.prototype.size = function() {
-  var offset = this.bb.__offset(this.bb_pos, 8);
-  return offset ? this.bb.readInt32(this.bb_pos + offset) : -1;
-};
-
-/**
- * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
- */
-Game.Engine.Networking.FlatBuffers.NetBody.prototype.sprite = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 10);
-  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
- * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
- */
-Game.Engine.Networking.FlatBuffers.NetBody.prototype.color = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
- * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
- */
-Game.Engine.Networking.FlatBuffers.NetBody.prototype.caption = function(optionalEncoding) {
-  var offset = this.bb.__offset(this.bb_pos, 14);
-  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
-};
-
-/**
- * @returns {number}
- */
-Game.Engine.Networking.FlatBuffers.NetBody.prototype.originalAngle = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
-  return offset ? this.bb.readFloat32(this.bb_pos + offset) : -999.0;
-};
-
-/**
- * @returns {number}
- */
-Game.Engine.Networking.FlatBuffers.NetBody.prototype.angularVelocity = function() {
-  var offset = this.bb.__offset(this.bb_pos, 18);
-  return offset ? this.bb.readFloat32(this.bb_pos + offset) : -999.0;
-};
-
-/**
- * @param {Game.Engine.Networking.FlatBuffers.Vec2=} obj
- * @returns {Game.Engine.Networking.FlatBuffers.Vec2|null}
- */
-Game.Engine.Networking.FlatBuffers.NetBody.prototype.momentum = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 20);
-  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.Vec2).__init(this.bb_pos + offset, this.bb) : null;
+  return this.bb.readUint32(this.bb_pos + 4);
 };
 
 /**
@@ -1034,104 +1066,93 @@ Game.Engine.Networking.FlatBuffers.NetBody.prototype.momentum = function(obj) {
  * @returns {Game.Engine.Networking.FlatBuffers.Vec2|null}
  */
 Game.Engine.Networking.FlatBuffers.NetBody.prototype.originalPosition = function(obj) {
-  var offset = this.bb.__offset(this.bb_pos, 22);
-  return offset ? (obj || new Game.Engine.Networking.FlatBuffers.Vec2).__init(this.bb_pos + offset, this.bb) : null;
+  return (obj || new Game.Engine.Networking.FlatBuffers.Vec2).__init(this.bb_pos + 8, this.bb);
 };
 
 /**
- * @param {flatbuffers.Builder} builder
+ * @param {Game.Engine.Networking.FlatBuffers.Vec2=} obj
+ * @returns {Game.Engine.Networking.FlatBuffers.Vec2|null}
  */
-Game.Engine.Networking.FlatBuffers.NetBody.startNetBody = function(builder) {
-  builder.startObject(10);
+Game.Engine.Networking.FlatBuffers.NetBody.prototype.velocity = function(obj) {
+  return (obj || new Game.Engine.Networking.FlatBuffers.Vec2).__init(this.bb_pos + 12, this.bb);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetBody.prototype.originalAngle = function() {
+  return this.bb.readInt8(this.bb_pos + 16);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetBody.prototype.angularVelocity = function() {
+  return this.bb.readInt8(this.bb_pos + 17);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetBody.prototype.size = function() {
+  return this.bb.readUint8(this.bb_pos + 18);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetBody.prototype.sprite = function() {
+  return this.bb.readUint8(this.bb_pos + 19);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetBody.prototype.mode = function() {
+  return this.bb.readUint8(this.bb_pos + 20);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetBody.prototype.group = function() {
+  return this.bb.readUint32(this.bb_pos + 24);
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  * @param {number} id
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addId = function(builder, id) {
-  builder.addFieldInt32(0, id, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Long} definitionTime
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addDefinitionTime = function(builder, definitionTime) {
-  builder.addFieldInt64(1, definitionTime, builder.createLong(0, 0));
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} size
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addSize = function(builder, size) {
-  builder.addFieldInt32(2, size, -1);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} spriteOffset
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addSprite = function(builder, spriteOffset) {
-  builder.addFieldOffset(3, spriteOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} colorOffset
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addColor = function(builder, colorOffset) {
-  builder.addFieldOffset(4, colorOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} captionOffset
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addCaption = function(builder, captionOffset) {
-  builder.addFieldOffset(5, captionOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
+ * @param {number} definitionTime
+ * @param {number} originalPosition_x
+ * @param {number} originalPosition_y
+ * @param {number} velocity_x
+ * @param {number} velocity_y
  * @param {number} originalAngle
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addOriginalAngle = function(builder, originalAngle) {
-  builder.addFieldFloat32(6, originalAngle, -999.0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
  * @param {number} angularVelocity
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addAngularVelocity = function(builder, angularVelocity) {
-  builder.addFieldFloat32(7, angularVelocity, -999.0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} momentumOffset
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addMomentum = function(builder, momentumOffset) {
-  builder.addFieldStruct(8, momentumOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} originalPositionOffset
- */
-Game.Engine.Networking.FlatBuffers.NetBody.addOriginalPosition = function(builder, originalPositionOffset) {
-  builder.addFieldStruct(9, originalPositionOffset, 0);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
+ * @param {number} size
+ * @param {number} sprite
+ * @param {number} mode
+ * @param {number} group
  * @returns {flatbuffers.Offset}
  */
-Game.Engine.Networking.FlatBuffers.NetBody.endNetBody = function(builder) {
-  var offset = builder.endObject();
-  return offset;
+Game.Engine.Networking.FlatBuffers.NetBody.createNetBody = function(builder, id, definitionTime, originalPosition_x, originalPosition_y, velocity_x, velocity_y, originalAngle, angularVelocity, size, sprite, mode, group) {
+  builder.prep(4, 28);
+  builder.writeInt32(group);
+  builder.pad(3);
+  builder.writeInt8(mode);
+  builder.writeInt8(sprite);
+  builder.writeInt8(size);
+  builder.writeInt8(angularVelocity);
+  builder.writeInt8(originalAngle);
+  builder.prep(2, 4);
+  builder.writeInt16(velocity_y);
+  builder.writeInt16(velocity_x);
+  builder.prep(2, 4);
+  builder.writeInt16(originalPosition_y);
+  builder.writeInt16(originalPosition_x);
+  builder.writeInt32(definitionTime);
+  builder.writeInt32(id);
+  return builder.offset();
 };
 
 /**
@@ -1200,59 +1221,6 @@ Game.Engine.Networking.FlatBuffers.NetAnnouncement.addText = function(builder, T
 Game.Engine.Networking.FlatBuffers.NetAnnouncement.endNetAnnouncement = function(builder) {
   var offset = builder.endObject();
   return offset;
-};
-
-/**
- * @constructor
- */
-Game.Engine.Networking.FlatBuffers.Vec2 = function() {
-  /**
-   * @type {flatbuffers.ByteBuffer}
-   */
-  this.bb = null;
-
-  /**
-   * @type {number}
-   */
-  this.bb_pos = 0;
-};
-
-/**
- * @param {number} i
- * @param {flatbuffers.ByteBuffer} bb
- * @returns {Game.Engine.Networking.FlatBuffers.Vec2}
- */
-Game.Engine.Networking.FlatBuffers.Vec2.prototype.__init = function(i, bb) {
-  this.bb_pos = i;
-  this.bb = bb;
-  return this;
-};
-
-/**
- * @returns {number}
- */
-Game.Engine.Networking.FlatBuffers.Vec2.prototype.x = function() {
-  return this.bb.readFloat32(this.bb_pos);
-};
-
-/**
- * @returns {number}
- */
-Game.Engine.Networking.FlatBuffers.Vec2.prototype.y = function() {
-  return this.bb.readFloat32(this.bb_pos + 4);
-};
-
-/**
- * @param {flatbuffers.Builder} builder
- * @param {number} x
- * @param {number} y
- * @returns {flatbuffers.Offset}
- */
-Game.Engine.Networking.FlatBuffers.Vec2.createVec2 = function(builder, x, y) {
-  builder.prep(4, 8);
-  builder.writeFloat32(y);
-  builder.writeFloat32(x);
-  return builder.offset();
 };
 
 /**

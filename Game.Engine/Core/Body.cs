@@ -6,8 +6,8 @@
 
     public class Body
     {
-        public int ID { get; set; }
-        public long DefinitionTime { get; set; }
+        public uint ID { get; set; }
+        public uint DefinitionTime { get; set; }
 
         public bool Exists { get; set; }
         public bool IsDirty { get; set; } = true;
