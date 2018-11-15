@@ -68,7 +68,7 @@
 
         public void AddShip()
         {
-            if (!this.Owner.IsAlive)
+            if (!this.Owner.IsAlive || this.PendingDestruction)
                 return;
 
             var random = new Random();
@@ -100,13 +100,13 @@
                     count++;
                 }
 
-                ship.Position = momentum / count;
-                ship.Momentum = position / count;
+                ship.Position = position / count + offset;
+                ship.Momentum = momentum / count;
                 ship.Angle = angle / count;
             }
             else
             {
-                ship.Position = FleetCenter;
+                ship.Position = FleetCenter + offset;
             }
 
             NewShips.Add(ship);

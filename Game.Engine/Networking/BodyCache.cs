@@ -8,10 +8,10 @@
 
     public class BodyCache
     {
-        private readonly Dictionary<long, Bucket> Buckets = new Dictionary<long, Bucket>();
-        private readonly Dictionary<long, object> Groups = new Dictionary<long, object>();
+        private readonly Dictionary<long, BucketBody> Bodies = new Dictionary<long, BucketBody>();
+        private readonly Dictionary<long, BucketGroup> Groups = new Dictionary<long, BucketGroup>();
 
-        public IEnumerable<Bucket> Update(IEnumerable<Body> bodies, uint time, Vector2 windowTopLeft, Vector2 windowBottomRight)
+        public void Update(IEnumerable<Body> bodies, IEnumerable<Group> groups, uint time, Vector2 windowTopLeft, Vector2 windowBottomRight)
         {
             // this should be some more efficient query r-trees or something
             var filtered = bodies.Where(b =>
@@ -24,53 +24,124 @@
             // update cache items and flag missing ones as stale
             UpdateLocalBodies(filtered);
 
+            UpdateLocalGroups(groups);
+
             // project the current bodies and calculate errors
-            foreach (var bucket in Buckets.Values)
+            foreach (var bucket in Bodies.Values)
                 bucket.Project(time);
 
+            foreach (var bucket in Groups.Values)
+                bucket.CalculateError();
+
+        }
+
+        public IEnumerable<BucketBody> BodiesByError()
+        {
             // find the bodies with the largest error
-            return Buckets.Values
+            return Bodies.Values
                 .Where(b => !b.Stale)
                 .Where(b => b.Error > 0)
                 .OrderByDescending(b => b.Error);
         }
 
+        public IEnumerable<BucketGroup> GroupsByError()
+        {
+            // find the bodies with the largest error
+            return Groups.Values
+                .Where(b => !b.Stale)
+                .Where(b => b.Error > 0)
+                .OrderByDescending(b => b.Error);
+        }
+
+        private void UpdateLocalGroups(IEnumerable<Group> groups)
+        {
+            foreach (var bucket in Groups.Values)
+                bucket.Stale = true;
+
+            foreach (var obj in groups)
+            {
+                BucketGroup bucket = null;
+
+                if (Groups.ContainsKey(obj.ID))
+                {
+                    Groups[obj.ID].Stale = false;
+                }
+                else
+                {
+                    bucket = new BucketGroup
+                    {
+                        GroupUpdated = obj,
+                        Stale = false
+                    };
+                    Groups.Add(obj.ID, bucket);
+                }
+            }
+
+
+        }
+
         private void UpdateLocalBodies(IEnumerable<Body> bodies)
         {
-            foreach (var bucket in Buckets.Values)
+            foreach (var bucket in Bodies.Values)
                 bucket.Stale = true;
 
             foreach (var obj in bodies)
             {
-                Bucket bucket = null;
+                BucketBody bucket = null;
 
-                if (Buckets.ContainsKey(obj.ID))
+                if (Bodies.ContainsKey(obj.ID))
                 {
-                    Buckets[obj.ID].Stale = false;
-                    Buckets[obj.ID].BodyUpdated = obj;
+                    Bodies[obj.ID].Stale = false;
+                    Bodies[obj.ID].BodyUpdated = obj;
                 }
                 else
                 {
-                    bucket = new Bucket
+                    bucket = new BucketBody
                     {
                         BodyUpdated = obj,
                         Stale = false
                     };
-                    Buckets.Add(obj.ID, bucket);
+                    Bodies.Add(obj.ID, bucket);
                 }
             }
         }
 
-        public IEnumerable<Bucket> CollectStaleBuckets()
+        public IEnumerable<BucketBody> CollectStaleBuckets()
         {
-            var stale = Buckets.Values.Where(b => b.Stale).ToList();
+            var stale = Bodies.Values.Where(b => b.Stale).ToList();
             foreach (var b in stale)
-                Buckets.Remove(b.BodyUpdated.ID);
+                Bodies.Remove(b.BodyUpdated.ID);
 
             return stale;
         }
 
-        public class Bucket
+        public IEnumerable<BucketGroup> CollectStaleGroups()
+        {
+            var stale = Groups.Values.Where(b => b.Stale).ToList();
+            foreach (var b in stale)
+                Groups.Remove(b.GroupUpdated.ID);
+
+            return stale;
+        }
+
+        public class BucketGroup
+        {
+            public Group GroupUpdated { get; set; }
+            public Group GroupClient { get; set; }
+
+            public bool Stale { get; set; }
+            public float Error { get; set; }
+
+            public void CalculateError()
+            {
+                if (GroupClient == null)
+                    Error = 1;
+                else
+                    Error = 0;
+            }
+        }
+
+        public class BucketBody
         {
             public Body BodyUpdated { get; set; }
             public Body BodyClient { get; set; }

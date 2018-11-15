@@ -79,22 +79,50 @@
                 {
                     var halfViewport = new Vector2(3000, 3000);
 
-                    var updates = BodyCache.Update(
+                    BodyCache.Update(
                         world.Bodies,
+                        world.Groups,
                         world.Time,
                         Vector2.Subtract(followFleet.Position, halfViewport),
                         Vector2.Add(followFleet.Position, halfViewport)
                     );
 
-                    var updatedBuckets = updates.Take(100);
+                    var updates = BodyCache.BodiesByError();
+
+                    var updateBodies = updates.Take(100);
 
                     var newHash = world.Hook.GetHashCode();
 
                     var builder = new FlatBufferBuilder(1);
                     float VELOCITY_SCALE_FACTOR = 10f;
 
-                    NetWorldView.StartUpdatesVector(builder, updatedBuckets.Count());
-                    foreach (var b in updatedBuckets)
+                    var updatedGroups = BodyCache.GroupsByError().ToList();
+
+                    var groupsVector = NetWorldView.CreateGroupsVector(builder,
+                        updatedGroups.Select(b =>
+                        {
+                            var serverGroup = b.GroupUpdated;
+
+                            var caption = builder.CreateString(serverGroup.Caption ?? " ");
+
+                            var group = NetGroup.CreateNetGroup(builder,
+                                group: serverGroup.ID,
+                                type: serverGroup.GroupType,
+                                captionOffset: caption
+                            );
+                            return group;
+                        }).ToArray());
+
+
+                    foreach (var update in updatedGroups)
+                        update.GroupClient = update.GroupUpdated.Clone();
+
+                    var groupDeletesVector = NetWorldView.CreateGroupDeletesVector(builder, BodyCache.CollectStaleGroups().Select(b =>
+                        b.GroupUpdated.ID
+                    ).ToArray());
+
+                    NetWorldView.StartUpdatesVector(builder, updateBodies.Count());
+                    foreach (var b in updateBodies)
                     {
                         var serverBody = b.BodyUpdated;
 
@@ -115,7 +143,7 @@
 
                     var updatesVector = builder.EndVector();
 
-                    foreach (var update in updatedBuckets)
+                    foreach (var update in updateBodies)
                         update.BodyClient = update.BodyUpdated.Clone();
 
                     var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
@@ -147,6 +175,9 @@
 
                     NetWorldView.AddUpdates(builder, updatesVector);
                     NetWorldView.AddDeletes(builder, deletesVector);
+
+                    NetWorldView.AddGroups(builder, groupsVector);
+                    NetWorldView.AddGroupDeletes(builder, groupDeletesVector);
 
                     var worldView = NetWorldView.EndNetWorldView(builder);
 

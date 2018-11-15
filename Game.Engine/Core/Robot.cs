@@ -16,6 +16,7 @@
             return new RobotFleet
             {
                 Owner = this,
+                Caption = this.Name
             };
         }
 

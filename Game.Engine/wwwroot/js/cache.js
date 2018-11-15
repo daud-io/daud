@@ -1,11 +1,12 @@
 ﻿(function () {
     var Cache = function () {
         this.bodies = {};
+        this.groups = {};
         Cache.count = 0;
     }
 
     Cache.prototype = {
-        update: function (updates, deletes, time) {
+        update: function (updates, deletes, groups, groupDeletes, time) {
             var i = 0;
 
             // delete objects that should no longer exist
@@ -15,7 +16,14 @@
                 if (key in this.bodies)
                     Cache.count--;
                 delete this.bodies[key];
-                
+
+            }
+
+            // delete groups that should no longer exist
+            for (i = 0; i < groupDeletes.length; i++) {
+                var deleteKey = groupDeletes[i];
+                var key = 'g-' + deleteKey;
+                delete this.groups[key];
             }
 
             // update objects that should be here
@@ -50,6 +58,14 @@
                 if (!existing)
                     Cache.count++;
             }
+
+            // update groups that should be here
+            for (i = 0; i < groups.length; i++) {
+                var group = groups[i];
+                var existing = this.groups['g-' + group.ID];
+
+                this.groups['g-' + group.ID] = group;
+            }
         },
         foreach: function (action, thisObj) {
 
@@ -58,6 +74,9 @@
                     action.apply(thisObj, [this.bodies[key]]);
                 }
             }
+        },
+        getGroup: function (groupID) {
+            return this.groups[groupID];
         }
     };
 

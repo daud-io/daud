@@ -34,5 +34,10 @@
                 _caption = value;
             }
         }
+
+        public Group Clone()
+        {
+            return this.MemberwiseClone() as Group;
+        }
     }
 }
