@@ -24,7 +24,7 @@
         public long SpawnTime;
         public const int InvulnerableTime = 2000;
 
-        public string ShipSprite { get; set; }
+        public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
         public bool PendingDestruction { get; set; } = false;
         private bool IsSpawning = false;
@@ -43,17 +43,13 @@
                 PendingDestruction = false;
             }
 
-            if (IsSpawning)
-            {
-
-            }
             if (IsSpawning && !IsAlive && Fleet == null)
             {
                 IsSpawning = false;
 
                 IsAlive = true;
 
-                Fleet = CreateFleet(Name, Color);
+                Fleet = CreateFleet(Color);
 
                 Fleet.Init(World);
 
@@ -111,7 +107,6 @@
 
             if (this.IsControlNew)
             {
-                Fleet.Angle = ControlInput.Angle;
                 if (float.IsNaN(ControlInput.Position.X))
                     ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
@@ -132,25 +127,22 @@
 
                 foreach (var ship in Fleet.Ships)
                     ship.Sprite = flash && IsInvulnerable
-                        ? "ship_flash"
-                        : Fleet.Owner?.ShipSprite;
+                        ? Sprites.ship_flash
+                        : Fleet.Owner?.ShipSprite ?? Sprites.ship_gray;
 
             }
 
         }
 
-        protected virtual Fleet CreateFleet(string name, string color)
+        protected virtual Fleet CreateFleet(string color)
         {
             return new Fleet
             {
-                Owner = this,
-                Position = World.RandomPosition(),
-                Caption = name,
-                Color = color
+                Owner = this
             };
         }
 
-        public void Spawn(string name, string sprite, string color)
+        public void Spawn(string name, Sprites sprite, string color)
         {
             if (name != null
                 && name.Length > 15)

@@ -2,7 +2,7 @@
 {
     public interface ICollide
     {
-        bool IsCollision(ProjectedBody projectedBody);
-        void CollisionExecute(ProjectedBody projectedBody);
+        bool IsCollision(Body projectedBody);
+        void CollisionExecute(Body projectedBody);
     }
 }

@@ -40,6 +40,7 @@
         };
 
         Renderer.spriteIndices = [
+            "none",
             "ship0",
             "ship_green",
             "ship_gray",

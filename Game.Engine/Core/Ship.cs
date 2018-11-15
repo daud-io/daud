@@ -62,7 +62,7 @@
 
         }
 
-        public virtual void CollisionExecute(ProjectedBody projectedBody)
+        public virtual void CollisionExecute(Body projectedBody)
         {
             var bullet = projectedBody as Bullet;
             var fleet = bullet?.OwnedByFleet;
@@ -78,7 +78,7 @@
             }
         }
 
-        public bool IsCollision(ProjectedBody projectedBody)
+        public bool IsCollision(Body projectedBody)
         {
             if (projectedBody is Bullet bullet)
             {

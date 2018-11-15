@@ -12,7 +12,7 @@
         {
             var bot = new Robot()
             {
-                ShipSprite = "ship0",
+                ShipSprite = Sprites.ship0,
                 Name = $"Daudelin #{this.Robots.Count}",
                 ControlInput = new ControlInput()
             };

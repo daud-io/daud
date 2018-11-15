@@ -11,16 +11,12 @@
         {
         }
 
-        protected override Fleet CreateFleet(string name, string color)
+        protected override Fleet CreateFleet(string color)
         {
             return new RobotFleet
             {
                 Owner = this,
-                Position = World.RandomPosition(),
-                Caption = name,
-                Color = color
             };
-
         }
 
         public override void CreateDestroy()
@@ -39,23 +35,18 @@
 
             var player =
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
-                    .Where(p => !p.Fleet?.Caption?.StartsWith("Daud") ?? true)
                     .Where(p => p.IsAlive)
                     .Where(p => (p.Fleet?.Ships?.Count() ?? 0) > 0)
-                    .OrderBy(p => Vector2.Distance(p.Fleet.Position, this.Fleet.Position))
+                    .OrderBy(p => Vector2.Distance(p.Fleet.FleetCenter, this.Fleet.FleetCenter))
                     .FirstOrDefault();
 
             if (player != null)
             { 
-                var delta = Vector2.Subtract(player.Fleet.Position, this.Fleet.Position);
+                var delta = Vector2.Subtract(player.Fleet.FleetCenter, this.Fleet.FleetCenter);
 
                 var trueAngle = (float)Math.Atan2(delta.Y, delta.X);
                 var quantized = (int)(trueAngle * 100) / 100f;
-                this.ControlInput.Angle = quantized;
 
-                if (float.IsNaN(delta.X))
-                {
-                }
                 this.ControlInput.Position = delta;
 
                 this.ControlInput.ShootRequested = true;
@@ -64,12 +55,8 @@
             }
             else
             {
-                this.ControlInput.Angle = (float)Math.Atan2(-Fleet.Position.Y, -Fleet.Position.X);
-                this.ControlInput.Position = new Vector2(MathF.Cos(this.ControlInput.Angle), MathF.Sin(this.ControlInput.Angle));
-                if (float.IsNaN(this.ControlInput.Position.X))
-                {
-                }
-
+                var angle = (float)Math.Atan2(-Fleet.FleetCenter.Y, -Fleet.FleetCenter.X);
+                this.ControlInput.Position = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
                 this.SetControl(ControlInput);
             }
 

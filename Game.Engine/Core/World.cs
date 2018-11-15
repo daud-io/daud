@@ -11,7 +11,7 @@
     public class World : IDisposable
     {
         public uint Time { get; private set; } = 0;
-        private long OffsetTicks = 0;
+        private readonly long OffsetTicks = 0;
 
         public Hook Hook { get; set; } = null;
 
@@ -19,10 +19,9 @@
 
         private readonly List<IDisposable> Disposables = new List<IDisposable>();
 
-
-        private RBush<ProjectedBody> RTree = new RBush<ProjectedBody>();
-
-        public List<ProjectedBody> Bodies = new List<ProjectedBody>();
+        private RBush<Body> RTree = new RBush<Body>();
+        public List<Body> Bodies = new List<Body>();
+        public List<Group> Groups = new List<Group>();
         public List<IActor> Actors = new List<IActor>();
 
         private long TimeLeaderboardRecalc = 0;
@@ -88,11 +87,11 @@
 
                 var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
                 if (elapsed > Hook.StepTime)
-                    Console.WriteLine("100% processing time warning");
+                    Console.WriteLine("**** 100% processing time warning");
                 else if (elapsed > Hook.StepTime * 0.8f)
-                    Console.WriteLine("80% processing time warning");
+                    Console.WriteLine("*** 80% processing time warning");
                 else if (elapsed > Hook.StepTime * 0.5f)
-                    Console.WriteLine("50% processing time warning");
+                    Console.WriteLine("** 50% processing time warning");
             }
             Processing = false;
         }
@@ -114,7 +113,7 @@
                     {
                         Entries = Player.GetWorldPlayers(this)
                             .Where(p => p.IsAlive)
-                            .GroupBy(p => p.Fleet.Color)
+                            .GroupBy(p => "white")
                             .Select(g => new Leaderboard.Entry
                             {
                                 Name = g.Key,
@@ -138,8 +137,8 @@
                             {
                                 Name = p.Name,
                                 Score = p.Score,
-                                Color = p.Fleet?.Color ?? "white",
-                                Position = p.Fleet.Position
+                                Color = "white",
+                                Position = p.Fleet.FleetCenter
                             })
                                 .OrderByDescending(e => e.Score)
                                 .Take(10)
@@ -159,7 +158,7 @@
             }
         }
 
-        private void WrapAroundWorld(ProjectedBody body)
+        private void WrapAroundWorld(Body body)
         {
             var position = body.Position;
 
@@ -197,31 +196,17 @@
             return _id++;
         }
 
-        public IEnumerable<ProjectedBody> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)
+        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)
         {
             if (maximumDistance == 0)
                 return this.Bodies;
             else
-            {
                 return RTree.Search(new Envelope(
                     point.X - maximumDistance/2,
                     point.Y - maximumDistance/2,
                     point.X + maximumDistance/2,
                     point.Y + maximumDistance/2
                 ));
-
-                if (offsetSize)
-                    return this.Bodies
-                        .Where(b => b != null)
-                        .Where(b => (Vector2.Distance(b.Position, point) - b.Size) < maximumDistance)
-                        .ToList();
-                else
-                    return this.Bodies
-                        .Where(b => b != null)
-                        .Where(b => Vector2.Distance(b.Position, point) < maximumDistance)
-                        .ToList();
-
-            }
         }
 
         public Vector2 RandomPosition()

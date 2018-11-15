@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Networking
 {
+    using Game.Engine.Core;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -8,8 +9,9 @@
     public class BodyCache
     {
         private readonly Dictionary<long, Bucket> Buckets = new Dictionary<long, Bucket>();
+        private readonly Dictionary<long, object> Groups = new Dictionary<long, object>();
 
-        public IEnumerable<Bucket> Update(IEnumerable<ProjectedBody> bodies, uint time, Vector2 windowTopLeft, Vector2 windowBottomRight)
+        public IEnumerable<Bucket> Update(IEnumerable<Body> bodies, uint time, Vector2 windowTopLeft, Vector2 windowBottomRight)
         {
             // this should be some more efficient query r-trees or something
             var filtered = bodies.Where(b =>
@@ -33,7 +35,7 @@
                 .OrderByDescending(b => b.Error);
         }
 
-        private void UpdateLocalBodies(IEnumerable<ProjectedBody> bodies)
+        private void UpdateLocalBodies(IEnumerable<Body> bodies)
         {
             foreach (var bucket in Buckets.Values)
                 bucket.Stale = true;
@@ -70,8 +72,8 @@
 
         public class Bucket
         {
-            public ProjectedBody BodyUpdated { get; set; }
-            public ProjectedBody BodyClient { get; set; }
+            public Body BodyUpdated { get; set; }
+            public Body BodyClient { get; set; }
 
             public float Error { get; set; }
             public bool Stale { get; set; }
@@ -79,7 +81,6 @@
             private const int DISTANCE_THRESHOLD = 2;
             private const float WEIGHT_DISTANCE = 1;
             private const float WEIGHT_ANGLE = 10;
-            private const float WEIGHT_CAPTION = 1;
             private const float WEIGHT_SPRITE = 1;
             private const float WEIGHT_MISSING = float.MaxValue;
 
@@ -98,7 +99,6 @@
                                 ? WEIGHT_DISTANCE * distance
                                 : 0
                             + WEIGHT_ANGLE * Math.Abs(BodyClient.Angle - BodyUpdated.Angle)
-                            + WEIGHT_CAPTION * (BodyClient.Caption != BodyUpdated.Caption ? 1 : 0)
                             + WEIGHT_SPRITE * (BodyClient.Sprite != BodyUpdated.Sprite ? 1 : 0);
                     }
                 }

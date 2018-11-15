@@ -1,16 +1,23 @@
 ﻿namespace Game.Engine.Core
 {
-    using Newtonsoft.Json;
+    using RBush;
     using System;
     using System.Numerics;
 
-    public class Body
+    public class Body : ISpatialData
     {
+        public long ProjectedTime { get; set; }
+        private Vector2 _position { get; set; } = new Vector2(0, 0);
+
+        public Envelope Envelope;
+
         public uint ID { get; set; }
         public uint DefinitionTime { get; set; }
+        public Group Group { get; set; }
 
         public bool Exists { get; set; }
         public bool IsDirty { get; set; } = true;
+
 
         private int _size { get; set; }
         public virtual int Size
@@ -26,8 +33,8 @@
             }
         }
 
-        private string _sprite { get; set; }
-        public virtual string Sprite
+        private Sprites _sprite { get; set; }
+        public virtual Sprites Sprite
         {
             get
             {
@@ -51,20 +58,6 @@
             {
                 IsDirty = IsDirty || _color != value;
                 _color = value;
-            }
-        }
-
-        private string _caption { get; set; }
-        public virtual string Caption
-        {
-            get
-            {
-                return _caption;
-            }
-            set
-            {
-                IsDirty = IsDirty || _caption != value;
-                _caption = value;
             }
         }
 
@@ -96,7 +89,7 @@
             }
         }
 
-        private Vector2 _momentum  = new Vector2(0, 0);
+        private Vector2 _momentum = new Vector2(0, 0);
         public virtual Vector2 Momentum
         {
             get
@@ -124,6 +117,68 @@
                 IsDirty = IsDirty || _originalPosition != value;
                 _originalPosition = value;
             }
+        }
+
+        public virtual Vector2 Position
+        {
+            set
+            {
+                if (_position != value)
+                {
+                    if (float.IsNaN(value.X))
+                        throw new Exception("Invalid position");
+                    _position = value;
+                    IsDirty = true;
+                }
+            }
+            get
+            {
+                return _position;
+            }
+        }
+
+        private float _angle { get; set; } = 0;
+        public virtual float Angle
+        {
+            set
+            {
+                if (_angle != value)
+                {
+                    if (float.IsNaN(value))
+                        throw new Exception("Invalid angle");
+
+                    _angle = value;
+                    IsDirty = true;
+                }
+            }
+            get
+            {
+                return _angle;
+            }
+        }
+
+        ref readonly Envelope ISpatialData.Envelope => ref this.Envelope;
+
+        public void Project(uint time)
+        {
+            ProjectedTime = time;
+            if (DefinitionTime == 0)
+                DefinitionTime = time;
+
+            var timeDelta = (time - this.DefinitionTime);
+
+            _position = Vector2.Add(OriginalPosition, Vector2.Multiply(Momentum, timeDelta));
+            if (float.IsNaN(_position.X))
+                throw new Exception("Invalid position");
+
+            _angle = OriginalAngle + timeDelta * AngularVelocity;
+
+            Envelope = new Envelope(_position.X - Size/2, _position.Y - Size / 2, _position.X + Size / 2, _position.Y + Size / 2);
+        }
+
+        public Body Clone()
+        {
+            return this.MemberwiseClone() as Body;
         }
     }
 }
