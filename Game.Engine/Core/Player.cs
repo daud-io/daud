@@ -55,7 +55,7 @@
                 Fleet.Init(World);
 
                 IsInvulnerable = true;
-                SpawnTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                SpawnTime = World.Time;
             }
         }
 
@@ -121,7 +121,7 @@
             if (IsInvulnerable)
             {
 
-                if (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond > SpawnTime + InvulnerableTime)
+                if (World.Time > SpawnTime + InvulnerableTime)
                     IsInvulnerable = false;
 
                 bool flash = (World.Time - this.SpawnTime) % 300 > 200;
