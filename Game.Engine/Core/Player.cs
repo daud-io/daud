@@ -138,7 +138,8 @@
         {
             return new Fleet
             {
-                Owner = this
+                Owner = this,
+                Caption = this.Name
             };
         }
 

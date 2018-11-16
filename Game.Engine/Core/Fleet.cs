@@ -82,7 +82,7 @@
             var ship = new Ship()
             {
                 Fleet = this,
-                Sprite = this.Owner.ShipSprite,
+                Sprite = this.Owner.ShipSprite
             };
 
             if (this.Ships.Any())
@@ -158,6 +158,7 @@
                     ship.Sprite = Sprites.ship_gray;
                     ship.Color = "gray";
                     ship.Abandoned = true;
+                    ship.Group = null;
                     ship.ThrustAmount = 0;
                     Ships.Remove(ship);
                 }

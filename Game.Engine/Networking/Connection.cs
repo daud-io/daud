@@ -138,7 +138,7 @@
                             Size: (byte)(serverBody.Size / 5),
                             Sprite: (byte)serverBody.Sprite,
                             Mode: 0,
-                            Group: 0);
+                            Group: serverBody.Group?.ID ?? 0);
                     }
 
                     var updatesVector = builder.EndVector();

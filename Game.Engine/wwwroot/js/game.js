@@ -36,7 +36,7 @@
         var momentum = body.velocity();
 
         var group = cache.getGroup(body.group());
-        var caption = (group && group.caption()) || '';
+        var groupID = (group && group.ID) || 0;
 
         var newBody = {
             ID: body.id(),
@@ -44,7 +44,7 @@
             Size: body.size() * 5,
             Sprite: Game.Renderer.spriteIndices[body.sprite()], //body.sprite(),
             Color: 'red', //body.color(),
-            Caption: caption,
+            Group: groupID,
             OriginalAngle: body.originalAngle() / 127 * Math.PI,
             AngularVelocity: body.angularVelocity() / 127  * Math.PI / 10,
             Momentum: {
@@ -114,14 +114,6 @@
         if (serverTimeOffset === false)
             serverTimeOffset = thisOffset;
 
-        var updatesLength = newView.updatesLength();
-        var updates = [];
-        for (var u = 0; u < updatesLength; u++) {
-            var update = newView.updates(u);
-
-            updates.push(bodyFromServer(cache, update));
-        }
-
 
         var groupsLength = newView.groupsLength();
         var groups = [];
@@ -130,6 +122,16 @@
 
             groups.push(groupFromServer(cache, group));
         }
+
+
+        var updatesLength = newView.updatesLength();
+        var updates = [];
+        for (var u = 0; u < updatesLength; u++) {
+            var update = newView.updates(u);
+
+            updates.push(bodyFromServer(cache, update));
+        }
+
 
         updateCounter += updatesLength;
 

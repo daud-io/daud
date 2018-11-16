@@ -32,6 +32,8 @@
             SizeMaximum = 90;
             Health = MaxHealth;
             Drag = World.Hook.Drag;
+
+            this.Group = this.Fleet;
         }
 
         public override void Destroy()

@@ -76,7 +76,7 @@
             }
         },
         getGroup: function (groupID) {
-            return this.groups[groupID];
+            return this.groups['g-' + groupID];
         }
     };
 
