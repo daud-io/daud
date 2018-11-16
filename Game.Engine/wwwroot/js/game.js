@@ -194,8 +194,14 @@
 
 
     var sizeCanvas = function () {
-        var width = window.innerWidth;
-        var height = width * 9 / 16;
+        var width, height
+        if (window.innerWidth * 9 / 16 < window.innerHeight) {
+            width = window.innerWidth;
+            height = width * 9 / 16;
+        } else {
+            height = window.innerHeight;
+            width = height * 16 / 9;
+        }
 
         canvas.width = width;
         canvas.height = height;
