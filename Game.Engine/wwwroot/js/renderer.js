@@ -195,17 +195,21 @@
 
                 for (var i = 0; i < groupsUsed.length; i++) {
                     var group = groupsUsed[i];
-                    var pt = { X: 0, Y: 0 };
 
-                    for (var x = 0; x < group.points.length; x++) {
-                        pt.X += group.points[x].X;
-                        pt.Y += group.points[x].Y;
+                    if (group && group.group) {
+                        var pt = { X: 0, Y: 0 };
+
+                        for (var x = 0; x < group.points.length; x++) {
+                            pt.X += group.points[x].X;
+                            pt.Y += group.points[x].Y;
+                        }
+
+                        pt.X /= group.points.length;
+                        pt.Y /= group.points.length;
+                    
+                        ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                     }
 
-                    pt.X /= group.points.length;
-                    pt.Y /= group.points.length;
-
-                    ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                 }
 
                 cache.foreach(function (body) {

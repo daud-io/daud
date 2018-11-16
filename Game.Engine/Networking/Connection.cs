@@ -298,7 +298,31 @@
                 case AllMessages.NetSpawn:
                     var spawn = quantum.Message<NetSpawn>().Value;
 
-                    player.Spawn(spawn.Name, Sprites.ship_red, spawn.Color);
+                    Sprites shipSprite = Sprites.ship_red;
+
+                    switch (spawn.Color)
+                    {
+                        case "green":
+                            shipSprite = Sprites.ship_green;
+                            break;
+                        case "orange":
+                            shipSprite = Sprites.ship_orange;
+                            break;
+                        case "pink":
+                            shipSprite = Sprites.ship_pink;
+                            break;
+                        case "red":
+                            shipSprite = Sprites.ship_red;
+                            break;
+                        case "cyan":
+                            shipSprite = Sprites.ship_cyan;
+                            break;
+                        case "yellow":
+                            shipSprite = Sprites.ship_yellow;
+                            break;
+                    }
+
+                    player.Spawn(spawn.Name, shipSprite, spawn.Color);
 
                     break;
                 case AllMessages.NetControlInput:
