@@ -113,7 +113,7 @@
                     {
                         Entries = Player.GetWorldPlayers(this)
                             .Where(p => p.IsAlive)
-                            .GroupBy(p => "white")
+                            .GroupBy(p => p.Color)
                             .Select(g => new Leaderboard.Entry
                             {
                                 Name = g.Key,
@@ -137,7 +137,7 @@
                             {
                                 Name = p.Name,
                                 Score = p.Score,
-                                Color = "white",
+                                Color = p.Color,
                                 Position = p.Fleet.FleetCenter
                             })
                                 .OrderByDescending(e => e.Score)
