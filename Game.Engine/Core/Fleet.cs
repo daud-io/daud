@@ -36,6 +36,7 @@
         public Sprites BulletSprite = Sprites.bullet;
 
         public Vector2 FleetCenter = Vector2.Zero;
+        public Vector2 FleetMomentum = Vector2.Zero;
 
         private void Die(Player player)
         {
@@ -165,6 +166,7 @@
             }
 
             FleetCenter = Flocking.FleetCenterNaive(this.Ships);
+            FleetMomentum = Flocking.FleetMomentum(this.Ships);
 
             foreach (var ship in Ships)
             {
@@ -185,9 +187,6 @@
                 if (isBoostInitial)
                     ship.Momentum += Vector2.Normalize(ship.Momentum) * World.Hook.BoostSpeed;
             }
-
-            var fleetCenter = Flocking.FleetCenterNaive(Ships, null);
-            var cameraVector = fleetCenter - FleetCenter;
 
             if (isShooting)
             {

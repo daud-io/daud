@@ -57,25 +57,46 @@
         {
             if (player != null)
             {
-                Body followFleet = player?.Fleet?.Ships?.FirstOrDefault();
+                // default to player
+                var followFleet = player?.Fleet;
 
+                // if the player doesn't have a fleet alive
                 if (followFleet == null)
+                {
+                    // find someone else to watch
                     followFleet = Player.GetWorldPlayers(world)
                         .ToList()
                         .Where(p => p.IsAlive)
                         .OrderByDescending(p => p.Score * 10000 + (10000 - p.Fleet.ID))
                         .FirstOrDefault()
-                        ?.Fleet
-                        ?.Ships
-                        ?.FirstOrDefault();
+                        ?.Fleet;
+                }
 
-                if (followFleet == null)
-                    followFleet = player?.World.Bodies.OfType<Ship>().FirstOrDefault();
+                Body followBody = null;
 
-                if (followFleet == null)
-                    followFleet = player?.World.Bodies.FirstOrDefault();
-
+                // if we're watching a fleet, watch the center of their fleet
                 if (followFleet != null)
+                {
+                    var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
+                    
+                    followBody = new Body
+                    {
+                        DefinitionTime = world.Time,
+                        OriginalPosition = center,
+                        Position = center,
+                        Momentum = followFleet.FleetMomentum
+                    };
+                }
+
+                // if we haven't found anything to watch yet, watch the first ship we find
+                if (followBody == null)
+                    followBody = player?.World.Bodies.OfType<Ship>().FirstOrDefault();
+
+                // if we haven't found anything to watch yet, watch anything
+                if (followBody == null)
+                    followBody = player?.World.Bodies.FirstOrDefault();
+
+                if (followBody != null)
                 {
                     var halfViewport = new Vector2(3000, 3000);
 
@@ -83,8 +104,8 @@
                         world.Bodies,
                         world.Groups,
                         world.Time,
-                        Vector2.Subtract(followFleet.Position, halfViewport),
-                        Vector2.Add(followFleet.Position, halfViewport)
+                        Vector2.Subtract(followBody.Position, halfViewport),
+                        Vector2.Add(followBody.Position, halfViewport)
                     );
 
                     var updates = BodyCache.BodiesByError();
@@ -156,12 +177,12 @@
                     var cameraBody = NetBody.CreateNetBody(
                         builder,
                         Id: 0,
-                        DefinitionTime: followFleet?.DefinitionTime ?? 0,
-                        originalPosition_X: (short)(followFleet?.OriginalPosition.X ?? 0),
-                        originalPosition_Y: (short)(followFleet?.OriginalPosition.Y ?? 0),
-                        velocity_X: (short)(followFleet?.Momentum.X * VELOCITY_SCALE_FACTOR ?? 0),
-                        velocity_Y: (short)(followFleet?.Momentum.Y * VELOCITY_SCALE_FACTOR ?? 0),
-                        OriginalAngle: (sbyte)(followFleet?.OriginalAngle / MathF.PI / 127 ?? 0),
+                        DefinitionTime: followBody?.DefinitionTime ?? 0,
+                        originalPosition_X: (short)(followBody?.OriginalPosition.X ?? 0),
+                        originalPosition_Y: (short)(followBody?.OriginalPosition.Y ?? 0),
+                        velocity_X: (short)(followBody?.Momentum.X * VELOCITY_SCALE_FACTOR ?? 0),
+                        velocity_Y: (short)(followBody?.Momentum.Y * VELOCITY_SCALE_FACTOR ?? 0),
+                        OriginalAngle: (sbyte)(followBody?.OriginalAngle / MathF.PI / 127 ?? 0),
                         AngularVelocity: 0,
                         Size: 0,
                         Sprite: 0,

@@ -10,11 +10,31 @@
         public static Vector2 FleetCenterNaive(IEnumerable<Ship> ships, Ship except = null)
         {
             Vector2 accumlator = Vector2.Zero;
-
+            int count = 0;
             foreach (var ship in ships.Where(s => s != except))
+            {
                 accumlator += ship.Position;
+                count++;
+            }
 
-            accumlator /= ships.Count();
+            if (count > 0)
+                accumlator /= count;
+
+            return accumlator;
+        }
+
+        public static Vector2 FleetMomentum(IEnumerable<Ship> ships, Ship except = null)
+        {
+            Vector2 accumlator = Vector2.Zero;
+            int count = 0;
+            foreach (var ship in ships.Where(s => s != except))
+            {
+                accumlator += ship.Momentum;
+                count++;
+            }
+
+            if (count > 0)
+                accumlator /= count;
 
             return accumlator;
         }
