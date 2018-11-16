@@ -12,7 +12,8 @@
 
         private void AddObstacle()
         {
-            var obstacle = new Obstacle(World);
+            var obstacle = new Obstacle();
+            obstacle.Init(World);
             this.Obstacles.Add(obstacle);
         }
 
@@ -26,6 +27,7 @@
         private void AddPickup()
         {
             var Pickup = new Pickup(World);
+            Pickup.Init(World);
             this.Pickups.Add(Pickup);
         }
 

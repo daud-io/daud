@@ -48,17 +48,14 @@
             OriginalAngle: body.originalAngle() / 127 * Math.PI,
             AngularVelocity: body.angularVelocity() / 127  * Math.PI / 10,
             Momentum: {
-                X: momentum.x(),
-                Y: momentum.y()
+                X: momentum.x() / 10,
+                Y: momentum.y() / 10
             },
             OriginalPosition: {
                 X: originalPosition.x(),
                 Y: originalPosition.y()
             }
         };
-
-        newBody.Momentum.X /= 10;
-        newBody.Momentum.Y /= 10;
 
         return newBody;
     };

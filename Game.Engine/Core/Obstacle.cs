@@ -5,22 +5,6 @@
 
     public class Obstacle : ActorBody, ICollide
     {
-        public Obstacle(World world)
-        {
-            this.Init(world);
-
-            var r = new Random();
-
-            Position = World.RandomPosition();
-            Momentum = new Vector2(
-                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
-                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
-            );
-            Size = r.Next(300, World.Hook.ObstacleMaxSize);
-            Sprite = Sprites.obstacle;
-            Color = "rgba(128,128,128,.2)";
-        }
-
         public void CollisionExecute(Body projectedBody)
         {
         }
@@ -31,8 +15,26 @@
                 < (projectedBody.Size + this.Size);
         }
 
+        public override void Init(World world)
+        {
+
+            World = world;
+            var r = new Random();
+            Position = World.RandomPosition();
+            Momentum = new Vector2(
+                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
+                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
+            );
+            Size = r.Next(300, World.Hook.ObstacleMaxSize);
+            Sprite = Sprites.obstacle;
+            Color = "rgba(128,128,128,.2)";
+            base.Init(world);
+        }
+
         public override void Think()
         {
+            base.Think();
+
             if (World.DistanceOutOfBounds(Position) > 0)
             {
                 var speed = Momentum.Length();

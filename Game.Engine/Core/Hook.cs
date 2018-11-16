@@ -33,7 +33,7 @@
                     BotPerXPoints = 500,
                     BotBase = 1,
                     StepTime = 40,
-                    Obstacles = 6,
+                    Obstacles = 0,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 600,
                     TeamMode = false,
@@ -83,7 +83,7 @@
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
         public int Obstacles { get; set; }
-        public int Pickups { get; set; } = 5;
+        public int Pickups { get; set; } = 0;
         public int Fishes { get; set; } = 100;
 
         public float ObstacleMaxMomentum { get; set; }
