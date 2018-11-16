@@ -207,10 +207,13 @@ public struct NetWorldView : IFlatbufferObject
   public ArraySegment<byte>? GetDeletesBytes() { return __p.__vector_as_arraysegment(12); }
   public NetGroup? Groups(int j) { int o = __p.__offset(14); return o != 0 ? (NetGroup?)(new NetGroup()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int GroupsLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public NetAnnouncement? Announcements(int j) { int o = __p.__offset(16); return o != 0 ? (NetAnnouncement?)(new NetAnnouncement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int AnnouncementsLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint GroupDeletes(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int GroupDeletesLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public ArraySegment<byte>? GetGroupDeletesBytes() { return __p.__vector_as_arraysegment(16); }
+  public NetAnnouncement? Announcements(int j) { int o = __p.__offset(18); return o != 0 ? (NetAnnouncement?)(new NetAnnouncement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int AnnouncementsLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
 
-  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(7); }
+  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(8); }
   public static void AddTime(FlatBufferBuilder builder, uint time) { builder.AddUint(0, time, 0); }
   public static void AddCamera(FlatBufferBuilder builder, Offset<NetBody> cameraOffset) { builder.AddStruct(1, cameraOffset.Value, 0); }
   public static void AddIsAlive(FlatBufferBuilder builder, bool isAlive) { builder.AddBool(2, isAlive, true); }
@@ -222,7 +225,10 @@ public struct NetWorldView : IFlatbufferObject
   public static void AddGroups(FlatBufferBuilder builder, VectorOffset groupsOffset) { builder.AddOffset(5, groupsOffset.Value, 0); }
   public static VectorOffset CreateGroupsVector(FlatBufferBuilder builder, Offset<NetGroup>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartGroupsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddAnnouncements(FlatBufferBuilder builder, VectorOffset announcementsOffset) { builder.AddOffset(6, announcementsOffset.Value, 0); }
+  public static void AddGroupDeletes(FlatBufferBuilder builder, VectorOffset groupDeletesOffset) { builder.AddOffset(6, groupDeletesOffset.Value, 0); }
+  public static VectorOffset CreateGroupDeletesVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static void StartGroupDeletesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddAnnouncements(FlatBufferBuilder builder, VectorOffset announcementsOffset) { builder.AddOffset(7, announcementsOffset.Value, 0); }
   public static VectorOffset CreateAnnouncementsVector(FlatBufferBuilder builder, Offset<NetAnnouncement>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartAnnouncementsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static Offset<NetWorldView> EndNetWorldView(FlatBufferBuilder builder) {

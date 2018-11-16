@@ -57,15 +57,17 @@
         {
             if (player != null)
             {
-                ProjectedBody followFleet = player?.Fleet;
+                Body followFleet = player?.Fleet?.Ships?.FirstOrDefault();
 
                 if (followFleet == null)
                     followFleet = Player.GetWorldPlayers(world)
                         .ToList()
                         .Where(p => p.IsAlive)
-                        .OrderByDescending(p => p.Score * 10000 + (10000-p.Fleet.ID))
+                        .OrderByDescending(p => p.Score * 10000 + (10000 - p.Fleet.ID))
                         .FirstOrDefault()
-                        ?.Fleet;
+                        ?.Fleet
+                        ?.Ships
+                        ?.FirstOrDefault();
 
                 if (followFleet == null)
                     followFleet = player?.World.Bodies.OfType<Ship>().FirstOrDefault();
@@ -77,66 +79,71 @@
                 {
                     var halfViewport = new Vector2(3000, 3000);
 
-                    var updates = BodyCache.Update(
+                    BodyCache.Update(
                         world.Bodies,
+                        world.Groups,
                         world.Time,
                         Vector2.Subtract(followFleet.Position, halfViewport),
                         Vector2.Add(followFleet.Position, halfViewport)
                     );
 
-                    var updatedBuckets = updates.Take(100);
-                    //var updatedBuckets = updates;
+                    var updates = BodyCache.BodiesByError();
 
-                    var groups = updatedBuckets.GroupBy(b => b.BodyUpdated.Sprite, b => b).OrderBy(g => g.Key);
-                    /*var report = "";
-
-                    foreach (var group in groups)
-                        report += $"{group.Key} {group.Count()}\n";
-
-                    Console.WriteLine(report);*/
+                    var updateBodies = updates.Take(100);
 
                     var newHash = world.Hook.GetHashCode();
 
                     var builder = new FlatBufferBuilder(1);
                     float VELOCITY_SCALE_FACTOR = 10f;
 
-                    NetWorldView.StartUpdatesVector(builder, updatedBuckets.Count());
-                    foreach (var b in updatedBuckets)
+                    var updatedGroups = BodyCache.GroupsByError().ToList();
+
+                    var groupsVector = NetWorldView.CreateGroupsVector(builder,
+                        updatedGroups.Select(b =>
+                        {
+                            var serverGroup = b.GroupUpdated;
+
+                            var caption = builder.CreateString(serverGroup.Caption ?? " ");
+
+                            var group = NetGroup.CreateNetGroup(builder,
+                                group: serverGroup.ID,
+                                type: serverGroup.GroupType,
+                                captionOffset: caption
+                            );
+                            return group;
+                        }).ToArray());
+
+
+                    foreach (var update in updatedGroups)
+                        update.GroupClient = update.GroupUpdated.Clone();
+
+                    var groupDeletesVector = NetWorldView.CreateGroupDeletesVector(builder, BodyCache.CollectStaleGroups().Select(b =>
+                        b.GroupUpdated.ID
+                    ).ToArray());
+
+                    NetWorldView.StartUpdatesVector(builder, updateBodies.Count());
+                    foreach (var b in updateBodies)
                     {
-                        var s = b.BodyUpdated;
-                        var c = b.BodyClient;
+                        var serverBody = b.BodyUpdated;
 
-                        /*StringOffset stringSprite = new StringOffset();
-                        StringOffset stringColor = new StringOffset();
-                        StringOffset stringCaption = new StringOffset();
-
-                        if (s.Sprite != c?.Sprite)
-                            stringSprite = builder.CreateString(s.Sprite ?? string.Empty);
-                        if (s.Color != c?.Color)
-                            stringColor = builder.CreateString(s.Color ?? string.Empty);
-                        if (s.Caption != c?.Caption)
-                            stringCaption = builder.CreateString(s.Caption ?? string.Empty);
-                            */
-                        
                         var body = NetBody.CreateNetBody(builder,
-                            Id: s.ID,
-                            DefinitionTime: s.DefinitionTime,
-                            originalPosition_X: (short)s.OriginalPosition.X,
-                            originalPosition_Y: (short)s.OriginalPosition.Y,
-                            velocity_X: (short)(s.Momentum.X* VELOCITY_SCALE_FACTOR),
-                            velocity_Y: (short)(s.Momentum.Y* VELOCITY_SCALE_FACTOR),
-                            OriginalAngle: (sbyte)(s.OriginalAngle / MathF.PI * 127),
-                            AngularVelocity: (sbyte)(s.AngularVelocity * VELOCITY_SCALE_FACTOR / MathF.PI * 127),
-                            Size: (byte)(s.Size / 5),
-                            Sprite: Sprites.SpriteIndex(s.Sprite),
+                            Id: serverBody.ID,
+                            DefinitionTime: serverBody.DefinitionTime,
+                            originalPosition_X: (short)serverBody.OriginalPosition.X,
+                            originalPosition_Y: (short)serverBody.OriginalPosition.Y,
+                            velocity_X: (short)(serverBody.Momentum.X* VELOCITY_SCALE_FACTOR),
+                            velocity_Y: (short)(serverBody.Momentum.Y* VELOCITY_SCALE_FACTOR),
+                            OriginalAngle: (sbyte)(serverBody.OriginalAngle / MathF.PI * 127),
+                            AngularVelocity: (sbyte)(serverBody.AngularVelocity * VELOCITY_SCALE_FACTOR / MathF.PI * 127),
+                            Size: (byte)(serverBody.Size / 5),
+                            Sprite: (byte)serverBody.Sprite,
                             Mode: 0,
-                            Group: 0);
+                            Group: serverBody.Group?.ID ?? 0);
                     }
 
                     var updatesVector = builder.EndVector();
 
-
-                    foreach (var update in updatedBuckets)
+                    foreach (var update in updateBodies)
                         update.BodyClient = update.BodyUpdated.Clone();
 
                     var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
@@ -168,6 +175,9 @@
 
                     NetWorldView.AddUpdates(builder, updatesVector);
                     NetWorldView.AddDeletes(builder, deletesVector);
+
+                    NetWorldView.AddGroups(builder, groupsVector);
+                    NetWorldView.AddGroupDeletes(builder, groupDeletesVector);
 
                     var worldView = NetWorldView.EndNetWorldView(builder);
 
@@ -267,14 +277,13 @@
                 case AllMessages.NetSpawn:
                     var spawn = quantum.Message<NetSpawn>().Value;
 
-                    player.Spawn(spawn.Name, spawn.Ship, spawn.Color);
+                    player.Spawn(spawn.Name, Sprites.ship_red, spawn.Color);
 
                     break;
                 case AllMessages.NetControlInput:
                     var input = quantum.Message<NetControlInput>().Value;
                     player?.SetControl(new ControlInput
                     {
-                        Angle = input.Angle,
                         Position = new Vector2(input.X, input.Y),
                         BoostRequested = input.Boost,
                         ShootRequested = input.Shoot

@@ -709,11 +709,36 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.groupsLength = functio
 
 /**
  * @param {number} index
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.groupDeletes = function(index) {
+  var offset = this.bb.__offset(this.bb_pos, 16);
+  return offset ? this.bb.readUint32(this.bb.__vector(this.bb_pos + offset) + index * 4) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.groupDeletesLength = function() {
+  var offset = this.bb.__offset(this.bb_pos, 16);
+  return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {Uint32Array}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.groupDeletesArray = function() {
+  var offset = this.bb.__offset(this.bb_pos, 16);
+  return offset ? new Uint32Array(this.bb.bytes().buffer, this.bb.bytes().byteOffset + this.bb.__vector(this.bb_pos + offset), this.bb.__vector_len(this.bb_pos + offset)) : null;
+};
+
+/**
+ * @param {number} index
  * @param {Game.Engine.Networking.FlatBuffers.NetAnnouncement=} obj
  * @returns {Game.Engine.Networking.FlatBuffers.NetAnnouncement}
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.announcements = function(index, obj) {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetAnnouncement).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -721,7 +746,7 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.announcements = functi
  * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.announcementsLength = function() {
-  var offset = this.bb.__offset(this.bb_pos, 16);
+  var offset = this.bb.__offset(this.bb_pos, 18);
   return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -729,7 +754,7 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.announcementsLength = 
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.startNetWorldView = function(builder) {
-  builder.startObject(7);
+  builder.startObject(8);
 };
 
 /**
@@ -832,10 +857,39 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.startGroupsVector = function(bui
 
 /**
  * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} groupDeletesOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.addGroupDeletes = function(builder, groupDeletesOffset) {
+  builder.addFieldOffset(6, groupDeletesOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {Array.<number>} data
+ * @returns {flatbuffers.Offset}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.createGroupDeletesVector = function(builder, data) {
+  builder.startVector(4, data.length, 4);
+  for (var i = data.length - 1; i >= 0; i--) {
+    builder.addInt32(data[i]);
+  }
+  return builder.endVector();
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} numElems
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.startGroupDeletesVector = function(builder, numElems) {
+  builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
  * @param {flatbuffers.Offset} announcementsOffset
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.addAnnouncements = function(builder, announcementsOffset) {
-  builder.addFieldOffset(6, announcementsOffset, 0);
+  builder.addFieldOffset(7, announcementsOffset, 0);
 };
 
 /**

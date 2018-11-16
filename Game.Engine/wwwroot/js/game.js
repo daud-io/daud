@@ -30,10 +30,13 @@
     var connection = new Game.Connection();
     window.Game.primaryConnection = connection;
 
-    var bodyFromServer = function (body) {
+    var bodyFromServer = function (cache, body) {
 
         var originalPosition = body.originalPosition();
         var momentum = body.velocity();
+
+        var group = cache.getGroup(body.group());
+        var groupID = (group && group.ID) || 0;
 
         var newBody = {
             ID: body.id(),
@@ -41,7 +44,7 @@
             Size: body.size() * 5,
             Sprite: Game.Renderer.spriteIndices[body.sprite()], //body.sprite(),
             Color: 'red', //body.color(),
-            Caption: '', //body.caption(),
+            Group: groupID,
             OriginalAngle: body.originalAngle() / 127 * Math.PI,
             AngularVelocity: body.angularVelocity() / 127  * Math.PI / 10,
             Momentum: {
@@ -58,6 +61,17 @@
         newBody.Momentum.Y /= 10;
 
         return newBody;
+    };
+
+    var groupFromServer = function (cache, group) {
+
+        var newGroup = {
+            ID: group.group(),
+            Caption: group.caption(),
+            Type: group.type(),
+        };
+
+        return newGroup;
     };
 
     connection.onConnected = function () {
@@ -100,13 +114,24 @@
         if (serverTimeOffset === false)
             serverTimeOffset = thisOffset;
 
+
+        var groupsLength = newView.groupsLength();
+        var groups = [];
+        for (var u = 0; u < groupsLength; u++) {
+            var group = newView.groups(u);
+
+            groups.push(groupFromServer(cache, group));
+        }
+
+
         var updatesLength = newView.updatesLength();
         var updates = [];
         for (var u = 0; u < updatesLength; u++) {
             var update = newView.updates(u);
 
-            updates.push(bodyFromServer(update));
+            updates.push(bodyFromServer(cache, update));
         }
+
 
         updateCounter += updatesLength;
 
@@ -114,10 +139,15 @@
         var deletesLength = newView.deletesLength();
         for (var d = 0; d < deletesLength; d++)
             deletes.push(newView.deletes(d));
-            
-        cache.update(updates, deletes, gameTime);
 
-        view.camera = bodyFromServer(newView.camera());
+        var groupDeletes = [];
+        var groupDeletesLength = newView.groupDeletesLength();
+        for (var d = 0; d < groupDeletesLength; d++)
+            groupDeletes.push(newView.groupDeletes(d));
+
+        cache.update(updates, deletes, groups, groupDeletes, gameTime);
+
+        view.camera = bodyFromServer(cache, newView.camera());
     };
 
     var lastControl = {};

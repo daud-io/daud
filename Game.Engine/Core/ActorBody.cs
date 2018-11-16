@@ -1,11 +1,9 @@
 ﻿namespace Game.Engine.Core
 {
-    using Newtonsoft.Json;
     using System.Linq;
 
-    public abstract class ActorBody : ProjectedBody, IActor
+    public abstract class ActorBody : Body, IActor
     {
-        [JsonIgnore]
         public World World = null;
 
         public bool PendingDestruction { get; set; } = false;

@@ -17,15 +17,15 @@
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
             );
             Size = r.Next(300, World.Hook.ObstacleMaxSize);
-            Sprite = "obstacle";
+            Sprite = Sprites.obstacle;
             Color = "rgba(128,128,128,.2)";
         }
 
-        public void CollisionExecute(ProjectedBody projectedBody)
+        public void CollisionExecute(Body projectedBody)
         {
         }
 
-        public bool IsCollision(ProjectedBody projectedBody)
+        public bool IsCollision(Body projectedBody)
         {
             return Vector2.Distance(projectedBody.Position, this.Position) 
                 < (projectedBody.Size + this.Size);

@@ -12,7 +12,7 @@
             this.Init(world);
 
             Size = 10;
-            Sprite = "fish";
+            Sprite = Sprites.fish;
             Color = "rgba(128,128,128,.2)";
             Randomize();
         }

@@ -53,6 +53,7 @@ table NetWorldView
 	updates:[NetBody];
 	deletes:[uint];
     groups:[NetGroup];
+	groupDeletes:[uint];
 	announcements:[NetAnnouncement];
 }
 

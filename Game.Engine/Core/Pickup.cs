@@ -5,15 +5,15 @@
 
     public class Pickup : ActorBody, ICollide
     {
-        public string BulletSprite { get; set; }
+        public Sprites BulletSprite { get; set; }
 
         public Pickup(World world)
         {
             this.Init(world);
 
             Size = 100;
-            Sprite = "seeker_pickup";
-            BulletSprite = "seeker";
+            Sprite = Sprites.seeker_pickup;
+            BulletSprite = Sprites.seeker;
             Color = "rgba(128,128,128,.2)";
             Randomize();
         }
@@ -28,7 +28,7 @@
             );
         }
 
-        public void CollisionExecute(ProjectedBody projectedBody)
+        public void CollisionExecute(Body projectedBody)
         {
             var ship = projectedBody as Ship;
             var fleet = ship.Fleet;
@@ -41,7 +41,7 @@
             }
         }
 
-        public bool IsCollision(ProjectedBody projectedBody)
+        public bool IsCollision(Body projectedBody)
         {
             if (projectedBody is Ship ship)
             {

@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Numerics;
 
-    public class Fleet : ActorBody
+    public class Fleet : ActorGroup
     {
         public virtual float ShotCooldownTimeM { get => World.Hook.ShotCooldownTimeM; }
         public virtual float ShotCooldownTimeB { get => World.Hook.ShotCooldownTimeB; }
@@ -33,6 +33,9 @@
         public List<Bullet> NewBullets { get; set; } = new List<Bullet>();
 
         public Pickup Pickup = null;
+        public Sprites BulletSprite = Sprites.bullet;
+
+        public Vector2 FleetCenter = Vector2.Zero;
 
         private void Die(Player player)
         {
@@ -65,7 +68,7 @@
 
         public void AddShip()
         {
-            if (!this.Owner.IsAlive)
+            if (!this.Owner.IsAlive || this.PendingDestruction)
                 return;
 
             var random = new Random();
@@ -79,24 +82,44 @@
             var ship = new Ship()
             {
                 Fleet = this,
-                Position = Vector2.Add(this.Position, offset),
-                Momentum = this.Momentum,
-                Sprite = this.Owner.ShipSprite,
-                Color = this.Color
+                Sprite = this.Owner.ShipSprite
             };
+
+            if (this.Ships.Any())
+            {
+                var position = Vector2.Zero;
+                var momentum = Vector2.Zero;
+                var angle = 0f;
+                var count = 0;
+
+                foreach (var existingShip in this.Ships)
+                {
+                    position += existingShip.Position;
+                    momentum += existingShip.Momentum;
+                    angle += existingShip.Angle;
+                    count++;
+                }
+
+                ship.Position = position / count + offset;
+                ship.Momentum = momentum / count;
+                ship.Angle = angle / count;
+            }
+            else
+            {
+                ship.Position = FleetCenter + offset;
+            }
 
             NewShips.Add(ship);
         }
 
         public override void Init(World world)
         {
-            this.Position = world.RandomPosition();
-
             base.Init(world);
 
-            for(int i=0; i<world.Hook.SpawnShipCount; i++)
-                this.AddShip();
+            FleetCenter = world.RandomPosition();
 
+            for (int i=0; i<world.Hook.SpawnShipCount; i++)
+                this.AddShip();
         }
 
         public override void CreateDestroy()
@@ -132,18 +155,20 @@
                 {
                     var ship = Ships.First();
                     ship.Fleet = null;
-                    ship.Sprite = "ship_gray";
+                    ship.Sprite = Sprites.ship_gray;
                     ship.Color = "gray";
                     ship.Abandoned = true;
+                    ship.Group = null;
                     ship.ThrustAmount = 0;
                     Ships.Remove(ship);
                 }
             }
 
+            FleetCenter = Flocking.FleetCenterNaive(this.Ships);
+
             foreach (var ship in Ships)
             {
-
-                var shipTargetVector = this.Position + AimTarget - ship.Position;
+                var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
                 ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
 
@@ -162,16 +187,7 @@
             }
 
             var fleetCenter = Flocking.FleetCenterNaive(Ships, null);
-            var cameraVector = fleetCenter - Position;
-
-            this.Momentum = Vector2.Zero;
-            foreach(var ship in Ships)
-                this.Momentum += ship.Momentum;
-            if (Ships.Count == 0)
-                this.Momentum = new Vector2(0, 0);
-            else
-                this.Momentum /= Ships.Count;
-
+            var cameraVector = fleetCenter - FleetCenter;
 
             if (isShooting)
             {
@@ -182,10 +198,6 @@
 
                 this.Pickup = null;
             }
-
-            if (float.IsNaN(this.Position.X))
-                throw new Exception("Invalid Position");
-
         }
 
         private void Flock(Ship ship)

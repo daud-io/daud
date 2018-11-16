@@ -40,6 +40,7 @@
         };
 
         Renderer.spriteIndices = [
+            "none",
             "ship0",
             "ship_green",
             "ship_gray",
@@ -96,14 +97,39 @@
                 ctx.strokeStyle = "white";
                 ctx.lineWidth = 6;
 
+                var groupsUsed = [];
+
                 cache.foreach(function (body) {
                     var object = body;
+
+                    var position = interpolator.projectObject(object, currentTime);
+
+                    if (object.Group) {
+
+                        var group = false;
+                        for (var i = 0; i < groupsUsed.length; i++)
+                            if (groupsUsed[i].id == object.Group) {
+                                group = groupsUsed[i];
+                                break;
+                            }
+
+                        if (!group) {
+                            group = {
+                                id: object.Group,
+                                group: cache.groups['g-' + object.Group],
+                                points: []
+                            };
+
+                            groupsUsed.push(group);
+                        }
+
+                        group.points.push(position);
+                    }
 
                     var ship = object.Sprite != null
                         ? Renderer.sprites[object.Sprite]
                         : false;
 
-                    var position = interpolator.projectObject(object, currentTime);
 
                     /*if (object.Caption) {
                         ctx.fillText(object.Caption, position.X, position.Y + 90);
@@ -166,6 +192,21 @@
                     ctx.restore();
 
                 }, this);
+
+                for (var i = 0; i < groupsUsed.length; i++) {
+                    var group = groupsUsed[i];
+                    var pt = { X: 0, Y: 0 };
+
+                    for (var x = 0; x < group.points.length; x++) {
+                        pt.X += group.points[x].X;
+                        pt.Y += group.points[x].Y;
+                    }
+
+                    pt.X /= group.points.length;
+                    pt.Y /= group.points.length;
+
+                    ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
+                }
 
                 cache.foreach(function (body) {
                     var position = interpolator.projectObject(body, currentTime);
