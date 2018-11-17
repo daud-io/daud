@@ -144,13 +144,18 @@
 
         public void Spawn(string name, Sprites sprite, string color)
         {
+            // sanitize the name
             if (name != null
                 && name.Length > 15)
                 name = name.Substring(0, 15);
 
             Name = name;
+
+
             ShipSprite = sprite;
+
             Color = color;
+
             IsSpawning = true;
 
         }

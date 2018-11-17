@@ -33,10 +33,27 @@
         public List<Bullet> NewBullets { get; set; } = new List<Bullet>();
 
         public Pickup Pickup = null;
-        public Sprites BulletSprite = Sprites.bullet;
 
         public Vector2 FleetCenter = Vector2.Zero;
         public Vector2 FleetMomentum = Vector2.Zero;
+
+        public Sprites BulletSprite
+        {
+            get
+            {
+                switch (Owner.ShipSprite)
+                {
+                    case Sprites.ship_cyan: return Sprites.bullet_cyan;
+                    case Sprites.ship_green: return Sprites.bullet_green;
+                    case Sprites.ship_orange: return Sprites.bullet_orange;
+                    case Sprites.ship_pink: return Sprites.bullet_pink;
+                    case Sprites.ship_red: return Sprites.bullet_red;
+                    case Sprites.ship_yellow: return Sprites.bullet_yellow;
+                    default: return Sprites.bullet;
+                }
+            }
+        }
+
 
         private void Die(Player player)
         {
