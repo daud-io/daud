@@ -16,6 +16,7 @@
         var self = this;
         this.fb = Game.Engine.Networking.FlatBuffers;
         this.latency = 0;
+        this.minLatency = 999;
         this.simulateLatency = 0;
 
         setInterval(function () {
@@ -181,8 +182,11 @@
                     this.onView(message);
                     break;
                 case this.fb.AllMessages.NetPing: // Ping
-                    if (this.pingSent)
+                    if (this.pingSent) {
                         this.latency = performance.now() - this.pingSent;
+                        if (this.latency > 0 && this.latency < this.minLatency)
+                            this.minLatency = this.latency;
+                    }
 
                     break;
                 case this.fb.AllMessages.NetLeaderboard:

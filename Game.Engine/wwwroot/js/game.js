@@ -11,15 +11,14 @@
 
     var cache = new Game.Cache();
     var view = false;
-    var lastFrameTime = false;
     var serverTimeOffset = false;
     var lastOffset = false;
     var gameTime = false;
 
-    var lagDetectionTimes = [1000, 3000, 10000];
+/*    var lagDetectionTimes = [1000, 3000, 10000];
     var scheduleLagCheck = function (delay) {
         setTimeout(function () { serverTimeOffset = lastOffset; }, delay);
-    };
+    };*/
 
     Game.Controls.registerCanvas(canvas);
 
@@ -72,8 +71,8 @@
     };
 
     connection.onConnected = function () {
-        for (var i = 0; i < lagDetectionTimes.length; i++)
-            scheduleLagCheck(lagDetectionTimes[i]);
+        /*for (var i = 0; i < lagDetectionTimes.length; i++)
+            scheduleLagCheck(lagDetectionTimes[i]);*/
     };
 
     connection.onLeaderboard = function (lb) {
@@ -101,16 +100,13 @@
                 .addClass('dead');
         }
 
-        lastFrameTime = performance.now();
-        var latency = connection.latency || 0;
-        var thisOffset = view.time - lastFrameTime + latency / 2;
-        if (isNaN(thisOffset)) {
-            var i = 0;
-        }
-        lastOffset = thisOffset;
-        if (serverTimeOffset === false)
-            serverTimeOffset = thisOffset;
+        var latency = connection.minLatency || 0;
+        lastOffset = view.time - performance.now() + latency / 2;
+        if (lastOffset < serverTimeOffset)
+            serverTimeOffset = lastOffset;
 
+        if (serverTimeOffset === false)
+            serverTimeOffset = lastOffset;
 
         var groupsLength = newView.groupsLength();
         var groups = [];
@@ -248,8 +244,8 @@
 
         if (view) {
             position = interpolator.projectObject(view.camera, gameTime);
-            position.X = (position.X * 0.8 + lastCamera.X * 0.2);
-            position.Y = (position.Y * 0.8 + lastCamera.Y * 0.2);
+            position.X = (position.X * 0.2 + lastCamera.X * 0.8);
+            position.Y = (position.Y * 0.2 + lastCamera.Y * 0.8);
 
             lastCamera = position;
 

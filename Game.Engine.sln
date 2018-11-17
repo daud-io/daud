@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Util", "Game.Util\Game
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.API.Common", "Game.API.Models\Game.API.Common.csproj", "{61B30F92-3466-4A38-A50B-C8F4A4BA5FC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.Robots", "Game.Robots\Game.Robots.csproj", "{D0600DFB-F0A1-456E-A386-F916210B66EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Robots", "Game.Robots\Game.Robots.csproj", "{D0600DFB-F0A1-456E-A386-F916210B66EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
