@@ -82,6 +82,9 @@
 
         public bool IsCollision(Body projectedBody)
         {
+            if (PendingDestruction)
+                return false;
+
             if (projectedBody is Bullet bullet)
             {
                 // avoid "piercing" shots
