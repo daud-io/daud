@@ -23,7 +23,7 @@
             };
         }
 
-        
+
         public override void CreateDestroy()
         {
             base.CreateDestroy();
@@ -56,7 +56,7 @@
                     .FirstOrDefault();
 
             if (player != null)
-            { 
+            {
                 var delta = Vector2.Subtract(player.Fleet.FleetCenter, this.Fleet.FleetCenter);
 
                 var trueAngle = (float)Math.Atan2(delta.Y, delta.X);

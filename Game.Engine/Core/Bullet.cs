@@ -73,7 +73,7 @@
             else
             {
                 ThrustAngle = Angle;
-                var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount*10;
+                var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount * 10;
                 Momentum = thrust;
             }
 

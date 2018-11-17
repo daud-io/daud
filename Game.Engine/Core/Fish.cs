@@ -45,17 +45,17 @@
 
             if (ships.Count() > 1)
                 flockingVector =
-                    (World.Hook.FlockCohesion 
+                    (World.Hook.FlockCohesion
                         * Flocking.Cohesion(ships, this, World.Hook.FlockCohesionMaximumDistance))
-                    + (World.Hook.FlockAlignment 
+                    + (World.Hook.FlockAlignment
                         * Flocking.Alignment(ships, this))
-                    + (World.Hook.FlockSeparation 
+                    + (World.Hook.FlockSeparation
                         * Flocking.Separation(ships, this, World.Hook.FlockSeparationMinimumDistance));
 
             if (IsOOB)
                 oobVector = Vector2.Normalize(-Position) * oobVectorWeight;
 
-            var steeringVector = 
+            var steeringVector =
                 new Vector2(MathF.Cos(Angle), MathF.Sin(Angle))
                 + World.Hook.FlockWeight * flockingVector
                 + oobVector;

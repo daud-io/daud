@@ -119,7 +119,7 @@
                 Die(null, null, null);
 
             Health = Math.Max(Math.Min(Health, MaxHealth), 0) + HealthRegenerationPerFrame;
-            Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum-SizeMinimum));
+            Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum - SizeMinimum));
 
             DoOutOfBoundsRules();
 
@@ -141,5 +141,5 @@
             if (oob > 700)
                 Die(null, null, null);
         }
-    }   
+    }
 }
