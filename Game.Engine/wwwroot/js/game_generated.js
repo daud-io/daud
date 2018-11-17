@@ -1248,7 +1248,7 @@ Game.Engine.Networking.FlatBuffers.NetAnnouncement.getRootAsNetAnnouncement = fu
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
-Game.Engine.Networking.FlatBuffers.NetAnnouncement.prototype.Text = function(optionalEncoding) {
+Game.Engine.Networking.FlatBuffers.NetAnnouncement.prototype.text = function(optionalEncoding) {
   var offset = this.bb.__offset(this.bb_pos, 4);
   return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
@@ -1262,10 +1262,10 @@ Game.Engine.Networking.FlatBuffers.NetAnnouncement.startNetAnnouncement = functi
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} TextOffset
+ * @param {flatbuffers.Offset} textOffset
  */
-Game.Engine.Networking.FlatBuffers.NetAnnouncement.addText = function(builder, TextOffset) {
-  builder.addFieldOffset(0, TextOffset, 0);
+Game.Engine.Networking.FlatBuffers.NetAnnouncement.addText = function(builder, textOffset) {
+  builder.addFieldOffset(0, textOffset, 0);
 };
 
 /**

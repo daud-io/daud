@@ -56,9 +56,6 @@
             }
         };
 
-        if (newBody.Sprite == "seeker_pickup")
-            console.log(newBody);
-
         return newBody;
     };
 
@@ -128,6 +125,15 @@
             updates.push(bodyFromServer(cache, update));
         }
 
+        var announcementsLength = newView.announcementsLength();
+        var announcements = [];
+        for (var u = 0; u < announcementsLength; u++) {
+            var announcement = newView.announcements(u);
+
+            announcements.push(announcement.text());
+        }
+        if (announcements.length)
+            console.log(announcements);
 
         updateCounter += updatesLength;
 

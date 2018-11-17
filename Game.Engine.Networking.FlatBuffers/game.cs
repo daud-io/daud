@@ -342,14 +342,14 @@ public struct NetAnnouncement : IFlatbufferObject
   public ArraySegment<byte>? GetTextBytes() { return __p.__vector_as_arraysegment(4); }
 
   public static Offset<NetAnnouncement> CreateNetAnnouncement(FlatBufferBuilder builder,
-      StringOffset TextOffset = default(StringOffset)) {
+      StringOffset textOffset = default(StringOffset)) {
     builder.StartObject(1);
-    NetAnnouncement.AddText(builder, TextOffset);
+    NetAnnouncement.AddText(builder, textOffset);
     return NetAnnouncement.EndNetAnnouncement(builder);
   }
 
   public static void StartNetAnnouncement(FlatBufferBuilder builder) { builder.StartObject(1); }
-  public static void AddText(FlatBufferBuilder builder, StringOffset TextOffset) { builder.AddOffset(0, TextOffset.Value, 0); }
+  public static void AddText(FlatBufferBuilder builder, StringOffset textOffset) { builder.AddOffset(0, textOffset.Value, 0); }
   public static Offset<NetAnnouncement> EndNetAnnouncement(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetAnnouncement>(o);

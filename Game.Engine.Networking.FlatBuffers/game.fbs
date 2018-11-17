@@ -86,7 +86,7 @@ struct NetBody
 
 table NetAnnouncement
 {
-	Text:string;
+	text:string;
 }
 
 table NetQuantum

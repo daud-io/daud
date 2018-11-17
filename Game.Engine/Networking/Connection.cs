@@ -90,11 +90,15 @@
 
                 // if we haven't found anything to watch yet, watch the first ship we find
                 if (followBody == null)
+                {
                     followBody = player?.World.Bodies.OfType<Ship>().FirstOrDefault();
+                }
 
                 // if we haven't found anything to watch yet, watch anything
                 if (followBody == null)
+                {
                     followBody = player?.World.Bodies.FirstOrDefault();
+                }
 
                 if (followBody != null)
                 {
@@ -136,7 +140,9 @@
 
 
                     foreach (var update in updatedGroups)
+                    {
                         update.GroupClient = update.GroupUpdated.Clone();
+                    }
 
                     var groupDeletesVector = NetWorldView.CreateGroupDeletesVector(builder, BodyCache.CollectStaleGroups().Select(b =>
                         b.GroupUpdated.ID
@@ -165,11 +171,28 @@
                     var updatesVector = builder.EndVector();
 
                     foreach (var update in updateBodies)
+                    {
                         update.BodyClient = update.BodyUpdated.Clone();
+                    }
 
                     var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
                         b.BodyUpdated.ID
                     ).ToArray());
+
+                    var messages = player.GetMessages();
+                    VectorOffset announcementsVector = new VectorOffset();
+                    if (messages != null && messages.Any())
+                    {
+                        announcementsVector = NetWorldView.CreateAnnouncementsVector(builder, messages.Select(e =>
+                        {
+                            var stringName = builder.CreateString(e);
+
+                            NetAnnouncement.StartNetAnnouncement(builder);
+                            NetAnnouncement.AddText(builder, stringName);
+
+                            return NetAnnouncement.EndNetAnnouncement(builder);
+                        }).ToArray());
+                    }
 
                     NetWorldView.StartNetWorldView(builder);
 
@@ -199,6 +222,8 @@
 
                     NetWorldView.AddGroups(builder, groupsVector);
                     NetWorldView.AddGroupDeletes(builder, groupDeletesVector);
+                    if (messages != null && messages.Any())
+                        NetWorldView.AddAnnouncements(builder, announcementsVector);
 
                     var worldView = NetWorldView.EndNetWorldView(builder);
 
@@ -376,7 +401,9 @@
                 ConnectionHeartbeat.Unregister(this);
 
                 if (player != null)
+                {
                     player.PendingDestruction = true;
+                }
             }
         }
 
@@ -446,7 +473,9 @@
                 if (disposing)
                 {
                     if (Socket != null)
+                    {
                         Socket.Dispose();
+                    }
                 }
                 disposedValue = true;
             }
