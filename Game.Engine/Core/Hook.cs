@@ -34,6 +34,8 @@
                     BulletLife = 3000,
                     BotPerXPoints = 500,
                     BotBase = 1,
+                    BotRespawnDelay = 10000,
+
                     StepTime = 40,
                     Obstacles = 10,
                     ObstacleMaxMomentum = 0.1f,
@@ -116,5 +118,6 @@
         public int StepTime { get; set; }
         public float OutOfBoundsBorder { get; set; } = 100;
         public float OutOfBoundsDecayDistance { get; set; } = 1500;
+        public int BotRespawnDelay { get; set; }
     }
 }

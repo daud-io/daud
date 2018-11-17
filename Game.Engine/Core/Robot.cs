@@ -7,6 +7,9 @@
     public class Robot : Player
     {
         public bool AutoSpawn { get; set; } = true;
+
+        private long SpawnTimeAfter = 0;
+
         public Robot() : base()
         {
         }
@@ -20,13 +23,23 @@
             };
         }
 
+        
         public override void CreateDestroy()
         {
             base.CreateDestroy();
 
             if (!IsAlive)
-                if (AutoSpawn)
+            {
+                if (AutoSpawn && World.Time > SpawnTimeAfter)
                     this.Spawn(Name, ShipSprite, "green");
+            }
+        }
+
+        protected override void OnDeath()
+        {
+            base.OnDeath();
+
+            SpawnTimeAfter = World.Time + World.Hook.BotRespawnDelay;
         }
 
         public override void Think()

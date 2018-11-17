@@ -159,12 +159,18 @@
             IsSpawning = true;
 
         }
-        
+
+        protected virtual void OnDeath()
+        {
+            Score /= 2;
+        }
+
         public void Die()
         {
             if (IsAlive)
             {
-                Score /= 2;
+                OnDeath();
+
                 if (Fleet != null)
                     Fleet.PendingDestruction = true;
 
