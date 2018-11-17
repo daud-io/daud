@@ -115,8 +115,14 @@ body {
 
 .dead .spawnscreen input,
 .dead .spawnscreen select {
-    border-radius: 25px;
-    padding: 1em;
+    font-size: 1rem;
+    border-radius: 5px;
+    padding: 5px 5px 10px 5px;
+    border: none;
+    background: linear-gradient(to right, #008888 0%, #0066ff 100%) left bottom rgba(55,55,90,0.8) no-repeat;
+    background-size: 100% 5px;
+    color: white;
+    margin: 0.5em;
 }
 
 #panel {
@@ -140,6 +146,12 @@ body {
     width: 300px;
     padding: 10px;
     list-style-type: none;
+}
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
 }
 
 .ansible .serverlinks a {
