@@ -12,7 +12,7 @@
             };
             this.Password = password;
         }
-        
+
         public UserIdentifier Identifier { get; set; }
         public string Password { get; set; }
         public string ClientClaims { get; set; }

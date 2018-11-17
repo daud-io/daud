@@ -11,7 +11,7 @@
 
         public bool IsCollision(Body projectedBody)
         {
-            return Vector2.Distance(projectedBody.Position, this.Position) 
+            return Vector2.Distance(projectedBody.Position, this.Position)
                 < (projectedBody.Size + this.Size);
         }
 

@@ -15,7 +15,7 @@
     var lastOffset = false;
     var gameTime = false;
 
-/*    var lagDetectionTimes = [1000, 3000, 10000];
+    /* var lagDetectionTimes = [1000, 3000, 10000];
     var scheduleLagCheck = function (delay) {
         setTimeout(function () { serverTimeOffset = lastOffset; }, delay);
     };*/
@@ -297,5 +297,5 @@
     }
 
     requestAnimationFrame(gameLoop);
-    
+
 })();

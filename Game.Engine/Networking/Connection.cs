@@ -78,7 +78,7 @@
                 if (followFleet != null)
                 {
                     var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
-                    
+
                     followBody = new Body
                     {
                         DefinitionTime = world.Time,
@@ -152,8 +152,8 @@
                             DefinitionTime: serverBody.DefinitionTime,
                             originalPosition_X: (short)serverBody.OriginalPosition.X,
                             originalPosition_Y: (short)serverBody.OriginalPosition.Y,
-                            velocity_X: (short)(serverBody.Momentum.X* VELOCITY_SCALE_FACTOR),
-                            velocity_Y: (short)(serverBody.Momentum.Y* VELOCITY_SCALE_FACTOR),
+                            velocity_X: (short)(serverBody.Momentum.X * VELOCITY_SCALE_FACTOR),
+                            velocity_Y: (short)(serverBody.Momentum.Y * VELOCITY_SCALE_FACTOR),
                             OriginalAngle: (sbyte)(serverBody.OriginalAngle / MathF.PI * 127),
                             AngularVelocity: (sbyte)(serverBody.AngularVelocity * VELOCITY_SCALE_FACTOR / MathF.PI * 127),
                             Size: (byte)(serverBody.Size / 5),
@@ -225,7 +225,7 @@
                     NetLeaderboardEntry.AddScore(builder, world.Leaderboard?.ArenaRecord?.Score ?? 0);
                     var record = NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
 
-                    
+
                     var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
                     {
                         stringName = builder.CreateString(e.Name ?? string.Empty);
@@ -264,9 +264,9 @@
                 var start = DateTime.Now;
 
                 await Socket.SendAsync(
-                    buffer, 
-                    WebSocketMessageType.Binary, 
-                    endOfMessage: true, 
+                    buffer,
+                    WebSocketMessageType.Binary,
+                    endOfMessage: true,
                     cancellationToken: cancellationToken);
 
                 //Console.WriteLine($"{DateTime.Now.Subtract(start).TotalMilliseconds}ms in send");

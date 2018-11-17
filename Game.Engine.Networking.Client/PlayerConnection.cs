@@ -146,7 +146,7 @@
             await SendAsync(builder.DataBuffer, default(CancellationToken));
         }
 
-        private async Task SendAsync(ByteBuffer byteBuffer, CancellationToken cancellationToken=default(CancellationToken))
+        private async Task SendAsync(ByteBuffer byteBuffer, CancellationToken cancellationToken = default(CancellationToken))
         {
             var buffer = byteBuffer.ToSizedArray();
             await WebsocketSendingSemaphore.WaitAsync();

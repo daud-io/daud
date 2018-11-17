@@ -80,17 +80,17 @@
                 ctx.beginPath();
                 ctx.lineWidth = 40;
                 ctx.strokeStyle = "blue";
-                ctx.rect(-worldSize, -worldSize, 2*worldSize, 2*worldSize);
+                ctx.rect(-worldSize, -worldSize, 2 * worldSize, 2 * worldSize);
                 ctx.stroke();
 
                 ctx.beginPath();
-                ctx.lineWidth = edgeWidth*2;
+                ctx.lineWidth = edgeWidth * 2;
                 ctx.strokeStyle = "rgba(255,0,0,0.1)";
                 ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
                 ctx.stroke();
 
                 ctx.restore();
-                
+
                 ctx.font = "48px sans-serif";
                 ctx.fillStyle = "white";
                 ctx.textAlign = "center";
@@ -129,7 +129,7 @@
                     var ship = object.Sprite != null
                         ? Renderer.sprites[object.Sprite]
                         : false;
-                    
+
                     /*if (object.Caption) {
                         ctx.fillText(object.Caption, position.X, position.Y + 90);
                     }*/
@@ -205,7 +205,7 @@
 
                         pt.X /= group.points.length;
                         pt.Y /= group.points.length;
-                    
+
                         ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                     }
 

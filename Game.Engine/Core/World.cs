@@ -1,12 +1,12 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.Engine.Networking;
+    using RBush;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
     using System.Threading;
-    using RBush;
 
     public class World : IDisposable
     {
@@ -34,7 +34,7 @@
         {
             OffsetTicks = DateTime.Now.Ticks;
             Hook = Hook.Default;
-            
+
             InitializeStepTimer();
 
             var robotTender = new RobotTender();
@@ -202,10 +202,10 @@
                 return this.Bodies;
             else
                 return RTree.Search(new Envelope(
-                    point.X - maximumDistance/2,
-                    point.Y - maximumDistance/2,
-                    point.X + maximumDistance/2,
-                    point.Y + maximumDistance/2
+                    point.X - maximumDistance / 2,
+                    point.Y - maximumDistance / 2,
+                    point.X + maximumDistance / 2,
+                    point.Y + maximumDistance / 2
                 ));
         }
 

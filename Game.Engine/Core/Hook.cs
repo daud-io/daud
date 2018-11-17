@@ -58,7 +58,7 @@
 
                     Pickups = 5,
                     Fishes = 50
-                    
+
                 };
             }
         }

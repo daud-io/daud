@@ -44,8 +44,7 @@
     }
 
 
-    var buildAttribute = function(labelText, propertyName, min, max, step)
-    {
+    var buildAttribute = function (labelText, propertyName, min, max, step) {
         var li = $('<li></li>');
         var label = $('<label></label>');
         li.append(label);
@@ -120,7 +119,7 @@
     attributes.push(buildAttribute("sep  dist", "FlockSeparationMinimumDistance", 0, 400, 20));
     attributes.push(buildAttribute("alignment", "FlockAlignment", 0, 0.2, 0.01));
     */
-    
+
     setInterval(function () {
         var connection = window.Game.primaryConnection;
 

@@ -32,7 +32,7 @@
     public class APIResponse<T> : APIResponse
     {
         public APIResponse(HttpStatusCode statusCode = HttpStatusCode.OK)
-            :base (statusCode)
+            : base(statusCode)
         {
 
         }

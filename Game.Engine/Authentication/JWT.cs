@@ -66,7 +66,7 @@
                     signingKey, SecurityAlgorithms.HmacSha256
                 ));
 
-            
+
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 

@@ -23,7 +23,7 @@
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseConfiguration(new ConfigurationBuilder()
-                    .AddJsonFile("hosting.json", optional:true)
+                    .AddJsonFile("hosting.json", optional: true)
                     .Build()
                 )
                 .UseStartup<Startup>();
