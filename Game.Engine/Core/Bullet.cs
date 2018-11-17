@@ -21,12 +21,14 @@
         public static Bullet FireFrom(Ship ship)
         {
             var world = ship.World;
+            var bulletOrigin = ship.Position
+                + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
 
             var bullet = new Bullet
             {
                 TimeDeath = world.Time + world.Hook.BulletLife,
                 Momentum = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * Vector2.Distance(ship.Momentum, Vector2.Zero),
-                Position = ship.Position,
+                Position = bulletOrigin,
                 Angle = ship.Angle,
                 OwnedByFleet = ship.Fleet,
                 Sprite = ship.Fleet.Pickup?.BulletSprite ?? ship.Fleet.BulletSprite,
