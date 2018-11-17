@@ -100,9 +100,8 @@
                 .addClass('dead');
         }
 
-        var latency = connection.minLatency || 0;
-        lastOffset = view.time - performance.now() + latency / 2;
-        if (lastOffset < serverTimeOffset)
+        lastOffset = view.time - performance.now();
+        if (lastOffset > serverTimeOffset)
             serverTimeOffset = lastOffset;
 
         if (serverTimeOffset === false)
@@ -238,7 +237,8 @@
     // Game Loop
     function gameLoop() {
         requestAnimationFrame(gameLoop);
-        gameTime = performance.now() + serverTimeOffset;
+        var latency = connection.minLatency || 0;
+        gameTime = performance.now() + serverTimeOffset - latency / 2;
         frameCounter++;
         var position = { X: 0, Y: 0 };
 
