@@ -62,7 +62,6 @@ body {
 }
 
 #logo {
-    margin-left: -25vmin;
     width: 90vmin;
     image-rendering: pixelated;
     image-rendering: -moz-crisp-edges;
