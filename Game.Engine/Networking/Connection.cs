@@ -147,11 +147,6 @@
                     {
                         var serverBody = b.BodyUpdated;
 
-                        if (serverBody.Sprite == Sprites.seeker_pickup)
-                        {
-
-                        }
-
                         var body = NetBody.CreateNetBody(builder,
                             Id: serverBody.ID,
                             DefinitionTime: serverBody.DefinitionTime,
