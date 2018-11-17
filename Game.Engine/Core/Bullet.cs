@@ -50,8 +50,10 @@
                 var target = targets
                     .OfType<Ship>()
                     .Where(s => s.Fleet != OwnedByFleet)
+                    .Where(s => s.Fleet != null)
                     .OrderBy(s => Vector2.Distance(s.Position, Position))
                     .FirstOrDefault();
+
                 if (target != null)
                 {
                     var delta = target.Position - Position;
@@ -59,6 +61,8 @@
 
                     Angle = MathF.Atan2(Momentum.Y, Momentum.X);
                 }
+                else
+                    ThrustAngle = Angle;
 
                 var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount;
                 Momentum = (Momentum + thrust) * Drag;
