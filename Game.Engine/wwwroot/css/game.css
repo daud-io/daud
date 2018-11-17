@@ -103,13 +103,14 @@ body {
     position: absolute;
 }
 
-#discord
-{
+#discord {
     height: 50px;
 }
 
 .spawnscreen .controls {
     margin: 15vmin;
+    position: relative;
+    z-index: 2;
 }
 
 .dead .spawnscreen input,
