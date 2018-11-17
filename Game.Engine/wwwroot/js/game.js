@@ -46,7 +46,7 @@
             Color: 'red', //body.color(),
             Group: groupID,
             OriginalAngle: body.originalAngle() / 127 * Math.PI,
-            AngularVelocity: body.angularVelocity() / 127  * Math.PI / 10,
+            AngularVelocity: body.angularVelocity() / 127 * Math.PI / 10,
             Momentum: {
                 X: momentum.x() / 10,
                 Y: momentum.y() / 10
@@ -224,6 +224,7 @@
     var frameCounter = 0;
     var viewCounter = 0;
     var updateCounter = 0;
+    var lastCamera = { X: 0, Y: 0 };
 
     setInterval(function () {
         Game.Stats.framesPerSecond = frameCounter;
@@ -247,6 +248,10 @@
 
         if (view) {
             position = interpolator.projectObject(view.camera, gameTime);
+            position.X = (position.X * 0.8 + lastCamera.X * 0.2);
+            position.Y = (position.Y * 0.8 + lastCamera.Y * 0.2);
+
+            lastCamera = position;
 
             camera.moveTo(position.X, position.Y);
             camera.zoomTo(5000);
