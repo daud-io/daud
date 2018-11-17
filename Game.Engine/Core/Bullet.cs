@@ -64,7 +64,7 @@
                 else
                     ThrustAngle = Angle;
 
-                var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount;
+                var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
                 Momentum = (Momentum + thrust) * Drag;
 
             }

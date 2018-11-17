@@ -24,6 +24,8 @@
                     ShotThrustM = -0.0035f,
                     ShotThrustB = 0.18f,
 
+                    SeekerThrustMultiplier = 2,
+
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
                     MaxHealth = 100,
@@ -83,6 +85,7 @@
 
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }
+        public float SeekerThrustMultiplier { get; set; }
         public int BulletLife { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
