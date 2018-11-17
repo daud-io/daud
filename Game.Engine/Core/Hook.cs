@@ -33,7 +33,7 @@
                     BotPerXPoints = 500,
                     BotBase = 1,
                     StepTime = 40,
-                    Obstacles = 0,
+                    Obstacles = 10,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 600,
                     TeamMode = false,
@@ -50,7 +50,9 @@
                     ShipGainBySizeM = -0.03f,
                     ShipGainBySizeB = 1.03f,
 
-                    FlockSpeed = 0
+                    FlockSpeed = 0,
+
+                    Pickups = 5
                 };
             }
         }

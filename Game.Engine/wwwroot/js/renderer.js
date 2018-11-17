@@ -129,8 +129,7 @@
                     var ship = object.Sprite != null
                         ? Renderer.sprites[object.Sprite]
                         : false;
-
-
+                    
                     /*if (object.Caption) {
                         ctx.fillText(object.Caption, position.X, position.Y + 90);
                     }*/

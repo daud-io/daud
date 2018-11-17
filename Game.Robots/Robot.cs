@@ -39,7 +39,7 @@
             float angle = (float)(DateTime.Now.Subtract(Born).TotalMilliseconds / 1000.0f) * MathF.PI * 2;
 
             this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 100;
-            this.Connection.ControlIsShooting = true;
+            this.Connection.ControlIsShooting = AutoFire;
 
             await this.Connection.SendControlInputAsync();
         }

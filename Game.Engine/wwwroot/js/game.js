@@ -33,7 +33,6 @@
 
         var originalPosition = body.originalPosition();
         var momentum = body.velocity();
-
         var group = cache.getGroup(body.group());
         var groupID = (group && group.ID) || 0;
 
@@ -45,16 +44,19 @@
             Color: 'red', //body.color(),
             Group: groupID,
             OriginalAngle: body.originalAngle() / 127 * Math.PI,
-            AngularVelocity: body.angularVelocity() / 127 * Math.PI / 10,
+            AngularVelocity: body.angularVelocity() / 127 * Math.PI / 1000,
             Momentum: {
-                X: momentum.x() / 10,
-                Y: momentum.y() / 10
+                X: momentum.x() / 1000,
+                Y: momentum.y() / 1000
             },
             OriginalPosition: {
                 X: originalPosition.x(),
                 Y: originalPosition.y()
             }
         };
+
+        if (newBody.Sprite == "seeker_pickup")
+            console.log(newBody);
 
         return newBody;
     };

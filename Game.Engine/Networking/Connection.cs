@@ -115,7 +115,7 @@
                     var newHash = world.Hook.GetHashCode();
 
                     var builder = new FlatBufferBuilder(1);
-                    float VELOCITY_SCALE_FACTOR = 10f;
+                    float VELOCITY_SCALE_FACTOR = 1000f;
 
                     var updatedGroups = BodyCache.GroupsByError().ToList();
 
@@ -146,6 +146,11 @@
                     foreach (var b in updateBodies)
                     {
                         var serverBody = b.BodyUpdated;
+
+                        if (serverBody.Sprite == Sprites.seeker_pickup)
+                        {
+
+                        }
 
                         var body = NetBody.CreateNetBody(builder,
                             Id: serverBody.ID,
