@@ -14,6 +14,7 @@
     var serverTimeOffset = false;
     var lastOffset = false;
     var gameTime = false;
+    var lastPosition = false;
 
     /* var lagDetectionTimes = [1000, 3000, 10000];
     var scheduleLagCheck = function (delay) {
@@ -80,6 +81,7 @@
     connection.onLeaderboard = function (lb) {
         //console.log('new leaderboard');
         leaderboard.setData(lb);
+        leaderboard.position = lastPosition;
     };
 
     connection.onView = function (newView) {
@@ -262,7 +264,9 @@
 
         camera.end();
 
-        leaderboard.draw(position);
+        lastPosition = position;
+
+        leaderboard.draw(leaderboard.position);
 
         if (Game.Controls.mouseX) {
 
