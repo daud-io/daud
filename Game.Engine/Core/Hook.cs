@@ -24,7 +24,7 @@
                     ShotThrustM = -0.0035f,
                     ShotThrustB = 0.18f,
 
-                    SeekerThrustMultiplier = 1.8f,
+                    SeekerThrustMultiplier = 1.5f,
 
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
