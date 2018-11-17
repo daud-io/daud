@@ -16,13 +16,13 @@
                     BoostThrust = 0.1f,
                     BoostCooldownTime = 1200,
                     BoostSpeed = 1f,
-                    BoostDuration = 500,
+                    BoostDuration = 450,
 
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 500,
 
                     ShotThrustM = -0.0035f,
-                    ShotThrustB = 0.21f,
+                    ShotThrustB = 0.18f,
 
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
@@ -52,7 +52,9 @@
 
                     FlockSpeed = 0,
 
-                    Pickups = 5
+                    Pickups = 5,
+                    Fishes = 50
+                    
                 };
             }
         }
@@ -86,7 +88,7 @@
         public int BotPerXPoints { get; set; }
         public int Obstacles { get; set; }
         public int Pickups { get; set; } = 0;
-        public int Fishes { get; set; } = 100;
+        public int Fishes { get; set; } = 0;
 
         public float ObstacleMaxMomentum { get; set; }
         public int ObstacleMaxSize { get; set; }
