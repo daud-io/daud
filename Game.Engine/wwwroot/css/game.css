@@ -125,6 +125,7 @@ body {
     bottom: 10px;
     right: 10px;
     width: 300px;
+    text-align: left;
     background-color: rgba(0, 0, 255, 0.3);
     border: solid 1px rgba(0, 0, 255, 0.9);
     overflow-wrap: normal;
@@ -181,6 +182,8 @@ label {
 .attribute-slider {
     margin-left: 20px;
     width: 100px;
+    display: inline-block;
+    float: right;
 }
 
 .noselect {
