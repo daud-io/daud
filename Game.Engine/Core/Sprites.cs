@@ -1,6 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
-    public enum Sprites: byte
+    public enum Sprites : byte
     {
         None,
         ship0,

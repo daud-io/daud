@@ -42,9 +42,9 @@
                 object.previous.Position = object.Position;
                 //object.previous.Position.X = this.lerp(object.previous.Position.X, object.Position.X, lerpAmount);
                 //object.previous.Position.Y = this.lerp(object.previous.Position.Y, object.Position.Y, lerpAmount);
-                
+
                 object.previous.Angle = this.angleLerp(object.previous.Angle, object.Angle, lerpAmount);
-                
+
                 var newPoint = {
                     X: object.previous.Position.X,
                     Y: object.previous.Position.Y,

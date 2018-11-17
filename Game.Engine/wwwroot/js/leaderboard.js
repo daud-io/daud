@@ -29,8 +29,8 @@
                     ctx.fillStyle = "white";
 
 
-                    ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width, rowHeight + (i * rowHeight)); 
-                    ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + (i * rowHeight)); 
+                    ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width, rowHeight + (i * rowHeight));
+                    ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + (i * rowHeight));
 
                     ctx.fillStyle = entry.Color;
 
@@ -49,16 +49,16 @@
                         var h = arrow.image.height;
                         ctx.rotate(angle);
                         ctx.scale(arrow.scale, arrow.scale);
-                        ctx.drawImage(arrow.image, -w / 2, -h/ 2, w, h);
+                        ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
                         ctx.restore();
-                        
+
                     }
                 }
 
                 if (this.data.Record) {
                     ctx.font = "8pt sans-serif";
                     ctx.fillStyle = "white";
-                    ctx.fillText("record: " + (this.data.Record.Name || "Unknown Fleet") + " - " + this.data.Record.Score, margin, this.canvas.height - margin); 
+                    ctx.fillText("record: " + (this.data.Record.Name || "Unknown Fleet") + " - " + this.data.Record.Score, margin, this.canvas.height - margin);
 
                 }
 

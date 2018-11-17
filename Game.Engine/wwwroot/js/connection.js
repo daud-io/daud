@@ -1,5 +1,5 @@
 ﻿(function () {
-    var Connection = function() {
+    var Connection = function () {
 
         this.onView = function (view) { };
         this.onLeaderboard = function (leaderboard) { };

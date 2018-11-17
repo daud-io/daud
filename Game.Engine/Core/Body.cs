@@ -173,7 +173,7 @@
 
             _angle = OriginalAngle + timeDelta * AngularVelocity;
 
-            Envelope = new Envelope(_position.X - Size/2, _position.Y - Size / 2, _position.X + Size / 2, _position.Y + Size / 2);
+            Envelope = new Envelope(_position.X - Size / 2, _position.Y - Size / 2, _position.X + Size / 2, _position.Y + Size / 2);
         }
 
         public Body Clone()

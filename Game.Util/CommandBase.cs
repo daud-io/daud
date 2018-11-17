@@ -99,7 +99,7 @@
         }
 
         protected T GetParent<T>()
-            where T: CommandBase
+            where T : CommandBase
         {
             var o = this;
             while (o.Parent != null)
