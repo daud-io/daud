@@ -88,15 +88,14 @@
         view.isAlive = newView.isAlive();
 
         // this is probably very slow and should be optimized
-        $(document.body).remove("loading");
+        document.body.classList.remove("loading");
         if (view.isAlive) {
-            $(document.body)
-                .removeClass('dead')
-                .addClass('alive');
+            document.body.classList.remove('dead')
+
+            document.body.classList.add('alive');
         } else {
-            $(document.body)
-                .removeClass('alive')
-                .addClass('dead');
+            document.body.classList.remove('alive');
+            document.body.classList.add('dead');
         }
 
         lastOffset = view.time - performance.now();
@@ -179,12 +178,12 @@
     });
 
     document.getElementById('spectate').addEventListener("click", function () {
-        $(document.body).addClass('spectating');
+        document.body.classList.add('spectating');
     });
 
-    $(document).on('keydown', function (e) {
+    document.addEventListener('keydown', function (e) {
         if (e.keyCode == 27 || e.which == 27)
-            $(document.body).removeClass('spectating');
+            document.body.classList.remove('spectating');
     });
 
 

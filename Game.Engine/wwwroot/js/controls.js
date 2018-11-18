@@ -1,16 +1,16 @@
 ﻿(function () {
 
-    var selector = $('#shipSelector');
-    selector.on("change", function (e) {
-        Game.Controls.ship = selector.val() || "ship_green";
-        Game.Controls.color = selector.find(':selected').attr('colorName');
+    var selector = document.querySelector('#shipSelector');
+    selector.addEventListener("change", function (e) {
+        Game.Controls.ship = ("ship_" + selector.value) || "ship_green";
+        Game.Controls.color = selector.value || "green";
 
         save();
     });
 
-    var nick = $('#nick');
-    nick.on("change", function (e) {
-        Game.Controls.nick = nick.val();
+    var nick = document.querySelector('#nick');
+    nick.addEventListener("change", function (e) {
+        Game.Controls.nick = nick.value;
         if (Game.Controls && Game.Controls.canvas)
             Game.Controls.canvas.focus();
 
@@ -125,22 +125,22 @@
 
     function save() {
         setCookie("nick", Game.Controls.nick);
-        setCookie("ship", Game.Controls.ship);
+        setCookie("color", Game.Controls.color);
     }
 
     var savedNick = getCookie("nick");
-    var savedShip = getCookie("ship");
+    var savedColor = getCookie("color");
 
     if (savedNick !== false) {
-        nick.val(savedNick);
+        Game.Controls.nick = savedNick
+        nick.value = savedNick;
     }
 
-    if (savedShip !== false) {
-        selector.val(savedShip);
+    if (savedColor !== false) {
+        Game.Controls.color = savedColor
+        selector.value = savedColor;
     }
 
-    selector.trigger('change');
-    nick.trigger('change');
-
-
+    selector.dispatchEvent(new Event("change"))
+    selector.dispatchEvent(new Event("change"))
 }).call(this);

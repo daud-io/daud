@@ -1,31 +1,21 @@
 ﻿
-(function ($) {
-    $.fn.disableSelection = function () {
-        return this
-            .attr('unselectable', 'on')
-            .css('user-select', 'none')
-            .on('selectstart', false);
-    };
-})(jQuery);
 
 var panelPinned = false;
-$(function () {
-    $('#panel .pin').on('click', function () {
-        panelPinned = $('#panel .pin').is(':checked');
+(function () {
+    document.querySelector('#panel .pin').addEventListener('click', function () {
+        panelPinned = document.querySelector('#panel .pin').checked;
         if (panelPinned)
-            $('#panel').show();
+            document.querySelector('#panel').show();
         else
-            $('#panel').hide();
+            document.querySelector('#panel').hide();
     });
 
-    $(document).on('keydown', function (e) {
+    document.addEventListener('keydown', function (e) {
         if (e.keyCode == 70 || e.which == 70)
-            $('#panel').show();
+            document.querySelector('#panel').style.display = "block";
     });
-    $(document).on('keyup', function (e) {
+    document.addEventListener('keyup', function (e) {
         if ((e.keyCode == 70 || e.which == 70) && !panelPinned)
-            $('#panel').hide();
+            document.querySelector('#panel').style.display = "none";
     });
-
-    $(document).disableSelection();
-});
+})();

@@ -1,27 +1,28 @@
-﻿$(function () {
-    var latencyDisplay = $('<li></li>');
-    $('#ansiblelinks').append(latencyDisplay);
+﻿(function () {
+    var latencyDisplay = document.createElement('li');
+    document.querySelector('#ansiblelinks').append(latencyDisplay);
 
-    var bandwidthDisplay = $('<li></li>');
-    $('#ansiblelinks').append(bandwidthDisplay);
+    var bandwidthDisplay = document.createElement('li');
+    document.querySelector('#ansiblelinks').append(bandwidthDisplay);
 
-    var statsDisplay = $('<li></li>');
-    $('#ansiblelinks').append(statsDisplay);
+    var statsDisplay = document.createElement('li');
+    document.querySelector('#ansiblelinks').append(statsDisplay);
 
     var attributes = [];
 
     var buildAttributeToggle = function (labelText, propertyName) {
-        var li = $('<li></li>');
-        var label = $('<label></label>');
+        var li = document.createElement('li');
+        var label = document.createElement('label');
         li.append(label);
 
-        var check = $('<input type="checkbox" />');
+        var check = document.createElement('input');
+        check.type = "checkbox";
         var draw = function (value) {
-            value = value || check.prop('checked');
-            label.text(labelText + '(' + (value) + ') : ');
+            value = value || check.checked;
+            label.innerText = (labelText + '(' + (value) + ') : ');
         };
 
-        check.on('change', function (event) {
+        check.addEventListener('change', function (event) {
             if (Game && Game.Hook) {
                 Game.Hook[propertyName] = check.prop('checked');
                 Game.Hook.New = true;
@@ -32,11 +33,11 @@
         draw();
 
         li.append(check);
-        $('#ansiblelinks').append(li);
+        document.querySelector('#ansiblelinks').append(li);
 
         var updater = {
             update: function (hook) {
-                check.prop('checked', hook[propertyName]);
+                check.checked = hook[propertyName];
                 draw();
             }
         };
@@ -45,47 +46,61 @@
 
 
     var buildAttribute = function (labelText, propertyName, min, max, step) {
-        var li = $('<li></li>');
-        var label = $('<label></label>');
+        var li = document.createElement('li');
+        var label = document.createElement('label');
         li.append(label);
 
-        var slider = $('<div class="attribute-slider"></div>');
+        var slider = document.createElement('input');
+        slider.type = "range"
+        slider.classList.add("attribute-slider");
         var draw = function (value) {
-            value = value || slider.slider('value');
+            value = value || slider.value;
 
-            label.text(labelText + '(' + (value) + ') : ');
+            label.innerText = (labelText + '(' + (value) + ') : ');
         };
+        slider.min = min;
+        slider.max = max;
+        slider.value = min;
+        slider.step = step;
+        slider.addEventListener("change", function () {
 
-        slider.slider({
-            min: min,
-            max: max,
-            value: min,
-            step: step,
-            slide: function (event, ui) {
-
-                if (Game && Game.Hook) {
-                    Game.Hook[propertyName] = ui.value;
-                    Game.Hook.New = true;
-                    //console.log(Game.Hook);
-                }
-                draw();
+            if (Game && Game.Hook) {
+                Game.Hook[propertyName] = slider.value;
+                Game.Hook.New = true;
+                //console.log(Game.Hook);
             }
-        });
+            draw();
+        })
+        // slider.slider({
+        //     min: min,
+        //     max: max,
+        //     value: min,
+        //     step: step,
+        //     slide: function (event, ui) {
+
+        //         if (Game && Game.Hook) {
+        //             Game.Hook[propertyName] = ui.value;
+        //             Game.Hook.New = true;
+        //             //console.log(Game.Hook);
+        //         }
+        //         draw();
+        //     }
+        // });
         draw();
 
         li.append(slider);
-        $('#ansiblelinks').append(li);
+        document.querySelector('#ansiblelinks').append(li);
 
         var updater = {
             update: function (hook) {
-                slider.slider('value', hook[propertyName]);
+                slider.value = hook[propertyName];
                 draw();
             }
         };
         return updater;
     }
 
-    /*
+
     attributes.push(buildAttribute("thrust", "BaseThrust", 0, 1, .025));
     attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 1, .025));
 
@@ -118,12 +133,11 @@
     attributes.push(buildAttribute("separation", "FlockSeparation", 0, 40, 0.01));
     attributes.push(buildAttribute("sep  dist", "FlockSeparationMinimumDistance", 0, 400, 20));
     attributes.push(buildAttribute("alignment", "FlockAlignment", 0, 0.2, 0.01));
-    */
 
     setInterval(function () {
         var connection = window.Game.primaryConnection;
 
-        statsDisplay.text(
+        statsDisplay.innerText = (
             'vps:' + Game.Stats.viewsPerSecond +
             ' ups:' + Game.Stats.updatesPerSecond +
             ' fps:' + Game.Stats.framesPerSecond +
@@ -131,14 +145,14 @@
         );
 
         if (connection !== null) {
-            bandwidthDisplay.text('bandwidth: '
+            bandwidthDisplay.innerText = ('bandwidth: '
                 + Math.floor(connection.statBytesUpPerSecond / 102.4) / 10 * 8 + 'Kb/s up '
                 + Math.floor(connection.statBytesDownPerSecond / 102.4) / 10 * 8 + 'Kb/s down'
             );
-            latencyDisplay.text('ping: ' + (connection.latency ? (Math.floor(connection.latency * 100) / 100) + ' ms' : 'n/a'));
+            latencyDisplay.innerText = ('ping: ' + (connection.latency ? (Math.floor(connection.latency * 100) / 100) + ' ms' : 'n/a'));
         }
         else
-            latencyDisplay.text('ping: n/a');
+            latencyDisplay.innerText = ('ping: n/a');
 
         if (Game.Hook) {
             for (var i = 0; i < attributes.length; i++) {
@@ -146,4 +160,4 @@
             }
         }
     }, 1000);
-});
+})();
