@@ -6,6 +6,8 @@
     var camera = new Game.Camera(context);
     var interpolator = new Game.Interpolator();
     var leaderboard = new Game.Leaderboard(canvas, context);
+    var log = new Game.Log(canvas, context);
+
     var angle = 0.0;
     var aimTarget = { X: 0, Y: 0 };
 
@@ -22,10 +24,6 @@
     };*/
 
     Game.Controls.registerCanvas(canvas);
-
-    var log = function (message) {
-        document.getElementById('log').prepend(document.createTextNode(message + '\n'));
-    };
 
     var connection = new Game.Connection();
     window.Game.primaryConnection = connection;
@@ -126,14 +124,10 @@
         }
 
         var announcementsLength = newView.announcementsLength();
-        var announcements = [];
         for (var u = 0; u < announcementsLength; u++) {
             var announcement = newView.announcements(u);
-
-            announcements.push(announcement.text());
+            log.addEntry(announcement.text());
         }
-        if (announcements.length)
-            console.log(announcements);
 
         updateCounter += updatesLength;
 
@@ -273,6 +267,7 @@
         lastPosition = position;
 
         leaderboard.draw(leaderboard.position);
+        log.draw();
 
         if (Game.Controls.mouseX) {
 
