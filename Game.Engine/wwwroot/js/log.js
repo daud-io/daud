@@ -10,7 +10,8 @@
     Log.prototype = {
         addEntry: function (entry) {
             this.data.push(entry);
-            this.data = this.data.slice(this.data.length - 4);
+            while (this.data.length > 5)
+                this.data.shift();
             this.lastDisplay = performance.now();
         },
         draw: function () {
@@ -26,7 +27,6 @@
                 if (time > 3000)
                     alpha = 0;
 
-                console.log(alpha);
                 ctx.globalAlpha = alpha;
 
                 ctx.font = "12pt sans-serif";
