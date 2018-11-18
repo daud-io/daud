@@ -24,8 +24,8 @@
         {
             var builder = WebHost.CreateDefaultBuilder(args);
 
-            var port = System.Environment.GetEnvironmentVariable("$PORT");
-            if (!string.IsNullOrEmpty(port))
+            var port = System.Environment.GetEnvironmentVariable("PORT");
+            if (!string.IsNullOrEmpty(port)) 
                 builder = builder.UseUrls($"http://*:{port}");
             else
                 builder = builder.UseConfiguration(new ConfigurationBuilder()
