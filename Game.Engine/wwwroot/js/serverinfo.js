@@ -1,31 +1,31 @@
 ﻿import { Cache } from "./cache";
 
-var latencyDisplay = document.createElement('li');
-document.querySelector('#ansiblelinks').append(latencyDisplay);
+var latencyDisplay = document.createElement("li");
+document.querySelector("#ansiblelinks").append(latencyDisplay);
 
-var bandwidthDisplay = document.createElement('li');
-document.querySelector('#ansiblelinks').append(bandwidthDisplay);
+var bandwidthDisplay = document.createElement("li");
+document.querySelector("#ansiblelinks").append(bandwidthDisplay);
 
-var statsDisplay = document.createElement('li');
-document.querySelector('#ansiblelinks').append(statsDisplay);
+var statsDisplay = document.createElement("li");
+document.querySelector("#ansiblelinks").append(statsDisplay);
 
 var attributes = [];
 
-var buildAttributeToggle = function (labelText, propertyName) {
-    var li = document.createElement('li');
-    var label = document.createElement('label');
+var buildAttributeToggle = (labelText, propertyName) => {
+    var li = document.createElement("li");
+    var label = document.createElement("label");
     li.append(label);
 
-    var check = document.createElement('input');
+    var check = document.createElement("input");
     check.type = "checkbox";
-    var draw = function (value) {
+    var draw = value => {
         value = value || check.checked;
-        label.innerText = (labelText + '(' + (value) + ') : ');
+        label.innerText = `${labelText}(${value}) : `;
     };
 
-    check.addEventListener('change', function (event) {
+    check.addEventListener("change", event => {
         if (Game && Game.Hook) {
-            Game.Hook[propertyName] = check.prop('checked');
+            Game.Hook[propertyName] = check.prop("checked");
             Game.Hook.New = true;
         }
         draw();
@@ -34,44 +34,42 @@ var buildAttributeToggle = function (labelText, propertyName) {
     draw();
 
     li.append(check);
-    document.querySelector('#ansiblelinks').append(li);
+    document.querySelector("#ansiblelinks").append(li);
 
     var updater = {
-        update: function (hook) {
+        update(hook) {
             check.checked = hook[propertyName];
             draw();
         }
     };
     return updater;
-}
+};
 
-
-var buildAttribute = function (labelText, propertyName, min, max, step) {
-    var li = document.createElement('li');
-    var label = document.createElement('label');
+var buildAttribute = (labelText, propertyName, min, max, step) => {
+    var li = document.createElement("li");
+    var label = document.createElement("label");
     li.append(label);
 
-    var slider = document.createElement('input');
-    slider.type = "range"
+    var slider = document.createElement("input");
+    slider.type = "range";
     slider.classList.add("attribute-slider");
-    var draw = function (value) {
+    var draw = value => {
         value = value || slider.value;
 
-        label.innerText = (labelText + '(' + (value) + ') : ');
+        label.innerText = `${labelText}(${value}) : `;
     };
     slider.min = min;
     slider.max = max;
     slider.value = min;
     slider.step = step;
-    slider.addEventListener("change", function () {
-
+    slider.addEventListener("change", () => {
         if (Game && Game.Hook) {
             Game.Hook[propertyName] = slider.value;
             Game.Hook.New = true;
             //console.log(Game.Hook);
         }
         draw();
-    })
+    });
     // slider.slider({
     //     min: min,
     //     max: max,
@@ -90,20 +88,19 @@ var buildAttribute = function (labelText, propertyName, min, max, step) {
     draw();
 
     li.append(slider);
-    document.querySelector('#ansiblelinks').append(li);
+    document.querySelector("#ansiblelinks").append(li);
 
     var updater = {
-        update: function (hook) {
+        update(hook) {
             slider.value = hook[propertyName];
             draw();
         }
     };
     return updater;
-}
+};
 
-
-attributes.push(buildAttribute("thrust", "BaseThrust", 0, 1, .025));
-attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 1, .025));
+attributes.push(buildAttribute("thrust", "BaseThrust", 0, 1, 0.025));
+attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 1, 0.025));
 
 attributes.push(buildAttribute("hit cost", "HealthHitCost", 0, 100, 1));
 attributes.push(buildAttribute("boost time", "MaxBoostTime", 0, 1000, 10));
@@ -135,28 +132,18 @@ attributes.push(buildAttribute("separation", "FlockSeparation", 0, 40, 0.01));
 attributes.push(buildAttribute("sep  dist", "FlockSeparationMinimumDistance", 0, 400, 20));
 attributes.push(buildAttribute("alignment", "FlockAlignment", 0, 0.2, 0.01));
 
-setInterval(function () {
+setInterval(() => {
     var connection = window.Game.primaryConnection;
 
-    statsDisplay.innerText = (
-        'vps:' + window.Game.Stats.viewsPerSecond +
-        ' ups:' + window.Game.Stats.updatesPerSecond +
-        ' fps:' + window.Game.Stats.framesPerSecond +
-        ' cs:' + Cache.count
-    );
+    statsDisplay.innerText = `vps:${window.Game.Stats.viewsPerSecond} ups:${window.Game.Stats.updatesPerSecond} fps:${window.Game.Stats.framesPerSecond} cs:${Cache.count}`;
 
     if (connection !== null) {
-        bandwidthDisplay.innerText = ('bandwidth: '
-            + Math.floor(connection.statBytesUpPerSecond / 102.4) / 10 * 8 + 'Kb/s up '
-            + Math.floor(connection.statBytesDownPerSecond / 102.4) / 10 * 8 + 'Kb/s down'
-        );
-        latencyDisplay.innerText = ('ping: ' + (connection.latency ? (Math.floor(connection.latency * 100) / 100) + ' ms' : 'n/a'));
-    }
-    else
-        latencyDisplay.innerText = ('ping: n/a');
+        bandwidthDisplay.innerText = `bandwidth: ${(Math.floor(connection.statBytesUpPerSecond / 102.4) / 10) * 8}Kb/s up ${(Math.floor(connection.statBytesDownPerSecond / 102.4) / 10) * 8}Kb/s down`;
+        latencyDisplay.innerText = `ping: ${connection.latency ? Math.floor(connection.latency * 100) / 100 + " ms" : "n/a"}`;
+    } else latencyDisplay.innerText = "ping: n/a";
 
     if (Game.Hook) {
-        for (var i = 0; i < attributes.length; i++) {
+        for (let i = 0; i < attributes.length; i++) {
             attributes[i].update(Game.Hook);
         }
     }

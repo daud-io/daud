@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html>
+
 <head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56531396-2"></script>
     <script>
@@ -13,9 +14,9 @@
     <meta charset="utf-8" />
     <title></title>
     <link rel="stylesheet" type="text/css" href="css/game.css">
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css">
-    <link rel="shortcut icon" type="image/png" href="img/favicon.ico" />
+    <link rel="shortcut icon" type="image/png" href="favicon.ico" />
 </head>
+
 <body class="loading">
     <div id="aspectratio">
         <div class="noselect">
@@ -35,18 +36,18 @@
                 <div>
 
                     <div>
-                        <img id="logo" src="img/header.png" />
+                        <img id="logo" src="img/header.png" draggable="false" />
                     </div>
 
-                    <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;"/>
+                    <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" />
 
                     <select id="shipSelector">
-                        <option value="ship_green" colorName="green">green</option>
-                        <option value="ship_orange" colorName="orange">orange</option>
-                        <option value="ship_pink" colorName="pink">pink</option>
-                        <option value="ship_red" colorName="red">red</option>
-                        <option value="ship_cyan" colorName="cyan">cyan</option>
-                        <option value="ship_yellow" colorName="yellow">yellow</option>
+                        <option value="green">green</option>
+                        <option value="orange">orange</option>
+                        <option value="pink">pink</option>
+                        <option value="red">red</option>
+                        <option value="cyan">cyan</option>
+                        <option value="yellow">yellow</option>
                     </select>
 
                     <input type="button" id="spawn" value="LAUNCH!" />
@@ -76,31 +77,17 @@
     </div>
     <pre id="log" style="display: none; overflow: auto"></pre>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"
-            integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
-            crossorigin="anonymous"></script>
-
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/flatbuffers.js"></script>
     <script type="text/javascript" src="js/game_generated.js"></script>
-    <script type="text/javascript" src="js/cache.js"></script>
-    <script type="text/javascript" src="js/interpolator.js"></script>
-    <script type="text/javascript" src="js/leaderboard.js"></script>
-    <script type="text/javascript" src="js/log.js"></script>
-    <script type="text/javascript" src="js/background.js"></script>
-    <script type="text/javascript" src="js/controls.js"></script>
-    <script type="text/javascript" src="js/connection.js"></script>
-    <script type="text/javascript" src="js/renderer.js"></script>
-    <script type="text/javascript" src="js/camera.js"></script>
-    <script type="text/javascript" src="js/game.js"></script>
 
+    <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="js/intro.js"></script>
     <script type="text/javascript" src="js/panel.js"></script>
     <script type="text/javascript" src="js/serverinfo.js"></script>
 
 </body>
+
 </html>

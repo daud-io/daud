@@ -37,8 +37,7 @@ Controls.registerCanvas(canvas);
 var connection = new Connection();
 window.Game.primaryConnection = connection;
 
-var bodyFromServer = function (cache, body) {
-
+var bodyFromServer = function(cache, body) {
     var originalPosition = body.originalPosition();
     var momentum = body.velocity();
     var group = cache.getGroup(body.group());
@@ -49,10 +48,10 @@ var bodyFromServer = function (cache, body) {
         DefinitionTime: body.definitionTime(),
         Size: body.size() * 5,
         Sprite: Renderer.spriteIndices[body.sprite()], //body.sprite(),
-        Color: 'red', //body.color(),
+        Color: "red", //body.color(),
         Group: groupID,
-        OriginalAngle: body.originalAngle() / 127 * Math.PI,
-        AngularVelocity: body.angularVelocity() / 127 * Math.PI / 1000,
+        OriginalAngle: (body.originalAngle() / 127) * Math.PI,
+        AngularVelocity: ((body.angularVelocity() / 127) * Math.PI) / 1000,
         Momentum: {
             X: momentum.x() / 1000,
             Y: momentum.y() / 1000
@@ -66,29 +65,28 @@ var bodyFromServer = function (cache, body) {
     return newBody;
 };
 
-var groupFromServer = function (cache, group) {
-
+var groupFromServer = function(cache, group) {
     var newGroup = {
         ID: group.group(),
         Caption: group.caption(),
-        Type: group.type(),
+        Type: group.type()
     };
 
     return newGroup;
 };
 
-connection.onConnected = function () {
+connection.onConnected = function() {
     /*for (var i = 0; i < lagDetectionTimes.length; i++)
         scheduleLagCheck(lagDetectionTimes[i]);*/
 };
 
-connection.onLeaderboard = function (lb) {
+connection.onLeaderboard = function(lb) {
     //console.log('new leaderboard');
     leaderboard.setData(lb);
     leaderboard.position = lastPosition;
 };
 
-connection.onView = function (newView) {
+connection.onView = function(newView) {
     viewCounter++;
 
     view = {};
@@ -99,20 +97,18 @@ connection.onView = function (newView) {
     // this is probably very slow and should be optimized
     document.body.classList.remove("loading");
     if (view.isAlive) {
-        document.body.classList.remove('dead')
+        document.body.classList.remove("dead");
 
-        document.body.classList.add('alive');
+        document.body.classList.add("alive");
     } else {
-        document.body.classList.remove('alive');
-        document.body.classList.add('dead');
+        document.body.classList.remove("alive");
+        document.body.classList.add("dead");
     }
 
     lastOffset = view.time - performance.now();
-    if (lastOffset > serverTimeOffset)
-        serverTimeOffset = lastOffset;
+    if (lastOffset > serverTimeOffset) serverTimeOffset = lastOffset;
 
-    if (serverTimeOffset === false)
-        serverTimeOffset = lastOffset;
+    if (serverTimeOffset === false) serverTimeOffset = lastOffset;
 
     var groupsLength = newView.groupsLength();
     var groups = [];
@@ -121,7 +117,6 @@ connection.onView = function (newView) {
 
         groups.push(groupFromServer(cache, group));
     }
-
 
     var updatesLength = newView.updatesLength();
     var updates = [];
@@ -141,13 +136,11 @@ connection.onView = function (newView) {
 
     var deletes = [];
     var deletesLength = newView.deletesLength();
-    for (var d = 0; d < deletesLength; d++)
-        deletes.push(newView.deletes(d));
+    for (var d = 0; d < deletesLength; d++) deletes.push(newView.deletes(d));
 
     var groupDeletes = [];
     var groupDeletesLength = newView.groupDeletesLength();
-    for (var d = 0; d < groupDeletesLength; d++)
-        groupDeletes.push(newView.groupDeletes(d));
+    for (var d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d));
 
     cache.update(updates, deletes, groups, groupDeletes, gameTime);
 
@@ -156,22 +149,9 @@ connection.onView = function (newView) {
 
 var lastControl = {};
 
-setInterval(function () {
-
-    if (
-        angle !== lastControl.angle
-        || aimTarget.X !== aimTarget.X
-        || aimTarget.Y !== aimTarget.Y
-        || Controls.boost !== lastControl.boost
-        || Controls.shoot !== lastControl.shoot
-    ) {
-        connection.sendControl(
-            angle,
-            Controls.boost,
-            Controls.shoot,
-            aimTarget.X,
-            aimTarget.Y
-        );
+setInterval(function() {
+    if (angle !== lastControl.angle || aimTarget.X !== aimTarget.X || aimTarget.Y !== aimTarget.Y || Controls.boost !== lastControl.boost || Controls.shoot !== lastControl.shoot) {
+        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y);
 
         lastControl = {
             angle: angle,
@@ -182,29 +162,26 @@ setInterval(function () {
     }
 }, 10);
 
-document.getElementById('spawn').addEventListener("click", function () {
+document.getElementById("spawn").addEventListener("click", function() {
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship);
 });
 
-document.getElementById('spectate').addEventListener("click", function () {
-    document.body.classList.add('spectating');
+document.getElementById("spectate").addEventListener("click", function() {
+    document.body.classList.add("spectating");
 });
 
-document.addEventListener('keydown', function (e) {
-    if (e.keyCode == 27 || e.which == 27)
-        document.body.classList.remove('spectating');
+document.addEventListener("keydown", function(e) {
+    if (e.keyCode == 27 || e.which == 27) document.body.classList.remove("spectating");
 });
 
-
-
-var sizeCanvas = function () {
-    var width, height
-    if (window.innerWidth * 9 / 16 < window.innerHeight) {
+var sizeCanvas = function() {
+    var width, height;
+    if ((window.innerWidth * 9) / 16 < window.innerHeight) {
         width = window.innerWidth;
-        height = width * 9 / 16;
+        height = (width * 9) / 16;
     } else {
         height = window.innerHeight;
-        width = height * 16 / 9;
+        width = (height * 16) / 9;
     }
 
     canvas.width = width;
@@ -213,12 +190,11 @@ var sizeCanvas = function () {
     /*$('#panel').css('right', canvas.width - 10);
     $('#panel').css('left', canvas.width - 10 - 300);
     $('#panel').css('bottom', canvas.height - 10);*/
-
 };
 
 sizeCanvas();
 
-window.addEventListener("resize", function () {
+window.addEventListener("resize", function() {
     sizeCanvas();
 });
 
@@ -233,13 +209,13 @@ var viewCounter = 0;
 var updateCounter = 0;
 var lastCamera = { X: 0, Y: 0 };
 
-setInterval(function () {
+setInterval(function() {
     window.Game.Stats.framesPerSecond = frameCounter;
     window.Game.Stats.viewsPerSecond = viewCounter;
     window.Game.Stats.updatesPerSecond = updateCounter;
 
     if (frameCounter === 0) {
-        console.log('backgrounded');
+        console.log("backgrounded");
     }
     frameCounter = 0;
     viewCounter = 0;
@@ -256,8 +232,8 @@ function gameLoop() {
 
     if (view) {
         position = interpolator.projectObject(view.camera, gameTime);
-        position.X = (position.X * 0.2 + lastCamera.X * 0.8);
-        position.Y = (position.Y * 0.2 + lastCamera.Y * 0.8);
+        position.X = position.X * 0.2 + lastCamera.X * 0.8;
+        position.Y = position.Y * 0.2 + lastCamera.Y * 0.8;
 
         lastCamera = position;
 
@@ -278,7 +254,6 @@ function gameLoop() {
     log.draw();
 
     if (Controls.mouseX) {
-
         var cx = canvas.width / 2;
         var cy = canvas.height / 2;
         var dy = Controls.mouseY - cy;
@@ -310,4 +285,3 @@ function gameLoop() {
 }
 
 requestAnimationFrame(gameLoop);
-

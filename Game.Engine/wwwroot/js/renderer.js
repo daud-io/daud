@@ -1,71 +1,71 @@
-﻿export var Renderer = function (context, settings) {
-    settings = settings || {};
-    this.context = context;
-    this.view = false;
+export class Renderer {
+    constructor(context, settings) {
+        settings = settings || {};
+        this.context = context;
+        this.view = false;
 
-    var sprite = function (name, scale, scaleToSize) {
-        var img = new Image();
-        img.src = "img/" + name + ".png";
+        var sprite = function(name, scale, scaleToSize) {
+            var img = new Image();
+            img.src = "img/" + name + ".png";
 
-        return {
-            image: img,
-            scale: scale || 1.3,
-            scaleToSize: scaleToSize || false
-        }
+            return {
+                image: img,
+                scale: scale || 1.3,
+                scaleToSize: scaleToSize || false
+            };
+        };
+
+        Renderer.sprites = {
+            ship0: sprite("ship0"),
+            ship_green: sprite("ship_green"),
+            ship_gray: sprite("ship_gray"),
+            ship_orange: sprite("ship_orange"),
+            ship_pink: sprite("ship_pink"),
+            ship_red: sprite("ship_red"),
+            ship_cyan: sprite("ship_cyan"),
+            ship_yellow: sprite("ship_yellow"),
+            ship_flash: sprite("ship_flash"),
+            bullet_green: sprite("bullet_green", 0.03, true),
+            bullet_orange: sprite("bullet_orange", 0.03, true),
+            bullet_pink: sprite("bullet_pink", 0.03, true),
+            bullet_red: sprite("bullet_red", 0.03, true),
+            bullet_cyan: sprite("bullet_cyan", 0.03, true),
+            bullet_yellow: sprite("bullet_yellow", 0.03, true),
+            fish: sprite("ship0", 0.005, true),
+            bullet: sprite("bullet", 0.02, true),
+            seeker: sprite("seeker", 0.02, true),
+            seeker_pickup: sprite("seeker_pickup", 0.02, true),
+            obstacle: sprite("obstacle", 0.0028, true),
+            arrow: sprite("arrow", 0.03)
+        };
+
+        Renderer.spriteIndices = [
+            "none",
+            "ship0",
+            "ship_green",
+            "ship_gray",
+            "ship_orange",
+            "ship_pink",
+            "ship_red",
+            "ship_cyan",
+            "ship_yellow",
+            "ship_flash",
+            "bullet_green",
+            "bullet_orange",
+            "bullet_pink",
+            "bullet_red",
+            "bullet_cyan",
+            "bullet_yellow",
+            "fish",
+            "bullet",
+            "seeker",
+            "seeker_pickup",
+            "obstacle",
+            "arrow"
+        ];
     }
 
-    Renderer.sprites = {
-        'ship0': sprite("ship0"),
-        'ship_green': sprite("ship_green"),
-        'ship_gray': sprite("ship_gray"),
-        'ship_orange': sprite("ship_orange"),
-        'ship_pink': sprite("ship_pink"),
-        'ship_red': sprite("ship_red"),
-        'ship_cyan': sprite("ship_cyan"),
-        'ship_yellow': sprite("ship_yellow"),
-        'ship_flash': sprite("ship_flash"),
-        'bullet_green': sprite("bullet_green", 0.03, true),
-        'bullet_orange': sprite("bullet_orange", 0.03, true),
-        'bullet_pink': sprite("bullet_pink", 0.03, true),
-        'bullet_red': sprite("bullet_red", 0.03, true),
-        'bullet_cyan': sprite("bullet_cyan", 0.03, true),
-        'bullet_yellow': sprite("bullet_yellow", 0.03, true),
-        'fish': sprite("ship0", .005, true),
-        'bullet': sprite("bullet", 0.02, true),
-        'seeker': sprite("seeker", 0.02, true),
-        'seeker_pickup': sprite("seeker_pickup", 0.02, true),
-        'obstacle': sprite("obstacle", 0.0028, true),
-        'arrow': sprite("arrow", 0.03)
-    };
-
-    Renderer.spriteIndices = [
-        "none",
-        "ship0",
-        "ship_green",
-        "ship_gray",
-        "ship_orange",
-        "ship_pink",
-        "ship_red",
-        "ship_cyan",
-        "ship_yellow",
-        "ship_flash",
-        "bullet_green",
-        "bullet_orange",
-        "bullet_pink",
-        "bullet_red",
-        "bullet_cyan",
-        "bullet_yellow",
-        "fish",
-        "bullet",
-        "seeker",
-        "seeker_pickup",
-        "obstacle",
-        "arrow"
-    ];
-};
-
-Renderer.prototype = {
-    draw: function (cache, interpolator, currentTime) {
+    draw(cache, interpolator, currentTime) {
         if (this.view) {
             var pv = this.view;
             var ctx = this.context;
@@ -98,13 +98,12 @@ Renderer.prototype = {
 
             var groupsUsed = [];
 
-            cache.foreach(function (body) {
+            cache.foreach(function(body) {
                 var object = body;
 
                 var position = interpolator.projectObject(object, currentTime);
 
                 if (object.Group) {
-
                     var group = false;
                     for (var i = 0; i < groupsUsed.length; i++)
                         if (groupsUsed[i].id == object.Group) {
@@ -115,7 +114,7 @@ Renderer.prototype = {
                     if (!group) {
                         group = {
                             id: object.Group,
-                            group: cache.groups['g-' + object.Group],
+                            group: cache.groups["g-" + object.Group],
                             points: []
                         };
 
@@ -125,9 +124,7 @@ Renderer.prototype = {
                     group.points.push(position);
                 }
 
-                var ship = object.Sprite != null
-                    ? Renderer.sprites[object.Sprite]
-                    : false;
+                var ship = object.Sprite != null ? Renderer.sprites[object.Sprite] : false;
 
                 /*if (object.Caption) {
                     ctx.fillText(object.Caption, position.X, position.Y + 90);
@@ -153,7 +150,6 @@ Renderer.prototype = {
                     }
 
                     if (healthRing) {
-
                         /*if (health < 0.33)
                             ctx.fillStyle = "rgba(255, 128, 128, 0.2)";
                         else if (health < 0.66)
@@ -181,14 +177,12 @@ Renderer.prototype = {
                     ctx.rotate(position.Angle);
                     ctx.scale(ship.scale, ship.scale);
 
-                    if (ship.scaleToSize)
-                        ctx.scale(object.Size, object.Size);
+                    if (ship.scaleToSize) ctx.scale(object.Size, object.Size);
 
                     ctx.drawImage(ship.image, -shipWidth / 2, -shipHeight / 2, shipWidth, shipHeight);
                 }
 
                 ctx.restore();
-
             }, this);
 
             for (var i = 0; i < groupsUsed.length; i++) {
@@ -207,18 +201,18 @@ Renderer.prototype = {
 
                     ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                 }
-
             }
 
-            cache.foreach(function (body) {
+            cache.foreach(function(body) {
                 var position = interpolator.projectObject(body, currentTime);
                 if (body.Caption) {
                     ctx.fillText(body.Caption, position.X, position.Y + 90);
                 }
             }, this);
         }
-    },
-    colorValue: function (colorName) {
+    }
+
+    colorValue(colorName) {
         switch (colorName) {
             case "cyan":
                 return "rgba(0,255,255,.2)";
@@ -236,4 +230,4 @@ Renderer.prototype = {
                 return "rgba(255,255,0,.2)";
         }
     }
-};
+}

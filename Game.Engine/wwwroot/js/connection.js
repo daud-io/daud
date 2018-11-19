@@ -1,42 +1,40 @@
 ﻿import { flatbuffers } from "./flatbuffers";
 import { Game } from "./game_generated";
 
-export var Connection = function () {
+export class Connection {
+    constructor() {
+        this.onView = function(view) {};
+        this.onLeaderboard = function(leaderboard) {};
+        this.onConnected = function() {};
+        this.reloading = false;
+        this.connected = false;
+        this.connect();
 
-    this.onView = function (view) { };
-    this.onLeaderboard = function (leaderboard) { };
-    this.onConnected = function () { };
-    this.reloading = false;
-    this.connected = false;
-    this.connect();
+        this.statBytesUp = 0;
+        this.statBytesDown = 0;
+        this.statBytesDownPerSecond = 0;
+        this.statBytesUpPerSecond = 0;
 
-    this.statBytesUp = 0;
-    this.statBytesDown = 0;
-    this.statBytesDownPerSecond = 0;
-    this.statBytesUpPerSecond = 0;
+        var self = this;
+        this.fb = Game.Engine.Networking.FlatBuffers;
+        this.latency = 0;
+        this.minLatency = 999;
+        this.simulateLatency = 0;
 
-    var self = this;
-    this.fb = Game.Engine.Networking.FlatBuffers;
-    this.latency = 0;
-    this.minLatency = 999;
-    this.simulateLatency = 0;
+        setInterval(function() {
+            if (self.connected) {
+                self.sendPing();
+            }
 
-    setInterval(function () {
-        if (self.connected) {
-            self.sendPing();
-        }
+            self.statBytesDownPerSecond = self.statBytesDown;
+            self.statBytesUpPerSecond = self.statBytesUp;
 
-        self.statBytesDownPerSecond = self.statBytesDown;
-        self.statBytesUpPerSecond = self.statBytesUp;
+            self.statBytesUp = 0;
+            self.statBytesDown = 0;
+        }, 1000);
+    }
 
-        self.statBytesUp = 0;
-        self.statBytesDown = 0;
-    }, 1000);
-}
-
-Connection.prototype = {
-
-    connect: function () {
+    connect() {
         var url;
         if (window.location.protocol === "https:") {
             url = "wss:";
@@ -51,25 +49,26 @@ Connection.prototype = {
 
         var self = this;
 
-        this.socket.onmessage = function (event) {
+        this.socket.onmessage = function(event) {
             if (self.simulateLatency > 0) {
-                setTimeout(function () {
+                setTimeout(function() {
                     self.onMessage(event);
                 }, self.simulateLatency);
-            }
-            else
-                self.onMessage(event);
-
+            } else self.onMessage(event);
         };
-        this.socket.onopen = function (event) { self.onOpen(event); };
-        this.socket.onclose = function (event) { self.onClose(event); };
+        this.socket.onopen = function(event) {
+            self.onOpen(event);
+        };
+        this.socket.onclose = function(event) {
+            self.onClose(event);
+        };
+    }
 
-    },
-    sendHook: function (hook) {
+    sendHook(hook) {
         //this.send(hook);
-    },
-    sendPing: function () {
+    }
 
+    sendPing() {
         var builder = new flatbuffers.Builder(0);
 
         this.fb.NetPing.startNetPing(builder);
@@ -79,7 +78,6 @@ Connection.prototype = {
         //this.fb.Ping.addTime(builder, this.pingSent);
         var ping = this.fb.NetPing.endNetPing(builder);
 
-
         this.fb.NetQuantum.startNetQuantum(builder);
         this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetPing);
         this.fb.NetQuantum.addMessage(builder, ping);
@@ -88,9 +86,9 @@ Connection.prototype = {
         builder.finish(quantum);
 
         this.send(builder.asUint8Array());
-    },
-    sendSpawn: function (name, color, ship) {
+    }
 
+    sendSpawn(name, color, ship) {
         var builder = new flatbuffers.Builder(0);
 
         var stringColor = builder.createString(color || "gray");
@@ -111,10 +109,10 @@ Connection.prototype = {
         builder.finish(quantum);
 
         this.send(builder.asUint8Array());
-        console.log('spawned');
+        console.log("spawned");
+    }
 
-    },
-    sendControl: function (angle, boost, shoot, x, y) {
+    sendControl(angle, boost, shoot, x, y) {
         var builder = new flatbuffers.Builder(0);
 
         this.fb.NetControlInput.startNetControlInput(builder);
@@ -134,38 +132,37 @@ Connection.prototype = {
         builder.finish(quantum);
 
         this.send(builder.asUint8Array());
-    },
-    send: function (databuffer) {
+    }
+
+    send(databuffer) {
         if (this.socket.readyState === 1) {
             var self = this;
             if (this.simulateLatency > 0) {
-                setTimeout(function () {
+                setTimeout(function() {
                     self.socket.send(databuffer);
-                }, this.simulateLatency)
-            }
-            else
-                this.socket.send(databuffer);
+                }, this.simulateLatency);
+            } else this.socket.send(databuffer);
 
             this.statBytesUp += databuffer.length;
         }
-    },
-    onOpen: function (event) {
+    }
+
+    onOpen(event) {
         this.connected = true;
-        console.log('connected');
+        console.log("connected");
         this.onConnected();
 
-        if (this.reloading)
-            window.location.reload();
-    },
-    onClose: function (event) {
+        if (this.reloading) window.location.reload();
+    }
 
-        console.log('disconnected');
+    onClose(event) {
+        console.log("disconnected");
         this.connected = false;
         this.reloading = true;
         this.connect();
-    },
-    onMessage: function (event) {
+    }
 
+    onMessage(event) {
         var data = new Uint8Array(event.data);
         var buf = new flatbuffers.ByteBuffer(data);
 
@@ -178,7 +175,6 @@ Connection.prototype = {
 
         switch (messageType) {
             case this.fb.AllMessages.NetWorldView:
-
                 message = quantum.message(new this.fb.NetWorldView());
 
                 this.onView(message);
@@ -186,8 +182,7 @@ Connection.prototype = {
             case this.fb.AllMessages.NetPing: // Ping
                 if (this.pingSent) {
                     this.latency = performance.now() - this.pingSent;
-                    if (this.latency > 0 && this.latency < this.minLatency)
-                        this.minLatency = this.latency;
+                    if (this.latency > 0 && this.latency < this.minLatency) this.minLatency = this.latency;
                 }
 
                 break;
@@ -223,4 +218,4 @@ Connection.prototype = {
                 break;
         }
     }
-};
+}
