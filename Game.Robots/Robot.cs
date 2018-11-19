@@ -9,13 +9,13 @@
     {
         public bool AutoSpawn { get; set; } = true;
         private DateTime LastSpawn = DateTime.MinValue;
-        private readonly PlayerConnection Connection;
+        private readonly Connection Connection;
         private const int RESPAWN_FALLOFF = 1000;
         private readonly DateTime Born = DateTime.Now;
 
         public bool AutoFire { get; set; } = false;
 
-        public Robot(PlayerConnection connection)
+        public Robot(Connection connection)
         {
             this.Connection = connection;
             this.Connection.OnView = this.OnView;

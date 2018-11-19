@@ -10,7 +10,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class PlayerConnection : IDisposable
+    public class Connection : IDisposable
     {
         private readonly APIClient APIClient;
         private readonly Timer PingTimer;
@@ -31,7 +31,7 @@
         public Func<Task> OnView { get; set; } = null;
         public Func<Task> OnConnected { get; set; } = null;
 
-        public PlayerConnection(APIClient apiClient)
+        public Connection(APIClient apiClient)
         {
             APIClient = apiClient;
             PingTimer = new Timer(this.PingEntry, null, 1000, PING_TIMER_MS);

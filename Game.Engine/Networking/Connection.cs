@@ -386,7 +386,10 @@
             {
                 lock (world.Bodies)
                 {
-                    player = new Player();
+                    player = new Player
+                    {
+                        IP = httpContext.Connection.RemoteIpAddress.ToString()
+                    };
                     player.Init(world);
                 }
 

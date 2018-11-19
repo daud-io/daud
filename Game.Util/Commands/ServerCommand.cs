@@ -2,10 +2,13 @@
 {
     using McMaster.Extensions.CommandLineUtils;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
 
     [Subcommand("get", typeof(Get))]
     [Subcommand("reset", typeof(Reset))]
+    [Subcommand("announce", typeof(Announce))]
+    [Subcommand("connections", typeof(Connections))]
     class ServerCommand : CommandBase
     {
         class Get : CommandBase
@@ -32,5 +35,35 @@
                 await API.Server.ServerResetAsync();
             }
         }
+
+        class Announce : CommandBase
+        {
+            [Argument(0)]
+            public string Message { get; set; } = null;
+
+            protected async override Task ExecuteAsync()
+            {
+                if (Message != null)
+                    await API.Server.AnnounceAsync(Message);
+            }
+        }
+
+        class Connections : CommandBase
+        {
+            protected async override Task ExecuteAsync()
+            {
+                var connections = await API.Server.ConnectionsAsync();
+
+                Table("Connections", connections.Select(c =>
+                    new
+                    {
+                        c.Name,
+                        c.IP,
+                        c.IsAlive,
+                        c.Score
+                    }));
+            }
+        }
+
     }
 }

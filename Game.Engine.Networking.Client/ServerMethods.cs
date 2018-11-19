@@ -2,6 +2,7 @@
 {
     using Game.API.Common.Models;
     using System;
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -38,6 +39,19 @@
             {
                 return false;
             }
+        }
+
+        public async Task<bool> AnnounceAsync(string message)
+        {
+            return await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.ServerAnnounce, 
+                queryStringContent: new { message });
+        }
+
+        public async Task<IEnumerable<GameConnection>> ConnectionsAsync()
+        {
+            return await APIClient.APICallAsync<IEnumerable<GameConnection>>(
+                HttpMethod.Get, APIEndpoint.ServerPlayers);
+
         }
     }
 }

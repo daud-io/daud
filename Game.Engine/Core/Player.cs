@@ -28,6 +28,8 @@
         public bool PendingDestruction { get; set; } = false;
         private bool IsSpawning = false;
 
+        public string IP { get; set; } = null;
+
         public void SetControl(ControlInput input)
         {
             this.ControlInput = input;
