@@ -53,5 +53,11 @@
                 HttpMethod.Get, APIEndpoint.ServerPlayers);
 
         }
+
+        public async Task<string> HookAsync(string json)
+        {
+            return await APIClient.APICallAsync<string>(
+                HttpMethod.Post, APIEndpoint.ServerHook, bodyContent: json);
+        }
     }
 }

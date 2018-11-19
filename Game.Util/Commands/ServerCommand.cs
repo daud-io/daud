@@ -9,6 +9,7 @@
     [Subcommand("reset", typeof(Reset))]
     [Subcommand("announce", typeof(Announce))]
     [Subcommand("connections", typeof(Connections))]
+    [Subcommand("hook", typeof(Hook))]
     class ServerCommand : CommandBase
     {
         class Get : CommandBase
@@ -65,5 +66,17 @@
             }
         }
 
+        class Hook : CommandBase
+        {
+            [Argument(0)]
+            public string HookJSON { get; set; } = null;
+
+            protected async override Task ExecuteAsync()
+            {
+                var hook = await API.Server.HookAsync(HookJSON);
+
+                Console.WriteLine(hook);
+            }
+        }
     }
 }

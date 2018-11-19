@@ -5,6 +5,7 @@
     using Game.Engine.Core;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -44,6 +45,16 @@
                 player.SendMessage(message);
 
             return true;
+        }
+
+        [HttpPost, Route("hook")]
+        public string Hook([FromBody]string json)
+        {
+            var world = Worlds.Find();
+
+            JsonConvert.PopulateObject(json, world.Hook);
+
+            return JsonConvert.SerializeObject(world.Hook, Formatting.Indented); ;
         }
 
         [HttpGet, Route("players")]
