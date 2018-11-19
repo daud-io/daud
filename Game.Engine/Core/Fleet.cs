@@ -68,6 +68,7 @@
             this.Owner.Die();
 
             PendingDestruction = true;
+            NewShips.Clear()
         }
 
         public override void Destroy()
