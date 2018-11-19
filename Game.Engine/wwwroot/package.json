@@ -4,7 +4,7 @@
   "description": "",
   "main": "game.html",
   "scripts": {
-    "build": "parcel build index.html && cp -R img dist/img"
+    "build": "parcel build index.html && copyfiles img/*.* dist/"
   },
   "author": "modderme123",
   "license": "ISC",
@@ -13,6 +13,8 @@
     "webpack-cli": "^3.1.2"
   },
   "devDependencies": {
-    "cssnano": "^4.1.7"
+    "copyfiles": "^2.1.0",
+    "cssnano": "^4.1.7",
+    "parcel": "^1.10.3"
   }
 }
