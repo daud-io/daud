@@ -39,15 +39,12 @@
                 for (var i = 0; i < this.data.length; i++) {
                     var entry = this.data[i];
 
-                    ctx.fillStyle = "white";
+                ctx.fillStyle = "white";
 
-                    ctx.fillText(entry, margin, rowHeight + (i * rowHeight));
-                }
+                ctx.fillText(entry, margin, rowHeight + (i * rowHeight));
             }
-
-            ctx.restore();
         }
-    };
 
-    this.Game.Log = Log;
-}).call(this);
+        ctx.restore();
+    }
+};

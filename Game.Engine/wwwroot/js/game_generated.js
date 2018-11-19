@@ -4,7 +4,7 @@
  * @const
  * @namespace
  */
-var Game = Game || {};
+export var Game = Game || {};
 
 /**
  * @const
@@ -1370,4 +1370,3 @@ Game.Engine.Networking.FlatBuffers.NetQuantum.finishNetQuantumBuffer = function(
 };
 
 // Exports for Node.js and RequireJS
-this.Game = Game;

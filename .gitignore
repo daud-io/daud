@@ -306,3 +306,7 @@ $RECYCLE.BIN/
 *.lnk
 *.vscode/
 debug.config.json
+
+dist/
+.cache/
+package-lock.json
