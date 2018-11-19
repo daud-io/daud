@@ -194,7 +194,8 @@ label {
     margin-left: 20px;
     width: 100px;
     display: inline-block;
-    float: right;
+    right: 0;
+    position: absolute;
 }
 
 .noselect {

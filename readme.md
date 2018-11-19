@@ -1,10 +1,5 @@
 # Setting Up on a Mac
 
-### Getting the Code
-
-If you don't have github, create a github account
-clone the repository https://github.com/andylippitt/IOGame
-
 ### Installing Tools
 
 Visual Studio can be found at https://visualstudio.microsoft.com/vs/mac/
@@ -13,6 +8,27 @@ VSCode can be used as well
 
 Make sure you install .net core, visual studio should prompt you to do so during the process.
 
+node.js and npm need to be installed
+
+### Running from the command line
+
+1. `git clone https://github.com/andylippitt/IOGame.git`
+2. `cd IOGame/Game.Engine`
+3. `npm install --prefix wwwroot`
+4. `dotnet run` or `dotnet run -c Release`
+
+### Publishing to Heroku
+1. Set up an account on Heroku and on Docker Hub
+2. `cd Game.Engine`
+3. `./deploy.sh`
+
+If you get an error that the file './deploy.sh' is not executable by this user: run `chmod +x ./deploy.sh`
+
+### Getting the Code
+
+If you don't have github, create a github account
+clone the repository https://github.com/andylippitt/IOGame
+
 ### Opening and Running
 
 Navigate to the code repository in finder
@@ -20,7 +36,6 @@ Double click "Game.Engine.sln"
 If the project opens in Visual studio, that is good.
 
 You can now run the project locally with the run button. 
-
 
 ### Possible Issues
 

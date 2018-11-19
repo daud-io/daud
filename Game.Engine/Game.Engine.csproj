@@ -30,4 +30,8 @@
     </None>
   </ItemGroup>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="npm --prefix ./wwwroot run build" />
+  </Target>
+
 </Project>

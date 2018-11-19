@@ -34,6 +34,7 @@
                 );
 
             return builder
+                .UseWebRoot("wwwroot/dist")
                 .UseStartup<Startup>();
         }
     }
