@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Numerics;
 
-    public class Bullet : ActorBody
+    public class Bullet : ActorBody, ICollide
     {
         public Fleet OwnedByFleet { get; set; }
         public long TimeDeath { get; set; }
@@ -85,5 +85,49 @@
         {
             TimeDeath = World.Time;
         }
+
+
+        public virtual void CollisionExecute(Body projectedBody)
+        {
+            var bullet = projectedBody as Bullet;
+            var fleet = bullet?.OwnedByFleet;
+            var player = fleet?.Owner;
+            bullet.Consumed = true;
+
+            this.Consumed = true;
+            this.PendingDestruction = true;
+        }
+
+        public bool IsCollision(Body projectedBody)
+        {
+            if (PendingDestruction)
+                return false;
+
+            if (!this.Seeker)
+                return false;
+
+            if (projectedBody is Bullet bullet)
+            {
+                // avoid "piercing" shots
+                if (bullet.Consumed)
+                    return false;
+
+                // if it came from this fleet
+                if (bullet.OwnedByFleet == this?.OwnedByFleet)
+                    return false;
+
+                // team mode ensures that bullets of like colors do no harm
+                if (World.Hook.TeamMode && bullet.Color == this.Color)
+                    return false;
+
+                // did it actually hit
+                if ((Vector2.Distance(projectedBody.Position, this.Position)
+                        <= this.Size + projectedBody.Size))
+                    return true;
+            }
+
+            return false;
+        }
+
     }
 }
