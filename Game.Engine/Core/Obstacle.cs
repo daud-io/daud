@@ -38,7 +38,8 @@
             if (World.DistanceOutOfBounds(Position) > 0)
             {
                 var speed = Momentum.Length();
-                Momentum = Vector2.Normalize(Vector2.Zero - Position) * speed;
+                if (Position != Vector2.Zero)
+                    Momentum = Vector2.Normalize(Vector2.Zero - Position) * speed;
             }
         }
     }

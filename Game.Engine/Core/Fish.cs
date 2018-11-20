@@ -53,7 +53,10 @@
                         * Flocking.Separation(ships, this, World.Hook.FlockSeparationMinimumDistance));
 
             if (IsOOB)
-                oobVector = Vector2.Normalize(-Position) * oobVectorWeight;
+            {
+                if (Position != Vector2.Zero)
+                    oobVector = Vector2.Normalize(-Position) * oobVectorWeight;
+            }
 
             var steeringVector =
                 new Vector2(MathF.Cos(Angle), MathF.Sin(Angle))
