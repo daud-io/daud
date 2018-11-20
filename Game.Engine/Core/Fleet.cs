@@ -101,7 +101,8 @@
             var ship = new Ship()
             {
                 Fleet = this,
-                Sprite = this.Owner.ShipSprite
+                Sprite = this.Owner.ShipSprite,
+                Color = this.Owner.Color
             };
 
             if (this.Ships.Any())
