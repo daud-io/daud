@@ -1,4 +1,6 @@
-﻿var max = 3;
+﻿import $ from "jquery";
+
+var max = 3;
 $.get("https://twitrss.me/twitter_user_to_rss/?user=IoDaud", function(data) {
     $(data)
         .find("item")

@@ -1,150 +1,111 @@
-﻿import { Cache } from "./cache";
+﻿import { fetch } from "whatwg-fetch";
+import { Cache } from "./cache";
+import * as dat from "dat.gui";
 
-var latencyDisplay = document.createElement("li");
-document.querySelector("#ansiblelinks").append(latencyDisplay);
+export const gui = new dat.GUI({ autoPlace: false });
+document.querySelector(".ansible").appendChild(gui.domElement);
+gui.domElement.style.position = "absolute";
+gui.domElement.style.bottom = "0";
+gui.domElement.style.right = "15px";
+gui.domElement.firstChild.style.maxHeight = "50vh";
+gui.domElement.firstChild.style.overflowY = "scroll";
+gui.__closeButton.style.display = "none";
+gui.closed = true;
 
-var bandwidthDisplay = document.createElement("li");
-document.querySelector("#ansiblelinks").append(bandwidthDisplay);
-
-var statsDisplay = document.createElement("li");
-document.querySelector("#ansiblelinks").append(statsDisplay);
-
-var attributes = [];
-
-var buildAttributeToggle = (labelText, propertyName) => {
-    var li = document.createElement("li");
-    var label = document.createElement("label");
-    li.append(label);
-
-    var check = document.createElement("input");
-    check.type = "checkbox";
-    var draw = value => {
-        value = value || check.checked;
-        label.innerText = `${labelText}(${value}) : `;
-    };
-
-    check.addEventListener("change", event => {
-        if (Game && Game.Hook) {
-            Game.Hook[propertyName] = check.prop("checked");
-            Game.Hook.New = true;
-        }
-        draw();
-    });
-
-    draw();
-
-    li.append(check);
-    document.querySelector("#ansiblelinks").append(li);
-
-    var updater = {
-        update(hook) {
-            check.checked = hook[propertyName];
-            draw();
-        }
-    };
-    return updater;
+var hooks = {
+    Ping: new Function(),
+    Bandwidth: new Function(),
+    FPS: new Function()
 };
 
-var buildAttribute = (labelText, propertyName, min, max, step) => {
-    var li = document.createElement("li");
-    var label = document.createElement("label");
-    li.append(label);
+var latencyDisplay = gui.add(hooks, "Ping");
+var bandwidthDisplay = gui.add(hooks, "Bandwidth");
+var statsDisplay = gui.add(hooks, "FPS");
 
-    var slider = document.createElement("input");
-    slider.type = "range";
-    slider.classList.add("attribute-slider");
-    var draw = value => {
-        value = value || slider.value;
+var token = fetch("/api/v1/user/authenticate", {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json; charset=utf-8"
+    },
+    body: JSON.stringify({
+        Identifier: {
+            UserKey: "Administrator"
+        },
+        password: ""
+    })
+})
+    .then(r => r.json())
+    .then(r => r.response.token)
+    .then(r => {
+        fetch("/api/v1/server/hook", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+                Authorization: "Bearer " + r
+            },
+            body: "{}"
+        })
+            .then(r => r.json())
+            .then(r => {
+                var obj = JSON.parse(r.response);
+                for (const key in obj) {
+                    hooks[key] = obj[key] == 0 ? obj[key] + 0.01 : obj[key];
+                    if (obj[key] == 0) console.log(key, hooks[key]);
+                }
+                for (const key in hooks) {
+                    if (typeof hooks[key] == "boolean") {
+                        gui.add(hooks, key).onChange(bind_param(key));
+                    } else if (typeof hooks[key] != "function") {
+                        var min, max, step;
+                        if (hooks[key] < 0) {
+                            min = -1;
+                            max = 0;
+                            step = 0.000001;
+                        } else if (hooks[key] <= 1) {
+                            min = 0;
+                            max = 1;
+                            step = 0.000001;
+                        } else {
+                            min = 0;
+                            max = Math.pow(10, Math.ceil(Math.log10(hooks[key] + 1)));
+                            step = 1;
+                        }
 
-        label.innerText = `${labelText}(${value}) : `;
-    };
-    slider.min = min;
-    slider.max = max;
-    slider.value = min;
-    slider.step = step;
-    slider.addEventListener("change", () => {
-        if (Game && Game.Hook) {
-            Game.Hook[propertyName] = slider.value;
-            Game.Hook.New = true;
-            //console.log(Game.Hook);
-        }
-        draw();
+                        if (step) {
+                            gui.add(hooks, key, min, max, step).onChange(bind_param(key));
+                        } else {
+                            gui.add(hooks, key, min, max).onChange(bind_param(key));
+                        }
+                    }
+                }
+            });
+
+        return r;
     });
-    // slider.slider({
-    //     min: min,
-    //     max: max,
-    //     value: min,
-    //     step: step,
-    //     slide: function (event, ui) {
 
-    //         if (Game && Game.Hook) {
-    //             Game.Hook[propertyName] = ui.value;
-    //             Game.Hook.New = true;
-    //             //console.log(Game.Hook);
-    //         }
-    //         draw();
-    //     }
-    // });
-    draw();
+async function send_hook(attr) {
+    var changer = {};
+    changer[attr] = hooks[attr];
+    fetch("/api/v1/server/hook", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            Authorization: "Bearer " + (await token)
+        },
+        body: JSON.stringify(changer)
+    });
+}
 
-    li.append(slider);
-    document.querySelector("#ansiblelinks").append(li);
+function bind_param(a) {
+    return () => send_hook(a);
+}
 
-    var updater = {
-        update(hook) {
-            slider.value = hook[propertyName];
-            draw();
-        }
-    };
-    return updater;
-};
-
-attributes.push(buildAttribute("thrust", "BaseThrust", 0, 1, 0.025));
-attributes.push(buildAttribute("thrust(bot)", "BaseThrustBot", 0, 1, 0.025));
-
-attributes.push(buildAttribute("hit cost", "HealthHitCost", 0, 100, 1));
-attributes.push(buildAttribute("boost time", "MaxBoostTime", 0, 1000, 10));
-attributes.push(buildAttribute("health regen", "HealthRegenerationPerFrame", 0, 2, 0.1));
-
-attributes.push(buildAttribute("max speed", "MaxSpeed", 0, 3, 0.2));
-attributes.push(buildAttribute("max speed boost", "MaxSpeedBoost", 0, 3, 0.2));
-
-attributes.push(buildAttribute("shot cooldown", "ShootCooldownTime", 0, 5000, 1));
-attributes.push(buildAttribute("shot cool(bot)", "ShootCooldownTimeBot", 0, 5000, 1));
-
-attributes.push(buildAttribute("max health", "MaxHealth", 0, 500, 1));
-attributes.push(buildAttribute("max health(bot)", "MaxHealthBot", 0, 500, 1));
-
-attributes.push(buildAttribute("bullet speed", "BulletSpeed", 0, 3, 0.1));
-attributes.push(buildAttribute("bullet life", "BulletLife", 0, 25000, 1));
-
-attributes.push(buildAttribute("bot per X", "BotPerXPoints", 100, 20000, 1));
-attributes.push(buildAttribute("bot base", "BotBase", 0, 25, 1));
-
-attributes.push(buildAttribute("obstacles", "Obstacles", 0, 25, 1));
-
-attributes.push(buildAttributeToggle("team mode", "TeamMode"));
-
-attributes.push(buildAttribute("flocking", "FlockWeight", 0, 0.2, 0.01));
-attributes.push(buildAttribute("flocking pseed", "FlockSpeed", 0, 1000, 40));
-attributes.push(buildAttribute("cohesion", "FlockCohesion", 0, 0.005, 0.00001));
-attributes.push(buildAttribute("separation", "FlockSeparation", 0, 40, 0.01));
-attributes.push(buildAttribute("sep  dist", "FlockSeparationMinimumDistance", 0, 400, 20));
-attributes.push(buildAttribute("alignment", "FlockAlignment", 0, 0.2, 0.01));
-
+var connection = window.Game.primaryConnection;
 setInterval(() => {
-    var connection = window.Game.primaryConnection;
-
-    statsDisplay.innerText = `vps:${window.Game.Stats.viewsPerSecond} ups:${window.Game.Stats.updatesPerSecond} fps:${window.Game.Stats.framesPerSecond} cs:${Cache.count}`;
+    statsDisplay.name(`vps:${window.Game.Stats.viewsPerSecond} ups:${window.Game.Stats.updatesPerSecond} fps:${window.Game.Stats.framesPerSecond} cs:${Cache.count}`);
 
     if (connection !== null) {
-        bandwidthDisplay.innerText = `bandwidth: ${(Math.floor(connection.statBytesUpPerSecond / 102.4) / 10) * 8}Kb/s up ${(Math.floor(connection.statBytesDownPerSecond / 102.4) / 10) * 8}Kb/s down`;
-        latencyDisplay.innerText = `ping: ${connection.latency ? Math.floor(connection.latency * 100) / 100 + " ms" : "n/a"}`;
-    } else latencyDisplay.innerText = "ping: n/a";
-
-    if (Game.Hook) {
-        for (let i = 0; i < attributes.length; i++) {
-            attributes[i].update(Game.Hook);
-        }
-    }
+        bandwidthDisplay.name(`bandwidth: ${(Math.floor(connection.statBytesUpPerSecond / 102.4) / 10) * 8}Kb/s up ${(Math.floor(connection.statBytesDownPerSecond / 102.4) / 10) * 8}Kb/s down`);
+        latencyDisplay.name(`ping: ${connection.latency ? Math.floor(connection.latency * 100) / 100 + " ms" : "n/a"}`);
+    } else latencyDisplay.name("ping: n/a");
 }, 1000);

@@ -213,3 +213,9 @@ label {
     user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome and Opera */
 }
+.property-name {
+    text-align: left;
+}
+.function .property-name {
+    width: 100% !important;
+}

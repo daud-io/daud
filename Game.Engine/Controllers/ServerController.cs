@@ -7,7 +7,10 @@
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
 
     public class ServerController : APIControllerBase
     {
@@ -48,13 +51,18 @@
         }
 
         [HttpPost, Route("hook")]
-        public string Hook([FromBody]string json)
+        public async Task<string> Hook()
         {
+            string json = null;
+
+            using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
+                json = await reader.ReadToEndAsync();
+
             var world = Worlds.Find();
 
             JsonConvert.PopulateObject(json, world.Hook);
 
-            return JsonConvert.SerializeObject(world.Hook, Formatting.Indented); ;
+            return JsonConvert.SerializeObject(world.Hook, Formatting.Indented);
         }
 
         [HttpGet, Route("players")]

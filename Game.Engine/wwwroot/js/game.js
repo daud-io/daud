@@ -1,4 +1,6 @@
-﻿import { Renderer } from "./renderer";
+﻿import "babel-polyfill";
+
+import { Renderer } from "./renderer";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";

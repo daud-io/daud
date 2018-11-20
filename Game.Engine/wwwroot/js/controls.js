@@ -144,5 +144,6 @@ if (savedColor !== false) {
     selector.value = savedColor;
 }
 
-selector.dispatchEvent(new Event("change"));
-selector.dispatchEvent(new Event("change"));
+var event = document.createEvent("Event");
+event.initEvent("change", true, true);
+selector.dispatchEvent(event);
