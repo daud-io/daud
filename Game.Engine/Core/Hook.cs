@@ -116,6 +116,7 @@
 
 
         public int StepTime { get; set; }
+        public float OutOfBoundsDeathLine { get; set; } = 700;
         public float OutOfBoundsBorder { get; set; } = 100;
         public float OutOfBoundsDecayDistance { get; set; } = 1500;
         public int BotRespawnDelay { get; set; }

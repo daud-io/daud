@@ -138,7 +138,7 @@
             if (oob > World.Hook.OutOfBoundsBorder)
                 this.Momentum *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
 
-            if (oob > 700)
+            if (oob > World.Hook.OutOfBoundsDeathLine)
                 Die(null, null, null);
         }
     }
