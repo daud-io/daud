@@ -53,8 +53,8 @@ var bodyFromServer = function(cache, body) {
         OriginalAngle: (body.originalAngle() / 127) * Math.PI,
         AngularVelocity: ((body.angularVelocity() / 127) * Math.PI) / 1000,
         Momentum: {
-            X: momentum.x() / 1000,
-            Y: momentum.y() / 1000
+            X: momentum.x() / 10000,
+            Y: momentum.y() / 10000
         },
         OriginalPosition: {
             X: originalPosition.x(),

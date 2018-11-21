@@ -168,12 +168,15 @@
             var timeDelta = (time - this.DefinitionTime);
 
             _position = Vector2.Add(OriginalPosition, Vector2.Multiply(Momentum, timeDelta));
-            if (float.IsNaN(_position.X))
-                throw new Exception("Invalid position");
 
             _angle = OriginalAngle + timeDelta * AngularVelocity;
 
-            Envelope = new Envelope(_position.X - Size / 2, _position.Y - Size / 2, _position.X + Size / 2, _position.Y + Size / 2);
+
+            if (this.GetType() == typeof(Obstacle))
+            {
+
+            }
+            Envelope = new Envelope(_position.X - Size, _position.Y - Size, _position.X + Size, _position.Y + Size);
         }
 
         public Body Clone()

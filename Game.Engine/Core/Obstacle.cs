@@ -11,8 +11,14 @@
 
         public bool IsCollision(Body projectedBody)
         {
-            return Vector2.Distance(projectedBody.Position, this.Position)
+            var isHit = Vector2.Distance(projectedBody.Position, this.Position)
                 < (projectedBody.Size + this.Size);
+
+            if (isHit)
+            {
+
+            }
+            return isHit;
         }
 
         public override void Init(World world)

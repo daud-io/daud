@@ -119,7 +119,7 @@
                     var newHash = world.Hook.GetHashCode();
 
                     var builder = new FlatBufferBuilder(1);
-                    float VELOCITY_SCALE_FACTOR = 1000f;
+                    float VELOCITY_SCALE_FACTOR = 10000f;
 
                     var updatedGroups = BodyCache.GroupsByError().ToList();
 
