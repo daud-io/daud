@@ -54,10 +54,10 @@
 
         }
 
-        public async Task<string> HookAsync(string json)
+        public async Task<string> HookAsync(object hook)
         {
             return await APIClient.APICallAsync<string>(
-                HttpMethod.Post, APIEndpoint.ServerHook, bodyContent: json);
+                HttpMethod.Post, APIEndpoint.ServerHook, bodyContent: hook);
         }
     }
 }

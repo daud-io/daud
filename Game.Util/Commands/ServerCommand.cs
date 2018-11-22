@@ -1,6 +1,7 @@
 ﻿namespace Game.Util.Commands
 {
     using McMaster.Extensions.CommandLineUtils;
+    using Newtonsoft.Json;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -73,7 +74,8 @@
 
             protected async override Task ExecuteAsync()
             {
-                var hook = await API.Server.HookAsync(HookJSON);
+                var hook = JsonConvert.DeserializeObject(HookJSON);
+                hook = await API.Server.HookAsync(hook);
 
                 Console.WriteLine(hook);
             }
