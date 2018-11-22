@@ -349,10 +349,19 @@ Game.Engine.Networking.FlatBuffers.NetSpawn.prototype.color = function(optionalE
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetSpawn.prototype.token = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetSpawn.startNetSpawn = function(builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 };
 
 /**
@@ -377,6 +386,14 @@ Game.Engine.Networking.FlatBuffers.NetSpawn.addShip = function(builder, shipOffs
  */
 Game.Engine.Networking.FlatBuffers.NetSpawn.addColor = function(builder, colorOffset) {
   builder.addFieldOffset(2, colorOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} tokenOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetSpawn.addToken = function(builder, tokenOffset) {
+  builder.addFieldOffset(3, tokenOffset, 0);
 };
 
 /**

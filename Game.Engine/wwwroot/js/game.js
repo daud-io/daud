@@ -9,6 +9,7 @@ import { Log } from "./log";
 import { Background } from "./background";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
+import { token } from "./discord";
 
 var canvas = document.getElementById("gameCanvas");
 var context = canvas.getContext("2d");
@@ -165,7 +166,7 @@ setInterval(function() {
 }, 10);
 
 document.getElementById("spawn").addEventListener("click", function() {
-    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship);
+    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
 });
 
 document.getElementById("spectate").addEventListener("click", function() {

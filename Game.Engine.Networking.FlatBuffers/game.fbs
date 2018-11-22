@@ -29,6 +29,7 @@ table NetSpawn
 	name:string;
 	ship:string;
 	color:string;
+	token:string;
 }
 
 table NetControlInput

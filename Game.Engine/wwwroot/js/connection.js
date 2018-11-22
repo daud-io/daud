@@ -88,17 +88,19 @@ export class Connection {
         this.send(builder.asUint8Array());
     }
 
-    sendSpawn(name, color, ship) {
+    sendSpawn(name, color, ship, token) {
         var builder = new flatbuffers.Builder(0);
 
         var stringColor = builder.createString(color || "gray");
         var stringName = builder.createString(name || "unknown");
         var stringShip = builder.createString(ship || "ship_gray");
+        var stringToken = builder.createString(token);
 
         this.fb.NetSpawn.startNetSpawn(builder);
         this.fb.NetSpawn.addColor(builder, stringColor);
         this.fb.NetSpawn.addName(builder, stringName);
         this.fb.NetSpawn.addShip(builder, stringShip);
+        this.fb.NetSpawn.addToken(builder, stringToken);
         var spawn = this.fb.NetSpawn.endNetSpawn(builder);
 
         this.fb.NetQuantum.startNetQuantum(builder);

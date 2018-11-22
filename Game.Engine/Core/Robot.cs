@@ -31,13 +31,13 @@
             if (!IsAlive)
             {
                 if (AutoSpawn && World.Time > SpawnTimeAfter)
-                    this.Spawn(Name, ShipSprite, "green");
+                    this.Spawn(Name, ShipSprite, "green", "");
             }
         }
 
-        protected override void OnDeath()
+        protected override void OnDeath(string token)
         {
-            base.OnDeath();
+            base.OnDeath(token);
 
             SpawnTimeAfter = World.Time + World.Hook.BotRespawnDelay;
         }

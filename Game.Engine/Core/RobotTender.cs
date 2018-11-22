@@ -18,7 +18,7 @@
 
             bot.Init(World);
 
-            bot.Spawn(bot.Name, bot.ShipSprite, "green");
+            bot.Spawn(bot.Name, bot.ShipSprite, "green", "");
 
             this.Robots.Add(bot);
         }
@@ -45,7 +45,7 @@
                 var robot = Robots[Robots.Count - 1];
                 Robots.Remove(robot);
                 robot.AutoSpawn = false;
-                robot.Die();
+                robot.Die("");
                 robot.Destroy();
             }
         }

@@ -1,9 +1,12 @@
 ﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
+    using System.Net.Http;
 
     public class Player : IActor
     {
+        private static readonly HttpClient HttpClient = new HttpClient();
+
         public World World = null;
         public Fleet Fleet = null;
 
@@ -25,6 +28,7 @@
 
         public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
+        public string Token { get; set; }
         public bool PendingDestruction { get; set; } = false;
         private bool IsSpawning = false;
 
@@ -61,7 +65,7 @@
 
         public void Destroy()
         {
-            Die();
+            Die("");
 
             if (Fleet != null)
             {
@@ -146,7 +150,7 @@
             };
         }
 
-        public void Spawn(string name, Sprites sprite, string color)
+        public void Spawn(string name, Sprites sprite, string color, string token)
         {
             // sanitize the name
             if (name != null
@@ -160,20 +164,29 @@
 
             Color = color;
 
+            Token = token;
+
             IsSpawning = true;
 
         }
 
-        protected virtual void OnDeath()
+        protected virtual void OnDeath(string token)
         {
             Score /= 2;
+            if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(token))
+                RemoteEventLog.SendEvent(new
+                {
+                    token = this.Token,
+                    name = this.Name,
+                    killedBy = token
+                });
         }
 
-        public void Die()
+        public void Die(string token)
         {
             if (IsAlive)
             {
-                OnDeath();
+                OnDeath(token);
 
                 if (Fleet != null)
                     Fleet.PendingDestruction = true;

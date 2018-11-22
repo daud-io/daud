@@ -65,7 +65,7 @@
                 this.Owner.SendMessage($"Killed by {player.Name}");
             }
 
-            this.Owner.Die();
+            this.Owner.Die(player?.Token ?? "");
 
             PendingDestruction = true;
             NewShips.Clear();

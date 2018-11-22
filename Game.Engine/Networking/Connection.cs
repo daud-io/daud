@@ -350,7 +350,7 @@
                             break;
                     }
 
-                    player.Spawn(spawn.Name, shipSprite, spawn.Color);
+                    player.Spawn(spawn.Name, shipSprite, spawn.Color, spawn.Token);
 
                     break;
                 case AllMessages.NetControlInput:

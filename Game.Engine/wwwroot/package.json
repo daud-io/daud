@@ -4,7 +4,7 @@
   "description": "",
   "main": "game.html",
   "scripts": {
-    "build": "parcel build index.html && copyfiles img/*.* dist/"
+    "build": "parcel build game.html && copyfiles img/*.* dist/"
   },
   "author": "modderme123",
   "license": "ISC",
@@ -13,6 +13,7 @@
     "copyfiles": "^2.1.0",
     "dat.gui": "^0.7.3",
     "jquery": "^3.3.1",
+    "js-cookie": "^2.2.0",
     "parcel-bundler": "^1.10.3",
     "whatwg-fetch": "^3.0.0"
   }
