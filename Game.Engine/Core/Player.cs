@@ -38,12 +38,6 @@
 
         public virtual void CreateDestroy()
         {
-            if (PendingDestruction)
-            {
-                Destroy();
-                PendingDestruction = false;
-            }
-
             if (IsSpawning && !IsAlive && Fleet == null)
             {
                 IsSpawning = false;
@@ -56,6 +50,12 @@
 
                 IsInvulnerable = true;
                 SpawnTime = World.Time;
+            }
+
+            if (PendingDestruction)
+            {
+                Destroy();
+                PendingDestruction = false;
             }
         }
 
