@@ -29,7 +29,10 @@
         ]
         public TokenResponseModel Authenticate([FromBody] TokenRequestModel request)
         {
-            if (request.Identifier.UserKey == "Administrator" && request.Password == Config.AdministratorPassword)
+            if (request.Identifier.UserKey == "Administrator" &&
+                (request.Password == Config.AdministratorPassword 
+                || Config.AdministratorPassword == null)
+            )
             {
                 var user = new UserModel
                 {
