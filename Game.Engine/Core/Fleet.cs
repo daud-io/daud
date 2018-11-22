@@ -144,7 +144,8 @@
 
         public override void CreateDestroy()
         {
-            base.CreateDestroy();
+            /*if (this.Owner != null && this.Owner.IsAlive)
+                this.PendingDestruction = true;*/
 
             foreach (var ship in NewShips)
             {
@@ -157,6 +158,8 @@
                 bullet.Init(World);
 
             NewBullets.Clear();
+
+            base.CreateDestroy();
         }
 
         public override void Think()
