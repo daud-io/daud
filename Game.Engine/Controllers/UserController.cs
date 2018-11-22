@@ -5,17 +5,21 @@
     using Game.API.Common.Security;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using System;
 
     public class UserController : APIControllerBase
     {
         private readonly JWT JWT;
+        private readonly GameConfiguration Config;
 
         public UserController(
             ISecurityContext securityContext,
-            JWT jwt
+            JWT jwt,
+            GameConfiguration config
         ) : base(securityContext)
         {
             this.JWT = jwt;
+            this.Config = config;
         }
 
         [
@@ -25,20 +29,25 @@
         ]
         public TokenResponseModel Authenticate([FromBody] TokenRequestModel request)
         {
-            var user = new UserModel
+            if (request.Identifier.UserKey == "Administrator" && request.Password == Config.AdministratorPassword)
             {
-                Identifier = request.Identifier,
-                NickName = request.Identifier.UserKey,
-                UserAccessIdentifiers = new string[0]
-            };
+                var user = new UserModel
+                {
+                    Identifier = request.Identifier,
+                    NickName = request.Identifier.UserKey,
+                    UserAccessIdentifiers = new string[0]
+                };
 
-            SecurityContext.AssumeUser(user);
+                SecurityContext.AssumeUser(user);
 
-            return new TokenResponseModel
-            {
-                Token = JWT.CreateUserToken(user, request.ClientClaims),
-                User = user
-            };
+                return new TokenResponseModel
+                {
+                    Token = JWT.CreateUserToken(user, request.ClientClaims),
+                    User = user
+                };
+            }
+            else
+                throw new Exception("Invalid Auth");
         }
     }
 }
