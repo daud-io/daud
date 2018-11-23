@@ -327,6 +327,9 @@
 
                     switch (spawn.Color)
                     {
+                        case "ship0":
+                            shipSprite = Sprites.ship0;
+                            break;
                         case "green":
                             shipSprite = Sprites.ship_green;
                             break;
