@@ -219,6 +219,23 @@
             };
         }
 
+        public Vector2 RandomSpawnPosition()
+        {
+            var r = new Random();
+            var x = r.NextDouble() > .5
+                ? 1
+                : -1;
+            var y = r.NextDouble() > .5
+                ? 1
+                : -1;
+
+            return new Vector2
+            {
+                X = x * WorldSize * 0.95f,
+                Y = y * WorldSize * 0.95f
+            };
+        }
+
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 

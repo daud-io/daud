@@ -136,7 +136,7 @@
         {
             base.Init(world);
 
-            FleetCenter = world.RandomPosition();
+            FleetCenter = world.RandomSpawnPosition();
 
             for (int i = 0; i < world.Hook.SpawnShipCount; i++)
                 this.AddShip();
