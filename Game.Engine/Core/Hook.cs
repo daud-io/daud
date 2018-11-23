@@ -44,6 +44,7 @@
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 600,
                     TeamMode = false,
+                    CTFMode = true,
 
                     SpawnShipCount = 3,
 
@@ -105,6 +106,8 @@
         public int ObstacleMaxSize { get; set; }
 
         public bool TeamMode { get; set; }
+        public bool CTFMode { get; set; }
+
         public int LeaderboardRefresh { get; set; } = 750;
 
         public float FlockAlignment { get; set; }

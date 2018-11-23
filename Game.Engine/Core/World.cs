@@ -43,6 +43,9 @@
             var objstacleTender = new ObstacleTender();
             objstacleTender.Init(this);
 
+            var ctf = new CaptureTheFlag() as IActor;
+            ctf.Init(this); 
+
         }
 
         public void Step()

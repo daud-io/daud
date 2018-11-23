@@ -23,6 +23,16 @@
         seeker,
         seeker_pickup,
         obstacle,
-        arrow
+        arrow,
+        flag_blue_0,
+        flag_blue_1,
+        flag_blue_2,
+        flag_blue_3,
+        flag_blue_4,
+        flag_red_0,
+        flag_red_1,
+        flag_red_2,
+        flag_red_3,
+        flag_red_4
     }
 }
