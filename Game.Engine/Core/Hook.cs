@@ -21,6 +21,9 @@
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 500,
 
+                    ShotCooldownTimeBotM = 20,
+                    ShotCooldownTimeBotB = 700,
+
                     ShotThrustM = -0.0035f,
                     ShotThrustB = 0.18f,
 
@@ -33,7 +36,7 @@
                     MaxHealthBot = 50,
                     BulletLife = 3000,
                     BotPerXPoints = 500,
-                    BotBase = 0,
+                    BotBase = 1,
                     BotRespawnDelay = 10000,
 
                     StepTime = 40,
@@ -81,6 +84,9 @@
 
         public float ShotCooldownTimeM { get; set; }
         public float ShotCooldownTimeB { get; set; }
+
+        public float ShotCooldownTimeBotM { get; set; }
+        public float ShotCooldownTimeBotB { get; set; }
 
         public float ShotThrustM { get; set; }
         public float ShotThrustB { get; set; }
