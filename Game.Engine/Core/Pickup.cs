@@ -7,15 +7,19 @@
     {
         public Sprites BulletSprite { get; set; }
 
-        public Pickup(World world)
+        public Pickup()
         {
-            this.Init(world);
-
             Size = 100;
             Sprite = Sprites.seeker_pickup;
             BulletSprite = Sprites.seeker;
             Color = "rgba(128,128,128,.2)";
+        }
+
+        public override void Init(World world)
+        {
+            World = world;
             Randomize();
+            base.Init(world);
         }
 
         public void Randomize()
@@ -56,6 +60,8 @@
 
         public override void Think()
         {
+            base.Think();
+
             AngularVelocity = 0.005f;
 
             if (World.DistanceOutOfBounds(Position) > 0)

@@ -7,14 +7,18 @@
 
     public class Fish : Ship
     {
-        public Fish(World world)
+        public Fish()
         {
-            this.Init(world);
-
             Size = 10;
             Sprite = Sprites.fish;
             Color = "rgba(128,128,128,.2)";
+        }
+
+        public override void Init(World world)
+        {
+            World = world;
             Randomize();
+            base.Init(world);
         }
 
         public void Randomize()
