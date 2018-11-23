@@ -94,7 +94,7 @@ export class Connection {
         var stringColor = builder.createString(color || "gray");
         var stringName = builder.createString(name || "unknown");
         var stringShip = builder.createString(ship || "ship_gray");
-        var stringToken = builder.createString(token);
+        var stringToken = builder.createString(token || "");
 
         this.fb.NetSpawn.startNetSpawn(builder);
         this.fb.NetSpawn.addColor(builder, stringColor);
