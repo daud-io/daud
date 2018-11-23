@@ -120,6 +120,8 @@
 
             if (IsInvulnerable)
             {
+                if (this.ControlInput?.ShootRequested ?? false)
+                    IsInvulnerable = false;
 
                 if (World.Time > SpawnTime + InvulnerableTime)
                     IsInvulnerable = false;
