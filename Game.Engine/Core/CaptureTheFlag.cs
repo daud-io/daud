@@ -9,6 +9,7 @@
     {
         private World World = null;
         private List<Flag> Flags = new List<Flag>();
+        private List<Base> Bases = new List<Base>();
 
         void IActor.CreateDestroy()
         {
@@ -44,16 +45,30 @@
         {
         }
 
+        private class Base : ActorBody, ICollide
+        {
+            void ICollide.CollisionExecute(Body projectedBody)
+            {
+                throw new NotImplementedException();
+            }
+
+            bool ICollide.IsCollision(Body projectedBody)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
         private class Flag : ActorBody, ICollide
         {
             private List<Sprites> SpriteSet = new List<Sprites>();
             private uint NextSpriteTime = 0;
             private uint SpriteInterval = 100;
             private int SpriteIndex = 0;
+            private Fleet CarriedBy = null;
 
             public Flag(string baseSpriteName)
             {
-                Size = 100;
+                Size = 200;
 
                 var i = 0;
                 var done = false;
@@ -80,6 +95,17 @@
             {
                 base.Think();
 
+                if (CarriedBy?.Owner?.IsAlive ?? false)
+                {
+                    this.Position = CarriedBy.FleetCenter;
+                    this.Momentum = CarriedBy.FleetMomentum;
+                }
+                else
+                {
+                    CarriedBy = null;
+                    this.Momentum = new Vector2(0, 0);
+                }
+
                 if (World.Time > NextSpriteTime)
                 {
                     SpriteIndex = (SpriteIndex + 1) % SpriteSet.Count;
@@ -96,11 +122,9 @@
                 var ship = projectedBody as Ship;
                 var fleet = ship.Fleet;
 
-                if (fleet != null)
+                if (fleet != null && CarriedBy == null && !(fleet.Owner is Robot))
                 {
-                    // powerup the fleet
-                    //fleet.Pickup = this;
-                    PendingDestruction = true;
+                    CarriedBy = fleet;
                 }
             }
 

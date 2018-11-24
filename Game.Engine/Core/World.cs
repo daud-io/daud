@@ -26,7 +26,7 @@
 
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
-        public int WorldSize = 6000;
+        public int WorldSize = 2000;
 
         private bool Processing = false;
 
