@@ -60,6 +60,7 @@
 
         private class Flag : ActorBody, ICollide
         {
+            private ActorGroup FlagGroup = new ActorGroup();
             private List<Sprites> SpriteSet = new List<Sprites>();
             private uint NextSpriteTime = 0;
             private uint SpriteInterval = 100;
@@ -88,7 +89,18 @@
             public override void Init(World world)
             {
                 base.Init(world);
-                this.Position = world.RandomPosition();
+
+
+                FlagGroup.Init(world);
+                FlagGroup.ZIndex = 10;
+                this.Group = FlagGroup;
+                Position = world.RandomPosition();
+            }
+
+            public override void Destroy()
+            {
+                base.Destroy();
+                FlagGroup.Destroy();
             }
 
             public override void Think()

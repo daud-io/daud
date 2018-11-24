@@ -1000,10 +1000,18 @@ Game.Engine.Networking.FlatBuffers.NetGroup.prototype.caption = function(optiona
 };
 
 /**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.prototype.zindex = function() {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetGroup.startNetGroup = function(builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 };
 
 /**
@@ -1028,6 +1036,14 @@ Game.Engine.Networking.FlatBuffers.NetGroup.addType = function(builder, type) {
  */
 Game.Engine.Networking.FlatBuffers.NetGroup.addCaption = function(builder, captionOffset) {
   builder.addFieldOffset(2, captionOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} zindex
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.addZindex = function(builder, zindex) {
+  builder.addFieldInt32(3, zindex, 0);
 };
 
 /**

@@ -57,9 +57,26 @@ export class Cache {
     }
 
     foreach(action, thisObj) {
-        for (var key in this.bodies) {
-            if (key.indexOf("b-") === 0) {
-                action.apply(thisObj, [this.bodies[key]]);
+        var sortedGroups = [];
+
+        for (var key in this.groups) {
+            var group = this.groups[key];
+            sortedGroups.push(group);
+        }
+
+        sortedGroups.sort(function (a, b) { return a.ZIndex - b.ZIndex; });
+        sortedGroups.unshift({ ID: 0 });
+
+        for (var g = 0; g < sortedGroups.length; g++) {
+            var group = sortedGroups[g];
+
+            for (var key in this.bodies) {
+                if (key.indexOf("b-") === 0) {
+                    var body = this.bodies[key];
+                    if (body.Group == group.ID) {
+                        action.apply(thisObj, [body]);
+                    }
+                }
             }
         }
     }

@@ -72,7 +72,8 @@ var groupFromServer = function(cache, group) {
     var newGroup = {
         ID: group.group(),
         Caption: group.caption(),
-        Type: group.type()
+        Type: group.type(),
+        ZIndex: group.zindex()
     };
 
     return newGroup;

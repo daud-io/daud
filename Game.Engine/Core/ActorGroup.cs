@@ -1,6 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
-    public abstract class ActorGroup : Group, IActor
+    public class ActorGroup : Group, IActor
     {
         public World World = null;
 
