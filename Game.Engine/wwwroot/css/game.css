@@ -39,9 +39,8 @@ body {
     visibility: hidden;
 }
 
-.dead .spawnscreen {
+.spawnscreen {
     animation: fadein 2s;
-    visibility: visible;
     position: absolute;
     text-align: center;
     vertical-align: middle;
@@ -117,8 +116,8 @@ body {
     margin-right: 10%;
 }
 
-.dead .spawnscreen input,
-.dead .spawnscreen select {
+.spawnscreen input,
+.spawnscreen select {
     font-size: 1rem;
     border-radius: 5px;
     padding: 5px 5px 10px 5px;
