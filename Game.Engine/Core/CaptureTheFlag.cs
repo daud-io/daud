@@ -11,22 +11,24 @@
         private List<Flag> Flags = new List<Flag>();
         private List<Base> Bases = new List<Base>();
 
+        private void CreateTeam(string teamName, string flagSpriteBase, Vector2 basePosition)
+        {
+            var b = new Base(basePosition, teamName);
+            var flag = new Flag(flagSpriteBase, teamName, b);
+            flag.Init(World);
+            b.Init(World);
+            Flags.Add(flag);
+            Bases.Add(b);
+
+            flag.ReturnToBase();
+        }
+
         void IActor.CreateDestroy()
         {
             if (World.Hook.CTFMode && Flags.Count == 0)
             {
-                Flags.Add(new Flag("flag_blue"));
-                Flags.Add(new Flag("flag_red"));
-
-                foreach (var flag in Flags)
-                    flag.Init(World);
-
-                Bases.Add(new Base(new Vector2(World.WorldSize, World.WorldSize)));
-                Bases.Add(new Base(new Vector2(-World.WorldSize, -World.WorldSize)));
-
-                foreach (var b in Bases)
-                    b.Init(World);
-
+                CreateTeam("cyan", "flag_blue", new Vector2(World.WorldSize, World.WorldSize));
+                CreateTeam("red", "flag_red", new Vector2(-World.WorldSize, -World.WorldSize));
             }
 
             if (!World.Hook.CTFMode && Flags.Count > 0)
@@ -59,8 +61,11 @@
 
         private class Base : ActorBody, ICollide
         {
-            public Base(Vector2 position)
+            private readonly string Team;
+
+            public Base(Vector2 position, string team)
             {
+                this.Team = team;
                 this.Position = position;
                 this.Sprite = Sprites.ctf_base;
                 this.AngularVelocity = 0.1f;
@@ -69,26 +74,41 @@
 
             void ICollide.CollisionExecute(Body projectedBody)
             {
+                var flag = projectedBody as Flag;
+                flag.ReturnToBase();
             }
 
             bool ICollide.IsCollision(Body projectedBody)
             {
+                if (projectedBody is Flag flag)
+                {
+                    if (flag.Team == this.Team)
+                        return false;
+
+                    return Vector2.Distance(projectedBody.Position, this.Position)
+                        < (projectedBody.Size + this.Size);
+                }
                 return false;
             }
         }
 
         private class Flag : ActorBody, ICollide
         {
+            private readonly uint SpriteAnimationInterval = 100;
+            public readonly string Team;
+            private readonly Base Base;
+
             private ActorGroup FlagGroup = new ActorGroup();
             private List<Sprites> SpriteSet = new List<Sprites>();
             private uint NextSpriteTime = 0;
-            private uint SpriteInterval = 100;
             private int SpriteIndex = 0;
             private Fleet CarriedBy = null;
 
-            public Flag(string baseSpriteName)
+            public Flag(string baseSpriteName, string team, Base b)
             {
                 Size = 200;
+                Team = team;
+                Base = b;
 
                 var i = 0;
                 var done = false;
@@ -108,7 +128,6 @@
             public override void Init(World world)
             {
                 base.Init(world);
-
 
                 FlagGroup.Init(world);
                 FlagGroup.ZIndex = 10;
@@ -145,9 +164,14 @@
 
                     Sprite = SpriteSet[SpriteIndex];
 
-                    NextSpriteTime = World.Time + SpriteInterval;
+                    NextSpriteTime = World.Time + SpriteAnimationInterval;
                 }
-                
+            }
+
+            public void ReturnToBase()
+            {
+                this.Position = Base.Position;
+                this.CarriedBy = null;
             }
 
             void ICollide.CollisionExecute(Body projectedBody)
@@ -157,7 +181,10 @@
 
                 if (fleet != null && CarriedBy == null && !(fleet.Owner is Robot))
                 {
-                    CarriedBy = fleet;
+                    if (fleet.Owner.Color == Team)
+                        ReturnToBase();
+                    else
+                        CarriedBy = fleet;
                 }
             }
 

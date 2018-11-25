@@ -44,7 +44,7 @@
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 600,
                     TeamMode = false,
-                    CTFMode = true,
+                    CTFMode = false,
 
                     SpawnShipCount = 3,
 
