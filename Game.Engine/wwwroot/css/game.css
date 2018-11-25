@@ -155,7 +155,7 @@ table {
     width: 8vh;
     height: 8vh;
     position: absolute;
-    right: 5%;
+    right: 10%;
     bottom: 5%;
     border: 2vh solid white;
 }
@@ -169,4 +169,40 @@ table {
     right: 8px;
     bottom: 8px;
     border-radius: 100%;
+}
+
+
+#boost {
+    border-radius: 100%;
+    width: 8vh;
+    height: 8vh;
+    position: absolute;
+    right: 5%;
+    bottom: 20%;
+    border: 2vh solid white;
+}
+#boost:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 3vh;
+    left: 3vh;
+    right: 3vh;
+    bottom: 3vh;
+    border-radius: 100%;
+    background: white;
+}
+
+#boost:after {
+    content: "";
+    display: block;
+    position: absolute;
+    left: 3vh;
+    right: 3vh;
+    bottom: 0vh;
+    width: 0; 
+    height: 0; 
+    border-left: 1vh solid transparent;
+    border-right: 1vh solid transparent;
+    border-top: 4vh solid white;  
 }

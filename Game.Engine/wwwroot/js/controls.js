@@ -71,6 +71,12 @@ export var Controls = {
         document.getElementById("shoot").addEventListener("touchend", function(e) {
             Controls.shoot = false;
         });
+        document.getElementById("boost").addEventListener("touchstart", function(e) {
+            Controls.boost = true;
+        });
+        document.getElementById("boost").addEventListener("touchend", function(e) {
+            Controls.boost = false;
+        });
         domElement.addEventListener("mouseup", function(e) {
             Controls.shoot = false;
         });
