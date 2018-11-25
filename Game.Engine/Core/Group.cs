@@ -35,6 +35,20 @@
             }
         }
 
+        private uint _zIndex { get; set; }
+        public virtual uint ZIndex
+        {
+            get
+            {
+                return _zIndex;
+            }
+            set
+            {
+                IsDirty = IsDirty || _zIndex != value;
+                _zIndex = value;
+            }
+        }
+
         public Group Clone()
         {
             return this.MemberwiseClone() as Group;

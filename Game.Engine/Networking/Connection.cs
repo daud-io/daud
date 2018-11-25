@@ -133,7 +133,8 @@
                             var group = NetGroup.CreateNetGroup(builder,
                                 group: serverGroup.ID,
                                 type: serverGroup.GroupType,
-                                captionOffset: caption
+                                captionOffset: caption,
+                                zindex: serverGroup.ZIndex
                             );
                             return group;
                         }).ToArray());

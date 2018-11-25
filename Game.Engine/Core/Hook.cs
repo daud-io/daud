@@ -40,10 +40,11 @@
                     BotRespawnDelay = 10000,
 
                     StepTime = 40,
-                    Obstacles = 10,
+                    Obstacles = 0,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 600,
                     TeamMode = false,
+                    CTFMode = false,
 
                     SpawnShipCount = 3,
 
@@ -105,6 +106,8 @@
         public int ObstacleMaxSize { get; set; }
 
         public bool TeamMode { get; set; }
+        public bool CTFMode { get; set; }
+
         public int LeaderboardRefresh { get; set; } = 750;
 
         public float FlockAlignment { get; set; }

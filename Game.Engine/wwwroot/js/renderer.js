@@ -15,6 +15,8 @@ export class Renderer {
             };
         };
 
+        var flagScale = 0.005;
+
         Renderer.sprites = {
             ship0: sprite("ship0"),
             ship_green: sprite("ship_green"),
@@ -36,7 +38,18 @@ export class Renderer {
             seeker: sprite("seeker", 0.02, true),
             seeker_pickup: sprite("seeker_pickup", 0.02, true),
             obstacle: sprite("obstacle", 0.0028, true),
-            arrow: sprite("arrow", 0.03)
+            arrow: sprite("arrow", 0.03),
+            flag_blue_0: sprite("flag_blue_0", flagScale, true),
+            flag_blue_1: sprite("flag_blue_1", flagScale, true),
+            flag_blue_2: sprite("flag_blue_2", flagScale, true),
+            flag_blue_3: sprite("flag_blue_3", flagScale, true),
+            flag_blue_4: sprite("flag_blue_4", flagScale, true),
+            flag_red_0: sprite("flag_red_0", flagScale, true),
+            flag_red_1: sprite("flag_red_1", flagScale, true),
+            flag_red_2: sprite("flag_red_2", flagScale, true),
+            flag_red_3: sprite("flag_red_3", flagScale, true),
+            flag_red_4: sprite("flag_red_4", flagScale, true),
+            ctf_base: sprite("ctf_base")
         };
 
         Renderer.spriteIndices = [
@@ -61,7 +74,19 @@ export class Renderer {
             "seeker",
             "seeker_pickup",
             "obstacle",
-            "arrow"
+            "arrow",
+            "flag_blue_0",
+            "flag_blue_1",
+            "flag_blue_2",
+            "flag_blue_3",
+            "flag_blue_4",
+            "flag_red_0",
+            "flag_red_1",
+            "flag_red_2",
+            "flag_red_3",
+            "flag_red_4",
+            "ctf_base"
+
         ];
     }
 
@@ -134,6 +159,7 @@ export class Renderer {
                 ctx.fillStyle = "rgba(0,255,0,0.2)";
 
                 var health = object.Size;
+
                 if (health) {
                     var healthBar = false;
                     var healthRing = false;

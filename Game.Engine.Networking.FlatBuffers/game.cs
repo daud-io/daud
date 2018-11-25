@@ -28,11 +28,7 @@ public struct NetLeaderboard : IFlatbufferObject
   public NetLeaderboard __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Type { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTypeBytes() { return __p.__vector_as_span(4); }
-#else
   public ArraySegment<byte>? GetTypeBytes() { return __p.__vector_as_arraysegment(4); }
-#endif
   public NetLeaderboardEntry? Entries(int j) { int o = __p.__offset(6); return o != 0 ? (NetLeaderboardEntry?)(new NetLeaderboardEntry()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int EntriesLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
   public NetLeaderboardEntry? Record { get { int o = __p.__offset(8); return o != 0 ? (NetLeaderboardEntry?)(new NetLeaderboardEntry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
@@ -70,18 +66,10 @@ public struct NetLeaderboardEntry : IFlatbufferObject
   public NetLeaderboardEntry __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Name { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetNameBytes() { return __p.__vector_as_span(4); }
-#else
   public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(4); }
-#endif
   public int Score { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public string Color { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetColorBytes() { return __p.__vector_as_span(8); }
-#else
   public ArraySegment<byte>? GetColorBytes() { return __p.__vector_as_arraysegment(8); }
-#endif
   public Vec2? Position { get { int o = __p.__offset(10); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
 
   public static void StartNetLeaderboardEntry(FlatBufferBuilder builder) { builder.StartObject(4); }
@@ -105,29 +93,14 @@ public struct NetSpawn : IFlatbufferObject
   public NetSpawn __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Name { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetNameBytes() { return __p.__vector_as_span(4); }
-#else
   public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(4); }
-#endif
   public string Ship { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetShipBytes() { return __p.__vector_as_span(6); }
-#else
   public ArraySegment<byte>? GetShipBytes() { return __p.__vector_as_arraysegment(6); }
-#endif
   public string Color { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetColorBytes() { return __p.__vector_as_span(8); }
-#else
   public ArraySegment<byte>? GetColorBytes() { return __p.__vector_as_arraysegment(8); }
-#endif
   public string Token { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTokenBytes() { return __p.__vector_as_span(10); }
-#else
   public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(10); }
-#endif
+
   public static Offset<NetSpawn> CreateNetSpawn(FlatBufferBuilder builder,
       StringOffset nameOffset = default(StringOffset),
       StringOffset shipOffset = default(StringOffset),
@@ -236,20 +209,12 @@ public struct NetWorldView : IFlatbufferObject
   public int UpdatesLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
   public uint Deletes(int j) { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int DeletesLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetDeletesBytes() { return __p.__vector_as_span(12); }
-#else
   public ArraySegment<byte>? GetDeletesBytes() { return __p.__vector_as_arraysegment(12); }
-#endif
   public NetGroup? Groups(int j) { int o = __p.__offset(14); return o != 0 ? (NetGroup?)(new NetGroup()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int GroupsLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
   public uint GroupDeletes(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int GroupDeletesLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetGroupDeletesBytes() { return __p.__vector_as_span(16); }
-#else
   public ArraySegment<byte>? GetGroupDeletesBytes() { return __p.__vector_as_arraysegment(16); }
-#endif
   public NetAnnouncement? Announcements(int j) { int o = __p.__offset(18); return o != 0 ? (NetAnnouncement?)(new NetAnnouncement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int AnnouncementsLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
 
@@ -289,27 +254,27 @@ public struct NetGroup : IFlatbufferObject
   public uint Group { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public byte Type { get { int o = __p.__offset(6); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public string Caption { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCaptionBytes() { return __p.__vector_as_span(8); }
-#else
   public ArraySegment<byte>? GetCaptionBytes() { return __p.__vector_as_arraysegment(8); }
-#endif
+  public uint Zindex { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
   public static Offset<NetGroup> CreateNetGroup(FlatBufferBuilder builder,
       uint group = 0,
       byte type = 0,
-      StringOffset captionOffset = default(StringOffset)) {
-    builder.StartObject(3);
+      StringOffset captionOffset = default(StringOffset),
+      uint zindex = 0) {
+    builder.StartObject(4);
+    NetGroup.AddZindex(builder, zindex);
     NetGroup.AddCaption(builder, captionOffset);
     NetGroup.AddGroup(builder, group);
     NetGroup.AddType(builder, type);
     return NetGroup.EndNetGroup(builder);
   }
 
-  public static void StartNetGroup(FlatBufferBuilder builder) { builder.StartObject(3); }
+  public static void StartNetGroup(FlatBufferBuilder builder) { builder.StartObject(4); }
   public static void AddGroup(FlatBufferBuilder builder, uint group) { builder.AddUint(0, group, 0); }
   public static void AddType(FlatBufferBuilder builder, byte type) { builder.AddByte(1, type, 0); }
   public static void AddCaption(FlatBufferBuilder builder, StringOffset captionOffset) { builder.AddOffset(2, captionOffset.Value, 0); }
+  public static void AddZindex(FlatBufferBuilder builder, uint zindex) { builder.AddUint(3, zindex, 0); }
   public static Offset<NetGroup> EndNetGroup(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetGroup>(o);
@@ -383,11 +348,7 @@ public struct NetAnnouncement : IFlatbufferObject
   public NetAnnouncement __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Text { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTextBytes() { return __p.__vector_as_span(4); }
-#else
   public ArraySegment<byte>? GetTextBytes() { return __p.__vector_as_arraysegment(4); }
-#endif
 
   public static Offset<NetAnnouncement> CreateNetAnnouncement(FlatBufferBuilder builder,
       StringOffset textOffset = default(StringOffset)) {
