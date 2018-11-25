@@ -6,6 +6,10 @@ export var nipple = nipplejs.create({
     resetJoystick: false
 });
 
+if (!("ontouchstart" in document.documentElement)) {
+    nipple.destroy();
+    document.getElementById("niple-buttons").style.display = "none";
+}
 var selector = document.querySelector("#shipSelector");
 selector.addEventListener("change", function(e) {
     Controls.ship = "ship_" + selector.value || "ship_green";
@@ -60,6 +64,12 @@ export var Controls = {
             selector.focus();
             e.preventDefault();
             return false;
+        });
+        document.getElementById("shoot").addEventListener("touchstart", function(e) {
+            Controls.shoot = true;
+        });
+        document.getElementById("shoot").addEventListener("touchend", function(e) {
+            Controls.shoot = false;
         });
         domElement.addEventListener("mouseup", function(e) {
             Controls.shoot = false;
