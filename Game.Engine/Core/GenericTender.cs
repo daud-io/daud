@@ -1,9 +1,10 @@
 ﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class GenericTender<T> : IActor
-        where T : class, IActor, new()
+        where T : ActorBody, new()
     {
         private readonly List<T> Herd = new List<T>();
         private World World = null;
@@ -13,7 +14,7 @@
         private void Add()
         {
             var member = new T();
-            member.Init(World);
+            ((IActor)member).Init(World);
             this.Herd.Add(member);
         }
 
@@ -21,7 +22,7 @@
         {
             var member = Herd[Herd.Count - 1];
             Herd.Remove(member);
-            member.Destroy();
+            ((IActor)member).Destroy();
         }
 
         public void Think()
@@ -30,6 +31,9 @@
 
         public void CreateDestroy()
         {
+            foreach (var member in Herd.Where(f => !f.Exists).ToList())
+                Herd.Remove(member);
+
             while (Herd.Count < DesiredCount)
                 Add();
 
