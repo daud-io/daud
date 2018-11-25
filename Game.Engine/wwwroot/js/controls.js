@@ -1,4 +1,10 @@
 ﻿import Cookies from "js-cookie";
+import nipplejs from "nipplejs";
+
+export var nipple = nipplejs.create({
+    zone: document.getElementById("nipple-zone"),
+    resetJoystick: false
+});
 
 var selector = document.querySelector("#shipSelector");
 selector.addEventListener("change", function(e) {
@@ -15,6 +21,7 @@ nick.addEventListener("change", function(e) {
 
     save();
 });
+var domElement = document.querySelector(".noselect");
 
 export var Controls = {
     left: false,
@@ -31,19 +38,30 @@ export var Controls = {
                 y: evt.clientY - rect.top
             };
         };
-        canvas.addEventListener("mousemove", function(e) {
+        domElement.addEventListener("mousemove", function(e) {
             var pos = getMousePos(canvas, e);
             Controls.mouseX = pos.x;
             Controls.mouseY = pos.y;
+            var cx = canvas.width / 2;
+            var cy = canvas.height / 2;
+            var dy = pos.y - cy;
+            var dx = pos.x - cx;
+            Controls.angle = Math.atan2(dy, dx);
         });
-
-        canvas.addEventListener("mousedown", function(e) {
+        nipple.on("move", function(e, data) {
+            Controls.angle = data.angle.radian;
+            var cx = canvas.width / 2;
+            var cy = canvas.height / 2;
+            Controls.mouseX = Math.cos(data.angle.radian) * data.force * window.innerHeight + cx;
+            Controls.mouseY = Math.sin(-data.angle.radian) * data.force * window.innerHeight + cy;
+        });
+        domElement.addEventListener("mousedown", function(e) {
             Controls.shoot = true;
             selector.focus();
             e.preventDefault();
             return false;
         });
-        canvas.addEventListener("mouseup", function(e) {
+        domElement.addEventListener("mouseup", function(e) {
             Controls.shoot = false;
         });
 
