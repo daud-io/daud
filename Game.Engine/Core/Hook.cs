@@ -40,7 +40,7 @@
                     BotRespawnDelay = 10000,
 
                     StepTime = 40,
-                    Obstacles = 0,
+                    Obstacles = 15,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxSize = 600,
                     TeamMode = false,
