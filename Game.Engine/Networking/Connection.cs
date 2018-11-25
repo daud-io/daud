@@ -244,11 +244,13 @@
 
                     var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
                     var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
+                    var stringToken = builder.CreateString(world.Leaderboard?.ArenaRecord?.Token ?? "");
 
                     NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                     NetLeaderboardEntry.AddColor(builder, stringColor);
                     NetLeaderboardEntry.AddName(builder, stringName);
                     NetLeaderboardEntry.AddScore(builder, world.Leaderboard?.ArenaRecord?.Score ?? 0);
+                    NetLeaderboardEntry.AddToken(builder, stringToken);
                     var record = NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
 
 
@@ -256,12 +258,14 @@
                     {
                         stringName = builder.CreateString(e.Name ?? string.Empty);
                         stringColor = builder.CreateString(e.Color ?? string.Empty);
+                        stringToken = builder.CreateString(e.Token ?? string.Empty);
 
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                         NetLeaderboardEntry.AddName(builder, stringName);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
                         NetLeaderboardEntry.AddScore(builder, e.Score);
                         NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
+                        NetLeaderboardEntry.AddToken(builder, stringToken);
 
                         return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
                     }).ToArray());

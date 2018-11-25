@@ -203,7 +203,8 @@ export class Connection {
                         Position: {
                             X: entry.position().x(),
                             Y: entry.position().y()
-                        }
+                        },
+                        Token: entry.token()
                     });
                 }
 
@@ -214,7 +215,8 @@ export class Connection {
                     Record: {
                         Name: record.name(),
                         Color: record.color(),
-                        Score: record.score()
+                        Score: record.score(),
+                        Token: record.token()
                     }
                 });
                 break;

@@ -17,6 +17,7 @@
             public string Name { get; set; }
             public string Color { get; set; } = "white";
             public Vector2 Position { get; set; }
+            public string Token { get; set; }
         }
     }
 }

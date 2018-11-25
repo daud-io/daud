@@ -141,7 +141,8 @@
                                 Name = p.Name,
                                 Score = p.Score,
                                 Color = p.Color,
-                                Position = p.Fleet.FleetCenter
+                                Position = p.Fleet.FleetCenter,
+                                Token = p.Token
                             })
                                 .OrderByDescending(e => e.Score)
                                 .Take(10)

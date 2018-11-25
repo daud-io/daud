@@ -27,9 +27,13 @@ export class Leaderboard {
             for (let i = 0; i < this.data.Entries.length; i++) {
                 const entry = this.data.Entries[i];
 
+                if (entry.Token) {
+                    ctx.fillStyle = "aqua";
+                    ctx.fillText("✓", this.canvas.width - width, rowHeight + i * rowHeight);
+                }
+                var tokenWidth = entry.Token ? 15 : 0;
                 ctx.fillStyle = "white";
-
-                ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width, rowHeight + i * rowHeight);
+                ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width + tokenWidth, rowHeight + i * rowHeight);
                 ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + i * rowHeight);
 
                 ctx.fillStyle = entry.Color;
