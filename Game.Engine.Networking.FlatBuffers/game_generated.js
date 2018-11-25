@@ -239,12 +239,11 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.position = func
 };
 
 /**
- * @param {flatbuffers.Encoding=} optionalEncoding
- * @returns {string|Uint8Array|null}
+ * @returns {boolean}
  */
-Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.token = function(optionalEncoding) {
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.token = function() {
   var offset = this.bb.__offset(this.bb_pos, 12);
-  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
 };
 
 /**
@@ -288,10 +287,10 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addPosition = function(bu
 
 /**
  * @param {flatbuffers.Builder} builder
- * @param {flatbuffers.Offset} tokenOffset
+ * @param {boolean} token
  */
-Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addToken = function(builder, tokenOffset) {
-  builder.addFieldOffset(4, tokenOffset, 0);
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addToken = function(builder, token) {
+  builder.addFieldInt8(4, +token, +false);
 };
 
 /**

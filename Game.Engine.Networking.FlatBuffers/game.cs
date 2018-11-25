@@ -83,19 +83,14 @@ public struct NetLeaderboardEntry : IFlatbufferObject
   public ArraySegment<byte>? GetColorBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public Vec2? Position { get { int o = __p.__offset(10); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  public string Token { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTokenBytes() { return __p.__vector_as_span(12); }
-#else
-  public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(12); }
-#endif
+  public bool Token { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
 
   public static void StartNetLeaderboardEntry(FlatBufferBuilder builder) { builder.StartObject(5); }
   public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(0, nameOffset.Value, 0); }
   public static void AddScore(FlatBufferBuilder builder, int score) { builder.AddInt(1, score, 0); }
   public static void AddColor(FlatBufferBuilder builder, StringOffset colorOffset) { builder.AddOffset(2, colorOffset.Value, 0); }
   public static void AddPosition(FlatBufferBuilder builder, Offset<Vec2> positionOffset) { builder.AddStruct(3, positionOffset.Value, 0); }
-  public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(4, tokenOffset.Value, 0); }
+  public static void AddToken(FlatBufferBuilder builder, bool token) { builder.AddBool(4, token, false); }
   public static Offset<NetLeaderboardEntry> EndNetLeaderboardEntry(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetLeaderboardEntry>(o);
