@@ -7,7 +7,7 @@ import { Interpolator } from "./interpolator";
 import { Leaderboard } from "./leaderboard";
 import { Log } from "./log";
 import { Background } from "./background";
-import { Controls } from "./controls";
+import { Controls, nipple } from "./controls";
 import { Connection } from "./connection";
 import { token } from "./discord";
 
@@ -102,7 +102,6 @@ connection.onView = function(newView) {
     document.body.classList.remove("loading");
     if (view.isAlive) {
         document.body.classList.remove("dead");
-
         document.body.classList.add("alive");
     } else {
         document.body.classList.remove("alive");
@@ -258,22 +257,13 @@ function gameLoop() {
     log.draw();
 
     if (Controls.mouseX) {
-        var cx = canvas.width / 2;
-        var cy = canvas.height / 2;
-        var dy = Controls.mouseY - cy;
-        var dx = Controls.mouseX - cx;
-
         var pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);
         /*console.log({
             X: position.X - pos.x,
             Y: position.Y - pos.y
         });*/
 
-        if (isNaN(pos.x) || isNaN(position.X)) {
-            var i = 0;
-        }
-
-        angle = Math.atan2(dy, dx);
+        angle = Controls.angle;
         aimTarget = {
             X: pos.x - position.X,
             Y: pos.y - position.Y

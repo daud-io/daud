@@ -86,7 +86,6 @@ export class Renderer {
             "flag_red_3",
             "flag_red_4",
             "ctf_base"
-
         ];
     }
 

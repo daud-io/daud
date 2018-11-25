@@ -64,7 +64,9 @@ export class Cache {
             sortedGroups.push(group);
         }
 
-        sortedGroups.sort(function (a, b) { return a.ZIndex - b.ZIndex; });
+        sortedGroups.sort(function(a, b) {
+            return a.ZIndex - b.ZIndex;
+        });
         sortedGroups.unshift({ ID: 0 });
 
         for (var g = 0; g < sortedGroups.length; g++) {

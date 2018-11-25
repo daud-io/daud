@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css?family=Exo+2');
+﻿@import url("https://fonts.googleapis.com/css?family=Exo+2");
 
 html,
 body {
@@ -9,6 +9,7 @@ body {
     text-align: center;
     overflow: hidden;
     font-family: "Exo 2";
+    color: white;
 }
 
 #aspectratio {
@@ -22,15 +23,6 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-}
-
-#hud {
-    z-index: 1;
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    height: 30px;
-    width: 300px;
 }
 
 .loading .spawnscreen,
@@ -68,22 +60,19 @@ body {
 }
 
 #hintbox {
-    color: white;
     font-size: 14pt;
 }
 
-#twitterpated a:visited,
-#twitterpated a {
+a:visited,
+a {
     color: white;
 }
 
 #twitterpated {
-    /*float: left;*/
     left: 30px;
     width: 500px;
-    background-color: rgba(255,255,255,0.3);
-    color: white;
-    padding: .5em;
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 0.5em;
 }
 
 #twitterpated .date {
@@ -92,13 +81,20 @@ body {
     margin-right: 1em;
 }
 
-
 .spawnscreen .social {
     text-align: left;
     bottom: 50px;
     margin-left: 50px;
     position: absolute;
     width: 100%;
+}
+
+#nipple-zone {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 #discord {
@@ -122,33 +118,10 @@ body {
     border-radius: 5px;
     padding: 5px 5px 10px 5px;
     border: none;
-    background: linear-gradient(to right, #008888 0%, #0066ff 100%) left bottom rgba(55,55,90,0.8) no-repeat;
+    background: linear-gradient(to right, #008888 0%, #0066ff 100%) left bottom rgba(55, 55, 90, 0.8) no-repeat;
     background-size: 100% 5px;
     color: white;
     margin: 0.5em;
-}
-
-#panel {
-    z-index: 1;
-    display: none;
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
-    width: 300px;
-    text-align: left;
-    background-color: rgba(0, 0, 255, 0.3);
-    border: solid 1px rgba(0, 0, 255, 0.9);
-    overflow-wrap: normal;
-}
-
-#panel ul, #panel a {
-    color: white;
-}
-
-#panel ul {
-    width: 300px;
-    padding: 10px;
-    list-style-type: none;
 }
 
 select {
@@ -157,64 +130,43 @@ select {
     appearance: none;
 }
 
-.ansible .serverlinks a {
-    margin-right: 3px;
-}
-
-
-.change-log-button {
-    color: red;
-}
-
-.peerlist a {
-    text-decoration-style: none;
-    clear: right;
-}
-
-.peerrange {
-    float: right;
-    width: 60px;
-}
-
-.peerpointer {
-    clear: right;
-    margin-right: 10px;
-    width: 15px;
-    height: 15px;
-    text-decoration-style: none;
-    float: right;
-}
-
-.pin {
-    float: right;
-    width: 20px;
-    height: 20px;
-}
-
-label {
-    width: 150px;
-}
-
-.attribute-slider {
-    margin-left: 20px;
-    width: 100px;
-    display: inline-block;
-    right: 0;
-    position: absolute;
-}
-
 .noselect {
     -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
     -moz-user-select: none; /* Firefox */
     -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome and Opera */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
 }
+
 .property-name {
     text-align: left;
 }
+
 .function .property-name {
     width: 100% !important;
+}
+
+table {
+    text-align: left;
+}
+
+#shoot {
+    border-radius: 100%;
+    width: 8vh;
+    height: 8vh;
+    position: absolute;
+    right: 5%;
+    bottom: 5%;
+    border: 2vh solid white;
+}
+#shoot:before {
+    border: 2vh solid #fff;
+    content: "";
+    display: block;
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    border-radius: 100%;
 }

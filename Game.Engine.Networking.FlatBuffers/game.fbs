@@ -22,6 +22,7 @@ table NetLeaderboardEntry
 	score: int;
 	color: string;
 	position: Vec2;
+	token: string;
 }
 
 table NetSpawn
