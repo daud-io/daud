@@ -20,14 +20,26 @@
 
                 foreach (var flag in Flags)
                     flag.Init(World);
+
+                Bases.Add(new Base(new Vector2(World.WorldSize, World.WorldSize)));
+                Bases.Add(new Base(new Vector2(-World.WorldSize, -World.WorldSize)));
+
+                foreach (var b in Bases)
+                    b.Init(World);
+
             }
 
             if (!World.Hook.CTFMode && Flags.Count > 0)
             {
                 foreach (var flag in Flags)
                     flag.Destroy();
-            }
 
+                foreach (var b in Bases)
+                    b.Destroy();
+
+                Flags.Clear();
+                Bases.Clear();
+            }
         }
 
         void IActor.Destroy()
@@ -47,14 +59,21 @@
 
         private class Base : ActorBody, ICollide
         {
+            public Base(Vector2 position)
+            {
+                this.Position = position;
+                this.Sprite = Sprites.ctf_base;
+                this.AngularVelocity = 0.1f;
+                this.Size = 200;
+            }
+
             void ICollide.CollisionExecute(Body projectedBody)
             {
-                throw new NotImplementedException();
             }
 
             bool ICollide.IsCollision(Body projectedBody)
             {
-                throw new NotImplementedException();
+                return false;
             }
         }
 
@@ -111,6 +130,8 @@
                 {
                     this.Position = CarriedBy.FleetCenter;
                     this.Momentum = CarriedBy.FleetMomentum;
+
+                    Console.WriteLine($"X:{CarriedBy.FleetMomentum.X} Y:{CarriedBy.FleetMomentum.Y}");
                 }
                 else
                 {

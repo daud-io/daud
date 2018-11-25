@@ -33,6 +33,7 @@
         flag_red_1,
         flag_red_2,
         flag_red_3,
-        flag_red_4
+        flag_red_4,
+        ctf_base
     }
 }
