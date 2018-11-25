@@ -135,7 +135,7 @@ window.addEventListener(
 );
 
 function save() {
-    Cookies.set("nick", Controls.nick);
+    if (Controls.nick) Cookies.set("nick", Controls.nick);
     Cookies.set("color", Controls.color);
 }
 
