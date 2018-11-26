@@ -18,24 +18,20 @@
 </head>
 
 <body class="loading">
-    <div id="aspectratio">
-        <div class="noselect">
-            <div style="position: relative">
-                <canvas id="gameCanvas" width="1000" height="500"></canvas>
-                <div id="nipple-zone"></div>
-                <div id="niple-buttons">
-                    <div id="shoot"></div>
-                    <div id="boost"></div>
-                </div>
-                <div class='ansible'></div>
+    <div id="container" class="aspectratio">
+        <div class="noselect aspectratio">
+            <canvas id="gameCanvas" width="1000" height="500"></canvas>
+            <div id="nipple-zone"></div>
+            <div id="niple-buttons">
+                <div id="shoot"></div>
+                <div id="boost"></div>
             </div>
+            <div class='ansible'></div>
         </div>
 
         <div class="spawnscreen">
-
             <div class="controls">
                 <div>
-
                     <div>
                         <img id="logo" src="img/header.png" draggable="false" />
                     </div>
@@ -50,14 +46,13 @@
                         <option value="cyan">cyan</option>
                         <option value="yellow">yellow</option>
                     </select>
+
                     <div>
                         <input type="button" id="spawn" value="Launch as guest!" />
                         <input type="button" id="dauth" value="Login with Discord" />
                     </div>
                 </div>
-
             </div>
-
 
             <div class="social">
                 <div id="hintbox">

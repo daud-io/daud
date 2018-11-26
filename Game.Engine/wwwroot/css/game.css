@@ -11,13 +11,14 @@ body {
     font-family: "Exo 2";
     color: white;
 }
-
-#aspectratio {
-    position: absolute;
+.aspectratio {
     width: 100vw;
     height: 56.25vw; /* 100/56.25 = 1.778 */
     max-height: 100vh;
     max-width: 177.78vh; /* 16/9 = 1.778 */
+}
+#container {
+    position: absolute;
     margin: auto;
     top: 0;
     bottom: 0;
@@ -171,7 +172,6 @@ table {
     border-radius: 100%;
 }
 
-
 #boost {
     border-radius: 100%;
     width: 8vh;
@@ -200,9 +200,9 @@ table {
     left: 3vh;
     right: 3vh;
     bottom: 0vh;
-    width: 0; 
-    height: 0; 
+    width: 0;
+    height: 0;
     border-left: 1vh solid transparent;
     border-right: 1vh solid transparent;
-    border-top: 4vh solid white;  
+    border-top: 4vh solid white;
 }
