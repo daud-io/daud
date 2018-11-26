@@ -49,8 +49,7 @@ var token = fetch("/api/v1/user/authenticate", {
             .then(r => {
                 var obj = JSON.parse(r.response);
                 for (const key in obj) {
-                    hooks[key] = obj[key] == 0 ? obj[key] + 0.01 : obj[key];
-                    if (obj[key] == 0) console.log(key, hooks[key]);
+                    hooks[key] = obj[key] === 0 ? obj[key] + 0.01 : obj[key];
                 }
                 for (const key in hooks) {
                     if (typeof hooks[key] == "boolean") {

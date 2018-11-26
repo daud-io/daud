@@ -13,18 +13,7 @@ if (token || Cookies.get("access_token")) {
     dauth.previousElementSibling.value = "Launch";
     token = token || Cookies.get("access_token");
     Cookies.set("access_token", token);
-    tester();
 } else if (window.frameElement) {
     dauth.previousElementSibling.value = "Launch";
     dauth.style.display = "none";
-}
-
-async function tester() {
-    const x = await fetch("https://discordapp.com/api/users/@me", {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }).then(r => r.json());
-    console.log(x.id);
 }

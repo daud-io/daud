@@ -21,7 +21,6 @@ export class Interpolator {
 
     projectObject(object, time) {
         var timeShift = time - object.DefinitionTime;
-        //console.log(timeShift);
         object.Angle = object.OriginalAngle + timeShift * object.AngularVelocity;
         object.Position = {
             X: object.OriginalPosition.X + timeShift * object.Momentum.X,

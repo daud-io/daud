@@ -30,11 +30,6 @@ var lastOffset = false;
 var gameTime = false;
 var lastPosition = false;
 
-/* var lagDetectionTimes = [1000, 3000, 10000];
-var scheduleLagCheck = function (delay) {
-    setTimeout(function () { serverTimeOffset = lastOffset; }, delay);
-};*/
-
 Controls.registerCanvas(canvas);
 
 var connection = new Connection();
@@ -79,13 +74,7 @@ var groupFromServer = function(cache, group) {
     return newGroup;
 };
 
-connection.onConnected = function() {
-    /*for (var i = 0; i < lagDetectionTimes.length; i++)
-        scheduleLagCheck(lagDetectionTimes[i]);*/
-};
-
 connection.onLeaderboard = function(lb) {
-    //console.log('new leaderboard');
     leaderboard.setData(lb);
     leaderboard.position = lastPosition;
 };
@@ -189,10 +178,6 @@ var sizeCanvas = function() {
 
     canvas.width = width;
     canvas.height = height;
-
-    /*$('#panel').css('right', canvas.width - 10);
-    $('#panel').css('left', canvas.width - 10 - 300);
-    $('#panel').css('bottom', canvas.height - 10);*/
 };
 
 sizeCanvas();
@@ -258,10 +243,6 @@ function gameLoop() {
 
     if (Controls.mouseX) {
         var pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);
-        /*console.log({
-            X: position.X - pos.x,
-            Y: position.Y - pos.y
-        });*/
 
         angle = Controls.angle;
         aimTarget = {
