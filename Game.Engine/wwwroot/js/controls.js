@@ -75,9 +75,6 @@ export var Controls = {
             });
             window.addEventListener("mousedown", function(e) {
                 Controls.shoot = true;
-                selector.focus();
-                e.preventDefault();
-                return false;
             });
             window.addEventListener("mouseup", function(e) {
                 Controls.shoot = false;
