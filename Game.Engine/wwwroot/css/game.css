@@ -26,9 +26,19 @@ body {
     right: 0;
 }
 #error {
+    display: none;
+}
+#error.closed {
+    max-height: 0;
+}
+#error_message {
+    color: red;
+    font-weight: bold;
+}
+.connectionerror .aspectratio #error {
     /* Dropdown effect Learnt From: https://davidwalsh.name/css-slide. Doesnt work as expected */
     overflow-y: hidden;
-    max-height: 200px;
+    max-height: 500px;
     -webkit-transition-property: all;
     -webkit-transition-duration: .5s;
     -webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
@@ -41,20 +51,14 @@ body {
     transition-property: all;
     transition-duration: .5s;
     transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-    display: none;
+    display: block;
     width: 100%;
     background: rgba(0,0,70,.8);
     text-align: center;
     position: absolute;
     z-index: 1;
 }
-#error.closed {
-    max-height: 0;
-}
-#error_message {
-    color: red;
-    font-weight: bold;
-}
+
 
 .loading .spawnscreen,
 .dead.spectating .spawnscreen,

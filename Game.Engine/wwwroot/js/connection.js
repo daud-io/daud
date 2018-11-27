@@ -58,13 +58,11 @@ export class Connection {
         };
 
         this.socket.onerror = function (error) {
-            document.getElementById('error').style.display = "block";
-            document.getElementById('error').classList.toggle('closed', false);
+            document.body.classList.add("connectionerror");
         };
 
         this.socket.onopen = function (event) {
-            document.getElementById('error').style.display = "none";
-            document.getElementById('error').classList.toggle('closed', true);
+            document.body.classList.remove("connectionerror");
             self.onOpen(event);
         };
         this.socket.onclose = function(event) {
