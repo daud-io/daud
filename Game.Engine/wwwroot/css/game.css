@@ -132,6 +132,10 @@ a {
     height: 50px;
 }
 
+#iogamesspace {
+    vertical-align: middle;
+}
+
 .spawnscreen .controls {
     margin: 15vmin;
     position: relative;
