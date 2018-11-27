@@ -20,7 +20,7 @@ export class Background {
         y /= this.parallaxFactor;
 
         ctx.save();
-        ctx.scale(10, 10);
+        ctx.scale(5, 5);
         ctx.fillStyle = this.pattern;
 
         ctx.translate(-2 * x, -2 * y);
