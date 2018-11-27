@@ -4,7 +4,7 @@
   "description": "",
   "main": "game.html",
   "scripts": {
-    "build": "parcel build game.html changes.html && copyfiles img/*.* dist/"
+    "build": "parcel build game.html changes.html && cp -r ./img dist"
   },
   "author": "modderme123",
   "license": "ISC",

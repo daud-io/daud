@@ -3,6 +3,7 @@ export class Renderer {
         settings = settings || {};
         this.context = context;
         this.view = false;
+        this.theme="default";
 
         var sprite = function(name, scale, scaleToSize) {
             var img = new Image();
@@ -18,26 +19,26 @@ export class Renderer {
         var flagScale = 0.005;
 
         Renderer.sprites = {
-            ship0: sprite("ship0",2),
-            ship_green: sprite("ship_green",2),
-            ship_gray: sprite("ship_gray",2),
-            ship_orange: sprite("ship_orange",2),
-            ship_pink: sprite("ship_pink",2),
-            ship_red: sprite("ship_red",2),
-            ship_cyan: sprite("ship_cyan",2),
-            ship_yellow: sprite("ship_yellow",2),
-            ship_flash: sprite("ship_flash",2),
-            bullet_green: sprite("bullet_green", 0.125, true),
-            bullet_orange: sprite("bullet_orange", 0.125, true),
-            bullet_pink: sprite("bullet_pink", 0.125, true),
-            bullet_red: sprite("bullet_red", 0.125, true),
-            bullet_cyan: sprite("bullet_cyan", 0.125, true),
-            bullet_yellow: sprite("bullet_yellow", 0.125, true),
-            fish: sprite("ship0", 0.0625, true),
-            bullet: sprite("bullet", 0.125, true),
-            seeker: sprite("seeker", 0.02, true),
-            seeker_pickup: sprite("seeker_pickup", 0.02, true),
-            obstacle: sprite("obstacle", 0.0028, true),
+            ship0: {default:sprite("variants/default/ship0"),bitty:sprite("variants/bitty/ship0",2)},
+            ship_green: {default:sprite("variants/default/ship_green"),bitty:sprite("variants/bitty/ship_green",2)},
+            ship_gray: {default:sprite("variants/default/ship_gray"),bitty:sprite("variants/bitty/ship_gray",2)},
+            ship_orange: {default:sprite("variants/default/ship_orange"),bitty:sprite("variants/bitty/ship_orange",2)},
+            ship_pink: {default:sprite("variants/default/ship_pink"),bitty:sprite("variants/bitty/ship_pink",2)},
+            ship_red: {default:sprite("variants/default/ship_red"),bitty:sprite("variants/bitty/ship_red",2)},
+            ship_cyan: {default:sprite("variants/default/ship_cyan"),bitty:sprite("variants/bitty/ship_cyan",2)},
+            ship_yellow: {default:sprite("variants/default/ship_yellow"),bitty:sprite("variants/bitty/ship_yellow",2)},
+            ship_flash: {default:sprite("variants/default/ship_flash"),bitty:sprite("variants/bitty/ship_flash",2)},
+            bullet_green: {default:sprite("variants/default/bullet_green", 0.03, true),bitty:sprite("variants/bitty/bullet_green", 0.125, true)},
+            bullet_orange: {default:sprite("variants/default/bullet_orange", 0.03, true),bitty:sprite("variants/bitty/bullet_orange", 0.125, true)},
+            bullet_pink:  {default:sprite("variants/default/bullet_pink", 0.03, true),bitty:sprite("variants/bitty/bullet_pink", 0.125, true)},
+            bullet_red: {default:sprite("variants/default/bullet_red", 0.03, true),bitty:sprite("variants/bitty/bullet_red", 0.125, true)},
+            bullet_cyan: {default:sprite("variants/default/bullet_cyan", 0.03, true),bitty:sprite("variants/bitty/bullet_cyan", 0.125, true)},
+            bullet_yellow: {default:sprite("variants/default/bullet_yellow", 0.03, true),bitty:sprite("variants/bitty/bullet_yellow", 0.125, true)},
+            fish: {default:sprite("variants/default/ship0",0.005,true),bitty:sprite("variants/bitty/ship0",0.01,true)},
+            bullet: {default:sprite("variants/default/bullet", 0.02, true),bitty:sprite("variants/bitty/bullet", 0.0815, true)},
+            seeker: {default:sprite("variants/default/seeker", 0.02, true),bitty:sprite("variants/bitty/seeker", 0.02, true)},
+            seeker_pickup: {default:sprite("variants/default/seeker_pickup", 0.02, true),bitty:sprite("variants/bitty/seeker_pickup", 0.02, true)},
+            obstacle: {default:sprite("variants/default/obstacle", 0.0028, true),bitty:sprite("variants/bitty/obstacle", 0.0028, true)},
             arrow: sprite("arrow", 0.03),
             flag_blue_0: sprite("flag_blue_0", flagScale, true),
             flag_blue_1: sprite("flag_blue_1", flagScale, true),
@@ -87,6 +88,18 @@ export class Renderer {
             "flag_red_4",
             "ctf_base"
         ];
+    }
+    
+    setTheme(theme){
+        this.theme=theme;
+    }
+
+    getSprite(key) {
+        var res=Renderer.sprites[key];
+        if(res && res.default){
+            return res[this.theme]?res[this.theme]:res.default;
+        }
+        return res;
     }
 
     draw(cache, interpolator, currentTime) {
@@ -148,7 +161,7 @@ export class Renderer {
                     group.points.push(position);
                 }
 
-                var ship = object.Sprite != null ? Renderer.sprites[object.Sprite] : false;
+                var ship = object.Sprite != null ? this.getSprite(object.Sprite) : false;
 
                 /*if (object.Caption) {
                     ctx.fillText(object.Caption, position.X, position.Y + 90);
