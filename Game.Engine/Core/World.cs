@@ -51,7 +51,7 @@
         public void Step()
         {
             if (Processing)
-                throw new Exception("Reentered");
+                return;
 
             Processing = true;
             lock (this.Bodies)

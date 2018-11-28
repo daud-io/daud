@@ -12,6 +12,8 @@
         ship_cyan,
         ship_yellow,
         ship_flash,
+        ship_secret,
+        ship_zed,
         bullet_green,
         bullet_orange,
         bullet_pink,

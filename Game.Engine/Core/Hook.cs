@@ -34,7 +34,7 @@
                     MaxHealth = 100,
 
                     MaxHealthBot = 50,
-                    BulletLife = 3000,
+                    BulletLife = 1800,
                     BotPerXPoints = 500,
                     BotBase = 1,
                     BotRespawnDelay = 10000,

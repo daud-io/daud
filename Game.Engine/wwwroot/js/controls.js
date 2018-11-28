@@ -79,6 +79,12 @@ export var Controls = {
             window.addEventListener("mouseup", function(e) {
                 Controls.shoot = false;
             });
+            window.addEventListener("contextmenu", function (e) {
+                Controls.boost = true;
+                this.setTimeout(function () { Controls.boost = false; }, 100);
+                e.preventDefault();
+                return false;
+            });
         }
         Controls.canvas = canvas;
     },

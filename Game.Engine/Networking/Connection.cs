@@ -334,6 +334,12 @@
                         case "ship0":
                             shipSprite = Sprites.ship0;
                             break;
+                        case "ship_secret":
+                            shipSprite = Sprites.ship_secret;
+                            break;
+                        case "ship_zed":
+                            shipSprite = Sprites.ship_zed;
+                            break;
                         case "green":
                             shipSprite = Sprites.ship_green;
                             break;

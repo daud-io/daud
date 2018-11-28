@@ -49,6 +49,7 @@
                     case Sprites.ship_pink: return Sprites.bullet_pink;
                     case Sprites.ship_red: return Sprites.bullet_red;
                     case Sprites.ship_yellow: return Sprites.bullet_yellow;
+                    case Sprites.ship_zed: return Sprites.bullet_red;
                     default: return Sprites.bullet;
                 }
             }
