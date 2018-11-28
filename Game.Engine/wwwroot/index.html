@@ -42,7 +42,6 @@
                     <div>
                         <img id="logo" src="img/header.png" draggable="false" />
                     </div>
-
                     <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" />
 
                     <select id="shipSelector">
@@ -60,7 +59,14 @@
                     </div>
                 </div>
             </div>
-
+            <div id="gear" class="closed">
+                <h1>Settings</h1>
+                <p>Place your dropbox hash here. Leave empty to exit</p>
+                <input placeholder="mod key" type="text" id="mod" value="3ryhaa6boenvv2k" />
+                <input type="button" id="closes" value="Enter and close" />
+                <br>
+                <input type="button" id="reset" value="Reset to default (reloads the page)" />
+            </div>
             <div class="social">
                 <div id="hintbox">
                     Controls: Mouse to aim, click to fire, press "s" to boost!
@@ -70,6 +76,8 @@
                     <a href="https://discord.gg/SwTHz8g" target="_blank"><img id="discord" src="img/discord.png" /></a>
                     <a href="https://reddit.com/r/daudio" target="_blank"><img id="reddit" src="img/reddit.png" /></a>
                     <div id="spectate_container">
+                        <input type="button" id="settings" value="Settings" />
+                        <br>
                         <input type="button" id="spectate" value="Spectate" />
                     </div>
                 </div>

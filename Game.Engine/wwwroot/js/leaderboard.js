@@ -1,4 +1,4 @@
-﻿import { Renderer } from "./renderer";
+﻿import { sprites } from "./renderer";
 
 export class Leaderboard {
     constructor(canvas, context, settings = {}) {
@@ -22,7 +22,7 @@ export class Leaderboard {
             const width = 200;
             var rowHeight = 28;
             const margin = 20;
-            const arrow = Renderer.sprites["arrow"];
+            const arrow = sprites["arrow"];
 
             for (let i = 0; i < this.data.Entries.length; i++) {
                 const entry = this.data.Entries[i];

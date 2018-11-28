@@ -73,19 +73,19 @@ export var Controls = {
                 var dx = pos.x - cx;
                 Controls.angle = Math.atan2(dy, dx);
             });
-            window.addEventListener("mousedown", function (e) {
-                if (e.button == 2) //right click
+            window.addEventListener("mousedown", function(e) {
+                if (e.button == 2)
+                    //right click
                     Controls.boost = true;
-                else    
-                    Controls.shoot = true;
+                else Controls.shoot = true;
             });
             window.addEventListener("mouseup", function(e) {
-                if (e.button == 2) //right click
+                if (e.button == 2)
+                    //right click
                     Controls.boost = false;
-                else    
-                    Controls.shoot = false;
+                else Controls.shoot = false;
             });
-            window.addEventListener("contextmenu", function (e) {
+            window.addEventListener("contextmenu", function(e) {
                 e.preventDefault();
                 return false;
             });

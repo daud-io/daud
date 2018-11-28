@@ -244,3 +244,17 @@ table {
     border-right: 1vh solid transparent;
     border-top: 4vh solid white;
 }
+
+#gear {
+    position: absolute;
+    padding: 15vmin;
+    top: 0;
+    left:0;
+    width: calc(100% - 30vmin);
+    height: calc(100% - 30vmin);
+    background: rgba(0, 0, 50, 0.8);
+    z-index: 3;
+}
+#gear.closed {
+    display:none;
+}
