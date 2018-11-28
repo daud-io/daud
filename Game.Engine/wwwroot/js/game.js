@@ -7,9 +7,10 @@ import { Interpolator } from "./interpolator";
 import { Leaderboard } from "./leaderboard";
 import { Log } from "./log";
 import { Background } from "./background";
-import { Controls, nipple } from "./controls";
+import { Controls } from "./controls";
 import { Connection } from "./connection";
 import { token } from "./discord";
+import "./settings";
 
 var canvas = document.getElementById("gameCanvas");
 var context = canvas.getContext("2d");

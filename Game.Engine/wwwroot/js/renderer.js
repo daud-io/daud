@@ -8,6 +8,7 @@ function sprite(name, scale, scaleToSize) {
         scaleToSize: scaleToSize || false
     };
 }
+
 var flagScale = 0.005;
 export var sprites = {
     ship0: sprite("ship0"),
@@ -43,6 +44,7 @@ export var sprites = {
     flag_red_4: sprite("flag_red_4", flagScale, true),
     ctf_base: sprite("ctf_base")
 };
+
 export var spriteIndices = [
     "none",
     "ship0",

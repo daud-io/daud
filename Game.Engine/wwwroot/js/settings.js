@@ -1,10 +1,11 @@
 import { sprites } from "./renderer";
+import { img as background, setPattern } from "./background";
+
 import JSZip from "jszip";
 var gear = document.getElementById("gear");
 document.getElementById("settings").addEventListener("click", function() {
     gear.classList.remove("closed");
 });
-console.log(sprites);
 document.getElementById("closes").addEventListener("click", async function() {
     var v = document.getElementById("mod").value;
     if (v) {
@@ -19,26 +20,27 @@ document.getElementById("closes").addEventListener("click", async function() {
             .then(function(text) {
                 var info = JSON.parse(text);
                 info.files.forEach(element => {
-                    console.log(element);
-                    zip.file("daudmod/" + element + ".png")
+                    zip.file("daudmod/" + element[0] + ".png")
                         .async("arraybuffer")
                         .then(function(ab) {
                             var arrayBufferView = new Uint8Array(ab);
                             var blob = new Blob([arrayBufferView], { type: "image/jpeg" });
                             var urlCreator = window.URL || window.webkitURL;
                             var url = urlCreator.createObjectURL(blob);
-                            var img = new Image();
-                            img.src = url;
-                            img.onload = function() {
-                                sprites[element].img = img;
-                                if (info.scale[element]) {
-                                    sprites[element].scale = info.scale[element];
-                                    sprites[element].scaleToSize = true;
+                            if (element[0] == "bg") {
+                                background.src = url;
+                                background.onload = function() {
+                                    setPattern();
+                                };
+                            } else {
+                                sprites[element[0]].image.src = url;
+                                if (element[1]) {
+                                    sprites[element[0]].scale = element[1];
+                                    sprites[element[0]].scaleToSize = !element[0].startsWith("ship");
                                 }
-                            };
+                            }
                         });
                 });
-                console.log(info);
             });
     }
     gear.classList.add("closed");

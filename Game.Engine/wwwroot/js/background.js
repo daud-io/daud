@@ -1,15 +1,22 @@
+export var img = new Image();
+export var setPattern;
+var pattern;
+img.src = "img/bg.png";
+img.onload = function() {
+    setPattern();
+};
 export class Background {
     constructor(canvas, context, settings) {
         settings = settings || {};
-        this.img = new Image();
-        this.img.src = "img/bg.png";
+
         this.context = context;
 
         this.parallaxFactor = 50;
 
         var self = this;
-        this.img.onload = function() {
-            self.pattern = self.context.createPattern(self.img, "repeat");
+
+        setPattern = function() {
+            pattern = self.context.createPattern(img, "repeat");
         };
         this.canvas = canvas;
     }
@@ -21,7 +28,7 @@ export class Background {
 
         ctx.save();
         ctx.scale(10, 10);
-        ctx.fillStyle = this.pattern;
+        ctx.fillStyle = pattern;
 
         ctx.translate(-2 * x, -2 * y);
         ctx.globalAlpha = 1;
