@@ -28,8 +28,8 @@
         {
             base.Init(world);
 
-            SizeMinimum = 50;
-            SizeMaximum = 50;
+            SizeMinimum = 70;
+            SizeMaximum = 70;
             Health = MaxHealth;
             Drag = World.Hook.Drag;
 
