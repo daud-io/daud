@@ -53,3 +53,8 @@ document.getElementById("closes").addEventListener("click", function() {
     }
     gear.classList.add("closed");
 });
+
+document.getElementById("reset").addEventListener("click", function() {
+    Cookies.remove("theme");
+    window.location.reload();
+})
