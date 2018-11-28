@@ -57,11 +57,11 @@ export class Connection {
             } else self.onMessage(event);
         };
 
-        this.socket.onerror = function (error) {
+        this.socket.onerror = function(error) {
             document.body.classList.add("connectionerror");
         };
 
-        this.socket.onopen = function (event) {
+        this.socket.onopen = function(event) {
             document.body.classList.remove("connectionerror");
             self.onOpen(event);
         };

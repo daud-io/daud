@@ -1,6 +1,6 @@
 ﻿import "babel-polyfill";
 
-import { Renderer } from "./renderer";
+import { Renderer, spriteIndices } from "./renderer";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
@@ -45,7 +45,7 @@ var bodyFromServer = function(cache, body) {
         ID: body.id(),
         DefinitionTime: body.definitionTime(),
         Size: body.size() * 5,
-        Sprite: Renderer.spriteIndices[body.sprite()], //body.sprite(),
+        Sprite: spriteIndices[body.sprite()], //body.sprite(),
         Color: "red", //body.color(),
         Group: groupID,
         OriginalAngle: (body.originalAngle() / 127) * Math.PI,

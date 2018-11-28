@@ -1,92 +1,88 @@
+function sprite(name, scale, scaleToSize) {
+    var img = new Image();
+    img.src = "img/" + name + ".png";
+
+    return {
+        image: img,
+        scale: scale || 1.3,
+        scaleToSize: scaleToSize || false
+    };
+}
+var flagScale = 0.005;
+export var sprites = {
+    ship0: sprite("ship0"),
+    ship_green: sprite("ship_green"),
+    ship_gray: sprite("ship_gray"),
+    ship_orange: sprite("ship_orange"),
+    ship_pink: sprite("ship_pink"),
+    ship_red: sprite("ship_red"),
+    ship_cyan: sprite("ship_cyan"),
+    ship_yellow: sprite("ship_yellow"),
+    ship_flash: sprite("ship_flash"),
+    bullet_green: sprite("bullet_green", 0.03, true),
+    bullet_orange: sprite("bullet_orange", 0.03, true),
+    bullet_pink: sprite("bullet_pink", 0.03, true),
+    bullet_red: sprite("bullet_red", 0.03, true),
+    bullet_cyan: sprite("bullet_cyan", 0.03, true),
+    bullet_yellow: sprite("bullet_yellow", 0.03, true),
+    fish: sprite("ship0", 0.005, true),
+    bullet: sprite("bullet", 0.02, true),
+    seeker: sprite("seeker", 0.02, true),
+    seeker_pickup: sprite("seeker_pickup", 0.02, true),
+    obstacle: sprite("obstacle", 0.0028, true),
+    arrow: sprite("arrow", 0.03),
+    flag_blue_0: sprite("flag_blue_0", flagScale, true),
+    flag_blue_1: sprite("flag_blue_1", flagScale, true),
+    flag_blue_2: sprite("flag_blue_2", flagScale, true),
+    flag_blue_3: sprite("flag_blue_3", flagScale, true),
+    flag_blue_4: sprite("flag_blue_4", flagScale, true),
+    flag_red_0: sprite("flag_red_0", flagScale, true),
+    flag_red_1: sprite("flag_red_1", flagScale, true),
+    flag_red_2: sprite("flag_red_2", flagScale, true),
+    flag_red_3: sprite("flag_red_3", flagScale, true),
+    flag_red_4: sprite("flag_red_4", flagScale, true),
+    ctf_base: sprite("ctf_base")
+};
+export var spriteIndices = [
+    "none",
+    "ship0",
+    "ship_green",
+    "ship_gray",
+    "ship_orange",
+    "ship_pink",
+    "ship_red",
+    "ship_cyan",
+    "ship_yellow",
+    "ship_flash",
+    "bullet_green",
+    "bullet_orange",
+    "bullet_pink",
+    "bullet_red",
+    "bullet_cyan",
+    "bullet_yellow",
+    "fish",
+    "bullet",
+    "seeker",
+    "seeker_pickup",
+    "obstacle",
+    "arrow",
+    "flag_blue_0",
+    "flag_blue_1",
+    "flag_blue_2",
+    "flag_blue_3",
+    "flag_blue_4",
+    "flag_red_0",
+    "flag_red_1",
+    "flag_red_2",
+    "flag_red_3",
+    "flag_red_4",
+    "ctf_base"
+];
 export class Renderer {
     constructor(context, settings) {
         settings = settings || {};
         this.context = context;
         this.view = false;
-
-        var sprite = function(name, scale, scaleToSize) {
-            var img = new Image();
-            img.src = "img/" + name + ".png";
-
-            return {
-                image: img,
-                scale: scale || 1.3,
-                scaleToSize: scaleToSize || false
-            };
-        };
-
-        var flagScale = 0.005;
-
-        Renderer.sprites = {
-            ship0: sprite("ship0"),
-            ship_green: sprite("ship_green"),
-            ship_gray: sprite("ship_gray"),
-            ship_orange: sprite("ship_orange"),
-            ship_pink: sprite("ship_pink"),
-            ship_red: sprite("ship_red"),
-            ship_cyan: sprite("ship_cyan"),
-            ship_yellow: sprite("ship_yellow"),
-            ship_flash: sprite("ship_flash"),
-            bullet_green: sprite("bullet_green", 0.03, true),
-            bullet_orange: sprite("bullet_orange", 0.03, true),
-            bullet_pink: sprite("bullet_pink", 0.03, true),
-            bullet_red: sprite("bullet_red", 0.03, true),
-            bullet_cyan: sprite("bullet_cyan", 0.03, true),
-            bullet_yellow: sprite("bullet_yellow", 0.03, true),
-            fish: sprite("ship0", 0.005, true),
-            bullet: sprite("bullet", 0.02, true),
-            seeker: sprite("seeker", 0.02, true),
-            seeker_pickup: sprite("seeker_pickup", 0.02, true),
-            obstacle: sprite("obstacle", 0.0028, true),
-            arrow: sprite("arrow", 0.03),
-            flag_blue_0: sprite("flag_blue_0", flagScale, true),
-            flag_blue_1: sprite("flag_blue_1", flagScale, true),
-            flag_blue_2: sprite("flag_blue_2", flagScale, true),
-            flag_blue_3: sprite("flag_blue_3", flagScale, true),
-            flag_blue_4: sprite("flag_blue_4", flagScale, true),
-            flag_red_0: sprite("flag_red_0", flagScale, true),
-            flag_red_1: sprite("flag_red_1", flagScale, true),
-            flag_red_2: sprite("flag_red_2", flagScale, true),
-            flag_red_3: sprite("flag_red_3", flagScale, true),
-            flag_red_4: sprite("flag_red_4", flagScale, true),
-            ctf_base: sprite("ctf_base")
-        };
-
-        Renderer.spriteIndices = [
-            "none",
-            "ship0",
-            "ship_green",
-            "ship_gray",
-            "ship_orange",
-            "ship_pink",
-            "ship_red",
-            "ship_cyan",
-            "ship_yellow",
-            "ship_flash",
-            "bullet_green",
-            "bullet_orange",
-            "bullet_pink",
-            "bullet_red",
-            "bullet_cyan",
-            "bullet_yellow",
-            "fish",
-            "bullet",
-            "seeker",
-            "seeker_pickup",
-            "obstacle",
-            "arrow",
-            "flag_blue_0",
-            "flag_blue_1",
-            "flag_blue_2",
-            "flag_blue_3",
-            "flag_blue_4",
-            "flag_red_0",
-            "flag_red_1",
-            "flag_red_2",
-            "flag_red_3",
-            "flag_red_4",
-            "ctf_base"
-        ];
     }
 
     draw(cache, interpolator, currentTime) {
@@ -148,7 +144,7 @@ export class Renderer {
                     group.points.push(position);
                 }
 
-                var ship = object.Sprite != null ? Renderer.sprites[object.Sprite] : false;
+                var ship = object.Sprite != null ? sprites[object.Sprite] : false;
 
                 /*if (object.Caption) {
                     ctx.fillText(object.Caption, position.X, position.Y + 90);
