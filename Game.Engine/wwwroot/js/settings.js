@@ -40,9 +40,12 @@ function load() {
     try {
         var savedSettings = Cookies.getJSON("settings");
 
-        if (savedSettings)
-            Settings = savedSettings;
-
+        if (savedSettings) {
+            // copying value by value because cookies can be old versions
+            // any values NOT in the cookie will remain defined with the new defaults
+            for (var key in savedSettings) 
+                Settings[key] = savedSettings[key];
+        }
 
         document.getElementById("settingsThemeSelector").value = Settings.theme;
         document.getElementById("settingsThemeSelectorCustom").value = Settings.themeCustom || "";
