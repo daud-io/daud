@@ -71,6 +71,7 @@ export var Controls = {
                 var cy = canvas.height / 2;
                 var dy = pos.y - cy;
                 var dx = pos.x - cx;
+
                 Controls.angle = Math.atan2(dy, dx);
             });
             window.addEventListener("mousedown", function(e) {

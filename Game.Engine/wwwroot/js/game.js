@@ -10,7 +10,7 @@ import { Background } from "./background";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
 import { token } from "./discord";
-import "./settings";
+import { Settings } from "./settings";
 
 var canvas = document.getElementById("gameCanvas");
 var context = canvas.getContext("2d");
@@ -247,8 +247,8 @@ function gameLoop() {
 
         angle = Controls.angle;
         aimTarget = {
-            X: pos.x - position.X,
-            Y: pos.y - position.Y
+            X: Settings.mouseScale * (pos.x - position.X),
+            Y: Settings.mouseScale * (pos.y - position.Y)
         };
     }
 
