@@ -71,6 +71,7 @@ export var Controls = {
                 var cy = canvas.height / 2;
                 var dy = pos.y - cy;
                 var dx = pos.x - cx;
+
                 Controls.angle = Math.atan2(dy, dx);
             });
             window.addEventListener("mousedown", function(e) {
@@ -150,8 +151,10 @@ window.addEventListener(
 );
 
 function save() {
-    if (Controls.nick) Cookies.set("nick", Controls.nick);
-    Cookies.set("color", Controls.color);
+    var cookieOptions = { expires: 300 };
+
+    if (Controls.nick) Cookies.set("nick", Controls.nick, cookieOptions);
+    Cookies.set("color", Controls.color, cookieOptions);
 }
 
 var savedNick = Cookies.get("nick");

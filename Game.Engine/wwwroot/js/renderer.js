@@ -1,3 +1,5 @@
+import { Settings } from "./settings";
+
 function sprite(name, scale, scaleToSize) {
     var img = new Image();
     img.src = "img/" + name + ".png";
@@ -116,7 +118,7 @@ export class Renderer {
 
             ctx.restore();
 
-            ctx.font = "48px sans-serif";
+            ctx.font = "48px " + Settings.font;
             ctx.fillStyle = "white";
             ctx.textAlign = "center";
             ctx.strokeStyle = "white";
@@ -212,30 +214,32 @@ export class Renderer {
                 ctx.restore();
             }, this);
 
-            for (var i = 0; i < groupsUsed.length; i++) {
-                var group = groupsUsed[i];
+            if (Settings.namesEnabled) {
+                for (var i = 0; i < groupsUsed.length; i++) {
+                    var group = groupsUsed[i];
 
-                if (group && group.group) {
-                    var pt = { X: 0, Y: 0 };
+                    if (group && group.group) {
+                        var pt = { X: 0, Y: 0 };
 
-                    for (var x = 0; x < group.points.length; x++) {
-                        pt.X += group.points[x].X;
-                        pt.Y += group.points[x].Y;
+                        for (var x = 0; x < group.points.length; x++) {
+                            pt.X += group.points[x].X;
+                            pt.Y += group.points[x].Y;
+                        }
+
+                        pt.X /= group.points.length;
+                        pt.Y /= group.points.length;
+
+                        ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                     }
-
-                    pt.X /= group.points.length;
-                    pt.Y /= group.points.length;
-
-                    ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                 }
+
+                cache.foreach(function (body) {
+                    var position = interpolator.projectObject(body, currentTime);
+                    if (body.Caption) {
+                        ctx.fillText(body.Caption, position.X, position.Y + 90);
+                    }
+                }, this);
             }
-
-            cache.foreach(function(body) {
-                var position = interpolator.projectObject(body, currentTime);
-                if (body.Caption) {
-                    ctx.fillText(body.Caption, position.X, position.Y + 90);
-                }
-            }, this);
         }
     }
 

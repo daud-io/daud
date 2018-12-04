@@ -1,3 +1,5 @@
+import { Settings } from "./settings";
+
 export var img = new Image();
 export var setPattern;
 var pattern;
@@ -11,8 +13,6 @@ export class Background {
 
         this.context = context;
 
-        this.parallaxFactor = 50;
-
         var self = this;
 
         setPattern = function() {
@@ -23,6 +23,19 @@ export class Background {
 
     draw(x, y) {
         var ctx = this.context;
+
+        if (Settings.background == "none") {
+            ctx.fillStyle = "solid black";
+            ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
+            return;
+        }
+        
+
+        if (Settings.background == "slow")
+            this.parallaxFactor = 200;
+        else
+            this.parallaxFactor = 100;
+
         x /= this.parallaxFactor;
         y /= this.parallaxFactor;
 
@@ -36,6 +49,7 @@ export class Background {
 
         ctx.translate(-x, -y);
         ctx.globalAlpha = 0.4;
+        ctx.scale(1.3, 1.3);
         ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
 
         ctx.restore();
