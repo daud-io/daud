@@ -1,3 +1,5 @@
+import { Settings } from "./settings";
+
 function sprite(name, scale, scaleToSize) {
     var img = new Image();
     img.src = "img/" + name + ".png";
@@ -116,7 +118,7 @@ export class Renderer {
 
             ctx.restore();
 
-            ctx.font = "48px sans-serif";
+            ctx.font = "48px " + Settings.font;
             ctx.fillStyle = "white";
             ctx.textAlign = "center";
             ctx.strokeStyle = "white";

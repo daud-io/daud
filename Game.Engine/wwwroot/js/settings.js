@@ -7,7 +7,8 @@ export var Settings = {
     theme: false,
     themeCustom: false,
     background: "slow",
-    mouseScale: 1.0
+    mouseScale: 1.0,
+    font: "sans-serif"
 };
 
 function save() {
@@ -18,6 +19,7 @@ function save() {
 
     Settings.background = document.getElementById("settingsBackground").value
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
+    Settings.font = document.getElementById("settingsFont").value;
 
     Cookies.set("settings", Settings, cookieOptions)
 }
@@ -39,6 +41,7 @@ function load() {
 
         document.getElementById("settingsBackground").value = Settings.background;
         document.getElementById("settingsMouseScale").value = Settings.mouseScale;
+        document.getElementById("settingsFont").value = Settings.font;
 
         if (Settings.themeCustom) {
             theme(Settings.themeCustom);

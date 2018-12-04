@@ -1,4 +1,5 @@
 ﻿import { sprites } from "./renderer";
+import { Settings } from "./settings";
 
 export class Leaderboard {
     constructor(canvas, context, settings = {}) {
@@ -15,7 +16,7 @@ export class Leaderboard {
         const ctx = this.context;
         ctx.save();
         if (this.data && this.data.Entries) {
-            ctx.font = "12pt sans-serif";
+            ctx.font = "12pt " + Settings.font;
             ctx.fillStyle = "white";
             ctx.textAlign = "left";
 
@@ -58,7 +59,7 @@ export class Leaderboard {
             }
 
             if (this.data.Record) {
-                ctx.font = "8pt sans-serif";
+                ctx.font = "8pt " + Settings.font;
                 ctx.fillStyle = "white";
                 ctx.fillText(`record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`, margin, this.canvas.height - margin);
             }
