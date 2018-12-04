@@ -14,6 +14,10 @@ export class Leaderboard {
 
     draw(relativeTo) {
         const ctx = this.context;
+
+        if (!Settings.leaderboardEnabled)
+            return;
+
         ctx.save();
         if (this.data && this.data.Entries) {
             ctx.font = "12pt " + Settings.font;

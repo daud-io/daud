@@ -8,7 +8,9 @@ export var Settings = {
     themeCustom: false,
     background: "slow",
     mouseScale: 1.0,
-    font: "sans-serif"
+    font: "sans-serif",
+    leaderboardEnabled: true,
+    namesEnabled: true
 };
 
 function save() {
@@ -20,6 +22,8 @@ function save() {
     Settings.background = document.getElementById("settingsBackground").value
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
     Settings.font = document.getElementById("settingsFont").value;
+    Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
+    Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
 
     Cookies.set("settings", Settings, cookieOptions)
 }
@@ -42,6 +46,9 @@ function load() {
         document.getElementById("settingsBackground").value = Settings.background;
         document.getElementById("settingsMouseScale").value = Settings.mouseScale;
         document.getElementById("settingsFont").value = Settings.font;
+        document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
+        document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
+
 
         if (Settings.themeCustom) {
             theme(Settings.themeCustom);
