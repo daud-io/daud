@@ -1,5 +1,7 @@
 ﻿import { flatbuffers } from "./flatbuffers";
 import { Game } from "./game_generated";
+import { Cache } from "./cache";
+import { Settings } from "./settings";
 
 export class Connection {
     constructor() {
@@ -82,6 +84,14 @@ export class Connection {
         this.pingSent = performance.now();
 
         //this.fb.Ping.addTime(builder, this.pingSent);
+        this.fb.NetPing.addLatency(builder, this.latency);
+        this.fb.NetPing.addVps(builder, window.Game.Stats.viewsPerSecond);
+        this.fb.NetPing.addUps(builder, window.Game.Stats.updatesPerSecond);
+        this.fb.NetPing.addFps(builder, window.Game.Stats.framesPerSecond);
+        this.fb.NetPing.addCs(builder, Cache.count);
+        this.fb.NetPing.addBackgrounded(builder, window.Game.isBackgrounded);
+        this.fb.NetPing.addBandwidthThrottle(builder, Settings.bandwidth);
+
         var ping = this.fb.NetPing.endNetPing(builder);
 
         this.fb.NetQuantum.startNetQuantum(builder);

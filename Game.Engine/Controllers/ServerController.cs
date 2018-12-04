@@ -75,7 +75,13 @@
                     Name = p.Name,
                     Score = p.Score,
                     IsAlive = p.IsAlive,
-                    IP = p.IP
+                    IP = p.IP,
+                    Backgrounded = p.Connection?.Backgrounded ?? false,
+                    ClientFPS = p.Connection?.ClientFPS ?? 0,
+                    ClientVPS = p.Connection?.ClientVPS ?? 0,
+                    ClientUPS = p.Connection?.ClientUPS ?? 0,
+                    ClientCS = p.Connection?.ClientCS ?? 0,
+                    Bandwidth = p.Connection?.Bandwidth ?? 0
                 });
         }
     }

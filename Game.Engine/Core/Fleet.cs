@@ -21,8 +21,12 @@
         public bool BoostRequested { get; set; }
         public bool ShootRequested { get; set; }
 
-        public long TimeReloaded { get; set; } = 0;
+        public long ShootCooldownTimeStart { get; set; } = 0;
+        public long ShootCooldownTime { get; set; } = 0;
+        public float ShootCooldownStatus { get; set; } = 0;
+        public long BoostCooldownTimeStart { get; set; } = 0;
         public long BoostCooldownTime { get; set; } = 0;
+        public float BoostCooldownStatus { get; set; } = 0;
         public long BoostUntil { get; set; } = 0;
 
         public Vector2 AimTarget { get; set; }
@@ -165,12 +169,13 @@
 
         public override void Think()
         {
-            var isShooting = ShootRequested && World.Time >= TimeReloaded;
+            var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
             var isBoosting = World.Time < BoostUntil;
             var isBoostInitial = false;
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
             {
+                BoostCooldownTimeStart = World.Time;
                 BoostCooldownTime = World.Time + World.Hook.BoostCooldownTime;
                 BoostUntil = World.Time + World.Hook.BoostDuration;
                 isBoostInitial = true;
@@ -214,13 +219,28 @@
 
             if (isShooting)
             {
-                TimeReloaded = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
+                ShootCooldownTime = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
+                ShootCooldownTimeStart = World.Time;
 
                 foreach (var ship in Ships)
                     NewBullets.Add(Bullet.FireFrom(ship));
 
                 this.Pickup = null;
             }
+
+            if (World.Time > BoostCooldownTime)
+                BoostCooldownStatus = 1;
+            else
+                BoostCooldownStatus = (float)
+                    (World.Time - BoostCooldownTimeStart) / (BoostCooldownTime - BoostCooldownTimeStart);
+
+            if (World.Time > ShootCooldownTime)
+                ShootCooldownStatus = 1;
+            else
+                ShootCooldownStatus = (float)
+                    (World.Time - ShootCooldownTimeStart) / (ShootCooldownTime - ShootCooldownTimeStart);
+
+
         }
 
         private void Flock(Ship ship)

@@ -62,7 +62,13 @@
                         c.Name,
                         c.IP,
                         c.IsAlive,
-                        c.Score
+                        c.Score,
+                        bg = c.Backgrounded,
+                        c.Bandwidth,
+                        fps = c.ClientFPS,
+                        vps = c.ClientVPS,
+                        ups = c.ClientUPS,
+                        cs = c.ClientCS
                     }));
             }
         }

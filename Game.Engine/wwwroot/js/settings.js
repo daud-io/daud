@@ -10,7 +10,9 @@ export var Settings = {
     mouseScale: 1.0,
     font: "sans-serif",
     leaderboardEnabled: true,
-    namesEnabled: true
+    hudEnabled: true,
+    namesEnabled: true,
+    bandwidth: 100
 };
 
 function save() {
@@ -24,6 +26,8 @@ function save() {
     Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
     Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
+    Settings.bandwidth = document.getElementById("settingsBandwidth").value;
+    Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
 
     Cookies.set("settings", Settings, cookieOptions)
 }
@@ -48,6 +52,8 @@ function load() {
         document.getElementById("settingsFont").value = Settings.font;
         document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
         document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
+        document.getElementById("settingsBandwidth").value = Settings.bandwidth;
+        document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
 
 
         if (Settings.themeCustom) {

@@ -45,6 +45,13 @@ table NetControlInput
 table NetPing
 {
 	time:uint;
+    latency:uint = 0;
+    fps:uint = 0;
+    vps:uint = 0;
+    ups:uint = 0;
+    cs:uint = 0;
+    backgrounded:bool = false;
+    bandwidthThrottle:uint;
 }
 
 table NetWorldView
@@ -57,6 +64,10 @@ table NetWorldView
     groups:[NetGroup];
 	groupDeletes:[uint];
 	announcements:[NetAnnouncement];
+    playerCount:uint;
+    spectatorCount:uint;
+    cooldownShoot:ubyte;
+    cooldownBoost:ubyte;
 }
 
 table NetGroup

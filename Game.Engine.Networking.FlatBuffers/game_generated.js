@@ -596,10 +596,66 @@ Game.Engine.Networking.FlatBuffers.NetPing.prototype.time = function() {
 };
 
 /**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.prototype.latency = function() {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.prototype.fps = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.prototype.vps = function() {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.prototype.ups = function() {
+  var offset = this.bb.__offset(this.bb_pos, 12);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.prototype.cs = function() {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {boolean}
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.prototype.backgrounded = function() {
+  var offset = this.bb.__offset(this.bb_pos, 16);
+  return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.prototype.bandwidthThrottle = function() {
+  var offset = this.bb.__offset(this.bb_pos, 18);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetPing.startNetPing = function(builder) {
-  builder.startObject(1);
+  builder.startObject(8);
 };
 
 /**
@@ -608,6 +664,62 @@ Game.Engine.Networking.FlatBuffers.NetPing.startNetPing = function(builder) {
  */
 Game.Engine.Networking.FlatBuffers.NetPing.addTime = function(builder, time) {
   builder.addFieldInt32(0, time, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} latency
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.addLatency = function(builder, latency) {
+  builder.addFieldInt32(1, latency, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} fps
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.addFps = function(builder, fps) {
+  builder.addFieldInt32(2, fps, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} vps
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.addVps = function(builder, vps) {
+  builder.addFieldInt32(3, vps, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} ups
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.addUps = function(builder, ups) {
+  builder.addFieldInt32(4, ups, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} cs
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.addCs = function(builder, cs) {
+  builder.addFieldInt32(5, cs, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {boolean} backgrounded
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.addBackgrounded = function(builder, backgrounded) {
+  builder.addFieldInt8(6, +backgrounded, +false);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} bandwidthThrottle
+ */
+Game.Engine.Networking.FlatBuffers.NetPing.addBandwidthThrottle = function(builder, bandwidthThrottle) {
+  builder.addFieldInt32(7, bandwidthThrottle, 0);
 };
 
 /**
@@ -784,10 +896,42 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.announcementsLength = 
 };
 
 /**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.playerCount = function() {
+  var offset = this.bb.__offset(this.bb_pos, 20);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.spectatorCount = function() {
+  var offset = this.bb.__offset(this.bb_pos, 22);
+  return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.cooldownShoot = function() {
+  var offset = this.bb.__offset(this.bb_pos, 24);
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.cooldownBoost = function() {
+  var offset = this.bb.__offset(this.bb_pos, 26);
+  return offset ? this.bb.readUint8(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.startNetWorldView = function(builder) {
-  builder.startObject(8);
+  builder.startObject(12);
 };
 
 /**
@@ -944,6 +1088,38 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.createAnnouncementsVector = func
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.startAnnouncementsVector = function(builder, numElems) {
   builder.startVector(4, numElems, 4);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} playerCount
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.addPlayerCount = function(builder, playerCount) {
+  builder.addFieldInt32(8, playerCount, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} spectatorCount
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.addSpectatorCount = function(builder, spectatorCount) {
+  builder.addFieldInt32(9, spectatorCount, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} cooldownShoot
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.addCooldownShoot = function(builder, cooldownShoot) {
+  builder.addFieldInt8(10, cooldownShoot, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} cooldownBoost
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.addCooldownBoost = function(builder, cooldownBoost) {
+  builder.addFieldInt8(11, cooldownBoost, 0);
 };
 
 /**

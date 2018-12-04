@@ -13,7 +13,7 @@ var texts = [
     "Tip: Daud.io is open source and changing quickly. Join Discord to help."
 ];
 
-var index = 1;
+var index = 1; // zero is duplicated in the HTML
 window.setInterval(function() {
     hintbox.innerText = texts[index % texts.length];
     index++;
