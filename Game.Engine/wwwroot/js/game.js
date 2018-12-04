@@ -11,6 +11,7 @@ import { Controls } from "./controls";
 import { Connection } from "./connection";
 import { token } from "./discord";
 import { Settings } from "./settings";
+import "./hintbox";
 
 var canvas = document.getElementById("gameCanvas");
 var context = canvas.getContext("2d");
