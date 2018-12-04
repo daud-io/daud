@@ -4,6 +4,7 @@ var texts = [
     "Controls: Mouse to aim, click to fire, press \"s\" to boost!",
     "Tip: If you have low frames-per-second in FireFox, try Chrome.",
     "Tip: The particles flying around are fish. Shoot them to grow bigger.",
+    "Tip: Larger fleets move, shoot, and reload slower than small fleets.",
     "Tip: Chat with other players, arrange duels, and more using the Discord link below.",
     "Tip: Trouble focusing your fire? Try adjusting mouse-sensitivity option in settings.",
     "Tip: Don't be afraid of dying. Soon others will!",
