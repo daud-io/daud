@@ -11,10 +11,13 @@
                     BaseThrustM = -0.003f,
                     BaseThrustB = 0.13f,
 
-                    Drag = 0.90f,
+                    Drag = 0.92f,
 
-                    BoostThrust = 0.1f,
-                    BoostCooldownTime = 1200,
+                    BoostThrust = 0.15f,
+
+                    BoostCooldownTimeM = 4.0f,
+                    BoostCooldownTimeB = 1096.0f,
+
                     BoostSpeed = 1f,
                     BoostDuration = 450,
 
@@ -46,7 +49,7 @@
                     TeamMode = false,
                     CTFMode = false,
 
-                    SpawnShipCount = 3,
+                    SpawnShipCount = 5,
 
                     FlockAlignment = .5f,
                     FlockCohesion = 0.002f,
@@ -72,7 +75,9 @@
 
         public float BoostThrust { get; set; }
 
-        public int BoostCooldownTime { get; set; }
+        public float BoostCooldownTimeM { get; set; }
+        public float BoostCooldownTimeB { get; set; }
+
         public int BoostDuration { get; set; }
         public float BoostSpeed { get; set; }
 
