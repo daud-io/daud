@@ -12,7 +12,8 @@ export var Settings = {
     leaderboardEnabled: true,
     hudEnabled: true,
     namesEnabled: true,
-    bandwidth: 100
+    bandwidth: 100,
+    showHitboxes: false
 };
 
 function save() {
@@ -28,6 +29,7 @@ function save() {
     Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
+    Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
 
     Cookies.set("settings", Settings, cookieOptions)
 }
@@ -57,6 +59,7 @@ function load() {
         document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
+        document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
 
 
         if (Settings.themeCustom) {

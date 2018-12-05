@@ -165,7 +165,7 @@ export class Renderer {
 
                 if (health) {
                     var healthBar = false;
-                    var healthRing = false;
+                    var healthRing = Settings.showHitboxes;
 
                     if (healthBar) {
                         var offset = { X: 0, Y: 100 };

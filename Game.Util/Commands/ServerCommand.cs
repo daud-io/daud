@@ -68,7 +68,8 @@
                         fps = c.ClientFPS,
                         vps = c.ClientVPS,
                         ups = c.ClientUPS,
-                        cs = c.ClientCS
+                        cs = c.ClientCS,
+                        ping = c.Latency
                     }));
             }
         }

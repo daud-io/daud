@@ -39,6 +39,7 @@
         public uint ClientUPS { get; set; } = 0;
         public uint ClientCS { get; set; } = 0;
         public uint Bandwidth { get; set; } = 100;
+        public uint Latency { get; set; } = 0;
 
         public Connection(ILogger<Connection> logger)
         {
@@ -338,6 +339,7 @@
             this.ClientUPS = ping.Ups;
             this.ClientCS = ping.Cs;
             this.Bandwidth = ping.BandwidthThrottle;
+            this.Latency = ping.Latency;
 
             await SendPingAsync();
         }

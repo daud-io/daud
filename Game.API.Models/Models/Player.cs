@@ -13,5 +13,6 @@
         public uint ClientUPS { get; set; }
         public uint ClientCS { get; set; }
         public uint Bandwidth { get; set; }
+        public uint Latency { get; set; }
     }
 }

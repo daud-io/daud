@@ -81,7 +81,8 @@
                     ClientVPS = p.Connection?.ClientVPS ?? 0,
                     ClientUPS = p.Connection?.ClientUPS ?? 0,
                     ClientCS = p.Connection?.ClientCS ?? 0,
-                    Bandwidth = p.Connection?.Bandwidth ?? 0
+                    Bandwidth = p.Connection?.Bandwidth ?? 0,
+                    Latency = p.Connection?.Latency ?? 0
                 });
         }
     }
