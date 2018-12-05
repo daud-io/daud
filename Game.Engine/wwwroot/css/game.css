@@ -124,6 +124,10 @@ a {
     width: 100%;
 }
 
+.spectating #nipple-controls {
+    visibility: hidden;
+}
+
 #nipple-zone {
     position: absolute;
     top: 0;

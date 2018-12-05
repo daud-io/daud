@@ -5,12 +5,14 @@ import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
 import { Leaderboard } from "./leaderboard";
+import { HUD } from "./hud";
 import { Log } from "./log";
 import { Background } from "./background";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
 import { token } from "./discord";
-import "./settings";
+import { Settings } from "./settings";
+import "./hintbox";
 
 var canvas = document.getElementById("gameCanvas");
 var context = canvas.getContext("2d");
@@ -19,6 +21,7 @@ var background = new Background(canvas, context, {});
 var camera = new Camera(context);
 var interpolator = new Interpolator();
 var leaderboard = new Leaderboard(canvas, context);
+var hud = new HUD(canvas, context);
 var log = new Log(canvas, context);
 
 var angle = 0.0;
@@ -35,6 +38,7 @@ Controls.registerCanvas(canvas);
 
 var connection = new Connection();
 window.Game.primaryConnection = connection;
+window.Game.isBackgrounded = false;
 
 var bodyFromServer = function(cache, body) {
     var originalPosition = body.originalPosition();
@@ -138,6 +142,15 @@ connection.onView = function(newView) {
 
     cache.update(updates, deletes, groups, groupDeletes, gameTime);
 
+    Game.Stats.playerCount = newView.playerCount();
+    Game.Stats.spectatorCount = newView.spectatorCount();
+    
+    /*console.log({
+        playerCount: Game.Stats.playerCount,
+        cooldownBoost: newView.cooldownBoost(),
+        cooldownShoot: newView.cooldownShoot()
+    })*/
+
     view.camera = bodyFromServer(cache, newView.camera());
 };
 
@@ -206,7 +219,10 @@ setInterval(function() {
 
     if (frameCounter === 0) {
         console.log("backgrounded");
+        Game.isBackgrounded = true;
     }
+    else
+        Game.isBackgrounded = false;
     frameCounter = 0;
     viewCounter = 0;
     updateCounter = 0;
@@ -241,6 +257,7 @@ function gameLoop() {
     lastPosition = position;
 
     leaderboard.draw(leaderboard.position);
+    hud.draw();
     log.draw();
 
     if (Controls.mouseX) {
@@ -248,8 +265,8 @@ function gameLoop() {
 
         angle = Controls.angle;
         aimTarget = {
-            X: pos.x - position.X,
-            Y: pos.y - position.Y
+            X: Settings.mouseScale * (pos.x - position.X),
+            Y: Settings.mouseScale * (pos.y - position.Y)
         };
     }
 

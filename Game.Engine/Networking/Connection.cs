@@ -33,6 +33,14 @@
 
         public AsyncAutoResetEvent WorldUpdateEvent = null;
 
+        public bool Backgrounded { get; set; } = false;
+        public uint ClientFPS { get; set; } = 0;
+        public uint ClientVPS { get; set; } = 0;
+        public uint ClientUPS { get; set; } = 0;
+        public uint ClientCS { get; set; } = 0;
+        public uint Bandwidth { get; set; } = 100;
+        public uint Latency { get; set; } = 0;
+
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
@@ -114,7 +122,7 @@
 
                     var updates = BodyCache.BodiesByError();
 
-                    var updateBodies = updates.Take(100);
+                    var updateBodies = updates.Take((int)this.Bandwidth);
 
                     var newHash = world.Hook.GetHashCode();
 
@@ -226,6 +234,13 @@
                     if (messages != null && messages.Any())
                         NetWorldView.AddAnnouncements(builder, announcementsVector);
 
+                    var players = Player.GetWorldPlayers(world);
+                    NetWorldView.AddPlayerCount(builder, (uint)players.Count(p => p.IsAlive));
+                    NetWorldView.AddSpectatorCount(builder, (uint)players.Count(p => !p.IsAlive));
+
+                    NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
+                    NetWorldView.AddCooldownShoot(builder, (byte)((player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
+
                     var worldView = NetWorldView.EndNetWorldView(builder);
 
                     HookHash = newHash;
@@ -316,12 +331,26 @@
             await SendAsync(builder.DataBuffer, default(CancellationToken));
         }
 
+        private async Task HandlePingAsync(NetPing ping)
+        {
+            this.Backgrounded = ping.Backgrounded;
+            this.ClientFPS = ping.Fps;
+            this.ClientVPS = ping.Vps;
+            this.ClientUPS = ping.Ups;
+            this.ClientCS = ping.Cs;
+            this.Bandwidth = ping.BandwidthThrottle;
+            this.Latency = ping.Latency;
+
+            await SendPingAsync();
+        }
+
         private async Task HandleIncomingMessage(NetQuantum quantum)
         {
             switch (quantum.MessageType)
             {
                 case AllMessages.NetPing:
-                    await SendPingAsync();
+                    var ping = quantum.Message<NetPing>().Value;
+                    await HandlePingAsync(ping);
                     break;
 
                 case AllMessages.NetSpawn:
@@ -401,7 +430,8 @@
                 {
                     player = new Player
                     {
-                        IP = httpContext.Connection.RemoteIpAddress.ToString()
+                        IP = httpContext.Connection.RemoteIpAddress.ToString(),
+                        Connection = this
                     };
                     player.Init(world);
                 }

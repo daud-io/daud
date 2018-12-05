@@ -28,10 +28,12 @@
 
         <div class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
-            <div id="nipple-zone"></div>
-            <div id="niple-buttons">
-                <div id="shoot"></div>
-                <div id="boost"></div>
+            <div id="nipple-controls">
+                <div id="nipple-zone"></div>
+                <div id="niple-buttons">
+                    <div id="shoot"></div>
+                    <div id="boost"></div>
+                </div>
             </div>
             <div class='ansible'></div>
         </div>
@@ -41,6 +43,9 @@
                 <div>
                     <div>
                         <img id="logo" src="img/header.png" draggable="false" />
+                    </div>
+                    <div id="hintbox">
+                        Controls: Mouse to aim, click to fire, press "s" to boost!
                     </div>
                     <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" />
 
@@ -61,16 +66,68 @@
             </div>
             <div id="gear" class="closed">
                 <h1>Settings</h1>
-                <p>Place your dropbox hash here. Leave empty to exit</p>
-                <input placeholder="mod key" type="text" id="mod" value="3ryhaa6boenvv2k" />
-                <input type="button" id="closes" value="Enter and close" />
+
+                <label for="settingsThemeSelector">Theme Selection</label>
+                <select id="settingsThemeSelector">
+                    <option value="">default</option>
+                    <option value="3ryhaa6boenvv2k">Bitty</option>
+                    <option value="3ds2agh4z76feci">Retro</option>
+                </select>
+                <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" value="" />
                 <br>
-                <input type="button" id="reset" value="Reset to default (reloads the page)" />
+                <label for="settingsBackground">Background</label>
+                <select id="settingsBackground">
+                    <option value="none">none</option>
+                    <option value="slow">slow</option>
+                    <option value="fast">fast</option>
+                </select>
+                <br>
+
+                <label for="settingsMouseScale">Mouse Sensitivity</label>
+                <select id="settingsMouseScale">
+                    <option value="1">sensitive</option>
+                    <option value="4">medium</option>
+                    <option value="10">straight-shooter</option>
+                </select>
+                <br>
+
+                <label for="settingsBandwidth">Bandwidth</label>
+                <select id="settingsBandwidth">
+                    <option value="100">high</option>
+                    <option value="50">medium</option>
+                    <option value="25">low</option>
+                </select>
+                <br>
+
+                <label for="settingsFont">Font</label>
+                <select id="settingsFont">
+                    <option value="sans-serif">default</option>
+                    <option value="&quot;Exo 2&quot;">experimental</option>
+                </select>
+                <br>
+
+                <label for="settingsLeaderboardEnabled">Show Leaderboard</label>
+                <input type="checkbox" id="settingsLeaderboardEnabled" />
+                <br>
+                <label for="settingsHUDEnabled">Show Stats</label>
+                <input type="checkbox" id="settingsHUDEnabled" />
+                <br>
+
+                <label for="settingsNamesEnabled">Show Names</label>
+                <input type="checkbox" id="settingsNamesEnabled" />
+                <br>
+
+                <label for="settingsShowHitboxes">Show Hitboxes</label>
+                <input type="checkbox" id="settingsShowHitboxes" />
+                <br>
+
+                <input type="button" id="settingsSave" value="Save settings" />
+                <input type="button" id="settingsCancel" value="Cancel (no changes)" />
+                <br />
+                <input type="button" id="settingsReset" value="Reset to default (reloads the page)" />
             </div>
             <div class="social">
-                <div id="hintbox">
-                    Controls: Mouse to aim, click to fire, press "s" to boost!
-                </div>
+                
                 <div id="twitterpated"></div>
                 <div>
                     <a href="https://discord.gg/SwTHz8g" target="_blank"><img id="discord" src="img/discord.png" /></a>

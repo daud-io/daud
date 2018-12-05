@@ -1,4 +1,6 @@
-﻿export class Log {
+﻿import { Settings } from "./settings";
+
+export class Log {
     constructor(canvas, context, settings) {
         settings = settings || {};
         this.context = context;
@@ -25,7 +27,7 @@
 
             ctx.globalAlpha = alpha;
 
-            ctx.font = "12pt sans-serif";
+            ctx.font = "12pt " + Settings.font;
             ctx.fillStyle = "white";
             ctx.textAlign = "left";
 

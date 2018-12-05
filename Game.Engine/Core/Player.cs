@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.Engine.Networking;
     using System.Collections.Generic;
     using System.Net.Http;
 
@@ -9,6 +10,8 @@
 
         public World World = null;
         public Fleet Fleet = null;
+
+        public Connection Connection { get; set; }
 
         public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
 
