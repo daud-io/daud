@@ -99,30 +99,38 @@ export class Renderer {
             var ctx = this.context;
 
             // edge of the universe
-            ctx.save();
+            if (Settings.showHitboxes3)
+                ctx.save();
 
             var worldSize = 6000;
             var edgeWidth = 4000;
 
-            ctx.beginPath();
-            ctx.lineWidth = 40;
-            ctx.strokeStyle = "blue";
-            ctx.rect(-worldSize, -worldSize, 2 * worldSize, 2 * worldSize);
-            ctx.stroke();
+            if (Settings.showHitboxes1) {
+                ctx.beginPath();
+                ctx.lineWidth = 40;
+                ctx.strokeStyle = "blue";
+                ctx.rect(-worldSize, -worldSize, 2 * worldSize, 2 * worldSize);
+                ctx.stroke();
+            }
 
-            ctx.beginPath();
-            ctx.lineWidth = edgeWidth * 2;
-            ctx.strokeStyle = "rgba(255,0,0,0.1)";
-            ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
-            ctx.stroke();
+            if (Settings.showHitboxes2) {
+                ctx.beginPath();
+                ctx.lineWidth = edgeWidth * 2;
+                ctx.strokeStyle = "rgba(255,0,0,0.1)";
+                ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
+                ctx.stroke();
+            }
 
-            ctx.restore();
+            if (Settings.showHitboxes3)
+                ctx.restore();
 
-            ctx.font = "48px " + Settings.font;
-            ctx.fillStyle = "white";
-            ctx.textAlign = "center";
-            ctx.strokeStyle = "white";
-            ctx.lineWidth = 6;
+            if (Settings.showHitboxes4) {
+                ctx.font = "48px " + Settings.font;
+                ctx.fillStyle = "white";
+                ctx.textAlign = "center";
+                ctx.strokeStyle = "white";
+                ctx.lineWidth = 6;
+            }
 
             var groupsUsed = [];
 
@@ -158,16 +166,25 @@ export class Renderer {
                     ctx.fillText(object.Caption, position.X, position.Y + 90);
                 }*/
 
-                if (Settings.showHitboxes1)
-                    ctx.save();
-                if (Settings.showHitboxes2)
-                    ctx.fillStyle = "rgba(0,255,0,0.2)";
+                ctx.save();
+                ctx.fillStyle = "rgba(0,255,0,0.2)";
 
                 var health = object.Size;
 
                 if (health) {
                     var healthBar = false;
                     var healthRing = Settings.showHitboxes;
+
+                    if (healthBar) {
+                        var offset = { X: 0, Y: 100 };
+                        var width = 200;
+                        var height = 30;
+
+                        ctx.beginPath();
+                        ctx.rect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width, height);
+                        ctx.stroke();
+                        ctx.fillRect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width * health, height);
+                    }
 
                     if (healthRing) {
                         /*if (health < 0.33)
@@ -180,32 +197,29 @@ export class Renderer {
                         ctx.fillStyle = this.colorValue(object.Color);
 
                         ctx.beginPath();
+                        ctx.arc(position.X, position.Y, health, 0, 2 * Math.PI, false);
+                        //ctx.arc(position.X, position.Y, 60, 0, 2 * Math.PI, true);
                         ctx.fill();
                     }
                 }
-                if (Settings.showHitboxes1)
-                    ctx.restore();
+                ctx.restore();
 
-                if (Settings.showHitboxes3) {
+                ctx.save();
+                ctx.translate(position.X, position.Y);
 
-                    ctx.save();
-                    ctx.translate(position.X, position.Y);
+                if (ship) {
+                    var shipWidth = ship.image.width;
+                    var shipHeight = ship.image.height;
 
-                    if (ship && Settings.showHitboxes4) {
-                        var shipWidth = ship.image.width;
-                        var shipHeight = ship.image.height;
+                    ctx.rotate(position.Angle);
+                    ctx.scale(ship.scale, ship.scale);
 
-                        ctx.rotate(position.Angle);
-                        ctx.scale(ship.scale, ship.scale);
+                    if (ship.scaleToSize) ctx.scale(object.Size, object.Size);
 
-                        if (ship.scaleToSize) ctx.scale(object.Size, object.Size);
-
-                        ctx.drawImage(ship.image, -shipWidth / 2, -shipHeight / 2, shipWidth, shipHeight);
-                    }
-
-                    ctx.restore();
+                    ctx.drawImage(ship.image, -shipWidth / 2, -shipHeight / 2, shipWidth, shipHeight);
                 }
 
+                ctx.restore();
             }, this);
 
             if (Settings.namesEnabled) {
