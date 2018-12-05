@@ -30,14 +30,15 @@
                     ShotThrustM = -0.0035f,
                     ShotThrustB = 0.18f,
 
-                    SeekerThrustMultiplier = 1.5f,
+                    SeekerThrustMultiplier = 1.57f,
+                    SeekerLifeMultiplier = 1.15f,
 
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
                     MaxHealth = 100,
 
                     MaxHealthBot = 50,
-                    BulletLife = 1800,
+                    BulletLife = 1890,
                     BotPerXPoints = 500,
                     BotBase = 1,
                     BotRespawnDelay = 10000,
@@ -64,7 +65,9 @@
                     FlockSpeed = 0,
 
                     Pickups = 5,
-                    Fishes = 50
+                    Fishes = 50,
+
+                    SeekerRange = 2200
 
                 };
             }
@@ -101,6 +104,7 @@
         public int MaxHealthBot { get; set; }
         public float SeekerThrustMultiplier { get; set; }
         public int BulletLife { get; set; }
+        public float SeekerLifeMultiplier { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
         public int Obstacles { get; set; }
@@ -123,7 +127,7 @@
         public float FlockWeight { get; set; }
         public int FlockSpeed { get; set; }
 
-        public int SeekerRange { get; set; } = 2000;
+        public int SeekerRange { get; set; }
 
         public float ShipGainBySizeM { get; set; }
         public float ShipGainBySizeB { get; set; }

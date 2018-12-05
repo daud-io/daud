@@ -24,9 +24,14 @@
             var bulletOrigin = ship.Position
                 + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
 
+            bool isSeeker = ship.Fleet.Pickup != null;
+            float lifeMultiplier = isSeeker
+                ? world.Hook.SeekerLifeMultiplier
+                : 1;
+
             var bullet = new Bullet
             {
-                TimeDeath = world.Time + world.Hook.BulletLife,
+                TimeDeath = world.Time + (long)(world.Hook.BulletLife * lifeMultiplier),
                 Momentum = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * Vector2.Distance(ship.Momentum, Vector2.Zero),
                 Position = bulletOrigin,
                 Angle = ship.Angle,
@@ -34,7 +39,7 @@
                 Sprite = ship.Fleet.Pickup?.BulletSprite ?? ship.Fleet.BulletSprite,
                 Size = ship.Fleet.Pickup?.Size ?? 20,
                 Color = ship.Color,
-                Seeker = ship.Fleet.Pickup != null,
+                Seeker = isSeeker,
                 ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB
             };
 
