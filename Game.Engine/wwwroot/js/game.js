@@ -45,7 +45,7 @@ var bodyFromServer = function(cache, body) {
     var momentum = body.velocity();
     var group = cache.getGroup(body.group());
     var groupID = (group && group.ID) || 0;
-    var VELOCITY_SCALE_FACTOR = 5000;
+    var VELOCITY_SCALE_FACTOR = 5000.0;
 
     var newBody = {
         ID: body.id(),
@@ -55,7 +55,7 @@ var bodyFromServer = function(cache, body) {
         Color: "red", //body.color(),
         Group: groupID,
         OriginalAngle: (body.originalAngle() / 127) * Math.PI,
-        AngularVelocity: ((body.angularVelocity() / 127) * Math.PI) / 1000,
+        AngularVelocity: body.angularVelocity() / 10000,
         Momentum: {
             X: momentum.x() / VELOCITY_SCALE_FACTOR,
             Y: momentum.y() / VELOCITY_SCALE_FACTOR
@@ -65,6 +65,11 @@ var bodyFromServer = function(cache, body) {
             Y: originalPosition.y()
         }
     };
+
+    if (newBody.AngularVelocity > 0) {
+        console.log({ av: newBody.AngularVelocity, wire: body.angularVelocity() });
+    }
+
 
     return newBody;
 };

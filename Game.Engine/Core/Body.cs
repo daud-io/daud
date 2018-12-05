@@ -171,7 +171,7 @@
 
             _angle = OriginalAngle + timeDelta * AngularVelocity;
 
-            if (time - this.DefinitionTime > 3000)
+            if (time - this.DefinitionTime > 1000)
                 this.IsDirty = true;
 
             Envelope = new Envelope(_position.X - Size, _position.Y - Size, _position.X + Size, _position.Y + Size);

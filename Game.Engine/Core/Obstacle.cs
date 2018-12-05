@@ -34,6 +34,7 @@
             Size = r.Next(300, World.Hook.ObstacleMaxSize);
             Sprite = Sprites.obstacle;
             Color = "rgba(128,128,128,.2)";
+
             base.Init(world);
         }
 
