@@ -41,6 +41,7 @@ var bodyFromServer = function(cache, body) {
     var momentum = body.velocity();
     var group = cache.getGroup(body.group());
     var groupID = (group && group.ID) || 0;
+    var VELOCITY_SCALE_FACTOR = 5000;
 
     var newBody = {
         ID: body.id(),
@@ -52,8 +53,8 @@ var bodyFromServer = function(cache, body) {
         OriginalAngle: (body.originalAngle() / 127) * Math.PI,
         AngularVelocity: ((body.angularVelocity() / 127) * Math.PI) / 1000,
         Momentum: {
-            X: momentum.x() / 10000,
-            Y: momentum.y() / 10000
+            X: momentum.x() / VELOCITY_SCALE_FACTOR,
+            Y: momentum.y() / VELOCITY_SCALE_FACTOR
         },
         OriginalPosition: {
             X: originalPosition.x(),

@@ -171,11 +171,9 @@
 
             _angle = OriginalAngle + timeDelta * AngularVelocity;
 
+            if (time - this.DefinitionTime > 3000)
+                this.IsDirty = true;
 
-            if (this.GetType() == typeof(Obstacle))
-            {
-
-            }
             Envelope = new Envelope(_position.X - Size, _position.Y - Size, _position.X + Size, _position.Y + Size);
         }
 

@@ -76,8 +76,6 @@
                     Groups.Add(obj.ID, bucket);
                 }
             }
-
-
         }
 
         private void UpdateLocalBodies(IEnumerable<Body> bodies)
