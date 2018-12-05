@@ -99,38 +99,35 @@ export class Renderer {
             var ctx = this.context;
 
             // edge of the universe
-            if (Settings.showHitboxes3)
-                ctx.save();
+            ctx.save();
 
             var worldSize = 6000;
             var edgeWidth = 4000;
 
-            if (Settings.showHitboxes1) {
-                ctx.beginPath();
-                ctx.lineWidth = 40;
-                ctx.strokeStyle = "blue";
-                ctx.rect(-worldSize, -worldSize, 2 * worldSize, 2 * worldSize);
-                ctx.stroke();
-            }
+            ctx.beginPath();
+            ctx.lineWidth = 40;
+            ctx.strokeStyle = "blue";
+            ctx.rect(-worldSize, -worldSize, 2 * worldSize, 2 * worldSize);
+            ctx.stroke();
 
-            if (Settings.showHitboxes2) {
-                ctx.beginPath();
-                ctx.lineWidth = edgeWidth * 2;
+            ctx.beginPath();
+            ctx.lineWidth = edgeWidth * 2;
+            if (Settings.showHitboxes1)
                 ctx.strokeStyle = "rgba(255,0,0,0.1)";
-                ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
-                ctx.stroke();
-            }
-
+            if (Settings.showHitboxes2)
+                ctx.strokeStyle = "rgb(255,0,0)";
             if (Settings.showHitboxes3)
-                ctx.restore();
+                ctx.strokeStyle = "red";
+            ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
+            ctx.stroke();
 
-            if (Settings.showHitboxes4) {
-                ctx.font = "48px " + Settings.font;
-                ctx.fillStyle = "white";
-                ctx.textAlign = "center";
-                ctx.strokeStyle = "white";
-                ctx.lineWidth = 6;
-            }
+            ctx.restore();
+
+            ctx.font = "48px " + Settings.font;
+            ctx.fillStyle = "white";
+            ctx.textAlign = "center";
+            ctx.strokeStyle = "white";
+            ctx.lineWidth = 6;
 
             var groupsUsed = [];
 
