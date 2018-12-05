@@ -158,25 +158,16 @@ export class Renderer {
                     ctx.fillText(object.Caption, position.X, position.Y + 90);
                 }*/
 
-                ctx.save();
-                ctx.fillStyle = "rgba(0,255,0,0.2)";
+                if (Settings.showHitboxes1)
+                    ctx.save();
+                if (Settings.showHitboxes2)
+                    ctx.fillStyle = "rgba(0,255,0,0.2)";
 
                 var health = object.Size;
 
                 if (health) {
                     var healthBar = false;
                     var healthRing = Settings.showHitboxes;
-
-                    if (healthBar) {
-                        var offset = { X: 0, Y: 100 };
-                        var width = 200;
-                        var height = 30;
-
-                        ctx.beginPath();
-                        ctx.rect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width, height);
-                        ctx.stroke();
-                        ctx.fillRect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width * health, height);
-                    }
 
                     if (healthRing) {
                         /*if (health < 0.33)
@@ -189,29 +180,32 @@ export class Renderer {
                         ctx.fillStyle = this.colorValue(object.Color);
 
                         ctx.beginPath();
-                        ctx.arc(position.X, position.Y, health, 0, 2 * Math.PI, false);
-                        //ctx.arc(position.X, position.Y, 60, 0, 2 * Math.PI, true);
                         ctx.fill();
                     }
                 }
-                ctx.restore();
+                if (Settings.showHitboxes1)
+                    ctx.restore();
 
-                ctx.save();
-                ctx.translate(position.X, position.Y);
+                if (Settings.showHitboxes3) {
 
-                if (ship) {
-                    var shipWidth = ship.image.width;
-                    var shipHeight = ship.image.height;
+                    ctx.save();
+                    ctx.translate(position.X, position.Y);
 
-                    ctx.rotate(position.Angle);
-                    ctx.scale(ship.scale, ship.scale);
+                    if (ship && Settings.showHitboxes4) {
+                        var shipWidth = ship.image.width;
+                        var shipHeight = ship.image.height;
 
-                    if (ship.scaleToSize) ctx.scale(object.Size, object.Size);
+                        ctx.rotate(position.Angle);
+                        ctx.scale(ship.scale, ship.scale);
 
-                    ctx.drawImage(ship.image, -shipWidth / 2, -shipHeight / 2, shipWidth, shipHeight);
+                        if (ship.scaleToSize) ctx.scale(object.Size, object.Size);
+
+                        ctx.drawImage(ship.image, -shipWidth / 2, -shipHeight / 2, shipWidth, shipHeight);
+                    }
+
+                    ctx.restore();
                 }
 
-                ctx.restore();
             }, this);
 
             if (Settings.namesEnabled) {

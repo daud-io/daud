@@ -66,11 +66,6 @@ var bodyFromServer = function(cache, body) {
         }
     };
 
-    if (newBody.AngularVelocity > 0) {
-        console.log({ av: newBody.AngularVelocity, wire: body.angularVelocity() });
-    }
-
-
     return newBody;
 };
 
@@ -239,6 +234,7 @@ function gameLoop() {
     var latency = connection.minLatency || 0;
     gameTime = performance.now() + serverTimeOffset - latency / 2;
     frameCounter++;
+
     var position = { X: 0, Y: 0 };
 
     if (view) {

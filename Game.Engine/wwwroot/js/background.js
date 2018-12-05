@@ -47,11 +47,14 @@ export class Background {
         ctx.globalAlpha = 1;
         ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
 
-        ctx.translate(-x, -y);
-        ctx.globalAlpha = 0.4;
-        ctx.scale(1.3, 1.3);
-        ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
+        if (Settings.background == "fast") {
+            ctx.translate(-x, -y);
+            ctx.globalAlpha = 0.4;
+            ctx.scale(1.3, 1.3);
+            ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
+        }
 
+        
         ctx.restore();
     }
 }

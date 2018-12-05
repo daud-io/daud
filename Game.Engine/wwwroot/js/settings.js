@@ -13,7 +13,11 @@ export var Settings = {
     hudEnabled: true,
     namesEnabled: true,
     bandwidth: 100,
-    showHitboxes: false
+    showHitboxes: false,
+    showHitboxes1: false,
+    showHitboxes2: false,
+    showHitboxes3: false,
+    showHitboxes4: false
 };
 
 function save() {
@@ -30,6 +34,10 @@ function save() {
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
+    Settings.showHitboxes1 = document.getElementById("settingsShowHitboxes1").checked;
+    Settings.showHitboxes2 = document.getElementById("settingsShowHitboxes2").checked;
+    Settings.showHitboxes3 = document.getElementById("settingsShowHitboxes3").checked;
+    Settings.showHitboxes4 = document.getElementById("settingsShowHitboxes4").checked;
 
     Cookies.set("settings", Settings, cookieOptions)
 }
@@ -60,6 +68,10 @@ function load() {
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
+        document.getElementById("settingsShowHitboxes1").checked = Settings.showHitboxes1;
+        document.getElementById("settingsShowHitboxes2").checked = Settings.showHitboxes2;
+        document.getElementById("settingsShowHitboxes3").checked = Settings.showHitboxes3;
+        document.getElementById("settingsShowHitboxes4").checked = Settings.showHitboxes4;
 
 
         if (Settings.themeCustom) {
