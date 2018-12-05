@@ -32,7 +32,7 @@
             var bullet = new Bullet
             {
                 TimeDeath = world.Time + (long)(world.Hook.BulletLife * lifeMultiplier),
-                Momentum = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * Vector2.Distance(ship.Momentum, Vector2.Zero),
+                Momentum = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * Vector2.Distance(ship.Momentum, Vector2.Zero) / 2.0f,
                 Position = bulletOrigin,
                 Angle = ship.Angle,
                 OwnedByFleet = ship.Fleet,

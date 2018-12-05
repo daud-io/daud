@@ -67,7 +67,7 @@
                     Pickups = 5,
                     Fishes = 50,
 
-                    SeekerRange = 2200
+                    SeekerRange = 2100
 
                 };
             }

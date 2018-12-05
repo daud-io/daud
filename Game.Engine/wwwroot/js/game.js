@@ -244,7 +244,7 @@ function gameLoop() {
         lastCamera = position;
 
         camera.moveTo(position.X, position.Y);
-        camera.zoomTo(5000);
+        camera.zoomTo(5500);
     }
 
     camera.begin();
