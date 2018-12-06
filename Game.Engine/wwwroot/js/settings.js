@@ -13,11 +13,7 @@ export var Settings = {
     hudEnabled: true,
     namesEnabled: true,
     bandwidth: 100,
-    showHitboxes: false,
-    showHitboxes1: false,
-    showHitboxes2: false,
-    showHitboxes3: false,
-    showHitboxes4: false
+    showHitboxes: false
 };
 
 function save() {
