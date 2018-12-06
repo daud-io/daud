@@ -30,7 +30,7 @@
                     ShotThrustM = -0.0035f,
                     ShotThrustB = 0.18f,
 
-                    SeekerThrustMultiplier = 1.57f,
+                    SeekerThrustMultiplier = 1.42f,
                     SeekerLifeMultiplier = 1.15f,
 
                     HealthHitCost = 100,
