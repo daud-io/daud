@@ -1,7 +1,7 @@
 export class Camera {
     constructor(context, settings) {
         settings = settings || {};
-        this.distance = 1000.0;
+        this.distance = 1500.0;
         this.lookat = [0, 0];
         this.context = context;
         this.fieldOfView = settings.fieldOfView || Math.PI / 4.0;

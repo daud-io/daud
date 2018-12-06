@@ -175,8 +175,10 @@
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
             {
+                BoostCooldownTime = World.Time + (long)
+                    (World.Hook.BoostCooldownTimeM * Ships.Count + World.Hook.BoostCooldownTimeB);
                 BoostCooldownTimeStart = World.Time;
-                BoostCooldownTime = World.Time + World.Hook.BoostCooldownTime;
+
                 BoostUntil = World.Time + World.Hook.BoostDuration;
                 isBoostInitial = true;
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);

@@ -61,7 +61,6 @@ function load() {
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
 
-
         if (Settings.themeCustom) {
             theme(Settings.themeCustom);
         } else if (Settings.theme) {

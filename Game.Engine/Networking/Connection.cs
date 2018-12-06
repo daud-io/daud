@@ -110,7 +110,7 @@
 
                 if (followBody != null)
                 {
-                    var halfViewport = new Vector2(3000, 3000);
+                    var halfViewport = new Vector2(3200, 3200);
 
                     BodyCache.Update(
                         world.Bodies,
@@ -127,7 +127,7 @@
                     var newHash = world.Hook.GetHashCode();
 
                     var builder = new FlatBufferBuilder(1);
-                    float VELOCITY_SCALE_FACTOR = 10000f;
+                    float VELOCITY_SCALE_FACTOR = 5000;
 
                     var updatedGroups = BodyCache.GroupsByError().ToList();
 
@@ -162,6 +162,11 @@
                     {
                         var serverBody = b.BodyUpdated;
 
+                        if (serverBody.AngularVelocity > 0)
+                        {
+
+                        }
+
                         var body = NetBody.CreateNetBody(builder,
                             Id: serverBody.ID,
                             DefinitionTime: serverBody.DefinitionTime,
@@ -170,7 +175,7 @@
                             velocity_X: (short)(serverBody.Momentum.X * VELOCITY_SCALE_FACTOR),
                             velocity_Y: (short)(serverBody.Momentum.Y * VELOCITY_SCALE_FACTOR),
                             OriginalAngle: (sbyte)(serverBody.OriginalAngle / MathF.PI * 127),
-                            AngularVelocity: (sbyte)(serverBody.AngularVelocity * VELOCITY_SCALE_FACTOR / MathF.PI * 127),
+                            AngularVelocity: (sbyte)(serverBody.AngularVelocity * 10000),
                             Size: (byte)(serverBody.Size / 5),
                             Sprite: (byte)serverBody.Sprite,
                             Mode: 0,

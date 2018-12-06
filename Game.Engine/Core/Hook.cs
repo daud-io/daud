@@ -11,10 +11,13 @@
                     BaseThrustM = -0.003f,
                     BaseThrustB = 0.13f,
 
-                    Drag = 0.90f,
+                    Drag = 0.92f,
 
-                    BoostThrust = 0.1f,
-                    BoostCooldownTime = 1200,
+                    BoostThrust = 0.15f,
+
+                    BoostCooldownTimeM = 4.0f,
+                    BoostCooldownTimeB = 1096.0f,
+
                     BoostSpeed = 1f,
                     BoostDuration = 450,
 
@@ -27,14 +30,15 @@
                     ShotThrustM = -0.0035f,
                     ShotThrustB = 0.18f,
 
-                    SeekerThrustMultiplier = 1.5f,
+                    SeekerThrustMultiplier = 1.42f,
+                    SeekerLifeMultiplier = 1.15f,
 
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
                     MaxHealth = 100,
 
                     MaxHealthBot = 50,
-                    BulletLife = 1800,
+                    BulletLife = 1890,
                     BotPerXPoints = 500,
                     BotBase = 1,
                     BotRespawnDelay = 10000,
@@ -46,7 +50,7 @@
                     TeamMode = false,
                     CTFMode = false,
 
-                    SpawnShipCount = 3,
+                    SpawnShipCount = 5,
 
                     FlockAlignment = .5f,
                     FlockCohesion = 0.002f,
@@ -61,8 +65,10 @@
                     FlockSpeed = 0,
 
                     Pickups = 5,
-                    Fishes = 50
+                    Fishes = 50,
 
+                    SeekerRange = 2100,
+                    SeekerDelay = 250
                 };
             }
         }
@@ -72,7 +78,9 @@
 
         public float BoostThrust { get; set; }
 
-        public int BoostCooldownTime { get; set; }
+        public float BoostCooldownTimeM { get; set; }
+        public float BoostCooldownTimeB { get; set; }
+
         public int BoostDuration { get; set; }
         public float BoostSpeed { get; set; }
 
@@ -96,6 +104,7 @@
         public int MaxHealthBot { get; set; }
         public float SeekerThrustMultiplier { get; set; }
         public int BulletLife { get; set; }
+        public float SeekerLifeMultiplier { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
         public int Obstacles { get; set; }
@@ -118,7 +127,8 @@
         public float FlockWeight { get; set; }
         public int FlockSpeed { get; set; }
 
-        public int SeekerRange { get; set; } = 2000;
+        public int SeekerRange { get; set; }
+        public int SeekerDelay { get; set; }
 
         public float ShipGainBySizeM { get; set; }
         public float ShipGainBySizeB { get; set; }
