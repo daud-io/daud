@@ -256,8 +256,9 @@ public struct NetWorldView : IFlatbufferObject
   public uint SpectatorCount { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public byte CooldownShoot { get { int o = __p.__offset(24); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public byte CooldownBoost { get { int o = __p.__offset(26); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  public ushort WorldSize { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
-  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(12); }
+  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(13); }
   public static void AddTime(FlatBufferBuilder builder, uint time) { builder.AddUint(0, time, 0); }
   public static void AddCamera(FlatBufferBuilder builder, Offset<NetBody> cameraOffset) { builder.AddStruct(1, cameraOffset.Value, 0); }
   public static void AddIsAlive(FlatBufferBuilder builder, bool isAlive) { builder.AddBool(2, isAlive, true); }
@@ -279,6 +280,7 @@ public struct NetWorldView : IFlatbufferObject
   public static void AddSpectatorCount(FlatBufferBuilder builder, uint spectatorCount) { builder.AddUint(9, spectatorCount, 0); }
   public static void AddCooldownShoot(FlatBufferBuilder builder, byte cooldownShoot) { builder.AddByte(10, cooldownShoot, 0); }
   public static void AddCooldownBoost(FlatBufferBuilder builder, byte cooldownBoost) { builder.AddByte(11, cooldownBoost, 0); }
+  public static void AddWorldSize(FlatBufferBuilder builder, ushort worldSize) { builder.AddUshort(12, worldSize, 0); }
   public static Offset<NetWorldView> EndNetWorldView(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetWorldView>(o);

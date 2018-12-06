@@ -145,6 +145,8 @@ connection.onView = function(newView) {
 
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
+
+    renderer.worldSize = newView.worldSize();
     
     /*console.log({
         playerCount: Game.Stats.playerCount,

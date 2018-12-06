@@ -945,10 +945,18 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.cooldownBoost = functi
 };
 
 /**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.worldSize = function() {
+  var offset = this.bb.__offset(this.bb_pos, 28);
+  return offset ? this.bb.readUint16(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.startNetWorldView = function(builder) {
-  builder.startObject(12);
+  builder.startObject(13);
 };
 
 /**
@@ -1137,6 +1145,14 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.addCooldownShoot = function(buil
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.addCooldownBoost = function(builder, cooldownBoost) {
   builder.addFieldInt8(11, cooldownBoost, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} worldSize
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.addWorldSize = function(builder, worldSize) {
+  builder.addFieldInt16(12, worldSize, 0);
 };
 
 /**

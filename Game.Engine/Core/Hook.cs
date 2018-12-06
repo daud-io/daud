@@ -8,6 +8,8 @@
             {
                 return new Hook
                 {
+                    WorldSize = 6000,
+
                     BaseThrustM = -0.003f,
                     BaseThrustB = 0.13f,
 
@@ -74,6 +76,9 @@
                 };
             }
         }
+
+
+        public int WorldSize { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }

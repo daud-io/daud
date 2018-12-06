@@ -91,6 +91,7 @@ export class Renderer {
         settings = settings || {};
         this.context = context;
         this.view = false;
+        this.worldSize = 6000;
     }
 
     draw(cache, interpolator, currentTime) {
@@ -101,14 +102,13 @@ export class Renderer {
             // Draw the edge of the universe
             ctx.save();
 
-            var worldSize = 6000;
             var edgeWidth = 4000;
 
             // draw blue border at the edge of the world
             ctx.beginPath();
             ctx.lineWidth = 40;
             ctx.strokeStyle = "blue";
-            ctx.rect(-worldSize, -worldSize, 2 * worldSize, 2 * worldSize);
+            ctx.rect(-this.worldSize, -this.worldSize, 2 * this.worldSize, 2 * this.worldSize);
             ctx.stroke();
 
 
@@ -129,16 +129,16 @@ export class Renderer {
             ctx.fillStyle = "rgba(255,0,0,0.1)";
 
             // top
-            ctx.fillRect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2*worldSize + 2*edgeWidth, edgeWidth);
+            ctx.fillRect(-this.worldSize - edgeWidth, -this.worldSize - edgeWidth, 2 * this.worldSize + 2*edgeWidth, edgeWidth);
 
             // left
-            ctx.fillRect(-worldSize - edgeWidth, -worldSize, edgeWidth, 2 * worldSize);
+            ctx.fillRect(-this.worldSize - edgeWidth, -this.worldSize, edgeWidth, 2 * this.worldSize);
 
             // right
-            ctx.fillRect(+worldSize, -worldSize, edgeWidth, 2*worldSize);
+            ctx.fillRect(+this.worldSize, -this.worldSize, edgeWidth, 2 * this.worldSize);
 
             // bottom
-            ctx.fillRect(-worldSize - edgeWidth, +worldSize, 2 * worldSize + 2 * edgeWidth, edgeWidth);
+            ctx.fillRect(-this.worldSize - edgeWidth, +this.worldSize, 2 * this.worldSize + 2 * edgeWidth, edgeWidth);
 
             // the bit below was causing 7fps on a firefox instance. seemed to be leaking a path?
             // `ctx.beginPath(); ctx.fill();` reset it and restored things to 60fps
@@ -148,7 +148,7 @@ export class Renderer {
                 ctx.beginPath();
                 ctx.lineWidth = edgeWidth * 2;
                 ctx.strokeStyle = "rgba(255,0,0,0.1)";
-                ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
+                ctx.rect(-this.worldSize - edgeWidth, -this.worldSize - edgeWidth, 2 * this.worldSize + 2 * edgeWidth, 2 * this.worldSize + 2 * edgeWidth);
                 ctx.stroke();
             I'M BAD, DON'T USE ME!
             */

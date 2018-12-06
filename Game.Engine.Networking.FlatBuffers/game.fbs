@@ -69,6 +69,7 @@ table NetWorldView
     spectatorCount:uint;
     cooldownShoot:ubyte;
     cooldownBoost:ubyte;
+    worldSize:ushort;
 }
 
 table NetGroup

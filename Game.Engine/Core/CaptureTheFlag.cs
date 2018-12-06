@@ -27,8 +27,8 @@
         {
             if (World.Hook.CTFMode && Flags.Count == 0)
             {
-                CreateTeam("cyan", "flag_blue", new Vector2(World.WorldSize, World.WorldSize));
-                CreateTeam("red", "flag_red", new Vector2(-World.WorldSize, -World.WorldSize));
+                CreateTeam("cyan", "flag_blue", new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
+                CreateTeam("red", "flag_red", new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
             }
 
             if (!World.Hook.CTFMode && Flags.Count > 0)

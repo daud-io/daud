@@ -251,6 +251,7 @@
 
                     NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
                     NetWorldView.AddCooldownShoot(builder, (byte)((player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
+                    NetWorldView.AddWorldSize(builder, (ushort)world.Hook.WorldSize);
 
                     var worldView = NetWorldView.EndNetWorldView(builder);
 

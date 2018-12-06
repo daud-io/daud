@@ -26,7 +26,6 @@
 
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
-        public int WorldSize = 6000;
 
         private bool Processing = false;
 
@@ -103,7 +102,7 @@
         {
             var pos = Vector2.Abs(position);
 
-            return Math.Max(pos.X - WorldSize, Math.Max(pos.Y - WorldSize, 0));
+            return Math.Max(pos.X - Hook.WorldSize, Math.Max(pos.Y - Hook.WorldSize, 0));
         }
 
         private void ProcessLeaderboard()
@@ -166,14 +165,14 @@
         {
             var position = body.Position;
 
-            if (position.X > WorldSize)
-                position.X -= 2 * WorldSize;
-            if (position.X < -WorldSize)
-                position.X += 2 * WorldSize;
-            if (position.Y > WorldSize)
-                position.Y -= 2 * WorldSize;
-            if (position.Y < -WorldSize)
-                position.Y += 2 * WorldSize;
+            if (position.X > Hook.WorldSize)
+                position.X -= 2 * Hook.WorldSize;
+            if (position.X < -Hook.WorldSize)
+                position.X += 2 * Hook.WorldSize;
+            if (position.Y > Hook.WorldSize)
+                position.Y -= 2 * Hook.WorldSize;
+            if (position.Y < -Hook.WorldSize)
+                position.Y += 2 * Hook.WorldSize;
 
             if (position.X != body.Position.X
                 || position.Y != body.Position.Y)
@@ -218,8 +217,8 @@
             var r = new Random();
             return new Vector2
             {
-                X = r.Next(-WorldSize, WorldSize),
-                Y = r.Next(-WorldSize, WorldSize)
+                X = r.Next(-Hook.WorldSize, Hook.WorldSize),
+                Y = r.Next(-Hook.WorldSize, Hook.WorldSize)
             };
         }
 
@@ -240,8 +239,8 @@
 
                     return new Vector2
                     {
-                        X = x * WorldSize * 0.95f,
-                        Y = y * WorldSize * 0.95f
+                        X = x * Hook.WorldSize * 0.95f,
+                        Y = y * Hook.WorldSize * 0.95f
                     };
 
                 case "QuietSpot":
