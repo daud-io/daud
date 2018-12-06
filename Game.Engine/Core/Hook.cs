@@ -68,7 +68,9 @@
                     Fishes = 50,
 
                     SeekerRange = 2100,
-                    SeekerDelay = 250
+                    SeekerDelay = 250,
+
+                    SpawnLocationMode = "QuietSpot" // Corners, QuietSpot
                 };
             }
         }
@@ -139,5 +141,7 @@
         public float OutOfBoundsBorder { get; set; } = 300;
         public float OutOfBoundsDecayDistance { get; set; } = 900;
         public int BotRespawnDelay { get; set; }
+
+        public string SpawnLocationMode { get; set; }
     }
 }
