@@ -1,5 +1,9 @@
 export class Cache {
     constructor() {
+        this.clear();
+    }
+
+    clear() {
         this.bodies = {};
         this.groups = {};
         Cache.count = 0;

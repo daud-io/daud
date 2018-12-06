@@ -177,7 +177,12 @@ setInterval(function() {
     }
 }, 10);
 
-document.getElementById("spawn").addEventListener("click", function() {
+document.getElementById("worldSelector").addEventListener("change", function () {
+    cache.clear();
+    connection.connect(document.getElementById("worldSelector").value);
+});
+
+document.getElementById("spawn").addEventListener("click", function () {
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
 });
 

@@ -36,7 +36,7 @@ export class Connection {
         }, 1000);
     }
 
-    connect() {
+    connect(world) {
         var url;
         if (window.location.protocol === "https:") {
             url = "wss:";
@@ -44,7 +44,15 @@ export class Connection {
             url = "ws:";
         }
         url += "//" + window.location.host;
-        url += "/api/v1/connect";
+        url += "/api/v1/connect?";
+
+        if (world)
+            url += `world=${encodeURIComponent(world)}&`;
+
+        if (this.socket) {
+            this.socket.onclose = function () { };
+            this.socket.close();
+        }
 
         this.socket = new WebSocket(url);
         this.socket.binaryType = "arraybuffer";
@@ -70,10 +78,6 @@ export class Connection {
         this.socket.onclose = function(event) {
             self.onClose(event);
         };
-    }
-
-    sendHook(hook) {
-        //this.send(hook);
     }
 
     sendPing() {

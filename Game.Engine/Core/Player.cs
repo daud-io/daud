@@ -96,16 +96,19 @@
 
         public static List<Player> GetWorldPlayers(World world)
         {
-            List<Player> worldPlayers = null;
-            if (!Players.ContainsKey(world))
+            lock (typeof(Player))
             {
-                worldPlayers = new List<Player>();
-                Players.Add(world, worldPlayers);
-            }
-            else
-                worldPlayers = Players[world];
+                List<Player> worldPlayers = null;
+                if (!Players.ContainsKey(world))
+                {
+                    worldPlayers = new List<Player>();
+                    Players.Add(world, worldPlayers);
+                }
+                else
+                    worldPlayers = Players[world];
 
-            return worldPlayers;
+                return worldPlayers;
+            }
         }
 
         public virtual void Think()

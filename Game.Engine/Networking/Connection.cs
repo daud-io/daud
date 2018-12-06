@@ -455,7 +455,9 @@
         {
             Socket = socket;
 
-            world = Worlds.Find();
+            var worldRequest = httpContext.Request.Query["world"].FirstOrDefault();
+
+            world = Worlds.Find(worldRequest);
 
             var builder = new FlatBufferBuilder(1);
             await SendPingAsync();
