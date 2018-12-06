@@ -68,7 +68,7 @@
                     Fishes = 50,
 
                     SeekerRange = 2100,
-                    SeekerDelay = 100
+                    SeekerDelay = 250
                 };
             }
         }
