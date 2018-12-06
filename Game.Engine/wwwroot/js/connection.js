@@ -130,8 +130,13 @@ export class Connection {
         console.log("spawned");
     }
 
-    sendControl(angle, boost, shoot, x, y) {
+    sendControl(angle, boost, shoot, x, y, spectateControl) {
         var builder = new flatbuffers.Builder(0);
+
+        var spectateString = false;
+
+        if (spectateControl)
+            spectateString = builder.createString(spectateControl);
 
         this.fb.NetControlInput.startNetControlInput(builder);
         this.fb.NetControlInput.addAngle(builder, angle);
@@ -139,6 +144,8 @@ export class Connection {
         this.fb.NetControlInput.addShoot(builder, shoot);
         this.fb.NetControlInput.addX(builder, x);
         this.fb.NetControlInput.addY(builder, y);
+        if (spectateControl)
+            this.fb.NetControlInput.addSpectateControl(builder, spectateString);
 
         var input = this.fb.NetControlInput.endNetControlInput(builder);
 

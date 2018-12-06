@@ -41,6 +41,8 @@
         public uint Bandwidth { get; set; } = 100;
         public uint Latency { get; set; } = 0;
 
+        private Fleet SpectatingFleet = null;
+
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
@@ -65,12 +67,17 @@
         {
             if (player != null)
             {
-                // default to player
+                // First try to focus camera on the player if they have
+                // a fleet alive;
                 var followFleet = player?.Fleet;
 
                 // if the player doesn't have a fleet alive
                 if (followFleet == null)
-                {
+                    // check to see if they are spectating a fleet that's alive
+                    if (SpectatingFleet != null && SpectatingFleet.Exists)
+                        followFleet = SpectatingFleet;
+
+                if (followFleet == null)
                     // find someone else to watch
                     followFleet = Player.GetWorldPlayers(world)
                         .ToList()
@@ -78,7 +85,6 @@
                         .OrderByDescending(p => p.Score * 10000 + (10000 - p.Fleet.ID))
                         .FirstOrDefault()
                         ?.Fleet;
-                }
 
                 Body followBody = null;
 
@@ -96,17 +102,17 @@
                     };
                 }
 
+                // we've found someone to spectate, record it
+                if (followFleet != player?.Fleet && followFleet != SpectatingFleet)
+                    SpectatingFleet = followFleet;
+
                 // if we haven't found anything to watch yet, watch the first ship we find
                 if (followBody == null)
-                {
                     followBody = player?.World.Bodies.OfType<Ship>().FirstOrDefault();
-                }
 
                 // if we haven't found anything to watch yet, watch anything
                 if (followBody == null)
-                {
                     followBody = player?.World.Bodies.FirstOrDefault();
-                }
 
                 if (followBody != null)
                 {
@@ -405,6 +411,32 @@
                         BoostRequested = input.Boost,
                         ShootRequested = input.Shoot
                     });
+
+                    if (input.SpectateControl != null)
+                    {
+                        switch (input.SpectateControl)
+                        {
+                            case "action:next":
+                                var next = 
+                                    Player.GetWorldPlayers(world)
+                                        .Where(p => p.IsAlive)
+                                        .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
+                                        .OrderBy(p => p?.Fleet?.ID)
+                                        .FirstOrDefault()?.Fleet;
+                                
+                                if (next == null)
+                                    next = Player.GetWorldPlayers(world)
+                                        .Where(p => p.IsAlive)
+                                        .OrderBy(p => p?.Fleet?.ID)
+                                        .FirstOrDefault()?.Fleet;
+
+                                SpectatingFleet = next;
+
+                                break;
+                        }
+
+                    }
+
                     break;
             }
 

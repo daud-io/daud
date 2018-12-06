@@ -23,6 +23,7 @@ var interpolator = new Interpolator();
 var leaderboard = new Leaderboard(canvas, context);
 var hud = new HUD(canvas, context);
 var log = new Log(canvas, context);
+var isSpectating = false;
 
 var angle = 0.0;
 var aimTarget = { X: 0, Y: 0 };
@@ -158,7 +159,12 @@ var lastControl = {};
 
 setInterval(function() {
     if (angle !== lastControl.angle || aimTarget.X !== aimTarget.X || aimTarget.Y !== aimTarget.Y || Controls.boost !== lastControl.boost || Controls.shoot !== lastControl.shoot) {
-        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y);
+
+        var spectateControl = false;
+        if (Controls.shoot && isSpectating)
+            spectateControl = "action:next";
+
+        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl);
 
         lastControl = {
             angle: angle,
@@ -173,12 +179,16 @@ document.getElementById("spawn").addEventListener("click", function() {
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
 });
 
-document.getElementById("spectate").addEventListener("click", function() {
+document.getElementById("spectate").addEventListener("click", function () {
+    isSpectating = true;
     document.body.classList.add("spectating");
 });
 
 document.addEventListener("keydown", function(e) {
-    if (e.keyCode == 27 || e.which == 27) document.body.classList.remove("spectating");
+    if (e.keyCode == 27 || e.which == 27) {
+        isSpectating = false;
+        document.body.classList.remove("spectating");
+    }
 });
 
 var sizeCanvas = function() {

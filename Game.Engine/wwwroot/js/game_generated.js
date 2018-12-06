@@ -497,10 +497,19 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.shoot = function() 
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.spectateControl = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.startNetControlInput = function(builder) {
-  builder.startObject(5);
+  builder.startObject(6);
 };
 
 /**
@@ -541,6 +550,14 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.addBoost = function(builder, 
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.addShoot = function(builder, shoot) {
   builder.addFieldInt8(4, +shoot, +false);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} spectateControlOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetControlInput.addSpectateControl = function(builder, spectateControlOffset) {
+  builder.addFieldOffset(5, spectateControlOffset, 0);
 };
 
 /**

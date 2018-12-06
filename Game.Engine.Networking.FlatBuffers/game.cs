@@ -141,14 +141,18 @@ public struct NetControlInput : IFlatbufferObject
   public float Y { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
   public bool Boost { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public bool Shoot { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public string SpectateControl { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetSpectateControlBytes() { return __p.__vector_as_arraysegment(14); }
 
   public static Offset<NetControlInput> CreateNetControlInput(FlatBufferBuilder builder,
       float angle = 0.0f,
       float x = 0.0f,
       float y = 0.0f,
       bool boost = false,
-      bool shoot = false) {
-    builder.StartObject(5);
+      bool shoot = false,
+      StringOffset spectateControlOffset = default(StringOffset)) {
+    builder.StartObject(6);
+    NetControlInput.AddSpectateControl(builder, spectateControlOffset);
     NetControlInput.AddY(builder, y);
     NetControlInput.AddX(builder, x);
     NetControlInput.AddAngle(builder, angle);
@@ -157,12 +161,13 @@ public struct NetControlInput : IFlatbufferObject
     return NetControlInput.EndNetControlInput(builder);
   }
 
-  public static void StartNetControlInput(FlatBufferBuilder builder) { builder.StartObject(5); }
+  public static void StartNetControlInput(FlatBufferBuilder builder) { builder.StartObject(6); }
   public static void AddAngle(FlatBufferBuilder builder, float angle) { builder.AddFloat(0, angle, 0.0f); }
   public static void AddX(FlatBufferBuilder builder, float x) { builder.AddFloat(1, x, 0.0f); }
   public static void AddY(FlatBufferBuilder builder, float y) { builder.AddFloat(2, y, 0.0f); }
   public static void AddBoost(FlatBufferBuilder builder, bool boost) { builder.AddBool(3, boost, false); }
   public static void AddShoot(FlatBufferBuilder builder, bool shoot) { builder.AddBool(4, shoot, false); }
+  public static void AddSpectateControl(FlatBufferBuilder builder, StringOffset spectateControlOffset) { builder.AddOffset(5, spectateControlOffset.Value, 0); }
   public static Offset<NetControlInput> EndNetControlInput(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetControlInput>(o);

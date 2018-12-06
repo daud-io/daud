@@ -40,6 +40,7 @@ table NetControlInput
 	y: float;
 	boost:bool;
 	shoot:bool;
+    spectateControl:string;
 }
 
 table NetPing
