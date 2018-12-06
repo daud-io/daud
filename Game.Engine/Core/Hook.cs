@@ -67,8 +67,8 @@
                     Pickups = 5,
                     Fishes = 50,
 
-                    SeekerRange = 2100
-
+                    SeekerRange = 2100,
+                    SeekerDelay = 100
                 };
             }
         }
@@ -128,6 +128,7 @@
         public int FlockSpeed { get; set; }
 
         public int SeekerRange { get; set; }
+        public int SeekerDelay { get; set; }
 
         public float ShipGainBySizeM { get; set; }
         public float ShipGainBySizeB { get; set; }

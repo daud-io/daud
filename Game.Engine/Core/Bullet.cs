@@ -8,6 +8,7 @@
     {
         public Fleet OwnedByFleet { get; set; }
         public long TimeDeath { get; set; }
+        public long TimeBirth { get; set; }
 
         public bool Seeker { get; set; } = false;
 
@@ -29,10 +30,16 @@
                 ? world.Hook.SeekerLifeMultiplier
                 : 1;
 
+            var momentum =
+                new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * Vector2.Distance(ship.Momentum, Vector2.Zero);
+
+            if (isSeeker)
+                momentum /= 2.0f;
+
             var bullet = new Bullet
             {
                 TimeDeath = world.Time + (long)(world.Hook.BulletLife * lifeMultiplier),
-                Momentum = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * Vector2.Distance(ship.Momentum, Vector2.Zero) / 2.0f,
+                Momentum = momentum,
                 Position = bulletOrigin,
                 Angle = ship.Angle,
                 OwnedByFleet = ship.Fleet,
@@ -40,9 +47,10 @@
                 Size = ship.Fleet.Pickup?.Size ?? 20,
                 Color = ship.Color,
                 Seeker = isSeeker,
-                ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB
+                ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB,
+                TimeBirth = world.Time
             };
-
+            
             return bullet;
         }
 
@@ -52,14 +60,18 @@
 
             if (Seeker)
             {
-                var targets = World.BodiesNear(this.Position, World.Hook.SeekerRange, offsetSize: true);
+                Ship target = null;
+                if (World.Time > TimeBirth + World.Hook.SeekerDelay)
+                {
+                    var targets = World.BodiesNear(this.Position, World.Hook.SeekerRange, offsetSize: true);
 
-                var target = targets
-                    .OfType<Ship>()
-                    .Where(s => s.Fleet != OwnedByFleet)
-                    .Where(s => s.Fleet != null)
-                    .OrderBy(s => Vector2.Distance(s.Position, Position))
-                    .FirstOrDefault();
+                    target = targets
+                        .OfType<Ship>()
+                        .Where(s => s.Fleet != OwnedByFleet)
+                        .Where(s => s.Fleet != null)
+                        .OrderBy(s => Vector2.Distance(s.Position, Position))
+                        .FirstOrDefault();
+                }
 
                 if (target != null)
                 {
@@ -73,7 +85,6 @@
 
                 var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
                 Momentum = (Momentum + thrust) * Drag;
-
             }
             else
             {
