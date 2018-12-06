@@ -98,31 +98,64 @@ export class Renderer {
             var pv = this.view;
             var ctx = this.context;
 
-            // edge of the universe
+            // Draw the edge of the universe
             ctx.save();
 
             var worldSize = 6000;
             var edgeWidth = 4000;
 
+            // draw blue border at the edge of the world
             ctx.beginPath();
             ctx.lineWidth = 40;
             ctx.strokeStyle = "blue";
             ctx.rect(-worldSize, -worldSize, 2 * worldSize, 2 * worldSize);
             ctx.stroke();
 
-            ctx.beginPath();
-            ctx.lineWidth = edgeWidth * 2;
-            if (Settings.showHitboxes1)
+
+            // draw red transparent buffer outside the edge of the world
+            /*  
+             *  ________________
+             * |       top      |
+             * |________________|
+             * |   |        |   |
+             * |   |        |   |
+             * | L |        | R |
+             * |___|________|___|
+             * |     bottom     |
+             * |________________|
+             * 
+             */
+
+            ctx.fillStyle = "rgba(255,0,0,0.1)";
+
+            // top
+            ctx.fillRect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2*worldSize + 2*edgeWidth, edgeWidth);
+
+            // left
+            ctx.fillRect(-worldSize - edgeWidth, -worldSize, edgeWidth, 2 * worldSize);
+
+            // right
+            ctx.fillRect(+worldSize, -worldSize, edgeWidth, 2*worldSize);
+
+            // bottom
+            ctx.fillRect(-worldSize - edgeWidth, +worldSize, 2 * worldSize + 2 * edgeWidth, edgeWidth);
+
+            // the bit below was causing 7fps on a firefox instance. seemed to be leaking a path?
+            // `ctx.beginPath(); ctx.fill();` reset it and restored things to 60fps
+            /*
+              
+            I'M BAD, DON'T USE ME!
+                ctx.beginPath();
+                ctx.lineWidth = edgeWidth * 2;
                 ctx.strokeStyle = "rgba(255,0,0,0.1)";
-            if (Settings.showHitboxes2)
-                ctx.strokeStyle = "rgb(255,0,0)";
-            if (Settings.showHitboxes3)
-                ctx.strokeStyle = "red";
-            ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
-            ctx.stroke();
+                ctx.rect(-worldSize - edgeWidth, -worldSize - edgeWidth, 2 * worldSize + 2 * edgeWidth, 2 * worldSize + 2 * edgeWidth);
+                ctx.stroke();
+            I'M BAD, DON'T USE ME!
+            */
 
             ctx.restore();
 
+            // start drawing the objects in the world
             ctx.font = "48px " + Settings.font;
             ctx.fillStyle = "white";
             ctx.textAlign = "center";
@@ -136,6 +169,8 @@ export class Renderer {
 
                 var position = interpolator.projectObject(object, currentTime);
 
+                // keep track of which "groups" are used, and collect the points of all the objects
+                // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
                 if (object.Group) {
                     var group = false;
                     for (var i = 0; i < groupsUsed.length; i++)
@@ -157,68 +192,38 @@ export class Renderer {
                     group.points.push(position);
                 }
 
-                var ship = object.Sprite != null ? sprites[object.Sprite] : false;
-
-                /*if (object.Caption) {
-                    ctx.fillText(object.Caption, position.X, position.Y + 90);
-                }*/
-
-                ctx.save();
-                ctx.fillStyle = "rgba(0,255,0,0.2)";
-
-                var health = object.Size;
-
-                if (health) {
-                    var healthBar = false;
-                    var healthRing = Settings.showHitboxes;
-
-                    if (healthBar) {
-                        var offset = { X: 0, Y: 100 };
-                        var width = 200;
-                        var height = 30;
-
-                        ctx.beginPath();
-                        ctx.rect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width, height);
-                        ctx.stroke();
-                        ctx.fillRect(position.X + offset.X - width / 2, position.Y + offset.Y + height, width * health, height);
-                    }
-
-                    if (healthRing) {
-                        /*if (health < 0.33)
-                            ctx.fillStyle = "rgba(255, 128, 128, 0.2)";
-                        else if (health < 0.66)
-                            ctx.fillStyle = "rgba(128, 128, 255, 0.5)";
-                        else 
-                            ctx.fillStyle = "rgba(0, 255, 0, 0.2)";*/
-
-                        ctx.fillStyle = this.colorValue(object.Color);
-
-                        ctx.beginPath();
-                        ctx.arc(position.X, position.Y, health, 0, 2 * Math.PI, false);
-                        //ctx.arc(position.X, position.Y, 60, 0, 2 * Math.PI, true);
-                        ctx.fill();
-                    }
+                // if we're drawing hitboxes
+                if (Settings.showHitboxes && object.Size > 0) {
+                    ctx.save();
+                    ctx.fillStyle = this.colorValue(object.Color);
+                    ctx.beginPath();
+                    ctx.arc(position.X, position.Y, object.Size, 0, 2 * Math.PI, false);
+                    ctx.fill();
+                    ctx.restore();
                 }
-                ctx.restore();
 
-                ctx.save();
-                ctx.translate(position.X, position.Y);
+                // draw the sprite
+                var sprite = object.Sprite != null ? sprites[object.Sprite] : false;
+                if (sprite) {
+                    ctx.save();
+                    ctx.translate(position.X, position.Y);
 
-                if (ship) {
-                    var shipWidth = ship.image.width;
-                    var shipHeight = ship.image.height;
+                    var spriteWidth = sprite.image.width;
+                    var spriteHeight = sprite.image.height;
 
                     ctx.rotate(position.Angle);
-                    ctx.scale(ship.scale, ship.scale);
+                    ctx.scale(sprite.scale, sprite.scale);
 
-                    if (ship.scaleToSize) ctx.scale(object.Size, object.Size);
+                    if (sprite.scaleToSize)
+                        ctx.scale(object.Size, object.Size);
 
-                    ctx.drawImage(ship.image, -shipWidth / 2, -shipHeight / 2, shipWidth, shipHeight);
+                    ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
+
+                    ctx.restore();
                 }
-
-                ctx.restore();
             }, this);
 
+            // draw labels on groups
             if (Settings.namesEnabled) {
                 for (var i = 0; i < groupsUsed.length; i++) {
                     var group = groupsUsed[i];
@@ -226,24 +231,19 @@ export class Renderer {
                     if (group && group.group) {
                         var pt = { X: 0, Y: 0 };
 
+                        // average the location of all the points
+                        // to find a "center"
                         for (var x = 0; x < group.points.length; x++) {
                             pt.X += group.points[x].X;
                             pt.Y += group.points[x].Y;
                         }
-
                         pt.X /= group.points.length;
                         pt.Y /= group.points.length;
 
+                        // draw a caption relative to the average above
                         ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                     }
                 }
-
-                cache.foreach(function (body) {
-                    var position = interpolator.projectObject(body, currentTime);
-                    if (body.Caption) {
-                        ctx.fillText(body.Caption, position.X, position.Y + 90);
-                    }
-                }, this);
             }
         }
     }
