@@ -1,13 +1,19 @@
-﻿import { gui } from "./serverinfo";
+﻿var toggle = false;
 
-var pressable = true;
 document.addEventListener("keydown", function(e) {
-    if ((e.keyCode == 70 || e.which == 70) && document.body.classList.contains("alive") && event.getModifierState("Shift")) {
-        //gui.closed = !gui.closed;
+    if ((e.keyCode == 70 || e.which == 70)) {
+
+        if (toggle)
+        {
+            document.getElementById('titan').style.visibility = 'visible';
+        }
+        else
+        {
+            document.getElementById('titan').style.visibility = 'hidden';
+        }
+
+        toggle = !toggle;
+
         pressable = false;
     }
-});
-
-document.addEventListener("keyup", function(e) {
-    if (e.keyCode == 70 || e.which == 70) pressable = true;
 });

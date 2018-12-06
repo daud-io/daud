@@ -25,6 +25,15 @@ body {
     left: 0;
     right: 0;
 }
+
+#titan {
+    position: absolute;
+    height: 50vh;
+    width: 30vw;
+    bottom: 0;
+    right: 15px;
+}
+
 #error {
     display: none;
 }
