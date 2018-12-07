@@ -1,19 +1,27 @@
-﻿var toggle = false;
+﻿var isVisible = false;
+
+function hide() {
+    document.getElementById('titan').style.visibility = 'hidden';
+    isVisible = false;
+}
+
+function show() {
+    document.getElementById('titan').style.visibility = 'visible';
+    document.getElementById('titan-frame').focus();
+    isVisible = true;
+}
 
 document.addEventListener("keydown", function(e) {
-    if ((e.keyCode == 70 || e.which == 70)) {
+    if ((e.keyCode == 70 || e.which == 70) && e.getModifierState("Shift")) {
 
-        if (toggle)
-        {
-            document.getElementById('titan').style.visibility = 'visible';
-        }
+        if (!isVisible)
+            show();
         else
-        {
-            document.getElementById('titan').style.visibility = 'hidden';
-        }
-
-        toggle = !toggle;
-
-        pressable = false;
+            hide();
     }
+});
+
+document.addEventListener("mousedown", function (e) {
+    if (isVisible)
+        hide();
 });
