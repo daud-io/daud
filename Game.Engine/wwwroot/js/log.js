@@ -10,9 +10,14 @@ export class Log {
     }
 
     addEntry(entry) {
-        this.data.push(entry);
-        this.data = this.data.slice(this.data.length - 4);
+
+        this.data.push({ time: new Date(), entry: entry });
+        while (this.data.length > 4)
+            this.data.shift();
+
         this.lastDisplay = performance.now();
+
+        //console.log(this.data);
     }
 
     draw() {
@@ -22,24 +27,25 @@ export class Log {
             var time = performance.now() - this.lastDisplay;
 
             var alpha = 1.0;
-            if (time > 2000) alpha = 1.0 - Math.max(time - 2000, 1000) / 1000.0;
-            if (time > 3000) alpha = 0;
+            if (time > 5000) alpha = 1.0 - Math.max(time - 5000, 1000) / 1000.0;
+            if (time > 6000) alpha = 0;
 
             ctx.globalAlpha = alpha;
 
             ctx.font = "12pt " + Settings.font;
-            ctx.fillStyle = "white";
             ctx.textAlign = "left";
 
             var rowHeight = 28;
             var margin = 20;
 
             for (var i = 0; i < this.data.length; i++) {
-                var entry = this.data[i];
+                var slot = this.data[i];
+
+                ctx.fillStyle = "gray";
+                ctx.fillText(slot.time.toLocaleTimeString(), margin, rowHeight + i * rowHeight);
 
                 ctx.fillStyle = "white";
-
-                ctx.fillText(entry, margin, rowHeight + i * rowHeight);
+                ctx.fillText(slot.entry, margin + 100, rowHeight + i * rowHeight);
             }
         }
 
