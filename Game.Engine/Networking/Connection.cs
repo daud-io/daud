@@ -105,8 +105,8 @@
                 }
 
                 // we've found someone to spectate, record it
-                if (followFleet != player?.Fleet && followFleet != SpectatingFleet)
-                    SpectatingFleet = followFleet;
+                //if (followFleet != player?.Fleet && followFleet != SpectatingFleet)
+                    //SpectatingFleet = followFleet;
 
                 // if we haven't found anything to watch yet, watch the first ship we find
                 if (followBody == null)
