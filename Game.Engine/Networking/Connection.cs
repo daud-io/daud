@@ -65,245 +65,261 @@
 
         public async Task StepAsync(CancellationToken cancellationToken)
         {
-            if (player != null)
+            try
             {
-                // First try to focus camera on the player if they have
-                // a fleet alive;
-                var followFleet = player?.Fleet;
 
-                /*
-                // if the player doesn't have a fleet alive
-                if (followFleet == null)
-                    // check to see if they are spectating a fleet that's alive
-                    if (SpectatingFleet != null && SpectatingFleet.Exists)
-                        followFleet = SpectatingFleet;
-                */
-
-                if (followFleet == null)
-                    // find someone else to watch
-                    followFleet = Player.GetWorldPlayers(world)
-                        .ToList()
-                        .Where(p => p.IsAlive)
-                        .OrderByDescending(p => p.Score * 10000 + (10000 - p.Fleet.ID))
-                        .FirstOrDefault()
-                        ?.Fleet;
-
-                Body followBody = null;
-
-                // if we're watching a fleet, watch the center of their fleet
-                if (followFleet != null)
+                if (player != null)
                 {
-                    var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
-
-                    followBody = new Body
-                    {
-                        DefinitionTime = world.Time,
-                        OriginalPosition = center,
-                        Position = center,
-                        Momentum = followFleet.FleetMomentum
-                    };
-                }
-
-                // we've found someone to spectate, record it
-                //if (followFleet != player?.Fleet && followFleet != SpectatingFleet)
-                    //SpectatingFleet = followFleet;
-
-                // if we haven't found anything to watch yet, watch the first ship we find
-                if (followBody == null)
-                    followBody = player?.World.Bodies.OfType<Ship>().FirstOrDefault();
-
-                // if we haven't found anything to watch yet, watch anything
-                if (followBody == null)
-                    followBody = player?.World.Bodies.FirstOrDefault();
-
-                if (followBody != null)
-                {
-                    var halfViewport = new Vector2(3200, 3200);
-
-                    BodyCache.Update(
-                        world.Bodies,
-                        world.Groups,
-                        world.Time,
-                        Vector2.Subtract(followBody.Position, halfViewport),
-                        Vector2.Add(followBody.Position, halfViewport)
-                    );
-
-                    var updates = BodyCache.BodiesByError();
-
-                    var updateBodies = updates.Take((int)this.Bandwidth);
-
-                    var newHash = world.Hook.GetHashCode();
-
                     var builder = new FlatBufferBuilder(1);
-                    float VELOCITY_SCALE_FACTOR = 5000;
 
-                    var updatedGroups = BodyCache.GroupsByError().ToList();
+                    lock (world.Bodies) // wrong kind of lock but might do for now
+                    { 
+                        // First try to focus camera on the player if they have
+                        // a fleet alive;
+                        var followFleet = player?.Fleet;
 
-                    var groupsVector = NetWorldView.CreateGroupsVector(builder,
-                        updatedGroups.Select(b =>
+                        // if the player doesn't have a fleet alive
+                        if (followFleet == null)
+                            // check to see if they are spectating a fleet that's alive
+                            if (SpectatingFleet != null && SpectatingFleet.Exists)
+                                followFleet = SpectatingFleet;
+
+                        if (followFleet == null)
+                            // find someone else to watch
+                            followFleet = Player.GetWorldPlayers(world)
+                                .ToList()
+                                .Where(p => p.IsAlive)
+                                .OrderByDescending(p => p.Score * 10000 + (10000 - p.Fleet?.ID ?? 0))
+                                .FirstOrDefault()
+                                ?.Fleet;
+
+                        Body followBody = null;
+
+                        // if we're watching a fleet, watch the center of their fleet
+                        if (followFleet != null)
                         {
-                            var serverGroup = b.GroupUpdated;
+                            var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
 
-                            var caption = builder.CreateString(serverGroup.Caption ?? " ");
+                            followBody = new Body
+                            {
+                                DefinitionTime = world.Time,
+                                OriginalPosition = center,
+                                Position = center,
+                                Momentum = followFleet.FleetMomentum
+                            };
+                        }
 
-                            var group = NetGroup.CreateNetGroup(builder,
-                                group: serverGroup.ID,
-                                type: serverGroup.GroupType,
-                                captionOffset: caption,
-                                zindex: serverGroup.ZIndex
+                        // we've found someone to spectate, record it
+                        if (followFleet != player?.Fleet && followFleet != SpectatingFleet)
+                            SpectatingFleet = followFleet;
+
+                        // if we haven't found anything to watch yet, watch the first ship we find
+                        if (followBody == null)
+                            followBody = player?.World.Bodies.OfType<Ship>().FirstOrDefault();
+
+                        // if we haven't found anything to watch yet, watch anything
+                        if (followBody == null)
+                            followBody = player?.World.Bodies.FirstOrDefault();
+
+                        if (followBody != null)
+                        {
+                            var halfViewport = new Vector2(3200, 3200);
+
+                            BodyCache.Update(
+                                world.Bodies,
+                                world.Groups,
+                                world.Time,
+                                Vector2.Subtract(followBody.Position, halfViewport),
+                                Vector2.Add(followBody.Position, halfViewport)
                             );
-                            return group;
-                        }).ToArray());
+
+                            var updates = BodyCache.BodiesByError();
+
+                            var updateBodies = updates.Take((int)this.Bandwidth);
+
+                            var newHash = world.Hook.GetHashCode();
+
+                            float VELOCITY_SCALE_FACTOR = 5000;
+
+                            var updatedGroups = BodyCache.GroupsByError().ToList();
+
+                            var groupsVector = NetWorldView.CreateGroupsVector(builder,
+                                updatedGroups.Select(b =>
+                                {
+                                    var serverGroup = b.GroupUpdated;
+
+                                    var caption = builder.CreateString(serverGroup.Caption ?? " ");
+
+                                    var group = NetGroup.CreateNetGroup(builder,
+                                        group: serverGroup.ID,
+                                        type: serverGroup.GroupType,
+                                        captionOffset: caption,
+                                        zindex: serverGroup.ZIndex
+                                    );
+                                    return group;
+                                }).ToArray());
 
 
-                    foreach (var update in updatedGroups)
-                    {
-                        update.GroupClient = update.GroupUpdated.Clone();
+                            foreach (var update in updatedGroups)
+                            {
+                                update.GroupClient = update.GroupUpdated.Clone();
+                            }
+
+                            var groupDeletesVector = NetWorldView.CreateGroupDeletesVector(builder, BodyCache.CollectStaleGroups().Select(b =>
+                                b.GroupUpdated.ID
+                            ).ToArray());
+
+                            NetWorldView.StartUpdatesVector(builder, updateBodies.Count());
+                            foreach (var b in updateBodies)
+                            {
+                                var serverBody = b.BodyUpdated;
+
+                                var body = NetBody.CreateNetBody(builder,
+                                    Id: serverBody.ID,
+                                    DefinitionTime: serverBody.DefinitionTime,
+                                    originalPosition_X: (short)serverBody.OriginalPosition.X,
+                                    originalPosition_Y: (short)serverBody.OriginalPosition.Y,
+                                    velocity_X: (short)(serverBody.Momentum.X * VELOCITY_SCALE_FACTOR),
+                                    velocity_Y: (short)(serverBody.Momentum.Y * VELOCITY_SCALE_FACTOR),
+                                    OriginalAngle: (sbyte)(serverBody.OriginalAngle / MathF.PI * 127),
+                                    AngularVelocity: (sbyte)(serverBody.AngularVelocity * 10000),
+                                    Size: (byte)(serverBody.Size / 5),
+                                    Sprite: (byte)serverBody.Sprite,
+                                    Mode: 0,
+                                    Group: serverBody.Group?.ID ?? 0);
+                            }
+
+                            var updatesVector = builder.EndVector();
+
+                            foreach (var update in updateBodies)
+                            {
+                                update.BodyClient = update.BodyUpdated.Clone();
+                            }
+
+                            var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
+                                b.BodyUpdated.ID
+                            ).ToArray());
+
+                            var messages = player.GetMessages();
+                            VectorOffset announcementsVector = new VectorOffset();
+                            if (messages != null && messages.Any())
+                            {
+                                announcementsVector = NetWorldView.CreateAnnouncementsVector(builder, messages.Select(e =>
+                                {
+                                    var stringName = builder.CreateString(e);
+
+                                    NetAnnouncement.StartNetAnnouncement(builder);
+                                    NetAnnouncement.AddText(builder, stringName);
+
+                                    return NetAnnouncement.EndNetAnnouncement(builder);
+                                }).ToArray());
+                            }
+
+                            NetWorldView.StartNetWorldView(builder);
+
+                            // define camera
+                            var cameraBody = NetBody.CreateNetBody(
+                                builder,
+                                Id: 0,
+                                DefinitionTime: followBody?.DefinitionTime ?? 0,
+                                originalPosition_X: (short)(followBody?.OriginalPosition.X ?? 0),
+                                originalPosition_Y: (short)(followBody?.OriginalPosition.Y ?? 0),
+                                velocity_X: (short)(followBody?.Momentum.X * VELOCITY_SCALE_FACTOR ?? 0),
+                                velocity_Y: (short)(followBody?.Momentum.Y * VELOCITY_SCALE_FACTOR ?? 0),
+                                OriginalAngle: (sbyte)(followBody?.OriginalAngle / MathF.PI / 127 ?? 0),
+                                AngularVelocity: 0,
+                                Size: 0,
+                                Sprite: 0,
+                                Mode: 0,
+                                Group: 0
+                            );
+
+                            NetWorldView.AddCamera(builder, cameraBody);
+                            NetWorldView.AddIsAlive(builder, player?.IsAlive ?? false);
+                            NetWorldView.AddTime(builder, world.Time);
+
+                            NetWorldView.AddUpdates(builder, updatesVector);
+                            NetWorldView.AddDeletes(builder, deletesVector);
+
+                            NetWorldView.AddGroups(builder, groupsVector);
+                            NetWorldView.AddGroupDeletes(builder, groupDeletesVector);
+                            if (messages != null && messages.Any())
+                                NetWorldView.AddAnnouncements(builder, announcementsVector);
+
+                            var players = Player.GetWorldPlayers(world);
+                            NetWorldView.AddPlayerCount(builder, (uint)players.Count(p => p.IsAlive));
+                            NetWorldView.AddSpectatorCount(builder, (uint)players.Count(p => !p.IsAlive));
+
+                            NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
+                            NetWorldView.AddCooldownShoot(builder, (byte)((player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
+                            NetWorldView.AddWorldSize(builder, (ushort)world.Hook.WorldSize);
+
+                            var worldView = NetWorldView.EndNetWorldView(builder);
+
+                            HookHash = newHash;
+
+                            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetWorldView, worldView.Value);
+                            builder.Finish(q.Value);
+                        }
                     }
-
-                    var groupDeletesVector = NetWorldView.CreateGroupDeletesVector(builder, BodyCache.CollectStaleGroups().Select(b =>
-                        b.GroupUpdated.ID
-                    ).ToArray());
-
-                    NetWorldView.StartUpdatesVector(builder, updateBodies.Count());
-                    foreach (var b in updateBodies)
-                    {
-                        var serverBody = b.BodyUpdated;
-
-                        var body = NetBody.CreateNetBody(builder,
-                            Id: serverBody.ID,
-                            DefinitionTime: serverBody.DefinitionTime,
-                            originalPosition_X: (short)serverBody.OriginalPosition.X,
-                            originalPosition_Y: (short)serverBody.OriginalPosition.Y,
-                            velocity_X: (short)(serverBody.Momentum.X * VELOCITY_SCALE_FACTOR),
-                            velocity_Y: (short)(serverBody.Momentum.Y * VELOCITY_SCALE_FACTOR),
-                            OriginalAngle: (sbyte)(serverBody.OriginalAngle / MathF.PI * 127),
-                            AngularVelocity: (sbyte)(serverBody.AngularVelocity * 10000),
-                            Size: (byte)(serverBody.Size / 5),
-                            Sprite: (byte)serverBody.Sprite,
-                            Mode: 0,
-                            Group: serverBody.Group?.ID ?? 0);
-                    }
-
-                    var updatesVector = builder.EndVector();
-
-                    foreach (var update in updateBodies)
-                    {
-                        update.BodyClient = update.BodyUpdated.Clone();
-                    }
-
-                    var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
-                        b.BodyUpdated.ID
-                    ).ToArray());
-
-                    var messages = player.GetMessages();
-                    VectorOffset announcementsVector = new VectorOffset();
-                    if (messages != null && messages.Any())
-                    {
-                        announcementsVector = NetWorldView.CreateAnnouncementsVector(builder, messages.Select(e =>
-                        {
-                            var stringName = builder.CreateString(e);
-
-                            NetAnnouncement.StartNetAnnouncement(builder);
-                            NetAnnouncement.AddText(builder, stringName);
-
-                            return NetAnnouncement.EndNetAnnouncement(builder);
-                        }).ToArray());
-                    }
-
-                    NetWorldView.StartNetWorldView(builder);
-
-                    // define camera
-                    var cameraBody = NetBody.CreateNetBody(
-                        builder,
-                        Id: 0,
-                        DefinitionTime: followBody?.DefinitionTime ?? 0,
-                        originalPosition_X: (short)(followBody?.OriginalPosition.X ?? 0),
-                        originalPosition_Y: (short)(followBody?.OriginalPosition.Y ?? 0),
-                        velocity_X: (short)(followBody?.Momentum.X * VELOCITY_SCALE_FACTOR ?? 0),
-                        velocity_Y: (short)(followBody?.Momentum.Y * VELOCITY_SCALE_FACTOR ?? 0),
-                        OriginalAngle: (sbyte)(followBody?.OriginalAngle / MathF.PI / 127 ?? 0),
-                        AngularVelocity: 0,
-                        Size: 0,
-                        Sprite: 0,
-                        Mode: 0,
-                        Group: 0
-                    );
-
-                    NetWorldView.AddCamera(builder, cameraBody);
-                    NetWorldView.AddIsAlive(builder, player?.IsAlive ?? false);
-                    NetWorldView.AddTime(builder, world.Time);
-
-                    NetWorldView.AddUpdates(builder, updatesVector);
-                    NetWorldView.AddDeletes(builder, deletesVector);
-
-                    NetWorldView.AddGroups(builder, groupsVector);
-                    NetWorldView.AddGroupDeletes(builder, groupDeletesVector);
-                    if (messages != null && messages.Any())
-                        NetWorldView.AddAnnouncements(builder, announcementsVector);
-
-                    var players = Player.GetWorldPlayers(world);
-                    NetWorldView.AddPlayerCount(builder, (uint)players.Count(p => p.IsAlive));
-                    NetWorldView.AddSpectatorCount(builder, (uint)players.Count(p => !p.IsAlive));
-
-                    NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
-                    NetWorldView.AddCooldownShoot(builder, (byte)((player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
-                    NetWorldView.AddWorldSize(builder, (ushort)world.Hook.WorldSize);
-
-                    var worldView = NetWorldView.EndNetWorldView(builder);
-
-                    HookHash = newHash;
-
-                    var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetWorldView, worldView.Value);
-                    builder.Finish(q.Value);
 
                     await this.SendAsync(builder.DataBuffer, cancellationToken);
-                }
 
-                if (LeaderboardTime != (world.Leaderboard?.Time ?? 0))
-                {
-                    LeaderboardTime = (world.Leaderboard?.Time ?? 0);
-
-                    var builder = new FlatBufferBuilder(1);
-
-                    var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
-                    var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
-
-                    NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
-                    NetLeaderboardEntry.AddColor(builder, stringColor);
-                    NetLeaderboardEntry.AddName(builder, stringName);
-                    NetLeaderboardEntry.AddScore(builder, world.Leaderboard?.ArenaRecord?.Score ?? 0);
-                    NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(world.Leaderboard?.ArenaRecord?.Token));
-                    var record = NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
-
-
-                    var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
+                    if (LeaderboardTime != (world.Leaderboard?.Time ?? 0))
                     {
-                        stringName = builder.CreateString(e.Name ?? string.Empty);
-                        stringColor = builder.CreateString(e.Color ?? string.Empty);
-                        // stringToken = builder.CreateString( ?? string.Empty);
+                        LeaderboardTime = (world.Leaderboard?.Time ?? 0);
+
+                        builder = new FlatBufferBuilder(1);
+
+                        var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
+                        var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
 
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
-                        NetLeaderboardEntry.AddName(builder, stringName);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
-                        NetLeaderboardEntry.AddScore(builder, e.Score);
-                        NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
-                        NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(e.Token));
+                        NetLeaderboardEntry.AddName(builder, stringName);
+                        NetLeaderboardEntry.AddScore(builder, world.Leaderboard?.ArenaRecord?.Score ?? 0);
+                        NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(world.Leaderboard?.ArenaRecord?.Token));
+                        var record = NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
 
-                        return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
-                    }).ToArray());
 
-                    var stringType = builder.CreateString(world.Leaderboard.Type ?? string.Empty);
-                    NetLeaderboard.StartNetLeaderboard(builder);
-                    NetLeaderboard.AddEntries(builder, entriesVector);
-                    NetLeaderboard.AddType(builder, stringType);
-                    NetLeaderboard.AddRecord(builder, record);
+                        var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
+                        {
+                            stringName = builder.CreateString(e.Name ?? string.Empty);
+                            stringColor = builder.CreateString(e.Color ?? string.Empty);
+                            // stringToken = builder.CreateString( ?? string.Empty);
 
-                    var leaderboardOffset = NetLeaderboard.EndNetLeaderboard(builder);
+                            NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
+                            NetLeaderboardEntry.AddName(builder, stringName);
+                            NetLeaderboardEntry.AddColor(builder, stringColor);
+                            NetLeaderboardEntry.AddScore(builder, e.Score);
+                            NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
+                            NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(e.Token));
 
-                    builder.Finish(NetQuantum.CreateNetQuantum(builder, AllMessages.NetLeaderboard, leaderboardOffset.Value).Value);
-                    await this.SendAsync(builder.DataBuffer, cancellationToken);
+                            return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
+                        }).ToArray());
+
+                        var stringType = builder.CreateString(world.Leaderboard.Type ?? string.Empty);
+                        NetLeaderboard.StartNetLeaderboard(builder);
+                        NetLeaderboard.AddEntries(builder, entriesVector);
+                        NetLeaderboard.AddType(builder, stringType);
+                        NetLeaderboard.AddRecord(builder, record);
+
+                        var leaderboardOffset = NetLeaderboard.EndNetLeaderboard(builder);
+
+                        builder.Finish(NetQuantum.CreateNetQuantum(builder, AllMessages.NetLeaderboard, leaderboardOffset.Value).Value);
+                        await this.SendAsync(builder.DataBuffer, cancellationToken);
+                    }
                 }
+            }
+            catch (WebSocketException e)
+            {
+                //Console.WriteLine(e);
+                throw;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
             }
         }
 
@@ -410,7 +426,7 @@
                         ShootRequested = input.Shoot
                     });
 
-                    /*if (input.SpectateControl != null)
+                    if (input.SpectateControl != null)
                     {
                         switch (input.SpectateControl)
                         {
@@ -433,20 +449,11 @@
                                 break;
                         }
 
-                    }*/
+                    }
 
                     break;
             }
-
-            /*
-            else if (message is Hook)
-            {
-                var hook = message as Hook;
-                world.Hook = hook;  
-            }*/
         }
-
-
 
         public async Task ConnectAsync(HttpContext httpContext, WebSocket socket, CancellationToken cancellationToken = default(CancellationToken))
         {

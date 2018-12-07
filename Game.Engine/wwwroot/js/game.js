@@ -163,8 +163,8 @@ setInterval(function() {
     if (angle !== lastControl.angle || aimTarget.X !== aimTarget.X || aimTarget.Y !== aimTarget.Y || Controls.boost !== lastControl.boost || Controls.shoot !== lastControl.shoot) {
 
         var spectateControl = false;
-        //if (Controls.shoot && isSpectating)
-        //    spectateControl = "action:next";
+        if (Controls.shoot && isSpectating)
+            spectateControl = "action:next";
 
         connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl);
 
