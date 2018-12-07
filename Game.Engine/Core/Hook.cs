@@ -72,7 +72,13 @@
                     SeekerRange = 2100,
                     SeekerDelay = 250,
 
-                    SpawnLocationMode = "QuietSpot" // Corners, QuietSpot
+                    SpawnLocationMode = "QuietSpot", // Corners, QuietSpot
+
+                    PointsPerKillShip = 1,
+                    PointsPerKillFleet = 55,
+                    PointsPerUniverseDeath = -1,
+                    PointsMultiplierDeath = 0.5f
+
                 };
             }
         }
@@ -92,6 +98,11 @@
         public float BoostSpeed { get; set; }
 
         public float Drag { get; set; }
+
+        public int PointsPerKillShip { get; set; }
+        public int PointsPerKillFleet { get; set; }
+        public int PointsPerUniverseDeath { get; set; }
+        public float PointsMultiplierDeath { get; set; }
 
         public int HealthHitCost { get; set; }
         public float HealthRegenerationPerFrame { get; set; }

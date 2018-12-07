@@ -30,9 +30,15 @@
         {
             var hook = Hook.Default;
             hook.BotBase = 0;
-            hook.WorldSize = 3500;
-            hook.Obstacles = 0;
-            hook.Fishes = 25;
+            hook.WorldSize = 4200;
+            hook.Obstacles = 3;
+            hook.Fishes = 7;
+            hook.Pickups = 3;
+            hook.PointsPerKillFleet = 1;
+            hook.PointsPerKillShip = 0;
+            hook.PointsPerUniverseDeath = -1;
+            hook.PointsMultiplierDeath = 1.0f;
+
             return new World
             {
                 Hook = hook
