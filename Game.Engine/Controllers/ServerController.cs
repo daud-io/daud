@@ -40,9 +40,9 @@
         }
 
         [HttpPost, Route("announce")]
-        public bool Announce(string message)
+        public bool Announce(string message, string worldName = null)
         {
-            var world = Worlds.Find();
+            var world = Worlds.Find(worldName);
             var players = Player.GetWorldPlayers(world);
             foreach (var player in players)
                 player.SendMessage(message);
@@ -51,14 +51,14 @@
         }
 
         [HttpPost, Route("hook")]
-        public async Task<string> Hook()
+        public async Task<string> Hook(string worldName = null)
         {
             string json = null;
 
             using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
                 json = await reader.ReadToEndAsync();
 
-            var world = Worlds.Find();
+            var world = Worlds.Find(worldName);
 
             JsonConvert.PopulateObject(json, world.Hook);
 
@@ -66,9 +66,9 @@
         }
 
         [HttpGet, Route("players")]
-        public IEnumerable<GameConnection> GetPlayers()
+        public IEnumerable<GameConnection> GetPlayers(string worldName = null)
         {
-            var world = Worlds.Find();
+            var world = Worlds.Find(worldName);
             return Player.GetWorldPlayers(world)
                 .Select(p => new GameConnection
                 {
