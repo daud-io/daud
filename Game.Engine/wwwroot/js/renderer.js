@@ -30,7 +30,7 @@ export const sprites = {
     bullet_red: sprite("bullet_red", 0.03, true),
     bullet_cyan: sprite("bullet_cyan", 0.03, true),
     bullet_yellow: sprite("bullet_yellow", 0.03, true),
-    fish: sprite("ship0", 0.005, true),
+    fish: sprite("ship0", 0.01, true),
     bullet: sprite("bullet", 0.02, true),
     seeker: sprite("seeker", 0.02, true),
     seeker_pickup: sprite("seeker_pickup", 0.02, true),
