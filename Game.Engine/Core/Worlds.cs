@@ -19,6 +19,7 @@
         {
             var hook = Hook.Default;
             hook.BotBase = 10;
+            hook.BotRespawnDelay = 0;
             return new World
             {
                 Hook = hook
