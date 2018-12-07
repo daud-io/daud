@@ -13,6 +13,8 @@
     public class Connection : IDisposable
     {
         private readonly APIClient APIClient;
+        private readonly string WorldName = null;
+
         private readonly Timer PingTimer;
         private ClientWebSocket Socket = null;
         private const int PING_TIMER_MS = 1000;
@@ -31,8 +33,9 @@
         public Func<Task> OnView { get; set; } = null;
         public Func<Task> OnConnected { get; set; } = null;
 
-        public Connection(APIClient apiClient)
+        public Connection(APIClient apiClient, string worldName = null)
         {
+            WorldName = worldName;
             APIClient = apiClient;
             PingTimer = new Timer(this.PingEntry, null, 1000, PING_TIMER_MS);
         }
@@ -168,7 +171,9 @@
 
         public async Task ConnectAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
-            Socket = await APIClient.ConnectWebSocket(APIEndpoint.PlayerConnect, cancellationToken: cancellationToken);
+            Socket = await APIClient.ConnectWebSocket(
+                APIEndpoint.PlayerConnect(WorldName), cancellationToken: cancellationToken
+            );
 
             if (OnConnected != null)
                 await OnConnected();

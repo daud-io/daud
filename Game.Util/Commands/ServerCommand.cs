@@ -13,6 +13,22 @@
     [Subcommand("hook", typeof(Hook))]
     class ServerCommand : CommandBase
     {
+        private static string[] Worlds = new[]
+        {
+            "default",
+            "other",
+            "duel",
+            "ctf"
+        };
+
+        private static string[] WorldSelection(string world)
+        {
+            if (world == null)
+                return Worlds;
+            else
+                return new[] { world };
+        }
+
         class Get : CommandBase
         {
             protected async override Task ExecuteAsync()
@@ -43,46 +59,65 @@
             [Argument(0)]
             public string Message { get; set; } = null;
 
+            [Option]
+            public string World { get; set; } = null;
+
             protected async override Task ExecuteAsync()
             {
                 if (Message != null)
-                    await API.Server.AnnounceAsync(Message);
+                {
+                    foreach (var world in WorldSelection(World))
+                        await API.Server.AnnounceAsync(Message, world);
+                }
             }
         }
 
         class Connections : CommandBase
         {
+            [Option]
+            public string World { get; set; } = null;
+
+            [Option]
+            public bool IP { get; set; } = false;
+
             protected async override Task ExecuteAsync()
             {
-                var connections = await API.Server.ConnectionsAsync();
 
-                Table("Connections", connections.Select(c =>
-                    new
-                    {
-                        c.Name,
-                        c.IP,
-                        c.IsAlive,
-                        c.Score,
-                        bg = c.Backgrounded,
-                        c.Bandwidth,
-                        fps = c.ClientFPS,
-                        vps = c.ClientVPS,
-                        ups = c.ClientUPS,
-                        cs = c.ClientCS,
-                        ping = c.Latency
-                    }));
+                foreach (var world in WorldSelection(World))
+                {
+                    var connections = await API.Server.ConnectionsAsync(world);
+
+                    Table($"Connections - {world}", connections.Select(c =>
+                        new
+                        {
+                            c.Name,
+                            ip = IP ? c.IP : string.Empty,
+                            c.IsAlive,
+                            c.Score,
+                            bg = c.Backgrounded,
+                            c.Bandwidth,
+                            fps = c.ClientFPS,
+                            vps = c.ClientVPS,
+                            ups = c.ClientUPS,
+                            cs = c.ClientCS,
+                            ping = c.Latency
+                        }));
+                }
             }
         }
 
         class Hook : CommandBase
         {
+            [Option]
+            public string World { get; set; } = null;
+
             [Argument(0)]
             public string HookJSON { get; set; } = null;
 
             protected async override Task ExecuteAsync()
             {
                 var hook = JsonConvert.DeserializeObject(HookJSON);
-                hook = await API.Server.HookAsync(hook);
+                hook = await API.Server.HookAsync(hook, World);
 
                 Console.WriteLine(hook);
             }

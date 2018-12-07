@@ -84,6 +84,8 @@
                 foreach (var row in rows)
                     dt.Rows.Add(properties.Select(p => Truncate(p.GetValue(row)?.ToString(), 75)).ToArray());
 
+
+                Console.WriteLine($"==== {name} ====");
                 ConsoleTableBuilder
                    .From(dt)
                    .WithOptions(new ConsoleTableBuilderOption

@@ -64,10 +64,18 @@
         {
             if (player != null)
             {
-                player.Score += 55;
+                player.Score += World.Hook.PointsPerKillFleet;
 
                 player.SendMessage($"You Killed {this.Owner.Name}");
                 this.Owner.SendMessage($"Killed by {player.Name}");
+            }
+            else
+            {
+                if (this.Owner != null)
+                {
+                    this.Owner.SendMessage($"Killed by the universe");
+                    this.Owner.Score += World.Hook.PointsPerUniverseDeath;
+                }
             }
 
             this.Owner.Die(player?.Token ?? "");

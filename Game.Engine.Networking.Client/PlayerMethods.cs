@@ -11,9 +11,12 @@
             this.APIClient = apiClient;
         }
 
-        public async Task<Connection> ConnectAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<Connection> ConnectAsync(
+            string worldName = null,
+            CancellationToken cancellationToken = default(CancellationToken)
+        )
         {
-            var connection = new Connection(this.APIClient);
+            var connection = new Connection(this.APIClient, worldName);
             await connection.ConnectAsync(cancellationToken);
 
             return connection;

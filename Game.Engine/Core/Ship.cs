@@ -46,7 +46,7 @@
         private void Die(Player player, Fleet fleet, Bullet bullet)
         {
             if (player != null)
-                player.Score += 1;
+                player.Score += World.Hook.PointsPerKillShip;
 
             if (fleet != null)
             {

@@ -1,13 +1,32 @@
-﻿import { gui } from "./serverinfo";
+﻿var isVisible = false;
 
-var pressable = true;
+function hide() {
+    document.getElementById('titan').style.visibility = 'hidden';
+    isVisible = false;
+}
+
+function show() {
+    document.getElementById('titan').style.visibility = 'visible';
+    document.getElementById('titan-frame').focus();
+    isVisible = true;
+}
+
 document.addEventListener("keydown", function(e) {
-    if ((e.keyCode == 70 || e.which == 70) && document.body.classList.contains("alive") && event.getModifierState("Shift")) {
-        //gui.closed = !gui.closed;
-        pressable = false;
+    if ((e.keyCode == 70 || e.which == 70)
+        && (
+            document.body.classList.contains("alive")
+        || document.body.classList.contains("spectating")
+        )
+    ) {
+
+        if (!isVisible)
+            show();
+        else
+            hide();
     }
 });
 
-document.addEventListener("keyup", function(e) {
-    if (e.keyCode == 70 || e.which == 70) pressable = true;
+document.addEventListener("mousedown", function (e) {
+    if (isVisible)
+        hide();
 });

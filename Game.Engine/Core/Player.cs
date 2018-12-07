@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.Engine.Networking;
+    using System;
     using System.Collections.Generic;
     using System.Net.Http;
 
@@ -144,7 +145,6 @@
                         : Fleet.Owner?.ShipSprite ?? Sprites.ship_gray;
 
             }
-
         }
 
         protected virtual Fleet CreateFleet(string color)
@@ -178,7 +178,8 @@
 
         protected virtual void OnDeath(string token)
         {
-            Score /= 2;
+            Score = (int)Math.Max(Score * World.Hook.PointsMultiplierDeath, 0);
+
             if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(token))
                 RemoteEventLog.SendEvent(new
                 {

@@ -1,0 +1,12 @@
+{
+  "name": "wwwroot",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "connections": "game server connections",
+    "weather-fast": "game server hook --world default {Obstacles:0,ObstacleMaxMomentum:1} && game server hook --world default {Obstacles:15}",
+    "weather-default": "game server hook --world default {Obstacles:0,ObstacleMaxMomentum:0.1} && game server hook --world default {Obstacles:15}"
+  },
+  "author": "little dr",
+  "license": "ISC"
+}

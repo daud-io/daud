@@ -11,6 +11,9 @@
         class Test : CommandBase
         {
             [Option()]
+            public string World { get; set; } = null;
+
+            [Option()]
             public int Replicas { get; set; } = 10;
 
             [Option()]
@@ -22,9 +25,11 @@
 
                 for (int i = 0; i < Replicas; i++)
                 {
-                    var player = await API.Player.ConnectAsync();
-                    var robot = new Robot(player);
-                    robot.AutoFire = Firing;
+                    var player = await API.Player.ConnectAsync(World);
+                    var robot = new Robot(player)
+                    {
+                        AutoFire = Firing
+                    };
 
                     tasks.Add(robot.Start());
                 };

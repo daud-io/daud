@@ -15,6 +15,9 @@
         public static APIEndpoint ServerAnnounce { get => new APIEndpoint("/api/v1/server/announce"); }
         public static APIEndpoint ServerPlayers { get => new APIEndpoint("/api/v1/server/players"); }
         public static APIEndpoint ServerHook { get => new APIEndpoint("/api/v1/server/hook"); }
-        public static APIEndpoint PlayerConnect { get => new APIEndpoint("/api/v1/connect"); }
+
+        public static APIEndpoint PlayerConnect(string worldName = null) {
+            return new APIEndpoint($"/api/v1/connect?world={worldName}");
+        }
     }
 }

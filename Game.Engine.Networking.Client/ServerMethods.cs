@@ -41,23 +41,24 @@
             }
         }
 
-        public async Task<bool> AnnounceAsync(string message)
+        public async Task<bool> AnnounceAsync(string message, string worldName = null)
         {
             return await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.ServerAnnounce, 
-                queryStringContent: new { message });
+                queryStringContent: new { message, worldName});
         }
 
-        public async Task<IEnumerable<GameConnection>> ConnectionsAsync()
+        public async Task<IEnumerable<GameConnection>> ConnectionsAsync(string worldName = null)
         {
             return await APIClient.APICallAsync<IEnumerable<GameConnection>>(
-                HttpMethod.Get, APIEndpoint.ServerPlayers);
-
+                HttpMethod.Get, APIEndpoint.ServerPlayers,
+                queryStringContent: new { worldName }
+            );
         }
 
-        public async Task<string> HookAsync(object hook)
+        public async Task<string> HookAsync(object hook, string worldName = null)
         {
             return await APIClient.APICallAsync<string>(
-                HttpMethod.Post, APIEndpoint.ServerHook, bodyContent: hook);
+                HttpMethod.Post, APIEndpoint.ServerHook, queryStringContent: new { worldName }, bodyContent: hook);
         }
     }
 }
