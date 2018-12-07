@@ -48,6 +48,8 @@
                     StepTime = 40,
                     Obstacles = 15,
                     ObstacleMaxMomentum = 0.1f,
+                    ObstacleMaxMomentumWeatherMultiplier = 1.0f,
+                    ObstacleMinSize = 300,
                     ObstacleMaxSize = 600,
                     TeamMode = false,
                     CTFMode = false,
@@ -130,7 +132,9 @@
         public int Fishes { get; set; } = 0;
 
         public float ObstacleMaxMomentum { get; set; }
+        public int ObstacleMinSize { get; set; }
         public int ObstacleMaxSize { get; set; }
+        public float ObstacleMaxMomentumWeatherMultiplier { get; set; }
 
         public bool TeamMode { get; set; }
         public bool CTFMode { get; set; }
