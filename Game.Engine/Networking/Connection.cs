@@ -71,11 +71,13 @@
                 // a fleet alive;
                 var followFleet = player?.Fleet;
 
+                /*
                 // if the player doesn't have a fleet alive
                 if (followFleet == null)
                     // check to see if they are spectating a fleet that's alive
                     if (SpectatingFleet != null && SpectatingFleet.Exists)
                         followFleet = SpectatingFleet;
+                */
 
                 if (followFleet == null)
                     // find someone else to watch
@@ -167,11 +169,6 @@
                     foreach (var b in updateBodies)
                     {
                         var serverBody = b.BodyUpdated;
-
-                        if (serverBody.AngularVelocity > 0)
-                        {
-
-                        }
 
                         var body = NetBody.CreateNetBody(builder,
                             Id: serverBody.ID,
@@ -413,7 +410,7 @@
                         ShootRequested = input.Shoot
                     });
 
-                    if (input.SpectateControl != null)
+                    /*if (input.SpectateControl != null)
                     {
                         switch (input.SpectateControl)
                         {
@@ -436,7 +433,7 @@
                                 break;
                         }
 
-                    }
+                    }*/
 
                     break;
             }
@@ -534,8 +531,9 @@
 
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }
