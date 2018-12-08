@@ -11,6 +11,7 @@
     [Subcommand("announce", typeof(Announce))]
     [Subcommand("connections", typeof(Connections))]
     [Subcommand("hook", typeof(Hook))]
+    [Subcommand("world", typeof(World))]
     class ServerCommand : CommandBase
     {
         private static string[] Worlds = new[]
@@ -120,6 +121,25 @@
                 hook = await API.Server.HookAsync(hook, World);
 
                 Console.WriteLine(hook);
+            }
+        }
+
+        [Subcommand("shrink", typeof(Shrink))]
+        class World : CommandBase
+        {
+            class Shrink : CommandBase
+            {
+                [Option]
+                public string World { get; set; } = null;
+
+                protected async override Task ExecuteAsync()
+                {
+                    for (int i = 4200; i > 0; i -= 10)
+                    {
+                        await API.Server.HookAsync(new { WorldSize = i }, World);
+                        await Task.Delay(100);
+                    }
+                }
             }
         }
     }
