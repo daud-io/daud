@@ -1,26 +1,11 @@
-﻿import { fetch } from "whatwg-fetch";
-import { Cache } from "./cache";
+﻿import "babel-polyfill";
+
+import { fetch } from "whatwg-fetch";
 import * as dat from "dat.gui";
 
-export const gui = new dat.GUI({ autoPlace: false });
-document.querySelector(".ansible").appendChild(gui.domElement);
-gui.domElement.style.position = "absolute";
-gui.domElement.style.bottom = "0";
-gui.domElement.style.right = "15px";
-gui.domElement.firstChild.style.maxHeight = "50vh";
-gui.domElement.firstChild.style.overflowY = "scroll";
-gui.__closeButton.style.display = "none";
-gui.closed = true;
+export const gui = new dat.GUI({ width: 500 });
 
-const hooks = {
-    Ping: new Function(),
-    Bandwidth: new Function(),
-    FPS: new Function()
-};
-
-const latencyDisplay = gui.add(hooks, "Ping");
-const bandwidthDisplay = gui.add(hooks, "Bandwidth");
-const statsDisplay = gui.add(hooks, "FPS");
+const hooks = {};
 
 const token = fetch("/api/v1/user/authenticate", {
     method: "POST",
@@ -31,7 +16,7 @@ const token = fetch("/api/v1/user/authenticate", {
         Identifier: {
             UserKey: "Administrator"
         },
-        password: ""
+        password: prompt("What is the password")
     })
 })
     .then(r => r.json())
@@ -100,13 +85,3 @@ async function send_hook(attr) {
 function bind_param(a) {
     return () => send_hook(a);
 }
-
-const connection = window.Game.primaryConnection;
-setInterval(() => {
-    statsDisplay.name(`vps:${window.Game.Stats.viewsPerSecond} ups:${window.Game.Stats.updatesPerSecond} fps:${window.Game.Stats.framesPerSecond} cs:${Cache.count}`);
-
-    if (connection !== null) {
-        bandwidthDisplay.name(`bandwidth: ${(Math.floor(connection.statBytesUpPerSecond / 102.4) / 10) * 8}Kb/s up ${(Math.floor(connection.statBytesDownPerSecond / 102.4) / 10) * 8}Kb/s down`);
-        latencyDisplay.name(`ping: ${connection.latency ? Math.floor(connection.latency * 100) / 100 + " ms" : "n/a"}`);
-    } else latencyDisplay.name("ping: n/a");
-}, 1000);
