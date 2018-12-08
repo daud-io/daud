@@ -79,8 +79,9 @@
                     PointsPerKillShip = 1,
                     PointsPerKillFleet = 55,
                     PointsPerUniverseDeath = -1,
-                    PointsMultiplierDeath = 0.5f
+                    PointsMultiplierDeath = 0.5f,
 
+                    PlayerCountGracePeriodMS = 5000
                 };
             }
         }
@@ -163,5 +164,7 @@
         public int BotRespawnDelay { get; set; }
 
         public string SpawnLocationMode { get; set; }
+
+        public int PlayerCountGracePeriodMS { get; set; }
     }
 }

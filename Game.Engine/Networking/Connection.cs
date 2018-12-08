@@ -249,7 +249,7 @@
                                 NetWorldView.AddAnnouncements(builder, announcementsVector);
 
                             var players = Player.GetWorldPlayers(world);
-                            NetWorldView.AddPlayerCount(builder, (uint)players.Count(p => p.IsAlive));
+                            NetWorldView.AddPlayerCount(builder, (uint)players.Count(p => p.IsAlive || (!p.PendingDestruction && p.DeadSince > world.Time - world.Hook.PlayerCountGracePeriodMS)));
                             NetWorldView.AddSpectatorCount(builder, (uint)players.Count(p => p.Connection?.IsSpectating ?? false));
 
                             NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));

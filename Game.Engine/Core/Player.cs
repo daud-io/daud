@@ -24,6 +24,7 @@
         public List<string> Messages { get; set; } = new List<string>();
 
         public bool IsAlive { get; set; } = false;
+        public long DeadSince { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
 
@@ -193,6 +194,7 @@
         {
             if (IsAlive)
             {
+                DeadSince = World.Time;
                 OnDeath(token);
 
                 if (Fleet != null)
