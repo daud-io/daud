@@ -6,12 +6,14 @@
         private static readonly World Other;
         private static readonly World Duel;
         private static readonly World CTF;
+        private static readonly World Team;
 
         static Worlds()
         {
             Default = new World();
             Other = WorldOther();
             Duel = WorldDuel();
+            Team = WorldTeam();
             CTF = WorldCTF();
         }
 
@@ -45,6 +47,23 @@
             };
         }
 
+        private static World WorldTeam()
+        {
+            var hook = Hook.Default;
+            hook.BotBase = 0;
+            hook.Obstacles = 3;
+            hook.PointsPerKillFleet = 1;
+            hook.PointsPerKillShip = 0;
+            hook.PointsPerUniverseDeath = -1;
+            hook.PointsMultiplierDeath = 1.0f;
+            hook.TeamMode = true;
+
+            return new World
+            {
+                Hook = hook
+            };
+        }
+
         private static World WorldCTF()
         {
             var hook = Hook.Default;
@@ -64,10 +83,13 @@
             {
                 case "duel":
                     return Duel;
+                case "team":
+                    return Team;
                 case "other":
                     return Other;
                 case "ctf":
                     return CTF;
+
                 case "default":
                 default:
                     return Default;

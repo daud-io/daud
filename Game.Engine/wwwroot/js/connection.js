@@ -10,7 +10,6 @@ export class Connection {
         this.onConnected = function() {};
         this.reloading = false;
         this.connected = false;
-        this.connect();
 
         this.statBytesUp = 0;
         this.statBytesDown = 0;

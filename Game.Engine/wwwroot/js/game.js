@@ -38,6 +38,11 @@ var lastPosition = false;
 Controls.registerCanvas(canvas);
 
 var connection = new Connection();
+if (window.location.hash) 
+    connection.connect(window.location.hash.substring(1));
+else
+    connection.connect();
+
 window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 
@@ -190,9 +195,13 @@ document.getElementById("spawn").addEventListener("click", function () {
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
 });
 
-document.getElementById("spectate").addEventListener("click", function () {
+function startSpectate() {
     isSpectating = true;
     document.body.classList.add("spectating");
+}
+
+document.getElementById("spectate").addEventListener("click", function () {
+    startSpectate();
 });
 
 document.addEventListener("keydown", function(e) {
@@ -233,7 +242,7 @@ var viewCounter = 0;
 var updateCounter = 0;
 var lastCamera = { X: 0, Y: 0 };
 
-setInterval(function() {
+function doPing() {
     window.Game.Stats.framesPerSecond = frameCounter;
     window.Game.Stats.viewsPerSecond = viewCounter;
     window.Game.Stats.updatesPerSecond = updateCounter;
@@ -247,7 +256,10 @@ setInterval(function() {
     frameCounter = 0;
     viewCounter = 0;
     updateCounter = 0;
-}, 1000);
+}
+
+doPing();
+setInterval(doPing, 1000);
 
 // Game Loop
 function gameLoop() {
@@ -301,3 +313,18 @@ function gameLoop() {
 }
 
 requestAnimationFrame(gameLoop);
+
+function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split('=');
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
+}
+
+var query = parseQuery(window.location.search);
+if (query.spectate && query.spectate !== "0") {
+    startSpectate();
+}

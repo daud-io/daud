@@ -12,6 +12,7 @@ function sprite(name, scale, scaleToSize) {
 }
 
 var flagScale = 0.005;
+
 export var sprites = {
     ship0: sprite("ship0"),
     ship_green: sprite("ship_green"),
@@ -86,6 +87,27 @@ export var spriteIndices = [
     "flag_red_4",
     "ctf_base"
 ];
+
+function addSprite(name, size, file) {
+    sprites[name] = sprite(file || name, size, size);
+    spriteIndices.push(name);
+}
+
+addSprite("ctf_score_final");
+addSprite("ctf_score_final_blue");
+addSprite("ctf_score_final_red");
+addSprite("ctf_score_left_0");
+addSprite("ctf_score_left_1");
+addSprite("ctf_score_left_2");
+addSprite("ctf_score_left_3");
+addSprite("ctf_score_left_4");
+addSprite("ctf_score_right_0");
+addSprite("ctf_score_right_1");
+addSprite("ctf_score_right_2");
+addSprite("ctf_score_right_3");
+addSprite("ctf_score_right_4");
+addSprite("ctf_score_stripes");
+
 export class Renderer {
     constructor(context, settings) {
         settings = settings || {};

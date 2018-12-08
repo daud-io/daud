@@ -36,6 +36,20 @@
         flag_red_2,
         flag_red_3,
         flag_red_4,
-        ctf_base
+        ctf_base,
+        ctf_score_final,
+        ctf_score_final_blue,
+        ctf_score_final_red,
+        ctf_score_left_0,
+        ctf_score_left_1,
+        ctf_score_left_2,
+        ctf_score_left_3,
+        ctf_score_left_4,
+        ctf_score_right_0,
+        ctf_score_right_1,
+        ctf_score_right_2,
+        ctf_score_right_3,
+        ctf_score_right_4,
+        ctf_score_stripes
     }
 }
