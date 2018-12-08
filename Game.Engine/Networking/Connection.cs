@@ -41,6 +41,8 @@
         public uint Bandwidth { get; set; } = 100;
         public uint Latency { get; set; } = 0;
 
+        public bool IsSpectating { get; set; } = false;
+
         private Fleet SpectatingFleet = null;
 
         public Connection(ILogger<Connection> logger)
@@ -248,7 +250,7 @@
 
                             var players = Player.GetWorldPlayers(world);
                             NetWorldView.AddPlayerCount(builder, (uint)players.Count(p => p.IsAlive));
-                            NetWorldView.AddSpectatorCount(builder, (uint)players.Count(p => !p.IsAlive));
+                            NetWorldView.AddSpectatorCount(builder, (uint)players.Count(p => p.Connection?.IsSpectating ?? false));
 
                             NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
                             NetWorldView.AddCooldownShoot(builder, (byte)((player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
@@ -426,29 +428,33 @@
                         ShootRequested = input.Shoot
                     });
 
-                    if (input.SpectateControl != null)
+                    switch (input.SpectateControl)
                     {
-                        switch (input.SpectateControl)
-                        {
-                            case "action:next":
-                                var next = 
-                                    Player.GetWorldPlayers(world)
-                                        .Where(p => p.IsAlive)
-                                        .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
-                                        .OrderBy(p => p?.Fleet?.ID)
-                                        .FirstOrDefault()?.Fleet;
+                        case "action:next":
+                            var next = 
+                                Player.GetWorldPlayers(world)
+                                    .Where(p => p.IsAlive)
+                                    .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
+                                    .OrderBy(p => p?.Fleet?.ID)
+                                    .FirstOrDefault()?.Fleet;
                                 
-                                if (next == null)
-                                    next = Player.GetWorldPlayers(world)
-                                        .Where(p => p.IsAlive)
-                                        .OrderBy(p => p?.Fleet?.ID)
-                                        .FirstOrDefault()?.Fleet;
+                            if (next == null)
+                                next = Player.GetWorldPlayers(world)
+                                    .Where(p => p.IsAlive)
+                                    .OrderBy(p => p?.Fleet?.ID)
+                                    .FirstOrDefault()?.Fleet;
 
-                                SpectatingFleet = next;
+                            SpectatingFleet = next;
+                            IsSpectating = true;
+                            break;
 
-                                break;
-                        }
+                        case "spectating":
+                            IsSpectating = true;
+                            break;
 
+                        default:
+                            IsSpectating = false;
+                            break;
                     }
 
                     break;
