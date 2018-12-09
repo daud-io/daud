@@ -40,8 +40,8 @@
         {
             app.Use(async (httpContext, next) =>
             {
-                httpContext.Response.Headers[HeaderNames.Pragma] = "no-cache";
-                httpContext.Response.Headers[HeaderNames.CacheControl] = "no-cache";
+                //httpContext.Response.Headers[HeaderNames.Pragma] = "no-cache";
+                //httpContext.Response.Headers[HeaderNames.CacheControl] = "no-cache";
                 await next();
             });
 

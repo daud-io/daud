@@ -134,7 +134,8 @@ a {
     width: 100%;
 }
 
-.spectating #nipple-controls {
+.spectating #nipple-controls,
+.loading #nipple-controls {
     visibility: hidden;
 }
 
