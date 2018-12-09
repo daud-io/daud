@@ -28,9 +28,16 @@ function parseQuery(queryString) {
 
 function save() {
     var cookieOptions = { expires: 300 };
+    var reload = false;
 
-    Settings.theme = document.getElementById("settingsThemeSelector").value;
-    Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value
+    if (Settings.theme != document.getElementById("settingsThemeSelector").value) {
+        Settings.theme = document.getElementById("settingsThemeSelector").value;
+        reload = true;
+    }
+    if (Settings.themeCustom != document.getElementById("settingsThemeSelectorCustom").value) {
+        Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value
+        reload = true;
+    }
 
     Settings.background = document.getElementById("settingsBackground").value
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
@@ -42,6 +49,9 @@ function save() {
     Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
 
     Cookies.set("settings", Settings, cookieOptions)
+
+    if (reload)
+        window.location.reload();
 }
 
 function reset() {
@@ -70,12 +80,6 @@ function load() {
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
-
-        if (Settings.themeCustom) {
-            theme(Settings.themeCustom);
-        } else if (Settings.theme) {
-            theme(Settings.theme);
-        } // no good way to reset to default :(
     }
     catch
     {
@@ -122,11 +126,8 @@ async function theme(v) {
 load();
 
 var qs = parseQuery(window.location.search);
-if (qs.themeCustom) {
+if (qs.themeCustom)
     Settings.themeCustom = qs.themeCustom;
-    if (Settings.themeCustom)
-        theme(Settings.themeCustom);
-}
 if (qs.background)
     Settings.background = qs.background;
 if (qs.leaderboardEnabled)
@@ -137,6 +138,13 @@ if (qs.namesEnabled)
     Settings.namesEnabled = qs.namesEnabled == 'true';
 if (qs.bandwidth)
     Settings.bandwidth = Number(qs.bandwidth);
+
+
+if (Settings.themeCustom) {
+    theme(Settings.themeCustom);
+} else if (Settings.theme) {
+    theme(Settings.theme);
+} // no good way to reset to default :(
 
 var gear = document.getElementById("gear");
 document.getElementById("settings").addEventListener("click", function() {
