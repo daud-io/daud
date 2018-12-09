@@ -16,6 +16,16 @@ export var Settings = {
     showHitboxes: false
 };
 
+function parseQuery(queryString) {
+    var query = {};
+    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split('=');
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+    }
+    return query;
+}
+
 function save() {
     var cookieOptions = { expires: 300 };
 
@@ -110,6 +120,23 @@ async function theme(v) {
 }
 
 load();
+
+var qs = parseQuery(window.location.search);
+if (qs.themeCustom) {
+    Settings.themeCustom = qs.themeCustom;
+    if (Settings.themeCustom)
+        theme(Settings.themeCustom);
+}
+if (qs.background)
+    Settings.background = qs.background;
+if (qs.leaderboardEnabled)
+    Settings.leaderboardEnabled = qs.leaderboardEnabled == 'true';
+if (qs.hudEnabled)
+    Settings.hudEnabled = qs.hudEnabled == 'true';
+if (qs.namesEnabled)
+    Settings.namesEnabled = qs.namesEnabled == 'true';
+if (qs.bandwidth)
+    Settings.bandwidth = Number(qs.bandwidth);
 
 var gear = document.getElementById("gear");
 document.getElementById("settings").addEventListener("click", function() {
