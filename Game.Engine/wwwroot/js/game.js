@@ -12,6 +12,7 @@ import { Controls } from "./controls";
 import { Connection } from "./connection";
 import { token } from "./discord";
 import { Settings } from "./settings";
+import { Events } from "./events";
 import "./hintbox";
 
 var canvas = document.getElementById("gameCanvas");
@@ -38,7 +39,7 @@ var lastPosition = false;
 Controls.registerCanvas(canvas);
 
 var connection = new Connection();
-if (window.location.hash) 
+if (window.location.hash)
     connection.connect(window.location.hash.substring(1));
 else
     connection.connect();
@@ -91,6 +92,7 @@ connection.onLeaderboard = function(lb) {
     leaderboard.position = lastPosition;
 };
 
+var lastAliveState = true;
 connection.onView = function(newView) {
     viewCounter++;
 
@@ -99,14 +101,15 @@ connection.onView = function(newView) {
 
     view.isAlive = newView.isAlive();
 
-    // this is probably very slow and should be optimized
-    document.body.classList.remove("loading");
-    if (view.isAlive) {
+    if (view.isAlive && !lastAliveState) {
+        lastAliveState = true;
         document.body.classList.remove("dead");
         document.body.classList.add("alive");
-    } else {
+    } else if (!view.isAlive && lastAliveState) {
+        lastAliveState = false;
         document.body.classList.remove("alive");
         document.body.classList.add("dead");
+        Events.Death();
     }
 
     lastOffset = view.time - performance.now();
@@ -187,16 +190,20 @@ setInterval(function() {
 }, 10);
 
 document.getElementById("worldSelector").addEventListener("change", function () {
-    cache.clear();
-    connection.connect(document.getElementById("worldSelector").value);
+    var world = document.getElementById("worldSelector").value;
+    connection.connect(world);
+    cache = new Cache();
+    Events.ChangeRoom(world);
 });
 
 document.getElementById("spawn").addEventListener("click", function () {
+    Events.Spawn();
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
 });
 
 function startSpectate() {
     isSpectating = true;
+    Events.Spectate();
     document.body.classList.add("spectating");
 }
 
@@ -313,6 +320,8 @@ function gameLoop() {
 }
 
 requestAnimationFrame(gameLoop);
+
+document.body.classList.remove("loading");
 
 function parseQuery(queryString) {
     var query = {};
