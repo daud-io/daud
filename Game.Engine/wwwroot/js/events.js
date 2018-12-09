@@ -1,5 +1,6 @@
 ﻿export class Events {
     static Report(category, action) {
+        /*
         if (!ga)
             return;
 
@@ -16,6 +17,7 @@
             console.log("exception in Events.Report");
             console.log(e);
         }
+        */
     }
 
     static Spawn() {
