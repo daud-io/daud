@@ -93,6 +93,7 @@ connection.onLeaderboard = function(lb) {
 };
 
 var lastAliveState = true;
+var aliveSince = false;
 connection.onView = function(newView) {
     viewCounter++;
 
@@ -109,7 +110,8 @@ connection.onView = function(newView) {
         lastAliveState = false;
         document.body.classList.remove("alive");
         document.body.classList.add("dead");
-        Events.Death();
+
+        Events.Death((gameTime - aliveSince) / 1000);
     }
 
     lastOffset = view.time - performance.now();
@@ -225,6 +227,7 @@ document.getElementById("worldSelector").addEventListener("change", function () 
 
 document.getElementById("spawn").addEventListener("click", function () {
     Events.Spawn();
+    aliveSince = gameTime;
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
 });
 
