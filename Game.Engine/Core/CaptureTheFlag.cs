@@ -27,7 +27,9 @@
             var players = Player.GetWorldPlayers(World);
 
             foreach (var team in Teams)
-                entries.AddRange(players.Where(p => p.Color == team.ColorName)
+                entries.AddRange(players
+                    .Where(p => p.Color == team.ColorName)
+                    .Where(p => p.IsAlive)
                     .Select(p => new Leaderboard.Entry
                     {
                         Color = team.ColorName,
