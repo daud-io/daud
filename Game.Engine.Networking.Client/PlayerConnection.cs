@@ -48,10 +48,21 @@
             }).Wait();
         }
 
-        private async Task HandleNetPing(NetPing netPing)
+        private Task HandleNetPing(NetPing netPing)
         {
-            //Console.WriteLine("Ping");
+            Console.WriteLine("Ping");
+
+            return Task.FromResult(true);
         }
+
+        public IEnumerable<ProjectedBody> Bodies
+        {
+            get
+            {
+                return Cache.Bodies;
+            }
+        }
+
 
         private async Task SendPingAsync()
         {

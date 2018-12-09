@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context local server reset"
+      "commandLineArgs": "--context daudio player test --replicas=1"
     }
   }
 }

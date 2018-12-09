@@ -2,6 +2,7 @@
 {
     using Game.API.Client;
     using System;
+    using System.Linq;
     using System.Numerics;
     using System.Threading.Tasks;
 
@@ -40,6 +41,8 @@
 
             this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 100;
             this.Connection.ControlIsShooting = AutoFire;
+
+            Console.WriteLine($"objects: {Connection.Bodies.Count()}");
 
             await this.Connection.SendControlInputAsync();
         }
