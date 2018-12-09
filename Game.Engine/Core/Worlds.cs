@@ -66,7 +66,7 @@
         {
             var hook = Hook.Default;
             hook.BotBase = 0;
-            hook.Obstacles = 0;
+            hook.Obstacles = 7;
             hook.CTFMode = true;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
