@@ -12,18 +12,35 @@
         private List<Base> Bases = new List<Base>();
         private List<Team> Teams = new List<Team>();
 
+        public uint GameRestartTime { get; set; } = 0;
+
         public Leaderboard LeaderboardGenerator()
         {
+            var entries = Teams.Select(t => new Leaderboard.Entry
+            {
+                Color = t.ColorName,
+                Name = t.ColorName,
+                Score = t.Score,
+                Position = t.Flag?.Position ?? Vector2.Zero
+            }).ToList();
+
+            var players = Player.GetWorldPlayers(World);
+
+            foreach (var team in Teams)
+                entries.AddRange(players.Where(p => p.Color == team.ColorName)
+                    .Select(p => new Leaderboard.Entry
+                    {
+                        Color = team.ColorName,
+                        Name = p.Name,
+                        Position = p.Fleet?.FleetCenter ?? Vector2.Zero,
+                        Score = p.Score
+                    }));
+
             return new Leaderboard
             {
-                Type = "Team",
+                Type = "CTF",
                 Time = World.Time,
-                Entries = Teams.Select(t => new Leaderboard.Entry
-                {
-                    Color = t.ColorName,
-                    Name = t.ColorName,
-                    Score = t.Score
-                }).ToList()
+                Entries = entries
             };
         }
 
@@ -56,6 +73,8 @@
             var b = new Base(basePosition, team);
             var flag = new Flag(flagSpriteBase, team, b);
             b.Flag = flag;
+            team.Flag = flag;
+
             flag.Init(World);
             b.Init(World);
             Flags.Add(flag);
@@ -107,6 +126,26 @@
 
         void IActor.Think()
         {
+
+            if (GameRestartTime > 0 && World.Time > GameRestartTime)
+            {
+                GameRestartTime = 0;
+                foreach (var team in Teams)
+                {
+                    team.Score = 0;
+                    team.Flag.CarriedBy = null;
+                    team.Flag.ReturnToBase();
+                }
+
+                foreach (var player in Player.GetWorldPlayers(World))
+                {
+                    player.Score = 0;
+                }
+            }
+
+            foreach (var team in Teams)
+                if (team.Score >= 5 && GameRestartTime == 0)
+                    GameRestartTime = World.Time + 10000;
         }
 
         private class Team
@@ -114,6 +153,7 @@
             public string ColorName { get; set; }
             public Vector2 BaseLocation { get; set; }
             public int Score { get; set; }
+            public Flag Flag { get; set; }
 
             public void Scored()
             {
@@ -177,7 +217,7 @@
             private List<Sprites> SpriteSet = new List<Sprites>();
             private uint NextSpriteTime = 0;
             private int SpriteIndex = 0;
-            private Fleet CarriedBy = null;
+            public Fleet CarriedBy = null;
 
             public Flag(string baseSpriteName, Team team, Base b)
             {

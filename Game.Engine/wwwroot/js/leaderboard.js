@@ -29,7 +29,7 @@ export class Leaderboard {
             const margin = 20;
             const arrow = sprites["arrow"];
 
-            if (this.data.Type == "Team") {
+            if (this.data.Type == "CTF") {
                 var self = this;
                 var findTeam = function (teamName) {
                     for (var i = 0; i < self.data.Entries.length; i++) {
@@ -45,7 +45,7 @@ export class Leaderboard {
                 var cyanScore = Math.min(cyan.Score, 5);
                 var redScore = Math.min(red.Score, 5);
 
-                var x = this.canvas.width - 300;
+                var x = this.canvas.width/2 - 310/2;
                 var y = 15;
                 var w = 300;
                 var h = 100;
@@ -65,6 +65,36 @@ export class Leaderboard {
                     draw("ctf_score_final_red");
                 else
                     draw("ctf_score_final");
+
+                for (let i = 0; i < this.data.Entries.length; i++) {
+                    const entry = this.data.Entries[i];
+
+                    ctx.fillStyle = "white";
+                    ctx.fillText(entry.Name || "Unknown Fleet",
+                        this.canvas.width - width, rowHeight + i * rowHeight);
+                    ctx.fillText(entry.Score,
+                        this.canvas.width - 60, rowHeight + i * rowHeight);
+
+                    ctx.fillStyle = entry.Color;
+
+                    const x = this.canvas.width - width - rowHeight;
+                    const y = i * rowHeight + 10;
+
+                    ctx.fillRect(x, y, rowHeight, rowHeight);
+
+                    if (relativeTo) {
+                        const angle = Math.atan2(entry.Position.Y - relativeTo.Y, entry.Position.X - relativeTo.X);
+
+                        ctx.save();
+                        ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
+                        const w = arrow.image.width;
+                        const h = arrow.image.height;
+                        ctx.rotate(angle);
+                        ctx.scale(arrow.scale, arrow.scale);
+                        ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
+                        ctx.restore();
+                    }
+                }
             }
             else {
 

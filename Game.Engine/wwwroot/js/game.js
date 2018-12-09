@@ -200,6 +200,7 @@ document.getElementById("worldSelector").addEventListener("change", function () 
             document.getElementById("shipSelector").innerHTML =
                 '<option value="red">red</option>' +
                 '<option value="cyan">cyan</option>';
+            document.getElementById("shipSelector").value = "red";
             break;
         default:
             document.getElementById("shipSelector").innerHTML =
