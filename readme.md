@@ -1,6 +1,9 @@
 # Daud.io - game
 https://daud.io
 
+# Deploying to heroku
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/andylippitt/iogame)
+
 # Setting Up on a Mac
 
 ### Installing Tools
