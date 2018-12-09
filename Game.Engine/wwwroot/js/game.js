@@ -93,6 +93,7 @@ connection.onLeaderboard = function(lb) {
 };
 
 var lastAliveState = true;
+var aliveSince = false;
 connection.onView = function(newView) {
     viewCounter++;
 
@@ -109,7 +110,8 @@ connection.onView = function(newView) {
         lastAliveState = false;
         document.body.classList.remove("alive");
         document.body.classList.add("dead");
-        Events.Death();
+
+        Events.Death((gameTime - aliveSince) / 1000);
     }
 
     lastOffset = view.time - performance.now();
@@ -194,10 +196,38 @@ document.getElementById("worldSelector").addEventListener("change", function () 
     connection.connect(world);
     cache = new Cache();
     Events.ChangeRoom(world);
+
+    switch (world) {
+        case "ctf":
+            // this is super hacky... 
+            // intend to make a greeting message from the server on connection
+            // that explains the allowed options in the room
+
+            document.getElementById("shipSelector").innerHTML =
+                '<option value="cyan">cyan</option>' +
+                '<option value="red">red</option>';
+
+            if (Controls.color != "cyan" && Controls.color != "red") {
+                Controls.ship = "ship_cyan";
+                Controls.color = "cyan";
+            }
+
+            break;
+        default:
+            document.getElementById("shipSelector").innerHTML =
+                '<option value="green">green</option>' +
+                '<option value="orange">orange</option>' +
+                '<option value="pink">pink</option>' +
+                '<option value="red">red</option>' +
+                '<option value="cyan">cyan</option>' +
+                '<option value="yellow">yellow</option>';
+            break;
+    }
 });
 
 document.getElementById("spawn").addEventListener("click", function () {
     Events.Spawn();
+    aliveSince = gameTime;
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
 });
 

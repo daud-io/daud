@@ -125,7 +125,7 @@
 
                         if (followBody != null)
                         {
-                            var halfViewport = new Vector2(3200, 3200);
+                            var halfViewport = new Vector2(3300, 3300);
 
                             BodyCache.Update(
                                 world.Bodies,

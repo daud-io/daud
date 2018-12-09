@@ -10,25 +10,93 @@
         private World World = null;
         private List<Flag> Flags = new List<Flag>();
         private List<Base> Bases = new List<Base>();
+        private List<Team> Teams = new List<Team>();
+
+        public uint GameRestartTime { get; set; } = 0;
+
+        public Leaderboard LeaderboardGenerator()
+        {
+            var entries = Teams.Select(t => new Leaderboard.Entry
+            {
+                Color = t.ColorName,
+                Name = t.ColorName,
+                Score = t.Score,
+                Position = t.Flag?.Position ?? Vector2.Zero
+            }).ToList();
+
+            var players = Player.GetWorldPlayers(World);
+
+            foreach (var team in Teams)
+                entries.AddRange(players
+                    .Where(p => p.Color == team.ColorName)
+                    .Where(p => p.IsAlive)
+                    .Select(p => new Leaderboard.Entry
+                    {
+                        Color = team.ColorName,
+                        Name = p.Name,
+                        Position = p.Fleet?.FleetCenter ?? Vector2.Zero,
+                        Score = p.Score
+                    }));
+
+            return new Leaderboard
+            {
+                Type = "CTF",
+                Time = World.Time,
+                Entries = entries
+            };
+        }
+
+        public Vector2 FleetSpawnPosition(Fleet fleet)
+        {
+            var color = fleet?.Owner?.Color;
+
+            if (color != null)
+            {
+                var team = Teams.FirstOrDefault(t => t.ColorName == color);
+                if (team != null)
+                {
+                    return team.BaseLocation;
+                }
+            }
+
+            return Vector2.Zero;
+        }
 
         private void CreateTeam(string teamName, string flagSpriteBase, Vector2 basePosition)
         {
-            var b = new Base(basePosition, teamName);
-            var flag = new Flag(flagSpriteBase, teamName, b);
+            var team = new Team
+            {
+                BaseLocation = basePosition,
+                ColorName = teamName
+            };
+
+            Teams.Add(team);
+
+            var b = new Base(basePosition, team);
+            var flag = new Flag(flagSpriteBase, team, b);
+            b.Flag = flag;
+            team.Flag = flag;
+
             flag.Init(World);
             b.Init(World);
             Flags.Add(flag);
             Bases.Add(b);
+
 
             flag.ReturnToBase();
         }
 
         void IActor.CreateDestroy()
         {
+            if (World.Hook.CTFMode)
+                World.Hook.TeamMode = true;
+
             if (World.Hook.CTFMode && Flags.Count == 0)
             {
                 CreateTeam("cyan", "flag_blue", new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
                 CreateTeam("red", "flag_red", new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
+                World.FleetSpawnPositionGenerator = this.FleetSpawnPosition;
+                World.LeaderboardGenerator = this.LeaderboardGenerator;
             }
 
             if (!World.Hook.CTFMode && Flags.Count > 0)
@@ -41,6 +109,9 @@
 
                 Flags.Clear();
                 Bases.Clear();
+
+                World.FleetSpawnPositionGenerator = null;
+                World.LeaderboardGenerator = null;
             }
         }
 
@@ -57,25 +128,68 @@
 
         void IActor.Think()
         {
+
+            if (GameRestartTime > 0 && World.Time > GameRestartTime)
+            {
+                GameRestartTime = 0;
+                foreach (var team in Teams)
+                {
+                    team.Score = 0;
+                    team.Flag.CarriedBy = null;
+                    team.Flag.ReturnToBase();
+                }
+
+                foreach (var player in Player.GetWorldPlayers(World))
+                {
+                    player.Score = 0;
+                }
+            }
+
+            foreach (var team in Teams)
+                if (team.Score >= 5 && GameRestartTime == 0)
+                    GameRestartTime = World.Time + 10000;
+        }
+
+        private class Team
+        {
+            public string ColorName { get; set; }
+            public Vector2 BaseLocation { get; set; }
+            public int Score { get; set; }
+            public Flag Flag { get; set; }
+
+            public void Scored()
+            {
+                Score++;
+            }
         }
 
         private class Base : ActorBody, ICollide
         {
-            private readonly string Team;
+            private readonly Team Team;
+            public Flag Flag { get; set; }
 
-            public Base(Vector2 position, string team)
+            public Base(Vector2 position, Team team)
             {
                 this.Team = team;
                 this.Position = position;
                 this.Sprite = Sprites.ctf_base;
-                this.AngularVelocity = 0.1f;
+                this.AngularVelocity = 0.03f;
                 this.Size = 200;
             }
 
             void ICollide.CollisionExecute(Body projectedBody)
             {
                 var flag = projectedBody as Flag;
+
+                this.Team.Scored();
+
                 flag.ReturnToBase();
+            }
+
+            private bool FlagIsHome()
+            {
+                return Vector2.Distance(Flag.Position, this.Position)
+                    < (Flag.Size + this.Size);
             }
 
             bool ICollide.IsCollision(Body projectedBody)
@@ -83,6 +197,9 @@
                 if (projectedBody is Flag flag)
                 {
                     if (flag.Team == this.Team)
+                        return false;
+
+                    if (!FlagIsHome())
                         return false;
 
                     return Vector2.Distance(projectedBody.Position, this.Position)
@@ -95,16 +212,16 @@
         private class Flag : ActorBody, ICollide
         {
             private readonly uint SpriteAnimationInterval = 100;
-            public readonly string Team;
+            public readonly Team Team;
             private readonly Base Base;
 
             private ActorGroup FlagGroup = new ActorGroup();
             private List<Sprites> SpriteSet = new List<Sprites>();
             private uint NextSpriteTime = 0;
             private int SpriteIndex = 0;
-            private Fleet CarriedBy = null;
+            public Fleet CarriedBy = null;
 
-            public Flag(string baseSpriteName, string team, Base b)
+            public Flag(string baseSpriteName, Team team, Base b)
             {
                 Size = 200;
                 Team = team;
@@ -181,7 +298,7 @@
 
                 if (fleet != null && CarriedBy == null && !(fleet.Owner is Robot))
                 {
-                    if (fleet.Owner.Color == Team)
+                    if (fleet.Owner.Color == Team.ColorName)
                         ReturnToBase();
                     else
                         CarriedBy = fleet;
