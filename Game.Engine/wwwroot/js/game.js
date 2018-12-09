@@ -194,6 +194,23 @@ document.getElementById("worldSelector").addEventListener("change", function () 
     connection.connect(world);
     cache = new Cache();
     Events.ChangeRoom(world);
+
+    switch (world) {
+        case "ctf":
+            document.getElementById("shipSelector").innerHTML =
+                '<option value="red">red</option>' +
+                '<option value="cyan">cyan</option>';
+            break;
+        default:
+            document.getElementById("shipSelector").innerHTML =
+                '<option value="green">green</option>' +
+                '<option value="orange">orange</option>' +
+                '<option value="pink">pink</option>' +
+                '<option value="red">red</option>' +
+                '<option value="cyan">cyan</option>' +
+                '<option value="yellow">yellow</option>';
+            break;
+    }
 });
 
 document.getElementById("spawn").addEventListener("click", function () {

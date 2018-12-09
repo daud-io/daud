@@ -59,9 +59,9 @@ export class Leaderboard {
                 draw(`ctf_score_left_${Math.min(cyanScore, 4)}`);
                 draw(`ctf_score_right_${Math.min(redScore, 4)}`);
 
-                if (cyan.Score == 5)
+                if (cyanScore >= 5)
                     draw("ctf_score_final_blue");
-                else if (red.Score == 5)
+                else if (redScore >= 5)
                     draw("ctf_score_final_red");
                 else
                     draw("ctf_score_final");
