@@ -27,6 +27,7 @@
             var players = Player.GetWorldPlayers(World);
 
             foreach (var team in Teams)
+            {
                 entries.AddRange(players
                     .Where(p => p.Color == team.ColorName)
                     .Where(p => p.IsAlive)
@@ -37,6 +38,7 @@
                         Position = p.Fleet?.FleetCenter ?? Vector2.Zero,
                         Score = p.Score
                     }));
+            }
 
             return new Leaderboard
             {
@@ -48,6 +50,9 @@
 
         public Vector2 FleetSpawnPosition(Fleet fleet)
         {
+            const int POINTS_TO_TEST = 50;
+            const int MAXIMUM_SEARCH_SIZE = 4000;
+
             var color = fleet?.Owner?.Color;
 
             if (color != null)
@@ -55,7 +60,28 @@
                 var team = Teams.FirstOrDefault(t => t.ColorName == color);
                 if (team != null)
                 {
-                    return team.BaseLocation;
+                    var points = new List<Vector2>();
+
+                    for (var i = 0; i < POINTS_TO_TEST; i++)
+                    {
+                        points.Add(World.RandomPosition());
+                    }
+
+                    return points.Select(p =>
+                    {
+                        var closeBodies = World.BodiesNear(p, MAXIMUM_SEARCH_SIZE)
+                                .OfType<Ship>();
+                        return new
+                        {
+                            Closest = closeBodies.Any()
+                                ? closeBodies.Min(s => Vector2.Distance(s.Position, p))
+                                 + (World.Hook.WorldSize * 2 - Vector2.Distance(p, team.BaseLocation))
+                                : MAXIMUM_SEARCH_SIZE,
+                            Point = p
+                        };
+                    })
+                    .OrderByDescending(location => location.Closest)
+                    .First().Point;
                 }
             }
 
@@ -89,7 +115,9 @@
         void IActor.CreateDestroy()
         {
             if (World.Hook.CTFMode)
+            {
                 World.Hook.TeamMode = true;
+            }
 
             if (World.Hook.CTFMode && Flags.Count == 0)
             {
@@ -102,10 +130,14 @@
             if (!World.Hook.CTFMode && Flags.Count > 0)
             {
                 foreach (var flag in Flags)
+                {
                     flag.Destroy();
+                }
 
                 foreach (var b in Bases)
+                {
                     b.Destroy();
+                }
 
                 Flags.Clear();
                 Bases.Clear();
@@ -146,8 +178,12 @@
             }
 
             foreach (var team in Teams)
+            {
                 if (team.Score >= 5 && GameRestartTime == 0)
+                {
                     GameRestartTime = World.Time + 10000;
+                }
+            }
         }
 
         private class Team
@@ -208,13 +244,17 @@
                 if (projectedBody is Flag flag)
                 {
                     if (flag.Team == this.Team)
+                    {
                         return false;
+                    }
 
                     if (!FlagIsHome())
+                    {
                         return false;
+                    }
 
                     return Vector2.Distance(projectedBody.Position, this.Position)
-                        < (projectedBody.Size + this.Size);
+                            < (projectedBody.Size + this.Size);
                 }
                 return false;
             }
@@ -232,8 +272,6 @@
             private int SpriteIndex = 0;
             public Fleet CarriedBy = null;
 
-            public float OriginalShipDrag = 0;
-
             public Flag(string baseSpriteName, Team team, Base b)
             {
                 Size = 200;
@@ -246,13 +284,19 @@
                 while (!done)
                 {
                     if (Enum.TryParse<Sprites>($"{baseSpriteName}_{i++}", out var result))
+                    {
                         SpriteSet.Add(result);
+                    }
                     else
+                    {
                         done = true;
+                    }
                 }
 
                 if (SpriteSet.Any())
+                {
                     Sprite = SpriteSet[0];
+                }
             }
 
             public override void Init(World world)
@@ -285,8 +329,9 @@
                 else
                 {
                     if (CarriedBy != null)
-                        foreach (var ship in CarriedBy.Ships)
-                            ship.Drag = OriginalShipDrag;
+                    {
+                        CarriedBy.Burden = 0;
+                    }
 
                     CarriedBy = null;
                     this.Momentum = new Vector2(0, 0);
@@ -305,8 +350,9 @@
             public void ReturnToBase()
             {
                 if (CarriedBy != null)
-                    foreach (var ship in CarriedBy.Ships)
-                        ship.Drag = OriginalShipDrag;
+                {
+                    CarriedBy.Burden = 0;
+                }
 
                 this.Position = Base.Position;
                 this.CarriedBy = null;
@@ -321,14 +367,17 @@
                     if (fleet != null && CarriedBy == null && !(fleet.Owner is Robot))
                     {
                         if (fleet.Owner.Color == Team.ColorName)
+                        {
                             ReturnToBase();
+                        }
                         else
                         {
                             CarriedBy = fleet;
 
                             if (CarriedBy != null)
-                                foreach (var s in CarriedBy.Ships)
-                                    s.Drag = World.Hook.CTFCarryDrag;
+                            {
+                                CarriedBy.Burden = World.Hook.CTFCarryBurden;
+                            }
                         }
                     }
                 }
@@ -343,10 +392,12 @@
                 if (projectedBody is Ship ship)
                 {
                     if (ship.Abandoned)
+                    {
                         return false;
+                    }
 
                     return Vector2.Distance(projectedBody.Position, this.Position)
-                        < (projectedBody.Size + this.Size);
+                            < (projectedBody.Size + this.Size);
                 }
 
                 // consider dropping flags... drop is not working out well though

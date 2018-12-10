@@ -41,6 +41,8 @@
         public Vector2 FleetCenter = Vector2.Zero;
         public Vector2 FleetMomentum = Vector2.Zero;
 
+        public float Burden { get; set; } = 0f;
+
         public Sprites BulletSprite
         {
             get
@@ -215,8 +217,8 @@
                 Flock(ship);
 
                 ship.ThrustAmount = isBoosting
-                    ? BoostThrust
-                    : BaseThrustM * Ships.Count + BaseThrustB;
+                    ? BoostThrust * (1-Burden)
+                    : (BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
 
                 ship.Drag = isBoosting
                     ? 1.0f

@@ -55,7 +55,7 @@
 
                     TeamMode = false,
                     CTFMode = false,
-                    CTFCarryDrag = 0.90f,
+                    CTFCarryBurden = 0.2f,
 
                     SpawnShipCount = 5,
 
@@ -143,7 +143,7 @@
 
         public bool TeamMode { get; set; }
         public bool CTFMode { get; set; }
-        public float CTFCarryDrag { get; set; }
+        public float CTFCarryBurden { get; set; }
 
         public int LeaderboardRefresh { get; set; } = 750;
 
