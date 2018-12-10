@@ -319,7 +319,8 @@
             {
                 base.Think();
 
-                if (CarriedBy?.Owner?.IsAlive ?? false)
+                if (CarriedBy?.Owner?.IsAlive ?? false
+                    && !(CarriedBy?.Owner?.PendingDestruction ?? true))
                 {
                     this.Position = CarriedBy.FleetCenter;
                     this.Momentum = CarriedBy.FleetMomentum;
