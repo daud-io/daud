@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common;
     using Game.Engine.Networking;
     using System;
     using System.Collections.Generic;

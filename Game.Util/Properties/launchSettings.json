@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context daudio player test --replicas=1"
+      "commandLineArgs": "--context daudio player test --replicas=2 --world default"
     }
   }
 }

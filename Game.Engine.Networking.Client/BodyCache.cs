@@ -5,26 +5,62 @@
     public class BodyCache
     {
         private readonly Dictionary<uint, ProjectedBody> _bodies = new Dictionary<uint, ProjectedBody>();
-        public void Update(IEnumerable<ProjectedBody> updates, IEnumerable<uint> deletes)
+        private readonly Dictionary<uint, Group> _groups = new Dictionary<uint, Group>();
+
+        public void Update(
+            IEnumerable<ProjectedBody> updates,
+            IEnumerable<uint> deletes,
+            IEnumerable<Group> groups,
+            IEnumerable<uint> groupDeletes,
+            long time
+        )
         {
             foreach (var id in deletes)
-                _bodies.Remove(id);
+                if (_bodies.ContainsKey(id))
+                    _bodies.Remove(id);
 
             foreach (var update in updates)
             {
                 if (!_bodies.ContainsKey(update.ID))
+                {
                     _bodies.Add(update.ID, update);
+                    update.Cache = this;
+                }
                 else
                 {
                     var existing = _bodies[update.ID];
-                    existing.Size = update.Size;
-                    existing.Sprite = update.Sprite;
-                    existing.Caption = update.Caption;
-                    existing.Color = update.Color;
+
+                    existing.DefinitionTime = update.DefinitionTime;
+
                     existing.OriginalAngle = update.OriginalAngle;
                     existing.AngularVelocity = update.AngularVelocity;
+                    existing.OriginalPosition = update.OriginalPosition;
+                    existing.Momentum = update.Momentum;
+
+                    existing.Size = update.Size;
+                    existing.Sprite = update.Sprite;
                 }
             }
+
+            foreach (var id in groupDeletes)
+                if (_groups.ContainsKey(id))
+                    _groups.Remove(id);
+
+            foreach (var group in groups)
+            {
+                if (!_groups.ContainsKey(group.ID))
+                    _groups.Add(group.ID, group);
+                else
+                {
+                    var existing = _groups[group.ID];
+                    existing.Caption = group.Caption;
+                    existing.Type = group.Type;
+                    existing.ZIndex = group.ZIndex;
+                }
+            }
+
+            foreach (var body in Bodies)
+                body.Project(time);
         }
 
         public IEnumerable<ProjectedBody> Bodies
@@ -33,6 +69,13 @@
             {
                 return this._bodies.Values;
             }
+        }
+
+        public Group GetGroup(uint group)
+        {
+            return _groups.ContainsKey(group)
+                ? _groups[group]
+                : null;
         }
     }
 }

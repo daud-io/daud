@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Networking
 {
+    using Game.API.Common;
     using Game.Engine.Core;
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;

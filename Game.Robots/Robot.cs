@@ -37,12 +37,42 @@
 
         private async Task StepAliveAsync()
         {
+
             float angle = (float)(DateTime.Now.Subtract(Born).TotalMilliseconds / 1000.0f) * MathF.PI * 2;
+
+            var centerVector = -1 * this.Connection.Position;
+
+            angle = MathF.Atan2(centerVector.Y, centerVector.X);
+
+            var bullets = this.Connection.Bodies
+                .Where(b => b.Sprite.ToString().StartsWith("bullet") || b.Sprite == API.Common.Sprites.seeker)
+                .OrderBy(b => Vector2.Distance(b.Position, this.Connection.Position))
+                .ToList();
+
+            if (bullets.Any())
+            {
+                var bullet = bullets.First();
+                var distance = Vector2.Distance(bullet.Position, this.Connection.Position);
+                if (distance < 2000)
+                {
+                    Console.WriteLine($"AHHH bullet {distance} clicks away");
+                    var runAway = Connection.Position - bullet.Position;
+                    angle = MathF.Atan2(runAway.Y, runAway.X);
+                }
+
+            }
 
             this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 100;
             this.Connection.ControlIsShooting = AutoFire;
 
-            Console.WriteLine($"objects: {Connection.Bodies.Count()}");
+            var groups = Connection.Bodies
+                .Select(b => b.Group?.Caption)
+                .Where(c => !string.IsNullOrWhiteSpace(c))
+                .Distinct();
+
+            var groupStrings = string.Join(", ", groups.ToArray());
+
+            Console.WriteLine($"objects: {Connection.Bodies.Count()} groups: {groupStrings}");
 
             await this.Connection.SendControlInputAsync();
         }
@@ -53,7 +83,7 @@
             {
                 if (DateTime.Now.Subtract(LastSpawn).TotalMilliseconds > RESPAWN_FALLOFF)
                 {
-                    await Connection.SpawnAsync("Robot", "ship0", "green");
+                    await Connection.SpawnAsync("Robot 0.2", "ship0", "green");
                     LastSpawn = DateTime.Now;
                 }
             }
