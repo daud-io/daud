@@ -336,7 +336,14 @@
 
                     CarriedBy = null;
                     this.Momentum = new Vector2(0, 0);
+
+                    if (World.DistanceOutOfBounds(this.Position) > 0 &&
+                        this.Position != Vector2.Zero)
+                        this.Momentum = Vector2.Normalize(-this.Position) * 0.1f;
+                    else
+                        this.Momentum = Vector2.Zero;
                 }
+
 
                 if (World.Time > NextSpriteTime)
                 {
