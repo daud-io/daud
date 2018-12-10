@@ -1,6 +1,5 @@
 export class Camera {
-    constructor(context, settings) {
-        settings = settings || {};
+    constructor(context, settings = {}) {
         this.distance = 1500.0;
         this.lookat = [0, 0];
         this.context = context;
@@ -58,15 +57,13 @@ export class Camera {
         this.updateViewport();
     }
 
-    screenToWorld(x, y, obj) {
-        obj = obj || {};
+    screenToWorld(x, y, obj = {}) {
         obj.x = x / this.viewport.scale[0] + this.viewport.left;
         obj.y = y / this.viewport.scale[1] + this.viewport.top;
         return obj;
     }
 
-    worldToScreen(x, y, obj) {
-        obj = obj || {};
+    worldToScreen(x, y, obj = {}) {
         obj.x = (x - this.viewport.left) * this.viewport.scale[0];
         obj.y = (y - this.viewport.top) * this.viewport.scale[1];
         return obj;

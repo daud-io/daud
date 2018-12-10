@@ -1,28 +1,26 @@
 import { Settings } from "./settings";
 
-export var img = new Image();
-export var setPattern;
-var pattern;
+export const img = new Image();
+export let setPattern;
+let pattern;
 img.src = "img/bg.png";
-img.onload = function() {
+img.onload = () => {
     setPattern();
 };
 export class Background {
-    constructor(canvas, context, settings) {
-        settings = settings || {};
-
+    constructor(canvas, context, settings = {}) {
         this.context = context;
 
-        var self = this;
+        const self = this;
 
-        setPattern = function() {
+        setPattern = () => {
             pattern = self.context.createPattern(img, "repeat");
         };
         this.canvas = canvas;
     }
 
     draw(x, y) {
-        var ctx = this.context;
+        const ctx = this.context;
 
         if (Settings.background == "none") {
             ctx.fillStyle = "solid black";

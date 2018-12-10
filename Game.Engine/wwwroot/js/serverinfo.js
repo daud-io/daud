@@ -12,17 +12,17 @@ gui.domElement.firstChild.style.overflowY = "scroll";
 gui.__closeButton.style.display = "none";
 gui.closed = true;
 
-var hooks = {
+const hooks = {
     Ping: new Function(),
     Bandwidth: new Function(),
     FPS: new Function()
 };
 
-var latencyDisplay = gui.add(hooks, "Ping");
-var bandwidthDisplay = gui.add(hooks, "Bandwidth");
-var statsDisplay = gui.add(hooks, "FPS");
+const latencyDisplay = gui.add(hooks, "Ping");
+const bandwidthDisplay = gui.add(hooks, "Bandwidth");
+const statsDisplay = gui.add(hooks, "FPS");
 
-var token = fetch("/api/v1/user/authenticate", {
+const token = fetch("/api/v1/user/authenticate", {
     method: "POST",
     headers: {
         "Content-Type": "application/json; charset=utf-8"
@@ -35,19 +35,19 @@ var token = fetch("/api/v1/user/authenticate", {
     })
 })
     .then(r => r.json())
-    .then(r => r.response.token)
+    .then(({ response }) => response.token)
     .then(r => {
         fetch("/api/v1/server/hook", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json; charset=utf-8",
-                Authorization: "Bearer " + r
+                Authorization: `Bearer ${r}`
             },
             body: "{}"
         })
             .then(r => r.json())
-            .then(r => {
-                var obj = JSON.parse(r.response);
+            .then(({ response }) => {
+                const obj = JSON.parse(response);
                 for (const key in obj) {
                     hooks[key] = obj[key] === 0 ? obj[key] + 0.01 : obj[key];
                 }
@@ -55,7 +55,9 @@ var token = fetch("/api/v1/user/authenticate", {
                     if (typeof hooks[key] == "boolean") {
                         gui.add(hooks, key).onChange(bind_param(key));
                     } else if (typeof hooks[key] != "function") {
-                        var min, max, step;
+                        let min;
+                        let max;
+                        let step;
                         if (hooks[key] < 0) {
                             min = -1;
                             max = 0;
@@ -66,7 +68,7 @@ var token = fetch("/api/v1/user/authenticate", {
                             step = 0.000001;
                         } else {
                             min = 0;
-                            max = Math.pow(10, Math.ceil(Math.log10(hooks[key] + 1)));
+                            max = 10 ** Math.ceil(Math.log10(hooks[key] + 1));
                             step = 1;
                         }
 
@@ -83,13 +85,13 @@ var token = fetch("/api/v1/user/authenticate", {
     });
 
 async function send_hook(attr) {
-    var changer = {};
+    const changer = {};
     changer[attr] = hooks[attr];
     fetch("/api/v1/server/hook", {
         method: "POST",
         headers: {
             "Content-Type": "application/json; charset=utf-8",
-            Authorization: "Bearer " + (await token)
+            Authorization: `Bearer ${await token}`
         },
         body: JSON.stringify(changer)
     });
@@ -99,7 +101,7 @@ function bind_param(a) {
     return () => send_hook(a);
 }
 
-var connection = window.Game.primaryConnection;
+const connection = window.Game.primaryConnection;
 setInterval(() => {
     statsDisplay.name(`vps:${window.Game.Stats.viewsPerSecond} ups:${window.Game.Stats.updatesPerSecond} fps:${window.Game.Stats.framesPerSecond} cs:${Cache.count}`);
 

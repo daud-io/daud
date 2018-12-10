@@ -1,8 +1,8 @@
 import { Settings } from "./settings";
 
 function sprite(name, scale, scaleToSize) {
-    var img = new Image();
-    img.src = "img/" + name + ".png";
+    const img = new Image();
+    img.src = `img/${name}.png`;
 
     return {
         image: img,
@@ -11,7 +11,7 @@ function sprite(name, scale, scaleToSize) {
     };
 }
 
-export var sprites = {
+export const sprites = {
     ship0: sprite("ship0"),
     ship_green: sprite("ship_green"),
     ship_gray: sprite("ship_gray"),
@@ -37,7 +37,7 @@ export var sprites = {
     arrow: sprite("arrow", 0.03)
 };
 
-export var spriteIndices = [
+export const spriteIndices = [
     "none",
     "ship0",
     "ship_green",
@@ -69,7 +69,7 @@ function addSprite(name, size, file) {
     spriteIndices.push(name);
 }
 
-var flagScale = 0.003;
+const flagScale = 0.003;
 
 addSprite("flag_blue_0", flagScale);
 addSprite("flag_blue_1", flagScale);
@@ -101,8 +101,7 @@ addSprite("ctf_score_right_4");
 addSprite("ctf_score_stripes");
 
 export class Renderer {
-    constructor(context, settings) {
-        settings = settings || {};
+    constructor(context, settings = {}) {
         this.context = context;
         this.view = false;
         this.worldSize = 6000;
@@ -110,13 +109,13 @@ export class Renderer {
 
     draw(cache, interpolator, currentTime) {
         if (this.view) {
-            var pv = this.view;
-            var ctx = this.context;
+            const pv = this.view;
+            const ctx = this.context;
 
             // Draw the edge of the universe
             ctx.save();
 
-            var edgeWidth = 4000;
+            const edgeWidth = 4000;
 
             // draw blue border at the edge of the world
             ctx.beginPath();
@@ -169,24 +168,24 @@ export class Renderer {
             ctx.restore();
 
             // start drawing the objects in the world
-            ctx.font = "48px " + Settings.font;
+            ctx.font = `48px ${Settings.font}`;
             ctx.fillStyle = "white";
             ctx.textAlign = "center";
             ctx.strokeStyle = "white";
             ctx.lineWidth = 6;
 
-            var groupsUsed = [];
+            const groupsUsed = [];
 
             cache.foreach(function(body) {
-                var object = body;
+                const object = body;
 
-                var position = interpolator.projectObject(object, currentTime);
+                const position = interpolator.projectObject(object, currentTime);
 
                 // keep track of which "groups" are used, and collect the points of all the objects
                 // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
                 if (object.Group) {
-                    var group = false;
-                    for (var i = 0; i < groupsUsed.length; i++)
+                    let group = false;
+                    for (let i = 0; i < groupsUsed.length; i++)
                         if (groupsUsed[i].id == object.Group) {
                             group = groupsUsed[i];
                             break;
@@ -195,7 +194,7 @@ export class Renderer {
                     if (!group) {
                         group = {
                             id: object.Group,
-                            group: cache.groups["g-" + object.Group],
+                            group: cache.groups[`g-${object.Group}`],
                             points: []
                         };
 
@@ -216,13 +215,13 @@ export class Renderer {
                 }
 
                 // draw the sprite
-                var sprite = object.Sprite != null ? sprites[object.Sprite] : false;
+                const sprite = object.Sprite != null ? sprites[object.Sprite] : false;
                 if (sprite) {
                     ctx.save();
                     ctx.translate(position.X, position.Y);
 
-                    var spriteWidth = sprite.image.width;
-                    var spriteHeight = sprite.image.height;
+                    const spriteWidth = sprite.image.width;
+                    const spriteHeight = sprite.image.height;
 
                     ctx.rotate(position.Angle);
                     ctx.scale(sprite.scale, sprite.scale);
@@ -237,15 +236,15 @@ export class Renderer {
 
             // draw labels on groups
             if (Settings.namesEnabled) {
-                for (var i = 0; i < groupsUsed.length; i++) {
-                    var group = groupsUsed[i];
+                for (let i = 0; i < groupsUsed.length; i++) {
+                    const group = groupsUsed[i];
 
                     if (group && group.group) {
-                        var pt = { X: 0, Y: 0 };
+                        const pt = { X: 0, Y: 0 };
 
                         // average the location of all the points
                         // to find a "center"
-                        for (var x = 0; x < group.points.length; x++) {
+                        for (let x = 0; x < group.points.length; x++) {
                             pt.X += group.points[x].X;
                             pt.Y += group.points[x].Y;
                         }

@@ -5,9 +5,9 @@ import { Settings } from "./settings";
 
 export class Connection {
     constructor() {
-        this.onView = function(view) {};
-        this.onLeaderboard = function(leaderboard) {};
-        this.onConnected = function() {};
+        this.onView = view => {};
+        this.onLeaderboard = leaderboard => {};
+        this.onConnected = () => {};
         this.reloading = false;
         this.connected = false;
 
@@ -16,13 +16,13 @@ export class Connection {
         this.statBytesDownPerSecond = 0;
         this.statBytesUpPerSecond = 0;
 
-        var self = this;
+        const self = this;
         this.fb = Game.Engine.Networking.FlatBuffers;
         this.latency = 0;
         this.minLatency = 999;
         this.simulateLatency = 0;
 
-        setInterval(function() {
+        setInterval(() => {
             if (self.connected) {
                 self.sendPing();
             }
@@ -36,50 +36,50 @@ export class Connection {
     }
 
     connect(world) {
-        var url;
+        let url;
         if (window.location.protocol === "https:") {
             url = "wss:";
         } else {
             url = "ws:";
         }
-        url += "//" + window.location.host;
+        url += `//${window.location.host}`;
         url += "/api/v1/connect?";
 
         if (world) url += `world=${encodeURIComponent(world)}&`;
 
         if (this.socket) {
-            this.socket.onclose = function() {};
+            this.socket.onclose = () => {};
             this.socket.close();
         }
 
         this.socket = new WebSocket(url);
         this.socket.binaryType = "arraybuffer";
 
-        var self = this;
+        const self = this;
 
-        this.socket.onmessage = function(event) {
+        this.socket.onmessage = event => {
             if (self.simulateLatency > 0) {
-                setTimeout(function() {
+                setTimeout(() => {
                     self.onMessage(event);
                 }, self.simulateLatency);
             } else self.onMessage(event);
         };
 
-        this.socket.onerror = function(error) {
+        this.socket.onerror = error => {
             document.body.classList.add("connectionerror");
         };
 
-        this.socket.onopen = function(event) {
+        this.socket.onopen = event => {
             document.body.classList.remove("connectionerror");
             self.onOpen(event);
         };
-        this.socket.onclose = function(event) {
+        this.socket.onclose = event => {
             self.onClose(event);
         };
     }
 
     sendPing() {
-        var builder = new flatbuffers.Builder(0);
+        const builder = new flatbuffers.Builder(0);
 
         this.fb.NetPing.startNetPing(builder);
 
@@ -94,12 +94,12 @@ export class Connection {
         this.fb.NetPing.addBackgrounded(builder, window.Game.isBackgrounded);
         this.fb.NetPing.addBandwidthThrottle(builder, Settings.bandwidth);
 
-        var ping = this.fb.NetPing.endNetPing(builder);
+        const ping = this.fb.NetPing.endNetPing(builder);
 
         this.fb.NetQuantum.startNetQuantum(builder);
         this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetPing);
         this.fb.NetQuantum.addMessage(builder, ping);
-        var quantum = this.fb.NetQuantum.endNetQuantum(builder);
+        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -107,24 +107,24 @@ export class Connection {
     }
 
     sendSpawn(name, color, ship, token) {
-        var builder = new flatbuffers.Builder(0);
+        const builder = new flatbuffers.Builder(0);
 
-        var stringColor = builder.createString(color || "gray");
-        var stringName = builder.createString(name || "unknown");
-        var stringShip = builder.createString(ship || "ship_gray");
-        var stringToken = builder.createString(token || "");
+        const stringColor = builder.createString(color || "gray");
+        const stringName = builder.createString(name || "unknown");
+        const stringShip = builder.createString(ship || "ship_gray");
+        const stringToken = builder.createString(token || "");
 
         this.fb.NetSpawn.startNetSpawn(builder);
         this.fb.NetSpawn.addColor(builder, stringColor);
         this.fb.NetSpawn.addName(builder, stringName);
         this.fb.NetSpawn.addShip(builder, stringShip);
         this.fb.NetSpawn.addToken(builder, stringToken);
-        var spawn = this.fb.NetSpawn.endNetSpawn(builder);
+        const spawn = this.fb.NetSpawn.endNetSpawn(builder);
 
         this.fb.NetQuantum.startNetQuantum(builder);
         this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetSpawn);
         this.fb.NetQuantum.addMessage(builder, spawn);
-        var quantum = this.fb.NetQuantum.endNetQuantum(builder);
+        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -133,9 +133,9 @@ export class Connection {
     }
 
     sendControl(angle, boost, shoot, x, y, spectateControl) {
-        var builder = new flatbuffers.Builder(0);
+        const builder = new flatbuffers.Builder(0);
 
-        var spectateString = false;
+        let spectateString = false;
 
         if (spectateControl) spectateString = builder.createString(spectateControl);
 
@@ -147,12 +147,12 @@ export class Connection {
         this.fb.NetControlInput.addY(builder, y);
         if (spectateControl) this.fb.NetControlInput.addSpectateControl(builder, spectateString);
 
-        var input = this.fb.NetControlInput.endNetControlInput(builder);
+        const input = this.fb.NetControlInput.endNetControlInput(builder);
 
         this.fb.NetQuantum.startNetQuantum(builder);
         this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetControlInput);
         this.fb.NetQuantum.addMessage(builder, input);
-        var quantum = this.fb.NetQuantum.endNetQuantum(builder);
+        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -161,9 +161,9 @@ export class Connection {
 
     send(databuffer) {
         if (this.socket.readyState === 1) {
-            var self = this;
+            const self = this;
             if (this.simulateLatency > 0) {
-                setTimeout(function() {
+                setTimeout(() => {
                     self.socket.send(databuffer);
                 }, this.simulateLatency);
             } else this.socket.send(databuffer);
@@ -188,15 +188,15 @@ export class Connection {
     }
 
     onMessage(event) {
-        var data = new Uint8Array(event.data);
-        var buf = new flatbuffers.ByteBuffer(data);
+        const data = new Uint8Array(event.data);
+        const buf = new flatbuffers.ByteBuffer(data);
 
         this.statBytesDown += data.byteLength;
 
-        var quantum = this.fb.NetQuantum.getRootAsNetQuantum(buf);
+        const quantum = this.fb.NetQuantum.getRootAsNetQuantum(buf);
 
-        var messageType = quantum.messageType();
-        var message = false;
+        const messageType = quantum.messageType();
+        let message = false;
 
         switch (messageType) {
             case this.fb.AllMessages.NetWorldView:
@@ -214,10 +214,10 @@ export class Connection {
             case this.fb.AllMessages.NetLeaderboard:
                 message = quantum.message(new this.fb.NetLeaderboard());
 
-                var entriesLength = message.entriesLength();
-                var entries = [];
-                for (var i = 0; i < entriesLength; i++) {
-                    var entry = message.entries(i);
+                const entriesLength = message.entriesLength();
+                const entries = [];
+                for (let i = 0; i < entriesLength; i++) {
+                    const entry = message.entries(i);
 
                     entries.push({
                         Name: entry.name(),
@@ -231,7 +231,7 @@ export class Connection {
                     });
                 }
 
-                var record = message.record();
+                const record = message.record();
                 this.onLeaderboard({
                     Type: message.type(),
                     Entries: entries,

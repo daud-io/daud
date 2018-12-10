@@ -18,7 +18,7 @@ export class HUD {
         if (!Settings.hudEnabled) return;
 
         ctx.save();
-        ctx.font = "8pt " + Settings.font;
+        ctx.font = `8pt ${Settings.font}`;
         ctx.fillStyle = "white";
         ctx.fillText(
             `fps: ${window.Game.Stats.framesPerSecond || 0}` +

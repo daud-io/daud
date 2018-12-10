@@ -10,12 +10,12 @@ export class Cache {
     }
 
     update(updates, deletes, groups, groupDeletes, time) {
-        var i = 0;
+        let i = 0;
 
         // delete objects that should no longer exist
         for (i = 0; i < deletes.length; i++) {
             var deleteKey = deletes[i];
-            var key = "b-" + deleteKey;
+            var key = `b-${deleteKey}`;
             if (key in this.bodies) Cache.count--;
             delete this.bodies[key];
         }
@@ -23,16 +23,16 @@ export class Cache {
         // delete groups that should no longer exist
         for (i = 0; i < groupDeletes.length; i++) {
             var deleteKey = groupDeletes[i];
-            var key = "g-" + deleteKey;
+            var key = `g-${deleteKey}`;
             delete this.groups[key];
         }
 
         // update objects that should be here
         for (i = 0; i < updates.length; i++) {
-            var update = updates[i];
-            var existing = this.bodies["b-" + update.ID];
+            const update = updates[i];
+            var existing = this.bodies[`b-${update.ID}`];
 
-            this.bodies["b-" + update.ID] = update;
+            this.bodies[`b-${update.ID}`] = update;
             if (existing) {
                 existing.previous = false;
                 existing.obsolete = time;
@@ -53,32 +53,30 @@ export class Cache {
 
         // update groups that should be here
         for (i = 0; i < groups.length; i++) {
-            var group = groups[i];
-            var existing = this.groups["g-" + group.ID];
+            const group = groups[i];
+            var existing = this.groups[`g-${group.ID}`];
 
-            this.groups["g-" + group.ID] = group;
+            this.groups[`g-${group.ID}`] = group;
         }
     }
 
     foreach(action, thisObj) {
-        var sortedGroups = [];
+        const sortedGroups = [];
 
         for (var key in this.groups) {
             var group = this.groups[key];
             sortedGroups.push(group);
         }
 
-        sortedGroups.sort(function(a, b) {
-            return a.ZIndex - b.ZIndex;
-        });
+        sortedGroups.sort((a, b) => a.ZIndex - b.ZIndex);
         sortedGroups.unshift({ ID: 0 });
 
-        for (var g = 0; g < sortedGroups.length; g++) {
+        for (let g = 0; g < sortedGroups.length; g++) {
             var group = sortedGroups[g];
 
             for (var key in this.bodies) {
                 if (key.indexOf("b-") === 0) {
-                    var body = this.bodies[key];
+                    const body = this.bodies[key];
                     if (body.Group == group.ID) {
                         action.apply(thisObj, [body]);
                     }
@@ -88,6 +86,6 @@ export class Cache {
     }
 
     getGroup(groupID) {
-        return this.groups["g-" + groupID];
+        return this.groups[`g-${groupID}`];
     }
 }

@@ -1,12 +1,12 @@
 import Cookies from "js-cookie";
 
-var dauth = document.getElementById("dauth");
+const dauth = document.getElementById("dauth");
 dauth.addEventListener("click", () => {
     window.location = `https://discordapp.com/api/oauth2/authorize?response_type=token&client_id=514844767511642112&scope=identify&redirect_uri=${encodeURIComponent(window.location.origin)}`;
 });
 
-var sp = new URLSearchParams(window.location.hash.substr(1));
-export var token = sp.get("access_token");
+const sp = new URLSearchParams(window.location.hash.substr(1));
+export let token = sp.get("access_token");
 if (token || Cookies.get("access_token")) {
     history.pushState({}, "", "/");
     dauth.style.display = "none";

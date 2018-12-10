@@ -1,26 +1,26 @@
 ﻿import Cookies from "js-cookie";
 import nipplejs from "nipplejs";
 
-export var nipple = nipplejs.create({
+export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
     resetJoystick: false
 });
-var isMobile = "ontouchstart" in document.documentElement;
+const isMobile = "ontouchstart" in document.documentElement;
 if (!isMobile) {
     nipple.destroy();
     document.getElementById("niple-buttons").style.display = "none";
 }
 
-var selector = document.querySelector("#shipSelector");
-selector.addEventListener("change", function(e) {
-    Controls.ship = "ship_" + selector.value || "ship_green";
+const selector = document.querySelector("#shipSelector");
+selector.addEventListener("change", e => {
+    Controls.ship = `ship_${selector.value}` || "ship_green";
     Controls.color = selector.value || "green";
 
     save();
 });
 
-var nick = document.querySelector("#nick");
-nick.addEventListener("change", function(e) {
+const nick = document.querySelector("#nick");
+nick.addEventListener("change", e => {
     Controls.nick = nick.value;
     if (Controls && Controls.canvas) Controls.canvas.focus();
 
@@ -34,59 +34,59 @@ export var Controls = {
     down: false,
     boost: false,
     shoot: false,
-    registerCanvas: function(canvas) {
-        var getMousePos = function(canvas, evt) {
-            var rect = canvas.getBoundingClientRect();
+    registerCanvas(canvas) {
+        const getMousePos = (canvas, { clientX, clientY }) => {
+            const rect = canvas.getBoundingClientRect();
             return {
-                x: evt.clientX - rect.left,
-                y: evt.clientY - rect.top
+                x: clientX - rect.left,
+                y: clientY - rect.top
             };
         };
         if (isMobile) {
-            nipple.on("move", function(e, data) {
-                Controls.angle = data.angle.radian;
-                var cx = canvas.width / 2;
-                var cy = canvas.height / 2;
-                Controls.mouseX = Math.cos(data.angle.radian) * data.force * window.innerHeight + cx;
-                Controls.mouseY = Math.sin(-data.angle.radian) * data.force * window.innerHeight + cy;
+            nipple.on("move", (e, { angle, force }) => {
+                Controls.angle = angle.radian;
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                Controls.mouseX = Math.cos(angle.radian) * force * window.innerHeight + cx;
+                Controls.mouseY = Math.sin(-angle.radian) * force * window.innerHeight + cy;
             });
-            document.getElementById("shoot").addEventListener("touchstart", function(e) {
+            document.getElementById("shoot").addEventListener("touchstart", e => {
                 Controls.shoot = true;
             });
-            document.getElementById("shoot").addEventListener("touchend", function(e) {
+            document.getElementById("shoot").addEventListener("touchend", e => {
                 Controls.shoot = false;
             });
-            document.getElementById("boost").addEventListener("touchstart", function(e) {
+            document.getElementById("boost").addEventListener("touchstart", e => {
                 Controls.boost = true;
             });
-            document.getElementById("boost").addEventListener("touchend", function(e) {
+            document.getElementById("boost").addEventListener("touchend", e => {
                 Controls.boost = false;
             });
         } else {
-            window.addEventListener("mousemove", function(e) {
-                var pos = getMousePos(canvas, e);
+            window.addEventListener("mousemove", e => {
+                const pos = getMousePos(canvas, e);
                 Controls.mouseX = pos.x;
                 Controls.mouseY = pos.y;
-                var cx = canvas.width / 2;
-                var cy = canvas.height / 2;
-                var dy = pos.y - cy;
-                var dx = pos.x - cx;
+                const cx = canvas.width / 2;
+                const cy = canvas.height / 2;
+                const dy = pos.y - cy;
+                const dx = pos.x - cx;
 
                 Controls.angle = Math.atan2(dy, dx);
             });
-            window.addEventListener("mousedown", function(e) {
-                if (e.button == 2)
+            window.addEventListener("mousedown", ({ button }) => {
+                if (button == 2)
                     //right click
                     Controls.boost = true;
                 else Controls.shoot = true;
             });
-            window.addEventListener("mouseup", function(e) {
-                if (e.button == 2)
+            window.addEventListener("mouseup", ({ button }) => {
+                if (button == 2)
                     //right click
                     Controls.boost = false;
                 else Controls.shoot = false;
             });
-            window.addEventListener("contextmenu", function(e) {
+            window.addEventListener("contextmenu", e => {
                 e.preventDefault();
                 return false;
             });
@@ -98,8 +98,8 @@ export var Controls = {
 
 window.addEventListener(
     "keydown",
-    function(e) {
-        switch (e.keyCode) {
+    ({ keyCode }) => {
+        switch (keyCode) {
             case 37: // left arrow
                 Controls.left = true;
                 break;
@@ -125,8 +125,8 @@ window.addEventListener(
 
 window.addEventListener(
     "keyup",
-    function(e) {
-        switch (e.keyCode) {
+    ({ keyCode }) => {
+        switch (keyCode) {
             case 37: // left arrow
                 Controls.left = false;
                 break;
@@ -151,14 +151,14 @@ window.addEventListener(
 );
 
 function save() {
-    var cookieOptions = { expires: 300 };
+    const cookieOptions = { expires: 300 };
 
     if (Controls.nick) Cookies.set("nick", Controls.nick, cookieOptions);
     Cookies.set("color", Controls.color, cookieOptions);
 }
 
-var savedNick = Cookies.get("nick");
-var savedColor = Cookies.get("color");
+const savedNick = Cookies.get("nick");
+const savedColor = Cookies.get("color");
 
 if (savedNick !== undefined) {
     Controls.nick = savedNick;
@@ -170,6 +170,6 @@ if (savedColor !== undefined) {
     selector.value = savedColor;
 }
 
-var event = document.createEvent("Event");
+const event = document.createEvent("Event");
 event.initEvent("change", true, true);
 selector.dispatchEvent(event);

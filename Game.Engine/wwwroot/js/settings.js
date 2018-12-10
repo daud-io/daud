@@ -3,7 +3,7 @@ import { img as background, setPattern } from "./background";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
 
-export var Settings = {
+export const Settings = {
     theme: false,
     themeCustom: false,
     background: "slow",
@@ -17,18 +17,18 @@ export var Settings = {
 };
 
 function parseQuery(queryString) {
-    var query = {};
-    var pairs = (queryString[0] === "?" ? queryString.substr(1) : queryString).split("&");
-    for (var i = 0; i < pairs.length; i++) {
-        var pair = pairs[i].split("=");
+    const query = {};
+    const pairs = (queryString[0] === "?" ? queryString.substr(1) : queryString).split("&");
+    for (let i = 0; i < pairs.length; i++) {
+        const pair = pairs[i].split("=");
         query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
     }
     return query;
 }
 
 function save() {
-    var cookieOptions = { expires: 300 };
-    var reload = false;
+    const cookieOptions = { expires: 300 };
+    let reload = false;
 
     if (Settings.theme != document.getElementById("settingsThemeSelector").value) {
         Settings.theme = document.getElementById("settingsThemeSelector").value;
@@ -59,12 +59,12 @@ function reset() {
 
 function load() {
     try {
-        var savedSettings = Cookies.getJSON("settings");
+        const savedSettings = Cookies.getJSON("settings");
 
         if (savedSettings) {
             // copying value by value because cookies can be old versions
             // any values NOT in the cookie will remain defined with the new defaults
-            for (var key in savedSettings) Settings[key] = savedSettings[key];
+            for (const key in savedSettings) Settings[key] = savedSettings[key];
         }
 
         document.getElementById("settingsThemeSelector").value = Settings.theme;
@@ -78,33 +78,31 @@ function load() {
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
-    } catch {
+    } catch (e) {
         // maybe reset()? will make debugging difficult
     }
 }
 
 async function theme(v) {
-    var link = "https://dl.dropboxusercontent.com/s/" + v + "/daudmod.zip";
-    var zip = await fetch(link)
-        .then(function(response) {
-            return response.blob();
-        })
+    const link = `https://dl.dropboxusercontent.com/s/${v}/daudmod.zip`;
+    const zip = await fetch(link)
+        .then(response => response.blob())
         .then(JSZip.loadAsync);
     zip.file("daudmod/info.json")
         .async("string")
-        .then(function(text) {
-            var info = JSON.parse(text);
+        .then(text => {
+            const info = JSON.parse(text);
             info.files.forEach(element => {
-                zip.file("daudmod/" + element[0] + ".png")
+                zip.file(`daudmod/${element[0]}.png`)
                     .async("arraybuffer")
-                    .then(function(ab) {
-                        var arrayBufferView = new Uint8Array(ab);
-                        var blob = new Blob([arrayBufferView], { type: "image/jpeg" });
-                        var urlCreator = window.URL || window.webkitURL;
-                        var url = urlCreator.createObjectURL(blob);
+                    .then(ab => {
+                        const arrayBufferView = new Uint8Array(ab);
+                        const blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+                        const urlCreator = window.URL || window.webkitURL;
+                        const url = urlCreator.createObjectURL(blob);
                         if (element[0] == "bg") {
                             background.src = url;
-                            background.onload = function() {
+                            background.onload = () => {
                                 setPattern();
                             };
                         } else {
@@ -121,7 +119,7 @@ async function theme(v) {
 
 load();
 
-var qs = parseQuery(window.location.search);
+const qs = parseQuery(window.location.search);
 if (qs.themeCustom) Settings.themeCustom = qs.themeCustom;
 if (qs.background) Settings.background = qs.background;
 if (qs.leaderboardEnabled) Settings.leaderboardEnabled = qs.leaderboardEnabled == "true";
@@ -135,23 +133,23 @@ if (Settings.themeCustom) {
     theme(Settings.theme);
 } // no good way to reset to default :(
 
-var gear = document.getElementById("gear");
-document.getElementById("settings").addEventListener("click", function() {
+const gear = document.getElementById("gear");
+document.getElementById("settings").addEventListener("click", () => {
     gear.classList.remove("closed");
 });
 
-document.getElementById("settingsCancel").addEventListener("click", function() {
+document.getElementById("settingsCancel").addEventListener("click", () => {
     gear.classList.add("closed");
 });
 
-document.getElementById("settingsSave").addEventListener("click", function() {
+document.getElementById("settingsSave").addEventListener("click", () => {
     save();
     load();
 
     gear.classList.add("closed");
 });
 
-document.getElementById("settingsReset").addEventListener("click", function() {
+document.getElementById("settingsReset").addEventListener("click", () => {
     reset();
     window.location.reload();
 });

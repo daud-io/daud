@@ -1,5 +1,5 @@
-﻿var isVisible = false;
-var isFirst = true;
+let isVisible = false;
+let isFirst = true;
 
 function hide() {
     document.getElementById("titan").style.display = "none";
@@ -17,13 +17,13 @@ function show() {
     isVisible = true;
 }
 
-document.addEventListener("keydown", function(e) {
-    if ((e.keyCode == 70 || e.which == 70) && (document.body.classList.contains("alive") || document.body.classList.contains("spectating"))) {
+document.addEventListener("keydown", ({ keyCode, which }) => {
+    if ((keyCode == 70 || which == 70) && (document.body.classList.contains("alive") || document.body.classList.contains("spectating"))) {
         if (!isVisible) show();
         else hide();
     }
 });
 
-document.addEventListener("mousedown", function(e) {
+document.addEventListener("mousedown", e => {
     if (isVisible) hide();
 });

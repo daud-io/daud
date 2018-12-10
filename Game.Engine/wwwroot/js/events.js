@@ -1,10 +1,10 @@
 ﻿export class Events {
     static Report(category, action, value) {
         window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
+        function gtag(...args) {
+            dataLayer.push(args);
         }
-        gtag("event", action, { event_category: category, value: value });
+        gtag("event", action, { event_category: category, value });
     }
 
     static Spawn() {
