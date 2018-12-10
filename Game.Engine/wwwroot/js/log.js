@@ -10,10 +10,8 @@ export class Log {
     }
 
     addEntry(entry) {
-
         this.data.push({ time: new Date(), entry: entry });
-        while (this.data.length > 4)
-            this.data.shift();
+        while (this.data.length > 4) this.data.shift();
 
         this.lastDisplay = performance.now();
 

@@ -34,7 +34,7 @@ export var sprites = {
     seeker: sprite("seeker", 0.02, true),
     seeker_pickup: sprite("seeker_pickup", 0.02, true),
     obstacle: sprite("obstacle", 0.0028, true),
-    arrow: sprite("arrow", 0.03),
+    arrow: sprite("arrow", 0.03)
 };
 
 export var spriteIndices = [
@@ -69,7 +69,6 @@ function addSprite(name, size, file) {
     spriteIndices.push(name);
 }
 
-
 var flagScale = 0.003;
 
 addSprite("flag_blue_0", flagScale);
@@ -101,7 +100,6 @@ addSprite("ctf_score_right_3");
 addSprite("ctf_score_right_4");
 addSprite("ctf_score_stripes");
 
-
 export class Renderer {
     constructor(context, settings) {
         settings = settings || {};
@@ -127,9 +125,8 @@ export class Renderer {
             ctx.rect(-this.worldSize, -this.worldSize, 2 * this.worldSize, 2 * this.worldSize);
             ctx.stroke();
 
-
             // draw red transparent buffer outside the edge of the world
-            /*  
+            /*
              *  ________________
              * |       top      |
              * |________________|
@@ -139,13 +136,13 @@ export class Renderer {
              * |___|________|___|
              * |     bottom     |
              * |________________|
-             * 
+             *
              */
 
             ctx.fillStyle = "rgba(255,0,0,0.1)";
 
             // top
-            ctx.fillRect(-this.worldSize - edgeWidth, -this.worldSize - edgeWidth, 2 * this.worldSize + 2*edgeWidth, edgeWidth);
+            ctx.fillRect(-this.worldSize - edgeWidth, -this.worldSize - edgeWidth, 2 * this.worldSize + 2 * edgeWidth, edgeWidth);
 
             // left
             ctx.fillRect(-this.worldSize - edgeWidth, -this.worldSize, edgeWidth, 2 * this.worldSize);
@@ -230,8 +227,7 @@ export class Renderer {
                     ctx.rotate(position.Angle);
                     ctx.scale(sprite.scale, sprite.scale);
 
-                    if (sprite.scaleToSize)
-                        ctx.scale(object.Size, object.Size);
+                    if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
 
                     ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
 

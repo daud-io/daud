@@ -15,8 +15,7 @@ export class Leaderboard {
     draw(relativeTo) {
         const ctx = this.context;
 
-        if (!Settings.leaderboardEnabled)
-            return;
+        if (!Settings.leaderboardEnabled) return;
 
         ctx.save();
         if (this.data && this.data.Entries) {
@@ -31,49 +30,42 @@ export class Leaderboard {
 
             if (this.data.Type == "CTF") {
                 var self = this;
-                var findTeam = function (teamName) {
+                var findTeam = function(teamName) {
                     for (var i = 0; i < self.data.Entries.length; i++) {
-                        if (self.data.Entries[i].Name == teamName)
-                            return self.data.Entries[i];
+                        if (self.data.Entries[i].Name == teamName) return self.data.Entries[i];
                     }
                     return false;
-                }
+                };
 
-                var cyan = findTeam("cyan") || { Score: 0};
+                var cyan = findTeam("cyan") || { Score: 0 };
                 var red = findTeam("red") || { Score: 0 };
 
                 var cyanScore = Math.min(cyan.Score, 5);
                 var redScore = Math.min(red.Score, 5);
 
-                var x = this.canvas.width/2 - 310/2;
+                var x = this.canvas.width / 2 - 310 / 2;
                 var y = 15;
                 var w = 300;
                 var h = 100;
 
-                var draw = function (sprite) {
-                    if (sprites.hasOwnProperty(sprite))
-                        ctx.drawImage(sprites[sprite].image, x, y, w, h);
-                }
+                var draw = function(sprite) {
+                    if (sprites.hasOwnProperty(sprite)) ctx.drawImage(sprites[sprite].image, x, y, w, h);
+                };
 
                 draw("ctf_score_stripes");
                 draw(`ctf_score_left_${Math.min(cyanScore, 4)}`);
                 draw(`ctf_score_right_${Math.min(redScore, 4)}`);
 
-                if (cyanScore >= 5)
-                    draw("ctf_score_final_blue");
-                else if (redScore >= 5)
-                    draw("ctf_score_final_red");
-                else
-                    draw("ctf_score_final");
+                if (cyanScore >= 5) draw("ctf_score_final_blue");
+                else if (redScore >= 5) draw("ctf_score_final_red");
+                else draw("ctf_score_final");
 
                 for (let i = 0; i < this.data.Entries.length; i++) {
                     const entry = this.data.Entries[i];
 
                     ctx.fillStyle = "white";
-                    ctx.fillText(entry.Name || "Unknown Fleet",
-                        this.canvas.width - width, rowHeight + i * rowHeight);
-                    ctx.fillText(entry.Score,
-                        this.canvas.width - 60, rowHeight + i * rowHeight);
+                    ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width, rowHeight + i * rowHeight);
+                    ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + i * rowHeight);
 
                     ctx.fillStyle = entry.Color;
 
@@ -95,10 +87,7 @@ export class Leaderboard {
                         ctx.restore();
                     }
                 }
-            }
-            else {
-
-
+            } else {
                 for (let i = 0; i < this.data.Entries.length; i++) {
                     const entry = this.data.Entries[i];
 

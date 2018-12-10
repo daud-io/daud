@@ -18,10 +18,10 @@ export var Settings = {
 
 function parseQuery(queryString) {
     var query = {};
-    var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+    var pairs = (queryString[0] === "?" ? queryString.substr(1) : queryString).split("&");
     for (var i = 0; i < pairs.length; i++) {
-        var pair = pairs[i].split('=');
-        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+        var pair = pairs[i].split("=");
+        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
     }
     return query;
 }
@@ -35,11 +35,11 @@ function save() {
         reload = true;
     }
     if (Settings.themeCustom != document.getElementById("settingsThemeSelectorCustom").value) {
-        Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value
+        Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value;
         reload = true;
     }
 
-    Settings.background = document.getElementById("settingsBackground").value
+    Settings.background = document.getElementById("settingsBackground").value;
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
     Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
@@ -48,10 +48,9 @@ function save() {
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
 
-    Cookies.set("settings", Settings, cookieOptions)
+    Cookies.set("settings", Settings, cookieOptions);
 
-    if (reload)
-        window.location.reload();
+    if (reload) window.location.reload();
 }
 
 function reset() {
@@ -65,8 +64,7 @@ function load() {
         if (savedSettings) {
             // copying value by value because cookies can be old versions
             // any values NOT in the cookie will remain defined with the new defaults
-            for (var key in savedSettings) 
-                Settings[key] = savedSettings[key];
+            for (var key in savedSettings) Settings[key] = savedSettings[key];
         }
 
         document.getElementById("settingsThemeSelector").value = Settings.theme;
@@ -80,9 +78,7 @@ function load() {
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
-    }
-    catch
-    {
+    } catch {
         // maybe reset()? will make debugging difficult
     }
 }
@@ -126,19 +122,12 @@ async function theme(v) {
 load();
 
 var qs = parseQuery(window.location.search);
-if (qs.themeCustom)
-    Settings.themeCustom = qs.themeCustom;
-if (qs.background)
-    Settings.background = qs.background;
-if (qs.leaderboardEnabled)
-    Settings.leaderboardEnabled = qs.leaderboardEnabled == 'true';
-if (qs.hudEnabled)
-    Settings.hudEnabled = qs.hudEnabled == 'true';
-if (qs.namesEnabled)
-    Settings.namesEnabled = qs.namesEnabled == 'true';
-if (qs.bandwidth)
-    Settings.bandwidth = Number(qs.bandwidth);
-
+if (qs.themeCustom) Settings.themeCustom = qs.themeCustom;
+if (qs.background) Settings.background = qs.background;
+if (qs.leaderboardEnabled) Settings.leaderboardEnabled = qs.leaderboardEnabled == "true";
+if (qs.hudEnabled) Settings.hudEnabled = qs.hudEnabled == "true";
+if (qs.namesEnabled) Settings.namesEnabled = qs.namesEnabled == "true";
+if (qs.bandwidth) Settings.bandwidth = Number(qs.bandwidth);
 
 if (Settings.themeCustom) {
     theme(Settings.themeCustom);
@@ -151,19 +140,18 @@ document.getElementById("settings").addEventListener("click", function() {
     gear.classList.remove("closed");
 });
 
-document.getElementById("settingsCancel").addEventListener("click", function () {
+document.getElementById("settingsCancel").addEventListener("click", function() {
     gear.classList.add("closed");
 });
 
-document.getElementById("settingsSave").addEventListener("click", function () {
-
+document.getElementById("settingsSave").addEventListener("click", function() {
     save();
     load();
 
     gear.classList.add("closed");
 });
 
-document.getElementById("settingsReset").addEventListener("click", function () {
+document.getElementById("settingsReset").addEventListener("click", function() {
     reset();
     window.location.reload();
 });

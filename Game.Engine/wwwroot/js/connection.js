@@ -45,11 +45,10 @@ export class Connection {
         url += "//" + window.location.host;
         url += "/api/v1/connect?";
 
-        if (world)
-            url += `world=${encodeURIComponent(world)}&`;
+        if (world) url += `world=${encodeURIComponent(world)}&`;
 
         if (this.socket) {
-            this.socket.onclose = function () { };
+            this.socket.onclose = function() {};
             this.socket.close();
         }
 
@@ -138,8 +137,7 @@ export class Connection {
 
         var spectateString = false;
 
-        if (spectateControl)
-            spectateString = builder.createString(spectateControl);
+        if (spectateControl) spectateString = builder.createString(spectateControl);
 
         this.fb.NetControlInput.startNetControlInput(builder);
         this.fb.NetControlInput.addAngle(builder, angle);
@@ -147,8 +145,7 @@ export class Connection {
         this.fb.NetControlInput.addShoot(builder, shoot);
         this.fb.NetControlInput.addX(builder, x);
         this.fb.NetControlInput.addY(builder, y);
-        if (spectateControl)
-            this.fb.NetControlInput.addSpectateControl(builder, spectateString);
+        if (spectateControl) this.fb.NetControlInput.addSpectateControl(builder, spectateString);
 
         var input = this.fb.NetControlInput.endNetControlInput(builder);
 

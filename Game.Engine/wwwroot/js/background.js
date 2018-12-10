@@ -29,12 +29,9 @@ export class Background {
             ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
             return;
         }
-        
 
-        if (Settings.background == "slow")
-            this.parallaxFactor = 200;
-        else
-            this.parallaxFactor = 100;
+        if (Settings.background == "slow") this.parallaxFactor = 200;
+        else this.parallaxFactor = 100;
 
         x /= this.parallaxFactor;
         y /= this.parallaxFactor;
@@ -54,7 +51,6 @@ export class Background {
             ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
         }
 
-        
         ctx.restore();
     }
 }
