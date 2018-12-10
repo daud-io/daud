@@ -13,7 +13,8 @@ export const Settings = {
     hudEnabled: true,
     namesEnabled: true,
     bandwidth: 100,
-    showHitboxes: false
+    showHitboxes: false,
+    logLength: 4
 };
 
 function parseQuery(queryString) {
@@ -47,6 +48,7 @@ function save() {
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
+    Settings.logLength = document.getElementById("settingsLog").value;
 
     Cookies.set("settings", Settings, cookieOptions);
 
@@ -78,6 +80,7 @@ function load() {
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
+        document.getElementById("settingsLog").value = Settings.logLength;
     } catch (e) {
         // maybe reset()? will make debugging difficult
     }

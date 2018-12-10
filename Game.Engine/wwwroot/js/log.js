@@ -10,7 +10,7 @@ export class Log {
 
     addEntry(entry) {
         this.data.push({ time: new Date(), entry });
-        while (this.data.length > 4) this.data.shift();
+        while (this.data.length > Settings.logLength) this.data.shift();
 
         this.lastDisplay = performance.now();
 
@@ -20,7 +20,7 @@ export class Log {
     draw() {
         const ctx = this.context;
         ctx.save();
-        if (this.data && this.lastDisplay) {
+        if (this.data && this.lastDisplay && Settings.logLength > 0) {
             const time = performance.now() - this.lastDisplay;
 
             let alpha = 1.0;

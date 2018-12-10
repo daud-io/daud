@@ -90,7 +90,7 @@ connection.onLeaderboard = lb => {
     leaderboard.position = lastPosition;
 };
 
-let lastAliveState = true;
+let lastAliveState = false;
 let aliveSince = false;
 connection.onView = newView => {
     viewCounter++;
@@ -110,6 +110,29 @@ connection.onView = newView => {
         document.body.classList.add("dead");
 
         Events.Death((gameTime - aliveSince) / 1000);
+
+        var countDown = 3;
+        var interval = false;
+        var updateButton = function () {
+            var button = document.getElementById("spawn");
+            console.log(`cooldown: ${countDown}`);
+
+            if (countDown > 0) {
+                console.log('hold');
+                button.value = `${countDown--} ...`;
+                button.disabled = true;
+            }
+            else {
+                console.log('Launch!');
+                button.value = `LAUNCH!`;
+                button.disabled = false;
+                clearInterval(interval);
+            }
+        }
+        updateButton();
+
+        interval = setInterval(updateButton, 1000);
+        document.getElementById("spawn")
     }
 
     lastOffset = view.time - performance.now();
