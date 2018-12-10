@@ -12,119 +12,247 @@ export class Leaderboard {
         this.data = data;
     }
 
-    draw(relativeTo) {
+
+
+    modeCTF(relativeTo) {
         const ctx = this.context;
-
-        if (!Settings.leaderboardEnabled) return;
-
         ctx.save();
-        if (this.data && this.data.Entries) {
-            ctx.font = `12pt ${Settings.font}`;
-            ctx.fillStyle = "white";
-            ctx.textAlign = "left";
 
-            const width = 200;
-            const rowHeight = 28;
-            const margin = 20;
-            const arrow = sprites["arrow"];
+        ctx.font = "12pt " + Settings.font;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "left";
 
-            if (this.data.Type == "CTF") {
-                const self = this;
-                const findTeam = teamName => {
-                    for (let i = 0; i < self.data.Entries.length; i++) {
-                        if (self.data.Entries[i].Name == teamName) return self.data.Entries[i];
-                    }
-                    return false;
-                };
 
-                const cyan = findTeam("cyan") || { Score: 0 };
-                const red = findTeam("red") || { Score: 0 };
+        const arrow = sprites["arrow"];
 
-                const cyanScore = Math.min(cyan.Score, 5);
-                const redScore = Math.min(red.Score, 5);
 
-                const x = this.canvas.width / 2 - 310 / 2;
-                const y = 15;
-                const w = 300;
-                const h = 100;
+        const self = this;
+        const findTeam = teamName => {
+            for (let i = 0; i < self.data.Entries.length; i++) {
+                if (self.data.Entries[i].Name == teamName) return self.data.Entries[i];
+            }
+            return false;
+        };
 
-                const draw = sprite => {
-                    if (sprites.hasOwnProperty(sprite)) ctx.drawImage(sprites[sprite].image, x, y, w, h);
-                };
+        const cyan = findTeam("cyan") || { Score: 0 };
+        const red = findTeam("red") || { Score: 0 };
 
-                draw("ctf_score_stripes");
-                draw(`ctf_score_left_${Math.min(cyanScore, 4)}`);
-                draw(`ctf_score_right_${Math.min(redScore, 4)}`);
+        const cyanScore = Math.min(cyan.Score, 5);
+        const redScore = Math.min(red.Score, 5);
 
-                if (cyanScore >= 5) draw("ctf_score_final_blue");
-                else if (redScore >= 5) draw("ctf_score_final_red");
-                else draw("ctf_score_final");
+        const hudX = this.canvas.width / 2 - 310 / 2;
+        const hudY = 0;
+        const hudWidth = 300;
+        const hudHeight = 100;
 
-                this.data.Entries.forEach(({ Name, Score, Color, Position }, i) => {
-                    ctx.fillStyle = "white";
-                    ctx.fillText(Name || "Unknown Fleet", this.canvas.width - width, rowHeight + i * rowHeight);
-                    ctx.fillText(Score, this.canvas.width - 60, rowHeight + i * rowHeight);
+        const drawSprite = sprite => {
+            if (sprites.hasOwnProperty(sprite)) ctx.drawImage(sprites[sprite].image, hudX, hudY, hudWidth, hudHeight);
+        };
 
-                    ctx.fillStyle = Color;
+        drawSprite("ctf_score_stripes");
+        drawSprite(`ctf_score_left_${Math.min(cyanScore, 4)}`);
+        drawSprite(`ctf_score_right_${Math.min(redScore, 4)}`);
 
-                    const x = this.canvas.width - width - rowHeight;
-                    const y = i * rowHeight + 10;
+        if (cyanScore >= 5) drawSprite("ctf_score_final_blue");
+        else if (redScore >= 5) drawSprite("ctf_score_final_red");
+        else drawSprite("ctf_score_final");
 
-                    ctx.fillRect(x, y, rowHeight, rowHeight);
+        var teams = ['cyan', 'red'];
 
-                    if (relativeTo) {
-                        const angle = Math.atan2(Position.Y - relativeTo.Y, Position.X - relativeTo.X);
+        var cyanCount = 0;
+        var redCount = 0;
 
-                        ctx.save();
-                        ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
-                        const w = arrow.image.width;
-                        const h = arrow.image.height;
-                        ctx.rotate(angle);
-                        ctx.scale(arrow.scale, arrow.scale);
-                        ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
-                        ctx.restore();
-                    }
-                });
-            } else {
-                this.data.Entries.forEach((entry, i) => {
-                    if (entry.Token) {
-                        ctx.fillStyle = "aqua";
-                        ctx.fillText("✓", this.canvas.width - width, rowHeight + i * rowHeight);
-                    }
-                    const tokenWidth = entry.Token ? 15 : 0;
-                    ctx.fillStyle = "white";
-                    ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width + tokenWidth, rowHeight + i * rowHeight);
-                    ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + i * rowHeight);
 
-                    ctx.fillStyle = entry.Color;
+        var cyanFlag = false;
+        var cyanTeam = [];
+        var redFlag = false;
+        var redTeam = [];
 
-                    const x = this.canvas.width - width - rowHeight;
-                    const y = i * rowHeight + 10;
+        this.data.Entries.forEach((entry, i) => {
+            if (i == 0)
+                cyanFlag = entry;
+            else if (i == 1)
+                redFlag = entry;
+            else if (entry.Color == 'cyan')
+                cyanTeam.push(entry);
+            else
+                redTeam.push(entry);
+        });
 
-                    ctx.fillRect(x, y, rowHeight, rowHeight);
 
-                    if (relativeTo) {
-                        const angle = Math.atan2(entry.Position.Y - relativeTo.Y, entry.Position.X - relativeTo.X);
+        const drawFlagArrow = (flag, teamIndex) => {
+            if (relativeTo) {
+                const angle = Math.atan2(flag.Position.Y - relativeTo.Y, flag.Position.X - relativeTo.X);
 
-                        ctx.save();
-                        ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
-                        const w = arrow.image.width;
-                        const h = arrow.image.height;
-                        ctx.rotate(angle);
-                        ctx.scale(arrow.scale, arrow.scale);
-                        ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
-                        ctx.restore();
-                    }
-                });
+                ctx.save();
+                const w = arrow.image.width;
+                const h = arrow.image.height;
 
-                if (this.data.Record) {
-                    ctx.font = `8pt ${Settings.font}`;
-                    ctx.fillStyle = "white";
-                    ctx.fillText(`record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`, margin, this.canvas.height - margin);
+                if (teamIndex == 0)
+                    ctx.translate(hudX, hudY + 40);
+                else
+                    ctx.translate(hudX + hudWidth, hudY + 40);
+
+                ctx.rotate(angle);
+                ctx.scale(arrow.scale, arrow.scale);
+                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
+                ctx.restore();
+            }
+        };
+
+        const drawLeaderboard = (entries, teamIndex, leftEdge) => {
+            entries.forEach(({ Name, Score, Color, Position }, i) => {
+                var rowHeight = 28;
+                ctx.fillStyle = "white";
+                ctx.fillText(Name || "Unknown Fleet", leftEdge, rowHeight + i * rowHeight);
+                ctx.fillText(Score, leftEdge + 200, rowHeight + i * rowHeight);
+                ctx.fillStyle = Color;
+
+                const x = leftEdge - rowHeight;
+                const y = i * rowHeight + 10;
+
+                ctx.fillRect(x, y, rowHeight, rowHeight);
+
+                if (relativeTo) {
+                    const angle = Math.atan2(Position.Y - relativeTo.Y, Position.X - relativeTo.X);
+
+                    ctx.save();
+                    ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
+                    const w = arrow.image.width;
+                    const h = arrow.image.height;
+                    ctx.rotate(angle);
+                    ctx.scale(arrow.scale, arrow.scale);
+                    ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
+                    ctx.restore();
                 }
+            });
+        };
+
+        drawFlagArrow(cyanFlag, 0);
+        drawFlagArrow(redFlag, 1);
+        drawLeaderboard(cyanTeam, 0, 60);
+        drawLeaderboard(redTeam, 1, this.canvas.width - 60 - 200);
+
+        ctx.restore();
+
+    }
+
+    modeTeam(relativeTo) {
+        const ctx = this.context;
+        ctx.save();
+
+        ctx.font = "12pt " + Settings.font;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "left";
+
+        const width = 200;
+        var rowHeight = 28;
+        const margin = 20;
+
+        const arrow = sprites["arrow"];
+
+        this.data.Entries.forEach(({ Name, Score, Color, Position }, i) => {
+            ctx.fillStyle = "white";
+            ctx.fillText(Name || "Unknown Fleet", this.canvas.width - width, rowHeight + i * rowHeight);
+            ctx.fillText(Score, this.canvas.width - 60, rowHeight + i * rowHeight);
+
+            ctx.fillStyle = Color;
+
+            const x = this.canvas.width - width - rowHeight;
+            const y = i * rowHeight + 10;
+
+            ctx.fillRect(x, y, rowHeight, rowHeight);
+
+            if (relativeTo) {
+                const angle = Math.atan2(Position.Y - relativeTo.Y, Position.X - relativeTo.X);
+
+                ctx.save();
+                ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
+                const w = arrow.image.width;
+                const h = arrow.image.height;
+                ctx.rotate(angle);
+                ctx.scale(arrow.scale, arrow.scale);
+                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
+                ctx.restore();
+            }
+        });
+        ctx.restore();
+    }
+
+    modeStandard(relativeTo) {
+        const ctx = this.context;
+        ctx.save();
+        ctx.font = "12pt " + Settings.font;
+        ctx.fillStyle = "white";
+        ctx.textAlign = "left";
+
+        const width = 200;
+        var rowHeight = 28;
+        const margin = 20;
+
+        const arrow = sprites["arrow"];
+
+        for (let i = 0; i < this.data.Entries.length; i++) {
+            const entry = this.data.Entries[i];
+
+            if (entry.Token) {
+                ctx.fillStyle = "aqua";
+                ctx.fillText("✓", this.canvas.width - width, rowHeight + i * rowHeight);
+            }
+            var tokenWidth = entry.Token ? 15 : 0;
+            ctx.fillStyle = "white";
+            ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width + tokenWidth, rowHeight + i * rowHeight);
+            ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + i * rowHeight);
+
+            ctx.fillStyle = entry.Color;
+
+            const x = this.canvas.width - width - rowHeight;
+            const y = i * rowHeight + 10;
+
+            ctx.fillRect(x, y, rowHeight, rowHeight);
+
+            if (relativeTo) {
+                const angle = Math.atan2(entry.Position.Y - relativeTo.Y, entry.Position.X - relativeTo.X);
+
+                ctx.save();
+                ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
+                const w = arrow.image.width;
+                const h = arrow.image.height;
+                ctx.rotate(angle);
+                ctx.scale(arrow.scale, arrow.scale);
+                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
+                ctx.restore();
             }
         }
 
+        if (this.data.Record) {
+            ctx.font = "8pt " + Settings.font;
+            ctx.fillStyle = "white";
+            ctx.fillText(`record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`, margin, this.canvas.height - margin);
+        }
         ctx.restore();
     }
+
+    draw(relativeTo) {
+
+        if (!Settings.leaderboardEnabled)
+            return;
+
+        switch (this.data.Type) {
+            case "Team":
+                this.modeTeam(relativeTo);
+                break;
+            case "CTF":
+                this.modeCTF(relativeTo);
+                break;
+            case "FFA":
+                this.modeStandard(relativeTo);
+                break;
+            default:
+                console.log(`Unknown leaderboard type: ${this.data.Type}`);
+        }
+    }
 }
+
+
+

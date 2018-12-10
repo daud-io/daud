@@ -51,8 +51,11 @@
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
                     ObstacleMinSize = 300,
                     ObstacleMaxSize = 600,
+                    ObstacleBorderBuffer = 1000,
+
                     TeamMode = false,
                     CTFMode = false,
+                    CTFCarryDrag = 0.90f,
 
                     SpawnShipCount = 5,
 
@@ -136,9 +139,11 @@
         public int ObstacleMinSize { get; set; }
         public int ObstacleMaxSize { get; set; }
         public float ObstacleMaxMomentumWeatherMultiplier { get; set; }
+        public int ObstacleBorderBuffer { get; set; }
 
         public bool TeamMode { get; set; }
         public bool CTFMode { get; set; }
+        public float CTFCarryDrag { get; set; }
 
         public int LeaderboardRefresh { get; set; } = 750;
 

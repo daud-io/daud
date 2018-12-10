@@ -93,8 +93,8 @@
 
             if (World.Hook.CTFMode && Flags.Count == 0)
             {
-                CreateTeam("cyan", "flag_blue", new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
-                CreateTeam("red", "flag_red", new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
+                CreateTeam("cyan", "flag_blue", new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
+                CreateTeam("red", "flag_red", new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
                 World.FleetSpawnPositionGenerator = this.FleetSpawnPosition;
                 World.LeaderboardGenerator = this.LeaderboardGenerator;
             }
@@ -167,14 +167,25 @@
         {
             private readonly Team Team;
             public Flag Flag { get; set; }
+            private const float SPEED_SPINNING = 0.001f;
+            private const float SPEED_STOPPED = 0f;
 
             public Base(Vector2 position, Team team)
             {
                 this.Team = team;
                 this.Position = position;
                 this.Sprite = Sprites.ctf_base;
-                this.AngularVelocity = 0.03f;
+                this.AngularVelocity = SPEED_STOPPED;
                 this.Size = 200;
+            }
+
+            public override void Think()
+            {
+                base.Think();
+
+                this.AngularVelocity = FlagIsHome()
+                    ? SPEED_SPINNING
+                    : SPEED_STOPPED;
             }
 
             void ICollide.CollisionExecute(Body projectedBody)
@@ -220,6 +231,8 @@
             private uint NextSpriteTime = 0;
             private int SpriteIndex = 0;
             public Fleet CarriedBy = null;
+
+            public float OriginalShipDrag = 0;
 
             public Flag(string baseSpriteName, Team team, Base b)
             {
@@ -267,10 +280,14 @@
                     this.Position = CarriedBy.FleetCenter;
                     this.Momentum = CarriedBy.FleetMomentum;
 
-                    Console.WriteLine($"X:{CarriedBy.FleetMomentum.X} Y:{CarriedBy.FleetMomentum.Y}");
+                    //Console.WriteLine($"X:{CarriedBy.FleetMomentum.X} Y:{CarriedBy.FleetMomentum.Y}");
                 }
                 else
                 {
+                    if (CarriedBy != null)
+                        foreach (var ship in CarriedBy.Ships)
+                            ship.Drag = OriginalShipDrag;
+
                     CarriedBy = null;
                     this.Momentum = new Vector2(0, 0);
                 }
@@ -287,21 +304,37 @@
 
             public void ReturnToBase()
             {
+                if (CarriedBy != null)
+                    foreach (var ship in CarriedBy.Ships)
+                        ship.Drag = OriginalShipDrag;
+
                 this.Position = Base.Position;
                 this.CarriedBy = null;
             }
 
             void ICollide.CollisionExecute(Body projectedBody)
             {
-                var ship = projectedBody as Ship;
-                var fleet = ship.Fleet;
-
-                if (fleet != null && CarriedBy == null && !(fleet.Owner is Robot))
+                if (projectedBody is Ship ship)
                 {
-                    if (fleet.Owner.Color == Team.ColorName)
-                        ReturnToBase();
-                    else
-                        CarriedBy = fleet;
+                    var fleet = ship.Fleet;
+
+                    if (fleet != null && CarriedBy == null && !(fleet.Owner is Robot))
+                    {
+                        if (fleet.Owner.Color == Team.ColorName)
+                            ReturnToBase();
+                        else
+                        {
+                            CarriedBy = fleet;
+
+                            if (CarriedBy != null)
+                                foreach (var s in CarriedBy.Ships)
+                                    s.Drag = World.Hook.CTFCarryDrag;
+                        }
+                    }
+                }
+                if (projectedBody is Obstacle obstacle)
+                {
+                    CarriedBy = null;
                 }
             }
 
@@ -315,6 +348,13 @@
                     return Vector2.Distance(projectedBody.Position, this.Position)
                         < (projectedBody.Size + this.Size);
                 }
+
+                // consider dropping flags... drop is not working out well though
+                /*if (projectedBody is Obstacle obstacle && CarriedBy != null)
+                {
+                    return Vector2.Distance(projectedBody.Position, this.Position)
+                        < (projectedBody.Size + this.Size);
+                }*/
                 return false;
             }
         }

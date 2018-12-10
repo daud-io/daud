@@ -198,12 +198,9 @@ document.getElementById("worldSelector").addEventListener("change", () => {
             // intend to make a greeting message from the server on connection
             // that explains the allowed options in the room
 
-            document.getElementById("shipSelector").innerHTML = '<option value="cyan">cyan</option>' + '<option value="red">red</option>';
-
-            if (Controls.color != "cyan" && Controls.color != "red") {
-                Controls.ship = "ship_cyan";
-                Controls.color = "cyan";
-            }
+            document.getElementById("shipSelector").innerHTML = '<option selected value="cyan">cyan</option>' + '<option value="red">red</option>';
+            Controls.ship = "ship_cyan";
+            Controls.color = "cyan";
 
             break;
         default:

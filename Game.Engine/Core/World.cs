@@ -101,11 +101,10 @@
             Processing = false;
         }
 
-        public float DistanceOutOfBounds(Vector2 position)
+        public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
         {
             var pos = Vector2.Abs(position);
-
-            return Math.Max(pos.X - Hook.WorldSize, Math.Max(pos.Y - Hook.WorldSize, 0));
+            return Math.Max(pos.X - Hook.WorldSize - buffer, Math.Max(pos.Y - Hook.WorldSize - buffer, 0));
         }
 
         private void ProcessLeaderboard()
