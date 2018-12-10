@@ -56,6 +56,7 @@
                     TeamMode = false,
                     CTFMode = false,
                     CTFCarryBurden = 0.2f,
+                    CTFSpawnDistance = 6000,
 
                     SpawnShipCount = 5,
 
@@ -144,6 +145,7 @@
         public bool TeamMode { get; set; }
         public bool CTFMode { get; set; }
         public float CTFCarryBurden { get; set; }
+        public int CTFSpawnDistance { get; set; }
 
         public int LeaderboardRefresh { get; set; } = 750;
 

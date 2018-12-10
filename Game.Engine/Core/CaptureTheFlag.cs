@@ -61,10 +61,16 @@
                 if (team != null)
                 {
                     var points = new List<Vector2>();
+                    int failsafe = 10000;
 
-                    for (var i = 0; i < POINTS_TO_TEST; i++)
+                    while(points.Count < POINTS_TO_TEST)
                     {
-                        points.Add(World.RandomPosition());
+                        var position = World.RandomPosition();
+                        if (Vector2.Distance(position, team.BaseLocation) < World.Hook.CTFSpawnDistance)
+                            points.Add(position);
+
+                        if (failsafe-- < 0)
+                            throw new Exception("Cannot find qualifying location in CTF Spawn");
                     }
 
                     return points.Select(p =>
@@ -75,7 +81,6 @@
                         {
                             Closest = closeBodies.Any()
                                 ? closeBodies.Min(s => Vector2.Distance(s.Position, p))
-                                 + (World.Hook.WorldSize * 2 - Vector2.Distance(p, team.BaseLocation))
                                 : MAXIMUM_SEARCH_SIZE,
                             Point = p
                         };
