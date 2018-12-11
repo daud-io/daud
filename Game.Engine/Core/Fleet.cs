@@ -179,6 +179,22 @@
             base.CreateDestroy();
         }
 
+        public void Abandon()
+        {
+            foreach (var ship in Ships)
+                this.AbandonShip(ship);
+        }
+
+        public void AbandonShip(Ship ship)
+        {
+            ship.Fleet = null;
+            ship.Sprite = Sprites.ship_gray;
+            ship.Color = "gray";
+            ship.Abandoned = true;
+            ship.Group = null;
+            ship.ThrustAmount = 0;
+        }
+
         public override void Think()
         {
             var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
@@ -197,12 +213,7 @@
                 for (int i = 0; i < shipLoss; i++)
                 {
                     var ship = Ships.First();
-                    ship.Fleet = null;
-                    ship.Sprite = Sprites.ship_gray;
-                    ship.Color = "gray";
-                    ship.Abandoned = true;
-                    ship.Group = null;
-                    ship.ThrustAmount = 0;
+                    AbandonShip(ship);
                     Ships.Remove(ship);
                 }
             }

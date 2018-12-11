@@ -257,11 +257,20 @@ function startSpectate() {
 document.getElementById("spectate").addEventListener("click", () => {
     startSpectate();
 });
-s
+
 document.addEventListener("keydown", ({ keyCode, which }) => {
     if (keyCode == 27 || which == 27) {
-        isSpectating = false;
-        document.body.classList.remove("spectating");
+        if (lastAliveState) {
+            connection.sendExit();
+            console.log('sending exit');
+        }
+        else if (isSpectating) {
+            isSpectating = false;
+            document.body.classList.remove("spectating");
+        }
+        else {
+            startSpectate();
+        }
     }
 });
 

@@ -458,6 +458,10 @@
                     }
 
                     break;
+
+                case AllMessages.NetExit:
+                    player.Exit();
+                    break;
             }
         }
 

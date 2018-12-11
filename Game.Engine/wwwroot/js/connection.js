@@ -106,6 +106,24 @@ export class Connection {
         this.send(builder.asUint8Array());
     }
 
+    sendExit() {
+        const builder = new flatbuffers.Builder(0);
+
+        this.fb.NetExit.startNetExit(builder);
+
+        this.fb.NetExit.addCode(builder, 0);
+        const exitmessage = this.fb.NetExit.endNetExit(builder);
+
+        this.fb.NetQuantum.startNetQuantum(builder);
+        this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetExit);
+        this.fb.NetQuantum.addMessage(builder, exitmessage);
+        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
+
+        builder.finish(quantum);
+
+        this.send(builder.asUint8Array());
+    }
+
     sendSpawn(name, color, ship, token) {
         const builder = new flatbuffers.Builder(0);
 

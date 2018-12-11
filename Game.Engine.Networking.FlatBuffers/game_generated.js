@@ -33,7 +33,8 @@ Game.Engine.Networking.FlatBuffers.AllMessages = {
   NetSpawn: 2,
   NetControlInput: 3,
   NetPing: 4,
-  NetLeaderboard: 5
+  NetLeaderboard: 5,
+  NetExit: 6
 };
 
 /**
@@ -417,6 +418,73 @@ Game.Engine.Networking.FlatBuffers.NetSpawn.addToken = function(builder, tokenOf
  * @returns {flatbuffers.Offset}
  */
 Game.Engine.Networking.FlatBuffers.NetSpawn.endNetSpawn = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+Game.Engine.Networking.FlatBuffers.NetExit = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {Game.Engine.Networking.FlatBuffers.NetExit}
+ */
+Game.Engine.Networking.FlatBuffers.NetExit.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {Game.Engine.Networking.FlatBuffers.NetExit=} obj
+ * @returns {Game.Engine.Networking.FlatBuffers.NetExit}
+ */
+Game.Engine.Networking.FlatBuffers.NetExit.getRootAsNetExit = function(bb, obj) {
+  return (obj || new Game.Engine.Networking.FlatBuffers.NetExit).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetExit.prototype.code = function() {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+Game.Engine.Networking.FlatBuffers.NetExit.startNetExit = function(builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} code
+ */
+Game.Engine.Networking.FlatBuffers.NetExit.addCode = function(builder, code) {
+  builder.addFieldInt32(0, code, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+Game.Engine.Networking.FlatBuffers.NetExit.endNetExit = function(builder) {
   var offset = builder.endObject();
   return offset;
 };

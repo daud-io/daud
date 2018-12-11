@@ -190,6 +190,27 @@
                 });
         }
 
+        public void Exit()
+        {
+            if (IsAlive)
+            {
+                DeadSince = World.Time;
+                OnDeath();
+
+                if (Fleet != null)
+                {
+                    Fleet.Abandon();
+
+                    Fleet.Ships.Clear();
+                    Fleet.PendingDestruction = true;
+                }
+
+                Fleet = null;
+                IsAlive = false;
+            }
+
+        }
+
         public void Die(Player player = null)
         {
             if (IsAlive)
