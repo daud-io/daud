@@ -13,6 +13,7 @@
         private List<Team> Teams = new List<Team>();
 
         public uint GameRestartTime { get; set; } = 0;
+        public uint GameEmptySince { get; set; } = 0;
 
         public Leaderboard LeaderboardGenerator()
         {
@@ -189,6 +190,21 @@
                     GameRestartTime = World.Time + 10000;
                 }
             }
+
+
+            var playerCount = Player.GetWorldPlayers(World)
+                .Where(p => p.IsAlive).Count();
+
+            if (playerCount == 0)
+            {
+                if (GameEmptySince == 0)
+                    GameEmptySince = World.Time;
+                else if (World.Time - GameEmptySince > 10000)
+                    GameRestartTime = World.Time;
+            }
+
+            if (playerCount > 0)
+                GameEmptySince = 0;
         }
 
         private class Team

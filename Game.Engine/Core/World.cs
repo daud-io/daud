@@ -114,25 +114,44 @@
                 if (LeaderboardGenerator != null)
                     Leaderboard = LeaderboardGenerator();
                 else
-
                 {
-
                     if (Hook.TeamMode)
                     {
+                        var entries = new List<Leaderboard.Entry>();
+
+                        var cyanTeam = Player.GetTeam(this, "cyan");
+                        var redTeam = Player.GetTeam(this, "red");
+
+                        entries.Add(new Leaderboard.Entry
+                        {
+                            Name = "cyan",
+                            Score = cyanTeam.Sum(p => p.Score),
+                            Color = "cyan"
+                        });
+
+                        entries.Add(new Leaderboard.Entry
+                        {
+                            Name = "red",
+                            Score = redTeam.Sum(p => p.Score),
+                            Color = "red"
+                        });
+
+                        entries.AddRange(Player.GetWorldPlayers(this)
+                            .Where(p => p.IsAlive)
+                            .OrderBy(p => p.Color)
+                            .ThenByDescending(p => p.Score)
+                            .Select(p => new Leaderboard.Entry
+                            {
+                                Name = p.Name,
+                                Score = p.Score,
+                                Color = p.Color,
+                                Position = p.Fleet?.FleetCenter ?? Vector2.Zero
+                            })
+                            .ToList());
+
                         Leaderboard = new Leaderboard
                         {
-                            Entries = Player.GetWorldPlayers(this)
-                                .Where(p => p.IsAlive)
-                                .GroupBy(p => p.Color)
-                                .Select(g => new Leaderboard.Entry
-                                {
-                                    Name = g.Key,
-                                    Score = g.Sum(p => p.Score),
-                                    Color = g.Key ?? "white"
-                                })
-                                    .OrderByDescending(e => e.Score)
-                                    .Take(10)
-                                    .ToList(),
+                            Entries = entries,
                             Type = "Team",
                             Time = this.Time
                         };

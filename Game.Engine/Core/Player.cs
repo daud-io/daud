@@ -3,6 +3,7 @@
     using Game.Engine.Networking;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
 
     public class Player : IActor
@@ -95,6 +96,14 @@
         }
 
         public string Name { get; set; }
+
+        public static List<Player> GetTeam(World world, string color)
+        {
+            return Player.GetWorldPlayers(world)
+                .Where(p => p.IsAlive)
+                .Where(p => p.Color == color)
+                .ToList();
+        }
 
         public static List<Player> GetWorldPlayers(World world)
         {

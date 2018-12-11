@@ -12,19 +12,46 @@ export class Leaderboard {
         this.data = data;
     }
 
+    drawTeamLeaderboardAt(entries, relativeTo, leftEdge) {
+        const ctx = this.context;
+        const arrow = sprites["arrow"];
+        entries.forEach(({ Name, Score, Color, Position }, i) => {
+            var rowHeight = 28;
+            ctx.fillStyle = "white";
+            ctx.fillText(Name || "Unknown Fleet", leftEdge, rowHeight + i * rowHeight);
+            ctx.fillText(Score, leftEdge + 200, rowHeight + i * rowHeight);
+            ctx.fillStyle = Color;
+
+            const x = leftEdge - rowHeight;
+            const y = i * rowHeight + 10;
+
+            ctx.fillRect(x, y, rowHeight, rowHeight);
+
+            if (relativeTo && (Position.X != 0 && Position.Y != 0)) {
+                const angle = Math.atan2(Position.Y - relativeTo.Y, Position.X - relativeTo.X);
+
+                ctx.save();
+                ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
+                const w = arrow.image.width;
+                const h = arrow.image.height;
+                ctx.rotate(angle);
+                ctx.scale(arrow.scale, arrow.scale);
+                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
+                ctx.restore();
+            }
+        });
+    };
 
 
     modeCTF(relativeTo) {
         const ctx = this.context;
-        ctx.save();
+        ctx.save();^
 
         ctx.font = "12pt " + Settings.font;
         ctx.fillStyle = "white";
         ctx.textAlign = "left";
 
-
         const arrow = sprites["arrow"];
-
 
         const self = this;
         const findTeam = teamName => {
@@ -59,10 +86,6 @@ export class Leaderboard {
 
         var teams = ['cyan', 'red'];
 
-        var cyanCount = 0;
-        var redCount = 0;
-
-
         var cyanFlag = false;
         var cyanTeam = [];
         var redFlag = false;
@@ -80,9 +103,11 @@ export class Leaderboard {
         });
 
 
-        const drawFlagArrow = (flag, teamIndex) => {
+        const drawFlagArrow = (flag, sprite, teamIndex) => {
             if (relativeTo) {
                 const angle = Math.atan2(flag.Position.Y - relativeTo.Y, flag.Position.X - relativeTo.X);
+                var arrow = sprites[sprite];
+                var overlay = sprites['ctf_arrow_trans_flag'];
 
                 ctx.save();
                 const w = arrow.image.width;
@@ -93,48 +118,25 @@ export class Leaderboard {
                 else
                     ctx.translate(hudX + hudWidth, hudY + 40);
 
+                ctx.save();
                 ctx.rotate(angle);
                 ctx.scale(arrow.scale, arrow.scale);
                 ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
                 ctx.restore();
+
+                //ctx.scale(overlay.scale, overlay.scale);
+                //ctx.drawImage(overlay.image, -overlay.image.width / 2, -overlay.image.height / 2, overlay.image.width, overlay.image.height);
+
+                ctx.restore();
             }
         };
 
-        const drawLeaderboard = (entries, teamIndex, leftEdge) => {
-            entries.forEach(({ Name, Score, Color, Position }, i) => {
-                var rowHeight = 28;
-                ctx.fillStyle = "white";
-                ctx.fillText(Name || "Unknown Fleet", leftEdge, rowHeight + i * rowHeight);
-                ctx.fillText(Score, leftEdge + 200, rowHeight + i * rowHeight);
-                ctx.fillStyle = Color;
-
-                const x = leftEdge - rowHeight;
-                const y = i * rowHeight + 10;
-
-                ctx.fillRect(x, y, rowHeight, rowHeight);
-
-                if (relativeTo) {
-                    const angle = Math.atan2(Position.Y - relativeTo.Y, Position.X - relativeTo.X);
-
-                    ctx.save();
-                    ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
-                    const w = arrow.image.width;
-                    const h = arrow.image.height;
-                    ctx.rotate(angle);
-                    ctx.scale(arrow.scale, arrow.scale);
-                    ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
-                    ctx.restore();
-                }
-            });
-        };
-
-        drawFlagArrow(cyanFlag, 0);
-        drawFlagArrow(redFlag, 1);
-        drawLeaderboard(cyanTeam, 0, 60);
-        drawLeaderboard(redTeam, 1, this.canvas.width - 60 - 200);
+        drawFlagArrow(redFlag, "ctf_arrow_red", 1);
+        drawFlagArrow(cyanFlag, "ctf_arrow_blue", 0);
+        this.drawTeamLeaderboardAt(cyanTeam, relativeTo, 60);
+        this.drawTeamLeaderboardAt(redTeam, relativeTo, this.canvas.width - 60 - 200);
 
         ctx.restore();
-
     }
 
     modeTeam(relativeTo) {
@@ -145,37 +147,26 @@ export class Leaderboard {
         ctx.fillStyle = "white";
         ctx.textAlign = "left";
 
-        const width = 200;
-        var rowHeight = 28;
-        const margin = 20;
+        var cyanTeam = [];
+        var redTeam = [];
+        var teams = [];
 
-        const arrow = sprites["arrow"];
-
-        this.data.Entries.forEach(({ Name, Score, Color, Position }, i) => {
-            ctx.fillStyle = "white";
-            ctx.fillText(Name || "Unknown Fleet", this.canvas.width - width, rowHeight + i * rowHeight);
-            ctx.fillText(Score, this.canvas.width - 60, rowHeight + i * rowHeight);
-
-            ctx.fillStyle = Color;
-
-            const x = this.canvas.width - width - rowHeight;
-            const y = i * rowHeight + 10;
-
-            ctx.fillRect(x, y, rowHeight, rowHeight);
-
-            if (relativeTo) {
-                const angle = Math.atan2(Position.Y - relativeTo.Y, Position.X - relativeTo.X);
-
-                ctx.save();
-                ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
-                const w = arrow.image.width;
-                const h = arrow.image.height;
-                ctx.rotate(angle);
-                ctx.scale(arrow.scale, arrow.scale);
-                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
-                ctx.restore();
-            }
+        this.data.Entries.forEach((entry, i) => {
+            if (i == 0)
+                teams.push(entry);
+            else if (i == 1)
+                teams.push(entry);
+            else if (entry.Color == 'cyan')
+                cyanTeam.push(entry);
+            else
+                redTeam.push(entry);
         });
+
+        this.drawTeamLeaderboardAt(teams, false, this.canvas.width / 2 - 100);
+
+        this.drawTeamLeaderboardAt(cyanTeam, relativeTo, 60);
+        this.drawTeamLeaderboardAt(redTeam, relativeTo, this.canvas.width - 60 - 200);
+
         ctx.restore();
     }
 

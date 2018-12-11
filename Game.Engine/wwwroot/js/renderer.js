@@ -99,6 +99,9 @@ addSprite("ctf_score_right_2");
 addSprite("ctf_score_right_3");
 addSprite("ctf_score_right_4");
 addSprite("ctf_score_stripes");
+addSprite("ctf_arrow_red", 0.05);
+addSprite("ctf_arrow_blue", 0.05);
+addSprite("ctf_arrow_trans_flag", 0.1);
 
 export class Renderer {
     constructor(context, settings = {}) {

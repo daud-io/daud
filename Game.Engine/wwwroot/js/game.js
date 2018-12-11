@@ -220,6 +220,7 @@ document.getElementById("worldSelector").addEventListener("change", () => {
 
     switch (world) {
         case "ctf":
+        case "team":
             // this is super hacky...
             // intend to make a greeting message from the server on connection
             // that explains the allowed options in the room
