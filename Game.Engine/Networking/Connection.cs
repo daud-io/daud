@@ -157,7 +157,8 @@
                                         group: serverGroup.ID,
                                         type: (byte)serverGroup.GroupType,
                                         captionOffset: caption,
-                                        zindex: serverGroup.ZIndex
+                                        zindex: serverGroup.ZIndex,
+                                        owner: serverGroup.OwnerID
                                     );
                                     return group;
                                 }).ToArray());
@@ -256,6 +257,12 @@
                             NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
                             NetWorldView.AddCooldownShoot(builder, (byte)((player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
                             NetWorldView.AddWorldSize(builder, (ushort)world.Hook.WorldSize);
+
+                            if (followFleet != null)
+                                // inform the client of which the fleet id
+                                NetWorldView.AddFleetID(builder, (ushort)followFleet.ID);
+                            else
+                                NetWorldView.AddFleetID(builder, 0);
 
                             var worldView = NetWorldView.EndNetWorldView(builder);
 

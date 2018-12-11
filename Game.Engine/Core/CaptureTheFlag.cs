@@ -16,6 +16,8 @@
         public uint GameRestartTime { get; set; } = 0;
         public uint GameEmptySince { get; set; } = 0;
 
+        private long NextAnnounceTime { get; set; } = 0;
+
         public Leaderboard LeaderboardGenerator()
         {
             var entries = Teams.Select(t => new Leaderboard.Entry
@@ -105,7 +107,7 @@
 
             Teams.Add(team);
 
-            var b = new Base(basePosition, team);
+            var b = new Base(this, basePosition, team);
             var flag = new Flag(flagSpriteBase, team, b);
             b.Flag = flag;
             team.Flag = flag;
@@ -165,6 +167,11 @@
             World.Actors.Add(this);
         }
 
+        private void AnnounceDefault(string message)
+        {
+
+        }
+
         void IActor.Think()
         {
 
@@ -188,10 +195,14 @@
             {
                 if (team.Score >= 5 && GameRestartTime == 0)
                 {
-                    GameRestartTime = World.Time + 10000;
+                    var world = Worlds.Find();
+                    var players = Player.GetWorldPlayers(world);
+                    foreach (var player in players)
+                        player.SendMessage("Next round of CTF (Capture the Flag) starts in 30 seconds, join now");
+
+                    GameRestartTime = World.Time + 30000;
                 }
             }
-
 
             var playerCount = Player.GetWorldPlayers(World)
                 .Where(p => p.IsAlive).Count();
@@ -227,14 +238,16 @@
             public Flag Flag { get; set; }
             private const float SPEED_SPINNING = 0.001f;
             private const float SPEED_STOPPED = 0f;
+            private readonly CaptureTheFlag CaptureTheFlag = null;
 
-            public Base(Vector2 position, Team team)
+            public Base(CaptureTheFlag captureTheFlag, Vector2 position, Team team)
             {
                 this.Team = team;
                 this.Position = position;
                 this.Sprite = Sprites.ctf_base;
                 this.AngularVelocity = SPEED_STOPPED;
                 this.Size = 200;
+                this.CaptureTheFlag = captureTheFlag;
             }
 
             public override void Think()
@@ -272,6 +285,16 @@
 
                     if (!FlagIsHome())
                     {
+                        if (World.Time > CaptureTheFlag.NextAnnounceTime)
+                        {
+                            var player = flag?.CarriedBy?.Owner;
+                            if (player != null)
+                            {
+                                CaptureTheFlag.NextAnnounceTime = World.Time + 2000;
+                                player.SendMessage("Your flag is not home. It must be in your base to score!");
+                            }
+                        }
+
                         return false;
                     }
 

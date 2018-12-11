@@ -25,6 +25,7 @@ export class Cache {
             var deleteKey = groupDeletes[i];
             var key = `g-${deleteKey}`;
             delete this.groups[key];
+            console.log('delete group', deleteKey);
         }
 
         // update objects that should be here
@@ -57,6 +58,8 @@ export class Cache {
             var existing = this.groups[`g-${group.ID}`];
 
             this.groups[`g-${group.ID}`] = group;
+
+            console.log('new group', group);
         }
     }
 

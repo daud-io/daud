@@ -266,48 +266,50 @@ public struct NetWorldView : IFlatbufferObject
 
   public uint Time { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public NetBody? Camera { get { int o = __p.__offset(6); return o != 0 ? (NetBody?)(new NetBody()).__assign(o + __p.bb_pos, __p.bb) : null; } }
-  public bool IsAlive { get { int o = __p.__offset(8); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
-  public NetBody? Updates(int j) { int o = __p.__offset(10); return o != 0 ? (NetBody?)(new NetBody()).__assign(__p.__vector(o) + j * 28, __p.bb) : null; }
-  public int UpdatesLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public uint Deletes(int j) { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
-  public int DeletesLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public ArraySegment<byte>? GetDeletesBytes() { return __p.__vector_as_arraysegment(12); }
-  public NetGroup? Groups(int j) { int o = __p.__offset(14); return o != 0 ? (NetGroup?)(new NetGroup()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int GroupsLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public uint GroupDeletes(int j) { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
-  public int GroupDeletesLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public ArraySegment<byte>? GetGroupDeletesBytes() { return __p.__vector_as_arraysegment(16); }
-  public NetAnnouncement? Announcements(int j) { int o = __p.__offset(18); return o != 0 ? (NetAnnouncement?)(new NetAnnouncement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
-  public int AnnouncementsLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public uint PlayerCount { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  public uint SpectatorCount { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  public byte CooldownShoot { get { int o = __p.__offset(24); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
-  public byte CooldownBoost { get { int o = __p.__offset(26); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
-  public ushort WorldSize { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public uint FleetID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public bool IsAlive { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
+  public NetBody? Updates(int j) { int o = __p.__offset(12); return o != 0 ? (NetBody?)(new NetBody()).__assign(__p.__vector(o) + j * 28, __p.bb) : null; }
+  public int UpdatesLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint Deletes(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int DeletesLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public ArraySegment<byte>? GetDeletesBytes() { return __p.__vector_as_arraysegment(14); }
+  public NetGroup? Groups(int j) { int o = __p.__offset(16); return o != 0 ? (NetGroup?)(new NetGroup()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int GroupsLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint GroupDeletes(int j) { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
+  public int GroupDeletesLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public ArraySegment<byte>? GetGroupDeletesBytes() { return __p.__vector_as_arraysegment(18); }
+  public NetAnnouncement? Announcements(int j) { int o = __p.__offset(20); return o != 0 ? (NetAnnouncement?)(new NetAnnouncement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int AnnouncementsLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public uint PlayerCount { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint SpectatorCount { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public byte CooldownShoot { get { int o = __p.__offset(26); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  public byte CooldownBoost { get { int o = __p.__offset(28); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  public ushort WorldSize { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
 
-  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(13); }
+  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(14); }
   public static void AddTime(FlatBufferBuilder builder, uint time) { builder.AddUint(0, time, 0); }
   public static void AddCamera(FlatBufferBuilder builder, Offset<NetBody> cameraOffset) { builder.AddStruct(1, cameraOffset.Value, 0); }
-  public static void AddIsAlive(FlatBufferBuilder builder, bool isAlive) { builder.AddBool(2, isAlive, true); }
-  public static void AddUpdates(FlatBufferBuilder builder, VectorOffset updatesOffset) { builder.AddOffset(3, updatesOffset.Value, 0); }
+  public static void AddFleetID(FlatBufferBuilder builder, uint fleetID) { builder.AddUint(2, fleetID, 0); }
+  public static void AddIsAlive(FlatBufferBuilder builder, bool isAlive) { builder.AddBool(3, isAlive, true); }
+  public static void AddUpdates(FlatBufferBuilder builder, VectorOffset updatesOffset) { builder.AddOffset(4, updatesOffset.Value, 0); }
   public static void StartUpdatesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(28, numElems, 4); }
-  public static void AddDeletes(FlatBufferBuilder builder, VectorOffset deletesOffset) { builder.AddOffset(4, deletesOffset.Value, 0); }
+  public static void AddDeletes(FlatBufferBuilder builder, VectorOffset deletesOffset) { builder.AddOffset(5, deletesOffset.Value, 0); }
   public static VectorOffset CreateDeletesVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
   public static void StartDeletesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddGroups(FlatBufferBuilder builder, VectorOffset groupsOffset) { builder.AddOffset(5, groupsOffset.Value, 0); }
+  public static void AddGroups(FlatBufferBuilder builder, VectorOffset groupsOffset) { builder.AddOffset(6, groupsOffset.Value, 0); }
   public static VectorOffset CreateGroupsVector(FlatBufferBuilder builder, Offset<NetGroup>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartGroupsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddGroupDeletes(FlatBufferBuilder builder, VectorOffset groupDeletesOffset) { builder.AddOffset(6, groupDeletesOffset.Value, 0); }
+  public static void AddGroupDeletes(FlatBufferBuilder builder, VectorOffset groupDeletesOffset) { builder.AddOffset(7, groupDeletesOffset.Value, 0); }
   public static VectorOffset CreateGroupDeletesVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
   public static void StartGroupDeletesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddAnnouncements(FlatBufferBuilder builder, VectorOffset announcementsOffset) { builder.AddOffset(7, announcementsOffset.Value, 0); }
+  public static void AddAnnouncements(FlatBufferBuilder builder, VectorOffset announcementsOffset) { builder.AddOffset(8, announcementsOffset.Value, 0); }
   public static VectorOffset CreateAnnouncementsVector(FlatBufferBuilder builder, Offset<NetAnnouncement>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartAnnouncementsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddPlayerCount(FlatBufferBuilder builder, uint playerCount) { builder.AddUint(8, playerCount, 0); }
-  public static void AddSpectatorCount(FlatBufferBuilder builder, uint spectatorCount) { builder.AddUint(9, spectatorCount, 0); }
-  public static void AddCooldownShoot(FlatBufferBuilder builder, byte cooldownShoot) { builder.AddByte(10, cooldownShoot, 0); }
-  public static void AddCooldownBoost(FlatBufferBuilder builder, byte cooldownBoost) { builder.AddByte(11, cooldownBoost, 0); }
-  public static void AddWorldSize(FlatBufferBuilder builder, ushort worldSize) { builder.AddUshort(12, worldSize, 0); }
+  public static void AddPlayerCount(FlatBufferBuilder builder, uint playerCount) { builder.AddUint(9, playerCount, 0); }
+  public static void AddSpectatorCount(FlatBufferBuilder builder, uint spectatorCount) { builder.AddUint(10, spectatorCount, 0); }
+  public static void AddCooldownShoot(FlatBufferBuilder builder, byte cooldownShoot) { builder.AddByte(11, cooldownShoot, 0); }
+  public static void AddCooldownBoost(FlatBufferBuilder builder, byte cooldownBoost) { builder.AddByte(12, cooldownBoost, 0); }
+  public static void AddWorldSize(FlatBufferBuilder builder, ushort worldSize) { builder.AddUshort(13, worldSize, 0); }
   public static Offset<NetWorldView> EndNetWorldView(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetWorldView>(o);
@@ -328,13 +330,16 @@ public struct NetGroup : IFlatbufferObject
   public string Caption { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
   public ArraySegment<byte>? GetCaptionBytes() { return __p.__vector_as_arraysegment(8); }
   public uint Zindex { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public uint Owner { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
   public static Offset<NetGroup> CreateNetGroup(FlatBufferBuilder builder,
       uint group = 0,
       byte type = 0,
       StringOffset captionOffset = default(StringOffset),
-      uint zindex = 0) {
-    builder.StartObject(4);
+      uint zindex = 0,
+      uint owner = 0) {
+    builder.StartObject(5);
+    NetGroup.AddOwner(builder, owner);
     NetGroup.AddZindex(builder, zindex);
     NetGroup.AddCaption(builder, captionOffset);
     NetGroup.AddGroup(builder, group);
@@ -342,11 +347,12 @@ public struct NetGroup : IFlatbufferObject
     return NetGroup.EndNetGroup(builder);
   }
 
-  public static void StartNetGroup(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void StartNetGroup(FlatBufferBuilder builder) { builder.StartObject(5); }
   public static void AddGroup(FlatBufferBuilder builder, uint group) { builder.AddUint(0, group, 0); }
   public static void AddType(FlatBufferBuilder builder, byte type) { builder.AddByte(1, type, 0); }
   public static void AddCaption(FlatBufferBuilder builder, StringOffset captionOffset) { builder.AddOffset(2, captionOffset.Value, 0); }
   public static void AddZindex(FlatBufferBuilder builder, uint zindex) { builder.AddUint(3, zindex, 0); }
+  public static void AddOwner(FlatBufferBuilder builder, uint owner) { builder.AddUint(4, owner, 0); }
   public static Offset<NetGroup> EndNetGroup(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetGroup>(o);

@@ -36,6 +36,8 @@
         public Func<Task> OnView { get; set; } = null;
         public Func<Task> OnConnected { get; set; } = null;
 
+        public uint FleetID { get; set; } = 0;
+
         public Connection(APIClient apiClient, string worldName = null)
         {
             WorldName = worldName;
@@ -143,7 +145,8 @@
                         ID = group.Group,
                         Caption = group.Caption,
                         Type = group.Type,
-                        ZIndex = group.Zindex
+                        ZIndex = group.Zindex,
+                        Owner = group.Owner
                     });
                 }
             }
@@ -153,6 +156,7 @@
             Position = FromNetVector(netWorldView.Camera.Value.OriginalPosition);
 
             IsAlive = netWorldView.IsAlive;
+            FleetID = netWorldView.FleetID;
 
             if (OnView != null)
                 await OnView();

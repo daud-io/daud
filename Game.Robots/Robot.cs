@@ -46,6 +46,7 @@
 
             var bullets = this.Connection.Bodies
                 .Where(b => b.Sprite.ToString().StartsWith("bullet") || b.Sprite == API.Common.Sprites.seeker)
+                .Where(b => b.Group?.Owner != this.Connection?.FleetID)
                 .OrderBy(b => Vector2.Distance(b.Position, this.Connection.Position))
                 .ToList();
 

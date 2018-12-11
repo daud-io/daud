@@ -43,6 +43,7 @@
         public Vector2 FleetMomentum = Vector2.Zero;
 
         public float Burden { get; set; } = 0f;
+        private bool FireVolley = false;
 
         public Sprites BulletSprite
         {
@@ -166,6 +167,12 @@
             /*if (this.Owner != null && this.Owner.IsAlive)
                 this.PendingDestruction = true;*/
 
+            if (FireVolley)
+            {
+                Volley.FireFrom(this);
+                FireVolley = false;
+            }
+
             foreach (var ship in NewShips)
             {
                 ship.Init(World);
@@ -249,8 +256,10 @@
                 ShootCooldownTime = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
                 ShootCooldownTimeStart = World.Time;
 
-                foreach (var ship in Ships)
-                    NewBullets.Add(Bullet.FireFrom(ship));
+                /*foreach (var ship in Ships)
+                    NewBullets.Add(Bullet.FireFrom(ship));*/
+
+                FireVolley = true;
 
                 this.Pickup = null;
             }

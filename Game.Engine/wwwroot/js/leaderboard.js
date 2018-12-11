@@ -45,7 +45,8 @@ export class Leaderboard {
 
     modeCTF(relativeTo) {
         const ctx = this.context;
-        ctx.save();^
+        ctx.save();
+
 
         ctx.font = "12pt " + Settings.font;
         ctx.fillStyle = "white";
