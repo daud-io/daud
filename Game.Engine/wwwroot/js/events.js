@@ -1,38 +1,25 @@
 ﻿export class Events {
-    static Report(category, action) {
-        /*
-        if (!ga)
-            return;
-
-        try {
-            ga('send', {
-                'hitType': 'event',
-                'eventCategory': category,
-                'eventAction': action,
-                'hitCallback': function () {
-                }
-            });
+    static Report(category, action, value) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag(...args) {
+            dataLayer.push(args);
         }
-        catch (e) {
-            console.log("exception in Events.Report");
-            console.log(e);
-        }
-        */
+        gtag("event", action, { event_category: category, value });
     }
 
     static Spawn() {
-        Events.Report('life', 'spawn');
+        Events.Report("life", "spawn");
     }
 
-    static Death() {
-        Events.Report('life', 'death');
+    static Death(secondsPlayed) {
+        Events.Report("life", "death", secondsPlayed);
     }
 
     static Spectate() {
-        Events.Report('other', 'spectate');
+        Events.Report("other", "spectate");
     }
 
     static ChangeRoom(room) {
-        Events.Report('room', room);
+        Events.Report("room", room);
     }
 }

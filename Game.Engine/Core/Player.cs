@@ -4,6 +4,7 @@
     using Game.Engine.Networking;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
 
     public class Player : IActor
@@ -71,7 +72,7 @@
 
         public void Destroy()
         {
-            Die("");
+            Die();
 
             if (Fleet != null)
             {
@@ -96,6 +97,14 @@
         }
 
         public string Name { get; set; }
+
+        public static List<Player> GetTeam(World world, string color)
+        {
+            return Player.GetWorldPlayers(world)
+                .Where(p => p.IsAlive)
+                .Where(p => p.Color == color)
+                .ToList();
+        }
 
         public static List<Player> GetWorldPlayers(World world)
         {
@@ -178,25 +187,46 @@
 
         }
 
-        protected virtual void OnDeath(string token)
+        protected virtual void OnDeath(Player player = null)
         {
             Score = (int)Math.Max(Score * World.Hook.PointsMultiplierDeath, 0);
 
-            if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(player?.Token))
                 RemoteEventLog.SendEvent(new
                 {
                     token = this.Token,
                     name = this.Name,
-                    killedBy = token
+                    killedBy = Token
                 });
         }
 
-        public void Die(string token)
+        public void Exit()
         {
             if (IsAlive)
             {
                 DeadSince = World.Time;
-                OnDeath(token);
+                OnDeath();
+
+                if (Fleet != null)
+                {
+                    Fleet.Abandon();
+
+                    Fleet.Ships.Clear();
+                    Fleet.PendingDestruction = true;
+                }
+
+                Fleet = null;
+                IsAlive = false;
+            }
+
+        }
+
+        public void Die(Player player = null)
+        {
+            if (IsAlive)
+            {
+                DeadSince = World.Time;
+                OnDeath(player);
 
                 if (Fleet != null)
                     Fleet.PendingDestruction = true;

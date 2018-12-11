@@ -29,6 +29,9 @@
 
         private bool Processing = false;
 
+        public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
+        public Func<Leaderboard> LeaderboardGenerator { get; set; }
+
         public World()
         {
             OffsetTicks = DateTime.Now.Ticks;
@@ -98,63 +101,88 @@
             Processing = false;
         }
 
-        public float DistanceOutOfBounds(Vector2 position)
+        public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
         {
             var pos = Vector2.Abs(position);
-
-            return Math.Max(pos.X - Hook.WorldSize, Math.Max(pos.Y - Hook.WorldSize, 0));
+            return Math.Max(pos.X - Hook.WorldSize + buffer, Math.Max(pos.Y - Hook.WorldSize + buffer, 0));
         }
 
         private void ProcessLeaderboard()
         {
             if (Time >= TimeLeaderboardRecalc)
             {
-                if (Hook.TeamMode)
-                {
-                    Leaderboard = new Leaderboard
-                    {
-                        Entries = Player.GetWorldPlayers(this)
-                            .Where(p => p.IsAlive)
-                            .GroupBy(p => p.Color)
-                            .Select(g => new Leaderboard.Entry
-                            {
-                                Name = g.Key,
-                                Score = g.Sum(p => p.Score),
-                                Color = g.Key ?? "white"
-                            })
-                                .OrderByDescending(e => e.Score)
-                                .Take(10)
-                                .ToList(),
-                        Type = "Team",
-                        Time = this.Time
-                    };
-                }
+                if (LeaderboardGenerator != null)
+                    Leaderboard = LeaderboardGenerator();
                 else
                 {
-                    Leaderboard = new Leaderboard
+                    if (Hook.TeamMode)
                     {
-                        Entries = Player.GetWorldPlayers(this)
+                        var entries = new List<Leaderboard.Entry>();
+
+                        var cyanTeam = Player.GetTeam(this, "cyan");
+                        var redTeam = Player.GetTeam(this, "red");
+
+                        entries.Add(new Leaderboard.Entry
+                        {
+                            Name = "cyan",
+                            Score = cyanTeam.Sum(p => p.Score),
+                            Color = "cyan"
+                        });
+
+                        entries.Add(new Leaderboard.Entry
+                        {
+                            Name = "red",
+                            Score = redTeam.Sum(p => p.Score),
+                            Color = "red"
+                        });
+
+                        entries.AddRange(Player.GetWorldPlayers(this)
                             .Where(p => p.IsAlive)
+                            .OrderBy(p => p.Color)
+                            .ThenByDescending(p => p.Score)
                             .Select(p => new Leaderboard.Entry
                             {
                                 Name = p.Name,
                                 Score = p.Score,
                                 Color = p.Color,
-                                Position = p.Fleet.FleetCenter,
-                                Token = p.Token
+                                Position = p.Fleet?.FleetCenter ?? Vector2.Zero
                             })
-                                .OrderByDescending(e => e.Score)
-                                .Take(10)
-                                .ToList(),
-                        Type = "FFA",
-                        Time = this.Time,
-                        ArenaRecord = Leaderboard?.ArenaRecord
-                            ?? new Leaderboard.Entry()
-                    };
+                            .ToList());
 
-                    var firstPlace = Leaderboard.Entries.FirstOrDefault();
-                    if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
-                        Leaderboard.ArenaRecord = firstPlace;
+                        Leaderboard = new Leaderboard
+                        {
+                            Entries = entries,
+                            Type = "Team",
+                            Time = this.Time
+                        };
+                    }
+                    else
+                    {
+                        Leaderboard = new Leaderboard
+                        {
+                            Entries = Player.GetWorldPlayers(this)
+                                .Where(p => p.IsAlive)
+                                .Select(p => new Leaderboard.Entry
+                                {
+                                    Name = p.Name,
+                                    Score = p.Score,
+                                    Color = p.Color,
+                                    Position = p.Fleet.FleetCenter,
+                                    Token = p.Token
+                                })
+                                    .OrderByDescending(e => e.Score)
+                                    .Take(10)
+                                    .ToList(),
+                            Type = "FFA",
+                            Time = this.Time,
+                            ArenaRecord = Leaderboard?.ArenaRecord
+                                ?? new Leaderboard.Entry()
+                        };
+
+                        var firstPlace = Leaderboard.Entries.FirstOrDefault();
+                        if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
+                            Leaderboard.ArenaRecord = firstPlace;
+                    }
                 }
 
                 TimeLeaderboardRecalc = this.Time + Hook.LeaderboardRefresh;
@@ -222,8 +250,11 @@
             };
         }
 
-        public Vector2 RandomSpawnPosition()
+        public Vector2 RandomSpawnPosition(Fleet fleet = null)
         {
+            if (FleetSpawnPositionGenerator != null)
+                return FleetSpawnPositionGenerator(fleet);
+
             var r = new Random();
 
             switch (Hook.SpawnLocationMode)

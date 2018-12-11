@@ -44,7 +44,7 @@
 
         public bool IsSpectating { get; set; } = false;
 
-        private Fleet SpectatingFleet = null;
+        public Fleet SpectatingFleet = null;
 
         public Connection(ILogger<Connection> logger)
         {
@@ -126,7 +126,7 @@
 
                         if (followBody != null)
                         {
-                            var halfViewport = new Vector2(3200, 3200);
+                            var halfViewport = new Vector2(3300, 3300);
 
                             BodyCache.Update(
                                 world.Bodies,
@@ -458,6 +458,10 @@
                             break;
                     }
 
+                    break;
+
+                case AllMessages.NetExit:
+                    player.Exit();
                     break;
             }
         }

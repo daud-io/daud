@@ -22,7 +22,6 @@
 
         public override void Init(World world)
         {
-
             World = world;
             var r = new Random();
             Position = World.RandomPosition();
@@ -41,8 +40,7 @@
         {
             base.Think();
 
-
-            if (World.DistanceOutOfBounds(Position) > 0)
+            if (World.DistanceOutOfBounds(Position, World.Hook.ObstacleBorderBuffer) > 0)
             {
                 var speed = IdealMomentum.Length();
                 speed *= Multiplier;

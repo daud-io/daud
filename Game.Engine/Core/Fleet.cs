@@ -42,6 +42,8 @@
         public Vector2 FleetCenter = Vector2.Zero;
         public Vector2 FleetMomentum = Vector2.Zero;
 
+        public float Burden { get; set; } = 0f;
+
         public Sprites BulletSprite
         {
             get
@@ -68,6 +70,8 @@
                 player.Score += World.Hook.PointsPerKillFleet;
 
                 player.SendMessage($"You Killed {this.Owner.Name}");
+                if (this.Owner.Connection != null)
+                    this.Owner.Connection.SpectatingFleet = player.Fleet;
                 this.Owner.SendMessage($"Killed by {player.Name}");
             }
             else
@@ -79,7 +83,7 @@
                 }
             }
 
-            this.Owner.Die(player?.Token ?? "");
+            this.Owner.Die(player);
 
             PendingDestruction = true;
             NewShips.Clear();
@@ -150,7 +154,7 @@
         {
             base.Init(world);
 
-            FleetCenter = world.RandomSpawnPosition();
+            FleetCenter = world.RandomSpawnPosition(this);
 
             for (int i = 0; i < world.Hook.SpawnShipCount; i++)
                 this.AddShip();
@@ -176,6 +180,22 @@
             base.CreateDestroy();
         }
 
+        public void Abandon()
+        {
+            foreach (var ship in Ships)
+                this.AbandonShip(ship);
+        }
+
+        public void AbandonShip(Ship ship)
+        {
+            ship.Fleet = null;
+            ship.Sprite = Sprites.ship_gray;
+            ship.Color = "gray";
+            ship.Abandoned = true;
+            ship.Group = null;
+            ship.ThrustAmount = 0;
+        }
+
         public override void Think()
         {
             var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
@@ -194,12 +214,7 @@
                 for (int i = 0; i < shipLoss; i++)
                 {
                     var ship = Ships.First();
-                    ship.Fleet = null;
-                    ship.Sprite = Sprites.ship_gray;
-                    ship.Color = "gray";
-                    ship.Abandoned = true;
-                    ship.Group = null;
-                    ship.ThrustAmount = 0;
+                    AbandonShip(ship);
                     Ships.Remove(ship);
                 }
             }
@@ -216,8 +231,8 @@
                 Flock(ship);
 
                 ship.ThrustAmount = isBoosting
-                    ? BoostThrust
-                    : BaseThrustM * Ships.Count + BaseThrustB;
+                    ? BoostThrust * (1-Burden)
+                    : (BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
 
                 ship.Drag = isBoosting
                     ? 1.0f

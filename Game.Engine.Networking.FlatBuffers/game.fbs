@@ -6,7 +6,8 @@ union AllMessages
 	NetSpawn,
 	NetControlInput,
 	NetPing,
-	NetLeaderboard
+	NetLeaderboard,
+    NetExit
 }
 
 table NetLeaderboard
@@ -31,6 +32,11 @@ table NetSpawn
 	ship:string;
 	color:string;
 	token:string;
+}
+
+table NetExit
+{
+	code: int;
 }
 
 table NetControlInput

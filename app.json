@@ -1,0 +1,9 @@
+{
+    "name": "daud.io",
+    "keywords": [
+      "iogame",
+      "csharp"
+    ],  
+    "image": "andylippitt/iogame",
+    "stack": "container"
+}

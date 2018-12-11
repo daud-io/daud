@@ -1,11 +1,9 @@
 export class Interpolator {
-    constructor(settings) {
-        settings = settings || {};
-    }
+    constructor(settings = {}) {}
 
     shortAngleDist(a0, a1) {
-        var max = Math.PI * 2;
-        var da = (a1 - a0) % max;
+        const max = Math.PI * 2;
+        const da = (a1 - a0) % max;
         return ((2 * da) % max) - da;
     }
 
@@ -20,7 +18,7 @@ export class Interpolator {
     }
 
     projectObject(object, time) {
-        var timeShift = time - object.DefinitionTime;
+        const timeShift = time - object.DefinitionTime;
         object.Angle = object.OriginalAngle + timeShift * object.AngularVelocity;
         object.Position = {
             X: object.OriginalPosition.X + timeShift * object.Momentum.X,
@@ -29,10 +27,10 @@ export class Interpolator {
 
         if (object.previous && object.previous.Position) {
             //var lerpAmount = Math.max(0.0, Math.min((time-object.previous.obsolete) / 400.0, 1.0));
-            var lerpAmount = 0.7;
+            const lerpAmount = 0.7;
 
             if (lerpAmount > 0 && lerpAmount < 1) {
-                var x = 1;
+                const x = 1;
             }
 
             // disable position lerping

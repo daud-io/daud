@@ -1,40 +1,35 @@
 import { Settings } from "./settings";
 
-export var img = new Image();
-export var setPattern;
-var pattern;
+export const img = new Image();
+export let setPattern;
+let pattern;
 img.src = "img/bg.png";
-img.onload = function() {
+img.onload = () => {
     setPattern();
 };
 export class Background {
-    constructor(canvas, context, settings) {
-        settings = settings || {};
-
+    constructor(canvas, context, settings = {}) {
         this.context = context;
 
-        var self = this;
+        const self = this;
 
-        setPattern = function() {
+        setPattern = () => {
             pattern = self.context.createPattern(img, "repeat");
         };
         this.canvas = canvas;
     }
 
     draw(x, y) {
-        var ctx = this.context;
+        const ctx = this.context;
 
         if (Settings.background == "none") {
             ctx.fillStyle = "solid black";
             ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
             return;
         }
-        
 
-        if (Settings.background == "slow")
-            this.parallaxFactor = 200;
-        else
-            this.parallaxFactor = 100;
+        if (Settings.background == "slow") this.parallaxFactor = 200;
+        else this.parallaxFactor = 100;
 
         x /= this.parallaxFactor;
         y /= this.parallaxFactor;
@@ -54,7 +49,6 @@ export class Background {
             ctx.fillRect(-100000 + x, -100000 + y, 200000, 200000);
         }
 
-        
         ctx.restore();
     }
 }

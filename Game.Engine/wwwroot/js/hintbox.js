@@ -1,7 +1,7 @@
-var hintbox = document.getElementById("hintbox");
+const hintbox = document.getElementById("hintbox");
 
-var texts = [
-    "Controls: Mouse to aim, click to fire, press \"s\" to boost!",
+const texts = [
+    'Controls: Mouse to aim, click to fire, press "s" to boost!',
     "Tip: If you have low frames-per-second in FireFox, try Chrome.",
     "Tip: The particles flying around are fish. Shoot them to grow bigger.",
     "Tip: Larger fleets move, shoot, and reload slower than small fleets.",
@@ -13,8 +13,8 @@ var texts = [
     "Tip: Daud.io is open source and changing quickly. Join Discord to help."
 ];
 
-var index = 1; // zero is duplicated in the HTML
-window.setInterval(function() {
+let index = 1; // zero is duplicated in the HTML
+window.setInterval(() => {
     hintbox.innerText = texts[index % texts.length];
     index++;
 }, 6000);

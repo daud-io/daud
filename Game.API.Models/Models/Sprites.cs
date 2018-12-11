@@ -52,6 +52,9 @@
         ctf_score_right_2,
         ctf_score_right_3,
         ctf_score_right_4,
-        ctf_score_stripes
+        ctf_score_stripes,
+        ctf_arrow_red,
+        ctf_arrow_blue,
+        ctf_arrow_trans_flag
     }
 }
