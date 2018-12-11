@@ -260,7 +260,7 @@
 
                             if (followFleet != null)
                                 // inform the client of which the fleet id
-                                NetWorldView.AddFleetID(builder, (ushort)followFleet.ID);
+                                NetWorldView.AddFleetID(builder, (uint)followFleet.ID);
                             else
                                 NetWorldView.AddFleetID(builder, 0);
 

@@ -8,6 +8,10 @@
 
     public class Robot
     {
+        public string Name { get; set; } = "Robot";
+        public string Sprite { get; set; } = "ship0";
+        public string Color { get; set; } = "ship0";
+
         public bool AutoSpawn { get; set; } = true;
         private DateTime LastSpawn = DateTime.MinValue;
         private readonly Connection Connection;
@@ -56,7 +60,7 @@
                 var distance = Vector2.Distance(bullet.Position, this.Connection.Position);
                 if (distance < 2000)
                 {
-                    Console.WriteLine($"AHHH bullet {distance} clicks away");
+                    Console.WriteLine($"bullet.group.owner: {bullet.Group.Owner} myFleetID: {Connection.FleetID}");
                     var runAway = Connection.Position - bullet.Position;
                     angle = MathF.Atan2(runAway.Y, runAway.X);
                 }
@@ -84,7 +88,7 @@
             {
                 if (DateTime.Now.Subtract(LastSpawn).TotalMilliseconds > RESPAWN_FALLOFF)
                 {
-                    await Connection.SpawnAsync("Robot 0.2", "ship0", "green");
+                    await Connection.SpawnAsync(Name, Sprite, Color);
                     LastSpawn = DateTime.Now;
                 }
             }

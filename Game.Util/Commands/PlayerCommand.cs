@@ -5,19 +5,28 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    [Subcommand("test", typeof(Test))]
+    [Subcommand("robots", typeof(Robots))]
     class PlayerCommand : CommandBase
     {
-        class Test : CommandBase
+        class Robots : CommandBase
         {
-            [Option()]
+            [Option]
             public string World { get; set; } = null;
 
-            [Option()]
+            [Option]
             public int Replicas { get; set; } = 10;
 
-            [Option()]
+            [Option]
             public bool Firing { get; set; } = false;
+
+            [Option]
+            public string Name { get; set; } = null;
+
+            [Option]
+            public string Color { get; set; } = "green";
+
+            [Option]
+            public string Sprite { get; set; } = "ship0";
 
             protected async override Task ExecuteAsync()
             {
@@ -28,7 +37,11 @@
                     var player = await API.Player.ConnectAsync(World);
                     var robot = new Robot(player)
                     {
-                        AutoFire = Firing
+                        AutoSpawn = true,
+                        AutoFire = Firing,
+                        Color = Color,
+                        Name = Name,
+                        Sprite = Sprite
                     };
 
                     tasks.Add(robot.Start());
