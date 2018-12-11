@@ -7,8 +7,8 @@
         public bool Exists { get; set; }
         public bool IsDirty { get; set; } = true;
 
-        private byte _groupType { get; set; }
-        public virtual byte GroupType
+        private GroupTypes _groupType;
+        public virtual GroupTypes GroupType
         {
             get
             {
@@ -21,7 +21,7 @@
             }
         }
 
-        private string _caption { get; set; }
+        private string _caption;
         public virtual string Caption
         {
             get
@@ -35,7 +35,7 @@
             }
         }
 
-        private uint _zIndex { get; set; }
+        private uint _zIndex;
         public virtual uint ZIndex
         {
             get
@@ -46,6 +46,20 @@
             {
                 IsDirty = IsDirty || _zIndex != value;
                 _zIndex = value;
+            }
+        }
+
+        private uint _ownerID;
+        public virtual uint OwnerID
+        {
+            get
+            {
+                return _ownerID;
+            }
+            set
+            {
+                IsDirty = IsDirty || _ownerID != value;
+                _ownerID = value;
             }
         }
 

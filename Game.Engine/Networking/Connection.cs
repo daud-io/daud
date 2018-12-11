@@ -155,7 +155,7 @@
 
                                     var group = NetGroup.CreateNetGroup(builder,
                                         group: serverGroup.ID,
-                                        type: serverGroup.GroupType,
+                                        type: (byte)serverGroup.GroupType,
                                         captionOffset: caption,
                                         zindex: serverGroup.ZIndex
                                     );
@@ -314,7 +314,7 @@
                     }
                 }
             }
-            catch (WebSocketException e)
+            catch (WebSocketException)
             {
                 //Console.WriteLine(e);
                 throw;

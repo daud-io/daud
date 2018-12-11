@@ -153,6 +153,7 @@
         public override void Init(World world)
         {
             base.Init(world);
+            this.GroupType = GroupTypes.Fleet;
 
             FleetCenter = world.RandomSpawnPosition(this);
 
