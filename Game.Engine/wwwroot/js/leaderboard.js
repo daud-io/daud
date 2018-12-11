@@ -47,7 +47,6 @@ export class Leaderboard {
         const ctx = this.context;
         ctx.save();
 
-
         ctx.font = "12pt " + Settings.font;
         ctx.fillStyle = "white";
         ctx.textAlign = "left";
