@@ -179,7 +179,7 @@ export class Leaderboard {
 
         const width = 200;
         var rowHeight = 28;
-        const margin = 20;
+        const margin = 15;
 
         const arrow = sprites["arrow"];
 

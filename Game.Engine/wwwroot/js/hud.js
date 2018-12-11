@@ -13,7 +13,7 @@ export class HUD {
 
     draw() {
         const ctx = this.context;
-        const margin = 20;
+        const margin = 15;
 
         if (!Settings.hudEnabled) return;
 

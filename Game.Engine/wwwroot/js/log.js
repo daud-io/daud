@@ -32,17 +32,18 @@ export class Log {
             ctx.font = `12pt ${Settings.font}`;
             ctx.textAlign = "left";
 
-            const rowHeight = 28;
-            const margin = 20;
+            const rowHeight = 25;
+            const margin = 15;
+            const top = this.canvas.height - this.data.length * rowHeight - 55;
 
             for (let i = 0; i < this.data.length; i++) {
                 const slot = this.data[i];
 
                 ctx.fillStyle = "gray";
-                ctx.fillText(slot.time.toLocaleTimeString(), margin, rowHeight + i * rowHeight);
+                ctx.fillText(slot.time.toLocaleTimeString(), margin, rowHeight + i * rowHeight + top);
 
                 ctx.fillStyle = "white";
-                ctx.fillText(slot.entry, margin + 100, rowHeight + i * rowHeight);
+                ctx.fillText(slot.entry, margin + 100, rowHeight + i * rowHeight + top);
             }
         }
 
