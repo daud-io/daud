@@ -106,8 +106,11 @@ connection.onView = newView => {
         document.body.classList.add("alive");
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
-        document.body.classList.remove("alive");
-        document.body.classList.add("dead");
+
+        setTimeout(function () {
+            document.body.classList.remove("alive");
+            document.body.classList.add("dead");
+        }, 500);
 
         Events.Death((gameTime - aliveSince) / 1000);
 
@@ -132,7 +135,7 @@ connection.onView = newView => {
         updateButton();
 
         interval = setInterval(updateButton, 1000);
-        document.getElementById("spawn")
+
     }
 
     lastOffset = view.time - performance.now();
@@ -248,12 +251,13 @@ function startSpectate() {
     isSpectating = true;
     Events.Spectate();
     document.body.classList.add("spectating");
+    document.body.classList.add("dead");
 }
 
 document.getElementById("spectate").addEventListener("click", () => {
     startSpectate();
 });
-
+s
 document.addEventListener("keydown", ({ keyCode, which }) => {
     if (keyCode == 27 || which == 27) {
         isSpectating = false;
