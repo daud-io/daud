@@ -1,5 +1,6 @@
 ﻿namespace Game.API.Client
 {
+    using Game.API.Common;
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
     using System;
@@ -30,8 +31,12 @@
 
         private readonly BodyCache Cache = new BodyCache();
 
+        public Vector2 Position { get; set; } = Vector2.Zero;
+
         public Func<Task> OnView { get; set; } = null;
         public Func<Task> OnConnected { get; set; } = null;
+
+        public uint FleetID { get; set; } = 0;
 
         public Connection(APIClient apiClient, string worldName = null)
         {
@@ -48,15 +53,23 @@
             }).Wait();
         }
 
-        private async Task HandleNetPing(NetPing netPing)
+        private Task HandleNetPing(NetPing netPing)
         {
-            //Console.WriteLine("Ping");
+            return Task.FromResult(true);
+        }
+
+        public IEnumerable<ProjectedBody> Bodies
+        {
+            get
+            {
+                return Cache.Bodies;
+            }
         }
 
         private async Task SendPingAsync()
         {
             var builder = new FlatBufferBuilder(1);
-            var ping = NetPing.CreateNetPing(builder, 0);
+            var ping = NetPing.CreateNetPing(builder, bandwidthThrottle: 100);
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, ping.Value);
             builder.Finish(q.Value);
 
@@ -97,27 +110,68 @@
                     {
                         ID = netBody.Id,
                         DefinitionTime = netBody.DefinitionTime,
+                        OriginalPosition = FromNetVector(netBody.OriginalPosition),
+                        Momentum = FromNetVectorVelocity(netBody.Velocity),
 
                         OriginalAngle = netBody.OriginalAngle,
                         AngularVelocity = netBody.AngularVelocity,
 
-                        OriginalPosition = FromNetVector(netBody.OriginalPosition),
+                        Size = netBody.Size,
+                        Sprite = (Sprites)netBody.Sprite,
 
-                        Momentum = FromNetVector(netBody.Velocity) * 10f,
-                        Size = netBody.Size
+                        GroupID = netBody.Group
                     });
                 }
             }
+
             var deletes = new List<uint>();
             for (int i = 0; i < netWorldView.DeletesLength; i++)
                 deletes.Add(netWorldView.Deletes(i));
 
-            Cache.Update(updates, deletes);
+            var groupDeletes = new List<uint>();
+            for (int i = 0; i < netWorldView.GroupDeletesLength; i++)
+                groupDeletes.Add(netWorldView.GroupDeletes(i));
+
+            var groups = new List<Group>();
+            for (int i = 0; i < netWorldView.GroupsLength; i++)
+            {
+                var netGroupNullable = netWorldView.Groups(i);
+                if (netGroupNullable.HasValue)
+                {
+                    var group = netGroupNullable.Value;
+
+                    groups.Add(new Group
+                    {
+                        ID = group.Group,
+                        Caption = group.Caption,
+                        Type = group.Type,
+                        ZIndex = group.Zindex,
+                        Owner = group.Owner
+                    });
+                }
+            }
+
+            Cache.Update(updates, deletes, groups, groupDeletes, netWorldView.Time);
+
+            Position = FromNetVector(netWorldView.Camera.Value.OriginalPosition);
 
             IsAlive = netWorldView.IsAlive;
+            FleetID = netWorldView.FleetID;
 
             if (OnView != null)
                 await OnView();
+        }
+
+        private Vector2 FromNetVectorVelocity(Vec2 vec2)
+        {
+            var VELOCITY_SCALE_FACTOR = 5000.0f;
+
+            return new Vector2
+            {
+                X = vec2.X / VELOCITY_SCALE_FACTOR,
+                Y = vec2.Y / VELOCITY_SCALE_FACTOR
+            };
+
         }
 
         private Vector2 FromNetVector(Vec2 vec2)
@@ -192,7 +246,7 @@
                     break;
 
                 default:
-                    Console.WriteLine("Received other: " + netQuantum.MessageType.ToString());
+                    //Console.WriteLine("Received other: " + netQuantum.MessageType.ToString());
                     break;
             }
         }

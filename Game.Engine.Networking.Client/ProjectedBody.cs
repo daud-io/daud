@@ -1,5 +1,6 @@
 ﻿namespace Game.API.Client
 {
+    using Game.API.Common;
     using System.Numerics;
 
     public class ProjectedBody
@@ -16,9 +17,28 @@
         public Vector2 Momentum { get; set; }
 
         public int Size { get; set; }
+        public Sprites Sprite { get; set; }
 
-        public string Sprite { get; set; }
-        public string Caption { get; set; }
-        public string Color { get; set; }
+        public uint GroupID { get; set; }
+
+        public BodyCache Cache { get; set; }
+
+        public Group Group
+        {
+            get
+            {
+                return this.Cache?.GetGroup(this.GroupID);
+            }
+        }
+
+        public void Project(long time)
+        {
+            var timeDelta = (time - this.DefinitionTime);
+
+            Position = Vector2.Add(OriginalPosition, Vector2.Multiply(Momentum, timeDelta));
+
+            Angle = OriginalAngle + timeDelta * AngularVelocity;
+        }
+
     }
 }

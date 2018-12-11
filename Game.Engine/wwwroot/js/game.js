@@ -90,6 +90,8 @@ connection.onLeaderboard = lb => {
     leaderboard.position = lastPosition;
 };
 
+
+var fleetID = 0;
 let lastAliveState = false;
 let aliveSince = false;
 connection.onView = newView => {
@@ -102,6 +104,7 @@ connection.onView = newView => {
 
     if (view.isAlive && !lastAliveState) {
         lastAliveState = true;
+        fleetID = newView.fleetID();
         document.body.classList.remove("dead");
         document.body.classList.add("alive");
     } else if (!view.isAlive && lastAliveState) {
@@ -179,6 +182,8 @@ connection.onView = newView => {
 
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
+
+
 
     renderer.worldSize = newView.worldSize();
 

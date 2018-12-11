@@ -65,6 +65,7 @@ table NetWorldView
 {
 	time:uint;
 	camera:NetBody;
+    fleetID:uint;
 	isAlive:bool = true;
 	updates:[NetBody];
 	deletes:[uint];
@@ -84,6 +85,7 @@ table NetGroup
     type:ubyte;
     caption:string;
     zindex:uint;
+    owner:uint;
 }
 
 struct Vec2
