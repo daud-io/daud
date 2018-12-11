@@ -38,6 +38,7 @@
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = -1;
             hook.PointsMultiplierDeath = 1.0f;
+            hook.TeamMode = true;
 
             return new World
             {

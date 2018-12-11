@@ -69,6 +69,7 @@
                         .OfType<Ship>()
                         .Where(s => s.Fleet != OwnedByFleet)
                         .Where(s => s.Fleet != null)
+                        .Where(s => !World.Hook.TeamMode || s.Fleet?.Owner.Color != this.Color)
                         .OrderBy(s => Vector2.Distance(s.Position, Position))
                         .FirstOrDefault();
                 }
