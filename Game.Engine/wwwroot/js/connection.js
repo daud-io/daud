@@ -42,8 +42,16 @@ export class Connection {
         } else {
             url = "ws:";
         }
-        url += `//${window.location.host}`;
+
+        var hostname = window.location.host;
+
+        if (!hostname) {
+            hostname = "daud.io";
+        }
+
+        url += `//${hostname}`;
         url += "/api/v1/connect?";
+
 
         if (world) url += `world=${encodeURIComponent(world)}&`;
 
