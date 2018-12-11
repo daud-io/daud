@@ -171,6 +171,7 @@
             {
                 Volley.FireFrom(this);
                 FireVolley = false;
+                Pickup = null;
             }
 
             foreach (var ship in NewShips)
@@ -260,8 +261,6 @@
                     NewBullets.Add(Bullet.FireFrom(ship));*/
 
                 FireVolley = true;
-
-                this.Pickup = null;
             }
 
             if (World.Time > BoostCooldownTime)
