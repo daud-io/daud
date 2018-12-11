@@ -69,6 +69,8 @@
                 player.Score += World.Hook.PointsPerKillFleet;
 
                 player.SendMessage($"You Killed {this.Owner.Name}");
+                if (this.Owner.Connection != null)
+                    this.Owner.Connection.SpectatingFleet = player.Fleet;
                 this.Owner.SendMessage($"Killed by {player.Name}");
             }
             else
@@ -80,7 +82,7 @@
                 }
             }
 
-            this.Owner.Die(player?.Token ?? "");
+            this.Owner.Die(player);
 
             PendingDestruction = true;
             NewShips.Clear();

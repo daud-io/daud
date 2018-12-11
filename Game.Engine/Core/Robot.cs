@@ -35,9 +35,9 @@
             }
         }
 
-        protected override void OnDeath(string token)
+        protected override void OnDeath(Player player = null)
         {
-            base.OnDeath(token);
+            base.OnDeath(player);
 
             SpawnTimeAfter = World.Time + World.Hook.BotRespawnDelay;
         }

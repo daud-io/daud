@@ -70,7 +70,7 @@
 
         public void Destroy()
         {
-            Die("");
+            Die();
 
             if (Fleet != null)
             {
@@ -177,25 +177,25 @@
 
         }
 
-        protected virtual void OnDeath(string token)
+        protected virtual void OnDeath(Player player = null)
         {
             Score = (int)Math.Max(Score * World.Hook.PointsMultiplierDeath, 0);
 
-            if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(player?.Token))
                 RemoteEventLog.SendEvent(new
                 {
                     token = this.Token,
                     name = this.Name,
-                    killedBy = token
+                    killedBy = Token
                 });
         }
 
-        public void Die(string token)
+        public void Die(Player player = null)
         {
             if (IsAlive)
             {
                 DeadSince = World.Time;
-                OnDeath(token);
+                OnDeath(player);
 
                 if (Fleet != null)
                     Fleet.PendingDestruction = true;

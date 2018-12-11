@@ -43,7 +43,7 @@
 
         public bool IsSpectating { get; set; } = false;
 
-        private Fleet SpectatingFleet = null;
+        public Fleet SpectatingFleet = null;
 
         public Connection(ILogger<Connection> logger)
         {
