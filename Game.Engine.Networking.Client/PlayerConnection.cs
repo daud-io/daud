@@ -15,6 +15,7 @@
     {
         private readonly APIClient APIClient;
         private readonly string WorldName = null;
+        public long GameTime { get; private set; }
 
         private readonly Timer PingTimer;
         private ClientWebSocket Socket = null;
@@ -58,7 +59,7 @@
             return Task.FromResult(true);
         }
 
-        public IEnumerable<ProjectedBody> Bodies
+        public IEnumerable<Body> Bodies
         {
             get
             {
@@ -97,7 +98,7 @@
 
         private async Task HandleNetWorldView(NetWorldView netWorldView)
         {
-            var updates = new List<ProjectedBody>();
+            var updates = new List<Body>();
 
             for (int i = 0; i < netWorldView.UpdatesLength; i++)
             {
@@ -106,7 +107,7 @@
                 {
                     var netBody = netBodyNullable.Value;
 
-                    updates.Add(new ProjectedBody
+                    updates.Add(new Body
                     {
                         ID = netBody.Id,
                         DefinitionTime = netBody.DefinitionTime,
@@ -157,6 +158,7 @@
 
             IsAlive = netWorldView.IsAlive;
             FleetID = netWorldView.FleetID;
+            GameTime = netWorldView.Time;
 
             if (OnView != null)
                 await OnView();

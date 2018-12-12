@@ -4,11 +4,11 @@
 
     public class BodyCache
     {
-        private readonly Dictionary<uint, ProjectedBody> _bodies = new Dictionary<uint, ProjectedBody>();
+        private readonly Dictionary<uint, Body> _bodies = new Dictionary<uint, Body>();
         private readonly Dictionary<uint, Group> _groups = new Dictionary<uint, Group>();
 
         public void Update(
-            IEnumerable<ProjectedBody> updates,
+            IEnumerable<Body> updates,
             IEnumerable<uint> deletes,
             IEnumerable<Group> groups,
             IEnumerable<uint> groupDeletes,
@@ -63,7 +63,7 @@
                 body.Project(time);
         }
 
-        public IEnumerable<ProjectedBody> Bodies
+        public IEnumerable<Body> Bodies
         {
             get
             {

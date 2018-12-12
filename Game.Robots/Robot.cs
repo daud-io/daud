@@ -2,88 +2,141 @@
 {
     using Game.API.Client;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
     using System.Threading.Tasks;
 
     public class Robot
     {
+        private Connection Connection;
+
         public string Name { get; set; } = "Robot";
         public string Sprite { get; set; } = "ship0";
         public string Color { get; set; } = "ship0";
 
         public bool AutoSpawn { get; set; } = true;
-        private DateTime LastSpawn = DateTime.MinValue;
-        private readonly Connection Connection;
         private const int RESPAWN_FALLOFF = 1000;
-        private readonly DateTime Born = DateTime.Now;
+        private DateTime LastSpawn = DateTime.MinValue;
+
+        protected long SpawnTime { get; private set; }
+        protected long DeathTime { get; private set; }
+
+        private bool IsAlive = false;
 
         public bool AutoFire { get; set; } = false;
 
-        public Robot(Connection connection)
+        public async Task Start(Connection connection)
         {
             this.Connection = connection;
-            this.Connection.OnView = this.OnView;
-        }
-
-        public async Task Start()
-        {
+            this.Connection.OnView = OnView;
             await this.Connection.ListenAsync();
         }
 
         private async Task OnView()
         {
+            if (IsAlive && !Connection.IsAlive)
+            {
+                this.SpawnTime = Connection.GameTime;
+                await OnDeathAsync();
+            }
+            if (!IsAlive && Connection.IsAlive)
+                await OnSpawnAsync();
+
+            IsAlive = Connection.IsAlive;
+
             if (!Connection.IsAlive)
                 await StepDeadAsync();
             else
                 await StepAliveAsync();
         }
 
+        protected virtual Task AliveAsync()
+        {
+            return Task.FromResult(0);
+        }
+
+        protected virtual Task DeadAsync()
+        {
+            return Task.FromResult(0);
+        }
+
+        protected Task OnDeathAsync()
+        {
+            return Task.FromResult(0);
+        }
+
+        protected Task OnSpawnAsync()
+        {
+            return Task.FromResult(0);
+        }
+
+        public IEnumerable<Body> Bodies
+        {
+            get
+            {
+                return Connection.Bodies;
+            }
+        }
+
+        public Vector2 Position
+        {
+            get
+            {
+                return this.Connection.Position;
+            }
+        }
+
+        public long GameTime
+        {
+            get
+            {
+                return this.Connection.GameTime;
+            }
+        }
+
+        public uint FleetID
+        {
+            get
+            {
+                return this.Connection.FleetID;
+            }
+        }
+
+        protected void SteerAngle(float angle)
+        {
+            var centerVector = -1 * this.Connection.Position;
+            angle = MathF.Atan2(centerVector.Y, centerVector.X);
+            this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 100;
+            
+        }
+
+        protected void SteerPointAbsolute(Vector2 point)
+        {
+            var relative = this.Connection.Position - point;
+            this.Connection.ControlAimTarget = relative;
+        }
+
+        protected void SteerPointRelative(Vector2 point)
+        {
+            this.Connection.ControlAimTarget = point;
+        }
+
         private async Task StepAliveAsync()
         {
+            await AliveAsync();
 
-            float angle = (float)(DateTime.Now.Subtract(Born).TotalMilliseconds / 1000.0f) * MathF.PI * 2;
-
-            var centerVector = -1 * this.Connection.Position;
-
-            angle = MathF.Atan2(centerVector.Y, centerVector.X);
-
-            var bullets = this.Connection.Bodies
-                .Where(b => b.Sprite.ToString().StartsWith("bullet") || b.Sprite == API.Common.Sprites.seeker)
-                .Where(b => b.Group?.Owner != this.Connection?.FleetID)
-                .OrderBy(b => Vector2.Distance(b.Position, this.Connection.Position))
-                .ToList();
-
-            if (bullets.Any())
-            {
-                var bullet = bullets.First();
-                var distance = Vector2.Distance(bullet.Position, this.Connection.Position);
-                if (distance < 2000)
-                {
-                    Console.WriteLine($"bullet.group.owner: {bullet.Group.Owner} myFleetID: {Connection.FleetID}");
-                    var runAway = Connection.Position - bullet.Position;
-                    angle = MathF.Atan2(runAway.Y, runAway.X);
-                }
-
-            }
-
-            this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 100;
-            this.Connection.ControlIsShooting = AutoFire;
-
-            var groups = Connection.Bodies
-                .Select(b => b.Group?.Caption)
-                .Where(c => !string.IsNullOrWhiteSpace(c))
-                .Distinct();
-
-            var groupStrings = string.Join(", ", groups.ToArray());
-
-            Console.WriteLine($"objects: {Connection.Bodies.Count()} groups: {groupStrings}");
+            if (AutoFire)
+                this.Connection.ControlIsShooting = true;
 
             await this.Connection.SendControlInputAsync();
         }
 
         private async Task StepDeadAsync()
         {
+
+            await DeadAsync();
+
             if (AutoSpawn)
             {
                 if (DateTime.Now.Subtract(LastSpawn).TotalMilliseconds > RESPAWN_FALLOFF)

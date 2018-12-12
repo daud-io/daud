@@ -3,7 +3,7 @@
     using Game.API.Common;
     using System.Numerics;
 
-    public class ProjectedBody
+    public class Body
     {
         public uint ID { get; set; }
         public long DefinitionTime { get; set; }

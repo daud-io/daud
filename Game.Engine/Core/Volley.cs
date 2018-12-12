@@ -15,7 +15,8 @@
             {
                 FiredFrom = fleet,
                 GroupType = GroupTypes.VolleyBullet,
-                OwnerID = fleet.ID
+                OwnerID = fleet.ID,
+                ZIndex = 50
             };
 
             foreach (var ship in fleet.Ships)

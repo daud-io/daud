@@ -34,8 +34,8 @@
 
                 for (int i = 0; i < Replicas; i++)
                 {
-                    var player = await API.Player.ConnectAsync(World);
-                    var robot = new Robot(player)
+                    var connection = await API.Player.ConnectAsync(World);
+                    var robot = new ContextRobot
                     {
                         AutoSpawn = true,
                         AutoFire = Firing,
@@ -44,7 +44,7 @@
                         Sprite = Sprite
                     };
 
-                    tasks.Add(robot.Start());
+                    tasks.Add(robot.Start(connection));
                 };
 
                 await Task.WhenAll(tasks);

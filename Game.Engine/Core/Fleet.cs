@@ -155,6 +155,7 @@
         {
             base.Init(world);
             this.GroupType = GroupTypes.Fleet;
+            this.ZIndex = 100;
 
             FleetCenter = world.RandomSpawnPosition(this);
 
