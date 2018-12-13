@@ -14,7 +14,26 @@ const texts = [
 ];
 
 let index = 1; // zero is duplicated in the HTML
-window.setInterval(() => {
-    hintbox.innerText = texts[index % texts.length];
-    index++;
-}, 6000);
+
+var eventStart = new Date("2018-12-13T17:00:00.000Z");
+if (new Date().getTime() < eventStart.getTime()) {
+    window.setInterval(() => {
+        var distance = eventStart.getTime() - new Date().getTime();
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        var remaining = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        hintbox.innerText = `Team match begins in ${remaining}`;
+    }, 1000);
+}
+else
+{
+    window.setInterval(() => {
+        hintbox.innerText = texts[index % texts.length];
+        index++;
+    }, 6000);
+}
