@@ -1,5 +1,6 @@
 ﻿namespace Game.Robots
 {
+    using Newtonsoft.Json;
     using System;
     using System.Linq;
     using System.Numerics;
@@ -9,7 +10,7 @@
     {
         protected override Task AliveAsync()
         {
-            float angle = (float)((GameTime - SpawnTime) / 1000.0f) * MathF.PI * 2;
+            float angle = 0; // (float)((GameTime - SpawnTime) / 1000.0f) * MathF.PI * 2;
             var centerVector = -1 * this.Position;
             angle = MathF.Atan2(centerVector.Y, centerVector.X);
 
@@ -25,12 +26,15 @@
                 var distance = Vector2.Distance(bullet.Position, Position);
                 if (distance < 2000)
                 {
-                    Console.WriteLine($"bullet.group.owner: {bullet.Group.Owner} myFleetID: {FleetID}");
+                    //Console.WriteLine($"bullet.group.owner: {bullet.Group.Owner} myFleetID: {FleetID}");
                     var runAway = Position - bullet.Position;
                     angle = MathF.Atan2(runAway.Y, runAway.X);
-                }
 
+                    Console.WriteLine($"angle: {angle}");
+                }
             }
+
+            SteerAngle(angle);
 
             // if you're not actually doing any async/await, just return this
             return Task.FromResult(0);

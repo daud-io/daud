@@ -3,7 +3,6 @@
     using Game.API.Client;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Numerics;
     using System.Threading.Tasks;
 
@@ -15,6 +14,7 @@
         public string Sprite { get; set; } = "ship0";
         public string Color { get; set; } = "ship0";
 
+        private bool IsAlive = false;
         public bool AutoSpawn { get; set; } = true;
         private const int RESPAWN_FALLOFF = 1000;
         private DateTime LastSpawn = DateTime.MinValue;
@@ -22,9 +22,17 @@
         protected long SpawnTime { get; private set; }
         protected long DeathTime { get; private set; }
 
-        private bool IsAlive = false;
-
         public bool AutoFire { get; set; } = false;
+
+        public IEnumerable<Body> Bodies { get => Connection.Bodies; }
+        public Vector2 Position { get => this.Connection.Position; }
+        public long GameTime { get => this.Connection.GameTime; }
+        public uint FleetID { get => this.Connection.FleetID; }
+
+        protected virtual Task AliveAsync() => Task.FromResult(0);
+        protected virtual Task DeadAsync() => Task.FromResult(0);
+        protected virtual Task OnDeathAsync() => Task.FromResult(0);
+        protected virtual Task OnSpawnAsync() => Task.FromResult(0);
 
         public async Task Start(Connection connection)
         {
@@ -41,7 +49,9 @@
                 await OnDeathAsync();
             }
             if (!IsAlive && Connection.IsAlive)
+            {
                 await OnSpawnAsync();
+            }
 
             IsAlive = Connection.IsAlive;
 
@@ -51,64 +61,9 @@
                 await StepAliveAsync();
         }
 
-        protected virtual Task AliveAsync()
-        {
-            return Task.FromResult(0);
-        }
-
-        protected virtual Task DeadAsync()
-        {
-            return Task.FromResult(0);
-        }
-
-        protected Task OnDeathAsync()
-        {
-            return Task.FromResult(0);
-        }
-
-        protected Task OnSpawnAsync()
-        {
-            return Task.FromResult(0);
-        }
-
-        public IEnumerable<Body> Bodies
-        {
-            get
-            {
-                return Connection.Bodies;
-            }
-        }
-
-        public Vector2 Position
-        {
-            get
-            {
-                return this.Connection.Position;
-            }
-        }
-
-        public long GameTime
-        {
-            get
-            {
-                return this.Connection.GameTime;
-            }
-        }
-
-        public uint FleetID
-        {
-            get
-            {
-                return this.Connection.FleetID;
-            }
-        }
-
         protected void SteerAngle(float angle)
         {
-            var centerVector = -1 * this.Connection.Position;
-            angle = MathF.Atan2(centerVector.Y, centerVector.X);
             this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 100;
-            
         }
 
         protected void SteerPointAbsolute(Vector2 point)
@@ -127,14 +82,15 @@
             await AliveAsync();
 
             if (AutoFire)
+            {
                 this.Connection.ControlIsShooting = true;
+            }
 
             await this.Connection.SendControlInputAsync();
         }
 
         private async Task StepDeadAsync()
         {
-
             await DeadAsync();
 
             if (AutoSpawn)
