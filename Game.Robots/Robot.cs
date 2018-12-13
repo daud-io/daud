@@ -68,7 +68,7 @@
 
         protected void SteerPointAbsolute(Vector2 point)
         {
-            var relative = this.Connection.Position - point;
+            var relative = point - this.Position;
             this.Connection.ControlAimTarget = relative;
         }
 
