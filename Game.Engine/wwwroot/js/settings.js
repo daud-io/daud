@@ -14,7 +14,8 @@ export const Settings = {
     namesEnabled: true,
     bandwidth: 100,
     showHitboxes: false,
-    logLength: 4
+    logLength: 4,
+    mouseOneButton: 0
 };
 
 function parseQuery(queryString) {
@@ -49,6 +50,7 @@ function save() {
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
+    Settings.mouseOneButton = document.getElementById("settingsMouseOneButton").value;
 
     Cookies.set("settings", Settings, cookieOptions);
 
@@ -81,6 +83,7 @@ function load() {
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
         document.getElementById("settingsLog").value = Settings.logLength;
+        document.getElementById("settingsMouseOneButton").value = Settings.mouseOneButton;
     } catch (e) {
         // maybe reset()? will make debugging difficult
     }
@@ -122,6 +125,7 @@ async function theme(v) {
 
 load();
 
+// override settins from querystring values
 const qs = parseQuery(window.location.search);
 if (qs.themeCustom) Settings.themeCustom = qs.themeCustom;
 if (qs.background) Settings.background = qs.background;

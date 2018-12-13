@@ -1,5 +1,7 @@
 ﻿import Cookies from "js-cookie";
 import nipplejs from "nipplejs";
+import { setInterval, setTimeout } from "timers";
+import { Settings } from "./settings";
 
 export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
@@ -34,6 +36,7 @@ export var Controls = {
     down: false,
     boost: false,
     shoot: false,
+    downSince: false,
     registerCanvas(canvas) {
         const getMousePos = (canvas, { clientX, clientY }) => {
             const rect = canvas.getBoundingClientRect();
@@ -78,13 +81,38 @@ export var Controls = {
                 if (button == 2)
                     //right click
                     Controls.boost = true;
-                else Controls.shoot = true;
+                else {
+                    if (Settings.mouseOneButton > 0) {
+                        Controls.downSince = (new Date()).getTime();
+                    }
+                    else
+                    {
+                        Controls.shoot = true;
+                    }
+                }
             });
+
             window.addEventListener("mouseup", ({ button }) => {
                 if (button == 2)
                     //right click
                     Controls.boost = false;
-                else Controls.shoot = false;
+                else {
+
+                    if (Settings.mouseOneButton > 0) {
+                        var timeDelta = (new Date()).getTime() - Controls.downSince;
+                        Controls.downSince = false;
+                        if (timeDelta < Settings.mouseOneButton) {
+                            Controls.shoot = true;
+                            setTimeout(function () { Controls.shoot = false; }, 100);
+                        }
+                        else {
+                            Controls.boost = true;
+                            setTimeout(function () { Controls.boost = false; }, 100);
+                        }
+                    }
+                    else
+                        Controls.shoot = false;
+                }
             });
             window.addEventListener("contextmenu", e => {
                 e.preventDefault();

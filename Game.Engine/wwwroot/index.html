@@ -83,12 +83,21 @@
                     <option value="3ds2agh4z76feci">Retro</option>
                 </select>
                 <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" value="" />
-                <br>
-                <label for="settingsBackground">Background</label>
-                <select id="settingsBackground">
-                    <option value="none">none</option>
-                    <option value="slow">slow</option>
-                    <option value="fast">fast</option>
+                <br />
+                <label for="settingsMouseOneButton">Mouse One-Button Mode</label>
+                <select id="settingsMouseOneButton">
+                    <option value="0">disabled</option>
+                    <option value="5">5ms</option>
+                    <option value="10">10ms</option>
+                    <option value="15">15ms</option>
+                    <option value="30">30ms</option>
+                    <option value="45">45ms</option>
+                    <option value="60">60ms</option>
+                    <option value="75">75ms</option>
+                    <option value="90">90ms</option>
+                    <option value="105">105ms</option>
+                    <option value="120">120ms</option>
+                    <option value="135">135ms</option>
                 </select>
                 <label for="settingsMouseScale">Mouse Sensitivity</label>
                 <select id="settingsMouseScale">
@@ -96,13 +105,25 @@
                     <option value="4">medium</option>
                     <option value="10">straight-shooter</option>
                 </select>
+
+                <br />
+
+                <label for="settingsBackground">Background</label>
+                <select id="settingsBackground">
+                    <option value="none">none</option>
+                    <option value="slow">slow</option>
+                    <option value="fast">fast</option>
+                </select>
+
                 <label for="settingsLog">Log Length</label>
                 <select id="settingsLog">
                     <option value="0">none</option>
+                    <option value="1">1 line</option>
                     <option value="2">2 lines</option>
+                    <option value="3">3 lines</option>
                     <option value="4">4 lines</option>
                 </select>
-                <br>
+                <br />
 
                 <label for="settingsBandwidth">Bandwidth</label>
                 <select id="settingsBandwidth">
@@ -110,29 +131,29 @@
                     <option value="50">medium</option>
                     <option value="25">low</option>
                 </select>
-                <br>
+                <br />
 
                 <label for="settingsFont">Font</label>
                 <select id="settingsFont">
                     <option value="sans-serif">default</option>
                     <option value="&quot;Exo 2&quot;">experimental</option>
                 </select>
-                <br>
+                <br />
 
                 <label for="settingsLeaderboardEnabled">Show Leaderboard</label>
                 <input type="checkbox" id="settingsLeaderboardEnabled" />
                 <br>
                 <label for="settingsHUDEnabled">Show Stats</label>
                 <input type="checkbox" id="settingsHUDEnabled" />
-                <br>
+                <br />
 
                 <label for="settingsNamesEnabled">Show Names</label>
                 <input type="checkbox" id="settingsNamesEnabled" />
-                <br>
+                <br />
 
                 <label for="settingsShowHitboxes">Show Hitboxes</label>
                 <input type="checkbox" id="settingsShowHitboxes" />
-                <br>
+                <br />
 
                 <input type="button" id="settingsSave" value="Save settings" />
                 <input type="button" id="settingsCancel" value="Cancel (no changes)" />
