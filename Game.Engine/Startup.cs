@@ -24,7 +24,13 @@
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISecurityContext, TokenSecurityContext>();
-            services.AddMvc();
+            services.AddMvc().
+                AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
+                    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
+                    options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
         }
 
         private GameConfiguration LoadConfiguration(IServiceCollection services)

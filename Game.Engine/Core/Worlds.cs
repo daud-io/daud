@@ -1,20 +1,21 @@
 ﻿namespace Game.Engine.Core
 {
+    using System.Collections.Generic;
+
     public static class Worlds
     {
+        public static readonly Dictionary<string, World> AllWorlds = new Dictionary<string, World>();
+
         private static readonly World Default;
-        private static readonly World Other;
-        private static readonly World Duel;
-        private static readonly World Team;
-        private static readonly World CTF;
 
         static Worlds()
         {
             Default = new World();
-            Other = WorldOther();
-            Duel = WorldDuel();
-            Team = WorldTeam();
-            CTF = WorldCTF();
+            AllWorlds.Add("default", Default);
+            AllWorlds.Add("other", WorldOther());
+            AllWorlds.Add("duel", WorldDuel());
+            AllWorlds.Add("team", WorldTeam());
+            AllWorlds.Add("ctf", WorldCTF());
         }
 
         private static World WorldOther()
@@ -79,21 +80,11 @@
 
         public static World Find(string world = null)
         {
-            switch (world)
-            {
-                case "duel":
-                    return Duel;
-                case "other":
-                    return Other;
-                case "ctf":
-                    return CTF;
-                case "team":
-                    return Team;
-
-                case "default":
-                default:
-                    return Default;
-            }
+            if (world != null && AllWorlds.ContainsKey(world))
+                return AllWorlds[world];
+            else
+                return Default;
         }
     }
 }
+

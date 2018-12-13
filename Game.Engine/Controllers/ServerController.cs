@@ -85,5 +85,15 @@
                     Latency = p.Connection?.Latency ?? 0
                 });
         }
+
+        [AllowAnonymous, HttpGet, Route("worlds")]
+        public IEnumerable<object> GetWorlds(string worldName = null)
+        {
+            return Worlds.AllWorlds.Select(w => new {
+                world = w.Key,
+                players = Player.GetWorldPlayers(w.Value)
+                    .Count()
+            });
+        }
     }
 }
