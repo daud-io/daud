@@ -1,24 +1,38 @@
 ﻿namespace Game.Robots
 {
-    using Newtonsoft.Json;
+    using Game.Robots.Senses;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
     using System.Threading.Tasks;
 
     public class ContextRobot : Robot
     {
+        private List<ISense> Sensors = new List<ISense>();
+        private readonly SensorBullets SensorBullets;
+
+        public ContextRobot()
+        {
+            Sensors.Add(SensorBullets = new SensorBullets(this));
+        }
+
+        private void Sense()
+        {
+            foreach (var sensor in Sensors)
+                sensor.Sense();
+        }
+
         protected override Task AliveAsync()
         {
-            float angle = 0; // (float)((GameTime - SpawnTime) / 1000.0f) * MathF.PI * 2;
+            Sense();
+
+            float angle = 0;
+
             var centerVector = -1 * this.Position;
             angle = MathF.Atan2(centerVector.Y, centerVector.X);
 
-            var bullets = this.Bodies
-                .Where(b => b.Sprite.ToString().StartsWith("bullet") || b.Sprite == API.Common.Sprites.seeker)
-                .Where(b => b.Group?.Owner != FleetID)
-                .OrderBy(b => Vector2.Distance(b.Position, Position))
-                .ToList();
+            var bullets = SensorBullets.VisibleBullets;
 
             if (bullets.Any())
             {
