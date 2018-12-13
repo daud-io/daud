@@ -4,7 +4,14 @@
     {
         public ContextRing Behave(int steps)
         {
-            return null;
+            var ring = new ContextRing(steps);
+
+            for(var i=0; i<steps; i++)
+                ring.Weights[i] = ScoreAngle(ring.Angle(i));
+
+            return ring;
         }
+
+        protected virtual float ScoreAngle(float angle) => 0f;
     }
 }

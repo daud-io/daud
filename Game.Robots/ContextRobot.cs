@@ -11,10 +11,12 @@
     {
         private List<ISense> Sensors = new List<ISense>();
         private readonly SensorBullets SensorBullets;
+        private readonly SensorFleets SensorFleets;
 
         public ContextRobot()
         {
             Sensors.Add(SensorBullets = new SensorBullets(this));
+            Sensors.Add(SensorFleets = new SensorFleets(this));
         }
 
         private void Sense()
@@ -31,6 +33,12 @@
 
             var centerVector = -1 * this.Position;
             angle = MathF.Atan2(centerVector.Y, centerVector.X);
+
+
+            if (SensorFleets.VisibleFleets.Any())
+            {
+                // check for your buddy
+            }
 
             var bullets = SensorBullets.VisibleBullets;
 
