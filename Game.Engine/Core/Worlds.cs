@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public static class Worlds
     {
@@ -8,9 +9,28 @@
 
         private static readonly World Default;
 
+        private static readonly string[] AllColors = new[] {
+            "green",
+            "orange",
+            "pink",
+            "red",
+            "cyan",
+            "yellow"
+        };
+        private static readonly string[] TeamColors = new[] {
+            "red",
+            "cyan"
+        };
+
         static Worlds()
         {
-            Default = new World();
+            Default = new World()
+            {
+                Name = "Default",
+                Description = "FFA Arena",
+                AllowedColors = AllColors
+            };
+            
             AllWorlds.Add("default", Default);
             AllWorlds.Add("other", WorldOther());
             AllWorlds.Add("duel", WorldDuel());
@@ -25,7 +45,10 @@
             hook.BotRespawnDelay = 0;
             return new World
             {
-                Hook = hook
+                Hook = hook,
+                Name = "Planet Daud",
+                Description = "AAAAAHHH! Run!",
+                AllowedColors = AllColors.Append("ship0").ToArray()
             };
         }
 
@@ -44,7 +67,10 @@
 
             return new World
             {
-                Hook = hook
+                Hook = hook,
+                Name = "Dueling Room",
+                Description = "Cyan vs. Red",
+                AllowedColors = TeamColors
             };
         }
 
@@ -57,7 +83,10 @@
 
             return new World
             {
-                Hook = hook
+                Hook = hook,
+                Name = "Team",
+                Description = "Cyan vs. Red",
+                AllowedColors = TeamColors
             };
         }
 
@@ -74,7 +103,10 @@
 
             return new World
             {
-                Hook = hook
+                Hook = hook,
+                Name = "Capture the Flag",
+                Description = "Cyan vs. Red - Capture the Flag. First to 5 wins!",
+                AllowedColors = TeamColors
             };
         }
 

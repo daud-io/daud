@@ -41,14 +41,10 @@
             <div class="controls">
                 <div>
                     <label for="worldSelector">Arena</label>
-
                     <select id="worldSelector">
-                        <option value="default">Default</option>
-                        <option value="other">Planet Daud</option>
-                        <option value="duel">Dueling Room</option>
-                        <option value="team">Team</option>
-                        <option value="ctf">CTF</option>
+                        <option value="loading" disabled="disabled">loading ...</option>
                     </select>
+                    <div id="arenaDescription"></div> 
 
                     <div>
                         <img id="logo" src="img/header.png" draggable="false" />
@@ -217,6 +213,7 @@
     <script type="text/javascript" src="js/flatbuffers.js"></script>
     <script type="text/javascript" src="js/game_generated.js"></script>
 
+    <script type="text/javascript" src="js/lobby.js"></script>
     <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="js/panel.js"></script>
 </body>

@@ -19,7 +19,7 @@
         Events.Report("other", "spectate");
     }
 
-    static ChangeRoom(room) {
+    static changeRoom(room) {
         Events.Report("room", room);
     }
 }

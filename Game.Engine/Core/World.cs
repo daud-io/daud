@@ -32,6 +32,13 @@
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
 
+        public string Name {get;set;}
+        public string Description {get;set;}
+
+        public string[] AllowedColors {get;set;}
+
+        public int AdvertisedPlayerCount {get;set;}
+
         public World()
         {
             OffsetTicks = DateTime.Now.Ticks;
@@ -39,15 +46,17 @@
 
             InitializeStepTimer();
 
-            var robotTender = new RobotTender();
-            robotTender.Init(this);
+            SystemActor<Advertisement>();
+            SystemActor<RobotTender>();
+            SystemActor<ObstacleTender>();
+            SystemActor<CaptureTheFlag>();
+        }
 
-            var objstacleTender = new ObstacleTender();
-            objstacleTender.Init(this);
-
-            var ctf = new CaptureTheFlag() as IActor;
-            ctf.Init(this); 
-
+        private void SystemActor<T>()
+            where T: class, IActor, new()
+        {
+            var actor = new T();
+            actor.Init(this);
         }
 
         public void Step()
@@ -92,11 +101,11 @@
 
                 var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
                 if (elapsed > Hook.StepTime)
-                    Console.WriteLine("**** 100% processing time warning");
+                    Console.WriteLine($"**** 100% processing time warning: {elapsed}");
                 else if (elapsed > Hook.StepTime * 0.8f)
-                    Console.WriteLine("*** 80% processing time warning");
+                    Console.WriteLine($"*** 80% processing time warning: {elapsed}");
                 else if (elapsed > Hook.StepTime * 0.5f)
-                    Console.WriteLine("** 50% processing time warning");
+                    Console.WriteLine($"** 50% processing time warning: {elapsed}");
             }
             Processing = false;
         }

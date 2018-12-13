@@ -14,6 +14,7 @@ import { token } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
 import "./hintbox";
+import { Lobby } from "./lobby";
 
 const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
@@ -221,30 +222,8 @@ document.getElementById("worldSelector").addEventListener("change", () => {
     const world = document.getElementById("worldSelector").value;
     connection.connect(world);
     cache = new Cache();
-    Events.ChangeRoom(world);
-
-    switch (world) {
-        case "ctf":
-        case "team":
-            // this is super hacky...
-            // intend to make a greeting message from the server on connection
-            // that explains the allowed options in the room
-
-            document.getElementById("shipSelector").innerHTML = '<option selected value="cyan">cyan</option>' + '<option value="red">red</option>';
-            Controls.ship = "ship_cyan";
-            Controls.color = "cyan";
-
-            break;
-        default:
-            document.getElementById("shipSelector").innerHTML =
-                '<option value="green">green</option>' +
-                '<option value="orange">orange</option>' +
-                '<option value="pink">pink</option>' +
-                '<option value="red">red</option>' +
-                '<option value="cyan">cyan</option>' +
-                '<option value="yellow">yellow</option>';
-            break;
-    }
+    Events.changeRoom(world);
+    Lobby.changeRoom(world);
 });
 
 document.getElementById("spawn").addEventListener("click", () => {

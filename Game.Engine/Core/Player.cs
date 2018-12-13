@@ -26,6 +26,7 @@
         public List<string> Messages { get; set; } = new List<string>();
 
         public bool IsAlive { get; set; } = false;
+        public bool IsStillPlaying {get;set;} = false;
         public long DeadSince { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
@@ -68,6 +69,9 @@
                 Destroy();
                 PendingDestruction = false;
             }
+
+            IsStillPlaying = !PendingDestruction && 
+                DeadSince > World.Time - World.Hook.PlayerCountGracePeriodMS;
         }
 
         public void Destroy()

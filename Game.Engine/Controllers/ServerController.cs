@@ -91,8 +91,10 @@
         {
             return Worlds.AllWorlds.Select(w => new {
                 world = w.Key,
-                players = Player.GetWorldPlayers(w.Value)
-                    .Count()
+                players = w.Value.AdvertisedPlayerCount,
+                name = w.Value.Name,
+                description = w.Value.Description,
+                allowedColors = w.Value.AllowedColors
             });
         }
     }

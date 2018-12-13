@@ -240,7 +240,8 @@ export class Leaderboard {
                 this.modeStandard(relativeTo);
                 break;
             default:
-                console.log(`Unknown leaderboard type: ${this.data.Type}`);
+                //console.log(`Unknown leaderboard type: ${this.data.Type}`);
+                break;
         }
     }
 }
