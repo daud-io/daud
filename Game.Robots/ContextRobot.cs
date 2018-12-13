@@ -29,14 +29,13 @@
         {
             Sense();
 
-            var centerVector = -1 * this.Position;
-
-            float angle = MathF.Atan2(centerVector.Y, centerVector.X);
+            SteerPointAbsolute(Vector2.Zero); // center of the universe
 
             if (SensorFleets.VisibleFleets.Any())
             {
-                var x = SensorFleets.VisibleFleets.FirstOrDefault().Center - this.Position;
-                angle = MathF.Atan2(x.Y, x.X);
+                var fleet = SensorFleets.VisibleFleets.FirstOrDefault(f => f.ID != FleetID);
+                if (fleet != null)
+                    SteerPointAbsolute(fleet.Center);
             }
 
             var bullets = SensorBullets.VisibleBullets;
@@ -49,11 +48,10 @@
                 {
                     //Console.WriteLine($"bullet.group.owner: {bullet.Group.Owner} myFleetID: {FleetID}");
                     var runAway = Position - bullet.Position;
-                    angle = MathF.Atan2(runAway.Y, runAway.X);
+                    SteerAngle(MathF.Atan2(runAway.Y, runAway.X));
                 }
             }
 
-            SteerAngle(angle);
 
             // if you're not actually doing any async/await, just return this
             return Task.FromResult(0);
