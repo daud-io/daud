@@ -1,6 +1,6 @@
 ﻿namespace Game.Robots.Behaviors
 {
-    public class NavigateToPoint : IBehaviors
+    public class NavigateToPoint : ContextBehavior
     {
         private readonly Robot Robot;
 
@@ -9,13 +9,10 @@
             this.Robot = robot;
         }
 
-        public ContextRing Behave(int steps)
+        protected override float ScoreAngle(float angle)
         {
-            var ring = new ContextRing(steps);
 
-
-
-            return ring;
+            return 0;
         }
     }
 }
