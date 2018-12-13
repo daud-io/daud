@@ -63,7 +63,7 @@
 
         protected void SteerAngle(float angle)
         {
-            this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 100;
+            this.Connection.ControlAimTarget = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * 800;
         }
 
         protected void SteerPointAbsolute(Vector2 point)

@@ -29,15 +29,14 @@
         {
             Sense();
 
-            float angle = 0;
-
             var centerVector = -1 * this.Position;
-            angle = MathF.Atan2(centerVector.Y, centerVector.X);
 
+            float angle = MathF.Atan2(centerVector.Y, centerVector.X);
 
             if (SensorFleets.VisibleFleets.Any())
             {
-                // check for your buddy
+                var x = SensorFleets.VisibleFleets.FirstOrDefault().Center - this.Position;
+                angle = MathF.Atan2(x.Y, x.X);
             }
 
             var bullets = SensorBullets.VisibleBullets;
@@ -51,8 +50,6 @@
                     //Console.WriteLine($"bullet.group.owner: {bullet.Group.Owner} myFleetID: {FleetID}");
                     var runAway = Position - bullet.Position;
                     angle = MathF.Atan2(runAway.Y, runAway.X);
-
-                    Console.WriteLine($"angle: {angle}");
                 }
             }
 
