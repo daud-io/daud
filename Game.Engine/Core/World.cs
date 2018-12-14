@@ -11,6 +11,7 @@
     public class World : IDisposable
     {
         public uint Time { get; private set; } = 0;
+        public uint LastStepSize { get; private set; } = 0;
         private readonly long OffsetTicks = 0;
 
         public Hook Hook { get; set; } = null;
@@ -68,7 +69,10 @@
             lock (this.Bodies)
             {
                 var start = DateTime.Now;
+                
+                var oldTime = Time;
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
+                LastStepSize = Time - oldTime;
 
                 RTree.Clear();
                 foreach (var body in Bodies)

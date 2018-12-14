@@ -85,7 +85,9 @@
                     PointsPerUniverseDeath = -1,
                     PointsMultiplierDeath = 0.5f,
 
-                    PlayerCountGracePeriodMS = 5000
+                PlayerCountGracePeriodMS = 15000,
+
+                    LifecycleDuration = 10000
                 };
             }
         }
@@ -171,6 +173,8 @@
         public int BotRespawnDelay { get; set; }
 
         public string SpawnLocationMode { get; set; }
+
+        public int LifecycleDuration {get;set;}
 
         public int PlayerCountGracePeriodMS { get; set; }
     }

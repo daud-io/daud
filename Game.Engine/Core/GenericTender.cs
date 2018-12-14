@@ -16,13 +16,20 @@
             var member = new T();
             ((IActor)member).Init(World);
             this.Herd.Add(member);
+
+            if (member is ILifeCycle canSpawn)
+               canSpawn.Spawn();
         }
 
         private void Remove()
         {
             var member = Herd[Herd.Count - 1];
             Herd.Remove(member);
-            ((IActor)member).Destroy();
+            
+            if (member is ILifeCycle canDie)
+                canDie.Die();
+            else
+                ((IActor)member).Destroy();
         }
 
         public void Think()

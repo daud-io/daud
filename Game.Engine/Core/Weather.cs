@@ -1,8 +1,8 @@
 ﻿namespace Game.Engine.Core
 {
     using System.Linq;
-
-    public class Advertisement : IActor
+    
+    public class Weather : IActor
     {
         private World World = null;
         public void CreateDestroy()
@@ -22,10 +22,7 @@
 
         public void Think()
         {
-            World.AdvertisedPlayerCount = Player.GetWorldPlayers(World)
-                .Where(p => p.IsAlive || p.IsStillPlaying)
-                .Where(p => !(p is Robot))
-                .Count();
+            
         }
     }
 }
