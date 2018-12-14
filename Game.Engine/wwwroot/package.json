@@ -5,7 +5,7 @@
   "main": "game.html",
   "scripts": {
     "build": "parcel build game.html changes.html && copyfiles img/*.* dist/",
-    "watch": "parcel watch game.html changes.html --out-dir dist"
+    "watch": "parcel watch index.html --out-dir dist"
   },
   "author": "modderme123",
   "license": "ISC",

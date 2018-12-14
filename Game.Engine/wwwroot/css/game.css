@@ -155,7 +155,7 @@ a {
 }
 
 .spawnscreen .controls {
-    margin: 15vmin;
+    margin: 3vmin;
     position: relative;
     z-index: 2;
 }

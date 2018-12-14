@@ -1,13 +1,57 @@
+﻿import { fetch } from "whatwg-fetch";
+
+export var Lobby = {
+    allWorlds: {},
+    connection: false,
+    refreshList: function()
+    {
+        fetch("/api/v1/server/worlds", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            }
+        })
+            .then(r => r.json())
+            .then(({ success, response }) => {
+                if (success) {
+                    var selector = document.getElementById('worldSelector');
+                    var selected = selector.value;
+                    if (!selected)
+                    {
+                        if (window.location.hash)
+                            selected = window.location.hash.substring(1);
+                        else
+                            selected = "default";
+                    }
+
+                    var options = '';
+                    Lobby.allWorlds = {};
+                    
+                    for(var i=0; i<response.length; i++)
+                    {
+                        var world = response[i];
+                        Lobby.allWorlds[world.world] = world;
+
+                        options += `<option value="${world.world}">${world.players}: ${world.name}</option>`;
                     }
 
                     selector.innerHTML = options;
                     selector.value = selected;
+            
+                    Lobby.showDescription(selected);
                 }
             });
     },
+    showDescription: function(worldKey)
+    {
+        var world = Lobby.allWorlds[worldKey];
+        if (world)
+            document.getElementById('arenaDescription').innerHTML = world.description;
+        else
+            document.getElementById('arenaDescription').innerHTML = worldKey;
+    },
     changeRoom: function(worldKey) 
     {
-        
         var world = Lobby.allWorlds[worldKey];
         if (world)
         {
@@ -20,27 +64,11 @@
             document.getElementById("shipSelector").innerHTML = options;
             document.getElementById("shipSelector").value = colors[0];
 
-            document.getElementById('arenaDescription').innerHTML = world.description;
+            Lobby.showDescription(worldKey);
 
         }
         else
             console.log(`Warning: could not find selected world ${worldKey}`);
-        /*
-                document.getElementById("shipSelector").innerHTML = '<option selected value="cyan">cyan</option>' + '<option value="red">red</option>';
-                Controls.ship = "ship_cyan";
-                Controls.color = "cyan";
-    
-                break;
-            default:
-                document.getElementById("shipSelector").innerHTML =
-                    '<option value="green">green</option>' +
-                    '<option value="orange">orange</option>' +
-                    '<option value="pink">pink</option>' +
-                    '<option value="red">red</option>' +
-                    '<option value="cyan">cyan</option>' +
-                    '<option value="yellow">yellow</option>';
-                break;
-        }        */
     }
 };
 
