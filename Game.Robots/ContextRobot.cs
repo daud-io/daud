@@ -37,10 +37,11 @@
             {
                 var fleet = SensorFleets.VisibleFleets.FirstOrDefault(f => f.ID != FleetID);
                 if (fleet != null)
-                    vel+=(fleet.Center-Position)*5;
+                    vel += (fleet.Center - Position) * 1;
             }
 
             var bullets = SensorBullets.VisibleBullets;
+            var danger = false;
 
             if (bullets.Any())
             {
@@ -48,9 +49,15 @@
                 var distance = Vector2.Distance(bullet.Position, Position);
                 if (distance < 2000)
                 {
-                    vel += (Position - bullet.Position);
+                    var avoid = (Position - bullet.Position);
+                    vel += avoid * 400_000 / avoid.LengthSquared();
+                }
+                if (distance < 200) {
+                    danger = true;
                 }
             }
+            
+            SetSplit(danger);
 
             SteerAngle(MathF.Atan2(vel.Y, vel.X));
             
