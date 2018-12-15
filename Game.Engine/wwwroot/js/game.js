@@ -243,6 +243,15 @@ document.getElementById("spectate").addEventListener("click", () => {
     startSpectate();
 });
 
+function stopSpectate() {
+    isSpectating = false;
+    document.body.classList.remove("spectating");
+}
+
+document.getElementById("stop_spectating").addEventListener("click", () => {
+    stopSpectate();
+});
+
 document.addEventListener("keydown", ({ keyCode, which }) => {
     if (keyCode == 27 || which == 27) {
         if (lastAliveState) {
@@ -250,8 +259,7 @@ document.addEventListener("keydown", ({ keyCode, which }) => {
             console.log('sending exit');
         }
         else if (isSpectating) {
-            isSpectating = false;
-            document.body.classList.remove("spectating");
+            stopSpectate()
         }
         else {
             startSpectate();
