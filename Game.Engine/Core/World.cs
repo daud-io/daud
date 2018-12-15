@@ -45,12 +45,12 @@
             OffsetTicks = DateTime.Now.Ticks;
             Hook = Hook.Default;
 
-            InitializeStepTimer();
-
             SystemActor<Advertisement>();
             SystemActor<RobotTender>();
             SystemActor<ObstacleTender>();
             SystemActor<CaptureTheFlag>();
+
+            InitializeStepTimer();
         }
 
         private void SystemActor<T>()
