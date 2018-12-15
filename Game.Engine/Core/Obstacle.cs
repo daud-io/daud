@@ -6,21 +6,32 @@
 
     public class Obstacle : ActorBody, ICollide, ILifeCycle
     {
-        private Vector2 IdealMomentum = Vector2.Zero;
+        private Vector2 TargetMomentum = Vector2.Zero;
         private float Multiplier = 1;
         private float GrowthRate = 0;
         private long DieByTime = 0;
-        private float IdealSize = 0;
-
+        private float IdealSize = 1;
         private int TargetSize = 0;
 
 
         public void CollisionExecute(Body projectedBody)
         {
+            if (projectedBody is Bullet bullet)
+            {
+                if (!bullet.Consumed)
+                {
+                    TargetSize = (int)(TargetSize * 0.99f);
+                    if (TargetSize < World.Hook.ObstacleMinSize)
+                        this.Die();
+                }
+                bullet.Consumed = true;
+
+            }
         }
 
         public bool IsCollision(Body projectedBody)
         {
+
             var isHit = Vector2.Distance(projectedBody.Position, this.Position)
                 < (projectedBody.Size + this.Size);
 
@@ -32,12 +43,11 @@
             World = world;
             var r = new Random();
             Position = World.RandomPosition();
-            IdealMomentum = new Vector2(
+            TargetMomentum = new Vector2(
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
             );
-            IdealSize = 0;
-            Size = 0;
+
             Sprite = Sprites.obstacle;
             Color = "rgba(128,128,128,.2)";
 
@@ -50,28 +60,41 @@
 
             if (World.DistanceOutOfBounds(Position, World.Hook.ObstacleBorderBuffer) > 0)
             {
-                var speed = IdealMomentum.Length();
+                var speed = TargetMomentum.Length();
                 speed *= Multiplier;
 
                 if (Position != Vector2.Zero)
-                    IdealMomentum = Vector2.Normalize(Vector2.Zero - Position) * speed;
+                    TargetMomentum = Vector2.Normalize(Vector2.Zero - Position) * speed;
             }
 
-            if (Math.Abs(World.Hook.ObstacleMaxMomentumWeatherMultiplier - Multiplier) < 0.02)
-                Multiplier = World.Hook.ObstacleMaxMomentumWeatherMultiplier;
-            else
+            var weatherMultiplerDelta = Math.Abs(World.Hook.ObstacleMaxMomentumWeatherMultiplier - Multiplier);
+            if (weatherMultiplerDelta / World.Hook.ObstacleMaxMomentumWeatherMultiplier > 0.02)
                 Multiplier = Multiplier * 0.97f + World.Hook.ObstacleMaxMomentumWeatherMultiplier * 0.03f;
+            Momentum = TargetMomentum * Multiplier;
+            
+            if (IdealSize > 0 && MathF.Abs(IdealSize - TargetSize) / IdealSize > 0.02f)
+            {
+                var step = (IdealSize * 0.97f + TargetSize * 0.03f) - IdealSize;
 
-            Momentum = IdealMomentum * Multiplier;
+                if(step > 0)
+                    step = MathF.Max(step, 0.03f * MathF.Abs(IdealSize - TargetSize));
+                else if(step < 0)
+                    step = MathF.Min(step, -0.03f * MathF.Abs(IdealSize - TargetSize));
 
-            if (GrowthRate != 0)
+                IdealSize += step;
+            }
+
+            if (IdealSize < World.Hook.ObstacleMinSize * 0.02)
+                this.PendingDestruction = true;
+
+            /* if (GrowthRate != 0)
                 IdealSize += (GrowthRate * (float)World.LastStepSize);
 
             if (DieByTime > 0 && DieByTime < World.Time)
                 this.PendingDestruction = true;
 
             if (GrowthRate > 0 && IdealSize > TargetSize)
-                GrowthRate = 0;
+                GrowthRate = 0;*/
 
             //Console.WriteLine(Size);
             Size = (int)IdealSize;
@@ -81,14 +104,16 @@
         {
             long LengthOfDeath = World.Hook.LifecycleDuration;
             DieByTime = World.Time + LengthOfDeath;
-            GrowthRate = -1 * (float)Size / (float)LengthOfDeath; // shrink
+            TargetSize = 0;
+            
+            //GrowthRate = -1 * (float)Size / (float)LengthOfDeath; // shrink
         }
 
         public void Spawn()
         {
             var r = new Random();
             this.TargetSize = r.Next(World.Hook.ObstacleMinSize, World.Hook.ObstacleMaxSize);
-            GrowthRate = (float)this.TargetSize / (float)World.Hook.LifecycleDuration; // grow
+            //GrowthRate = (float)this.TargetSize / (float)World.Hook.LifecycleDuration; // grow
         }
     }
 }

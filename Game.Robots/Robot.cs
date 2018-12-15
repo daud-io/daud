@@ -77,6 +77,11 @@
             this.Connection.ControlAimTarget = point;
         }
 
+        protected void SetSplit(bool splitting)
+        {
+            this.Connection.ControlIsBoosting = splitting;
+        }
+
         private async Task StepAliveAsync()
         {
             await AliveAsync();

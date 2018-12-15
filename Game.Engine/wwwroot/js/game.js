@@ -142,11 +142,18 @@ connection.onView = newView => {
 
     }
 
-    lastOffset = view.time - performance.now();
-    if (lastOffset > serverTimeOffset) serverTimeOffset = lastOffset;
+    lastOffset = view.time - performance.now() + Math.random();
 
-    if (serverTimeOffset === false) serverTimeOffset = lastOffset;
-
+    if (!Settings.prototypeLag)
+    {
+        if (lastOffset > serverTimeOffset) serverTimeOffset = lastOffset;
+        if (serverTimeOffset === false) serverTimeOffset = lastOffset;
+    }
+    else
+    {
+        if (serverTimeOffset === false) serverTimeOffset = lastOffset;
+        serverTimeOffset = 0.99 * serverTimeOffset + 0.01 * lastOffset;
+    }
     const groupsLength = newView.groupsLength();
     const groups = [];
     for (var u = 0; u < groupsLength; u++) {
