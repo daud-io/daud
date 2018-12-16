@@ -1,8 +1,9 @@
 import { Settings } from "./settings";
+import images from '../img/*.png';
 
 function sprite(name, scale, scaleToSize) {
     const img = new Image();
-    img.src = `img/${name}.png`;
+    img.src = images[name];
 
     return {
         image: img,

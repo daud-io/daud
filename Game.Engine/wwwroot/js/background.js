@@ -3,7 +3,7 @@ import { Settings } from "./settings";
 export const img = new Image();
 export let setPattern;
 let pattern;
-img.src = "img/bg.png";
+img.src = require("../img/bg.png");
 img.onload = () => {
     setPattern();
 };

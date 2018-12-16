@@ -4,18 +4,18 @@
   "description": "",
   "main": "game.html",
   "scripts": {
-    "build": "parcel build game.html changes.html && copyfiles img/*.* dist/",
+    "build": "parcel build game.html changes.html",
     "watch": "parcel watch index.html --out-dir dist"
   },
   "author": "modderme123",
   "license": "ISC",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
-    "copyfiles": "^2.1.0",
     "dat.gui": "^0.7.3",
+    "img": "^3.0.3",
     "js-cookie": "^2.2.0",
     "jszip": "^3.1.5",
-    "nipplejs": "^0.7.1",
+    "nipplejs": "^0.7.3",
     "parcel-bundler": "^1.10.3",
     "whatwg-fetch": "^3.0.0"
   }
