@@ -1,4 +1,5 @@
 ﻿import { fetch } from "whatwg-fetch";
+import { Controls } from "./controls";
 
 export var Lobby = {
     allWorlds: {},
@@ -63,6 +64,8 @@ export var Lobby = {
 
             document.getElementById("shipSelector").innerHTML = options;
             document.getElementById("shipSelector").value = colors[0];
+            Controls.color = colors[0];
+
 
             Lobby.showDescription(worldKey);
 
