@@ -15,6 +15,7 @@ export const Settings = {
     hudEnabled: true,
     namesEnabled: true,
     bandwidth: 100,
+    showCooldown: true,
     showHitboxes: false,
     logLength: 4,
     mouseOneButton: 0
@@ -50,6 +51,7 @@ function save() {
     Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
+    Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
     Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.mouseOneButton = document.getElementById("settingsMouseOneButton").value;
@@ -83,6 +85,7 @@ function load() {
         document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
+        document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
         document.getElementById("settingsLog").value = Settings.logLength;
         document.getElementById("settingsMouseOneButton").value = Settings.mouseOneButton;
