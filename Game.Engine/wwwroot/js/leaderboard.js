@@ -40,8 +40,7 @@ export class Leaderboard {
                 ctx.restore();
             }
         });
-    };
-
+    }
 
     modeCTF(relativeTo) {
         const ctx = this.context;
@@ -84,7 +83,7 @@ export class Leaderboard {
         else if (redScore >= 5) drawSprite("ctf_score_final_red");
         else drawSprite("ctf_score_final");
 
-        var teams = ['cyan', 'red'];
+        var teams = ["cyan", "red"];
 
         var cyanFlag = false;
         var cyanTeam = [];
@@ -92,31 +91,24 @@ export class Leaderboard {
         var redTeam = [];
 
         this.data.Entries.forEach((entry, i) => {
-            if (i == 0)
-                cyanFlag = entry;
-            else if (i == 1)
-                redFlag = entry;
-            else if (entry.Color == 'cyan')
-                cyanTeam.push(entry);
-            else
-                redTeam.push(entry);
+            if (i == 0) cyanFlag = entry;
+            else if (i == 1) redFlag = entry;
+            else if (entry.Color == "cyan") cyanTeam.push(entry);
+            else redTeam.push(entry);
         });
-
 
         const drawFlagArrow = (flag, sprite, teamIndex) => {
             if (relativeTo) {
                 const angle = Math.atan2(flag.Position.Y - relativeTo.Y, flag.Position.X - relativeTo.X);
                 var arrow = sprites[sprite];
-                var overlay = sprites['ctf_arrow_trans_flag'];
+                var overlay = sprites["ctf_arrow_trans_flag"];
 
                 ctx.save();
                 const w = arrow.image.width;
                 const h = arrow.image.height;
 
-                if (teamIndex == 0)
-                    ctx.translate(hudX, hudY + 40);
-                else
-                    ctx.translate(hudX + hudWidth, hudY + 40);
+                if (teamIndex == 0) ctx.translate(hudX, hudY + 40);
+                else ctx.translate(hudX + hudWidth, hudY + 40);
 
                 ctx.save();
                 ctx.rotate(angle);
@@ -152,14 +144,10 @@ export class Leaderboard {
         var teams = [];
 
         this.data.Entries.forEach((entry, i) => {
-            if (i == 0)
-                teams.push(entry);
-            else if (i == 1)
-                teams.push(entry);
-            else if (entry.Color == 'cyan')
-                cyanTeam.push(entry);
-            else
-                redTeam.push(entry);
+            if (i == 0) teams.push(entry);
+            else if (i == 1) teams.push(entry);
+            else if (entry.Color == "cyan") cyanTeam.push(entry);
+            else redTeam.push(entry);
         });
 
         this.drawTeamLeaderboardAt(teams, false, this.canvas.width / 2 - 100);
@@ -225,9 +213,7 @@ export class Leaderboard {
     }
 
     draw(relativeTo) {
-
-        if (!Settings.leaderboardEnabled)
-            return;
+        if (!Settings.leaderboardEnabled) return;
 
         switch (this.data.Type) {
             case "Team":
@@ -245,6 +231,3 @@ export class Leaderboard {
         }
     }
 }
-
-
-

@@ -1,3 +1,5 @@
+import { fetch } from "whatwg-fetch";
+
 import { sprites } from "./renderer";
 import { img as background, setPattern } from "./background";
 import Cookies from "js-cookie";

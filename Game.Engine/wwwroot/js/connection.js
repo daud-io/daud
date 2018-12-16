@@ -52,7 +52,6 @@ export class Connection {
         url += `//${hostname}`;
         url += "/api/v1/connect?";
 
-
         if (world) url += `world=${encodeURIComponent(world)}&`;
 
         if (this.socket) {

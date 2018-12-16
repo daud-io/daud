@@ -83,10 +83,8 @@ export var Controls = {
                     Controls.boost = true;
                 else {
                     if (Settings.mouseOneButton > 0) {
-                        Controls.downSince = (new Date()).getTime();
-                    }
-                    else
-                    {
+                        Controls.downSince = new Date().getTime();
+                    } else {
                         Controls.shoot = true;
                     }
                 }
@@ -97,21 +95,21 @@ export var Controls = {
                     //right click
                     Controls.boost = false;
                 else {
-
                     if (Settings.mouseOneButton > 0) {
-                        var timeDelta = (new Date()).getTime() - Controls.downSince;
+                        var timeDelta = new Date().getTime() - Controls.downSince;
                         Controls.downSince = false;
                         if (timeDelta < Settings.mouseOneButton) {
                             Controls.shoot = true;
-                            setTimeout(function () { Controls.shoot = false; }, 100);
-                        }
-                        else {
+                            setTimeout(function() {
+                                Controls.shoot = false;
+                            }, 100);
+                        } else {
                             Controls.boost = true;
-                            setTimeout(function () { Controls.boost = false; }, 100);
+                            setTimeout(function() {
+                                Controls.boost = false;
+                            }, 100);
                         }
-                    }
-                    else
-                        Controls.shoot = false;
+                    } else Controls.shoot = false;
                 }
             });
             window.addEventListener("contextmenu", e => {

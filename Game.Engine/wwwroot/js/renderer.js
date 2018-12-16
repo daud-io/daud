@@ -1,5 +1,5 @@
 import { Settings } from "./settings";
-import images from '../img/*.png';
+import images from "../img/*.png";
 
 function sprite(name, scale, scaleToSize) {
     const img = new Image();

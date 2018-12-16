@@ -7,6 +7,7 @@ import { Interpolator } from "./interpolator";
 import { Leaderboard } from "./leaderboard";
 import { HUD } from "./hud";
 import { Log } from "./log";
+import { Cooldown } from "./cooldown";
 import { Background } from "./background";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
@@ -25,6 +26,7 @@ const interpolator = new Interpolator();
 const leaderboard = new Leaderboard(canvas, context);
 const hud = new HUD(canvas, context);
 const log = new Log(canvas, context);
+const cooldown = new Cooldown(canvas, context);
 let isSpectating = false;
 
 let angle = 0.0;
@@ -91,7 +93,6 @@ connection.onLeaderboard = lb => {
     leaderboard.position = lastPosition;
 };
 
-
 var fleetID = 0;
 let lastAliveState = false;
 let aliveSince = false;
@@ -111,7 +112,7 @@ connection.onView = newView => {
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
 
-        setTimeout(function () {
+        setTimeout(function() {
             document.body.classList.remove("alive");
             document.body.classList.add("dead");
         }, 500);
@@ -120,32 +121,30 @@ connection.onView = newView => {
 
         var countDown = 3;
         var interval = false;
-        var updateButton = function () {
+        var updateButton = function() {
             var button = document.getElementById("spawn");
             console.log(`cooldown: ${countDown}`);
 
             if (countDown > 0) {
-                console.log('hold');
+                console.log("hold");
                 button.value = `${countDown--} ...`;
                 button.disabled = true;
-            }
-            else {
-                console.log('Launch!');
+            } else {
+                console.log("Launch!");
                 button.value = `LAUNCH!`;
                 button.disabled = false;
                 clearInterval(interval);
             }
-        }
+        };
         updateButton();
 
         interval = setInterval(updateButton, 1000);
-
     }
 
     lastOffset = view.time - performance.now() + Math.random();
     if (serverTimeOffset === false) serverTimeOffset = lastOffset;
     serverTimeOffset = 0.99 * serverTimeOffset + 0.01 * lastOffset;
-    
+
     const groupsLength = newView.groupsLength();
     const groups = [];
     for (var u = 0; u < groupsLength; u++) {
@@ -183,10 +182,9 @@ connection.onView = newView => {
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
 
-
-
     renderer.worldSize = newView.worldSize();
 
+    cooldown.setCooldown(newView.cooldownShoot());
     /*console.log({
         playerCount: Game.Stats.playerCount,
         cooldownBoost: newView.cooldownBoost(),
@@ -239,7 +237,7 @@ function startSpectate(hideButton) {
 
     if (hideButton) {
         document.body.classList.add("spectate_only");
-    } 
+    }
 }
 
 document.getElementById("spectate").addEventListener("click", () => {
@@ -260,12 +258,10 @@ document.addEventListener("keydown", ({ keyCode, which }) => {
     if (keyCode == 27 || which == 27) {
         if (lastAliveState) {
             connection.sendExit();
-            console.log('sending exit');
-        }
-        else if (isSpectating) {
+            console.log("sending exit");
+        } else if (isSpectating) {
             stopSpectate();
-        }
-        else {
+        } else {
             startSpectate();
         }
     }
@@ -352,6 +348,7 @@ function gameLoop() {
     leaderboard.draw(leaderboard.position);
     hud.draw();
     log.draw();
+    cooldown.draw();
 
     if (Controls.mouseX) {
         const pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);

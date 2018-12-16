@@ -26,12 +26,10 @@ if (new Date().getTime() < eventStart.getTime()) {
         var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        var remaining = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        var remaining = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
         hintbox.innerText = `Team match begins in ${remaining}`;
     }, 1000);
-}
-else
-{
+} else {
     window.setInterval(() => {
         hintbox.innerText = texts[index % texts.length];
         index++;
