@@ -171,7 +171,7 @@ a {
 .spectating #stop_spectating_container {
     position: absolute;
     bottom: 10%;
-    margin-left: 42%;
+    width: 100%;
     display: block;
 }
 
@@ -183,7 +183,7 @@ a {
     background: linear-gradient(to right, #008888 0%, #0066ff 100%) left bottom rgba(55, 55, 90, 0.8) no-repeat;
     background-size: 100% 5px;
     color: white;
-    opacity: 0.3;
+    opacity: 0.1;
 }
 .spectating #stop_spectating:hover {
     opacity: 1;
