@@ -258,7 +258,7 @@ document.addEventListener("keydown", ({ keyCode, which }) => {
             console.log('sending exit');
         }
         else if (isSpectating) {
-            stopSpectate()
+            stopSpectate();
         }
         else {
             startSpectate();
