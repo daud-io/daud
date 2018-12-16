@@ -196,11 +196,16 @@ a {
 #stop_spectating_container {
     display: none;
 }
+
 .spectating #stop_spectating_container {
     position: absolute;
     bottom: 10%;
     width: 100%;
     display: block;
+}
+
+.spectate_only #stop_spectating_container {
+    display: none;
 }
 
 .spectating #stop_spectating {
@@ -213,6 +218,7 @@ a {
     color: white;
     opacity: 0.1;
 }
+
 .spectating #stop_spectating:hover {
     opacity: 1;
 }

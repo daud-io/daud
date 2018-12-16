@@ -33,7 +33,7 @@ export var Lobby = {
                         var world = response[i];
                         Lobby.allWorlds[world.world] = world;
 
-                        options += `<option value="${world.world}">${world.players}: ${world.name}</option>`;
+                        options += `<option value="${world.world}">${world.name} (${world.players})</option>`;
                     }
 
                     selector.innerHTML = options;

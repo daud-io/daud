@@ -231,11 +231,15 @@ document.getElementById("spawn").addEventListener("click", () => {
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
 });
 
-function startSpectate() {
+function startSpectate(hideButton) {
     isSpectating = true;
     Events.Spectate();
     document.body.classList.add("spectating");
     document.body.classList.add("dead");
+
+    if (hideButton) {
+        document.body.classList.add("spectate_only");
+    } 
 }
 
 document.getElementById("spectate").addEventListener("click", () => {
@@ -245,6 +249,7 @@ document.getElementById("spectate").addEventListener("click", () => {
 function stopSpectate() {
     isSpectating = false;
     document.body.classList.remove("spectating");
+    document.body.classList.remove("spectate_only");
 }
 
 document.getElementById("stop_spectating").addEventListener("click", () => {
@@ -382,5 +387,5 @@ function parseQuery(queryString) {
 
 const query = parseQuery(window.location.search);
 if (query.spectate && query.spectate !== "0") {
-    startSpectate();
+    startSpectate(true);
 }
