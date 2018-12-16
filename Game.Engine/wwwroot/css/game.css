@@ -223,8 +223,6 @@ a {
     opacity: 1;
 }
 
-
-
 .spawnscreen input,
 .spawnscreen select {
     font-size: 1rem;
@@ -321,13 +319,14 @@ table {
 
 #gear {
     position: absolute;
-    padding: 15vmin;
+    padding: 10vmin;
     top: 0;
     left: 0;
-    width: calc(100% - 30vmin);
-    height: calc(100% - 30vmin);
+    width: calc(100% - 20vmin);
+    height: calc(100% - 20vmin);
     background: rgba(0, 0, 50, 0.8);
     z-index: 3;
+    overflow-y: scroll;
 }
 #gear.closed {
     display: none;
