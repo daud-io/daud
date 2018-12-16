@@ -15,8 +15,7 @@ export const Settings = {
     bandwidth: 100,
     showHitboxes: false,
     logLength: 4,
-    mouseOneButton: 0,
-    prototypeLag: false
+    mouseOneButton: 0
 };
 
 function parseQuery(queryString) {
@@ -52,7 +51,6 @@ function save() {
     Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.mouseOneButton = document.getElementById("settingsMouseOneButton").value;
-    Settings.prototypeLag = document.getElementById("settingsPrototypeLag").checked;
 
     Cookies.set("settings", Settings, cookieOptions);
 
@@ -86,7 +84,6 @@ function load() {
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
         document.getElementById("settingsLog").value = Settings.logLength;
         document.getElementById("settingsMouseOneButton").value = Settings.mouseOneButton;
-        document.getElementById("settingsPrototypeLag").checked = Settings.prototypeLag;
     } catch (e) {
         // maybe reset()? will make debugging difficult
     }
