@@ -1,5 +1,6 @@
 import { Settings } from "./settings";
 import images from "../img/*.png";
+import { FleetRenderer } from "./renderers/fleetRenderer";
 
 function sprite(name, scale, scaleToSize) {
     const img = new Image();
@@ -7,6 +8,7 @@ function sprite(name, scale, scaleToSize) {
 
     return {
         image: img,
+        name: name,
         scale: scale || 1.3,
         scaleToSize: scaleToSize || false
     };
@@ -103,12 +105,27 @@ addSprite("ctf_score_stripes");
 addSprite("ctf_arrow_red", 0.05);
 addSprite("ctf_arrow_blue", 0.05);
 addSprite("ctf_arrow_trans_flag", 0.1);
+addSprite("thruster_default_green");
+addSprite("thruster_default_orange");
+addSprite("thruster_default_pink");
+addSprite("thruster_default_red");
+addSprite("thruster_default_cyan");
+addSprite("thruster_default_yellow");
+addSprite("thruster_retro_green");
+addSprite("thruster_retro_orange");
+addSprite("thruster_retro_pink");
+addSprite("thruster_retro_red");
+addSprite("thruster_retro_cyan");
+addSprite("thruster_retro_yellow");
+
 
 export class Renderer {
     constructor(context, settings = {}) {
         this.context = context;
         this.view = false;
         this.worldSize = 6000;
+
+        this.fleetRenderer = new FleetRenderer(context, settings);
     }
 
     draw(cache, interpolator, currentTime) {
@@ -182,13 +199,13 @@ export class Renderer {
 
             cache.foreach(function(body) {
                 const object = body;
+                let group = false;
 
                 const position = interpolator.projectObject(object, currentTime);
 
                 // keep track of which "groups" are used, and collect the points of all the objects
                 // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
                 if (object.Group) {
-                    let group = false;
                     for (let i = 0; i < groupsUsed.length; i++)
                         if (groupsUsed[i].id == object.Group) {
                             group = groupsUsed[i];
@@ -218,23 +235,30 @@ export class Renderer {
                     ctx.restore();
                 }
 
-                // draw the sprite
-                const sprite = object.Sprite != null ? sprites[object.Sprite] : false;
-                if (sprite) {
-                    ctx.save();
-                    ctx.translate(position.X, position.Y);
+                if (group && group.group && group.group.Type == 1)
+                {
+                    this.fleetRenderer.draw(cache, interpolator, currentTime, object, group, position);
+                }
+                else
+                {
+                    // draw the sprite
+                    const sprite = object.Sprite != null ? sprites[object.Sprite] : false;
+                    if (sprite) {
+                        ctx.save();
+                        ctx.translate(position.X, position.Y);
 
-                    const spriteWidth = sprite.image.width;
-                    const spriteHeight = sprite.image.height;
+                        const spriteWidth = sprite.image.width;
+                        const spriteHeight = sprite.image.height;
 
-                    ctx.rotate(position.Angle);
-                    ctx.scale(sprite.scale, sprite.scale);
+                        ctx.rotate(position.Angle);
+                        ctx.scale(sprite.scale, sprite.scale);
 
-                    if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
+                        if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
 
-                    ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
+                        ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
 
-                    ctx.restore();
+                        ctx.restore();
+                    }
                 }
             }, this);
 

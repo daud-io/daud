@@ -152,6 +152,7 @@
             private const float WEIGHT_ANGLE = 10;
             private const float WEIGHT_SPRITE = 1;
             private const float WEIGHT_SIZE = 1;
+            private const float WEIGHT_MODE = 1;
             private const float WEIGHT_MISSING = float.MaxValue;
 
             public void Project(uint time)
@@ -170,6 +171,7 @@
                                 : 0
                             + WEIGHT_ANGLE * Math.Abs(BodyClient.Angle - BodyUpdated.Angle)
                             + WEIGHT_SIZE * Math.Abs(BodyClient.Size - BodyUpdated.Size)
+                            + WEIGHT_MODE * Math.Abs(BodyClient.Mode - BodyUpdated.Mode)
                             + WEIGHT_SPRITE * (BodyClient.Sprite != BodyUpdated.Sprite ? 1 : 0);
                     }
                 }

@@ -189,7 +189,7 @@
                                     AngularVelocity: (sbyte)(serverBody.AngularVelocity * 10000),
                                     Size: (byte)(serverBody.Size / 5),
                                     Sprite: (byte)serverBody.Sprite,
-                                    Mode: 0,
+                                    Mode: serverBody.Mode,
                                     Group: serverBody.Group?.ID ?? 0);
                             }
 

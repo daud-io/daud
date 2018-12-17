@@ -248,6 +248,10 @@
                     ? 1.0f
                     : World.Hook.Drag;
 
+                ship.Mode = (byte)(isBoosting
+                    ? 1
+                    : 0);
+
                 if (isBoostInitial)
                     if (ship.Momentum != Vector2.Zero)
                         ship.Momentum += Vector2.Normalize(ship.Momentum) * World.Hook.BoostSpeed;

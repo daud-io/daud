@@ -60,6 +60,7 @@ const bodyFromServer = (cache, body) => {
         DefinitionTime: body.definitionTime(),
         Size: body.size() * 5,
         Sprite: spriteIndices[body.sprite()], //body.sprite(),
+        Mode: body.mode(),
         Color: "red", //body.color(),
         Group: groupID,
         OriginalAngle: (body.originalAngle() / 127) * Math.PI,

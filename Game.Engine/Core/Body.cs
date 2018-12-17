@@ -34,6 +34,20 @@
             }
         }
 
+        private byte _mode { get; set; }
+        public virtual byte Mode
+        {
+            get
+            {
+                return _mode;
+            }
+            set
+            {
+                IsDirty = IsDirty || _mode != value;
+                _mode = value;
+            }
+        }
+
         private Sprites _sprite { get; set; }
         public virtual Sprites Sprite
         {
