@@ -42,7 +42,14 @@ namespace Game.Engine.ChatBot
             if (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
             {
                 if (message.MentionedUsers.Any())
-                    await DiscordBotModule.UserMentions(message.MentionedUsers.Select(u => u.Id), message.Content);
+                {
+                    var textMessage = $"@{message.Author.Username}: {message.Content}";
+
+                    foreach (var mention in message.MentionedUsers)
+                        textMessage = textMessage.Replace($"<@{mention.Id}>", $"@{mention.Username}");
+
+                    await DiscordBotModule.UserMentions(message.MentionedUsers.Select(u => u.Id), textMessage);
+                }
 
                 return;
             }
