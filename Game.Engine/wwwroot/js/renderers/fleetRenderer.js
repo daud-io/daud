@@ -25,7 +25,7 @@ export class FleetRenderer {
             if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
 
             ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
-            if (object.Mode == 1)
+            if (object.Mode == 1 || group.group.boostAnimateUntil > performance.now())
                 this.drawBooster(object, group, sprite);
             else
                 group.group.index = 0;
@@ -37,11 +37,17 @@ export class FleetRenderer {
     drawBooster(object, group, baseSprite)
     {
         var index = group.group.index || 0;
+        var boostDurationTotal = 600;
+        if (index == 0)
+        {
+            group.group.boostStarted = performance.now();
+            group.group.boostAnimateUntil = performance.now() + boostDurationTotal;
+        }
+        
+        var boostDuration = performance.now() - group.group.boostStarted;
+
         group.group.index = index + 1;
-
-
-        var spriteIndex = Math.floor(index/2);
-        //console.log(index, spriteIndex, group);
+        group.group.spriteScale = 1.5;
 
         var distance = -20;
         
@@ -72,7 +78,6 @@ export class FleetRenderer {
                         break;
                 }
             }
-            group.group.thursterSprite = thrusterSprite;
             distance = -40;
         }
 
@@ -102,20 +107,28 @@ export class FleetRenderer {
                         break;
                 }
             }
-            group.group.thursterSprite = thrusterSprite;
             distance = -20;
+            group.group.spriteScale = 1;
         }
 
+        if (!thrusterSprite)
+            thrusterSprite = sprites['thruster_default_cyan'];
+        
         var totalTiles = (thrusterSprite.image.width / this.thrusterSpriteSize);
+        var spriteIndex = Math.floor(boostDuration/boostDurationTotal * totalTiles) % totalTiles
+            + object.ID % 3;
+
+        group.group.thursterSprite = thrusterSprite;
+
         var sx = this.thrusterSpriteSize * (spriteIndex % totalTiles);
         var sy = 0;
         var sw = this.thrusterSpriteSize;
         var sh = this.thrusterSpriteSize;
 
         var dx = distance;
-        var dy = -32*1.5;
-        var dw = this.thrusterSpriteSize*1.5;
-        var dh = this.thrusterSpriteSize*1.5;
+        var dy = -32*group.group.spriteScale;
+        var dw = this.thrusterSpriteSize*group.group.spriteScale;
+        var dh = this.thrusterSpriteSize*group.group.spriteScale;
 
         this.context.translate(dx, dy);
         this.context.rotate(Math.PI / 2);
