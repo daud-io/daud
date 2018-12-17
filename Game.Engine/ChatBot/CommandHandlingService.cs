@@ -7,6 +7,7 @@ namespace Game.Engine.ChatBot
     using Discord;
     using Discord.Commands;
     using Discord.WebSocket;
+    using System.Linq;
 
     public class CommandHandlingService
     {
@@ -38,7 +39,13 @@ namespace Game.Engine.ChatBot
 
             // This value holds the offset where the prefix ends
             var argPos = 0;
-            if (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos)) return;
+            if (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
+            {
+                if (message.MentionedUsers.Any())
+                    await DiscordBotModule.UserMentions(message.MentionedUsers.Select(u => u.Id), message.Content);
+
+                return;
+            }
 
             var context = new SocketCommandContext(_discord, message);
             await _commands.ExecuteAsync(context, argPos, _services); // we will handle the result in CommandExecutedAsync

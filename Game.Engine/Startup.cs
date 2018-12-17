@@ -10,7 +10,6 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;
