@@ -1,7 +1,10 @@
 ﻿namespace Game.Engine
 {
+    using Discord.Commands;
+    using Discord.WebSocket;
     using Game.API.Authentication;
     using Game.API.Common.Security;
+    using Game.Engine.ChatBot;
     using Game.Engine.Networking;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -10,6 +13,7 @@
     using Microsoft.Net.Http.Headers;
     using Newtonsoft.Json;
     using System;
+    using System.Net.Http;
 
     public class Startup
     {
@@ -31,6 +35,13 @@
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
+
+            services
+                .AddSingleton<DiscordSocketClient>()
+                .AddSingleton<CommandService>()
+                .AddSingleton<CommandHandlingService>()
+                .AddSingleton<HttpClient>()
+                .AddSingleton<DiscordBot>();
         }
 
         private GameConfiguration LoadConfiguration(IServiceCollection services)
@@ -42,7 +53,7 @@
             return config.Object;
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
         {
             app.Use(async (httpContext, next) =>
             {

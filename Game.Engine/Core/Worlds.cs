@@ -69,8 +69,8 @@
             {
                 Hook = hook,
                 Name = "Dueling Room",
-                Description = "Cyan vs. Red",
-                AllowedColors = TeamColors
+                Description = "1 vs. 1",
+                AllowedColors = AllColors
             };
         }
 
