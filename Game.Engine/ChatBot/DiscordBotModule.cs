@@ -4,6 +4,7 @@ namespace Game.Engine.ChatBot
     using Discord.Commands;
     using Discord.Rest;
     using Game.Engine.Core;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -31,14 +32,12 @@ namespace Game.Engine.ChatBot
         [Command("worlds")]
         public async Task WorldsAsync()
         {
-            var response = "\n";
+            var response = "*worlds report*\n";
             using (var drc = new DiscordRestClient())
             {
 
                 foreach (var world in Worlds.AllWorlds)
                 {
-                    response += $"{world.Key} {world.Value.AdvertisedPlayerCount}\n";
-
                     var players = Player.GetWorldPlayers(world.Value);
 
                     foreach (var player in players)
@@ -46,11 +45,7 @@ namespace Game.Engine.ChatBot
                         if (!string.IsNullOrWhiteSpace(player.Token))
                         {
                             await drc.LoginAsync(TokenType.Bearer, player.Token);
-                            response += $" - {player.Name} @{drc.CurrentUser}\n";
-                        }
-                        else
-                        {
-                            response += $" - {player.Name}\n";
+                            response += $"{world.Key}({world.Value.AdvertisedPlayerCount}): {player.Name} is @{drc.CurrentUser}\n";
                         }
                     }
 
@@ -108,12 +103,19 @@ namespace Game.Engine.ChatBot
                 }
                 else
                 {
-                    using (var drc = new DiscordRestClient())
+                    try
                     {
-                        await drc.LoginAsync(TokenType.Bearer, token);
-                        TokenUserMap.Add(token, drc.CurrentUser);
-                        IDUserMap.Add(drc.CurrentUser.Id, drc.CurrentUser);
-                        return drc.CurrentUser;
+                        using (var drc = new DiscordRestClient())
+                        {
+                            await drc.LoginAsync(TokenType.Bearer, token);
+                            TokenUserMap.Add(token, drc.CurrentUser);
+                            IDUserMap.Add(drc.CurrentUser.Id, drc.CurrentUser);
+                            return drc.CurrentUser;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"Exception while Getting Discord User: {e}");
                     }
                 }
             }
