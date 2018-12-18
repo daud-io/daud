@@ -2,9 +2,6 @@
   "profiles": {
     "Game.Engine": {
       "commandName": "Project",
-      "environmentVariables": {
-        "DEBUG": "true"
-      },
       "applicationUrl": "http://localhost:80"
     }
   }

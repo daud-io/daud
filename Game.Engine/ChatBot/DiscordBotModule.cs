@@ -5,12 +5,14 @@ namespace Game.Engine.ChatBot
     using Discord.Rest;
     using Game.Engine.Core;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     // Modules must be public and inherit from an IModuleBase
     public class DiscordBotModule : ModuleBase<SocketCommandContext>
     {
-        private static Dictionary<string, ulong> TokenUserMap = new Dictionary<string, ulong>();
+        private static Dictionary<string, RestSelfUser> TokenUserMap = new Dictionary<string, RestSelfUser>();
+        private static Dictionary<ulong, RestSelfUser> IDUserMap = new Dictionary<ulong, RestSelfUser>();
 
         [Command("ping")]
         [Alias("pong", "hello")]
@@ -44,10 +46,12 @@ namespace Game.Engine.ChatBot
                         if (!string.IsNullOrWhiteSpace(player.Token))
                         {
                             await drc.LoginAsync(TokenType.Bearer, player.Token);
-                            response += $" - {player.Name} <@{drc.CurrentUser.Id}>\n";
+                            response += $" - {player.Name} @{drc.CurrentUser}\n";
                         }
                         else
+                        {
                             response += $" - {player.Name}\n";
+                        }
                     }
 
                 }
@@ -58,38 +62,64 @@ namespace Game.Engine.ChatBot
             await ReplyAsync(response);
         }
 
-        
-        public static async Task UserMentions(IEnumerable<ulong> ids, string message)
+        private static async Task ScanAllSignedInPlayers()
         {
             foreach (var world in Worlds.AllWorlds)
             {
-
-                var players = Player.GetWorldPlayers(world.Value);
-                foreach (var player in players)
+                foreach (var player in Player.GetWorldPlayers(world.Value))
                 {
-                    var id = await GetUserID(player.Token);
-                    if (id != 0)
-                        player.SendMessage(message);
+                    await GetUser(player.Token);
                 }
             }
         }
 
-        private static async Task<ulong> GetUserID(string token)
+
+        public static async Task UserMentions(IEnumerable<ulong> ids, string message)
         {
-            if (TokenUserMap.ContainsKey(token))
-                return TokenUserMap[token];
-            else
-                using (var drc = new DiscordRestClient())
+            foreach (var world in Worlds.AllWorlds)
+            {
+                var players = Player.GetWorldPlayers(world.Value);
+                foreach (var player in players)
                 {
-                    if (!string.IsNullOrWhiteSpace(token))
+                    var user = await GetUser(player.Token);
+                    if (user != null && ids.Any(i => i == user.Id))
                     {
-                        await drc.LoginAsync(TokenType.Bearer, token);
-                        TokenUserMap.Add(token, drc.CurrentUser.Id);
-                        return drc.CurrentUser.Id;
+                        player.SendMessage(message);
                     }
                 }
+            }
+        }
 
-            return 0;
+        private static RestSelfUser GetUser(ulong id)
+        {
+            return IDUserMap.ContainsKey(id)
+                ? IDUserMap[id]
+                : null;
+        }
+
+        private static async Task<RestSelfUser> GetUser(string token)
+        {
+            if (!string.IsNullOrWhiteSpace(token))
+            {
+
+                if (TokenUserMap.ContainsKey(token))
+                {
+                    return TokenUserMap[token];
+                }
+                else
+                {
+                    using (var drc = new DiscordRestClient())
+                    {
+                        await drc.LoginAsync(TokenType.Bearer, token);
+                        TokenUserMap.Add(token, drc.CurrentUser);
+                        IDUserMap.Add(drc.CurrentUser.Id, drc.CurrentUser);
+                        return drc.CurrentUser;
+                    }
+                }
+            }
+
+
+            return null;
         }
     }
 }
