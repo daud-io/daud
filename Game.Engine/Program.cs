@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine
 {
+    using Game.Engine.ChatBot;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
@@ -17,7 +18,12 @@
 
         public async static Task Main(string[] args)
         {
-            await CreateWebHostBuilder(args).Build().RunAsync(cts.Token);
+            var host = CreateWebHostBuilder(args).Build();
+
+            var bot = host.Services.GetService(typeof(DiscordBot)) as DiscordBot;
+            await bot.InitializeAsync();
+
+            await host.RunAsync(cts.Token);
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
