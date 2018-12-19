@@ -200,7 +200,7 @@
                 {
                     token = this.Token,
                     name = this.Name,
-                    killedBy = Token
+                    killedBy = player?.Token
                 });
         }
 
