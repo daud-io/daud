@@ -1,5 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common;
+
     public class Group
     {
         public uint ID { get; set; }

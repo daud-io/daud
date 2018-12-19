@@ -145,7 +145,7 @@
                     {
                         ID = group.Group,
                         Caption = group.Caption,
-                        Type = group.Type,
+                        Type = (GroupTypes)group.Type,
                         ZIndex = group.Zindex,
                         Owner = group.Owner
                     });
