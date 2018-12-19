@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Numerics;
+    using Game.API.Common;
 
     public class Robot : Player
     {
@@ -54,26 +55,44 @@
                     .Where(p => !p.Name?.StartsWith("Daud") ?? true)
                     .OrderBy(p => Vector2.Distance(p.Fleet.FleetCenter, this.Fleet.FleetCenter))
                     .FirstOrDefault();
-
+            var vel = Vector2.Zero;
             if (player != null)
             {
-                var delta = Vector2.Subtract(player.Fleet.FleetCenter, this.Fleet.FleetCenter);
-
-                var trueAngle = (float)Math.Atan2(delta.Y, delta.X);
-                var quantized = (int)(trueAngle * 100) / 100f;
-
-                this.ControlInput.Position = delta;
+                vel+=player.Fleet.FleetCenter - this.Fleet.FleetCenter;
 
                 this.ControlInput.ShootRequested = true;
-
-                this.SetControl(ControlInput);
             }
             else
             {
-                var angle = (float)Math.Atan2(-Fleet.FleetCenter.Y, -Fleet.FleetCenter.X);
-                this.ControlInput.Position = new Vector2(MathF.Cos(angle), MathF.Sin(angle));
-                this.SetControl(ControlInput);
+                var angle = (float)((World.Time - SpawnTime) / 3000.0f) * MathF.PI * 2;
+                vel += new Vector2(MathF.Cos(angle), MathF.Sin(angle));
             }
+            var danger = false;
+            var bullets = World.Bodies
+                .Where(b => b.Group?.GroupType == GroupTypes.VolleyBullet || b.Group?.GroupType == GroupTypes.VolleySeeker)
+                .Where(b => b.Group?.OwnerID != this.Fleet.ID)
+                .OrderBy(p => Vector2.Distance(p.Position, this.Fleet.FleetCenter))
+                .ToList();
+            if (bullets.Any())
+            {
+                var bullet = bullets.First();
+
+                var distance = Vector2.Distance(bullet.Position, this.Fleet.FleetCenter);
+                if (distance < 2000)
+                {
+                    var avoid = (this.Fleet.FleetCenter - bullet.Position);
+                    vel += avoid * 400_000 / avoid.LengthSquared();
+                }
+                if (distance < 200)
+                {
+                    danger = true;
+                }
+            }
+
+            this.ControlInput.Position = vel;
+            this.ControlInput.BoostRequested = danger;
+
+            this.SetControl(ControlInput);
 
             base.Think();
         }
