@@ -53,7 +53,6 @@ namespace Game.Engine.ChatBot
             }
             response += "\n";
 
-
             await ReplyAsync(response);
         }
 
@@ -68,6 +67,13 @@ namespace Game.Engine.ChatBot
             }
         }
 
+        public static Task WorldAnnounce(World world, string message)
+        {
+            foreach (var player in Player.GetWorldPlayers(world))
+                player.SendMessage(message);
+
+            return Task.FromResult(0);
+        }
 
         public static async Task UserMentions(IEnumerable<ulong> ids, string message)
         {

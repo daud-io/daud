@@ -8,6 +8,7 @@ namespace Game.Engine.ChatBot
     using Discord.Commands;
     using Discord.WebSocket;
     using System.Linq;
+    using Game.Engine.Core;
 
     public class CommandHandlingService
     {
@@ -41,15 +42,19 @@ namespace Game.Engine.ChatBot
             var argPos = 0;
             if (!message.HasMentionPrefix(_discord.CurrentUser, ref argPos))
             {
-                if (message.MentionedUsers.Any())
+                var textMessage = $"@{message.Author.Username}: {message.Content}";
+                foreach (var mention in message.MentionedUsers)
+                    textMessage = textMessage.Replace($"<@{mention.Id}>", $"@{mention.Username}");
+
+                if (message.Channel.Name.StartsWith("arena-"))
                 {
-                    var textMessage = $"@{message.Author.Username}: {message.Content}";
+                    var world = Worlds.Find(message.Channel.Name.Substring(6));
 
-                    foreach (var mention in message.MentionedUsers)
-                        textMessage = textMessage.Replace($"<@{mention.Id}>", $"@{mention.Username}");
-
-                    await DiscordBotModule.UserMentions(message.MentionedUsers.Select(u => u.Id), textMessage);
+                    await DiscordBotModule.WorldAnnounce(world, textMessage);
                 }
+
+                if (message.MentionedUsers.Any())
+                    await DiscordBotModule.UserMentions(message.MentionedUsers.Select(u => u.Id), textMessage);
 
                 return;
             }
