@@ -19,6 +19,7 @@
             "default",
             "other",
             "duel",
+            "team",
             "ctf"
         };
 
@@ -83,7 +84,6 @@
 
             protected async override Task ExecuteAsync()
             {
-
                 foreach (var world in WorldSelection(World))
                 {
                     var connections = await API.Server.ConnectionsAsync(world);
