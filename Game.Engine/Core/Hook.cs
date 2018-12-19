@@ -21,7 +21,7 @@
                     BoostCooldownTimeB = 1096.0f,
 
                     BoostSpeed = 1f,
-                    BoostDuration = 450,
+                    BoostDuration = 420,
 
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 500,
@@ -30,9 +30,9 @@
                     ShotCooldownTimeBotB = 700,
 
                     ShotThrustM = -0.0035f,
-                    ShotThrustB = 0.18f,
+                    ShotThrustB = 0.21f,
 
-                    SeekerThrustMultiplier = 1.42f,
+                    SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
 
                     HealthHitCost = 100,
@@ -46,7 +46,7 @@
                     BotRespawnDelay = 10000,
 
                     StepTime = 40,
-                    Obstacles = 15,
+                    Obstacles = 10,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
                     ObstacleMinSize = 300,
@@ -60,8 +60,8 @@
 
                     SpawnShipCount = 5,
 
-                    FlockAlignment = .5f,
-                    FlockCohesion = 0.002f,
+                    FlockAlignment = .35f,
+                    FlockCohesion = 0.006f,
                     FlockCohesionMaximumDistance = 600,
                     FlockSeparation = 80f,
                     FlockSeparationMinimumDistance = 200,
