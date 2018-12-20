@@ -6,7 +6,7 @@
     using System.Numerics;
     using System.Threading.Tasks;
 
-    public class ContextRobot
+    public class Robot
     {
         private Connection Connection;
 

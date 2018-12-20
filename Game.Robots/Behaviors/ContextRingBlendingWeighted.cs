@@ -3,9 +3,11 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class ContextRingBlendingWeighted
+    public class ContextRingBlendingWeighted : IContextRingBlending
     {
         private readonly ContextRobot Robot;
+        public int BlurSteps { get; set; } = 10;
+        public float BlurAmount { get; set; } = 0.05f;
 
         public ContextRingBlendingWeighted(ContextRobot robot)
         {
@@ -16,23 +18,9 @@
         {
             var combined = new ContextRing(Robot.Steps);
 
-
             // blur
             foreach (var context in contexts)
-                for (var blurStep = 0; blurStep < 10; blurStep++)
-                    for (var i = 0; i < context.Weights.Length; i++)
-                    {
-                        var previousIndex = i - 1;
-                        if (previousIndex < 0)
-                            previousIndex = context.Weights.Length - 1;
-                        var prev = context.Weights[previousIndex];
-                        var next = context[(i + 1) % context.Weights.Length];
-
-                        var thisScore = context[i].score;
-                        context[i].score = context[i].score + (prev - thisScore) * .05 + (next - thisScore) * .05;
-                    }
-
-
+                BlurRing(context);
 
             if (contexts.Any())
             {
@@ -50,7 +38,29 @@
                 return combined.Angle(maxIndex);
             }
             else
+            {
                 return 0; // going east a lot ?
+            }
+        }
+
+        private void BlurRing(ContextRing ring)
+        {
+            // blur
+            for (var blurStep = 0; blurStep < BlurSteps; blurStep++)
+                for (var i = 0; i < ring.Weights.Length; i++)
+                {
+                    var previousIndex = i - 1;
+                    if (previousIndex < 0)
+                        previousIndex = ring.Weights.Length - 1;
+
+                    var prev = ring.Weights[previousIndex];
+                    var next = ring.Weights[(i + 1) % ring.Weights.Length];
+
+                    var thisScore = ring.Weights[i];
+                    ring.Weights[i] +=
+                        (prev - thisScore) * BlurAmount
+                        + (next - thisScore) * BlurAmount;
+                }
         }
     }
 }

@@ -12,6 +12,7 @@
         {
             Behaviors.Add(Navigation = new NavigateToPoint(this));
             Navigation.TargetPoint = target;
+            Steps = 16;
         }
     }
 }
