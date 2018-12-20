@@ -1,6 +1,7 @@
 ﻿namespace Game.Robots
 {
     using Game.Robots.Behaviors;
+    using Game.Robots.Behaviors.Blending;
     using Game.Robots.Senses;
     using System.Collections.Generic;
     using System.Linq;
@@ -10,8 +11,8 @@
     {
         protected readonly List<ISense> Sensors = new List<ISense>();
         protected readonly List<IBehaviors> Behaviors = new List<IBehaviors>();
-        protected readonly SensorBullets SensorBullets;
-        protected readonly SensorFleets SensorFleets;
+        public readonly SensorBullets SensorBullets;
+        public readonly SensorFleets SensorFleets;
 
         protected IContextRingBlending ContextRingBlending { get; set; }
 
