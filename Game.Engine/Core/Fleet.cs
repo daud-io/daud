@@ -11,6 +11,7 @@
     {
         public virtual float ShotCooldownTimeM { get => World.Hook.ShotCooldownTimeM; }
         public virtual float ShotCooldownTimeB { get => World.Hook.ShotCooldownTimeB; }
+        public virtual int ShotCooldownTimeShark { get => World.Hook.ShotCooldownTimeShark; }
         public virtual float ShotThrustM { get => World.Hook.ShotThrustM; }
         public virtual float ShotThrustB { get => World.Hook.ShotThrustB; }
         public virtual float BaseThrustM { get => World.Hook.BaseThrustM; }
@@ -43,6 +44,8 @@
         public Vector2 FleetMomentum = Vector2.Zero;
 
         public float Burden { get; set; } = 0f;
+        public bool Shark { get; set; } = false;
+        public bool LastTouchedLeft { get; set; } = false;
         private bool FireVolley = false;
 
         public Sprites BulletSprite
@@ -241,7 +244,7 @@
                 Flock(ship);
 
                 ship.ThrustAmount = isBoosting
-                    ? BoostThrust * (1-Burden)
+                    ? BoostThrust * (1 - Burden)
                     : (BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
 
                 ship.Drag = isBoosting
@@ -259,7 +262,7 @@
 
             if (isShooting)
             {
-                ShootCooldownTime = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
+                ShootCooldownTime = World.Time + (Shark ? ShotCooldownTimeShark : (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB));
                 ShootCooldownTimeStart = World.Time;
 
                 /*foreach (var ship in Ships)
@@ -280,10 +283,16 @@
                 ShootCooldownStatus = (float)
                     (World.Time - ShootCooldownTimeStart) / (ShootCooldownTime - ShootCooldownTimeStart);
 
-            if(World.DistanceOutOfBounds(FleetCenter)>0 && World.Name=="Sharks and Minnows"){
-                Console.WriteLine("yaaaaaaaaaaaa");
+            if (MathF.Abs(FleetCenter.X) >  World.Hook.WorldSize &&
+                FleetCenter.X<0!=LastTouchedLeft &&
+                World.Name == "Sharks and Minnows" &&
+                !Owner.IsInvulnerable &&
+                !Shark)
+            {
+                LastTouchedLeft = FleetCenter.X < 0;
                 Owner.IsInvulnerable = true;
                 Owner.SpawnTime = World.Time;
+                Owner.Score++;
             }
         }
 

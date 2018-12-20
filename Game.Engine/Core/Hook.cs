@@ -19,6 +19,7 @@
 
                     BoostCooldownTimeM = 4.0f,
                     BoostCooldownTimeB = 1096.0f,
+                    ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 1f,
                     BoostDuration = 420,
@@ -120,6 +121,7 @@
 
         public float ShotCooldownTimeM { get; set; }
         public float ShotCooldownTimeB { get; set; }
+        public int ShotCooldownTimeShark { get; set; }
 
         public float ShotCooldownTimeBotM { get; set; }
         public float ShotCooldownTimeBotB { get; set; }

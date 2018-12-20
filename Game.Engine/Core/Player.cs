@@ -165,7 +165,7 @@
         protected virtual Fleet CreateFleet(string color)
         {
             if (World.NewFleetGenerator != null)
-                return World.NewFleetGenerator(color);
+                return World.NewFleetGenerator(this, color);
             else
                 return new Fleet
                 {

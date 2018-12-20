@@ -30,7 +30,7 @@
                 Description = "FFA Arena",
                 AllowedColors = AllColors
             };
-            
+
             AllWorlds.Add("default", Default);
             AllWorlds.Add("other", WorldOther());
             AllWorlds.Add("duel", WorldDuel());
@@ -119,13 +119,23 @@
             hook.TeamMode = true;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
+            hook.WorldSize /= 2;
 
             return new World
             {
                 Hook = hook,
                 Name = "Sharks and Minnows",
                 Description = "Sharks vs. Minnows",
-                AllowedColors = TeamColors
+                AllowedColors = TeamColors,
+                NewFleetGenerator = delegate (Player p, string Color)
+                {
+                    return new Fleet
+                    {
+                        Owner = p,
+                        Caption = p.Name,
+                        Shark = Color == "red",
+                    };
+                }
             };
         }
 
