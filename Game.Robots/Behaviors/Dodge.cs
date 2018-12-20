@@ -18,7 +18,7 @@
             this.Robot = robot;
         }
 
-        protected override void PreSweep()
+        protected override void PreSweep(ContextRing ring)
         {
             var LookAheadMS = 1000;
 
@@ -38,10 +38,15 @@
                     * fleet.Momentum.Length();
 
                 foreach (var danger in Projections)
-                    accumulator -= Vector2.DistanceSquared(danger, projectedCenter);
+                    accumulator -= 1/Vector2.DistanceSquared(danger, projectedCenter);
             }
 
             return accumulator;
+        }
+
+        protected override void PostSweep(ContextRing ring)
+        {
+            ring.Normalize();
         }
     }
 }

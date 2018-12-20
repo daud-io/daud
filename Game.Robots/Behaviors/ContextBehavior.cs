@@ -7,12 +7,15 @@
         public ContextRing Behave(int steps)
         {
             var ring = new ContextRing(steps);
-            this.PreSweep();
+            this.PreSweep(ring);
 
             for (var i = 0; i < steps; i++)
                 ring.Weights[i] = ScoreAngle(ring.Angle(i));
 
             ring.RingWeight = BehaviorWeight;
+
+            this.PostSweep(ring);
+
             return ring;
         }
 
@@ -20,7 +23,11 @@
         {
         }
 
-        protected virtual void PreSweep()
+        protected virtual void PreSweep(ContextRing ring)
+        {
+        }
+
+        protected virtual void PostSweep(ContextRing ring)
         {
         }
 

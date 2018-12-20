@@ -15,7 +15,7 @@
             this.Robot = robot;
         }
 
-        protected override void PreSweep()
+        protected override void PreSweep(ContextRing ring)
         {
             if (Robot.SensorFleets.MyFleet != null)
             {

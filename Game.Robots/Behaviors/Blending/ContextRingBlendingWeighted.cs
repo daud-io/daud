@@ -1,5 +1,6 @@
 ﻿namespace Game.Robots.Behaviors.Blending
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -18,9 +19,17 @@
         {
             var combined = new ContextRing(Robot.Steps);
 
+            
             // blur
             foreach (var context in contexts)
                 BlurRing(context);
+
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("RingDump");
+            foreach (var context in contexts)
+            {
+                Console.WriteLine($"{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("0.0")))}");
+            }
 
             if (contexts.Any())
             {

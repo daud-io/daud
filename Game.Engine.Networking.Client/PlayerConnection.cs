@@ -16,6 +16,7 @@
         private readonly APIClient APIClient;
         private readonly string WorldName = null;
         public long GameTime { get; private set; }
+        public ushort WorldSize { get; private set; }
 
         private readonly Timer PingTimer;
         private ClientWebSocket Socket = null;
@@ -159,6 +160,7 @@
             IsAlive = netWorldView.IsAlive;
             FleetID = netWorldView.FleetID;
             GameTime = netWorldView.Time;
+            WorldSize = netWorldView.WorldSize;
 
             if (OnView != null)
                 await OnView();
