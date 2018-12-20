@@ -164,11 +164,14 @@
 
         protected virtual Fleet CreateFleet(string color)
         {
-            return new Fleet
-            {
-                Owner = this,
-                Caption = this.Name
-            };
+            if (World.NewFleetGenerator != null)
+                return World.NewFleetGenerator(color);
+            else
+                return new Fleet
+                {
+                    Owner = this,
+                    Caption = this.Name
+                };
         }
 
         public void Spawn(string name, Sprites sprite, string color, string token)

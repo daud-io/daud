@@ -32,6 +32,7 @@
 
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
+        public Func<string, Fleet> NewFleetGenerator { get; set; }
 
         public string Name {get;set;}
         public string Description {get;set;}
