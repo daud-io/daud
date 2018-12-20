@@ -2,7 +2,6 @@
 {
     using Game.API.Common;
     using Game.Robots.Models;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -10,31 +9,20 @@
     {
         private readonly Robot Robot;
 
-        public IEnumerable<Fleet> VisibleFleets { get; private set; }
+        public IEnumerable<Fleet> AllVisibleFleets { get; private set; }
+
+        public Fleet MyFleet { get; private set; }
 
         public SensorFleets(Robot robot)
         {
             this.Robot = robot;
-            this.VisibleFleets = null;
+            this.AllVisibleFleets = null;
         }
 
         public void Sense()
         {
-            var shipSprites = new[] {
-                Sprites.ship0,
-                Sprites.ship_cyan,
-                Sprites.ship_green,
-                Sprites.ship_orange,
-                Sprites.ship_pink,
-                Sprites.ship_red,
-                Sprites.ship_yellow,
-                Sprites.ship_flash,
-                Sprites.ship_secret,
-                Sprites.ship_zed
-            };
-
-            VisibleFleets = Robot.Bodies
-                .Where(b => shipSprites.Contains(b.Sprite)) // check the sprite
+            AllVisibleFleets = Robot.Bodies
+                .Where(b => b.Group?.Type == GroupTypes.Fleet) // check the sprite
                 .GroupBy(b => b.Group)
                 .Select(g => new Fleet
                 {
@@ -50,6 +38,10 @@
                     }).ToList()
                 })
                 .ToList();
+
+            MyFleet = AllVisibleFleets.FirstOrDefault(f => f.ID == Robot.FleetID);
         }
+
+        public IEnumerable<Fleet> Others { get => AllVisibleFleets.Except(new[] { MyFleet }); }
     }
 }

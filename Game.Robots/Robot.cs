@@ -107,5 +107,10 @@
                 }
             }
         }
+
+        public Vector2 VectorToAbsolutePoint(Vector2 absolutePoint)
+        {
+            return absolutePoint - this.Position;
+        }
     }
 }

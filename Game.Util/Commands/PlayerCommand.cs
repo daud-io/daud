@@ -3,6 +3,7 @@
     using Game.Robots;
     using McMaster.Extensions.CommandLineUtils;
     using System.Collections.Generic;
+    using System.Numerics;
     using System.Threading.Tasks;
 
     [Subcommand("robots", typeof(Robots))]
@@ -20,7 +21,7 @@
             public bool Firing { get; set; } = false;
 
             [Option]
-            public string Name { get; set; } = null;
+            public string Name { get; set; } = "Robot";
 
             [Option]
             public string Color { get; set; } = "green";
@@ -35,7 +36,7 @@
                 for (int i = 0; i < Replicas; i++)
                 {
                     var connection = await API.Player.ConnectAsync(World);
-                    var robot = new ContextRobot
+                    var robot = new ContextTurret(Vector2.Zero)
                     {
                         AutoSpawn = true,
                         AutoFire = Firing,

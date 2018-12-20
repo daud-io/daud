@@ -1,20 +1,22 @@
 ﻿namespace Game.Robots
 {
+    using Game.Robots.Behaviors;
     using Game.Robots.Senses;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Numerics;
     using System.Threading.Tasks;
 
     public class ContextRobot : Robot
     {
-        private List<ISense> Sensors = new List<ISense>();
-        private readonly SensorBullets SensorBullets;
-        private readonly SensorFleets SensorFleets;
+        protected readonly List<ISense> Sensors = new List<ISense>();
+        protected readonly List<IBehaviors> Behaviors = new List<IBehaviors>();
+        protected readonly SensorBullets SensorBullets;
+        protected readonly SensorFleets SensorFleets;
+        protected readonly int Steps;
 
         public ContextRobot()
         {
+            Steps = 8;
             Sensors.Add(SensorBullets = new SensorBullets(this));
             Sensors.Add(SensorFleets = new SensorFleets(this));
         }
@@ -25,59 +27,40 @@
                 sensor.Sense();
         }
 
-        protected override Task AliveAsync()
+        private void Behave()
         {
-            Sense();
+            var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
+            var combined = new ContextRing(Steps);
 
-            SteerPointAbsolute(Vector2.Zero); // center of the universe
-
-            var vel = Vector2.Zero;
-            var fleets = false;
-            if (SensorFleets.VisibleFleets.Any())
+            if (contexts.Any())
             {
-                var fleet = SensorFleets.VisibleFleets.FirstOrDefault(f => f.ID != FleetID);
-                if (fleet != null)
+                for (var i=0; i<Steps; i++)
+                    combined.Weights[i] = contexts.Sum(c => c.Weights[i]);
+
+                var maxIndex = 0;
+
+                for (var i=0; i<Steps; i++)
                 {
-                    fleets = true;
-                    vel += (fleet.Center - Position) * 1;
+                    if (combined.Weights[i] > combined.Weights[maxIndex])
+                        maxIndex = i;
                 }
+
+                SteerAngle(combined.Angle(maxIndex));
             }
-            if (!fleets)
-            {
-                var angle = (float)((GameTime - SpawnTime) / 3000.0f) * MathF.PI * 2;
-                vel.X += (float)Math.Cos(angle);
-                vel.Y += (float)Math.Sin(angle);
-            }
+        }
 
-            var bullets = SensorBullets.VisibleBullets;
-            var danger = false;
-
-            if (bullets.Any())
-            {
-                var bullet = bullets.First();
-                var distance = Vector2.Distance(bullet.Position, Position);
-                if (distance < 2000)
-                {
-                    var avoid = (Position - bullet.Position);
-                    vel += avoid * 400_000 / avoid.LengthSquared();
-                }
-                if (distance < 200)
-                {
-                    danger = true;
-                }
-            }
-
-            SetSplit(danger);
-
-            SteerAngle(MathF.Atan2(vel.Y, vel.X));
-
-            // if you're not actually doing any async/await, just return this
+        protected virtual Task OnSensors()
+        {
             return Task.FromResult(0);
         }
 
-        protected override Task DeadAsync()
+        protected async override Task AliveAsync()
         {
-            return base.DeadAsync();
+            Sense();
+
+            await this.OnSensors();
+
+            Behave();
         }
     }
 }
