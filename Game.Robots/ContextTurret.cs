@@ -2,7 +2,6 @@
 {
     using Game.Robots.Behaviors;
     using System.Numerics;
-    using System.Threading.Tasks;
 
     public class ContextTurret : ContextRobot
     {
@@ -10,8 +9,9 @@
 
         public ContextTurret(Vector2 target)
         {
-            Behaviors.Add(Navigation = new NavigateToPoint(this));
-            Behaviors.Add(new Efficiency(this));
+            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 1f });
+            Behaviors.Add(new Efficiency(this) { BehaviorWeight = 0.5f });
+            Behaviors.Add(new Dodge(this) { BehaviorWeight = 1f });
 
             Navigation.TargetPoint = target;
             Steps = 16;

@@ -7,6 +7,8 @@
         public readonly float[] Weights;
         private readonly float StepSize;
 
+        public float RingWeight { get; set; } = 1f;
+
         public ContextRing(int size)
         {
             Weights = new float[size]; // a weight for each slice

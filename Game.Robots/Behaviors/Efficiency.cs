@@ -5,6 +5,8 @@
     public class Efficiency : ContextBehavior
     {
         private readonly ContextRobot Robot;
+
+        // reset each PreSweep
         private float TargetAngle;
         private float Scale = 0f;
 

@@ -25,7 +25,7 @@
             if (contexts.Any())
             {
                 for (var i = 0; i < Robot.Steps; i++)
-                    combined.Weights[i] = contexts.Sum(c => c.Weights[i]);
+                    combined.Weights[i] = contexts.Sum(c => c.Weights[i] * c.RingWeight);
 
                 var maxIndex = 0;
 
@@ -45,7 +45,7 @@
 
         private void BlurRing(ContextRing ring)
         {
-            // blur
+            // blur the values in the ring
             for (var blurStep = 0; blurStep < BlurSteps; blurStep++)
                 for (var i = 0; i < ring.Weights.Length; i++)
                 {
