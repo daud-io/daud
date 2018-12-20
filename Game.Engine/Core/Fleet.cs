@@ -280,7 +280,11 @@
                 ShootCooldownStatus = (float)
                     (World.Time - ShootCooldownTimeStart) / (ShootCooldownTime - ShootCooldownTimeStart);
 
-
+            if(World.DistanceOutOfBounds(FleetCenter)>0 && World.Name=="Sharks and Minnows"){
+                Console.WriteLine("yaaaaaaaaaaaa");
+                Owner.IsInvulnerable = true;
+                Owner.SpawnTime = World.Time;
+            }
         }
 
         private void Flock(Ship ship)

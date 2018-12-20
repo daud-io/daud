@@ -36,6 +36,7 @@
             AllWorlds.Add("duel", WorldDuel());
             AllWorlds.Add("team", WorldTeam());
             AllWorlds.Add("ctf", WorldCTF());
+            AllWorlds.Add("sharks", WorldSharks());
         }
 
         private static World WorldOther()
@@ -106,6 +107,24 @@
                 Hook = hook,
                 Name = "Capture the Flag",
                 Description = "Cyan vs. Red - Capture the Flag. First to 5 wins!",
+                AllowedColors = TeamColors
+            };
+        }
+
+        private static World WorldSharks()
+        {
+            var hook = Hook.Default;
+            hook.BotBase = 0;
+            hook.Obstacles = 0;
+            hook.TeamMode = true;
+            hook.PointsPerKillFleet = 1;
+            hook.PointsPerKillShip = 0;
+
+            return new World
+            {
+                Hook = hook,
+                Name = "Sharks and Minnows",
+                Description = "Sharks vs. Minnows",
                 AllowedColors = TeamColors
             };
         }
