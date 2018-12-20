@@ -7,13 +7,13 @@
 
     public class SensorFleets : ISense
     {
-        private readonly Robot Robot;
+        private readonly ContextRobot Robot;
 
         public IEnumerable<Fleet> AllVisibleFleets { get; private set; }
 
         public Fleet MyFleet { get; private set; }
 
-        public SensorFleets(Robot robot)
+        public SensorFleets(ContextRobot robot)
         {
             this.Robot = robot;
             this.AllVisibleFleets = null;

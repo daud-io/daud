@@ -5,10 +5,10 @@
 
     public class NavigateToPoint : ContextBehavior
     {
-        private readonly Robot Robot;
+        private readonly ContextRobot Robot;
         public Vector2 TargetPoint = Vector2.Zero;
 
-        public NavigateToPoint(Robot robot)
+        public NavigateToPoint(ContextRobot robot)
         {
             this.Robot = robot;
         }

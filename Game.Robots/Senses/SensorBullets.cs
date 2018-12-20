@@ -8,11 +8,11 @@
 
     public class SensorBullets : ISense
     {
-        private readonly Robot Robot;
+        private readonly ContextRobot Robot;
 
         public IEnumerable<Body> VisibleBullets { get; private set; }
 
-        public SensorBullets(Robot robot)
+        public SensorBullets(ContextRobot robot)
         {
             this.Robot = robot;
             this.VisibleBullets = null;

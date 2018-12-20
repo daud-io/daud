@@ -6,13 +6,13 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class ContextRobot : Robot
+    public class ContextRobot : ContextRobot
     {
         protected readonly List<ISense> Sensors = new List<ISense>();
         protected readonly List<IBehaviors> Behaviors = new List<IBehaviors>();
         protected readonly SensorBullets SensorBullets;
         protected readonly SensorFleets SensorFleets;
-        protected readonly int Steps;
+        public readonly int Steps;
 
         public ContextRobot()
         {
