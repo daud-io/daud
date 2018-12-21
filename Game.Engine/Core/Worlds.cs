@@ -119,6 +119,7 @@
             hook.TeamMode = true;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
+            hook.PointsMultiplierDeath = 1.0f;
             hook.WorldSize /= 2;
 
             return new World
