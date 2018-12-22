@@ -109,10 +109,19 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.record = function(ob
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.modeData = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.startNetLeaderboard = function(builder) {
-  builder.startObject(3);
+  builder.startObject(4);
 };
 
 /**
@@ -158,6 +167,14 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.startEntriesVector = function(
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.addRecord = function(builder, recordOffset) {
   builder.addFieldOffset(2, recordOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} modeDataOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboard.addModeData = function(builder, modeDataOffset) {
+  builder.addFieldOffset(3, modeDataOffset, 0);
 };
 
 /**
@@ -248,10 +265,19 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.token = functio
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.modeData = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.startNetLeaderboardEntry = function(builder) {
-  builder.startObject(5);
+  builder.startObject(6);
 };
 
 /**
@@ -292,6 +318,14 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addPosition = function(bu
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addToken = function(builder, token) {
   builder.addFieldInt8(4, +token, +false);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} modeDataOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addModeData = function(builder, modeDataOffset) {
+  builder.addFieldOffset(5, modeDataOffset, 0);
 };
 
 /**

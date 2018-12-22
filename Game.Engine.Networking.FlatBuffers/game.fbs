@@ -15,6 +15,7 @@ table NetLeaderboard
 	type:string;
 	entries:[NetLeaderboardEntry];
 	record:NetLeaderboardEntry;
+	modeData: string;
 }
 
 table NetLeaderboardEntry
@@ -24,6 +25,7 @@ table NetLeaderboardEntry
 	color: string;
 	position: Vec2;
 	token: bool;
+	modeData: string;
 }
 
 table NetSpawn

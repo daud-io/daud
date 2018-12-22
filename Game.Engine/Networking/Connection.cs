@@ -1,4 +1,6 @@
-﻿namespace Game.Engine.Networking
+﻿using Newtonsoft.Json;
+
+namespace Game.Engine.Networking
 {
     using Game.API.Common;
     using Game.Engine.Core;
@@ -283,7 +285,7 @@
 
                         var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
                         var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
-
+                        
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
                         NetLeaderboardEntry.AddName(builder, stringName);
@@ -296,6 +298,8 @@
                         {
                             stringName = builder.CreateString(e.Name ?? string.Empty);
                             stringColor = builder.CreateString(e.Color ?? string.Empty);
+                            var stringAddMode = builder.CreateString(e.Color ?? string.Empty);
+
                             // stringToken = builder.CreateString( ?? string.Empty);
 
                             NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
@@ -304,6 +308,9 @@
                             NetLeaderboardEntry.AddScore(builder, e.Score);
                             NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
                             NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(e.Token));
+                            NetLeaderboardEntry.AddModeData(builder, stringAddMode);
+
+
 
                             return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
                         }).ToArray());

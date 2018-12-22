@@ -33,24 +33,29 @@ public struct NetLeaderboard : IFlatbufferObject
   public NetLeaderboardEntry? Entries(int j) { int o = __p.__offset(6); return o != 0 ? (NetLeaderboardEntry?)(new NetLeaderboardEntry()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int EntriesLength { get { int o = __p.__offset(6); return o != 0 ? __p.__vector_len(o) : 0; } }
   public NetLeaderboardEntry? Record { get { int o = __p.__offset(8); return o != 0 ? (NetLeaderboardEntry?)(new NetLeaderboardEntry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public string ModeData { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetModeDataBytes() { return __p.__vector_as_arraysegment(10); }
 
   public static Offset<NetLeaderboard> CreateNetLeaderboard(FlatBufferBuilder builder,
       StringOffset typeOffset = default(StringOffset),
       VectorOffset entriesOffset = default(VectorOffset),
-      Offset<NetLeaderboardEntry> recordOffset = default(Offset<NetLeaderboardEntry>)) {
-    builder.StartObject(3);
+      Offset<NetLeaderboardEntry> recordOffset = default(Offset<NetLeaderboardEntry>),
+      StringOffset modeDataOffset = default(StringOffset)) {
+    builder.StartObject(4);
+    NetLeaderboard.AddModeData(builder, modeDataOffset);
     NetLeaderboard.AddRecord(builder, recordOffset);
     NetLeaderboard.AddEntries(builder, entriesOffset);
     NetLeaderboard.AddType(builder, typeOffset);
     return NetLeaderboard.EndNetLeaderboard(builder);
   }
 
-  public static void StartNetLeaderboard(FlatBufferBuilder builder) { builder.StartObject(3); }
+  public static void StartNetLeaderboard(FlatBufferBuilder builder) { builder.StartObject(4); }
   public static void AddType(FlatBufferBuilder builder, StringOffset typeOffset) { builder.AddOffset(0, typeOffset.Value, 0); }
   public static void AddEntries(FlatBufferBuilder builder, VectorOffset entriesOffset) { builder.AddOffset(1, entriesOffset.Value, 0); }
   public static VectorOffset CreateEntriesVector(FlatBufferBuilder builder, Offset<NetLeaderboardEntry>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static void StartEntriesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddRecord(FlatBufferBuilder builder, Offset<NetLeaderboardEntry> recordOffset) { builder.AddOffset(2, recordOffset.Value, 0); }
+  public static void AddModeData(FlatBufferBuilder builder, StringOffset modeDataOffset) { builder.AddOffset(3, modeDataOffset.Value, 0); }
   public static Offset<NetLeaderboard> EndNetLeaderboard(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetLeaderboard>(o);
@@ -73,13 +78,16 @@ public struct NetLeaderboardEntry : IFlatbufferObject
   public ArraySegment<byte>? GetColorBytes() { return __p.__vector_as_arraysegment(8); }
   public Vec2? Position { get { int o = __p.__offset(10); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public bool Token { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  public string ModeData { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetModeDataBytes() { return __p.__vector_as_arraysegment(14); }
 
-  public static void StartNetLeaderboardEntry(FlatBufferBuilder builder) { builder.StartObject(5); }
+  public static void StartNetLeaderboardEntry(FlatBufferBuilder builder) { builder.StartObject(6); }
   public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(0, nameOffset.Value, 0); }
   public static void AddScore(FlatBufferBuilder builder, int score) { builder.AddInt(1, score, 0); }
   public static void AddColor(FlatBufferBuilder builder, StringOffset colorOffset) { builder.AddOffset(2, colorOffset.Value, 0); }
   public static void AddPosition(FlatBufferBuilder builder, Offset<Vec2> positionOffset) { builder.AddStruct(3, positionOffset.Value, 0); }
   public static void AddToken(FlatBufferBuilder builder, bool token) { builder.AddBool(4, token, false); }
+  public static void AddModeData(FlatBufferBuilder builder, StringOffset modeDataOffset) { builder.AddOffset(5, modeDataOffset.Value, 0); }
   public static Offset<NetLeaderboardEntry> EndNetLeaderboardEntry(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetLeaderboardEntry>(o);
