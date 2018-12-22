@@ -296,21 +296,25 @@ namespace Game.Engine.Networking
 
                         var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
                         {
+                            // the strings must be created into the buffer before the are referenced
+                            // and before the start of the entry object
                             stringName = builder.CreateString(e.Name ?? string.Empty);
                             stringColor = builder.CreateString(e.Color ?? string.Empty);
-                            var stringAddMode = builder.CreateString(e.Color ?? string.Empty);
+                            StringOffset stringModeData = new StringOffset();
 
-                            // stringToken = builder.CreateString( ?? string.Empty);
+                            if (e.ModeData != null)
+                                stringModeData = builder.CreateString(JsonConvert.SerializeObject(e.ModeData));
 
+                            // here's the start of the entry object, after this we can only use
+                            // predefined string offsets
                             NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                             NetLeaderboardEntry.AddName(builder, stringName);
                             NetLeaderboardEntry.AddColor(builder, stringColor);
                             NetLeaderboardEntry.AddScore(builder, e.Score);
                             NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
                             NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(e.Token));
-                            NetLeaderboardEntry.AddModeData(builder, stringAddMode);
-
-
+                            if (e.ModeData != null)
+                                NetLeaderboardEntry.AddModeData(builder, stringModeData);
 
                             return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
                         }).ToArray());
