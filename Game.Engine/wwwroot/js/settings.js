@@ -2,6 +2,7 @@ import { fetch } from "whatwg-fetch";
 
 import { sprites } from "./renderer";
 import { img as background, setPattern } from "./background";
+import { blur } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
 
@@ -147,17 +148,19 @@ if (Settings.themeCustom) {
 
 const gear = document.getElementById("gear");
 document.getElementById("settings").addEventListener("click", () => {
+    blur();
     gear.classList.remove("closed");
 });
 
 document.getElementById("settingsCancel").addEventListener("click", () => {
+    blur();
     gear.classList.add("closed");
 });
 
 document.getElementById("settingsSave").addEventListener("click", () => {
     save();
     load();
-
+    blur();
     gear.classList.add("closed");
 });
 

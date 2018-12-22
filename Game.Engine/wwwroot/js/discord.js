@@ -13,10 +13,9 @@ if (token || Cookies.get("daud_auth_token")) {
     dauth.previousElementSibling.value = "Launch";
     token = token || Cookies.get("daud_auth_token");
 
-    let expirationSeconds = sp.get("expires_in") || (60 * 60 * 24 * 10);
+    let expirationSeconds = sp.get("expires_in") || 60 * 60 * 24 * 10;
     let cookieOptions = { expires: new Date(new Date().getTime() + expirationSeconds * 1000) };
     Cookies.set("daud_auth_token", token, cookieOptions);
-
 } else if (window.frameElement) {
     dauth.previousElementSibling.value = "Launch";
     dauth.style.display = "none";

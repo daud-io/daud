@@ -15,7 +15,7 @@ import { token } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
 import "./hintbox";
-import { Lobby } from "./lobby";
+import { blur } from "./lobby";
 
 const canvas = document.getElementById("gameCanvas");
 const context = canvas.getContext("2d");
@@ -216,12 +216,10 @@ setInterval(() => {
     }
 }, 10);
 
-document.getElementById("worldSelector").addEventListener("change", () => {
-    const world = document.getElementById("worldSelector").value;
-    connection.connect(world);
+document.getElementById("wcancel").addEventListener("click", () => {
+    worlds.classList.add("closed");
+    blur();
     cache = new Cache();
-    Events.changeRoom(world);
-    Lobby.changeRoom(world);
 });
 
 document.getElementById("spawn").addEventListener("click", () => {

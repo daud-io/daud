@@ -34,7 +34,9 @@ export class Connection {
             self.statBytesDown = 0;
         }, 1000);
     }
-
+    disconnect() {
+        this.socket.close();
+    }
     connect(world) {
         let url;
         if (window.location.protocol === "https:") {
