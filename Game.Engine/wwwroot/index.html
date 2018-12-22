@@ -45,11 +45,7 @@
         <div class="spawnscreen">
             <div class="controls">
                 <div>
-                    <label for="worldSelector">Arena</label>
-                    <select id="worldSelector">
-                        <option value="loading" disabled="disabled">loading ...</option>
-                    </select>
-                    <div id="arenaDescription"></div> 
+                    
 
                     <div>
                         <img id="logo" src="img/header.png" draggable="false" />
@@ -67,12 +63,18 @@
                         <option value="cyan">cyan</option>
                         <option value="yellow">yellow</option>
                     </select>
-
+                   
                     <div>
                         <input type="button" id="spawn" value="Launch as guest!" />
                         <input type="button" id="dauth" value="Login with Discord" />
                     </div>
+                    <input type="button" id="arenas" value="Arenas"></input>
                 </div>
+            </div>
+            <div id="worlds" class="closed">
+                <div id="topbar"><button id="wrefresh">refresh</button><button id="wcancel">Cancel</button></div>
+                <table id="worldList">
+                </table>
             </div>
             <div id="gear" class="closed">
                 <h1>Settings</h1>

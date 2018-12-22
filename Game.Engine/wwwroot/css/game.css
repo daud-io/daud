@@ -8,7 +8,7 @@ body {
     background-color: black;
     text-align: center;
     overflow: hidden;
-    font-family: "Exo 2";
+    font-family: "Exo 2", Verdana;
     color: white;
 }
 .aspectratio {
@@ -138,6 +138,7 @@ a {
     margin-left: 50px;
     position: absolute;
     width: 100%;
+    transition: 0.25s filter linear;
 }
 
 .spectating #nipple-controls,
@@ -186,6 +187,7 @@ a {
     margin: 3vmin;
     position: relative;
     z-index: 2;
+    transition: 0.5s filter linear;
 }
 
 #spectate_container {
@@ -327,7 +329,29 @@ table {
     background: rgba(0, 0, 50, 0.8);
     z-index: 3;
     overflow-y: scroll;
+    opacity: 1;
+    transition: 0.5s opacity ease-in-out;
 }
-#gear.closed {
-    display: none;
+#worlds {
+    position: absolute;
+    top: 25%;
+    left: 25%;
+    width: 50%;
+    height: 50%;
+    background: rgba(0, 0, 200, 0.9);
+    z-index: 3;
+    overflow-y: scroll;
+    opacity: 1;
+    transition: 0.5s opacity ease-in-out;
+}
+#worldList {
+    width: 100%;
+}
+.closed {
+    opacity: 0 !important;
+    z-index: -2 !important;
+}
+
+.blur {
+    filter: blur(10px);
 }

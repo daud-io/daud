@@ -1,64 +1,81 @@
 ﻿import { fetch } from "whatwg-fetch";
 import { Controls } from "./controls";
 
-export var Lobby = {
-    allWorlds: {},
-    connection: false,
-    refreshList: function() {
-        fetch("/api/v1/server/worlds", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json; charset=utf-8"
-            }
-        })
-            .then(r => r.json())
-            .then(({ success, response }) => {
-                if (success) {
-                    var selector = document.getElementById("worldSelector");
-                    var selected = selector.value;
-                    if (!selected) {
-                        if (window.location.hash) selected = window.location.hash.substring(1);
-                        else selected = "default";
-                    }
+var worlds = document.getElementById("worlds");
+var worldList = document.getElementById("worldList");
 
-                    var options = "";
-                    Lobby.allWorlds = {};
-
-                    for (var i = 0; i < response.length; i++) {
-                        var world = response[i];
-                        Lobby.allWorlds[world.world] = world;
-
-                        options += `<option value="${world.world}">${world.name} (${world.players})</option>`;
-                    }
-
-                    selector.innerHTML = options;
-                    selector.value = selected;
-
-                    Lobby.showDescription(selected);
+var allWorlds = {};
+function refreshList() {
+    fetch("/api/v1/server/worlds", {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json; charset=utf-8"
+        }
+    })
+        .then(r => r.json())
+        .then(({ success, response }) => {
+            if (success) {
+                if (window.location.hash) {
+                    var selected = window.location.hash.substring(1);
+                    window.Game.primaryConnection.connect(selected);
+                    changeRoom(selected);
                 }
-            });
-    },
-    showDescription: function(worldKey) {
-        var world = Lobby.allWorlds[worldKey];
-        if (world) document.getElementById("arenaDescription").innerHTML = world.description;
-        else document.getElementById("arenaDescription").innerHTML = worldKey;
-    },
-    changeRoom: function(worldKey) {
-        var world = Lobby.allWorlds[worldKey];
-        if (world) {
-            var colors = world.allowedColors;
-            var options = "";
 
-            for (var i = 0; i < colors.length; i++) options += `<option value="${colors[i]}">${colors[i]}</option>`;
+                var options = "";
+                allWorlds = {};
 
-            document.getElementById("shipSelector").innerHTML = options;
-            document.getElementById("shipSelector").value = colors[0];
-            Controls.color = colors[0];
+                for (var world of response) {
+                    allWorlds[world.world] = world;
+                    options += `<tr><td><b>${world.name}</b>: ${world.description} (${world.players})</td><td><button id="${world.world}" class="j">Join</button></div></td>`;
+                }
 
-            Lobby.showDescription(worldKey);
-        } else console.log(`Warning: could not find selected world ${worldKey}`);
+                worldList.innerHTML = options;
+
+                document.querySelectorAll(".j").forEach(j =>
+                    j.addEventListener("click", function() {
+                        const world = this.id;
+                        window.Game.primaryConnection.disconnect();
+                        window.Game.primaryConnection.connect(world);
+                        changeRoom(world);
+                    })
+                );
+            }
+        });
+}
+function changeRoom(worldKey) {
+    document.getElementById("wcancel").click();
+    var world = allWorlds[worldKey];
+    if (world) {
+        var colors = world.allowedColors;
+        var options = "";
+
+        for (var i = 0; i < colors.length; i++) options += `<option value="${colors[i]}">${colors[i]}</option>`;
+
+        document.getElementById("shipSelector").innerHTML = options;
+        document.getElementById("shipSelector").value = colors[0];
+        Controls.color = colors[0];
+    } else console.log(`Warning: could not find selected world ${worldKey}`);
+}
+
+var controls = document.querySelector(".controls");
+var social = document.querySelector(".social");
+var blurred = false;
+export function blur() {
+    if (!blurred) {
+        controls.classList.add("blur");
+        social.classList.add("blur");
+    } else {
+        controls.classList.remove("blur");
+        social.classList.remove("blur");
     }
-};
+    blurred = !blurred;
+}
 
-Lobby.refreshList();
-setInterval(Lobby.refreshList, 3000);
+document.getElementById("arenas").addEventListener("click", () => {
+    refreshList();
+    worlds.classList.remove("closed");
+    blur();
+});
+document.getElementById("wrefresh").addEventListener("click", () => {
+    refreshList();
+});

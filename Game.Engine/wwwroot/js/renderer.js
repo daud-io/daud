@@ -119,7 +119,6 @@ addSprite("thruster_retro_cyan");
 addSprite("thruster_retro_yellow");
 addSprite("circles");
 
-
 export class Renderer {
     constructor(context, settings = {}) {
         this.context = context;
@@ -236,12 +235,9 @@ export class Renderer {
                     ctx.restore();
                 }
 
-                if (group && group.group && group.group.Type == 1)
-                {
+                if (group && group.group && group.group.Type == 1) {
                     this.fleetRenderer.draw(cache, interpolator, currentTime, object, group, position);
-                }
-                else
-                {
+                } else {
                     // draw the sprite
                     const sprite = object.Sprite != null ? sprites[object.Sprite] : false;
                     if (sprite) {

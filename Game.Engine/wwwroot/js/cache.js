@@ -56,15 +56,13 @@ export class Cache {
             const group = groups[i];
             var existing = this.groups[`g-${group.ID}`];
 
-            if (!existing)
-                existing = group;
-            else
-            {
+            if (!existing) existing = group;
+            else {
                 existing.ID = group.ID;
                 existing.Caption = group.Caption;
                 existing.Type = group.Type;
                 existing.ZIndex = group.ZIndex;
-            }    
+            }
 
             this.groups[`g-${group.ID}`] = existing;
         }
