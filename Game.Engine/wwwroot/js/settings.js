@@ -129,7 +129,8 @@ async function theme(v) {
                             sprites[element[0]].image.src = url;
                             if (element[1]) {
                                 sprites[element[0]].scale = element[1];
-                                sprites[element[0]].scaleToSize = !element[0].startsWith("ship");
+                                if (element[0].startsWith("ship"))
+                                    sprites[element[0]].scale = 0.03;
                             }
                         }
                     });

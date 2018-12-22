@@ -101,15 +101,19 @@
                         // if we're watching a fleet, watch the center of their fleet
                         if (followFleet != null)
                         {
-                            var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
-
-                            followBody = new Body
+                            if (world.Hook.FollowFirstShip)
+                                followBody = followFleet.Ships.FirstOrDefault();
+                            else
                             {
-                                DefinitionTime = world.Time,
-                                OriginalPosition = center,
-                                Position = center,
-                                Momentum = followFleet.FleetMomentum
-                            };
+                                var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
+                                followBody = new Body
+                                {
+                                    DefinitionTime = world.Time,
+                                    OriginalPosition = center,
+                                    Position = center,
+                                    Momentum = followFleet.FleetMomentum
+                                };
+                            }
                         }
 
                         // we've found someone to spectate, record it

@@ -22,8 +22,8 @@ export class FleetRenderer {
             ctx.rotate(position.Angle);
 
             ctx.scale(sprite.scale, sprite.scale);
+            ctx.scale(object.Size, object.Size);
 
-            if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
 
             if (Settings.showPickupSprites && object.Mode == 2) {
                 ctx.save();
@@ -32,6 +32,7 @@ export class FleetRenderer {
             }
 
             ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
+
             if (Settings.showThrusterSprites && (object.Mode == 1 || group.group.boostAnimateUntil > performance.now()))
                 this.drawBooster(object, group, sprite);
             else

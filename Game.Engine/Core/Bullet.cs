@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common;
     using System;
     using System.Linq;
     using System.Numerics;
@@ -19,13 +20,12 @@
 
         public bool Consumed { get; set; }
 
-        public static Bullet FireFrom(Ship ship)
+        public static Bullet FireFrom(Ship ship, bool isSeeker, Sprites? spriteOverride = null, int size = 20)
         {
             var world = ship.World;
             var bulletOrigin = ship.Position
                 + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
 
-            bool isSeeker = ship.Fleet.Pickup != null;
             float lifeMultiplier = isSeeker
                 ? world.Hook.SeekerLifeMultiplier
                 : 1;
@@ -43,8 +43,8 @@
                 Position = bulletOrigin,
                 Angle = ship.Angle,
                 OwnedByFleet = ship.Fleet,
-                Sprite = ship.Fleet.Pickup?.BulletSprite ?? ship.Fleet.BulletSprite,
-                Size = ship.Fleet.Pickup?.Size ?? 20,
+                Sprite = spriteOverride ?? ship.Fleet.BulletSprite,
+                Size = size,
                 Color = ship.Color,
                 Seeker = isSeeker,
                 ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB,

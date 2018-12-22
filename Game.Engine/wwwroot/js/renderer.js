@@ -2,15 +2,14 @@ import { Settings } from "./settings";
 import images from "../img/*.png";
 import { FleetRenderer } from "./renderers/fleetRenderer";
 
-function sprite(name, scale, scaleToSize) {
+function sprite(name, scale) {
     const img = new Image();
     img.src = images[name];
 
     return {
         image: img,
         name: name,
-        scale: scale || 1.3,
-        scaleToSize: scaleToSize || false
+        scale: scale || 0.020
     };
 }
 
@@ -68,7 +67,7 @@ export const spriteIndices = [
 ];
 
 function addSprite(name, size, file) {
-    sprites[name] = sprite(file || name, size, size);
+    sprites[name] = sprite(file || name, size);
     spriteIndices.push(name);
 }
 
@@ -249,8 +248,7 @@ export class Renderer {
 
                         ctx.rotate(position.Angle);
                         ctx.scale(sprite.scale, sprite.scale);
-
-                        if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
+                        ctx.scale(object.Size, object.Size);
 
                         ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
 

@@ -61,7 +61,10 @@
             hook.FlockWeight = 0;
             hook.SnakeWeight = 0.01f;
             hook.FlockWeight = 0.02f;
-            hook.FlockCohesion = 0.001f;
+            hook.FlockCohesion = 0.0003f;
+            hook.FlockAlignment = 0;
+            hook.FollowFirstShip = true;
+            hook.FiringSequenceDelay = 250;
 
             return new World
             {
