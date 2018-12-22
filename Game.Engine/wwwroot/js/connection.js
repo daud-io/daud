@@ -254,7 +254,8 @@ export class Connection {
                             X: entry.position().x(),
                             Y: entry.position().y()
                         },
-                        Token: entry.token()
+                        Token: entry.token(),
+                        ModeData: JSON.parse(record.modeData()) || {flagStatus : 'home'}
                     });
                 }
 
@@ -269,6 +270,7 @@ export class Connection {
                         Token: record.token()
                     }
                 });
+                
                 break;
         }
     }
