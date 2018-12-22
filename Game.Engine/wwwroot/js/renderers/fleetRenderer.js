@@ -25,7 +25,7 @@ export class FleetRenderer {
 
             if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
 
-            if (object.Mode == 2) {
+            if (false && object.Mode == 2) {
                 ctx.save();
                 this.drawPickup(object, group);
                 ctx.restore();

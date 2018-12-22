@@ -246,6 +246,7 @@
                 ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
 
                 Flock(ship);
+                Snake(ship);
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
@@ -316,6 +317,21 @@
             steeringVector += World.Hook.FlockWeight * shipFlockingVector;
 
             ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+        }
+
+        private void Snake(Ship ship)
+        {
+            if (Ships.Count < 2)
+                return;
+
+            var shipIndex = Ships.IndexOf(ship);
+            if (shipIndex > 0)
+            {
+
+                var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
+                steeringVector += (Ships[shipIndex - 1].Position - ship.Position) * World.Hook.SnakeWeight;
+                ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            }
         }
     }
 }

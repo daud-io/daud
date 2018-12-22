@@ -67,6 +67,7 @@
                     FlockSeparation = 80f,
                     FlockSeparationMinimumDistance = 200,
                     FlockWeight = 0.14f,
+                    SnakeWeight = 0f,
 
                     ShipGainBySizeM = -0.03f,
                     ShipGainBySizeB = 1.03f,
@@ -159,6 +160,8 @@
         public float FlockSeparation { get; set; }
         public int FlockSeparationMinimumDistance { get; set; }
         public float FlockWeight { get; set; }
+        public float SnakeWeight { get; set; }
+
         public int FlockSpeed { get; set; }
 
         public int SeekerRange { get; set; }

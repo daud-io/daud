@@ -37,6 +37,7 @@
             AllWorlds.Add("team", WorldTeam());
             AllWorlds.Add("ctf", WorldCTF());
             AllWorlds.Add("sharks", WorldSharks());
+            AllWorlds.Add("snake", WorldSnake());
         }
 
         private static World WorldOther()
@@ -48,6 +49,21 @@
             {
                 Hook = hook,
                 Name = "Planet Daud",
+                Description = "AAAAAHHH! Run!",
+                AllowedColors = AllColors.Append("ship0").ToArray()
+            };
+        }
+
+        private static World WorldSnake()
+        {
+            var hook = Hook.Default;
+            hook.BotBase = 1;
+            hook.FlockWeight = 0;
+
+            return new World
+            {
+                Hook = hook,
+                Name = "Snake World",
                 Description = "AAAAAHHH! Run!",
                 AllowedColors = AllColors.Append("ship0").ToArray()
             };
