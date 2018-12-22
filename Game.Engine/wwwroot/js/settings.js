@@ -97,7 +97,6 @@ function load() {
         document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
         document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
-
     } catch (e) {
         // maybe reset()? will make debugging difficult
     }
@@ -129,8 +128,7 @@ async function theme(v) {
                             sprites[element[0]].image.src = url;
                             if (element[1]) {
                                 sprites[element[0]].scale = element[1];
-                                if (element[0].startsWith("ship"))
-                                    sprites[element[0]].scale = 0.03;
+                                if (element[0].startsWith("ship")) sprites[element[0]].scale = 0.03;
                             }
                         }
                     });

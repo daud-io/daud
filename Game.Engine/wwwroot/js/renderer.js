@@ -9,7 +9,7 @@ function sprite(name, scale) {
     return {
         image: img,
         name: name,
-        scale: scale || 0.020
+        scale: scale || 0.02
     };
 }
 
@@ -263,10 +263,7 @@ export class Renderer {
                     const group = groupsUsed[i];
 
                     if (group && group.group) {
-
-                        if (group.group.ID != fleetID
-                            || Settings.showOwnName) {
-
+                        if (group.group.ID != fleetID || Settings.showOwnName) {
                             const pt = { X: 0, Y: 0 };
 
                             // average the location of all the points

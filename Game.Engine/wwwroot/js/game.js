@@ -302,6 +302,7 @@ function doPing() {
     window.Game.Stats.framesPerSecond = frameCounter;
     window.Game.Stats.viewsPerSecond = viewCounter;
     window.Game.Stats.updatesPerSecond = updateCounter;
+    hud.update();
 
     if (frameCounter === 0) {
         console.log("backgrounded");
@@ -345,7 +346,6 @@ function gameLoop() {
     lastPosition = position;
 
     leaderboard.draw(leaderboard.position);
-    hud.draw();
     log.draw();
     cooldown.draw();
 

@@ -26,7 +26,7 @@ function refreshList() {
 
                 for (var world of response) {
                     allWorlds[world.world] = world;
-                    options += `<tr><td><b>${world.name}</b>: ${world.description} (${world.players})</td><td><button id="${world.world}" class="j">Join</button></div></td>`;
+                    options += `<tr><td><button id="${world.world}" class="j">Join</button></div></td><td>(${world.players})</td><td><b>${world.name}</b>: ${world.description}</td></tr>`;
                 }
 
                 worldList.innerHTML = options;

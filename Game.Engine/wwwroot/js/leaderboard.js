@@ -1,6 +1,7 @@
 ﻿import { sprites } from "./renderer";
 import { Settings } from "./settings";
 
+var record = document.getElementById("record");
 export class Leaderboard {
     constructor(canvas, context, settings = {}) {
         this.context = context;
@@ -10,6 +11,10 @@ export class Leaderboard {
 
     setData(data) {
         this.data = data;
+        if (this.data.Record) {
+            record.style.fontFamily = Settings.font;
+            record.innerHTML = `record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`;
+        }
     }
 
     drawTeamLeaderboardAt(entries, relativeTo, leftEdge) {
@@ -204,11 +209,6 @@ export class Leaderboard {
             }
         }
 
-        if (this.data.Record) {
-            ctx.font = "8pt " + Settings.font;
-            ctx.fillStyle = "white";
-            ctx.fillText(`record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`, margin, this.canvas.height - margin);
-        }
         ctx.restore();
     }
 
