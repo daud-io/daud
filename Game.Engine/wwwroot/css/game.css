@@ -226,7 +226,8 @@ a {
 }
 
 .spawnscreen input,
-.spawnscreen select {
+.spawnscreen select,
+.spawnscreen button {
     font-size: 1rem;
     border-radius: 5px;
     padding: 5px 5px 10px 5px;
@@ -332,18 +333,22 @@ table {
     opacity: 1;
     transition: 0.5s opacity ease-in-out;
 }
+
 #worlds {
     position: absolute;
-    top: 25%;
-    left: 25%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 50%;
     height: 50%;
-    background: rgba(0, 0, 200, 0.9);
+    background: rgb(0, 0, 100);
     z-index: 3;
     overflow-y: scroll;
+    padding: 3em;
     opacity: 1;
     transition: 0.5s opacity ease-in-out;
 }
+
 #worldList {
     width: 100%;
 }
