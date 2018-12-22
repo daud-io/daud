@@ -352,7 +352,7 @@
                 base.Init(world);
 
                 FlagGroup.Init(world);
-                FlagGroup.ZIndex = 10;
+                FlagGroup.ZIndex = 200;
                 this.Group = FlagGroup;
                 Position = world.RandomPosition();
             }
