@@ -66,6 +66,10 @@
             }
         }
 
+        public void AcceptPickup(Pickup pickup)
+        {
+            this.Pickup = pickup;
+        }
 
         private void Die(Player player)
         {
@@ -253,7 +257,9 @@
 
                 ship.Mode = (byte)(isBoosting
                     ? 1
-                    : 0);
+                    : (Pickup != null)
+                        ? 2
+                        : 0);
 
                 if (isBoostInitial)
                     if (ship.Momentum != Vector2.Zero)

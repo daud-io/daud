@@ -41,7 +41,7 @@
             if (fleet != null)
             {
                 // powerup the fleet
-                fleet.Pickup = this;
+                fleet.AcceptPickup(this);
                 Randomize();
             }
         }

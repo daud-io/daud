@@ -5,6 +5,7 @@ export class FleetRenderer {
     constructor(context, settings = {}) {
         this.context = context;
         this.thrusterSpriteSize = 64;
+        this.pickupSpriteSize = 72;
     }
 
     draw(cache, interpolator, currentTime, object, group, position) {
@@ -24,6 +25,12 @@ export class FleetRenderer {
 
             if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
 
+            if (object.Mode == 2) {
+                ctx.save();
+                this.drawPickup(object, group);
+                ctx.restore();
+            }
+
             ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
             if (object.Mode == 1 || group.group.boostAnimateUntil > performance.now())
                 this.drawBooster(object, group, sprite);
@@ -32,6 +39,42 @@ export class FleetRenderer {
 
             ctx.restore();
         }
+    }
+    drawPickup(object, group) {
+        var index = group.group.pickupIndex || 0;
+        var pickupAnimationTotal = 1000;
+        var pickupSprite = false;
+
+        if (index == 0) {
+            group.group.pickupStarted = performance.now();
+        }
+
+        var timeIndex = performance.now() - group.group.pickupStarted;
+
+        group.group.pickupIndex = index + 1;
+
+        if (!pickupSprite)
+            pickupSprite = sprites['circles']
+        var spriteScale = 1.5;
+
+        var totalTiles = (pickupSprite.image.width / this.pickupSpriteSize);
+        var spriteIndex = (Math.floor(timeIndex / pickupAnimationTotal * totalTiles)
+            + object.ID % 3) % totalTiles;
+
+        var sx = this.pickupSpriteSize * (spriteIndex % totalTiles);
+        var sy = 0;
+        var sw = this.pickupSpriteSize;
+        var sh = this.pickupSpriteSize;
+
+        var dx = -0.5 * this.pickupSpriteSize * spriteScale;
+        var dy = -0.5 * this.pickupSpriteSize * spriteScale;
+        var dw = this.pickupSpriteSize * spriteScale;
+        var dh = this.pickupSpriteSize * spriteScale;
+
+        //this.context.translate(dx, dy);
+        //this.context.rotate(Math.PI / 2);
+
+        this.context.drawImage(pickupSprite.image, sx, sy, sw, sh, dx, dy, dw, dh);
     }
 
     drawBooster(object, group, baseSprite)

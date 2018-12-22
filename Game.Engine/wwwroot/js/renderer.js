@@ -117,6 +117,7 @@ addSprite("thruster_retro_pink");
 addSprite("thruster_retro_red");
 addSprite("thruster_retro_cyan");
 addSprite("thruster_retro_yellow");
+addSprite("circles");
 
 
 export class Renderer {

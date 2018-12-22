@@ -75,6 +75,7 @@
                 .ToList();
             if (bullets.Any())
             {
+
                 var bullet = bullets.First();
 
                 var distance = Vector2.Distance(bullet.Position, this.Fleet.FleetCenter);
