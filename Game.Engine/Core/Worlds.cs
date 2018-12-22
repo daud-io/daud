@@ -59,12 +59,15 @@
             var hook = Hook.Default;
             hook.BotBase = 1;
             hook.FlockWeight = 0;
+            hook.SnakeWeight = 0.01f;
+            hook.FlockWeight = 0.02f;
+            hook.FlockCohesion = 0.001f;
 
             return new World
             {
                 Hook = hook,
                 Name = "Snake World",
-                Description = "AAAAAHHH! Run!",
+                Description = "Hisssssss...",
                 AllowedColors = AllColors.Append("ship0").ToArray()
             };
         }
