@@ -25,7 +25,8 @@
                 Color = t.ColorName,
                 Name = t.ColorName,
                 Score = t.Score,
-                Position = t.Flag?.Position ?? Vector2.Zero
+                Position = t.Flag?.Position ?? Vector2.Zero,
+                ModeData = t.Base.FlagIsHome
             }).ToList();
 
             var players = Player.GetWorldPlayers(World);
@@ -111,6 +112,7 @@
             var flag = new Flag(flagSpriteBase, team, b);
             b.Flag = flag;
             team.Flag = flag;
+            team.Base = b;
 
             flag.Init(World);
             b.Init(World);
@@ -225,6 +227,7 @@
             public Vector2 BaseLocation { get; set; }
             public int Score { get; set; }
             public Flag Flag { get; set; }
+            public Base Base { get; set; }
 
             public void Scored()
             {
@@ -268,7 +271,7 @@
                 flag.ReturnToBase();
             }
 
-            private bool FlagIsHome()
+            public bool FlagIsHome()
             {
                 return Vector2.Distance(Flag.Position, this.Position)
                     < (Flag.Size + this.Size);
