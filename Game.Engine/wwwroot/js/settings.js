@@ -21,7 +21,8 @@ export const Settings = {
     logLength: 4,
     mouseOneButton: 0,
     showPickupSprites: false,
-    showThrusterSprites: true
+    showThrusterSprites: true,
+    showOwnName: false
 };
 
 function parseQuery(queryString) {
@@ -59,6 +60,7 @@ function save() {
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
     Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
+    Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
 
     Cookies.set("settings", Settings, cookieOptions);
 
@@ -94,6 +96,7 @@ function load() {
         document.getElementById("settingsLog").value = Settings.logLength;
         document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
+        document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
 
     } catch (e) {
         // maybe reset()? will make debugging difficult

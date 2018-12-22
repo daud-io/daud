@@ -338,7 +338,7 @@ function gameLoop() {
     camera.begin();
     background.draw(position.X, position.Y);
     renderer.view = view;
-    renderer.draw(cache, interpolator, gameTime);
+    renderer.draw(cache, interpolator, gameTime, fleetID);
 
     camera.end();
 

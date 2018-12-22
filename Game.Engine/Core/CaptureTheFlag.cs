@@ -26,7 +26,7 @@
                 Name = t.ColorName,
                 Score = t.Score,
                 Position = t.Flag?.Position ?? Vector2.Zero,
-                ModeData = t.Base.FlagIsHome
+                //ModeData = t.Base.FlagIsHome
             }).ToList();
 
             var players = Player.GetWorldPlayers(World);
