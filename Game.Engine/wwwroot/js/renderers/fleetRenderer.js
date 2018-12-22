@@ -25,14 +25,14 @@ export class FleetRenderer {
 
             if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
 
-            if (false && object.Mode == 2) {
+            if (Settings.showPickupSprites && object.Mode == 2) {
                 ctx.save();
                 this.drawPickup(object, group);
                 ctx.restore();
             }
 
             ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
-            if (object.Mode == 1 || group.group.boostAnimateUntil > performance.now())
+            if (Settings.showThrusterSprites && (object.Mode == 1 || group.group.boostAnimateUntil > performance.now()))
                 this.drawBooster(object, group, sprite);
             else
                 group.group.index = 0;

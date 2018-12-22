@@ -68,7 +68,7 @@
                         <input type="button" id="spawn" value="Launch as guest!" />
                         <input type="button" id="dauth" value="Login with Discord" />
                     </div>
-                    <input type="button" id="arenas" value="Arenas"></input>
+                    <input type="button" id="arenas" value="Arenas" />
                 </div>
             </div>
             <div id="worlds" class="closed">
@@ -87,21 +87,6 @@
                 </select>
                 <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" value="" />
                 <br />
-                <label for="settingsMouseOneButton">Mouse One-Button Mode</label>
-                <select id="settingsMouseOneButton">
-                    <option value="0">disabled</option>
-                    <option value="5">5ms</option>
-                    <option value="10">10ms</option>
-                    <option value="15">15ms</option>
-                    <option value="30">30ms</option>
-                    <option value="45">45ms</option>
-                    <option value="60">60ms</option>
-                    <option value="75">75ms</option>
-                    <option value="90">90ms</option>
-                    <option value="105">105ms</option>
-                    <option value="120">120ms</option>
-                    <option value="135">135ms</option>
-                </select>
                 <label for="settingsMouseScale">Mouse Sensitivity</label>
                 <select id="settingsMouseScale">
                     <option value="1">sensitive</option>
@@ -161,6 +146,15 @@
 
                 <label for="settingsShowHitboxes">Show Hitboxes</label>
                 <input type="checkbox" id="settingsShowHitboxes" />
+                <br />
+
+                <label for="settingsShowPickupSprites">Show Rocket Indicator</label>
+                <input type="checkbox" id="settingsShowPickupSprites" />
+                <br />
+
+                <label for="settingsShowThrusterSprites">Show Thruster Animations</label>
+                <input type="checkbox" id="settingsShowThrusterSprites" />
+
                 <br />
 
                 <input type="button" id="settingsSave" value="Save settings" />
