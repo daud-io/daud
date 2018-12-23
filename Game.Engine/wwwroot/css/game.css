@@ -358,6 +358,20 @@ table {
     background-color: #333;
 }
 
+#worldList .details {
+    display: none;
+}
+
+#worldList .selected .details {
+    display: table-row;
+}
+
+#worldList .details img {
+    float: right;
+    width: 100px;
+    height: 100px;
+}
+
 .closed {
     opacity: 0 !important;
     z-index: -2 !important;

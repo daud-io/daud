@@ -36,10 +36,13 @@
 
         public string Name {get;set;}
         public string Description {get;set;}
+        public string Instructions { get; set; }
 
         public string[] AllowedColors {get;set;}
 
         public int AdvertisedPlayerCount {get;set;}
+
+        public string Image { get; set; } = "default";
 
         public World()
         {

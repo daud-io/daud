@@ -94,7 +94,9 @@
                 players = w.Value.AdvertisedPlayerCount,
                 name = w.Value.Name,
                 description = w.Value.Description,
-                allowedColors = w.Value.AllowedColors
+                allowedColors = w.Value.AllowedColors,
+                image = w.Value.Image,
+                instructions = w.Value.Instructions
             });
         }
     }

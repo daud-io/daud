@@ -5,6 +5,22 @@ var worlds = document.getElementById("worlds");
 var worldList = document.getElementById("worldList");
 
 var allWorlds = false;
+var lastSelected = false;
+
+function selectRow(selectedWorld) {
+    if (lastSelected == selectedWorld)
+        selectedWorld = false;
+
+    for (var world in allWorlds) {
+        var row = document.getElementById(`${world}_row`);
+        if (world == selectedWorld)
+            row.classList.add('selected');
+        else
+            row.classList.remove('selected');
+    }
+
+    lastSelected = selectedWorld;
+}
 
 function buildList(response) {
     if (allWorlds != false) return updateList(response);
@@ -14,9 +30,27 @@ function buildList(response) {
     var options = "";
     for (var world of response) {
         allWorlds[world.world] = world;
-        options += `<tr id="${world.world}_row"><td><button id="${world.world}" class="j">Join</button></div></td><td>(<span id="${world.world}_playercount">${world.players}</span>)</td><td><b>${
-            world.name
-        }</b>: ${world.description}</td></tr>`;
+
+        var img = '';
+        if (world.image)
+            img = `<img src="img/worlds/${world.image}.png" />`;
+
+        options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
+
+        options = options
+            + `<tr>`
+            + `<td><button id="${world.world}" class="j">Join</button></td>`
+            + `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>`
+            + `<td><b>${world.name}</b>: ${world.description}</td>`
+            + `</tr>`;
+
+        if (world.instructions || img)
+            options = options
+                + `<tr class="details">`
+                + `<td colspan="3">${img}${world.instructions || ""}</td>`
+                + `</tr>`;
+
+        options += `</tbody>`;
     }
 
     worldList.innerHTML = options;
@@ -28,6 +62,13 @@ function buildList(response) {
             changeRoom(world);
         })
     );
+
+    document.querySelectorAll(".worldrow").forEach(worldRow =>
+        worldRow.addEventListener("click", function () {
+            selectRow(this.getAttribute("world"));
+        })
+    );
+
 }
 
 function updateList(response) {
@@ -57,11 +98,6 @@ function refreshList() {
                 }
 
                 buildList(response);
-
-                // with jquery, I'd have done this with a handler on the parent
-                // element and then looked at a $(sourceElement).data('world')
-                // not sure what a xplat/non-jq equiv would be
-                
             }
         });
 }
