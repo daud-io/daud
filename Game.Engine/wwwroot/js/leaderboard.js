@@ -179,9 +179,7 @@ export class Leaderboard {
         ctx.restore();
     }
 
-    modeStandard(relativeTo) {
-        
-    }
+    modeStandard(relativeTo) {}
 
     draw(relativeTo) {
         if (!Settings.leaderboardEnabled) return;

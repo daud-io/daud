@@ -7,16 +7,16 @@ var worldList = document.getElementById("worldList");
 var allWorlds = false;
 
 function buildList(response) {
-
-    if (allWorlds != false) 
-        return updateList(response);
+    if (allWorlds != false) return updateList(response);
 
     allWorlds = {};
 
     var options = "";
     for (var world of response) {
         allWorlds[world.world] = world;
-        options += `<tr id="${world.world}_row"><td><button id="${world.world}" class="j">Join</button></div></td><td>(<span id="${world.world}_playercount">${world.players}</span>)</td><td><b>${world.name}</b>: ${world.description}</td></tr>`;
+        options += `<tr id="${world.world}_row"><td><button id="${world.world}" class="j">Join</button></div></td><td>(<span id="${world.world}_playercount">${world.players}</span>)</td><td><b>${
+            world.name
+        }</b>: ${world.description}</td></tr>`;
     }
 
     worldList.innerHTML = options;
@@ -27,10 +27,8 @@ function updateList(response) {
         document.getElementById(`${world.world}_playercount`).innerHTML = world.players;
         var row = document.getElementById(`${world.world}_row`);
 
-        if (world.players > 0)
-            row.classList.remove("empty");
-        else
-            row.classList.add("empty");
+        if (world.players > 0) row.classList.remove("empty");
+        else row.classList.add("empty");
     }
 }
 
