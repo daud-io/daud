@@ -13,6 +13,7 @@
 
         public class Entry
         {
+            public uint FleetID { get; set; }
             public int Score { get; set; }
             public string Name { get; set; }
             public string Color { get; set; } = "white";

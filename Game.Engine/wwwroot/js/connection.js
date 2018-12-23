@@ -247,6 +247,7 @@ export class Connection {
                     const entry = message.entries(i);
 
                     entries.push({
+                        FleetID: entry.fleetID(),
                         Name: entry.name(),
                         Color: entry.color(),
                         Score: entry.score(),
@@ -255,7 +256,7 @@ export class Connection {
                             Y: entry.position().y()
                         },
                         Token: entry.token(),
-                        ModeData: JSON.parse(entry.modeData()) || {flagStatus : 'home'}
+                        ModeData: JSON.parse(entry.modeData()) || { flagStatus: 'home' }
                     });
                 }
 

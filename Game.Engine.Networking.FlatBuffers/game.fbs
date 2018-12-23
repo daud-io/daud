@@ -12,33 +12,35 @@ union AllMessages
 
 table NetLeaderboard
 {
-	type:string;
-	entries:[NetLeaderboardEntry];
-	record:NetLeaderboardEntry;
+	fleetID	: uint;
+	type	: string;
+	entries	: [NetLeaderboardEntry];
+	record	: NetLeaderboardEntry;
 	modeData: string;
 }
 
 table NetLeaderboardEntry
 {
-	name: string;
-	score: int;
-	color: string;
+	fleetID	: uint;
+	name	: string;
+	score	: int;
+	color	: string;
 	position: Vec2;
-	token: bool;
+	token	: bool;
 	modeData: string;
 }
 
 table NetSpawn
 {
-	name:string;
-	ship:string;
-	color:string;
-	token:string;
+	name	: string;
+	ship	: string;
+	color	: string;
+	token	: string;
 }
 
 table NetExit
 {
-	code: int;
+	code	: int;
 }
 
 table NetControlInput

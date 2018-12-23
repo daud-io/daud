@@ -308,6 +308,7 @@ namespace Game.Engine.Networking
                             // here's the start of the entry object, after this we can only use
                             // predefined string offsets
                             NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
+                            NetLeaderboardEntry.AddFleetID(builder, e.FleetID);
                             NetLeaderboardEntry.AddName(builder, stringName);
                             NetLeaderboardEntry.AddColor(builder, stringColor);
                             NetLeaderboardEntry.AddScore(builder, e.Score);

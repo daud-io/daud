@@ -39,6 +39,7 @@
                     .Where(p => p.IsAlive)
                     .Select(p => new Leaderboard.Entry
                     {
+                        FleetID = p.Fleet?.ID ?? 0,
                         Color = team.ColorName,
                         Name = p.Name,
                         Position = p.Fleet?.FleetCenter ?? Vector2.Zero,
