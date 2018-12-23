@@ -4,7 +4,36 @@ import { Controls } from "./controls";
 var worlds = document.getElementById("worlds");
 var worldList = document.getElementById("worldList");
 
-var allWorlds = {};
+var allWorlds = false;
+
+function buildList(response) {
+
+    if (allWorlds != false) 
+        return updateList(response);
+
+    allWorlds = {};
+
+    var options = "";
+    for (var world of response) {
+        allWorlds[world.world] = world;
+        options += `<tr id="${world.world}_row"><td><button id="${world.world}" class="j">Join</button></div></td><td>(<span id="${world.world}_playercount">${world.players}</span>)</td><td><b>${world.name}</b>: ${world.description}</td></tr>`;
+    }
+
+    worldList.innerHTML = options;
+}
+
+function updateList(response) {
+    for (var world of response) {
+        document.getElementById(`${world.world}_playercount`).innerHTML = world.players;
+        var row = document.getElementById(`${world.world}_row`);
+
+        if (world.players > 0)
+            row.classList.remove("empty");
+        else
+            row.classList.add("empty");
+    }
+}
+
 function refreshList() {
     fetch("/api/v1/server/worlds", {
         method: "GET",
@@ -21,16 +50,11 @@ function refreshList() {
                     changeRoom(selected);
                 }
 
-                var options = "";
-                allWorlds = {};
+                buildList(response);
 
-                for (var world of response) {
-                    allWorlds[world.world] = world;
-                    options += `<tr><td><button id="${world.world}" class="j">Join</button></div></td><td>(${world.players})</td><td><b>${world.name}</b>: ${world.description}</td></tr>`;
-                }
-
-                worldList.innerHTML = options;
-
+                // with jquery, I'd have done this with a handler on the parent
+                // element and then looked at a $(sourceElement).data('world')
+                // not sure what a xplat/non-jq equiv would be
                 document.querySelectorAll(".j").forEach(j =>
                     j.addEventListener("click", function() {
                         const world = this.id;
@@ -42,6 +66,7 @@ function refreshList() {
             }
         });
 }
+
 function changeRoom(worldKey) {
     document.getElementById("wcancel").click();
     var world = allWorlds[worldKey];
@@ -79,3 +104,5 @@ document.getElementById("arenas").addEventListener("click", () => {
 document.getElementById("wrefresh").addEventListener("click", () => {
     refreshList();
 });
+
+setInterval(refreshList, 1000);
