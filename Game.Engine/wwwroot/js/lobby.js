@@ -18,7 +18,7 @@ function selectRow(selectedWorld) {
 
     lastSelected = selectedWorld;
 }
-
+const imgs = require(`../img/worlds/*.png`);
 function buildList(response) {
     if (allWorlds != false) return updateList(response);
 
@@ -28,7 +28,7 @@ function buildList(response) {
     for (var world of response) {
         allWorlds[world.world] = world;
 
-        var img = world.image ? `<img src="${require(`img/worlds/${world.image}.png`)}" />` : "";
+        var img = world.image ? `<img src="${imgs[world.image]}" />` : "";
 
         options += `<tr id="${world.world}_row" world="${world.world}" class="worldrow">`;
 
