@@ -4,7 +4,7 @@ import { Renderer, spriteIndices } from "./renderer";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
-import { Leaderboard } from "./leaderboard";
+import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
 import { HUD } from "./hud";
 import { Log } from "./log";
 import { Cooldown } from "./cooldown";
@@ -220,6 +220,7 @@ document.getElementById("wcancel").addEventListener("click", () => {
     worlds.classList.add("closed");
     blur();
     cache = new Cache();
+    clearLeaderboards();
 });
 
 document.getElementById("spawn").addEventListener("click", () => {
@@ -345,7 +346,6 @@ function gameLoop() {
 
     lastPosition = position;
 
-    leaderboard.draw(leaderboard.position);
     log.draw();
     cooldown.draw();
 

@@ -400,11 +400,15 @@ table {
     left: 15px;
 }
 
+:root {
+    --leaderboard-width: 250px;
+}
+
 #leaderboard {
     position: absolute;
     top: 10px;
     right: 30px;
-    width: 200px;
+    width: var(--leaderboard-width);
     padding: 0;
     margin: 0;
     font-size: 12pt;
@@ -414,7 +418,7 @@ table {
     position: absolute;
     top: 10px;
     left: 30px;
-    width: 200px;
+    width: var(--leaderboard-width);
     padding: 0;
     margin: 0;
     font-size: 12pt;
@@ -422,10 +426,10 @@ table {
 
 #leaderboard-center {
     position: absolute;
-    top: 10px;
+    top: 0px;
     left: 50%;
     transform: translate(-50%, 0);
-    width: 200px;
+    width: var(--leaderboard-width);
     padding: 0;
     margin: 0;
     font-size: 12pt;
@@ -440,7 +444,15 @@ table {
     padding: 0;
     border: none;
 }
-
+.overlap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100px;
+    margin: 0;
+    padding: 0;
+}
 .arrow {
     width: 18px;
     height: 8px;
@@ -456,7 +468,23 @@ table {
     text-align: right;
     width: 28px;
 }
-
+td.flag {
+    width: 27px;
+    height: 27px;
+    position: relative;
+}
 .name {
-    width: 134px;
+    width: calc(var(--leaderboard-width) - 56px);
+}
+table {
+    border-spacing: 0;
+}
+.flag-arrow {
+    width: 27px;
+    height: 27px;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
 }
