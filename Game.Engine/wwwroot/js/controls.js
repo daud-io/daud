@@ -10,7 +10,7 @@ export const nipple = nipplejs.create({
 const isMobile = "ontouchstart" in document.documentElement;
 if (!isMobile) {
     nipple.destroy();
-    document.getElementById("niple-buttons").style.display = "none";
+    document.getElementById("nipple-controls").style.display = "none";
 }
 
 const selector = document.querySelector("#shipSelector");

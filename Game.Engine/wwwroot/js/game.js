@@ -4,7 +4,7 @@ import { Renderer, spriteIndices } from "./renderer";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
-import { Leaderboard } from "./leaderboard";
+import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
 import { HUD } from "./hud";
 import { Log } from "./log";
 import { Cooldown } from "./cooldown";
@@ -23,9 +23,9 @@ const renderer = new Renderer(context, {});
 const background = new Background(canvas, context, {});
 const camera = new Camera(context);
 const interpolator = new Interpolator();
-const leaderboard = new Leaderboard(canvas, context);
-const hud = new HUD(canvas, context);
-const log = new Log(canvas, context);
+const leaderboard = new Leaderboard();
+const hud = new HUD();
+const log = new Log();
 const cooldown = new Cooldown(canvas, context);
 let isSpectating = false;
 
@@ -90,7 +90,7 @@ const groupFromServer = (cache, group) => {
 };
 
 connection.onLeaderboard = lb => {
-    leaderboard.setData(lb);
+    leaderboard.setData(lb, lastPosition);
     leaderboard.position = lastPosition;
 };
 
@@ -220,6 +220,7 @@ document.getElementById("wcancel").addEventListener("click", () => {
     worlds.classList.add("closed");
     blur();
     cache = new Cache();
+    clearLeaderboards();
 });
 
 document.getElementById("spawn").addEventListener("click", () => {
@@ -302,6 +303,7 @@ function doPing() {
     window.Game.Stats.framesPerSecond = frameCounter;
     window.Game.Stats.viewsPerSecond = viewCounter;
     window.Game.Stats.updatesPerSecond = updateCounter;
+    hud.update();
 
     if (frameCounter === 0) {
         console.log("backgrounded");
@@ -338,15 +340,13 @@ function gameLoop() {
     camera.begin();
     background.draw(position.X, position.Y);
     renderer.view = view;
-    renderer.draw(cache, interpolator, gameTime);
+    renderer.draw(cache, interpolator, gameTime, fleetID);
 
     camera.end();
 
     lastPosition = position;
 
-    leaderboard.draw(leaderboard.position);
-    hud.draw();
-    log.draw();
+    log.check();
     cooldown.draw();
 
     if (Controls.mouseX) {

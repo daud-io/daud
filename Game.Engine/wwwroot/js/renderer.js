@@ -2,15 +2,14 @@ import { Settings } from "./settings";
 import images from "../img/*.png";
 import { FleetRenderer } from "./renderers/fleetRenderer";
 
-function sprite(name, scale, scaleToSize) {
+function sprite(name, scale) {
     const img = new Image();
     img.src = images[name];
 
     return {
         image: img,
         name: name,
-        scale: scale || 1.3,
-        scaleToSize: scaleToSize || false
+        scale: scale || 0.02
     };
 }
 
@@ -68,7 +67,7 @@ export const spriteIndices = [
 ];
 
 function addSprite(name, size, file) {
-    sprites[name] = sprite(file || name, size, size);
+    sprites[name] = sprite(file || name, size);
     spriteIndices.push(name);
 }
 
@@ -128,7 +127,7 @@ export class Renderer {
         this.fleetRenderer = new FleetRenderer(context, settings);
     }
 
-    draw(cache, interpolator, currentTime) {
+    draw(cache, interpolator, currentTime, fleetID) {
         if (this.view) {
             const pv = this.view;
             const ctx = this.context;
@@ -249,8 +248,7 @@ export class Renderer {
 
                         ctx.rotate(position.Angle);
                         ctx.scale(sprite.scale, sprite.scale);
-
-                        if (sprite.scaleToSize) ctx.scale(object.Size, object.Size);
+                        ctx.scale(object.Size, object.Size);
 
                         ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
 
@@ -265,19 +263,21 @@ export class Renderer {
                     const group = groupsUsed[i];
 
                     if (group && group.group) {
-                        const pt = { X: 0, Y: 0 };
+                        if (group.group.ID != fleetID || Settings.showOwnName) {
+                            const pt = { X: 0, Y: 0 };
 
-                        // average the location of all the points
-                        // to find a "center"
-                        for (let x = 0; x < group.points.length; x++) {
-                            pt.X += group.points[x].X;
-                            pt.Y += group.points[x].Y;
+                            // average the location of all the points
+                            // to find a "center"
+                            for (let x = 0; x < group.points.length; x++) {
+                                pt.X += group.points[x].X;
+                                pt.Y += group.points[x].Y;
+                            }
+                            pt.X /= group.points.length;
+                            pt.Y /= group.points.length;
+
+                            // draw a caption relative to the average above
+                            ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                         }
-                        pt.X /= group.points.length;
-                        pt.Y /= group.points.length;
-
-                        // draw a caption relative to the average above
-                        ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
                     }
                 }
             }

@@ -19,7 +19,10 @@ export const Settings = {
     showCooldown: true,
     showHitboxes: false,
     logLength: 4,
-    mouseOneButton: 0
+    mouseOneButton: 0,
+    showPickupSprites: false,
+    showThrusterSprites: true,
+    showOwnName: false
 };
 
 function parseQuery(queryString) {
@@ -55,7 +58,9 @@ function save() {
     Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
     Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
-    Settings.mouseOneButton = document.getElementById("settingsMouseOneButton").value;
+    Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
+    Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
+    Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
 
     Cookies.set("settings", Settings, cookieOptions);
 
@@ -89,7 +94,9 @@ function load() {
         document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
         document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
         document.getElementById("settingsLog").value = Settings.logLength;
-        document.getElementById("settingsMouseOneButton").value = Settings.mouseOneButton;
+        document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
+        document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
+        document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
     } catch (e) {
         // maybe reset()? will make debugging difficult
     }
@@ -121,7 +128,7 @@ async function theme(v) {
                             sprites[element[0]].image.src = url;
                             if (element[1]) {
                                 sprites[element[0]].scale = element[1];
-                                sprites[element[0]].scaleToSize = !element[0].startsWith("ship");
+                                if (element[0].startsWith("ship")) sprites[element[0]].scale = 0.03;
                             }
                         }
                     });

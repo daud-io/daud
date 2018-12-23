@@ -1,265 +1,129 @@
 ﻿import { sprites } from "./renderer";
 import { Settings } from "./settings";
 
+var record = document.getElementById("record");
+var leaderboard = document.getElementById("leaderboard");
+var leaderboardLeft = document.getElementById("leaderboard-left");
+var leaderboardCenter = document.getElementById("leaderboard-center");
+export function clear() {
+    leaderboard.innerHTML = "";
+    leaderboardLeft.innerHTML = "";
+    leaderboardCenter.innerHTML = "";
+    leaderboardCenter.style.width = null;
+    leaderboardCenter.style.height = null;
+}
 export class Leaderboard {
-    constructor(canvas, context, settings = {}) {
-        this.context = context;
-        this.canvas = canvas;
+    constructor() {
         this.data = false;
     }
 
-    setData(data) {
+    setData(data, position) {
         this.data = data;
-
-        //Hide or show elements based on Arena.
-        if (this.data.Type == "CTF") {
-            document.getElementById('ctf_arena').classList.remove('hide');
-        } else {
-            document.getElementById('ctf_arena').classList.add('hide');
-        }
-    }
-
-    drawTeamLeaderboardAt(entries, relativeTo, leftEdge) {
-        const ctx = this.context;
-        const arrow = sprites["arrow"];
-        entries.forEach(({ Name, Score, Color, Position }, i) => {
-            var rowHeight = 28;
-            ctx.fillStyle = "white";
-            ctx.fillText(Name || "Unknown Fleet", leftEdge, rowHeight + i * rowHeight);
-            ctx.fillText(Score, leftEdge + 200, rowHeight + i * rowHeight);
-            ctx.fillStyle = Color;
-
-            const x = leftEdge - rowHeight;
-            const y = i * rowHeight + 10;
-
-            ctx.fillRect(x, y, rowHeight, rowHeight);
-
-            if (relativeTo && (Position.X != 0 && Position.Y != 0)) {
-                const angle = Math.atan2(Position.Y - relativeTo.Y, Position.X - relativeTo.X);
-
-                ctx.save();
-                ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
-                const w = arrow.image.width;
-                const h = arrow.image.height;
-                ctx.rotate(angle);
-                ctx.scale(arrow.scale, arrow.scale);
-                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
-                ctx.restore();
-            }
-        });
-    }
-
-    modeCTF(relativeTo) {
-        const ctx = this.context;
-        ctx.save();
-
-        ctx.font = "12pt " + Settings.font;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "left";
-
-        const arrow = sprites["arrow"];
-
-        const self = this;
-
-        const flagStatus = {
-            'cyan': self.data.Entries[0].ModeData.flagStatus,
-            'red': self.data.Entries[1].ModeData.flagStatus
-        }
-
-        const cyanFlagStatus = document.getElementById('ctf_cyan').getElementsByClassName('flag_status')[0];
-        const redFlagStatus = document.getElementById('ctf_red').getElementsByClassName('flag_status')[0];
-
-        if (flagStatus.cyan == "Home") {
-            cyanFlagStatus.getElementsByClassName('home')[0].classList.remove('hide');
-            cyanFlagStatus.getElementsByClassName('taken')[0].classList.add('hide');
-        } else if (flagStatus.cyan == "Taken") {
-            cyanFlagStatus.getElementsByClassName('home')[0].classList.add('hide');
-            cyanFlagStatus.getElementsByClassName('taken')[0].classList.remove('hide');
-        }
-
-        if (flagStatus.red == "Home") {
-            redFlagStatus.getElementsByClassName('home')[0].classList.remove('hide');
-            redFlagStatus.getElementsByClassName('taken')[0].classList.add('hide');
-        } else if (flagStatus.red == "Taken") {
-            redFlagStatus.getElementsByClassName('home')[0].classList.add('hide');
-            redFlagStatus.getElementsByClassName('taken')[0].classList.remove('hide');
-        }
-
-        const findTeam = teamName => {
-            for (let i = 0; i < self.data.Entries.length; i++) {
-                if (self.data.Entries[i].Name == teamName) return self.data.Entries[i];
-            }
-            return false;
-        };
-
-        const cyan = findTeam("cyan") || { Score: 0 };
-        const red = findTeam("red") || { Score: 0 };
-
-        const cyanScore = Math.min(cyan.Score, 5);
-        const redScore = Math.min(red.Score, 5);
-
-        const hudX = this.canvas.width / 2 - 310 / 2;
-        const hudY = 0;
-        const hudWidth = 300;
-        const hudHeight = 100;
-
-        const drawSprite = sprite => {
-            if (sprites.hasOwnProperty(sprite)) ctx.drawImage(sprites[sprite].image, hudX, hudY, hudWidth, hudHeight);
-        };
-
-        drawSprite("ctf_score_stripes");
-        drawSprite(`ctf_score_left_${Math.min(cyanScore, 4)}`);
-        drawSprite(`ctf_score_right_${Math.min(redScore, 4)}`);
-
-        if (cyanScore >= 5) drawSprite("ctf_score_final_blue");
-        else if (redScore >= 5) drawSprite("ctf_score_final_red");
-        else drawSprite("ctf_score_final");
-
-        var teams = ["cyan", "red"];
-
-        var cyanFlag = false;
-        var cyanTeam = [];
-        var redFlag = false;
-        var redTeam = [];
-
-        this.data.Entries.forEach((entry, i) => {
-            if (i == 0) cyanFlag = entry;
-            else if (i == 1) redFlag = entry;
-            else if (entry.Color == "cyan") cyanTeam.push(entry);
-            else redTeam.push(entry);
-        });
-
-        const drawFlagArrow = (flag, sprite, teamIndex) => {
-            if (relativeTo) {
-                const angle = Math.atan2(flag.Position.Y - relativeTo.Y, flag.Position.X - relativeTo.X);
-                var arrow = sprites[sprite];
-                var overlay = sprites["ctf_arrow_trans_flag"];
-
-                ctx.save();
-                const w = arrow.image.width;
-                const h = arrow.image.height;
-
-                if (teamIndex == 0) ctx.translate(hudX, hudY + 40);
-                else ctx.translate(hudX + hudWidth, hudY + 40);
-
-                ctx.save();
-                ctx.rotate(angle);
-                ctx.scale(arrow.scale, arrow.scale);
-                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
-                ctx.restore();
-
-                //ctx.scale(overlay.scale, overlay.scale);
-                //ctx.drawImage(overlay.image, -overlay.image.width / 2, -overlay.image.height / 2, overlay.image.width, overlay.image.height);
-
-                ctx.restore();
-            }
-        };
-
-        drawFlagArrow(redFlag, "ctf_arrow_red", 1);
-        drawFlagArrow(cyanFlag, "ctf_arrow_blue", 0);
-        this.drawTeamLeaderboardAt(cyanTeam, relativeTo, 60);
-        this.drawTeamLeaderboardAt(redTeam, relativeTo, this.canvas.width - 60 - 200);
-
-        ctx.restore();
-    }
-
-    modeTeam(relativeTo) {
-        const ctx = this.context;
-        ctx.save();
-
-        ctx.font = "12pt " + Settings.font;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "left";
-
-        var cyanTeam = [];
-        var redTeam = [];
-        var teams = [];
-
-        this.data.Entries.forEach((entry, i) => {
-            if (i == 0) teams.push(entry);
-            else if (i == 1) teams.push(entry);
-            else if (entry.Color == "cyan") cyanTeam.push(entry);
-            else redTeam.push(entry);
-        });
-
-        this.drawTeamLeaderboardAt(teams, false, this.canvas.width / 2 - 100);
-
-        this.drawTeamLeaderboardAt(cyanTeam, relativeTo, 60);
-        this.drawTeamLeaderboardAt(redTeam, relativeTo, this.canvas.width - 60 - 200);
-
-        ctx.restore();
-    }
-
-    modeStandard(relativeTo) {
-        const ctx = this.context;
-        ctx.save();
-        ctx.font = "12pt " + Settings.font;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "left";
-
-        const width = 200;
-        var rowHeight = 28;
-        const margin = 15;
-
-        const arrow = sprites["arrow"];
-
-        for (let i = 0; i < this.data.Entries.length; i++) {
-            const entry = this.data.Entries[i];
-
-            if (entry.Token) {
-                ctx.fillStyle = "aqua";
-                ctx.fillText("✓", this.canvas.width - width, rowHeight + i * rowHeight);
-            }
-            var tokenWidth = entry.Token ? 15 : 0;
-            ctx.fillStyle = "white";
-            ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width + tokenWidth, rowHeight + i * rowHeight);
-            ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + i * rowHeight);
-
-            ctx.fillStyle = entry.Color;
-
-            const x = this.canvas.width - width - rowHeight;
-            const y = i * rowHeight + 10;
-
-            ctx.fillRect(x, y, rowHeight, rowHeight);
-
-            if (relativeTo) {
-                const angle = Math.atan2(entry.Position.Y - relativeTo.Y, entry.Position.X - relativeTo.X);
-
-                ctx.save();
-                ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
-                const w = arrow.image.width;
-                const h = arrow.image.height;
-                ctx.rotate(angle);
-                ctx.scale(arrow.scale, arrow.scale);
-                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
-                ctx.restore();
-            }
-        }
-
         if (this.data.Record) {
-            ctx.font = "8pt " + Settings.font;
-            ctx.fillStyle = "white";
-            ctx.fillText(`record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`, margin, this.canvas.height - margin);
+            record.style.fontFamily = Settings.font;
+            record.innerHTML = `record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`;
         }
-        ctx.restore();
-    }
+        if (this.data.Type == "FFA") {
+            let out = "";
+            for (let i = 0; i < this.data.Entries.length; i++) {
+                const entry = this.data.Entries[i];
+                const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 
-    draw(relativeTo) {
-        if (!Settings.leaderboardEnabled) return;
+                out +=
+                    `<tr>` +
+                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+                    `<td class="name">${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td class="score">${entry.Score}</td>` +
+                    `</tr>`;
+            }
+            leaderboard.innerHTML = `<tbody>${out}</tbody>`;
+        } else if (this.data.Type == "Team") {
+            let outL = "";
+            let outR = "";
+            let outC = "";
+            for (let i = 0; i < this.data.Entries.length; i++) {
+                const entry = this.data.Entries[i];
+                const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+                let str =
+                    `<tr>` +
+                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+                    `<td class="name">${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td class="score">${entry.Score}</td>` +
+                    `</tr>`;
+                if (i == 0 || i == 1) {
+                    outC += str;
+                } else if (entry.Color == "cyan") {
+                    outL += str;
+                } else {
+                    outR += str;
+                }
+            }
+            leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
+            leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
+            leaderboardCenter.innerHTML = `<tbody>${outC}</tbody>`;
+        } else if (this.data.Type == "CTF") {
+            let outL = "";
+            let outR = "";
+            let redFlag = false;
+            let cyanFlag = false;
+            for (let i = 0; i < this.data.Entries.length; i++) {
+                const entry = this.data.Entries[i];
+                const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+                let str =
+                    `<tr>` +
+                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+                    `<td class="name">${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td class="score">${entry.Score}</td>` +
+                    `</tr>`;
+                if (i == 0) {
+                    cyanFlag = entry;
+                } else if (i == 1) {
+                    redFlag = entry;
+                } else if (entry.Color == "cyan") {
+                    outL += str;
+                } else {
+                    outR += str;
+                }
+            }
 
-        switch (this.data.Type) {
-            case "Team":
-                this.modeTeam(relativeTo);
-                break;
-            case "CTF":
-                this.modeCTF(relativeTo);
-                break;
-            case "FFA":
-                this.modeStandard(relativeTo);
-                break;
-            default:
-                //console.log(`Unknown leaderboard type: ${this.data.Type}`);
-                break;
+            const self = this;
+            const findTeam = teamName => {
+                for (let i = 0; i < self.data.Entries.length; i++) {
+                    if (self.data.Entries[i].Name == teamName) return self.data.Entries[i];
+                }
+                return false;
+            };
+
+            const cyan = findTeam("cyan") || { Score: 0 };
+            const red = findTeam("red") || { Score: 0 };
+
+            const cyanScore = Math.min(cyan.Score, 5);
+            const redScore = Math.min(red.Score, 5);
+
+            const image = i => {
+                return `<img class="overlap" src="${sprites[i].image.src}"></img>`;
+            };
+            const cyanAngle = Math.atan2(cyanFlag.Position.Y - position.Y, cyanFlag.Position.X - position.X);
+            const redAngle = Math.atan2(redFlag.Position.Y - position.Y, redFlag.Position.X - position.X);
+            leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
+            leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
+            leaderboardCenter.style.width = "372px";
+            leaderboardCenter.style.height = "83px";
+            leaderboardCenter.innerHTML =
+                `<tbody><tr>` +
+                `<td class="flag"><img class="flag-arrow" src="${sprites["ctf_arrow_blue"].image.src}" style="transform:rotate(${cyanAngle}rad);right:-50px"></img></td>` +
+                `<td style="width:300px;position:relative">` +
+                image("ctf_score_stripes") +
+                image(`ctf_score_left_${Math.min(cyanScore, 4)}`) +
+                image(`ctf_score_right_${Math.min(redScore, 4)}`) +
+                image(`ctf_score_final${cyanScore >= 5 ? "_blue" : redScore >= 5 ? "_red" : ""}`) +
+                `</td>` +
+                `<td class="flag"><img class="flag-arrow" src="${sprites["ctf_arrow_red"].image.src}" style="transform:rotate(${redAngle}rad);left:-50px"></img></td>` +
+                `</tr></tbody>`;
+            console.log("leaderboarded");
         }
     }
 }

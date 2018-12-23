@@ -9,6 +9,8 @@
                 return new Hook
                 {
                     WorldSize = 6000,
+                    FollowFirstShip = false,
+                    FiringSequenceDelay = 0,
 
                     BaseThrustM = -0.003f,
                     BaseThrustB = 0.13f,
@@ -176,6 +178,9 @@
         public float OutOfBoundsBorder { get; set; } = 300;
         public float OutOfBoundsDecayDistance { get; set; } = 900;
         public int BotRespawnDelay { get; set; }
+
+        public bool FollowFirstShip { get; set; }
+        public int FiringSequenceDelay { get; set; }
 
         public string SpawnLocationMode { get; set; }
 

@@ -406,6 +406,29 @@ table {
 #worldList {
     width: 100%;
 }
+
+#worldList .empty {
+    color: #777;
+    background-color: #333;
+}
+
+#worldList .details {
+    display: none;
+}
+#worldList .selected {
+    background-color: #777;
+    color: #333;
+}
+#worldList .selected .details {
+    display: table-cell;
+}
+
+#worldList .details img {
+    float: left;
+    width: 100px;
+    height: 100px;
+}
+
 .closed {
     opacity: 0 !important;
     z-index: -2 !important;
@@ -415,6 +438,113 @@ table {
     filter: blur(10px);
 }
 
-.hide {
-    display: none;
+#hud {
+    font-family: sans-serif;
+    font-size: 8pt;
+    position: absolute;
+    bottom: 30px;
+    left: 15px;
+}
+
+#record {
+    font-family: sans-serif;
+    font-size: 8pt;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}
+
+:root {
+    --leaderboard-width: 250px;
+}
+
+#leaderboard {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard-left {
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard-center {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard td,
+#leaderboard tr,
+#leaderboard-left td,
+#leaderboard-left tr {
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.overlap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100px;
+    margin: 0;
+    padding: 0;
+}
+.arrow {
+    width: 18px;
+    height: 8px;
+    margin: auto;
+    display: block;
+}
+.blue {
+    color: cyan;
+}
+.score {
+    float: right;
+    right: 0px;
+    text-align: right;
+    width: 28px;
+}
+td.flag {
+    width: 27px;
+    height: 27px;
+    position: relative;
+}
+.name {
+    width: calc(var(--leaderboard-width) - 56px);
+}
+table {
+    border-spacing: 0;
+}
+.flag-arrow {
+    width: 27px;
+    height: 27px;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+#log {
+    position: absolute;
+    bottom: 55px;
+    left: 15px;
+    font-size: 12pt;
 }

@@ -22,32 +22,22 @@
 
         <div id="error">
             <h4 id="error_message">
-                Unable to connect to the server! Please check your internet connection or the server maybe under maintenance. 
+                Unable to connect to the server! Please check your internet connection or the server maybe under maintenance.
             </h4>
         </div>
 
         <div class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
-            
-            <div id="ctf_arena" class="hide">
-                <span id="ctf_cyan">
-                    <span class="flag_status">
-                        <span class="home">Home</span>
-                        <span class="taken">Taken</span>
-                    </span>
-                </span>
-                <span id="ctf_red">
-                    <span class="flag_status">
-                        <span class="home">Home</span>
-                        <span class="taken">Taken</span>
-                    </span>
-                </span>
-            </div>
 
             <div id="stop_spectating_container">
                 <input type="button" id="stop_spectating" value="Stop Spectating" />
             </div>
-
+            <table id="leaderboard" cellspacing="0"></table>
+            <table id="leaderboard-left" cellspacing="0"></table>
+            <table id="leaderboard-center" cellspacing="0"></table>
+            <div id="log"></div>
+            <div id="hud">fps: 0 - players: 0 - ping: 0</div>
+            <div id="record">record: - 0</div>
             <div id="nipple-controls">
                 <div id="nipple-zone"></div>
                 <div id="niple-buttons">
@@ -60,8 +50,6 @@
         <div class="spawnscreen">
             <div class="controls">
                 <div>
-                    
-
                     <div>
                         <img id="logo" src="img/header.png" draggable="false" />
                     </div>
@@ -78,18 +66,21 @@
                         <option value="cyan">cyan</option>
                         <option value="yellow">yellow</option>
                     </select>
-                   
+
                     <div>
                         <input type="button" id="spawn" value="Launch as guest!" />
                         <input type="button" id="dauth" value="Login with Discord" />
                     </div>
-                    <input type="button" id="arenas" value="Arenas"></input>
+                    <input type="button" id="arenas" value="Arenas" />
                 </div>
             </div>
             <div id="worlds" class="closed">
-                <div id="topbar"><button id="wrefresh">refresh</button><button id="wcancel">Cancel</button></div>
-                <table id="worldList">
-                </table>
+                <div id="topbar">
+                    <button id="wrefresh">refresh</button>
+                    <button id="wcancel">Cancel</button>
+                    <button id="join">Join</button>
+                </div>
+                <table id="worldList"></table>
             </div>
             <div id="gear" class="closed">
                 <h1>Settings</h1>
@@ -102,21 +93,6 @@
                 </select>
                 <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" value="" />
                 <br />
-                <label for="settingsMouseOneButton">Mouse One-Button Mode</label>
-                <select id="settingsMouseOneButton">
-                    <option value="0">disabled</option>
-                    <option value="5">5ms</option>
-                    <option value="10">10ms</option>
-                    <option value="15">15ms</option>
-                    <option value="30">30ms</option>
-                    <option value="45">45ms</option>
-                    <option value="60">60ms</option>
-                    <option value="75">75ms</option>
-                    <option value="90">90ms</option>
-                    <option value="105">105ms</option>
-                    <option value="120">120ms</option>
-                    <option value="135">135ms</option>
-                </select>
                 <label for="settingsMouseScale">Mouse Sensitivity</label>
                 <select id="settingsMouseScale">
                     <option value="1">sensitive</option>
@@ -169,6 +145,9 @@
                 <label for="settingsNamesEnabled">Show Names</label>
                 <input type="checkbox" id="settingsNamesEnabled" />
                 <br />
+                <label for="settingsShowOwnName">Show OWN name</label>
+                <input type="checkbox" id="settingsShowOwnName" />
+                <br />
 
                 <label for="settingsShowCooldown">Show Cooldown Timer</label>
                 <input type="checkbox" id="settingsShowCooldown" />
@@ -176,6 +155,14 @@
 
                 <label for="settingsShowHitboxes">Show Hitboxes</label>
                 <input type="checkbox" id="settingsShowHitboxes" />
+                <br />
+
+                <label for="settingsShowPickupSprites">Show Rocket Indicator</label>
+                <input type="checkbox" id="settingsShowPickupSprites" />
+                <br />
+
+                <label for="settingsShowThrusterSprites">Show Thruster Animations</label>
+                <input type="checkbox" id="settingsShowThrusterSprites" />
                 <br />
 
                 <input type="button" id="settingsSave" value="Save settings" />

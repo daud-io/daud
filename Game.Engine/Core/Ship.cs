@@ -28,8 +28,7 @@
         {
             base.Init(world);
 
-            SizeMinimum = 70;
-            SizeMaximum = 70;
+            Size = 70;
             Health = MaxHealth;
             Drag = World.Hook.Drag;
 
@@ -119,7 +118,7 @@
                 Die(null, null, null);
 
             Health = Math.Max(Math.Min(Health, MaxHealth), 0) + HealthRegenerationPerFrame;
-            Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum - SizeMinimum));
+            //Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum - SizeMinimum));
 
             DoOutOfBoundsRules();
 

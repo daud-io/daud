@@ -305,6 +305,9 @@
 
         private void Flock(Ship ship)
         {
+            if (World.Hook.FlockWeight == 0)
+                return;
+
             if (Ships.Count < 2)
                 return;
 
@@ -321,17 +324,21 @@
 
         private void Snake(Ship ship)
         {
+            if (World.Hook.SnakeWeight == 0)
+                return;
             if (Ships.Count < 2)
                 return;
 
             var shipIndex = Ships.IndexOf(ship);
             if (shipIndex > 0)
             {
-
+                ship.Size = 70;
                 var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
                 steeringVector += (Ships[shipIndex - 1].Position - ship.Position) * World.Hook.SnakeWeight;
                 ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
             }
+            else
+                ship.Size = 100;
         }
     }
 }
