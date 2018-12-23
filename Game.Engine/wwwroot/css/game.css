@@ -366,11 +366,11 @@ table {
     color: #333;
 }
 #worldList .selected .details {
-    display: table-row;
+    display: table-cell;
 }
 
 #worldList .details img {
-    float: right;
+    float: left;
     width: 100px;
     height: 100px;
 }

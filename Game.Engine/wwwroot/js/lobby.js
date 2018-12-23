@@ -24,27 +24,24 @@ function buildList(response) {
 
     allWorlds = {};
 
-    var options = "<tbody>";
+    var options = "";
     for (var world of response) {
         allWorlds[world.world] = world;
 
+        console.log(world.image);
         var img = world.image ? `<img src="${imgs[world.image]}" />` : "";
 
-        options += `<tr id="${world.world}_row" world="${world.world}" class="worldrow">`;
-
-        options =
-            options +
-            // `<td><button id="${world.world}" class="j">Join</button></td>` +
+        options +=
+            `<tr id="${world.world}_row" world="${world.world}" class="worldrow">` +
             `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>` +
-            `<td><b>${world.name}</b>: ${world.description}</td>`;
+            `<td><b>${world.name}</b>: ${world.description}`;
 
-        if (world.instructions || img) options = options + `<td colspan="3" class="details">${img}${world.instructions || ""}</td>`;
+        if (world.instructions || img) options += `<div class="details">${img}${world.instructions || ""}</div>`;
 
-        options += `</tr>`;
+        options += `</td></tr>`;
     }
-    options += `</tbody>`;
 
-    worldList.innerHTML = options;
+    worldList.innerHTML = `<tbody>${options}</tbody>`;
 
     document.querySelectorAll(".worldrow").forEach(worldRow =>
         worldRow.addEventListener("click", function() {
