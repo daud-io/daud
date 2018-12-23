@@ -5,6 +5,7 @@ var record = document.getElementById("record");
 var leaderboard = document.getElementById("leaderboard");
 var leaderboardLeft = document.getElementById("leaderboard-left");
 var leaderboardCenter = document.getElementById("leaderboard-center");
+
 export function clear() {
     leaderboard.innerHTML = "";
     leaderboardLeft.innerHTML = "";
@@ -23,6 +24,14 @@ export class Leaderboard {
             record.style.fontFamily = Settings.font;
             record.innerHTML = `record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`;
         }
+
+        //Hide or show elements based on Arena.
+        if (this.data.Type == "CTF") {
+            document.getElementById('ctf_arena').classList.remove('hide');
+        } else {
+            document.getElementById('ctf_arena').classList.add('hide');
+        }
+
         if (this.data.Type == "FFA") {
             let out = "";
             for (let i = 0; i < this.data.Entries.length; i++) {
@@ -90,6 +99,31 @@ export class Leaderboard {
             }
 
             const self = this;
+
+            const flagStatus = {
+                'cyan': self.data.Entries[0].ModeData.flagStatus,
+                'red': self.data.Entries[1].ModeData.flagStatus
+            }
+
+            const cyanFlagStatus = document.getElementById('ctf_cyan').getElementsByClassName('flag_status')[0];
+            const redFlagStatus = document.getElementById('ctf_red').getElementsByClassName('flag_status')[0];
+
+            if (flagStatus.cyan == "Home") {
+                cyanFlagStatus.getElementsByClassName('home')[0].classList.remove('hide');
+                cyanFlagStatus.getElementsByClassName('taken')[0].classList.add('hide');
+            } else if (flagStatus.cyan == "Taken") {
+                cyanFlagStatus.getElementsByClassName('home')[0].classList.add('hide');
+                cyanFlagStatus.getElementsByClassName('taken')[0].classList.remove('hide');
+            }
+
+            if (flagStatus.red == "Home") {
+                redFlagStatus.getElementsByClassName('home')[0].classList.remove('hide');
+                redFlagStatus.getElementsByClassName('taken')[0].classList.add('hide');
+            } else if (flagStatus.red == "Taken") {
+                redFlagStatus.getElementsByClassName('home')[0].classList.add('hide');
+                redFlagStatus.getElementsByClassName('taken')[0].classList.remove('hide');
+            }
+
             const findTeam = teamName => {
                 for (let i = 0; i < self.data.Entries.length; i++) {
                     if (self.data.Entries[i].Name == teamName) return self.data.Entries[i];

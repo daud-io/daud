@@ -272,7 +272,7 @@ select {
 }
 
 #ctf_cyan .flag_status {
-    margin-right: 187px;
+    margin-right: 150px;
     opacity: 0.7;
 }
 
@@ -294,7 +294,7 @@ select {
 }
 
 #ctf_red .flag_status {
-    margin-left: 170px;
+    margin-left: 150px;
     opacity: 0.7;
 }
 
@@ -547,4 +547,7 @@ table {
     bottom: 55px;
     left: 15px;
     font-size: 12pt;
+}
+.hide {
+    display: none;
 }
