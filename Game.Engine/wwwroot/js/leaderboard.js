@@ -28,8 +28,8 @@ export class Leaderboard {
                     `<tr>` +
                     `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
                     `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-                    `<td>${entry.Name || "Unknown Fleet"}</td>` +
-                    `<td>${entry.Score}</td>` +
+                    `<td class="name">${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td class="score">${entry.Score}</td>` +
                     `</tr>`;
             }
             leaderboard.innerHTML = `<tbody>${out}</tbody>`;
@@ -40,30 +40,19 @@ export class Leaderboard {
             for (let i = 0; i < this.data.Entries.length; i++) {
                 const entry = this.data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
-                if (i==0||i==1){
-                outC +=
+                let str =
                     `<tr>` +
                     `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
                     `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-                    `<td>${entry.Name || "Unknown Fleet"}</td>` +
-                    `<td>${entry.Score}</td>` +
+                    `<td class="name">${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td class="score">${entry.Score}</td>` +
                     `</tr>`;
-                }else if (entry.Color=="cyan"){
-                    outL +=
-                    `<tr>` +
-                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
-                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-                    `<td>${entry.Name || "Unknown Fleet"}</td>` +
-                    `<td>${entry.Score}</td>` +
-                    `</tr>`;
-                }else {
-                    outR +=
-                    `<tr>` +
-                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
-                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-                    `<td>${entry.Name || "Unknown Fleet"}</td>` +
-                    `<td>${entry.Score}</td>` +
-                    `</tr>`;
+                if (i == 0 || i == 1) {
+                    outC += str;
+                } else if (entry.Color == "cyan") {
+                    outL += str;
+                } else {
+                    outR += str;
                 }
             }
             leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
@@ -225,13 +214,13 @@ export class Leaderboard {
 
         switch (this.data.Type) {
             case "Team":
-                this.modeTeam(relativeTo);
+                // this.modeTeam(relativeTo);
                 break;
             case "CTF":
                 this.modeCTF(relativeTo);
                 break;
             case "FFA":
-                this.modeStandard(relativeTo);
+                // this.modeStandard(relativeTo);
                 break;
             default:
                 //console.log(`Unknown leaderboard type: ${this.data.Type}`);

@@ -361,7 +361,10 @@ table {
 #worldList .details {
     display: none;
 }
-
+#worldList .selected {
+    background-color: #777;
+    color: #333;
+}
 #worldList .selected .details {
     display: table-row;
 }
@@ -401,7 +404,7 @@ table {
     position: absolute;
     top: 10px;
     right: 30px;
-    width: 300px;
+    width: 200px;
     padding: 0;
     margin: 0;
     font-size: 12pt;
@@ -411,7 +414,7 @@ table {
     position: absolute;
     top: 10px;
     left: 30px;
-    width: 300px;
+    width: 200px;
     padding: 0;
     margin: 0;
     font-size: 12pt;
@@ -422,7 +425,7 @@ table {
     top: 10px;
     left: 50%;
     transform: translate(-50%, 0);
-    width: 300px;
+    width: 200px;
     padding: 0;
     margin: 0;
     font-size: 12pt;
@@ -446,4 +449,14 @@ table {
 }
 .blue {
     color: cyan;
+}
+.score {
+    float: right;
+    right: 0px;
+    text-align: right;
+    width: 28px;
+}
+
+.name {
+    width: 134px;
 }

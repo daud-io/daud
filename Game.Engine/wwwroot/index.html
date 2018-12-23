@@ -22,13 +22,13 @@
 
         <div id="error">
             <h4 id="error_message">
-                Unable to connect to the server! Please check your internet connection or the server maybe under maintenance. 
+                Unable to connect to the server! Please check your internet connection or the server maybe under maintenance.
             </h4>
         </div>
 
         <div class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
-            
+
             <div id="stop_spectating_container">
                 <input type="button" id="stop_spectating" value="Stop Spectating" />
             </div>
@@ -65,7 +65,7 @@
                         <option value="cyan">cyan</option>
                         <option value="yellow">yellow</option>
                     </select>
-                   
+
                     <div>
                         <input type="button" id="spawn" value="Launch as guest!" />
                         <input type="button" id="dauth" value="Login with Discord" />
@@ -74,9 +74,12 @@
                 </div>
             </div>
             <div id="worlds" class="closed">
-                <div id="topbar"><button id="wrefresh">refresh</button><button id="wcancel">Cancel</button></div>
-                <table id="worldList">
-                </table>
+                <div id="topbar">
+                    <button id="wrefresh">refresh</button>
+                    <button id="wcancel">Cancel</button>
+                    <button id="join">Join</button>
+                </div>
+                <table id="worldList"></table>
             </div>
             <div id="gear" class="closed">
                 <h1>Settings</h1>

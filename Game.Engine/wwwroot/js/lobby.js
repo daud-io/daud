@@ -8,15 +8,12 @@ var allWorlds = false;
 var lastSelected = false;
 
 function selectRow(selectedWorld) {
-    if (lastSelected == selectedWorld)
-        selectedWorld = false;
+    if (lastSelected == selectedWorld) selectedWorld = false;
 
     for (var world in allWorlds) {
         var row = document.getElementById(`${world}_row`);
-        if (world == selectedWorld)
-            row.classList.add('selected');
-        else
-            row.classList.remove('selected');
+        if (world == selectedWorld) row.classList.add("selected");
+        else row.classList.remove("selected");
     }
 
     lastSelected = selectedWorld;
@@ -27,49 +24,42 @@ function buildList(response) {
 
     allWorlds = {};
 
-    var options = "";
+    var options = "<tbody>";
     for (var world of response) {
         allWorlds[world.world] = world;
 
-        var img = '';
-        if (world.image)
-            img = `<img src="img/worlds/${world.image}.png" />`;
+        var img = world.image ? `<img src="${require(`img/worlds/${world.image}.png`)}" />` : "";
 
-        options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
+        options += `<tr id="${world.world}_row" world="${world.world}" class="worldrow">`;
 
-        options = options
-            + `<tr>`
-            + `<td><button id="${world.world}" class="j">Join</button></td>`
-            + `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>`
-            + `<td><b>${world.name}</b>: ${world.description}</td>`
-            + `</tr>`;
+        options =
+            options +
+            // `<td><button id="${world.world}" class="j">Join</button></td>` +
+            `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>` +
+            `<td><b>${world.name}</b>: ${world.description}</td>`;
 
-        if (world.instructions || img)
-            options = options
-                + `<tr class="details">`
-                + `<td colspan="3">${img}${world.instructions || ""}</td>`
-                + `</tr>`;
+        if (world.instructions || img) options = options + `<td colspan="3" class="details">${img}${world.instructions || ""}</td>`;
 
-        options += `</tbody>`;
+        options += `</tr>`;
     }
+    options += `</tbody>`;
 
     worldList.innerHTML = options;
-    document.querySelectorAll(".j").forEach(j =>
-        j.addEventListener("click", function() {
-            const world = this.id;
-            window.Game.primaryConnection.disconnect();
-            window.Game.primaryConnection.connect(world);
-            changeRoom(world);
-        })
-    );
 
     document.querySelectorAll(".worldrow").forEach(worldRow =>
-        worldRow.addEventListener("click", function () {
+        worldRow.addEventListener("click", function() {
             selectRow(this.getAttribute("world"));
         })
     );
-
 }
+
+document.getElementById("join").addEventListener("click", function() {
+    const world = document.querySelector(".selected").getAttribute("world");
+    window.Game.primaryConnection.disconnect();
+    window.Game.primaryConnection.connect(world);
+    changeRoom(world);
+    selectRow(world);
+});
 
 function updateList(response) {
     for (var world of response) {
