@@ -2,6 +2,8 @@
 import { Settings } from "./settings";
 
 var record = document.getElementById("record");
+var leaderboard = document.getElementById("leaderboard");
+
 export class Leaderboard {
     constructor(canvas, context, settings = {}) {
         this.context = context;
@@ -9,12 +11,26 @@ export class Leaderboard {
         this.data = false;
     }
 
-    setData(data) {
+    setData(data, position) {
         this.data = data;
         if (this.data.Record) {
             record.style.fontFamily = Settings.font;
             record.innerHTML = `record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`;
         }
+        let out = "";
+        for (let i = 0; i < this.data.Entries.length; i++) {
+            const entry = this.data.Entries[i];
+            const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+
+            out +=
+                `<tr>` +
+                `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+                `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+                `<td>${entry.Name || "Unknown Fleet"}</td>` +
+                `<td>${entry.Score}</td>` +
+                `</tr>`;
+        }
+        leaderboard.innerHTML = `<tbody>${out}</tbody>`;
     }
 
     drawTeamLeaderboardAt(entries, relativeTo, leftEdge) {
@@ -164,52 +180,7 @@ export class Leaderboard {
     }
 
     modeStandard(relativeTo) {
-        const ctx = this.context;
-        ctx.save();
-        ctx.font = "12pt " + Settings.font;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "left";
-
-        const width = 200;
-        var rowHeight = 28;
-        const margin = 15;
-
-        const arrow = sprites["arrow"];
-
-        for (let i = 0; i < this.data.Entries.length; i++) {
-            const entry = this.data.Entries[i];
-
-            if (entry.Token) {
-                ctx.fillStyle = "aqua";
-                ctx.fillText("✓", this.canvas.width - width, rowHeight + i * rowHeight);
-            }
-            var tokenWidth = entry.Token ? 15 : 0;
-            ctx.fillStyle = "white";
-            ctx.fillText(entry.Name || "Unknown Fleet", this.canvas.width - width + tokenWidth, rowHeight + i * rowHeight);
-            ctx.fillText(entry.Score, this.canvas.width - 60, rowHeight + i * rowHeight);
-
-            ctx.fillStyle = entry.Color;
-
-            const x = this.canvas.width - width - rowHeight;
-            const y = i * rowHeight + 10;
-
-            ctx.fillRect(x, y, rowHeight, rowHeight);
-
-            if (relativeTo) {
-                const angle = Math.atan2(entry.Position.Y - relativeTo.Y, entry.Position.X - relativeTo.X);
-
-                ctx.save();
-                ctx.translate(x + rowHeight / 2, y + rowHeight / 2);
-                const w = arrow.image.width;
-                const h = arrow.image.height;
-                ctx.rotate(angle);
-                ctx.scale(arrow.scale, arrow.scale);
-                ctx.drawImage(arrow.image, -w / 2, -h / 2, w, h);
-                ctx.restore();
-            }
-        }
-
-        ctx.restore();
+        
     }
 
     draw(relativeTo) {

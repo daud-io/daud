@@ -90,7 +90,7 @@ const groupFromServer = (cache, group) => {
 };
 
 connection.onLeaderboard = lb => {
-    leaderboard.setData(lb);
+    leaderboard.setData(lb, lastPosition);
     leaderboard.position = lastPosition;
 };
 
