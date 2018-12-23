@@ -23,9 +23,9 @@ const renderer = new Renderer(context, {});
 const background = new Background(canvas, context, {});
 const camera = new Camera(context);
 const interpolator = new Interpolator();
-const leaderboard = new Leaderboard(canvas, context);
-const hud = new HUD(canvas, context);
-const log = new Log(canvas, context);
+const leaderboard = new Leaderboard();
+const hud = new HUD();
+const log = new Log();
 const cooldown = new Cooldown(canvas, context);
 let isSpectating = false;
 
@@ -346,7 +346,7 @@ function gameLoop() {
 
     lastPosition = position;
 
-    log.draw();
+    log.check();
     cooldown.draw();
 
     if (Controls.mouseX) {

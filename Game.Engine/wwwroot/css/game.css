@@ -488,3 +488,9 @@ table {
     top: 0;
     bottom: 0;
 }
+#log {
+    position: absolute;
+    bottom: 55px;
+    left: 15px;
+    font-size: 12pt;
+}

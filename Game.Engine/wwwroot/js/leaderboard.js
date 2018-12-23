@@ -13,9 +13,7 @@ export function clear() {
     leaderboardCenter.style.height = null;
 }
 export class Leaderboard {
-    constructor(canvas, context, settings = {}) {
-        this.context = context;
-        this.canvas = canvas;
+    constructor() {
         this.data = false;
     }
 
