@@ -387,18 +387,43 @@ table {
     position: absolute;
     top: 10px;
     right: 30px;
-    width: 200px;
+    width: 300px;
     padding: 0;
     margin: 0;
     font-size: 12pt;
 }
+
+#leaderboard-left {
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    width: 300px;
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard-center {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 300px;
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
 #leaderboard td,
-#leaderboard tr {
+#leaderboard tr,
+#leaderboard-left td,
+#leaderboard-left tr {
     height: 28px;
     margin: 0;
     padding: 0;
     border: none;
 }
+
 .arrow {
     width: 18px;
     height: 8px;

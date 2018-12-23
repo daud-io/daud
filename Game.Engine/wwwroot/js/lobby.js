@@ -20,6 +20,14 @@ function buildList(response) {
     }
 
     worldList.innerHTML = options;
+    document.querySelectorAll(".j").forEach(j =>
+        j.addEventListener("click", function() {
+            const world = this.id;
+            window.Game.primaryConnection.disconnect();
+            window.Game.primaryConnection.connect(world);
+            changeRoom(world);
+        })
+    );
 }
 
 function updateList(response) {
@@ -53,14 +61,7 @@ function refreshList() {
                 // with jquery, I'd have done this with a handler on the parent
                 // element and then looked at a $(sourceElement).data('world')
                 // not sure what a xplat/non-jq equiv would be
-                document.querySelectorAll(".j").forEach(j =>
-                    j.addEventListener("click", function() {
-                        const world = this.id;
-                        window.Game.primaryConnection.disconnect();
-                        window.Game.primaryConnection.connect(world);
-                        changeRoom(world);
-                    })
-                );
+                
             }
         });
 }

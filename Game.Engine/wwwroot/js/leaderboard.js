@@ -3,7 +3,8 @@ import { Settings } from "./settings";
 
 var record = document.getElementById("record");
 var leaderboard = document.getElementById("leaderboard");
-
+var leaderboardLeft = document.getElementById("leaderboard-left");
+var leaderboardCenter = document.getElementById("leaderboard-center");
 export class Leaderboard {
     constructor(canvas, context, settings = {}) {
         this.context = context;
@@ -17,20 +18,58 @@ export class Leaderboard {
             record.style.fontFamily = Settings.font;
             record.innerHTML = `record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`;
         }
-        let out = "";
-        for (let i = 0; i < this.data.Entries.length; i++) {
-            const entry = this.data.Entries[i];
-            const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+        if (this.data.Type == "FFA") {
+            let out = "";
+            for (let i = 0; i < this.data.Entries.length; i++) {
+                const entry = this.data.Entries[i];
+                const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 
-            out +=
-                `<tr>` +
-                `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
-                `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-                `<td>${entry.Name || "Unknown Fleet"}</td>` +
-                `<td>${entry.Score}</td>` +
-                `</tr>`;
+                out +=
+                    `<tr>` +
+                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+                    `<td>${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td>${entry.Score}</td>` +
+                    `</tr>`;
+            }
+            leaderboard.innerHTML = `<tbody>${out}</tbody>`;
+        } else if (this.data.Type == "Team") {
+            let outL = "";
+            let outR = "";
+            let outC = "";
+            for (let i = 0; i < this.data.Entries.length; i++) {
+                const entry = this.data.Entries[i];
+                const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+                if (i==0||i==1){
+                outC +=
+                    `<tr>` +
+                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+                    `<td>${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td>${entry.Score}</td>` +
+                    `</tr>`;
+                }else if (entry.Color=="cyan"){
+                    outL +=
+                    `<tr>` +
+                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+                    `<td>${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td>${entry.Score}</td>` +
+                    `</tr>`;
+                }else {
+                    outR +=
+                    `<tr>` +
+                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+                    `<td>${entry.Name || "Unknown Fleet"}</td>` +
+                    `<td>${entry.Score}</td>` +
+                    `</tr>`;
+                }
+            }
+            leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
+            leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
+            leaderboardCenter.innerHTML = `<tbody>${outC}</tbody>`;
         }
-        leaderboard.innerHTML = `<tbody>${out}</tbody>`;
     }
 
     drawTeamLeaderboardAt(entries, relativeTo, leftEdge) {
