@@ -36,6 +36,7 @@ export class Cache {
             const update = updates[i];
             var existing = this.bodies[`b-${update.ID}`];
 
+            let oldSprite = existing ? this.bodies[`b-${update.ID}`].Sprite : false;
             this.bodies[`b-${update.ID}`] = update;
 
             if (existing) {
@@ -54,6 +55,12 @@ export class Cache {
 
                 let sprite = sprites[update.Sprite];
                 let object = this.bodies[`p-${update.ID}`];
+                if (oldSprite != update.Sprite) {
+                    let texture = new PIXI.Texture.fromLoader(sprite.image);
+                    object.pivot.x = sprite.image.width / 2;
+                    object.pivot.y = sprite.image.height / 2;
+                    object.texture = texture;
+                }
                 object.position.x = update.OriginalPosition.X;
                 object.position.y = update.OriginalPosition.Y;
                 object.rotation = update.OriginalAngle;
@@ -64,7 +71,6 @@ export class Cache {
                 let sprite = sprites[update.Sprite];
                 let texture = new PIXI.Texture.fromLoader(sprite.image);
                 var object = new PIXI.Sprite(texture);
-
                 object.position.x = update.OriginalPosition.X;
                 object.position.y = update.OriginalPosition.Y;
                 object.pivot.x = sprite.image.width / 2;
