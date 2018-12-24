@@ -29,19 +29,16 @@ function buildList(response) {
         allWorlds[world.world] = world;
 
         console.log(world.image);
+
+        options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
+        options += `<tr>` + `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>` + `<td><b>${world.name}</b>: ${world.description}</td>` + `</tr>`;
+
         var img = world.image ? `<img src="${imgs[world.image]}" />` : "";
-
-        options +=
-            `<tr id="${world.world}_row" world="${world.world}" class="worldrow">` +
-            `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>` +
-            `<td><b>${world.name}</b>: ${world.description}`;
-
-        if (world.instructions || img) options += `<div class="details">${img}${world.instructions || ""}</div>`;
-
-        options += `</td></tr>`;
+        if (world.instructions || img) options += `<tr class="details"><td colspan="2">${img}${world.instructions || ""}</td></tr>`;
+        options += `</tbody>`;
     }
 
-    worldList.innerHTML = `<tbody>${options}</tbody>`;
+    worldList.innerHTML = `${options}`;
 
     document.querySelectorAll(".worldrow").forEach(worldRow =>
         worldRow.addEventListener("click", function() {

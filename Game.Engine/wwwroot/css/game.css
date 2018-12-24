@@ -366,7 +366,7 @@ table {
     color: #333;
 }
 #worldList .selected .details {
-    display: table-cell;
+    display: table-row;
 }
 
 #worldList .details img {
