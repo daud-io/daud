@@ -13,11 +13,13 @@
 
         public class Entry
         {
+            public uint FleetID { get; set; }
             public int Score { get; set; }
             public string Name { get; set; }
             public string Color { get; set; } = "white";
             public Vector2 Position { get; set; }
             public string Token { get; set; }
+            public object ModeData { get; set; }
         }
     }
 }

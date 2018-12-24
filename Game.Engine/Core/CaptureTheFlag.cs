@@ -20,17 +20,18 @@
 
         public Leaderboard LeaderboardGenerator()
         {
+
             var entries = Teams.Select(t => new Leaderboard.Entry
             {
                 Color = t.ColorName,
                 Name = t.ColorName,
                 Score = t.Score,
                 Position = t.Flag?.Position ?? Vector2.Zero,
-                //ModeData = t.Base.FlagIsHome
+                ModeData = new { flagStatus = t.Base.FlagIsHome() ? "Home" : "Taken" }
             }).ToList();
 
             var players = Player.GetWorldPlayers(World);
-
+            
             foreach (var team in Teams)
             {
                 entries.AddRange(players
@@ -38,6 +39,7 @@
                     .Where(p => p.IsAlive)
                     .Select(p => new Leaderboard.Entry
                     {
+                        FleetID = p.Fleet?.ID ?? 0,
                         Color = team.ColorName,
                         Name = p.Name,
                         Position = p.Fleet?.FleetCenter ?? Vector2.Zero,
