@@ -13,13 +13,35 @@ if (!isMobile) {
     document.getElementById("niple-buttons").style.display = "none";
 }
 
+// this script makes new ship selector work
+
 const selector = document.querySelector("#shipSelector");
+
+/*
 selector.addEventListener("change", e => {
     Controls.ship = `ship_${selector.value}` || "ship_green";
     Controls.color = selector.value || "green";
 
     save();
 });
+*/
+
+var shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
+var ships = shipSelectorSwitch.getElementsByTagName("img");
+
+for (var i = 0; i < ships.length; i++) {
+	ships[i].addEventListener("click", function() {
+		document.querySelector(".selected").classList.remove("selected");
+		var color = this.getAttribute("data-color");
+		this.classList.add("selected");
+		selector.value = color;
+		
+		Controls.ship = `ship_${selector.value}` || "ship_green";
+		Controls.color = selector.value || "green";
+		
+		save();
+	});
+}
 
 const nick = document.querySelector("#nick");
 nick.addEventListener("change", e => {
