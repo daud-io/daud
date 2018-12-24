@@ -85,7 +85,7 @@ addSprite("flag_red_2", flagScale);
 addSprite("flag_red_3", flagScale);
 addSprite("flag_red_4", flagScale);
 addSprite("flag_red_5", flagScale);
-addSprite("ctf_base");
+addSprite("ctf_base", 0.0075);
 
 addSprite("ctf_score_final");
 addSprite("ctf_score_final_blue");
