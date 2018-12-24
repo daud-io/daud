@@ -13,8 +13,11 @@
 
     <meta charset="utf-8" />
     <title>Daud.io</title>
-    <link rel="stylesheet" type="text/css" href="css/game.css">
+    <link rel="stylesheet" type="text/css" href="css/game.css" />
     <link rel="shortcut icon" type="image/png" href="favicon.ico" />
+    <!-- Font Awesome 5 & 4 icons libraries -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
 
 <body class="loading">
@@ -45,17 +48,25 @@
         <div class="spawnscreen">
             <div class="controls">
                 <div>
-                    
-
                     <div>
-                        <img id="logo" src="img/header.png" draggable="false" />
+                        <img id="logo" src="img/header.png" draggable="false">
                     </div>
-                    <div id="hintbox">
-                        Controls: Mouse to aim, click to fire, press "s" to boost!
-                    </div>
-                    <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" />
-
-                    <select id="shipSelector">
+					
+					<div id="shipSelectorSwitch">
+						<img src="img/ship_red.png" data-color="red" />
+						<img src="img/ship_pink.png" data-color="pink" />
+						<img src="img/ship_orange.png" data-color="orange" />
+						<img src="img/ship_yellow.png" data-color="yellow" />
+						<img src="img/ship_cyan.png" data-color="cyan" />
+						<img src="img/ship_green.png" class="selected" data-color="green" />
+					</div>
+					
+                    <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
+					
+					<input type="hidden" id="shipSelector" value="green" />
+					
+					<!--
+                    <select id="shipSelector" hidden>
                         <option value="green">green</option>
                         <option value="orange">orange</option>
                         <option value="pink">pink</option>
@@ -63,16 +74,17 @@
                         <option value="cyan">cyan</option>
                         <option value="yellow">yellow</option>
                     </select>
+					-->
                    
                     <div>
-                        <input type="button" id="spawn" value="Launch as guest!" />
-                        <input type="button" id="dauth" value="Login with Discord" />
+                        <input type="button" id="spawn" class="button1" value="Launch as guest!">
+                        <input type="button" id="dauth" class="button1" value="Login with Discord">
                     </div>
-                    <input type="button" id="arenas" value="Arenas" />
+                    <input type="button" id="arenas" class="button1" value="Arenas" />
                 </div>
             </div>
             <div id="worlds" class="closed">
-                <div id="topbar"><button id="wrefresh">refresh</button><button id="wcancel">Cancel</button></div>
+                <div id="topbar"><button id="wrefresh" class="button1">refresh</button><button id="wcancel" class="button1">Cancel</button></div>
                 <table id="worldList">
                 </table>
             </div>
@@ -80,31 +92,46 @@
                 <h1>Settings</h1>
 
                 <label for="settingsThemeSelector">Theme Selection</label>
-                <select id="settingsThemeSelector">
+                <select id="settingsThemeSelector" class="button1">
                     <option value="">default</option>
                     <option value="3ryhaa6boenvv2k">Bitty</option>
                     <option value="3ds2agh4z76feci">Retro</option>
                 </select>
-                <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" value="" />
-                <br />
+                <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" class="button1" value="">
+                <br>
+                <label for="settingsMouseOneButton">Mouse One-Button Mode</label>
+                <select id="settingsMouseOneButton" class="button1">
+                    <option value="0">disabled</option>
+                    <option value="5">5ms</option>
+                    <option value="10">10ms</option>
+                    <option value="15">15ms</option>
+                    <option value="30">30ms</option>
+                    <option value="45">45ms</option>
+                    <option value="60">60ms</option>
+                    <option value="75">75ms</option>
+                    <option value="90">90ms</option>
+                    <option value="105">105ms</option>
+                    <option value="120">120ms</option>
+                    <option value="135">135ms</option>
+                </select>
                 <label for="settingsMouseScale">Mouse Sensitivity</label>
-                <select id="settingsMouseScale">
+                <select id="settingsMouseScale" class="button1" class="button1">
                     <option value="1">sensitive</option>
                     <option value="4">medium</option>
                     <option value="10">straight-shooter</option>
                 </select>
 
-                <br />
+                <br>
 
                 <label for="settingsBackground">Background</label>
-                <select id="settingsBackground">
+                <select id="settingsBackground" class="button1">
                     <option value="none">none</option>
                     <option value="slow">slow</option>
                     <option value="fast">fast</option>
                 </select>
 
                 <label for="settingsLog">Log Length</label>
-                <select id="settingsLog">
+                <select id="settingsLog" class="button1">
                     <option value="0">none</option>
                     <option value="1">1 line</option>
                     <option value="2">2 lines</option>
@@ -112,61 +139,96 @@
                     <option value="4">4 lines</option>
                     <option value="10">historian</option>
                 </select>
-                <br />
+                <br>
 
                 <label for="settingsBandwidth">Bandwidth</label>
-                <select id="settingsBandwidth">
+                <select id="settingsBandwidth" class="button1">
                     <option value="100">high</option>
                     <option value="50">medium</option>
                     <option value="25">low</option>
                 </select>
-                <br />
+                <br>
 
                 <label for="settingsFont">Font</label>
-                <select id="settingsFont">
+                <select id="settingsFont" class="button1">
                     <option value="sans-serif">default</option>
                     <option value="&quot;Exo 2&quot;">experimental</option>
                 </select>
-                <br />
-
-                <label for="settingsLeaderboardEnabled">Show Leaderboard</label>
-                <input type="checkbox" id="settingsLeaderboardEnabled" />
                 <br>
+				
+				<p>
+                <label for="settingsLeaderboardEnabled">Show Leaderboard</label>
+				<label class="switch">
+					<input type="checkbox" id="settingsShowHitboxes">
+					<span class="slider round"></span>
+				</label>
+				</p>
+				
+				<p>
                 <label for="settingsHUDEnabled">Show Stats</label>
-                <input type="checkbox" id="settingsHUDEnabled" />
-                <br />
-
+				<label class="switch">
+					<input type="checkbox" id="settingsHUDEnabled">
+					<span class="slider round"></span>
+				</label>
+				</p>
+				
+				<p>
                 <label for="settingsNamesEnabled">Show Names</label>
-                <input type="checkbox" id="settingsNamesEnabled" />
-                <br />
+				<label class="switch">
+					<input type="checkbox" id="settingsNamesEnabled">
+					<span class="slider round"></span>
+				</label>
+				</p>
+                
+                <p>
                 <label for="settingsShowOwnName">Show OWN name</label>
-                <input type="checkbox" id="settingsShowOwnName" />
-                <br />
+                <label class="switch">
+					<input type="checkbox" id="settingsShowOwnName">
+					<span class="slider round"></span>
+				</label>
+                </p>
 
+                <p>
                 <label for="settingsShowCooldown">Show Cooldown Timer</label>
-                <input type="checkbox" id="settingsShowCooldown" />
-                <br />
-
+				<label class="switch">
+					<input type="checkbox" id="settingsShowCooldown">
+					<span class="slider round"></span>
+				</label>
+                </p>
+				
+				<p>
                 <label for="settingsShowHitboxes">Show Hitboxes</label>
-                <input type="checkbox" id="settingsShowHitboxes" />
-                <br />
+				<label class="switch">
+					<input type="checkbox" id="settingsShowHitboxes">
+					<span class="slider round"></span>
+				</label>
+                </p>
 
-                <label for="settingsShowPickupSprites">Show Rocket Indicator</label>
-                <input type="checkbox" id="settingsShowPickupSprites" />
-                <br />
+                <p>
+                <label for="settingsShowPickupSprites">Show Hitboxes</label>
+				<label class="switch">
+					<input type="checkbox" id="settingsShowPickupSprites">
+					<span class="slider round"></span>
+				</label>
+                </p>
 
-                <label for="settingsShowThrusterSprites">Show Thruster Animations</label>
-                <input type="checkbox" id="settingsShowThrusterSprites" />
-                <br />
+                <p>
+                <label for="settingsShowThrusterSprites">Show Hitboxes</label>
+				<label class="switch">
+					<input type="checkbox" id="settingsShowThrusterSprites">
+					<span class="slider round"></span>
+				</label>
+                </p>
 
-                <input type="button" id="settingsSave" value="Save settings" />
-                <input type="button" id="settingsCancel" value="Cancel (no changes)" />
-                <br />
-                <input type="button" id="settingsReset" value="Reset to default (reloads the page)" />
+                <input type="button" id="settingsSave" class="button1" value="Save settings" />
+                <input type="button" id="settingsCancel" class="button1" value="Cancel (no changes)" />
+                <br>
+                <input type="button" id="settingsReset" class="button1" value="Reset to default (reloads the page)" />
             </div>
             <div class="social">
 
                 <div id="twitterpated">
+					<h4>Changelog</h4>
                     <table>
                         <tr>
                             <td>
@@ -196,24 +258,42 @@
                         -->
                     </table>
                 </div>
+				
+				<!--
+                <div class="social_divider" hidden>
+                    <a href="https://discord.gg/SwTHz8g" target="_blank"><img id="discord" src="/Users/micha/OneDrive/Documents/GitHub/daud/Game.Engine/wwwroot/dist/discord.9566f5a7.png"></a>
+                    <a href="https://reddit.com/r/daudio" target="_blank"><img id="reddit" src="/Users/micha/OneDrive/Documents/GitHub/daud/Game.Engine/wwwroot/dist/reddit.62419125.png"></a>
 
-                <div class="social_divider">
-                    <a href="https://discord.gg/SwTHz8g" target="_blank"><img id="discord" src="img/discord.png" /></a>
-                    <a href="https://reddit.com/r/daudio" target="_blank"><img id="reddit" src="img/reddit.png" /></a>
-
-                    <img id="controls_instructions" src="img/controls.png" />
+                    <img id="controls_instructions" src="/Users/micha/OneDrive/Documents/GitHub/daud/Game.Engine/wwwroot/dist/controls.f289ed36.png">
 
                     <div id="spectate_container">
-                        <input type="button" id="settings" value="Settings" />
+                        <input type="button" id="settings" class="button1" value="Settings">
                         <br>
-                        <input type="button" id="spectate" value="Spectate" />
+                        <input type="button" id="spectate" class="button1" value="Spectate">
                     </div>
                 </div>
 
-                <div class="social_divider">
-                    <a href="https://iogames.space" target="_blank"><img id="iogamesspace" src="img/linkback.iogames.space.png" /><span>More IO Games</span></a>
-                    <a href="https://titotu.io" target="_blank"><img id="titotu" src="img/linkback.titotu.io.png" /></a>
+                <div class="social_divider" hidden>
+                    <a href="https://iogames.space" target="_blank"><img id="iogamesspace" src="/Users/micha/OneDrive/Documents/GitHub/daud/Game.Engine/wwwroot/dist/linkback.iogames.space.11f3936c.png"><span>More IO Games</span></a>
+                    <a href="https://titotu.io" target="_blank"><img id="titotu" src="/Users/micha/OneDrive/Documents/GitHub/daud/Game.Engine/wwwroot/dist/linkback.titotu.io.6dcfe308.png"></a>
                 </div>
+				-->
+				
+				<div id="spectate_container">
+					<input type="button" id="settings" class="button1" value="Settings">
+					<br>
+					<input type="button" id="spectate" class="button1" value="Spectate">
+				</div>
+				
+				<div id="socialMediaContainer">
+					<a href="https://discord.gg/SwTHz8g" target="_blank"><img id="discord" src="img/discord.png" /></a>
+					<a href="https://reddit.com/r/daudio" target="_blank"><img id="reddit" src="img/reddit.png" /></a>
+					<a href="https://iogames.space" target="_blank"><img id="iogamesspace" src="img/linkback.iogames.space.png" /></a>
+					<a href="https://titotu.io" target="_blank"><img id="titotu" src="img/linkback.titotu.io.png" /></a>
+				</div>
+				
+				<img id="controls_instructions" src="/Users/micha/OneDrive/Documents/GitHub/daud/Game.Engine/wwwroot/dist/controls.f289ed36.png">
+				
             </div>
 
             <div id="titan" style="display: none;">
@@ -222,13 +302,75 @@
 
         </div>
     </div>
+    
+    <div id="fullPageCard" class="hidden">
+		<div id="openArrow">
+			<i class="fas fa-angle-up"></i> about
+		</div>
+		<div id="close">
+			<i class="fa fa-close"></i>
+		</div>
+		<h1>About daud.io</h1>
+		<div id="fullPageCardContainer">
+		
+			<h2>WHAT IS DAUD.IO?</h2>
 
+			<p>Daud.io is a fleet-based space combat game, where players are pitted against each other in a free for all arena. The game’s skill-based combat system involves accumulating a fleet over time by attacking enemies, then leveraging the individual directionality of your fleets bullets to outmaneuver your enemies and destroy them. Each player begins the game with a small fleet of basic ships, each controlled independently by your mouse pointer. By destroying enemy fleets and collecting special power ups, your fleet grows in power, allowing you to take on the most difficult foes. Size isn’t everything, however, and through our unique combat system, a small fleet in the hands of a skilled player can easily overpower the largest armada.</p>
+
+			<p>To begin your journey in the daud.io arena, start by focusing your efforts on the smaller ships flying around the arena. Use these to grow your fleet. Be wary of other players while your fleet is too small, as they can easily take advantage of your small numbers to destroy you. As you grow your fleet, leverage the power ups scattered around the map to gain an advantage over your foes. Each ship in your fleet moves individually towards your mouse, so to best stronger players you will need to utilize different bullet spreads to both weaken their numbers with larger volleys, then finishing them off with concentrated bursts.</p>
+
+			<p>If you have any questions or feedback, feel free to head over to our discord server or subreddit. Links to both can be found on the intro screen of our game.</p>
+
+			<p>Now, we would like to take a minute to thank our sponsors, of which we have none. If you enjoyed this game, please tell all your friends, and take a minute to reflect on the availability of Indian Ocean based web entertainment. We hope you enjoy this artisanal electronic gaming experience if you decide to partake in our creation. We hope you have a wonderful day, and please enjoy your flight.</p>
+		
+			<h2>HOW TO PLAY:</h2>
+
+			Your ships go towards your mouse - move your mouse across the screen to control them.<br />
+			Press space or click the mouse to shoot<br />
+			Press S for a speed boost - but beware! You lose half your fleet doing this!<br />
+			Bullets that hit other players give you more ships!<br />
+			Kill other players to gain points<br />
+			Missile power ups make you shoot homing missile - use them wisely
+
+			<h2>ADVANCED GAMEPLAY:</h2>
+
+			Fleet speed depends on number of ships - smaller fleets are faster<br />
+			Bullet speed is also modified by ship size<br />
+			Circular barriers destroy bullets, use them for cover<br />
+			Red arena borders slow down your ship - be careful of them<br />
+			Use splitting to flank your opponents<br />
+			Position yourself wisely to trap your opponents between other players<br />
+			Homing missiles can be shot down by normal bullets<br />
+			Spread your bullets in an arc to hit more enemies, or concentrate your bullets to deal more damage in a smaller area.
+			
+			<h2>More good stuff</h2>
+			
+			<iframe width="280" height="157" src="https://www.youtube.com/embed/SpBXw-fv0oc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br /><br />
+			<p>Also visit daud.io game official webpage: <a href="https://daudnetwork.com" target="_blank">daudnetwork.com</a></p>
+		</div>
+	</div>
+    
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/flatbuffers.js"></script>
     <script type="text/javascript" src="js/game_generated.js"></script>
 
     <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="js/panel.js"></script>
+    
+    <script type="text/javascript">
+		
+		// about card open and close script
+		
+		document.getElementById("openArrow").addEventListener("click", function() {
+			document.getElementById("fullPageCard").classList.remove("hidden");
+		});
+		
+		document.getElementById("close").addEventListener("click", function() {
+			document.getElementById("fullPageCard").classList.add("hidden");
+		});
+	
+	</script>
+    
 </body>
 
 </html>
