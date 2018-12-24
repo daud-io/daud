@@ -54,8 +54,6 @@ export class Cache {
 
                 let sprite = sprites[update.Sprite];
                 let object = this.bodies[`p-${update.ID}`];
-                // object.texture = new PIXI.Texture.fromLoader(sprite.image);
-                // object.textureDirty = true;
                 object.position.x = update.OriginalPosition.X;
                 object.position.y = update.OriginalPosition.Y;
                 object.rotation = update.OriginalAngle;
@@ -69,10 +67,12 @@ export class Cache {
 
                 object.position.x = update.OriginalPosition.X;
                 object.position.y = update.OriginalPosition.Y;
+                object.pivot.x = sprite.image.width / 2;
+                object.pivot.y = sprite.image.height / 2;
                 object.rotation = update.OriginalAngle;
                 object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
-                this.container.addChild(object);
 
+                this.container.addChild(object);
                 this.bodies[`p-${update.ID}`] = object;
                 Cache.count++;
             }

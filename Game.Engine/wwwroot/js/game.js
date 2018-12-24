@@ -287,8 +287,7 @@ const sizeCanvas = () => {
 
     canvas.width = width;
     canvas.height = height;
-    canvas2.width = width;
-    canvas2.height = height;
+    app.renderer.resize(width, height);
 };
 
 sizeCanvas();
@@ -327,8 +326,7 @@ doPing();
 setInterval(doPing, 1000);
 
 // Game Loop
-function gameLoop() {
-    requestAnimationFrame(gameLoop);
+app.ticker.add(() => {
     const latency = connection.minLatency || 0;
     gameTime = performance.now() + serverTimeOffset - latency / 2;
     frameCounter++;
@@ -345,10 +343,9 @@ function gameLoop() {
         camera.moveTo(position.X, position.Y);
         camera.zoomTo(5500);
     }
-
-    container.pivot.x = position.X + canvas.width / 2;
-    container.pivot.y = position.Y + canvas.height / 2;
-    container.scale.set(canvas.width / 5500, canvas.height / 5500);
+    container.scale.set(canvas.width / 5500, canvas.width / 5500);
+    container.pivot.x = position.X - canvas.width * 2;
+    container.pivot.y = position.Y - canvas.height * 2;
 
     camera.begin();
     background.draw(position.X, position.Y);
@@ -378,9 +375,7 @@ function gameLoop() {
     if (Game.Controls.right || Game.Controls.down)
         angle += 0.1;
     */
-}
-
-requestAnimationFrame(gameLoop);
+});
 
 document.body.classList.remove("loading");
 

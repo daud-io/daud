@@ -203,6 +203,9 @@ export class Renderer {
 
                 const position = interpolator.projectObject(object, currentTime);
 
+                const body2 = cache.bodies[`p-${body.ID}`];
+                body2.position.x = position.X;
+                body2.position.y = position.Y;
                 // keep track of which "groups" are used, and collect the points of all the objects
                 // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
                 if (object.Group) {
