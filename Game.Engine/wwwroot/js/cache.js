@@ -1,5 +1,8 @@
+import { sprites } from "./renderer";
+
 export class Cache {
-    constructor() {
+    constructor(container) {
+        this.container = container;
         this.clear();
     }
 
@@ -16,6 +19,7 @@ export class Cache {
         for (i = 0; i < deletes.length; i++) {
             var deleteKey = deletes[i];
             var key = `b-${deleteKey}`;
+            this.container.removeChild(this.bodies[`p-${deleteKey}`]);
             if (key in this.bodies) Cache.count--;
             delete this.bodies[key];
         }
@@ -33,6 +37,7 @@ export class Cache {
             var existing = this.bodies[`b-${update.ID}`];
 
             this.bodies[`b-${update.ID}`] = update;
+
             if (existing) {
                 existing.previous = false;
                 existing.obsolete = time;
@@ -46,9 +51,31 @@ export class Cache {
 
                 if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
                 if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
+
+                let sprite = sprites[update.Sprite];
+                let object = this.bodies[`p-${update.ID}`];
+                // object.texture = new PIXI.Texture.fromLoader(sprite.image);
+                // object.textureDirty = true;
+                object.position.x = update.OriginalPosition.X;
+                object.position.y = update.OriginalPosition.Y;
+                object.rotation = update.OriginalAngle;
+                object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
             }
 
-            if (!existing) Cache.count++;
+            if (!existing) {
+                let sprite = sprites[update.Sprite];
+                let texture = new PIXI.Texture.fromLoader(sprite.image);
+                var object = new PIXI.Sprite(texture);
+
+                object.position.x = update.OriginalPosition.X;
+                object.position.y = update.OriginalPosition.Y;
+                object.rotation = update.OriginalAngle;
+                object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
+                this.container.addChild(object);
+
+                this.bodies[`p-${update.ID}`] = object;
+                Cache.count++;
+            }
         }
 
         // update groups that should be here

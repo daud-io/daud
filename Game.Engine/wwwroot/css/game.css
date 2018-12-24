@@ -494,3 +494,9 @@ table {
     left: 15px;
     font-size: 12pt;
 }
+
+#gameCanvas2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+}

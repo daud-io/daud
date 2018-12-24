@@ -119,8 +119,9 @@ addSprite("thruster_retro_yellow");
 addSprite("circles");
 
 export class Renderer {
-    constructor(context, settings = {}) {
+    constructor(context, container, settings = {}) {
         this.context = context;
+        this.container = container;
         this.view = false;
         this.worldSize = 6000;
 

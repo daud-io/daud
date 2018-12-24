@@ -1,6 +1,6 @@
 ﻿import "babel-polyfill";
 
-import { Renderer, spriteIndices } from "./renderer";
+import { Renderer, spriteIndices, sprites } from "./renderer";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
@@ -16,10 +16,17 @@ import { Settings } from "./settings";
 import { Events } from "./events";
 import "./hintbox";
 import { blur } from "./lobby";
+import * as PIXI from "pixi.js";
 
 const canvas = document.getElementById("gameCanvas");
+const canvas2 = document.getElementById("gameCanvas2");
+
+const app = new PIXI.Application({ view: canvas2, transparent: true });
+const container = new PIXI.Container();
+app.stage.addChild(container);
+
 const context = canvas.getContext("2d");
-const renderer = new Renderer(context, {});
+const renderer = new Renderer(context, container, {});
 const background = new Background(canvas, context, {});
 const camera = new Camera(context);
 const interpolator = new Interpolator();
@@ -32,7 +39,7 @@ let isSpectating = false;
 let angle = 0.0;
 let aimTarget = { X: 0, Y: 0 };
 
-let cache = new Cache();
+let cache = new Cache(container);
 let view = false;
 let serverTimeOffset = false;
 let lastOffset = false;
@@ -219,7 +226,7 @@ setInterval(() => {
 document.getElementById("wcancel").addEventListener("click", () => {
     worlds.classList.add("closed");
     blur();
-    cache = new Cache();
+    cache = new Cache(container);
     clearLeaderboards();
 });
 
@@ -280,6 +287,8 @@ const sizeCanvas = () => {
 
     canvas.width = width;
     canvas.height = height;
+    canvas2.width = width;
+    canvas2.height = height;
 };
 
 sizeCanvas();
@@ -336,6 +345,10 @@ function gameLoop() {
         camera.moveTo(position.X, position.Y);
         camera.zoomTo(5500);
     }
+
+    container.pivot.x = position.X + canvas.width / 2;
+    container.pivot.y = position.Y + canvas.height / 2;
+    container.scale.set(canvas.width / 5500, canvas.height / 5500);
 
     camera.begin();
     background.draw(position.X, position.Y);
