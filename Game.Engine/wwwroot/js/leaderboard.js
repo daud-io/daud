@@ -27,9 +27,9 @@ export class Leaderboard {
 
         //Hide or show elements based on Arena.
         if (this.data.Type == "CTF") {
-            document.getElementById('ctf_arena').classList.remove('hide');
+            document.getElementById("ctf_arena").classList.remove("hide");
         } else {
-            document.getElementById('ctf_arena').classList.add('hide');
+            document.getElementById("ctf_arena").classList.add("hide");
         }
 
         if (this.data.Type == "FFA") {
@@ -101,27 +101,27 @@ export class Leaderboard {
             const self = this;
 
             const flagStatus = {
-                'cyan': self.data.Entries[0].ModeData.flagStatus,
-                'red': self.data.Entries[1].ModeData.flagStatus
-            }
+                cyan: self.data.Entries[0].ModeData.flagStatus,
+                red: self.data.Entries[1].ModeData.flagStatus
+            };
 
-            const cyanFlagStatus = document.getElementById('ctf_cyan').getElementsByClassName('flag_status')[0];
-            const redFlagStatus = document.getElementById('ctf_red').getElementsByClassName('flag_status')[0];
+            const cyanFlagStatus = document.getElementById("ctf_cyan").getElementsByClassName("flag_status")[0];
+            const redFlagStatus = document.getElementById("ctf_red").getElementsByClassName("flag_status")[0];
 
             if (flagStatus.cyan == "Home") {
-                cyanFlagStatus.getElementsByClassName('home')[0].classList.remove('hide');
-                cyanFlagStatus.getElementsByClassName('taken')[0].classList.add('hide');
+                cyanFlagStatus.getElementsByClassName("home")[0].classList.remove("hide");
+                cyanFlagStatus.getElementsByClassName("taken")[0].classList.add("hide");
             } else if (flagStatus.cyan == "Taken") {
-                cyanFlagStatus.getElementsByClassName('home')[0].classList.add('hide');
-                cyanFlagStatus.getElementsByClassName('taken')[0].classList.remove('hide');
+                cyanFlagStatus.getElementsByClassName("home")[0].classList.add("hide");
+                cyanFlagStatus.getElementsByClassName("taken")[0].classList.remove("hide");
             }
 
             if (flagStatus.red == "Home") {
-                redFlagStatus.getElementsByClassName('home')[0].classList.remove('hide');
-                redFlagStatus.getElementsByClassName('taken')[0].classList.add('hide');
+                redFlagStatus.getElementsByClassName("home")[0].classList.remove("hide");
+                redFlagStatus.getElementsByClassName("taken")[0].classList.add("hide");
             } else if (flagStatus.red == "Taken") {
-                redFlagStatus.getElementsByClassName('home')[0].classList.add('hide');
-                redFlagStatus.getElementsByClassName('taken')[0].classList.remove('hide');
+                redFlagStatus.getElementsByClassName("home")[0].classList.add("hide");
+                redFlagStatus.getElementsByClassName("taken")[0].classList.remove("hide");
             }
 
             const findTeam = teamName => {

@@ -344,8 +344,8 @@ app.ticker.add(() => {
         camera.zoomTo(5500);
     }
     container.scale.set(canvas.width / 5500, canvas.width / 5500);
-    container.pivot.x = position.X - canvas.width * 2;
-    container.pivot.y = position.Y - canvas.height * 2;
+    container.pivot.x = position.X - 5500 / 2;
+    container.pivot.y = position.Y - (5500 / 2) * (9 / 16);
 
     camera.begin();
     background.draw(position.X, position.Y);
