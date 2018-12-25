@@ -17,7 +17,7 @@ import { blur } from "./lobby";
 import * as PIXI from "pixi.js";
 // import "./hintbox";
 
-const size = {width: 1000, height: 500};
+const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
 
 const app = new PIXI.Application({ view: canvas, transparent: true });

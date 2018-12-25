@@ -1,10 +1,11 @@
 import { fetch } from "whatwg-fetch";
 
-import { sprites } from "./renderer";
+import { sprites, sprite } from "./renderer";
 import { blur } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
 import { textures } from "./cache";
+import * as PIXI from "pixi.js";
 
 export const Settings = {
     theme: false,
@@ -117,10 +118,8 @@ async function theme(v) {
                         const urlCreator = window.URL || window.webkitURL;
                         const url = urlCreator.createObjectURL(blob);
                         if (element[0] == "bg") {
-                            // background.src = url;
-                            // background.onload = () => {
-                            //     setPattern();
-                            // };
+                            const background = new PIXI.Texture.fromImage(url);
+                            sprite.texture = background;
                         } else {
                             sprites[element[0]].image.src = url;
                             textures[element[0]] = new PIXI.Texture.fromImage(url);

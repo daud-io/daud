@@ -1,6 +1,5 @@
 import { Settings } from "./settings";
 import images from "../img/*.png";
-// import { FleetRenderer } from "./renderers/fleetRenderer";
 
 function sprite(name, scale) {
     const img = new Image();
@@ -118,25 +117,18 @@ addSprite("thruster_retro_cyan");
 addSprite("thruster_retro_yellow");
 addSprite("circles");
 
+const background = new PIXI.Texture.fromImage(images["bg"]);
+export const sprite = new PIXI.extras.TilingSprite(background, 200000, 200000);
+sprite.tileScale.set(10, 10);
+sprite.position.x = -100000;
+sprite.position.y = -100000;
+
 export class Renderer {
     constructor(container, settings = {}) {
         this.container = container;
         this.view = false;
         this.worldSize = 6000;
 
-        // let width;
-        // let height;
-        // if ((window.innerWidth * 9) / 16 < window.innerHeight) {
-        //     width = window.innerWidth;
-        // } else {
-        //     width = (height * 16) / 9;
-        // }
-    
-        let background = new PIXI.Texture.fromImage(images["bg"]);
-        let sprite = new PIXI.extras.TilingSprite(background, 200000, 200000);
-        sprite.tileScale.set(10,10);//5500 / width, 5500 / width);
-        sprite.position.x = -100000;
-        sprite.position.y = -100000;
         this.container.addChild(sprite);
 
         var graphics = new PIXI.Graphics();
@@ -155,8 +147,6 @@ export class Renderer {
         graphics.drawRect(-this.worldSize, -this.worldSize, this.worldSize * 2, this.worldSize * 2);
 
         this.container.addChild(graphics);
-
-        
     }
 
     draw(cache, interpolator, currentTime, fleetID) {
