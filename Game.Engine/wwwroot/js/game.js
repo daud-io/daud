@@ -288,6 +288,7 @@ const sizeCanvas = () => {
     canvas.width = width;
     canvas.height = height;
     app.renderer.resize(width, height);
+    container.scale.set(width / 5500, width / 5500);
 };
 
 sizeCanvas();
@@ -343,7 +344,6 @@ app.ticker.add(() => {
         camera.moveTo(position.X, position.Y);
         camera.zoomTo(5500);
     }
-    container.scale.set(canvas.width / 5500, canvas.width / 5500);
     container.pivot.x = position.X - 5500 / 2;
     container.pivot.y = position.Y - (5500 / 2) * (9 / 16);
 
