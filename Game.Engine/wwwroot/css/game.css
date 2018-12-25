@@ -1,9 +1,5 @@
 ﻿@import url("https://fonts.googleapis.com/css?family=Exo+2");
 
-* {
-    outline: none;
-}
-
 html,
 body {
     width: 100%;
@@ -54,15 +50,6 @@ body {
     /* Dropdown effect Learnt From: https://davidwalsh.name/css-slide. Doesnt work as expected */
     overflow-y: hidden;
     max-height: 500px;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-    -moz-transition-property: all;
-    -moz-transition-duration: 0.5s;
-    -moz-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-    -ms-transition-property: all;
-    -ms-transition-duration: 0.5s;
-    -ms-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
     transition-property: all;
     transition-duration: 0.5s;
     transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
@@ -104,8 +91,6 @@ body {
 #logo {
     width: 90vmin;
     image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
 }
 
 #hintbox {
@@ -254,12 +239,11 @@ a {
     border-radius: 5px;
     color: #9d9d9d;
     background: none;
-    padding: 15px 15px 15px 15px;
-    margin: 10px 5px 10px 5px;
+    padding: 10px;
+    margin: 1vh 0.5vh;
     font-size: 0.75rem;
     color: white;
     text-transform: uppercase;
-    -webkit-transition: border 1s, color 1s; /* Safari */
     transition: border 1s, color 1s;
 }
 
@@ -282,7 +266,6 @@ a {
     font-size: 2rem;
     color: white;
     margin: 0 0 10px 0;
-    -webkit-transition: border-bottom 1s; /* Safari */
     transition: border-bottom 1s;
     width: 20rem;
 }
@@ -293,7 +276,7 @@ a {
 
 #shipSelectorSwitch img {
     transform: rotate(-90deg);
-    width: 4rem;
+    width: 8vh;
     margin: 0 5px 0 5px;
     cursor: pointer;
     transition: transform 0.6s;
@@ -318,17 +301,11 @@ a {
 }
 
 select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
 }
 
 .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+    user-select: none;
 }
 
 #ctf_arena {
@@ -467,12 +444,34 @@ table {
     display: none;
 }
 
+#worlds {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+    background: rgba(0, 0, 50, 0.8);
+    z-index: 3;
+    overflow-y: scroll;
+    padding: 3em;
+    opacity: 1;
+    transition: 0.5s opacity ease-in-out;
+}
+
+#worldList {
+    width: 100%;
+}
+.blur {
+    filter: blur(10px);
+}
+
 /* The switch - the box around the slider */
 .switch {
     position: relative;
     display: inline-block;
     width: 60px;
-    height: 34px;
+    height: 17px;
 }
 
 /* Hide default HTML checkbox */
@@ -491,19 +490,17 @@ table {
     right: 0;
     bottom: 0;
     background-color: #ccc;
-    -webkit-transition: 0.4s;
     transition: 0.4s;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 26px;
-    width: 26px;
+    height: 13px;
+    width: 13px;
     left: 4px;
-    bottom: 4px;
+    bottom: 2px;
     background-color: white;
-    -webkit-transition: 0.4s;
     transition: 0.4s;
 }
 
@@ -542,9 +539,7 @@ input:focus + .slider {
     z-index: -2 !important;
 }
 input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
+    transform: translateX(39px);
 }
 
 /* Rounded sliders */
@@ -613,11 +608,7 @@ input:checked + .slider:before {
 
 #fullPageCard #fullPageCardContainer {
     text-align: justify;
-    -webkit-column-count: 3; /* Chrome, Safari, Opera */
-    -moz-column-count: 3; /* Firefox */
     column-count: 3;
-    -webkit-column-gap: 40px; /* Chrome, Safari, Opera */
-    -moz-column-gap: 40px; /* Firefox */
     column-gap: 40px;
     margin: 0 40px 0 40px;
     overflow-y: auto;

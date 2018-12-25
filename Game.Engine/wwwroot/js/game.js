@@ -14,7 +14,7 @@ import { Connection } from "./connection";
 import { token } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
-import "./hintbox";
+// import "./hintbox";
 import { blur } from "./lobby";
 import * as PIXI from "pixi.js";
 

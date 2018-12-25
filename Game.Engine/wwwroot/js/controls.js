@@ -13,19 +13,6 @@ if (!isMobile) {
     document.getElementById("nipple-controls").style.display = "none";
 }
 
-// this script makes new ship selector work
-
-const selector = document.querySelector("#shipSelector");
-
-/*
-selector.addEventListener("change", e => {
-    Controls.ship = `ship_${selector.value}` || "ship_green";
-    Controls.color = selector.value || "green";
-
-    save();
-});
-*/
-
 var shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
 var ships = shipSelectorSwitch.getElementsByTagName("img");
 
@@ -34,10 +21,9 @@ for (var i = 0; i < ships.length; i++) {
         document.querySelector(".selected").classList.remove("selected");
         var color = this.getAttribute("data-color");
         this.classList.add("selected");
-        selector.value = color;
 
-        Controls.ship = `ship_${selector.value}` || "ship_green";
-        Controls.color = selector.value || "green";
+        Controls.ship = `ship_${color}` || "ship_green";
+        Controls.color = color || "green";
 
         save();
     });
@@ -215,9 +201,6 @@ if (savedNick !== undefined) {
 
 if (savedColor !== undefined) {
     Controls.color = savedColor;
-    selector.value = savedColor;
+    document.querySelector(".selected").classList.remove("selected");
+    shipSelectorSwitch.querySelector(`img[data-color="${savedColor}"`).classList.add("selected");
 }
-
-const event = document.createEvent("Event");
-event.initEvent("change", true, true);
-selector.dispatchEvent(event);

@@ -129,8 +129,7 @@ export class Renderer {
     }
 
     draw(cache, interpolator, currentTime, fleetID) {
-        if (this.view) {
-            const pv = this.view;
+        // if (this.view) {
             const ctx = this.context;
 
             // Draw the edge of the universe
@@ -175,16 +174,6 @@ export class Renderer {
 
             // the bit below was causing 7fps on a firefox instance. seemed to be leaking a path?
             // `ctx.beginPath(); ctx.fill();` reset it and restored things to 60fps
-            /*
-              
-            I'M BAD, DON'T USE ME!
-                ctx.beginPath();
-                ctx.lineWidth = edgeWidth * 2;
-                ctx.strokeStyle = "rgba(255,0,0,0.1)";
-                ctx.rect(-this.worldSize - edgeWidth, -this.worldSize - edgeWidth, 2 * this.worldSize + 2 * edgeWidth, 2 * this.worldSize + 2 * edgeWidth);
-                ctx.stroke();
-            I'M BAD, DON'T USE ME!
-            */
 
             ctx.restore();
 
@@ -237,28 +226,6 @@ export class Renderer {
                     ctx.fill();
                     ctx.restore();
                 }
-
-                if (group && group.group && group.group.Type == 1) {
-                    this.fleetRenderer.draw(cache, interpolator, currentTime, object, group, position);
-                } else {
-                    // draw the sprite
-                    const sprite = object.Sprite != null ? sprites[object.Sprite] : false;
-                    if (sprite) {
-                        ctx.save();
-                        ctx.translate(position.X, position.Y);
-
-                        const spriteWidth = sprite.image.width;
-                        const spriteHeight = sprite.image.height;
-
-                        ctx.rotate(position.Angle);
-                        ctx.scale(sprite.scale, sprite.scale);
-                        ctx.scale(object.Size, object.Size);
-
-                        ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
-
-                        ctx.restore();
-                    }
-                }
             }, this);
 
             // draw labels on groups
@@ -285,7 +252,7 @@ export class Renderer {
                     }
                 }
             }
-        }
+        // }
     }
 
     colorValue(colorName) {
