@@ -5,6 +5,7 @@ import { img as background, setPattern } from "./background";
 import { blur } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
+import { textures } from "./cache";
 
 export const Settings = {
     theme: false,
@@ -22,7 +23,7 @@ export const Settings = {
     mouseOneButton: 0,
     showPickupSprites: false,
     showThrusterSprites: true,
-    showOwnName: false
+    showOwnName: true
 };
 
 function parseQuery(queryString) {
@@ -126,6 +127,7 @@ async function theme(v) {
                             };
                         } else {
                             sprites[element[0]].image.src = url;
+                            textures[element[0]] = new PIXI.Texture.fromImage(url);
                             if (element[1]) {
                                 sprites[element[0]].scale = element[1];
                                 if (element[0].startsWith("ship")) sprites[element[0]].scale = 0.03;

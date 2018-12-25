@@ -28,8 +28,6 @@ function buildList(response) {
     for (var world of response) {
         allWorlds[world.world] = world;
 
-        console.log(world.image);
-
         options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
         options += `<tr>` + `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>` + `<td><b>${world.name}</b>: ${world.description}</td>` + `</tr>`;
 
@@ -48,7 +46,7 @@ function buildList(response) {
 }
 
 document.getElementById("join").addEventListener("click", function() {
-    const world = document.querySelector(".selected").getAttribute("world");
+    const world = document.querySelector(".worldrow.selected").getAttribute("world");
     window.Game.primaryConnection.disconnect();
     window.Game.primaryConnection.connect(world);
     changeRoom(world);

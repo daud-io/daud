@@ -1,5 +1,5 @@
 import { sprites } from "./renderer";
-
+export const textures = {};
 export class Cache {
     constructor(container) {
         this.container = container;
@@ -9,7 +9,17 @@ export class Cache {
     clear() {
         this.bodies = {};
         this.groups = {};
+        // this.textures = {};
         Cache.count = 0;
+    }
+
+    empty() {
+        for (let key in this.bodies) {
+            if (key.startsWith("p-")) {
+                this.container.removeChild(this.bodies[key]);
+            }
+        }
+        this.clear();
     }
 
     update(updates, deletes, groups, groupDeletes, time) {
@@ -21,6 +31,7 @@ export class Cache {
             var key = `b-${deleteKey}`;
             this.container.removeChild(this.bodies[`p-${deleteKey}`]);
             if (key in this.bodies) Cache.count--;
+            delete this.bodies[`p-${deleteKey}`];
             delete this.bodies[key];
         }
 
@@ -56,7 +67,8 @@ export class Cache {
                 let sprite = sprites[update.Sprite];
                 let object = this.bodies[`p-${update.ID}`];
                 if (oldSprite != update.Sprite) {
-                    let texture = new PIXI.Texture.fromLoader(sprite.image);
+                    let texture = textures[update.Sprite];
+                    if (!texture) texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
                     object.pivot.x = sprite.image.width / 2;
                     object.pivot.y = sprite.image.height / 2;
                     object.texture = texture;
@@ -69,7 +81,8 @@ export class Cache {
 
             if (!existing) {
                 let sprite = sprites[update.Sprite];
-                let texture = new PIXI.Texture.fromLoader(sprite.image);
+                let texture = textures[update.Sprite];
+                if (!texture) texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
                 var object = new PIXI.Sprite(texture);
                 object.position.x = update.OriginalPosition.X;
                 object.position.y = update.OriginalPosition.Y;

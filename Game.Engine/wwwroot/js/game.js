@@ -1,6 +1,6 @@
 ﻿import "babel-polyfill";
 
-import { Renderer, spriteIndices, sprites } from "./renderer";
+import { Renderer, spriteIndices } from "./renderer";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
@@ -226,7 +226,7 @@ setInterval(() => {
 document.getElementById("wcancel").addEventListener("click", () => {
     worlds.classList.add("closed");
     blur();
-    cache = new Cache(container);
+    cache.empty();
     clearLeaderboards();
 });
 
@@ -351,7 +351,6 @@ app.ticker.add(() => {
     background.draw(position.X, position.Y);
     renderer.view = view;
     renderer.draw(cache, interpolator, gameTime, fleetID);
-
     camera.end();
 
     lastPosition = position;
