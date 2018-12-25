@@ -153,9 +153,6 @@ export class Renderer {
         // if (this.view) {
         const ctx = this.context;
 
-        // Draw the edge of the universe
-        ctx.save();
-
         // start drawing the objects in the world
         ctx.font = `48px ${Settings.font}`;
         ctx.fillStyle = "white";
@@ -227,7 +224,9 @@ export class Renderer {
                         pt.Y /= group.points.length;
 
                         // draw a caption relative to the average above
-                        ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
+                        const body = cache.bodies[`p-${group.group.ID}`];
+                        body.position.x = pt.X;
+                        body.position.y = pt.Y;
                     }
                 }
             }

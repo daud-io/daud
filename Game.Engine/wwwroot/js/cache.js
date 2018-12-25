@@ -1,4 +1,5 @@
 import { sprites } from "./renderer";
+import { Settings } from "./settings";
 export const textures = {};
 export class Cache {
     constructor(container) {
@@ -38,6 +39,8 @@ export class Cache {
         // delete groups that should no longer exist
         for (i = 0; i < groupDeletes.length; i++) {
             var deleteKey = groupDeletes[i];
+            this.container.removeChild(this.bodies[`p-${deleteKey}`]);
+            delete this.bodies[`p-${deleteKey}`];
             var key = `g-${deleteKey}`;
             delete this.groups[key];
         }
@@ -102,8 +105,13 @@ export class Cache {
             const group = groups[i];
             var existing = this.groups[`g-${group.ID}`];
 
-            if (!existing) existing = group;
-            else {
+            if (!existing) {
+                let text = new PIXI.Text(group.Caption, { fontFamily: Settings.font, fontSize: 96, fill: 0xffffff });
+                text.anchor.set(0.5, 0.5);
+                this.container.addChild(text);
+                this.bodies[`p-${group.ID}`] = text;
+                existing = group;
+            } else {
                 existing.ID = group.ID;
                 existing.Caption = group.Caption;
                 existing.Type = group.Type;
