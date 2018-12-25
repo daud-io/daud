@@ -1,6 +1,6 @@
 import { Settings } from "./settings";
 import images from "../img/*.png";
-import { FleetRenderer } from "./renderers/fleetRenderer";
+// import { FleetRenderer } from "./renderers/fleetRenderer";
 
 function sprite(name, scale) {
     const img = new Image();
@@ -119,18 +119,27 @@ addSprite("thruster_retro_yellow");
 addSprite("circles");
 
 export class Renderer {
-    constructor(context, container, settings = {}) {
-        this.context = context;
+    constructor(container, settings = {}) {
         this.container = container;
         this.view = false;
         this.worldSize = 6000;
 
-        this.fleetRenderer = new FleetRenderer(context, settings);
+        // let width;
+        // let height;
+        // if ((window.innerWidth * 9) / 16 < window.innerHeight) {
+        //     width = window.innerWidth;
+        // } else {
+        //     width = (height * 16) / 9;
+        // }
+    
+        let background = new PIXI.Texture.fromImage(images["bg"]);
+        let sprite = new PIXI.extras.TilingSprite(background, 200000, 200000);
+        sprite.tileScale.set(10,10);//5500 / width, 5500 / width);
+        sprite.position.x = -100000;
+        sprite.position.y = -100000;
+        this.container.addChild(sprite);
 
         var graphics = new PIXI.Graphics();
-        //
-
-        // set the line style to have a width of 5 and set the color to red
 
         const edgeWidth = 4000;
 
@@ -146,20 +155,11 @@ export class Renderer {
         graphics.drawRect(-this.worldSize, -this.worldSize, this.worldSize * 2, this.worldSize * 2);
 
         this.container.addChild(graphics);
-        console.log("HI");
+
+        
     }
 
     draw(cache, interpolator, currentTime, fleetID) {
-        // if (this.view) {
-        const ctx = this.context;
-
-        // start drawing the objects in the world
-        ctx.font = `48px ${Settings.font}`;
-        ctx.fillStyle = "white";
-        ctx.textAlign = "center";
-        ctx.strokeStyle = "white";
-        ctx.lineWidth = 6;
-
         const groupsUsed = [];
 
         cache.foreach(function(body) {
@@ -231,7 +231,6 @@ export class Renderer {
                 }
             }
         }
-        // }
     }
 
     colorValue(colorName) {

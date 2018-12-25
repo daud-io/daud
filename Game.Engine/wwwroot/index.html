@@ -31,7 +31,6 @@
 
         <div class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
-            <canvas id="gameCanvas2" width="1000" height="500"></canvas>
 
             <div id="ctf_arena" class="hide">
                 <span id="ctf_cyan">
@@ -55,6 +54,8 @@
             <table id="leaderboard-left" cellspacing="0"></table>
             <table id="leaderboard-center" cellspacing="0"></table>
             <div id="log"></div>
+            <progress id="cooldown" value="0" max="255"></progress>
+
             <div id="hud">fps: 0 - players: 0 - ping: 0</div>
             <div id="record">record: - 0</div>
             <div id="nipple-controls">

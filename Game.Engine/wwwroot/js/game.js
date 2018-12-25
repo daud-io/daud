@@ -8,32 +8,29 @@ import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
 import { HUD } from "./hud";
 import { Log } from "./log";
 import { Cooldown } from "./cooldown";
-import { Background } from "./background";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
 import { token } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
-// import "./hintbox";
 import { blur } from "./lobby";
 import * as PIXI from "pixi.js";
+// import "./hintbox";
 
+const size = {width: 1000, height: 500};
 const canvas = document.getElementById("gameCanvas");
-const canvas2 = document.getElementById("gameCanvas2");
 
-const app = new PIXI.Application({ view: canvas2, transparent: true });
+const app = new PIXI.Application({ view: canvas, transparent: true });
 const container = new PIXI.Container();
 app.stage.addChild(container);
 
-const context = canvas.getContext("2d");
-const renderer = new Renderer(context, container, {});
-const background = new Background(canvas, context, {});
-const camera = new Camera(context);
+const renderer = new Renderer(container, {});
+const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
 const hud = new HUD();
 const log = new Log();
-const cooldown = new Cooldown(canvas, context);
+const cooldown = new Cooldown();
 let isSpectating = false;
 
 let angle = 0.0;
@@ -285,8 +282,8 @@ const sizeCanvas = () => {
         width = (height * 16) / 9;
     }
 
-    canvas.width = width;
-    canvas.height = height;
+    size.width = width;
+    size.height = height;
     app.renderer.resize(width, height);
     container.scale.set(width / 5500, width / 5500);
 };
@@ -347,16 +344,13 @@ app.ticker.add(() => {
     container.pivot.x = position.X - 5500 / 2;
     container.pivot.y = position.Y - (5500 / 2) * (9 / 16);
 
-    camera.begin();
-    background.draw(position.X, position.Y);
     renderer.view = view;
     renderer.draw(cache, interpolator, gameTime, fleetID);
-    camera.end();
 
     lastPosition = position;
 
     log.check();
-    cooldown.draw();
+    // cooldown.draw();
 
     if (Controls.mouseX) {
         const pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);

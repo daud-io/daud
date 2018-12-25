@@ -1,7 +1,6 @@
 import { fetch } from "whatwg-fetch";
 
 import { sprites } from "./renderer";
-import { img as background, setPattern } from "./background";
 import { blur } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
@@ -10,7 +9,6 @@ import { textures } from "./cache";
 export const Settings = {
     theme: false,
     themeCustom: false,
-    background: "slow",
     mouseScale: 1.0,
     font: "sans-serif",
     leaderboardEnabled: true,
@@ -49,7 +47,6 @@ function save() {
         reload = true;
     }
 
-    Settings.background = document.getElementById("settingsBackground").value;
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
     Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
@@ -85,7 +82,6 @@ function load() {
         document.getElementById("settingsThemeSelector").value = Settings.theme;
         document.getElementById("settingsThemeSelectorCustom").value = Settings.themeCustom || "";
 
-        document.getElementById("settingsBackground").value = Settings.background;
         document.getElementById("settingsMouseScale").value = Settings.mouseScale;
         document.getElementById("settingsFont").value = Settings.font;
         document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
@@ -121,10 +117,10 @@ async function theme(v) {
                         const urlCreator = window.URL || window.webkitURL;
                         const url = urlCreator.createObjectURL(blob);
                         if (element[0] == "bg") {
-                            background.src = url;
-                            background.onload = () => {
-                                setPattern();
-                            };
+                            // background.src = url;
+                            // background.onload = () => {
+                            //     setPattern();
+                            // };
                         } else {
                             sprites[element[0]].image.src = url;
                             textures[element[0]] = new PIXI.Texture.fromImage(url);
@@ -143,7 +139,6 @@ load();
 // override settins from querystring values
 const qs = parseQuery(window.location.search);
 if (qs.themeCustom) Settings.themeCustom = qs.themeCustom;
-if (qs.background) Settings.background = qs.background;
 if (qs.leaderboardEnabled) Settings.leaderboardEnabled = qs.leaderboardEnabled == "true";
 if (qs.hudEnabled) Settings.hudEnabled = qs.hudEnabled == "true";
 if (qs.namesEnabled) Settings.namesEnabled = qs.namesEnabled == "true";
