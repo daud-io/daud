@@ -543,3 +543,8 @@ input:checked + .slider:before {
 	margin: 0 40px 0 40px;
 	overflow-y: auto;
 }
+
+.spectating #fullPageCard,
+.alive #fullPageCard {
+	display: none;
+}
