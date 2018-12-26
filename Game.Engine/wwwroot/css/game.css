@@ -10,6 +10,7 @@ body {
     overflow: hidden;
     font-family: "Exo 2";
     color: white;
+	--bg-color-1: #222;
 }
 
 .aspectratio {
@@ -559,7 +560,7 @@ input:checked + .slider:before {
 }
 
 #fullPageCard {
-    background-color: #222;
+    background-color: var(--bg-color-1);
     width: 100vw;
     height: 100vh;
     position: absolute;
@@ -743,4 +744,17 @@ table {
 }
 .hide {
     display: none;
+}
+#chat {
+	z-index: 1;
+	display: absolute;
+	top: 10px;
+	left: 10px;
+	left: 10px;
+	width: 200px;
+	height: 150px;
+}
+
+option {
+	background-color: var(--bg-color-1);
 }
