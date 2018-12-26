@@ -17,7 +17,6 @@ export const Settings = {
     namesEnabled: true,
     bandwidth: 100,
     showCooldown: true,
-    showHitboxes: false,
     logLength: 4,
     mouseOneButton: 0,
     showPickupSprites: false,
@@ -55,7 +54,6 @@ function save() {
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
-    Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
     Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
@@ -90,7 +88,6 @@ function load() {
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
-        document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
         document.getElementById("settingsLog").value = Settings.logLength;
         document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;

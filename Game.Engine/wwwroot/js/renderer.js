@@ -183,16 +183,6 @@ export class Renderer {
 
                 group.points.push(position);
             }
-
-            // if we're drawing hitboxes
-            if (Settings.showHitboxes && object.Size > 0) {
-                ctx.save();
-                ctx.fillStyle = this.colorValue(object.Color);
-                ctx.beginPath();
-                ctx.arc(position.X, position.Y, object.Size, 0, 2 * Math.PI, false);
-                ctx.fill();
-                ctx.restore();
-            }
         }, this);
 
         // draw labels on groups

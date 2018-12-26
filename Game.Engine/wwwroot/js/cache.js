@@ -94,7 +94,7 @@ export class Cache {
                 object.rotation = update.OriginalAngle;
                 object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
 
-                this.container.addChild(object);
+                this.container.addChildAt(object, 2);
                 this.bodies[`p-${update.ID}`] = object;
                 Cache.count++;
             }
