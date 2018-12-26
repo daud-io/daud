@@ -1,9 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Exo+2");
 
-* {
-	outline: none;
-}
-
 html,
 body {
     width: 100%;
@@ -15,6 +11,7 @@ body {
     font-family: "Exo 2";
     color: white;
 }
+
 .aspectratio {
     width: 100vw;
     height: 56.25vw; /* 100/56.25 = 1.778 */
@@ -53,15 +50,6 @@ body {
     /* Dropdown effect Learnt From: https://davidwalsh.name/css-slide. Doesnt work as expected */
     overflow-y: hidden;
     max-height: 500px;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-    -moz-transition-property: all;
-    -moz-transition-duration: 0.5s;
-    -moz-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-    -ms-transition-property: all;
-    -ms-transition-duration: 0.5s;
-    -ms-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
     transition-property: all;
     transition-duration: 0.5s;
     transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
@@ -103,13 +91,11 @@ body {
 #logo {
     width: 90vmin;
     image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
 }
 
 #hintbox {
     font-size: 14pt;
-	margin: 2rem 0 0 0;
+    margin: 2rem 0 0 0;
 }
 
 a:visited,
@@ -118,31 +104,36 @@ a {
 }
 
 @media only screen and (max-width: 1200px) {
-	#twitterpated,
-	#controls_instructions {
-		transform: scale(0.6);
-		transform-origin: bottom left;
-	}
+    #twitterpated,
+    #controls_instructions {
+        transform: scale(0.6);
+        transform-origin: bottom left;
+    }
 }
 
 @media only screen and (max-width: 1000px) {
-	#twitterpated,
-	#socialMediaContainer,
-	#controls_instructions {
-		display: none;
-	}
+    #twitterpated,
+    #socialMediaContainer,
+    #controls_instructions {
+        display: none;
+    }
 }
-
+#socialMediaContainer {
+    position: absolute;
+    bottom: 3vh;
+}
 #twitterpated {
-    left: 30px;
+    left: 0;
     width: 500px;
     background-color: rgba(255, 255, 255, 0.15);
     padding: 0.5em;
-	border-radius: 5px;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 8vh;
 }
 
 #twitterpated h4 {
-	margin: 0 0 3px 3px;
+    margin: 0 0 3px 3px;
 }
 
 #twitterpated .date {
@@ -155,15 +146,16 @@ a {
     position: absolute;
     right: 20%;
     width: 240px;
-    margin-top: -14px;
+    bottom: 0;
 }
 
 .spawnscreen .social {
     text-align: left;
     bottom: 0;
-    margin-left: 50px;
+    margin-left: 2%;
+    margin-right: 2%;
     position: absolute;
-    width: 100%;
+    width: 96%;
 }
 
 .spectating #nipple-controls,
@@ -184,22 +176,22 @@ a {
 }
 
 #reddit {
-    height: 2vw;
+    height: 4vh;
     vertical-align: middle;
 }
 
 #discord {
-    height: 2vw;
-	vertical-align: middle;
+    height: 4vh;
+    vertical-align: middle;
 }
 
 #iogamesspace {
     vertical-align: middle;
-    height: 2vw;
+    height: 4vh;
 }
 
 #titotu {
-    height: 2vw;
+    height: 4vh;
     vertical-align: middle;
 }
 
@@ -214,8 +206,9 @@ a {
 }
 
 #spectate_container {
-    float: right;
-    margin-right: 10%;
+    position: absolute;
+    right: 0;
+    bottom: 3vh;
 }
 
 #stop_spectating_container {
@@ -249,85 +242,130 @@ a {
 }
 
 .button1 {
-	border: 1px solid #9d9d9d;
-	border-radius: 5px;
-	color: #9d9d9d;
-	background: none;
-	padding: 15px 15px 15px 15px;
-	margin: 10px 5px 10px 5px;
-	font-size: 0.75rem;
-	color: white;
-	text-transform: uppercase;
-	-webkit-transition: border 1s, color 1s; /* Safari */
-	transition: border 1s, color 1s;
+    border: 1px solid #9d9d9d;
+    border-radius: 5px;
+    color: #9d9d9d;
+    background: none;
+    padding: 10px;
+    margin: 1vh 0.5vh;
+    font-size: 0.75rem;
+    color: white;
+    text-transform: uppercase;
+    transition: border 1s, color 1s;
 }
 
 .button1:hover {
-	cursor: pointer;
-	border: 1px solid white;
-	color: #fff;
+    cursor: pointer;
+    border: 1px solid white;
+    color: #fff;
 }
 
 .button1:disabled {
-	border: none;
+    border: none;
 }
 
 #nick {
-	border: none;
-	background: none;
-	border-bottom: 1px solid #9d9d9d;
-	text-align: center;
-	padding: 5px 0 5px 0;
-	font-size: 2rem;
-	color: white;
-	margin: 0 0 10px 0;
-	-webkit-transition: border-bottom 1s; /* Safari */
-	transition: border-bottom 1s;
-	width: 20rem
+    border: none;
+    background: none;
+    border-bottom: 1px solid #9d9d9d;
+    text-align: center;
+    padding: 5px 0 5px 0;
+    font-size: 2rem;
+    color: white;
+    margin: 0 0 10px 0;
+    transition: border-bottom 1s;
+    width: 20rem;
 }
 
 #shipSelectorSwitch {
-	margin: 0 0 20px 0;
+    margin: 0 0 20px 0;
 }
 
 #shipSelectorSwitch img {
-	transform: rotate(-90deg);
-	width: 4rem;
-	margin: 0 5px 0 5px;
-	cursor: pointer;
-	transition: transform 0.6s;
+    transform: rotate(-90deg);
+    width: 8vh;
+    margin: 0 5px 0 5px;
+    cursor: pointer;
+    transition: transform 0.6s;
 }
 
 #shipSelectorSwitch img:hover {
-	transform: rotate(-90deg) scale(1.1);
+    transform: rotate(-90deg) scale(1.1);
 }
 
 #shipSelectorSwitch .selected,
 #shipSelectorSwitch .selected:hover {
-	transform: rotate(-90deg) scale(1.3);
+    transform: rotate(-90deg) scale(1.3);
 }
 
 #nick:focus {
-	border-bottom: 1px solid white;
-	outline: none;
+    border-bottom: 1px solid white;
+    outline: none;
 }
 
 #worldSelector {
-	color: white;
+    color: white;
 }
 
 select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
 }
 
 .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+    user-select: none;
+}
+
+#ctf_arena {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    margin: 0;
+}
+
+#ctf_cyan {
+    position: absolute;
+    top: 20px;
+    margin-right: 25%;
+    font-size: 30px;
+    left: 0;
+    width: 50%;
+    text-align: right;
+}
+
+#ctf_cyan .flag_status {
+    margin-right: 150px;
+    opacity: 0.7;
+}
+
+#ctf_cyan .flag_status .home {
+    color: green;
+}
+
+#ctf_cyan .flag_status .taken {
+    color: red;
+}
+
+#ctf_red {
+    position: absolute;
+    top: 20px;
+    margin-right: 25%;
+    font-size: 30px;
+    text-align: left;
+    width: 50%;
+}
+
+#ctf_red .flag_status {
+    margin-left: 150px;
+    opacity: 0.7;
+}
+
+#ctf_red .flag_status .home {
+    color: green;
+}
+
+#ctf_red .flag_status .taken {
+    color: red;
 }
 
 .property-name {
@@ -413,138 +451,296 @@ table {
     display: none;
 }
 
+#worlds {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 50%;
+    background: rgba(0, 0, 50, 0.8);
+    z-index: 3;
+    overflow-y: scroll;
+    padding: 3em;
+    opacity: 1;
+    transition: 0.5s opacity ease-in-out;
+}
 
- /* The switch - the box around the slider */
+#worldList {
+    width: 100%;
+}
+.blur {
+    filter: blur(10px);
+}
+
+/* The switch - the box around the slider */
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 17px;
 }
 
 /* Hide default HTML checkbox */
 .switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
 
 /* The slider */
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 13px;
+    left: 4px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: cyan;
+    background-color: #0066ff;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px cyan;
+    box-shadow: 0 0 1px #0066ff;
 }
 
+#worldList .empty {
+    color: #777;
+    background-color: #333;
+}
+
+#worldList .details {
+    display: none;
+}
+#worldList .selected {
+    background-color: #777;
+    color: #333;
+}
+#worldList .selected .details {
+    display: table-row;
+}
+
+#worldList .details img {
+    float: left;
+    width: 100px;
+    height: 100px;
+}
+
+.closed {
+    opacity: 0 !important;
+    z-index: -2 !important;
+}
 input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+    transform: translateX(39px);
 }
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+    border-radius: 34px;
 }
 
 .slider.round:before {
-  border-radius: 50%;
-} 
+    border-radius: 50%;
+}
 
 #fullPageCard {
-	background-color: #222;
-	width: 100vw;
-	height: 100vh;
-	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
-	z-index: 2;
-	transition: transform 1s;
+    background-color: #222;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    transition: transform 1s;
 }
 
 .hidden {
-	transform: translateY(100%);
+    transform: translateY(100%);
 }
 
 #fullPageCard #openArrow {
-	color: #d9d9d9;
-	background-color: #222;
-	margin: auto;
-	width: 100px;
-	height: 30px;
-	text-align: center;
-	transform: translateY(-100%);
-	font-size: 25px;
-	cursor: pointer;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-	transition: color 1s;
+    color: #d9d9d9;
+    background-color: #222;
+    margin: auto;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    transform: translateY(-100%);
+    font-size: 25px;
+    cursor: pointer;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    transition: color 1s;
 }
 
 #fullPageCard #openArrow:hover i {
-	color: #fff;
+    color: #fff;
 }
 
 #fullPageCard #close {
-	color: #9d9d9d;
-	text-align: right;
-	font-size: 25px;
-	transition: color 1s;
-	cursor: pointer;
-	margin-right: 20px;
+    color: #9d9d9d;
+    text-align: right;
+    font-size: 25px;
+    transition: color 1s;
+    cursor: pointer;
+    margin-right: 20px;
 }
 
 #fullPageCard #close:hover {
-	color: #fff;
+    color: #fff;
 }
 
 #fullPageCard h1,
 #fullPageCard h2 {
-	text-align: center;
-	text-transform: uppercase;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 #fullPageCard #fullPageCardContainer {
-	text-align: justify;
-	-webkit-column-count: 3; /* Chrome, Safari, Opera */
-	-moz-column-count: 3; /* Firefox */
-	column-count: 3;
-	-webkit-column-gap: 40px; /* Chrome, Safari, Opera */
-	-moz-column-gap: 40px; /* Firefox */
-	column-gap: 40px;
-	margin: 0 40px 0 40px;
-	overflow-y: auto;
+    text-align: justify;
+    column-count: 3;
+    column-gap: 40px;
+    margin: 0 40px 0 40px;
+    overflow-y: auto;
 }
 
 .spectating #fullPageCard,
 .alive #fullPageCard {
 	display: none;
+}
+
+#hud {
+    font-family: sans-serif;
+    font-size: 8pt;
+    position: absolute;
+    bottom: 30px;
+    left: 15px;
+}
+
+#record {
+    font-family: sans-serif;
+    font-size: 8pt;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}
+
+:root {
+    --leaderboard-width: 250px;
+}
+
+#leaderboard {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard-left {
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard-center {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard td,
+#leaderboard tr,
+#leaderboard-left td,
+#leaderboard-left tr {
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.overlap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100px;
+    margin: 0;
+    padding: 0;
+}
+.arrow {
+    width: 18px;
+    height: 8px;
+    margin: auto;
+    display: block;
+}
+.blue {
+    color: cyan;
+}
+.score {
+    float: right;
+    right: 0px;
+    text-align: right;
+    width: 28px;
+}
+td.flag {
+    width: 27px;
+    height: 27px;
+    position: relative;
+}
+.name {
+    width: calc(var(--leaderboard-width) - 56px);
+}
+table {
+    border-spacing: 0;
+}
+.flag-arrow {
+    width: 27px;
+    height: 27px;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+#log {
+    position: absolute;
+    bottom: 55px;
+    left: 15px;
+    font-size: 12pt;
+}
+#gameCanvas2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.hide {
+    display: none;
 }
