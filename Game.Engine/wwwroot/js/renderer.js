@@ -127,28 +127,30 @@ export class Renderer {
     constructor(container, settings = {}) {
         this.container = container;
         this.view = false;
-        this.worldSize = 6000;
 
         this.container.addChild(sprite);
 
-        var graphics = new PIXI.Graphics();
-
-        const edgeWidth = 4000;
-
-        // draw a rectangle
-        graphics.beginFill(0xff0000, 0.1);
-        graphics.drawRect(-this.worldSize - edgeWidth, -this.worldSize - edgeWidth, 2 * this.worldSize + 2 * edgeWidth, edgeWidth);
-        graphics.drawRect(-this.worldSize - edgeWidth, -this.worldSize, edgeWidth, 2 * this.worldSize);
-        graphics.drawRect(+this.worldSize, -this.worldSize, edgeWidth, 2 * this.worldSize);
-        graphics.drawRect(-this.worldSize - edgeWidth, +this.worldSize, 2 * this.worldSize + 2 * edgeWidth, edgeWidth);
-        graphics.endFill();
-
-        graphics.lineStyle(40, 0x0000ff);
-        graphics.drawRect(-this.worldSize, -this.worldSize, this.worldSize * 2, this.worldSize * 2);
-
-        this.container.addChild(graphics);
+        this.graphics = new PIXI.Graphics();
+        this.updateWorldSize(6000);
+        this.container.addChild(this.graphics);
     }
 
+    updateWorldSize(size) {
+        const edgeWidth = 4000;
+        this.graphics.clear();
+        // draw a rectangle
+        this.graphics.beginFill(0xff0000, 0.1);
+        this.graphics.drawRect(-size - edgeWidth, -size - edgeWidth, 2 * size + 2 * edgeWidth, edgeWidth);
+        this.graphics.drawRect(-size - edgeWidth, -size, edgeWidth, 2 * size);
+        this.graphics.drawRect(+size, -size, edgeWidth, 2 * size);
+        this.graphics.drawRect(-size - edgeWidth, +size, 2 * size + 2 * edgeWidth, edgeWidth);
+        this.graphics.endFill();
+
+        this.graphics.lineStyle(40, 0x0000ff);
+        this.graphics.drawRect(-size, -size, size * 2, size * 2);
+
+        this.worldSize = size;
+    }
     draw(cache, interpolator, currentTime, fleetID) {
         const groupsUsed = [];
 

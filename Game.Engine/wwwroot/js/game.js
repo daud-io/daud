@@ -187,7 +187,7 @@ connection.onView = newView => {
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
 
-    renderer.worldSize = newView.worldSize();
+    if (newView.worldSize() != renderer.worldSize) renderer.updateWorldSize(newView.worldSize());
 
     cooldown.setCooldown(newView.cooldownShoot());
     /*console.log({
