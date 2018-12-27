@@ -14,7 +14,7 @@ if (!isMobile) {
 }
 
 var shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
-var ships = shipSelectorSwitch.getElementsByTagName("img");
+var ships = shipSelectorSwitch.querySelectorAll(".circle");
 
 for (var i = 0; i < ships.length; i++) {
     ships[i].addEventListener("click", function() {
@@ -202,5 +202,5 @@ if (savedNick !== undefined) {
 if (savedColor !== undefined) {
     Controls.color = savedColor;
     document.querySelector(".selected").classList.remove("selected");
-    shipSelectorSwitch.querySelector(`img[data-color="${savedColor}"`).classList.add("selected");
+    shipSelectorSwitch.querySelector(`.circle[data-color="${savedColor}"`).classList.add("selected");
 }
