@@ -67,6 +67,11 @@ body {
     visibility: hidden;
 }
 
+.alive #fullPageCard,
+.spectating #fullPageCard {
+    display: none;
+}
+
 .spawnscreen {
     animation: fadein 2s;
     position: absolute;
