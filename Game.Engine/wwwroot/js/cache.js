@@ -110,6 +110,7 @@ export class Cache {
                 text.anchor.set(0.5, 0.5);
                 this.container.addChild(text);
                 this.bodies[`p-${group.ID}`] = text;
+                if (!Settings.namesEnabled) text.visible = false;
                 existing = group;
             } else {
                 existing.ID = group.ID;

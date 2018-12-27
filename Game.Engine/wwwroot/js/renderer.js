@@ -138,7 +138,6 @@ export class Renderer {
     updateWorldSize(size) {
         const edgeWidth = 4000;
         this.graphics.clear();
-        // draw a rectangle
         this.graphics.beginFill(0xff0000, 0.1);
         this.graphics.drawRect(-size - edgeWidth, -size - edgeWidth, 2 * size + 2 * edgeWidth, edgeWidth);
         this.graphics.drawRect(-size - edgeWidth, -size, edgeWidth, 2 * size);
@@ -188,11 +187,13 @@ export class Renderer {
         }, this);
 
         // draw labels on groups
+        let ids = [];
         if (Settings.namesEnabled) {
             for (let i = 0; i < groupsUsed.length; i++) {
                 const group = groupsUsed[i];
 
                 if (group && group.group) {
+                    ids.push(`g-${group.group.ID}`);
                     if (group.group.ID != fleetID || Settings.showOwnName) {
                         const pt = { X: 0, Y: 0 };
 
@@ -209,8 +210,15 @@ export class Renderer {
                         const body = cache.bodies[`p-${group.group.ID}`];
                         body.position.x = pt.X;
                         body.position.y = pt.Y;
+                        body.visible = Settings.namesEnabled;
                     }
                 }
+            }
+        }
+        for (var k in cache.groups) {
+            if (!ids.includes(k)) {
+                const body = cache.bodies[`p-${k.substr(2)}`];
+                body.visible = false;
             }
         }
     }
