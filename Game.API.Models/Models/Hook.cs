@@ -22,21 +22,21 @@
 
                     BoostThrust = 0.15f,
 
-                    BoostCooldownTimeM = 4.0f,
-                    BoostCooldownTimeB = 1096.0f,
+                    BoostCooldownTimeM = 20.0f,
+                    BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 1f,
                     BoostDuration = 420,
 
-                    ShotCooldownTimeM = 20,
+                    ShotCooldownTimeM = 30,
                     ShotCooldownTimeB = 500,
 
-                    ShotCooldownTimeBotM = 20,
-                    ShotCooldownTimeBotB = 700,
+                    ShotCooldownTimeBotM = 30,
+                    ShotCooldownTimeBotB = 500,
 
                     ShotThrustM = -0.0035f,
-                    ShotThrustB = 0.21f,
+                    ShotThrustB = 0.22f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -82,8 +82,8 @@
                     SnakeWeight = 0f,
                     BossMode = false,
 
-                    ShipGainBySizeM = -0.03f,
-                    ShipGainBySizeB = 1.03f,
+                    ShipGainBySizeM = -0.034f,
+                    ShipGainBySizeB = 1.04f,
 
                     FlockSpeed = 0,
 
