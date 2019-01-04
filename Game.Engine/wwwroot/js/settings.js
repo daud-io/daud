@@ -1,15 +1,15 @@
 import { fetch } from "whatwg-fetch";
 
-import { sprites } from "./renderer";
-import { img as background, setPattern } from "./background";
+import { sprites, sprite } from "./renderer";
 import { blur } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
+import { textures } from "./cache";
+import * as PIXI from "pixi.js";
 
 export const Settings = {
     theme: false,
     themeCustom: false,
-    background: "slow",
     mouseScale: 1.0,
     font: "sans-serif",
     leaderboardEnabled: true,
@@ -17,12 +17,11 @@ export const Settings = {
     namesEnabled: true,
     bandwidth: 100,
     showCooldown: true,
-    showHitboxes: false,
     logLength: 4,
     mouseOneButton: 0,
     showPickupSprites: false,
     showThrusterSprites: true,
-    showOwnName: false
+    showOwnName: true
 };
 
 function parseQuery(queryString) {
@@ -48,7 +47,6 @@ function save() {
         reload = true;
     }
 
-    Settings.background = document.getElementById("settingsBackground").value;
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
     Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
@@ -56,7 +54,6 @@ function save() {
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
-    Settings.showHitboxes = document.getElementById("settingsShowHitboxes").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
     Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
@@ -84,7 +81,6 @@ function load() {
         document.getElementById("settingsThemeSelector").value = Settings.theme;
         document.getElementById("settingsThemeSelectorCustom").value = Settings.themeCustom || "";
 
-        document.getElementById("settingsBackground").value = Settings.background;
         document.getElementById("settingsMouseScale").value = Settings.mouseScale;
         document.getElementById("settingsFont").value = Settings.font;
         document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
@@ -92,12 +88,10 @@ function load() {
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
-        document.getElementById("settingsShowHitboxes").checked = Settings.showHitboxes;
         document.getElementById("settingsLog").value = Settings.logLength;
         document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
         document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
-
     } catch (e) {
         // maybe reset()? will make debugging difficult
     }
@@ -121,16 +115,14 @@ async function theme(v) {
                         const urlCreator = window.URL || window.webkitURL;
                         const url = urlCreator.createObjectURL(blob);
                         if (element[0] == "bg") {
-                            background.src = url;
-                            background.onload = () => {
-                                setPattern();
-                            };
+                            const background = new PIXI.Texture.fromImage(url);
+                            sprite.texture = background;
                         } else {
                             sprites[element[0]].image.src = url;
+                            textures[element[0]] = new PIXI.Texture.fromImage(url);
                             if (element[1]) {
                                 sprites[element[0]].scale = element[1];
-                                if (element[0].startsWith("ship"))
-                                    sprites[element[0]].scale = 0.03;
+                                if (element[0].startsWith("ship")) sprites[element[0]].scale = 0.03;
                             }
                         }
                     });
@@ -143,7 +135,6 @@ load();
 // override settins from querystring values
 const qs = parseQuery(window.location.search);
 if (qs.themeCustom) Settings.themeCustom = qs.themeCustom;
-if (qs.background) Settings.background = qs.background;
 if (qs.leaderboardEnabled) Settings.leaderboardEnabled = qs.leaderboardEnabled == "true";
 if (qs.hudEnabled) Settings.hudEnabled = qs.hudEnabled == "true";
 if (qs.namesEnabled) Settings.namesEnabled = qs.namesEnabled == "true";

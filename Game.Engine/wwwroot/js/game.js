@@ -4,35 +4,39 @@ import { Renderer, spriteIndices } from "./renderer";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
-import { Leaderboard } from "./leaderboard";
+import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
 import { HUD } from "./hud";
 import { Log } from "./log";
 import { Cooldown } from "./cooldown";
-import { Background } from "./background";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
 import { token } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
-import "./hintbox";
 import { blur } from "./lobby";
+import * as PIXI from "pixi.js";
+// import "./hintbox";
 
+const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
-const context = canvas.getContext("2d");
-const renderer = new Renderer(context, {});
-const background = new Background(canvas, context, {});
-const camera = new Camera(context);
+
+const app = new PIXI.Application({ view: canvas, transparent: true });
+const container = new PIXI.Container();
+app.stage.addChild(container);
+
+const renderer = new Renderer(container, {});
+const camera = new Camera(size);
 const interpolator = new Interpolator();
-const leaderboard = new Leaderboard(canvas, context);
-const hud = new HUD(canvas, context);
-const log = new Log(canvas, context);
-const cooldown = new Cooldown(canvas, context);
+const leaderboard = new Leaderboard();
+const hud = new HUD();
+const log = new Log();
+const cooldown = new Cooldown();
 let isSpectating = false;
 
 let angle = 0.0;
 let aimTarget = { X: 0, Y: 0 };
 
-let cache = new Cache();
+let cache = new Cache(container);
 let view = false;
 let serverTimeOffset = false;
 let lastOffset = false;
@@ -90,7 +94,7 @@ const groupFromServer = (cache, group) => {
 };
 
 connection.onLeaderboard = lb => {
-    leaderboard.setData(lb);
+    leaderboard.setData(lb, lastPosition);
     leaderboard.position = lastPosition;
 };
 
@@ -183,7 +187,7 @@ connection.onView = newView => {
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
 
-    renderer.worldSize = newView.worldSize();
+    if (newView.worldSize() != renderer.worldSize) renderer.updateWorldSize(newView.worldSize());
 
     cooldown.setCooldown(newView.cooldownShoot());
     /*console.log({
@@ -219,7 +223,8 @@ setInterval(() => {
 document.getElementById("wcancel").addEventListener("click", () => {
     worlds.classList.add("closed");
     blur();
-    cache = new Cache();
+    cache.empty();
+    clearLeaderboards();
 });
 
 document.getElementById("spawn").addEventListener("click", () => {
@@ -277,8 +282,10 @@ const sizeCanvas = () => {
         width = (height * 16) / 9;
     }
 
-    canvas.width = width;
-    canvas.height = height;
+    size.width = width;
+    size.height = height;
+    app.renderer.resize(width, height);
+    container.scale.set(width / 5500, width / 5500);
 };
 
 sizeCanvas();
@@ -302,6 +309,7 @@ function doPing() {
     window.Game.Stats.framesPerSecond = frameCounter;
     window.Game.Stats.viewsPerSecond = viewCounter;
     window.Game.Stats.updatesPerSecond = updateCounter;
+    hud.update();
 
     if (frameCounter === 0) {
         console.log("backgrounded");
@@ -316,8 +324,7 @@ doPing();
 setInterval(doPing, 1000);
 
 // Game Loop
-function gameLoop() {
-    requestAnimationFrame(gameLoop);
+app.ticker.add(() => {
     const latency = connection.minLatency || 0;
     gameTime = performance.now() + serverTimeOffset - latency / 2;
     frameCounter++;
@@ -334,20 +341,16 @@ function gameLoop() {
         camera.moveTo(position.X, position.Y);
         camera.zoomTo(5500);
     }
+    container.pivot.x = position.X - 5500 / 2;
+    container.pivot.y = position.Y - (5500 / 2) * (9 / 16);
 
-    camera.begin();
-    background.draw(position.X, position.Y);
     renderer.view = view;
     renderer.draw(cache, interpolator, gameTime, fleetID);
 
-    camera.end();
-
     lastPosition = position;
 
-    leaderboard.draw(leaderboard.position);
-    hud.draw();
-    log.draw();
-    cooldown.draw();
+    log.check();
+    // cooldown.draw();
 
     if (Controls.mouseX) {
         const pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);
@@ -365,9 +368,7 @@ function gameLoop() {
     if (Game.Controls.right || Game.Controls.down)
         angle += 0.1;
     */
-}
-
-requestAnimationFrame(gameLoop);
+});
 
 document.body.classList.remove("loading");
 

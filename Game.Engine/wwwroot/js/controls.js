@@ -10,37 +10,23 @@ export const nipple = nipplejs.create({
 const isMobile = "ontouchstart" in document.documentElement;
 if (!isMobile) {
     nipple.destroy();
-    document.getElementById("niple-buttons").style.display = "none";
+    document.getElementById("nipple-controls").style.display = "none";
 }
 
-// this script makes new ship selector work
-
-const selector = document.querySelector("#shipSelector");
-
-/*
-selector.addEventListener("change", e => {
-    Controls.ship = `ship_${selector.value}` || "ship_green";
-    Controls.color = selector.value || "green";
-
-    save();
-});
-*/
-
 var shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
-var ships = shipSelectorSwitch.getElementsByTagName("img");
+var ships = shipSelectorSwitch.querySelectorAll(".circle");
 
 for (var i = 0; i < ships.length; i++) {
-	ships[i].addEventListener("click", function() {
-		document.querySelector(".selected").classList.remove("selected");
-		var color = this.getAttribute("data-color");
-		this.classList.add("selected");
-		selector.value = color;
-		
-		Controls.ship = `ship_${selector.value}` || "ship_green";
-		Controls.color = selector.value || "green";
-		
-		save();
-	});
+    ships[i].addEventListener("click", function() {
+        document.querySelector(".selected").classList.remove("selected");
+        var color = this.getAttribute("data-color");
+        this.classList.add("selected");
+
+        Controls.ship = `ship_${color}` || "ship_green";
+        Controls.color = color || "green";
+
+        save();
+    });
 }
 
 const nick = document.querySelector("#nick");
@@ -215,9 +201,6 @@ if (savedNick !== undefined) {
 
 if (savedColor !== undefined) {
     Controls.color = savedColor;
-    selector.value = savedColor;
+    document.querySelector(".selected").classList.remove("selected");
+    shipSelectorSwitch.querySelector(`.circle[data-color="${savedColor}"`).classList.add("selected");
 }
-
-const event = document.createEvent("Event");
-event.initEvent("change", true, true);
-selector.dispatchEvent(event);

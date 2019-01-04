@@ -129,6 +129,17 @@
                 Hook = hook,
                 Name = "Capture the Flag",
                 Description = "Cyan vs. Red - Capture the Flag. First to 5 wins!",
+                Instructions = @"<p>features two teams,cyan and red, 
+                    who each try to steal the other team's
+                    flag and bring it back to their own 
+                    base to 'capture'.</p>
+                    <p>each team will have their own base and flag to defend.In order to score, your team's flag must still be 
+                    at your base, which means you'll have to have some good defense to keep
+                    the other team from running off with your flag.</p>
+                    <p>If someone makes off with your flag, frag them and they'll drop your flag -- 
+                    touch the flag and it will be returned
+                    to your base.</p>",
+                Image = "ctf",
                 AllowedColors = TeamColors
             };
         }

@@ -1,6 +1,5 @@
 import { Settings } from "./settings";
 import images from "../img/*.png";
-import { FleetRenderer } from "./renderers/fleetRenderer";
 
 function sprite(name, scale) {
     const img = new Image();
@@ -9,7 +8,7 @@ function sprite(name, scale) {
     return {
         image: img,
         name: name,
-        scale: scale || 0.020
+        scale: scale || 0.02
     };
 }
 
@@ -118,171 +117,108 @@ addSprite("thruster_retro_cyan");
 addSprite("thruster_retro_yellow");
 addSprite("circles");
 
-export class Renderer {
-    constructor(context, settings = {}) {
-        this.context = context;
-        this.view = false;
-        this.worldSize = 6000;
+const background = new PIXI.Texture.fromImage(images["bg"]);
+export const sprite = new PIXI.extras.TilingSprite(background, 200000, 200000);
+sprite.tileScale.set(10, 10);
+sprite.position.x = -100000;
+sprite.position.y = -100000;
 
-        this.fleetRenderer = new FleetRenderer(context, settings);
+export class Renderer {
+    constructor(container, settings = {}) {
+        this.container = container;
+        this.view = false;
+
+        this.container.addChild(sprite);
+
+        this.graphics = new PIXI.Graphics();
+        this.updateWorldSize(6000);
+        this.container.addChild(this.graphics);
     }
 
+    updateWorldSize(size) {
+        const edgeWidth = 4000;
+        this.graphics.clear();
+        this.graphics.beginFill(0xff0000, 0.1);
+        this.graphics.drawRect(-size - edgeWidth, -size - edgeWidth, 2 * size + 2 * edgeWidth, edgeWidth);
+        this.graphics.drawRect(-size - edgeWidth, -size, edgeWidth, 2 * size);
+        this.graphics.drawRect(+size, -size, edgeWidth, 2 * size);
+        this.graphics.drawRect(-size - edgeWidth, +size, 2 * size + 2 * edgeWidth, edgeWidth);
+        this.graphics.endFill();
+
+        this.graphics.lineStyle(40, 0x0000ff);
+        this.graphics.drawRect(-size, -size, size * 2, size * 2);
+
+        this.worldSize = size;
+    }
     draw(cache, interpolator, currentTime, fleetID) {
-        if (this.view) {
-            const pv = this.view;
-            const ctx = this.context;
+        const groupsUsed = [];
 
-            // Draw the edge of the universe
-            ctx.save();
+        cache.foreach(function(body) {
+            const object = body;
+            let group = false;
 
-            const edgeWidth = 4000;
+            const position = interpolator.projectObject(object, currentTime);
 
-            // draw blue border at the edge of the world
-            ctx.beginPath();
-            ctx.lineWidth = 40;
-            ctx.strokeStyle = "blue";
-            ctx.rect(-this.worldSize, -this.worldSize, 2 * this.worldSize, 2 * this.worldSize);
-            ctx.stroke();
+            const objec2 = cache.bodies[`p-${body.ID}`];
+            objec2.position.x = position.X;
+            objec2.position.y = position.Y;
 
-            // draw red transparent buffer outside the edge of the world
-            /*
-             *  ________________
-             * |       top      |
-             * |________________|
-             * |   |        |   |
-             * |   |        |   |
-             * | L |        | R |
-             * |___|________|___|
-             * |     bottom     |
-             * |________________|
-             *
-             */
+            // keep track of which "groups" are used, and collect the points of all the objects
+            // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
+            if (object.Group) {
+                for (let i = 0; i < groupsUsed.length; i++)
+                    if (groupsUsed[i].id == object.Group) {
+                        group = groupsUsed[i];
+                        break;
+                    }
 
-            ctx.fillStyle = "rgba(255,0,0,0.1)";
+                if (!group) {
+                    group = {
+                        id: object.Group,
+                        group: cache.groups[`g-${object.Group}`],
+                        points: []
+                    };
 
-            // top
-            ctx.fillRect(-this.worldSize - edgeWidth, -this.worldSize - edgeWidth, 2 * this.worldSize + 2 * edgeWidth, edgeWidth);
+                    groupsUsed.push(group);
+                }
 
-            // left
-            ctx.fillRect(-this.worldSize - edgeWidth, -this.worldSize, edgeWidth, 2 * this.worldSize);
+                group.points.push(position);
+            }
+        }, this);
 
-            // right
-            ctx.fillRect(+this.worldSize, -this.worldSize, edgeWidth, 2 * this.worldSize);
+        // draw labels on groups
+        let ids = [];
+        if (Settings.namesEnabled) {
+            for (let i = 0; i < groupsUsed.length; i++) {
+                const group = groupsUsed[i];
 
-            // bottom
-            ctx.fillRect(-this.worldSize - edgeWidth, +this.worldSize, 2 * this.worldSize + 2 * edgeWidth, edgeWidth);
+                if (group && group.group) {
+                    ids.push(`g-${group.group.ID}`);
+                    if (group.group.ID != fleetID || Settings.showOwnName) {
+                        const pt = { X: 0, Y: 0 };
 
-            // the bit below was causing 7fps on a firefox instance. seemed to be leaking a path?
-            // `ctx.beginPath(); ctx.fill();` reset it and restored things to 60fps
-            /*
-              
-            I'M BAD, DON'T USE ME!
-                ctx.beginPath();
-                ctx.lineWidth = edgeWidth * 2;
-                ctx.strokeStyle = "rgba(255,0,0,0.1)";
-                ctx.rect(-this.worldSize - edgeWidth, -this.worldSize - edgeWidth, 2 * this.worldSize + 2 * edgeWidth, 2 * this.worldSize + 2 * edgeWidth);
-                ctx.stroke();
-            I'M BAD, DON'T USE ME!
-            */
-
-            ctx.restore();
-
-            // start drawing the objects in the world
-            ctx.font = `48px ${Settings.font}`;
-            ctx.fillStyle = "white";
-            ctx.textAlign = "center";
-            ctx.strokeStyle = "white";
-            ctx.lineWidth = 6;
-
-            const groupsUsed = [];
-
-            cache.foreach(function(body) {
-                const object = body;
-                let group = false;
-
-                const position = interpolator.projectObject(object, currentTime);
-
-                // keep track of which "groups" are used, and collect the points of all the objects
-                // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
-                if (object.Group) {
-                    for (let i = 0; i < groupsUsed.length; i++)
-                        if (groupsUsed[i].id == object.Group) {
-                            group = groupsUsed[i];
-                            break;
+                        // average the location of all the points
+                        // to find a "center"
+                        for (let x = 0; x < group.points.length; x++) {
+                            pt.X += group.points[x].X;
+                            pt.Y += group.points[x].Y;
                         }
+                        pt.X /= group.points.length;
+                        pt.Y /= group.points.length;
 
-                    if (!group) {
-                        group = {
-                            id: object.Group,
-                            group: cache.groups[`g-${object.Group}`],
-                            points: []
-                        };
-
-                        groupsUsed.push(group);
-                    }
-
-                    group.points.push(position);
-                }
-
-                // if we're drawing hitboxes
-                if (Settings.showHitboxes && object.Size > 0) {
-                    ctx.save();
-                    ctx.fillStyle = this.colorValue(object.Color);
-                    ctx.beginPath();
-                    ctx.arc(position.X, position.Y, object.Size, 0, 2 * Math.PI, false);
-                    ctx.fill();
-                    ctx.restore();
-                }
-
-                if (group && group.group && group.group.Type == 1) {
-                    this.fleetRenderer.draw(cache, interpolator, currentTime, object, group, position);
-                } else {
-                    // draw the sprite
-                    const sprite = object.Sprite != null ? sprites[object.Sprite] : false;
-                    if (sprite) {
-                        ctx.save();
-                        ctx.translate(position.X, position.Y);
-
-                        const spriteWidth = sprite.image.width;
-                        const spriteHeight = sprite.image.height;
-
-                        ctx.rotate(position.Angle);
-                        ctx.scale(sprite.scale, sprite.scale);
-                        ctx.scale(object.Size, object.Size);
-
-                        ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
-
-                        ctx.restore();
+                        // draw a caption relative to the average above
+                        const body = cache.bodies[`p-${group.group.ID}`];
+                        body.position.x = pt.X;
+                        body.position.y = pt.Y;
+                        body.visible = Settings.namesEnabled;
                     }
                 }
-            }, this);
-
-            // draw labels on groups
-            if (Settings.namesEnabled) {
-                for (let i = 0; i < groupsUsed.length; i++) {
-                    const group = groupsUsed[i];
-
-                    if (group && group.group) {
-
-                        if (group.group.ID != fleetID
-                            || Settings.showOwnName) {
-
-                            const pt = { X: 0, Y: 0 };
-
-                            // average the location of all the points
-                            // to find a "center"
-                            for (let x = 0; x < group.points.length; x++) {
-                                pt.X += group.points[x].X;
-                                pt.Y += group.points[x].Y;
-                            }
-                            pt.X /= group.points.length;
-                            pt.Y /= group.points.length;
-
-                            // draw a caption relative to the average above
-                            ctx.fillText(group.group.Caption, pt.X, pt.Y + 90);
-                        }
-                    }
-                }
+            }
+        }
+        for (var k in cache.groups) {
+            if (!ids.includes(k)) {
+                const body = cache.bodies[`p-${k.substr(2)}`];
+                body.visible = false;
             }
         }
     }

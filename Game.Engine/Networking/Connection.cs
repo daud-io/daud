@@ -1,4 +1,6 @@
-﻿namespace Game.Engine.Networking
+﻿using Newtonsoft.Json;
+
+namespace Game.Engine.Networking
 {
     using Game.API.Common;
     using Game.Engine.Core;
@@ -287,7 +289,7 @@
 
                         var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
                         var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
-
+                        
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
                         NetLeaderboardEntry.AddName(builder, stringName);
@@ -298,16 +300,26 @@
 
                         var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
                         {
+                            // the strings must be created into the buffer before the are referenced
+                            // and before the start of the entry object
                             stringName = builder.CreateString(e.Name ?? string.Empty);
                             stringColor = builder.CreateString(e.Color ?? string.Empty);
-                            // stringToken = builder.CreateString( ?? string.Empty);
+                            StringOffset stringModeData = new StringOffset();
 
+                            if (e.ModeData != null)
+                                stringModeData = builder.CreateString(JsonConvert.SerializeObject(e.ModeData));
+
+                            // here's the start of the entry object, after this we can only use
+                            // predefined string offsets
                             NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
+                            NetLeaderboardEntry.AddFleetID(builder, e.FleetID);
                             NetLeaderboardEntry.AddName(builder, stringName);
                             NetLeaderboardEntry.AddColor(builder, stringColor);
                             NetLeaderboardEntry.AddScore(builder, e.Score);
                             NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
                             NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(e.Token));
+                            if (e.ModeData != null)
+                                NetLeaderboardEntry.AddModeData(builder, stringModeData);
 
                             return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
                         }).ToArray());

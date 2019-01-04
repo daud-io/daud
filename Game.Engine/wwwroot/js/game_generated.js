@@ -73,11 +73,19 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.getRootAsNetLeaderboard = func
 };
 
 /**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.fleetID = function() {
+    var offset = this.bb.__offset(this.bb_pos, 4);
+    return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.type = function(optionalEncoding) {
-    var offset = this.bb.__offset(this.bb_pos, 4);
+    var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
@@ -87,7 +95,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.type = function(opti
  * @returns {Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.entries = function(index, obj) {
-    var offset = this.bb.__offset(this.bb_pos, 6);
+    var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry()).__init(this.bb.__indirect(this.bb.__vector(this.bb_pos + offset) + index * 4), this.bb) : null;
 };
 
@@ -95,7 +103,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.entries = function(i
  * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.entriesLength = function() {
-    var offset = this.bb.__offset(this.bb_pos, 6);
+    var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? this.bb.__vector_len(this.bb_pos + offset) : 0;
 };
 
@@ -104,15 +112,32 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.entriesLength = func
  * @returns {Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry|null}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.record = function(obj) {
-    var offset = this.bb.__offset(this.bb_pos, 8);
+    var offset = this.bb.__offset(this.bb_pos, 10);
     return offset ? (obj || new Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry()).__init(this.bb.__indirect(this.bb_pos + offset), this.bb) : null;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboard.prototype.modeData = function(optionalEncoding) {
+    var offset = this.bb.__offset(this.bb_pos, 12);
+    return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.startNetLeaderboard = function(builder) {
-    builder.startObject(3);
+    builder.startObject(5);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} fleetID
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboard.addFleetID = function(builder, fleetID) {
+    builder.addFieldInt32(0, fleetID, 0);
 };
 
 /**
@@ -120,7 +145,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.startNetLeaderboard = function
  * @param {flatbuffers.Offset} typeOffset
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.addType = function(builder, typeOffset) {
-    builder.addFieldOffset(0, typeOffset, 0);
+    builder.addFieldOffset(1, typeOffset, 0);
 };
 
 /**
@@ -128,7 +153,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.addType = function(builder, ty
  * @param {flatbuffers.Offset} entriesOffset
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.addEntries = function(builder, entriesOffset) {
-    builder.addFieldOffset(1, entriesOffset, 0);
+    builder.addFieldOffset(2, entriesOffset, 0);
 };
 
 /**
@@ -157,7 +182,15 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboard.startEntriesVector = function(
  * @param {flatbuffers.Offset} recordOffset
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboard.addRecord = function(builder, recordOffset) {
-    builder.addFieldOffset(2, recordOffset, 0);
+    builder.addFieldOffset(3, recordOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} modeDataOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboard.addModeData = function(builder, modeDataOffset) {
+    builder.addFieldOffset(4, modeDataOffset, 0);
 };
 
 /**
@@ -205,11 +238,19 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.getRootAsNetLeaderboardEn
 };
 
 /**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.fleetID = function() {
+    var offset = this.bb.__offset(this.bb_pos, 4);
+    return offset ? this.bb.readUint32(this.bb_pos + offset) : 0;
+};
+
+/**
  * @param {flatbuffers.Encoding=} optionalEncoding
  * @returns {string|Uint8Array|null}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.name = function(optionalEncoding) {
-    var offset = this.bb.__offset(this.bb_pos, 4);
+    var offset = this.bb.__offset(this.bb_pos, 6);
     return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
@@ -217,7 +258,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.name = function
  * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.score = function() {
-    var offset = this.bb.__offset(this.bb_pos, 6);
+    var offset = this.bb.__offset(this.bb_pos, 8);
     return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
 };
 
@@ -226,7 +267,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.score = functio
  * @returns {string|Uint8Array|null}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.color = function(optionalEncoding) {
-    var offset = this.bb.__offset(this.bb_pos, 8);
+    var offset = this.bb.__offset(this.bb_pos, 10);
     return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
@@ -235,7 +276,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.color = functio
  * @returns {Game.Engine.Networking.FlatBuffers.Vec2|null}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.position = function(obj) {
-    var offset = this.bb.__offset(this.bb_pos, 10);
+    var offset = this.bb.__offset(this.bb_pos, 12);
     return offset ? (obj || new Game.Engine.Networking.FlatBuffers.Vec2()).__init(this.bb_pos + offset, this.bb) : null;
 };
 
@@ -243,15 +284,32 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.position = func
  * @returns {boolean}
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.token = function() {
-    var offset = this.bb.__offset(this.bb_pos, 12);
+    var offset = this.bb.__offset(this.bb_pos, 14);
     return offset ? !!this.bb.readInt8(this.bb_pos + offset) : false;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.prototype.modeData = function(optionalEncoding) {
+    var offset = this.bb.__offset(this.bb_pos, 16);
+    return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
 };
 
 /**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.startNetLeaderboardEntry = function(builder) {
-    builder.startObject(5);
+    builder.startObject(7);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} fleetID
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addFleetID = function(builder, fleetID) {
+    builder.addFieldInt32(0, fleetID, 0);
 };
 
 /**
@@ -259,7 +317,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.startNetLeaderboardEntry 
  * @param {flatbuffers.Offset} nameOffset
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addName = function(builder, nameOffset) {
-    builder.addFieldOffset(0, nameOffset, 0);
+    builder.addFieldOffset(1, nameOffset, 0);
 };
 
 /**
@@ -267,7 +325,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addName = function(builde
  * @param {number} score
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addScore = function(builder, score) {
-    builder.addFieldInt32(1, score, 0);
+    builder.addFieldInt32(2, score, 0);
 };
 
 /**
@@ -275,7 +333,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addScore = function(build
  * @param {flatbuffers.Offset} colorOffset
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addColor = function(builder, colorOffset) {
-    builder.addFieldOffset(2, colorOffset, 0);
+    builder.addFieldOffset(3, colorOffset, 0);
 };
 
 /**
@@ -283,7 +341,7 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addColor = function(build
  * @param {flatbuffers.Offset} positionOffset
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addPosition = function(builder, positionOffset) {
-    builder.addFieldStruct(3, positionOffset, 0);
+    builder.addFieldStruct(4, positionOffset, 0);
 };
 
 /**
@@ -291,7 +349,15 @@ Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addPosition = function(bu
  * @param {boolean} token
  */
 Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addToken = function(builder, token) {
-    builder.addFieldInt8(4, +token, +false);
+    builder.addFieldInt8(5, +token, +false);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} modeDataOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry.addModeData = function(builder, modeDataOffset) {
+    builder.addFieldOffset(6, modeDataOffset, 0);
 };
 
 /**

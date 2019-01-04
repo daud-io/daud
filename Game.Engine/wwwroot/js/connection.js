@@ -247,6 +247,7 @@ export class Connection {
                     const entry = message.entries(i);
 
                     entries.push({
+                        FleetID: entry.fleetID(),
                         Name: entry.name(),
                         Color: entry.color(),
                         Score: entry.score(),
@@ -254,7 +255,8 @@ export class Connection {
                             X: entry.position().x(),
                             Y: entry.position().y()
                         },
-                        Token: entry.token()
+                        Token: entry.token(),
+                        ModeData: JSON.parse(entry.modeData()) || { flagStatus: "home" }
                     });
                 }
 
@@ -269,6 +271,7 @@ export class Connection {
                         Token: record.token()
                     }
                 });
+
                 break;
         }
     }

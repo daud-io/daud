@@ -4,7 +4,65 @@ import { Controls } from "./controls";
 var worlds = document.getElementById("worlds");
 var worldList = document.getElementById("worldList");
 
-var allWorlds = {};
+var allWorlds = false;
+var lastSelected = false;
+
+function selectRow(selectedWorld) {
+    if (lastSelected == selectedWorld) selectedWorld = false;
+
+    for (var world in allWorlds) {
+        var row = document.getElementById(`${world}_row`);
+        if (world == selectedWorld) row.classList.add("selected");
+        else row.classList.remove("selected");
+    }
+
+    lastSelected = selectedWorld;
+}
+const imgs = require(`../img/worlds/*.png`);
+function buildList(response) {
+    if (allWorlds != false) return updateList(response);
+
+    allWorlds = {};
+
+    var options = "";
+    for (var world of response) {
+        allWorlds[world.world] = world;
+
+        options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
+        options += `<tr>` + `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>` + `<td><b>${world.name}</b>: ${world.description}</td>` + `</tr>`;
+
+        var img = world.image ? `<img src="${imgs[world.image]}" />` : "";
+        if (world.instructions || img) options += `<tr class="details"><td colspan="2">${img}${world.instructions || ""}</td></tr>`;
+        options += `</tbody>`;
+    }
+
+    worldList.innerHTML = `${options}`;
+
+    document.querySelectorAll(".worldrow").forEach(worldRow =>
+        worldRow.addEventListener("click", function() {
+            selectRow(this.getAttribute("world"));
+        })
+    );
+}
+
+document.getElementById("join").addEventListener("click", function() {
+    const world = document.querySelector(".worldrow.selected").getAttribute("world");
+    window.Game.primaryConnection.disconnect();
+    window.Game.primaryConnection.connect(world);
+    changeRoom(world);
+    selectRow(world);
+});
+
+function updateList(response) {
+    for (var world of response) {
+        document.getElementById(`${world.world}_playercount`).innerHTML = world.players;
+        var row = document.getElementById(`${world.world}_row`);
+
+        if (world.players > 0) row.classList.remove("empty");
+        else row.classList.add("empty");
+    }
+}
+
 function refreshList() {
     fetch("/api/v1/server/worlds", {
         method: "GET",
@@ -21,27 +79,11 @@ function refreshList() {
                     changeRoom(selected);
                 }
 
-                var options = "";
-                allWorlds = {};
-
-                for (var world of response) {
-                    allWorlds[world.world] = world;
-                    options += `<tr><td><b>${world.name}</b>: ${world.description} (${world.players})</td><td><button id="${world.world}" class="j">Join</button></div></td>`;
-                }
-
-                worldList.innerHTML = options;
-
-                document.querySelectorAll(".j").forEach(j =>
-                    j.addEventListener("click", function() {
-                        const world = this.id;
-                        window.Game.primaryConnection.disconnect();
-                        window.Game.primaryConnection.connect(world);
-                        changeRoom(world);
-                    })
-                );
+                buildList(response);
             }
         });
 }
+
 function changeRoom(worldKey) {
     document.getElementById("wcancel").click();
     var world = allWorlds[worldKey];
@@ -79,3 +121,5 @@ document.getElementById("arenas").addEventListener("click", () => {
 document.getElementById("wrefresh").addEventListener("click", () => {
     refreshList();
 });
+
+setInterval(refreshList, 1000);
