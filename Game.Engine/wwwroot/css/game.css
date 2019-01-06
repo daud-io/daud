@@ -65,7 +65,7 @@ body {
 .loading .spawnscreen,
 .dead.spectating .spawnscreen,
 .alive .spawnscreen {
-    visibility: hidden;
+    display: none;
 }
 
 .alive #fullPageCard,
