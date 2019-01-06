@@ -5,18 +5,13 @@ var worlds = document.getElementById("worlds");
 var worldList = document.getElementById("worldList");
 
 var allWorlds = false;
-var lastSelected = false;
 
 function selectRow(selectedWorld) {
-    if (lastSelected == selectedWorld) selectedWorld = false;
-
     for (var world in allWorlds) {
         var row = document.getElementById(`${world}_row`);
         if (world == selectedWorld) row.classList.add("selected");
         else row.classList.remove("selected");
     }
-
-    lastSelected = selectedWorld;
 }
 const imgs = require(`../img/worlds/*.png`);
 function buildList(response) {
