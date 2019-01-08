@@ -1,11 +1,16 @@
 ﻿namespace Game.Engine.Core
 {
+    using BepuPhysics;
+    using BepuPhysics.Collidables;
+    using BepuPhysics.CollisionDetection;
+    using BepuUtilities.Memory;
     using Game.Engine.Networking;
     using RBush;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
+    using System.Runtime.CompilerServices;
     using System.Threading;
 
     public class World : IDisposable
@@ -25,6 +30,9 @@
         public List<Group> Groups = new List<Group>();
         public List<IActor> Actors = new List<IActor>();
 
+        private readonly BufferPool BufferPool = new BufferPool();
+        public Simulation Simulation = null;
+
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
 
@@ -34,18 +42,30 @@
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
 
-        public string Name {get;set;}
-        public string Description {get;set;}
+        public string Name { get; set; }
+        public string Description { get; set; }
         public string Instructions { get; set; }
 
-        public string[] AllowedColors {get;set;}
+        public string[] AllowedColors { get; set; }
 
-        public int AdvertisedPlayerCount {get;set;}
+        public int AdvertisedPlayerCount { get; set; }
 
         public string Image { get; set; } = "default";
 
+        BodyDescription bulletDescription;
+
         public World()
         {
+            Simulation = Simulation.Create(BufferPool, new NarrowPhaseCallbacks(), new PoseIntegratorCallbacks(new Vector3(0,0,0)));
+
+            var bulletShape = new Sphere(0.5f);
+            bulletShape.ComputeInertia(.1f, out var bulletInertia);
+            bulletDescription = BodyDescription.CreateDynamic(new Vector3(), bulletInertia, new CollidableDescription(Simulation.Shapes.Add(bulletShape), 10), new BodyActivityDescription(0.01f));
+
+            bulletDescription.Pose.Position = new Vector3(0, 0, 0);
+            bulletDescription.Velocity.Linear = new Vector3(0.1f, 0.1f, 0);
+            Simulation.Bodies.Add(bulletDescription);
+
             OffsetTicks = DateTime.Now.Ticks;
             Hook = Hook.Default;
 
@@ -58,11 +78,43 @@
         }
 
         private void SystemActor<T>()
-            where T: class, IActor, new()
+            where T : class, IActor, new()
         {
             var actor = new T();
             actor.Init(this);
         }
+
+
+        void AddBodyShape(Shapes shapes, Bodies bodies, int setIndex, int indexInSet)
+        {
+            ref var set = ref bodies.Sets[setIndex];
+            Vector3 color = new Vector3(1, 1, 1);
+
+            AddShape(shapes, set.Collidables[indexInSet].Shape, ref set.Poses[indexInSet], color);
+        }
+
+        public unsafe void AddShape(Shapes shapes, TypedIndex shapeIndex, ref RigidPose pose, in Vector3 color)
+        {
+            if (shapeIndex.Exists)
+            {
+                shapes[shapeIndex.Type].GetShapeData(shapeIndex.Index, out var shapeData, out _);
+                AddShape(shapeData, shapeIndex.Type, shapes, ref pose, color);
+            }
+        }
+        public unsafe void AddShape(void* shapeData, int shapeType, Shapes shapes, ref RigidPose pose, in Vector3 color)
+        {
+            switch (shapeType)
+            {
+                case Sphere.Id:
+                    {
+                        var position = pose.Position;
+                        var sphere = Unsafe.AsRef<Sphere>(shapeData);
+                        Console.WriteLine(pose.Position.ToString());
+                    }
+                    break;
+            }
+        }
+
 
         public void Step()
         {
@@ -73,10 +125,31 @@
             lock (this.Bodies)
             {
                 var start = DateTime.Now;
-                
+
                 var oldTime = Time;
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
                 LastStepSize = Time - oldTime;
+
+                Simulation.Timestep(LastStepSize / 1000f);
+
+                for (int i = 0; i < Simulation.Bodies.Sets.Length; ++i)
+                {
+                    ref var set = ref Simulation.Bodies.Sets[i];
+                    if (set.Allocated) //Islands are stored noncontiguously; skip those which have been deallocated.
+                    {
+                        for (int bodyIndex = 0; bodyIndex < set.Count; ++bodyIndex)
+                        {
+                            AddBodyShape(Simulation.Shapes, Simulation.Bodies, i, bodyIndex);
+                        }
+                    }
+                }
+                for (int i = 0; i < Simulation.Statics.Count; ++i)
+                {
+                    //AddStaticShape(Simulation.Shapes, Simulation.Statics, i);
+                }
+
+
+
 
                 RTree.Clear();
                 foreach (var body in Bodies)
@@ -333,5 +406,6 @@
             Dispose(true);
         }
         #endregion
+
     }
 }

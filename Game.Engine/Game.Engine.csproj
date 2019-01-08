@@ -5,6 +5,10 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="KdSoft.FlatBuffers" Version="1.9.3" />
     <PackageReference Include="Nito.AsyncEx" Version="5.0.0-pre-05" />
@@ -15,6 +19,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\bepuphysics2\BepuPhysics\BepuPhysics.csproj" />
+    <ProjectReference Include="..\..\bepuphysics2\BepuUtilities\BepuUtilities.csproj" />
     <ProjectReference Include="..\Game.API.Models\Game.API.Common.csproj" />
     <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
   </ItemGroup>
