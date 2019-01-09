@@ -311,10 +311,6 @@ a {
     outline: none;
 }
 
-#worldSelector {
-    color: white;
-}
-
 select {
     appearance: none;
 }
@@ -459,19 +455,26 @@ table {
     display: none;
 }
 
+#worldSelector {
+    color: white;
+}
+
 #worlds {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 50%;
-    height: 50%;
+    width: 75%;
+    height: 75%;
     background: rgba(0, 0, 50, 0.8);
     z-index: 3;
-    overflow-y: scroll;
-    padding: 3em;
+    overflow-y: auto;
+    padding: 1em;
     opacity: 1;
     transition: 0.5s opacity ease-in-out;
+}
+#worlds .button1 {
+    margin: 2px;
 }
 
 #worldList {
@@ -528,25 +531,29 @@ input:focus + .slider {
 }
 
 #worldList .empty {
-    color: #777;
-    background-color: #333;
+    color: #eee;
+    background-color: #222;
 }
 
 #worldList .details {
     display: none;
 }
-#worldList .selected {
-    background-color: #777;
-    color: #333;
+
+#worldList .selected .details td {
+    border: solid 1px white;
+    padding: 3px;
 }
+
 #worldList .selected .details {
     display: table-row;
+    color: 
 }
 
 #worldList .details img {
-    float: left;
+    float: right;
     width: 100px;
     height: 100px;
+    margin: 10px;
 }
 
 .closed {
@@ -762,12 +769,18 @@ table {
     height: 150px;
 }
 
+.dead #cooldown,
+.spectating #cooldown {
+    display: none;
+}
+
 #cooldown {
     position: absolute;
     bottom: 3vh;
     left: 50%;
     width: 30%;
     transform: translateX(-50%);
+    color: 
 }
 
 option {
@@ -791,3 +804,35 @@ option {
 .cirlce-green {
     background: lime;
 }
+
+
+progress {
+    display: block; /* default: inline-block */
+    width: 300px;
+    margin: 2em auto;
+    padding: 4px;
+    border: 0 none;
+    background: rgba(4,4,4,.5);
+    border-radius: 14px;
+    box-shadow: inset 0px 1px 1px rgba(0,0,0,0.5), 0px 1px 0px rgba(255,255,255,0.2);
+  }
+  progress::-moz-progress-bar {
+    border-radius: 12px;
+    background: rgba(7,7,7,.5);
+    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4), 0 2px 5px 0px rgba(0,0,0,0.3);
+    
+  }
+  /* webkit */
+  @media screen and (-webkit-min-device-pixel-ratio:0) {
+    progress {
+      height: 15px;
+    }
+  }
+  progress::-webkit-progress-bar {
+      background: transparent;
+  }  
+  progress::-webkit-progress-value {  
+    border-radius: 12px;
+    background: #444;
+    box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4), 0 2px 5px 0px rgba(0,0,0,0.3); 
+  } 

@@ -1,7 +1,7 @@
 import { fetch } from "whatwg-fetch";
 
 import { sprites, sprite } from "./renderer";
-import { blur } from "./lobby";
+import { toggleLobby } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
 import { textures } from "./cache";
@@ -18,10 +18,10 @@ export const Settings = {
     bandwidth: 100,
     showCooldown: true,
     logLength: 4,
-    mouseOneButton: 0,
     showPickupSprites: false,
     showThrusterSprites: true,
-    showOwnName: true
+    showOwnName: true,
+    nameSize: 48
 };
 
 function parseQuery(queryString) {
@@ -58,8 +58,11 @@ function save() {
     Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
     Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
+    Settings.nameSize = Number(document.getElementById("settingsNameSize").value);
 
     Cookies.set("settings", Settings, cookieOptions);
+
+    console.log(Settings);
 
     if (reload) window.location.reload();
 }
@@ -92,6 +95,7 @@ function load() {
         document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
         document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
+        document.getElementById("settingsNameSize").value = Settings.nameSize;
     } catch (e) {
         // maybe reset()? will make debugging difficult
     }
@@ -154,19 +158,19 @@ if (Settings.themeCustom) {
 
 const gear = document.getElementById("gear");
 document.getElementById("settings").addEventListener("click", () => {
-    blur();
+    toggleLobby();
     gear.classList.remove("closed");
 });
 
 document.getElementById("settingsCancel").addEventListener("click", () => {
-    blur();
+    toggleLobby();
     gear.classList.add("closed");
 });
 
 document.getElementById("settingsSave").addEventListener("click", () => {
     save();
     load();
-    blur();
+    toggleLobby();
     gear.classList.add("closed");
 });
 

@@ -6,6 +6,7 @@
   "scripts": {
     "build": "parcel build game.html changes.html",
     "watch": "parcel watch index.html --out-dir dist",
+    "watch2": "parcel watch --no-hmr index.html --out-dir dist",
     "format": "prettier --tab-width 4 --print-width 200 --write \"**/*.{js,css}\""
   },
   "author": "modderme123",

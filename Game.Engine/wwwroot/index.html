@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
 
-<body class="loading">
+<body class="loading dead">
     <div id="container" class="aspectratio">
 
         <div id="error">
@@ -95,10 +95,8 @@
             </div>
             <div id="worlds" class="closed">
                 <div id="topbar">
-                    <button class="button1" id="wrefresh">Refresh</button>
                     <button class="button1" id="wcancel">Cancel</button>
-                    <button class="button1" id="join">Join</button>
-                </div>
+                </div>                
                 <table id="worldList"></table>
             </div>
             <div id="gear" class="closed">
@@ -113,20 +111,14 @@
                 </select>
                 <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" class="button1" value="">
                 <br>
-                <label for="settingsMouseOneButton">Mouse One-Button Mode</label>
-                <select id="settingsMouseOneButton" class="button1">
-                    <option value="0">disabled</option>
-                    <option value="5">5ms</option>
-                    <option value="10">10ms</option>
-                    <option value="15">15ms</option>
-                    <option value="30">30ms</option>
-                    <option value="45">45ms</option>
-                    <option value="60">60ms</option>
-                    <option value="75">75ms</option>
-                    <option value="90">90ms</option>
-                    <option value="105">105ms</option>
-                    <option value="120">120ms</option>
-                    <option value="135">135ms</option>
+                <label for="settingsNameSize">Name Size</label>
+                <select id="settingsNameSize" class="button1">
+                    <option value="20">tiny</option>
+                    <option value="32">smaller</option>
+                    <option value="48">small</option>
+                    <option value="64">medium</option>
+                    <option value="72">big</option>
+                    <option value="96">woah</option>
                 </select>
                 <label for="settingsMouseScale">Mouse Sensitivity</label>
                 <select id="settingsMouseScale" class="button1" class="button1">

@@ -106,7 +106,7 @@ export class Cache {
             var existing = this.groups[`g-${group.ID}`];
 
             if (!existing) {
-                let text = new PIXI.Text(group.Caption, { fontFamily: Settings.font, fontSize: 96, fill: 0xffffff });
+                let text = new PIXI.Text(group.Caption, { fontFamily: Settings.font, fontSize: Settings.nameSize, fill: 0xffffff });
                 text.anchor.set(0.5, 0.5);
                 this.container.addChild(text);
                 this.bodies[`p-${group.ID}`] = text;

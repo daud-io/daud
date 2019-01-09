@@ -13,7 +13,7 @@ import { Connection } from "./connection";
 import { token } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
-import { blur } from "./lobby";
+import { LobbyCallbacks, toggleLobby } from "./lobby";
 import * as PIXI from "pixi.js";
 // import "./hintbox";
 
@@ -205,7 +205,7 @@ setInterval(() => {
     if (angle !== lastControl.angle || aimTarget.X !== aimTarget.X || aimTarget.Y !== aimTarget.Y || Controls.boost !== lastControl.boost || Controls.shoot !== lastControl.shoot) {
         let spectateControl = false;
         if (isSpectating) {
-            if (Controls.shoot) spectateControl = "action:next";
+        if (Controls.shoot) spectateControl = "action:next";
             else spectateControl = "spectating";
         }
 
@@ -213,19 +213,32 @@ setInterval(() => {
 
         lastControl = {
             angle,
-            aimTarget,
+        aimTarget,
             boost: Controls.boost,
             shoot: Controls.shoot
         };
     }
 }, 10);
 
-document.getElementById("wcancel").addEventListener("click", () => {
-    worlds.classList.add("closed");
-    blur();
+LobbyCallbacks.onLobbyClose = function() {
     cache.empty();
     clearLeaderboards();
-});
+};
+
+LobbyCallbacks.onWorldJoin = function(worldKey, world)
+{
+    window.Game.primaryConnection.disconnect();
+    window.Game.primaryConnection.connect(worldKey);
+
+    var colors = world.allowedColors;
+    var options = "";
+
+    for (var i = 0; i < colors.length; i++) options += `<option value="${colors[i]}">${colors[i]}</option>`;
+
+    document.getElementById("shipSelector").innerHTML = options;
+    document.getElementById("shipSelector").value = colors[0];
+    Controls.color = colors[0];
+}
 
 document.getElementById("spawn").addEventListener("click", () => {
     Events.Spawn();
@@ -262,9 +275,10 @@ document.addEventListener("keydown", ({ keyCode, which }) => {
     if (keyCode == 27 || which == 27) {
         if (lastAliveState) {
             connection.sendExit();
-            console.log("sending exit");
         } else if (isSpectating) {
             stopSpectate();
+        } else if (document.body.classList.contains('lobby')) {
+            toggleLobby();
         } else {
             startSpectate();
         }

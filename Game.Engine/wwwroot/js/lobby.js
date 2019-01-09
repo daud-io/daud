@@ -1,5 +1,6 @@
 ﻿import { fetch } from "whatwg-fetch";
 import { Controls } from "./controls";
+import { __esModule } from "pixi.js/lib/core";
 
 var worlds = document.getElementById("worlds");
 var worldList = document.getElementById("worldList");
@@ -24,7 +25,7 @@ function buildList(response) {
         allWorlds[world.world] = world;
 
         options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
-        options += `<tr>` + `<td>(<span id="${world.world}_playercount">${world.players}</span>)</td>` + `<td><b>${world.name}</b>: ${world.description}</td>` + `</tr>`;
+        options += `<tr>` + `<td><button class="button1" id="join">Join</button> (<span id="${world.world}_playercount">${world.players}</span>)</td>` + `<td><b>${world.name}</b>: ${world.description}</td>` + `</tr>`;
 
         var img = world.image ? `<img src="${imgs[world.image]}" />` : "";
         if (world.instructions || img) options += `<tr class="details"><td colspan="2">${img}${world.instructions || ""}</td></tr>`;
@@ -34,19 +35,16 @@ function buildList(response) {
     worldList.innerHTML = `${options}`;
 
     document.querySelectorAll(".worldrow").forEach(worldRow =>
-        worldRow.addEventListener("click", function() {
-            selectRow(this.getAttribute("world"));
+        worldRow.addEventListener("click", function (e) {
+            var worldKey = this.getAttribute("world");
+
+            if (e.srcElement.tagName == "BUTTON")
+                joinWorld(worldKey);
+            else
+                selectRow(worldKey);
         })
     );
 }
-
-document.getElementById("join").addEventListener("click", function() {
-    const world = document.querySelector(".worldrow.selected").getAttribute("world");
-    window.Game.primaryConnection.disconnect();
-    window.Game.primaryConnection.connect(world);
-    changeRoom(world);
-    selectRow(world);
-});
 
 function updateList(response) {
     for (var world of response) {
@@ -58,7 +56,19 @@ function updateList(response) {
     }
 }
 
+var controls = document.querySelector(".controls");
+var social = document.querySelector(".social");
+var showing = false;
+
+export var LobbyCallbacks = {
+    onLobbyClose: false,
+    onWorldJoin: false
+}
+
 function refreshList() {
+    if (!showing)
+        return;
+
     fetch("/api/v1/server/worlds", {
         method: "GET",
         headers: {
@@ -71,7 +81,7 @@ function refreshList() {
                 if (window.location.hash) {
                     var selected = window.location.hash.substring(1);
                     window.Game.primaryConnection.connect(selected);
-                    changeRoom(selected);
+                    selectWorld(selected);
                 }
 
                 buildList(response);
@@ -79,8 +89,7 @@ function refreshList() {
         });
 }
 
-function changeRoom(worldKey) {
-    document.getElementById("wcancel").click();
+function selectWorld(worldKey) {
     var world = allWorlds[worldKey];
     if (world) {
         var colors = world.allowedColors;
@@ -94,27 +103,49 @@ function changeRoom(worldKey) {
     } else console.log(`Warning: could not find selected world ${worldKey}`);
 }
 
-var controls = document.querySelector(".controls");
-var social = document.querySelector(".social");
-var blurred = false;
-export function blur() {
-    if (!blurred) {
-        controls.classList.add("blur");
-        social.classList.add("blur");
-    } else {
-        controls.classList.remove("blur");
-        social.classList.remove("blur");
-    }
-    blurred = !blurred;
+function hide()
+{
+    worlds.classList.add("closed");
+    controls.classList.remove("blur");
+    social.classList.remove("blur");
+    document.body.classList.remove("lobby");
+    showing = false;
+
+    if (LobbyCallbacks.onLobbyClose)
+        LobbyCallbacks.onLobbyClose();
 }
 
-document.getElementById("arenas").addEventListener("click", () => {
+function show()
+{
+    controls.classList.add("blur");
+    social.classList.add("blur");
+    document.body.classList.add("lobby");
+    showing = true;
+}
+
+function joinWorld(worldKey) {
+    LobbyCallbacks.onWorldJoin(worldKey, allWorlds[worldKey]);
+    hide();
+}
+
+export function toggleLobby() {
+    if (!showing)
+        show();
+    else
+        hide();
+}
+
+document.getElementById("wcancel").addEventListener("click", (e) => {
+    if (showing)
+        hide();
+});
+
+document.getElementById("arenas").addEventListener("click", (e) => {
+    show();
     refreshList();
     worlds.classList.remove("closed");
-    blur();
-});
-document.getElementById("wrefresh").addEventListener("click", () => {
-    refreshList();
+    e.preventDefault();
+    return false;
 });
 
 setInterval(refreshList, 1000);
