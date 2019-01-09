@@ -134,12 +134,11 @@ async function theme(v) {
                                 if (version == 1 && element[0].startsWith("ship"))
                                     sprites[element[0]].scale = 0.03;
                             }
+
+                            window.Game.cache.refreshSprites();
                         }
                     });
             });
-        })
-        .then(_ => {
-            window.Game.cache.refreshSprites();
         });
 }
 
