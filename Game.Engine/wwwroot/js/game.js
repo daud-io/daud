@@ -51,6 +51,7 @@ else connection.connect();
 
 window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
+window.Game.cache = cache;
 
 const bodyFromServer = (cache, body) => {
     const originalPosition = body.originalPosition();

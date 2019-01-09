@@ -162,6 +162,7 @@ export class Renderer {
             const objec2 = cache.bodies[`p-${body.ID}`];
             objec2.position.x = position.X;
             objec2.position.y = position.Y;
+            objec2.rotation = position.Angle;
 
             // keep track of which "groups" are used, and collect the points of all the objects
             // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)

@@ -23,6 +23,19 @@ export class Cache {
         this.clear();
     }
 
+    refreshSprites()
+    {
+        this.foreach(function(body) {
+            let sprite = sprites[body.Sprite];
+            let object = this.bodies[`p-${body.ID}`];
+            let texture = textures[body.Sprite];
+            object.pivot.x = sprite.image.width / 2;
+            object.pivot.y = sprite.image.height / 2;
+            object.texture = texture;
+            object.scale.set(sprite.scale * body.Size, sprite.scale * body.Size);
+        }, this);
+    }
+
     update(updates, deletes, groups, groupDeletes, time) {
         let i = 0;
 
@@ -69,8 +82,8 @@ export class Cache {
 
                 let sprite = sprites[update.Sprite];
                 let object = this.bodies[`p-${update.ID}`];
-                if (oldSprite != update.Sprite) {
-                    let texture = textures[update.Sprite];
+                let texture = textures[update.Sprite];
+                if (object.texture != texture) {
                     if (!texture) texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
                     object.pivot.x = sprite.image.width / 2;
                     object.pivot.y = sprite.image.height / 2;

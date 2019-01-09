@@ -137,6 +137,9 @@ async function theme(v) {
                         }
                     });
             });
+        })
+        .then(_ => {
+            window.Game.cache.refreshSprites();
         });
 }
 
