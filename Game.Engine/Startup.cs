@@ -34,6 +34,13 @@
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin()
+                );
+            });
 
             services
                 .AddSingleton<DiscordSocketClient>()
@@ -74,6 +81,7 @@
             app.UseAuthentication();
 
             app.UseMvc();
+            app.UseCors();
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {

@@ -24,20 +24,29 @@
 
         static Worlds()
         {
-            Default = new World()
-            {
-                Name = "Default",
-                Description = "FFA Arena",
-                AllowedColors = AllColors
-            };
-
+            Default = WorldDefault();
             AllWorlds.Add("default", Default);
+            
             AllWorlds.Add("other", WorldOther());
             AllWorlds.Add("duel", WorldDuel());
             AllWorlds.Add("team", WorldTeam());
             AllWorlds.Add("ctf", WorldCTF());
             AllWorlds.Add("sharks", WorldSharks());
             AllWorlds.Add("snake", WorldSnake());
+        }
+
+        private static World WorldDefault()
+        {
+            var hook = Hook.Default;
+
+            return new World
+            {
+                Hook = hook,
+                Name = "FFA",
+                Description = "FFA Arena",
+                AllowedColors = AllColors,
+                Instructions = "Mouse to aim, click to shoot. Press 's' to boost."
+            };
         }
 
         private static World WorldOther()

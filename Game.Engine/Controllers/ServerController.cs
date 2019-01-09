@@ -4,6 +4,7 @@
     using Game.API.Common.Security;
     using Game.Engine.Core;
     using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
     using System.Collections.Generic;
@@ -86,7 +87,7 @@
                 });
         }
 
-        [AllowAnonymous, HttpGet, Route("worlds")]
+        [AllowAnonymous, HttpGet, Route("worlds"),EnableCors("AllowAllOrigins")]
         public IEnumerable<object> GetWorlds(string worldName = null)
         {
             return Worlds.AllWorlds.Select(w => new {
