@@ -406,41 +406,51 @@ namespace Game.Engine.Networking
 
                 case AllMessages.NetSpawn:
                     var spawn = quantum.Message<NetSpawn>().Value;
+                    var color = "green";
 
                     Sprites shipSprite = Sprites.ship_red;
 
-                    switch (spawn.Color)
+                    switch (spawn.Ship)
                     {
                         case "ship0":
                             shipSprite = Sprites.ship0;
+                            color = "green";
                             break;
                         case "ship_secret":
                             shipSprite = Sprites.ship_secret;
+                            color = "yellow";
                             break;
                         case "ship_zed":
                             shipSprite = Sprites.ship_zed;
+                            color = "red";
                             break;
-                        case "green":
+                        case "ship_green":
                             shipSprite = Sprites.ship_green;
+                            color = "green";
                             break;
-                        case "orange":
+                        case "ship_orange":
                             shipSprite = Sprites.ship_orange;
+                            color = "orange";
                             break;
-                        case "pink":
+                        case "ship_pink":
                             shipSprite = Sprites.ship_pink;
+                            color = "pink";
                             break;
-                        case "red":
+                        case "ship_red":
                             shipSprite = Sprites.ship_red;
+                            color = "red";
                             break;
-                        case "cyan":
+                        case "ship_cyan":
                             shipSprite = Sprites.ship_cyan;
+                            color = "cyan";
                             break;
-                        case "yellow":
+                        case "ship_yellow":
                             shipSprite = Sprites.ship_yellow;
+                            color = "yellow";
                             break;
                     }
 
-                    player.Spawn(spawn.Name, shipSprite, spawn.Color, spawn.Token);
+                    player.Spawn(spawn.Name, shipSprite, color, spawn.Token);
 
                     break;
                 case AllMessages.NetControlInput:

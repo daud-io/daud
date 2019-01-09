@@ -1,6 +1,6 @@
 ﻿import "babel-polyfill";
 
-import { Renderer, spriteIndices } from "./renderer";
+import { Renderer, sprites, spriteIndices } from "./renderer";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
@@ -230,14 +230,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world)
     window.Game.primaryConnection.disconnect();
     window.Game.primaryConnection.connect(worldKey);
 
-    var colors = world.allowedColors;
-    var options = "";
-
-    for (var i = 0; i < colors.length; i++) options += `<option value="${colors[i]}">${colors[i]}</option>`;
-
-    document.getElementById("shipSelector").innerHTML = options;
-    document.getElementById("shipSelector").value = colors[0];
-    Controls.color = colors[0];
+    Controls.initializeWorld(world);
 }
 
 document.getElementById("spawn").addEventListener("click", () => {

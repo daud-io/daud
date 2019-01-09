@@ -2,6 +2,7 @@
 import nipplejs from "nipplejs";
 import { setInterval, setTimeout } from "timers";
 import { Settings } from "./settings";
+import { sprites } from "./renderer";
 
 export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
@@ -14,20 +15,24 @@ if (!isMobile) {
 }
 
 var shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
-var ships = shipSelectorSwitch.querySelectorAll(".circle");
 
-for (var i = 0; i < ships.length; i++) {
-    ships[i].addEventListener("click", function() {
-        document.querySelector(".selected").classList.remove("selected");
-        var color = this.getAttribute("data-color");
-        this.classList.add("selected");
-
-        Controls.ship = `ship_${color}` || "ship_green";
-        Controls.color = color || "green";
-
-        save();
-    });
+var refreshSelectedStyle = function()
+{
+    var options = Array.from(document.getElementById("shipSelectorSwitch").children);
+    for (var i = 0; i < options.length; i++) {
+        var option = options[i];
+        if (option.getAttribute('data-color') == Controls.ship)
+            option.classList.add('selected');
+        else
+            option.classList.remove('selected');
+    };
 }
+
+shipSelectorSwitch.addEventListener("click", function(e) {
+    Controls.ship = e.srcElement.getAttribute('data-color');
+    save();
+    refreshSelectedStyle();
+});
 
 const nick = document.querySelector("#nick");
 nick.addEventListener("change", e => {
@@ -127,6 +132,27 @@ export var Controls = {
         }
         Controls.canvas = canvas;
     },
+    initializeWorld: function(world){
+        var colors = world.allowedColors;
+        var selector = document.getElementById("shipSelectorSwitch");
+        while (selector.firstChild) selector.removeChild(selector.firstChild);
+        
+        for (var i = 0; i < colors.length; i++) 
+        {
+            var sprite = sprites[colors[i]];
+    
+            if (sprite)
+            {
+                selector.appendChild(sprite.image);
+                sprite.image.setAttribute('data-color', colors[i]);
+                sprite.image.classList.add('circle');
+            }
+        }
+        
+        Controls.color = colors[0];
+        refreshSelectedStyle();
+
+    },
     ship: "ship_green"
 };
 
@@ -201,6 +227,5 @@ if (savedNick !== undefined) {
 
 if (savedColor !== undefined) {
     Controls.color = savedColor;
-    document.querySelector(".selected").classList.remove("selected");
-    shipSelectorSwitch.querySelector(`.circle[data-color="${savedColor}"`).classList.add("selected");
+    refreshSelectedStyle();
 }

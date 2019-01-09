@@ -10,23 +10,23 @@
         private static readonly World Default;
 
         private static readonly string[] AllColors = new[] {
-            "green",
-            "orange",
-            "pink",
-            "red",
-            "cyan",
-            "yellow"
+            "ship_green",
+            "ship_orange",
+            "ship_pink",
+            "ship_red",
+            "ship_cyan",
+            "ship_yellow"
         };
         private static readonly string[] TeamColors = new[] {
-            "red",
-            "cyan"
+            "ship_red",
+            "ship_cyan"
         };
 
         static Worlds()
         {
             Default = WorldDefault();
             AllWorlds.Add("default", Default);
-            
+
             AllWorlds.Add("other", WorldOther());
             AllWorlds.Add("duel", WorldDuel());
             AllWorlds.Add("team", WorldTeam());

@@ -59,6 +59,7 @@ function updateList(response) {
 var controls = document.querySelector(".controls");
 var social = document.querySelector(".social");
 var showing = false;
+var firstLoad = true;
 
 export var LobbyCallbacks = {
     onLobbyClose: false,
@@ -66,9 +67,9 @@ export var LobbyCallbacks = {
 }
 
 function refreshList() {
-    if (!showing)
+    if (!showing && !firstLoad)
         return;
-
+    
     fetch("/api/v1/server/worlds", {
         method: "GET",
         headers: {
@@ -81,26 +82,16 @@ function refreshList() {
                 if (window.location.hash) {
                     var selected = window.location.hash.substring(1);
                     window.Game.primaryConnection.connect(selected);
-                    selectWorld(selected);
                 }
 
                 buildList(response);
+
+                if (firstLoad)
+                    joinWorld('default')
+
+                firstLoad = false;
             }
         });
-}
-
-function selectWorld(worldKey) {
-    var world = allWorlds[worldKey];
-    if (world) {
-        var colors = world.allowedColors;
-        var options = "";
-
-        for (var i = 0; i < colors.length; i++) options += `<option value="${colors[i]}">${colors[i]}</option>`;
-
-        document.getElementById("shipSelector").innerHTML = options;
-        document.getElementById("shipSelector").value = colors[0];
-        Controls.color = colors[0];
-    } else console.log(`Warning: could not find selected world ${worldKey}`);
 }
 
 function hide()
@@ -148,4 +139,5 @@ document.getElementById("arenas").addEventListener("click", (e) => {
     return false;
 });
 
+refreshList();
 setInterval(refreshList, 1000);
