@@ -9,5 +9,9 @@
         public string AdministratorPassword { get; set; }
 
         public string DiscordToken {get; set;} = null;
+
+        public bool ForceHTTPS { get; set; } = false;
+
+        public bool AllowCORS {get; set;} = true;
     }
 }

@@ -59,8 +59,15 @@
             return config.Object;
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
+        public void Configure(
+            IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            IServiceProvider provider, 
+            IServiceCollection services
+        )
         {
+            var config = LoadConfiguration(services);
+
             app.Use(async (httpContext, next) =>
             {
                 //httpContext.Response.Headers[HeaderNames.Pragma] = "no-cache";
@@ -81,7 +88,13 @@
             app.UseAuthentication();
 
             app.UseMvc();
-            app.UseCors();
+
+            if (config.ForceHTTPS)
+                app.UseHttpsRedirection();
+            
+            if (config.AllowCORS)
+                app.UseCors();
+                
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
