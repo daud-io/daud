@@ -35,8 +35,7 @@ export class Connection {
         }, 1000);
     }
     disconnect() {
-        if (this.socket)
-            this.socket.close();
+        if (this.socket) this.socket.close();
     }
     connect(world) {
         let url;

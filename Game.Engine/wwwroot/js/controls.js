@@ -16,20 +16,17 @@ if (!isMobile) {
 
 var shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
 
-var refreshSelectedStyle = function()
-{
+var refreshSelectedStyle = function() {
     var options = Array.from(document.getElementById("shipSelectorSwitch").children);
     for (var i = 0; i < options.length; i++) {
         var option = options[i];
-        if (option.getAttribute('data-color') == Controls.ship)
-            option.classList.add('selected');
-        else
-            option.classList.remove('selected');
-    };
-}
+        if (option.getAttribute("data-color") == Controls.ship) option.classList.add("selected");
+        else option.classList.remove("selected");
+    }
+};
 
 shipSelectorSwitch.addEventListener("click", function(e) {
-    Controls.ship = e.srcElement.getAttribute('data-color');
+    Controls.ship = e.srcElement.getAttribute("data-color");
     save();
     refreshSelectedStyle();
 });
@@ -132,26 +129,23 @@ export var Controls = {
         }
         Controls.canvas = canvas;
     },
-    initializeWorld: function(world){
+    initializeWorld: function(world) {
         var colors = world.allowedColors;
         var selector = document.getElementById("shipSelectorSwitch");
         while (selector.firstChild) selector.removeChild(selector.firstChild);
-        
-        for (var i = 0; i < colors.length; i++) 
-        {
+
+        for (var i = 0; i < colors.length; i++) {
             var sprite = sprites[colors[i]];
-    
-            if (sprite)
-            {
+
+            if (sprite) {
                 selector.appendChild(sprite.image);
-                sprite.image.setAttribute('data-color', colors[i]);
-                sprite.image.classList.add('circle');
+                sprite.image.setAttribute("data-color", colors[i]);
+                sprite.image.classList.add("circle");
             }
         }
-        
+
         Controls.color = colors[0];
         refreshSelectedStyle();
-
     },
     ship: "ship_green"
 };

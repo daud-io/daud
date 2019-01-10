@@ -112,8 +112,7 @@ async function theme(v) {
             const info = JSON.parse(text);
 
             var version = 1;
-            if (info.version)
-                version = info.version;
+            if (info.version) version = info.version;
 
             info.files.forEach(element => {
                 zip.file(`daudmod/${element[0]}.png`)
@@ -131,13 +130,11 @@ async function theme(v) {
                             textures[element[0]] = new PIXI.Texture.fromImage(url);
                             if (element[1]) {
                                 sprites[element[0]].scale = element[1];
-                                if (version == 1 && element[0].startsWith("ship"))
-                                    sprites[element[0]].scale = 0.03;
+                                if (version == 1 && element[0].startsWith("ship")) sprites[element[0]].scale = 0.03;
                             }
                         }
 
-                        if (window.Game && window.Game.cache)
-                            window.Game.cache.refreshSprites();
+                        if (window.Game && window.Game.cache) window.Game.cache.refreshSprites();
                     });
             });
         });
