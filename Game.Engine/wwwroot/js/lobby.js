@@ -66,11 +66,13 @@ export var LobbyCallbacks = {
     onWorldJoin: false
 }
 
-function refreshList() {
+function refreshList(server) {
     if (!showing && !firstLoad)
         return;
-    
-    fetch("/api/v1/server/worlds", {
+
+    //server = "http://ids:5000";
+
+    fetch(`${server}/api/v1/server/worlds`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json; charset=utf-8"

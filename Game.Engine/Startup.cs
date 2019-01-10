@@ -40,6 +40,9 @@
             {
                 options.AddPolicy("AllowAllOrigins",
                     builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
                 );
             });
 
