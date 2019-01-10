@@ -144,7 +144,6 @@ export var Controls = {
             }
         }
 
-        Controls.color = colors[0];
         refreshSelectedStyle();
     },
     ship: "ship_green"
