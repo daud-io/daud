@@ -444,11 +444,12 @@ table {
 
 #gear {
     position: absolute;
-    padding: 10vmin;
     top: 0;
     left: 0;
-    width: calc(100% - 20vmin);
-    height: calc(100% - 20vmin);
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
     background: rgba(0, 0, 50, 0.8);
     z-index: 3;
     overflow-y: scroll;
@@ -475,6 +476,8 @@ table {
     opacity: 1;
     transition: 0.5s opacity ease-in-out;
 }
+
+#gear .button1,
 #worlds .button1 {
     margin: 2px;
 }
