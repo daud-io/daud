@@ -10,12 +10,12 @@
         private static readonly World Default;
 
         private static readonly string[] AllColors = new[] {
-            "ship_green",
-            "ship_orange",
             "ship_pink",
             "ship_red",
-            "ship_cyan",
-            "ship_yellow"
+            "ship_orange",
+            "ship_yellow",
+            "ship_green",
+            "ship_cyan"
         };
         private static readonly string[] TeamColors = new[] {
             "ship_red",
