@@ -52,8 +52,15 @@ namespace Game.Engine.ChatBot
                     {
                         if (!string.IsNullOrWhiteSpace(player.Token))
                         {
-                            await drc.LoginAsync(TokenType.Bearer, player.Token);
-                            response += $"{world.Key}({world.Value.AdvertisedPlayerCount}): {player.Name} is @{drc.CurrentUser}\n";
+                            try
+                            {
+                                await drc.LoginAsync(TokenType.Bearer, player.Token);
+                                response += $"{world.Key}({world.Value.AdvertisedPlayerCount}): {player.Name} is @{drc.CurrentUser}\n";
+                            }
+                            catch (Exception e)
+                            {
+                                response += $"{world.Key}({world.Value.AdvertisedPlayerCount}): {player.Name} FAIL: ${e.Message}\n";
+                            }
                         }
                     }
 
