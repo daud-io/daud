@@ -78,6 +78,7 @@
 
                     Pickups = 5,
                     Fishes = 50,
+                    FishThrust = 0.02f,
 
                     SeekerRange = 2100,
                     SeekerDelay = 250,
@@ -142,6 +143,7 @@
         public int Obstacles { get; set; }
         public int Pickups { get; set; } = 0;
         public int Fishes { get; set; } = 0;
+        public float FishThrust { get; set; } = 0;
 
         public float ObstacleMaxMomentum { get; set; }
         public int ObstacleMinSize { get; set; }

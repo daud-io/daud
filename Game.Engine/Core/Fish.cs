@@ -30,7 +30,7 @@
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
             );
-            ThrustAmount = World.Hook.BaseThrustB;
+            ThrustAmount = World.Hook.FishThrust;
         }
 
         public override void Think()
