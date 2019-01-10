@@ -406,7 +406,7 @@ namespace Game.Engine.Networking
 
                 case AllMessages.NetSpawn:
                     var spawn = quantum.Message<NetSpawn>().Value;
-                    var color = "green";
+                    var color = "red";
 
                     Sprites shipSprite = Sprites.ship_red;
 
