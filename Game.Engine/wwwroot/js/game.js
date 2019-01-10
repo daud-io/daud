@@ -10,7 +10,7 @@ import { Log } from "./log";
 import { Cooldown } from "./cooldown";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
-import { token } from "./discord";
+import { getToken } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
@@ -206,7 +206,7 @@ setInterval(() => {
     if (angle !== lastControl.angle || aimTarget.X !== aimTarget.X || aimTarget.Y !== aimTarget.Y || Controls.boost !== lastControl.boost || Controls.shoot !== lastControl.shoot) {
         let spectateControl = false;
         if (isSpectating) {
-        if (Controls.shoot) spectateControl = "action:next";
+            if (Controls.shoot) spectateControl = "action:next";
             else spectateControl = "spectating";
         }
 
@@ -214,7 +214,7 @@ setInterval(() => {
 
         lastControl = {
             angle,
-        aimTarget,
+            aimTarget,
             boost: Controls.boost,
             shoot: Controls.shoot
         };
@@ -226,18 +226,17 @@ LobbyCallbacks.onLobbyClose = function() {
     clearLeaderboards();
 };
 
-LobbyCallbacks.onWorldJoin = function(worldKey, world)
-{
+LobbyCallbacks.onWorldJoin = function(worldKey, world) {
     window.Game.primaryConnection.disconnect();
     window.Game.primaryConnection.connect(worldKey);
 
     Controls.initializeWorld(world);
-}
+};
 
 document.getElementById("spawn").addEventListener("click", () => {
     Events.Spawn();
     aliveSince = gameTime;
-    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, token);
+    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
 });
 
 function startSpectate(hideButton) {
@@ -271,7 +270,7 @@ document.addEventListener("keydown", ({ keyCode, which }) => {
             connection.sendExit();
         } else if (isSpectating) {
             stopSpectate();
-        } else if (document.body.classList.contains('lobby')) {
+        } else if (document.body.classList.contains("lobby")) {
             toggleLobby();
         } else {
             startSpectate();

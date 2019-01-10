@@ -25,7 +25,11 @@ function buildList(response) {
         allWorlds[world.world] = world;
 
         options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
-        options += `<tr>` + `<td><button class="button1" id="join">Join</button> (<span id="${world.world}_playercount">${world.players}</span>)</td>` + `<td><b>${world.name}</b>: ${world.description}</td>` + `</tr>`;
+        options +=
+            `<tr>` +
+            `<td><button class="button1" id="join">Join</button> (<span id="${world.world}_playercount">${world.players}</span>)</td>` +
+            `<td><b>${world.name}</b>: ${world.description}</td>` +
+            `</tr>`;
 
         var img = world.image ? `<img src="${imgs[world.image]}" />` : "";
         if (world.instructions || img) options += `<tr class="details"><td colspan="2">${img}${world.instructions || ""}</td></tr>`;
@@ -35,13 +39,11 @@ function buildList(response) {
     worldList.innerHTML = `${options}`;
 
     document.querySelectorAll(".worldrow").forEach(worldRow =>
-        worldRow.addEventListener("click", function (e) {
+        worldRow.addEventListener("click", function(e) {
             var worldKey = this.getAttribute("world");
 
-            if (e.srcElement.tagName == "BUTTON")
-                joinWorld(worldKey);
-            else
-                selectRow(worldKey);
+            if (e.srcElement.tagName == "BUTTON") joinWorld(worldKey);
+            else selectRow(worldKey);
         })
     );
 }
@@ -64,12 +66,11 @@ var firstLoad = true;
 export var LobbyCallbacks = {
     onLobbyClose: false,
     onWorldJoin: false
-}
+};
 
 function refreshList() {
-    if (!showing && !firstLoad)
-        return;
-    
+    if (!showing && !firstLoad) return;
+
     fetch("/api/v1/server/worlds", {
         method: "GET",
         headers: {
@@ -86,28 +87,24 @@ function refreshList() {
 
                 buildList(response);
 
-                if (firstLoad)
-                    joinWorld('default')
+                if (firstLoad) joinWorld("default");
 
                 firstLoad = false;
             }
         });
 }
 
-function hide()
-{
+function hide() {
     worlds.classList.add("closed");
     controls.classList.remove("blur");
     social.classList.remove("blur");
     document.body.classList.remove("lobby");
     showing = false;
 
-    if (LobbyCallbacks.onLobbyClose)
-        LobbyCallbacks.onLobbyClose();
+    if (LobbyCallbacks.onLobbyClose) LobbyCallbacks.onLobbyClose();
 }
 
-function show()
-{
+function show() {
     controls.classList.add("blur");
     social.classList.add("blur");
     document.body.classList.add("lobby");
@@ -120,18 +117,15 @@ function joinWorld(worldKey) {
 }
 
 export function toggleLobby() {
-    if (!showing)
-        show();
-    else
-        hide();
+    if (!showing) show();
+    else hide();
 }
 
-document.getElementById("wcancel").addEventListener("click", (e) => {
-    if (showing)
-        hide();
+document.getElementById("wcancel").addEventListener("click", e => {
+    if (showing) hide();
 });
 
-document.getElementById("arenas").addEventListener("click", (e) => {
+document.getElementById("arenas").addEventListener("click", e => {
     show();
     refreshList();
     worlds.classList.remove("closed");

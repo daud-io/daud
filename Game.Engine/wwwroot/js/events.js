@@ -1,8 +1,10 @@
 ﻿export class Events {
     static Report(category, action, value) {
         window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('event', action, { event_category: category, value: value });
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag("event", action, { event_category: category, value: value });
     }
     static Spawn() {
         Events.Report("life", "spawn");

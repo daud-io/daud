@@ -23,8 +23,7 @@ export class Cache {
         this.clear();
     }
 
-    refreshSprites()
-    {
+    refreshSprites() {
         this.foreach(function(body) {
             let sprite = sprites[body.Sprite];
             let object = this.bodies[`p-${body.ID}`];
