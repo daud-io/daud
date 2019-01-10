@@ -35,7 +35,8 @@ export class Connection {
         }, 1000);
     }
     disconnect() {
-        this.socket.close();
+        if (this.socket)
+            this.socket.close();
     }
     connect(world) {
         let url;
@@ -187,7 +188,7 @@ export class Connection {
     }
 
     send(databuffer) {
-        if (this.socket.readyState === 1) {
+        if (this.socket && this.socket.readyState === 1) {
             const self = this;
             if (this.simulateLatency > 0) {
                 setTimeout(() => {

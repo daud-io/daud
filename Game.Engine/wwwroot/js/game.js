@@ -46,8 +46,8 @@ let lastPosition = false;
 Controls.registerCanvas(canvas);
 
 const connection = new Connection();
-if (window.location.hash) connection.connect(window.location.hash.substring(1));
-else connection.connect();
+/*if (window.location.hash) connection.connect(window.location.hash.substring(1));
+else connection.connect();*/
 
 window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
