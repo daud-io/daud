@@ -78,7 +78,7 @@
 
                     Pickups = 5,
                     Fishes = 50,
-                    FishThrust = 0.02f,
+                    FishThrust = 0.04f,
 
                     SeekerRange = 2100,
                     SeekerDelay = 250,
