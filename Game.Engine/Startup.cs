@@ -19,6 +19,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             var config = LoadConfiguration(services);
+            services.AddSingleton<GameConfiguration>(config);
 
             services.AddTransient<Connection>();
 
@@ -63,11 +64,9 @@
             IApplicationBuilder app, 
             IHostingEnvironment env, 
             IServiceProvider provider, 
-            IServiceCollection services
+            GameConfiguration config
         )
         {
-            var config = LoadConfiguration(services);
-
             app.Use(async (httpContext, next) =>
             {
                 //httpContext.Response.Headers[HeaderNames.Pragma] = "no-cache";
@@ -94,7 +93,7 @@
             
             if (config.AllowCORS)
                 app.UseCors();
-                
+
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
