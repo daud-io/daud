@@ -6,6 +6,7 @@
     public class StayInBounds : ContextBehavior
     {
         private readonly ContextRobot Robot;
+        public int LookAheadMS { get; set; } = 2000;
 
         public StayInBounds(ContextRobot robot)
         {
@@ -21,7 +22,7 @@
             {
                 var projectedCenter = fleet.Center +
                     new Vector2(MathF.Cos(angle), MathF.Sin(angle))
-                    * fleet.Momentum.Length();
+                    * fleet.Momentum.Length() * LookAheadMS;
 
                 var oobX = (MathF.Abs(projectedCenter.X) - Robot.WorldSize);
                 var oobY = (MathF.Abs(projectedCenter.Y) - Robot.WorldSize);

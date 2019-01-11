@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context daudio player robots --replicas=1 --firing --name \"Da++\" --sprite ship0 --color ship0 --world duel"
+      "commandLineArgs": "--context daudio player robots --replicas=5 --firing --name \"BotTest\" --sprite ship0 --color green --world other"
     }
   }
 }

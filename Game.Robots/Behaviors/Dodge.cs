@@ -11,6 +11,8 @@
         private readonly ContextRobot Robot;
         private IEnumerable<Body> DangerousBullets;
 
+        public int LookAheadMS { get; set; } = 250;
+
         private IEnumerable<Vector2> Projections;
 
         public Dodge(ContextRobot robot)
@@ -20,8 +22,6 @@
 
         protected override void PreSweep(ContextRing ring)
         {
-            var LookAheadMS = 1000;
-
             DangerousBullets = Robot.SensorBullets.VisibleBullets.Where(b => b.Group.Owner != Robot.FleetID);
             Projections = DangerousBullets.Select(b => b.ProjectNew(Robot.GameTime + LookAheadMS).Position).ToList();
         }
@@ -35,10 +35,14 @@
             {
                 var projectedCenter = fleet.Center +
                     new Vector2(MathF.Cos(angle), MathF.Sin(angle))
-                    * fleet.Momentum.Length();
+                    * fleet.Momentum.Length() * LookAheadMS;
 
                 foreach (var danger in Projections)
-                    accumulator -= 1/Vector2.DistanceSquared(danger, projectedCenter);
+                {
+                    var distSq = Vector2.DistanceSquared(danger, projectedCenter);
+                    if (distSq < 100000)
+                        accumulator -= 1 / distSq;
+                }
             }
 
             return accumulator;

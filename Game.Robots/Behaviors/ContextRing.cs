@@ -8,6 +8,7 @@
         public readonly float[] Weights;
         private readonly float StepSize;
         public float RingWeight { get; set; } = 1f;
+        public string Name { get; set; }
 
         public ContextRing(int size)
         {

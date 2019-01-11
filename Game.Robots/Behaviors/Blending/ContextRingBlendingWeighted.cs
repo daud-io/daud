@@ -28,7 +28,10 @@
             Console.WriteLine("RingDump");
             foreach (var context in contexts)
             {
-                Console.WriteLine($"{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("0.0")))}");
+                var name = context.Name;
+                while (name.Length < 20)
+                    name += ' ';
+                Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.0;-0.0")))}");
             }
 
             if (contexts.Any())

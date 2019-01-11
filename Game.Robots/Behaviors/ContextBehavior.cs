@@ -16,6 +16,8 @@
 
             this.PostSweep(ring);
 
+            ring.Name = this.GetType().Name;
+
             return ring;
         }
 
