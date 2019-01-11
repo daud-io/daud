@@ -25,6 +25,9 @@
 
         public bool ControlIsBoosting { get; set; }
         public bool ControlIsShooting { get; set; }
+        public float CooldownBoost { get; set; }
+        public float CooldownShoot { get; set; }
+
         public Vector2 ControlAimTarget { get; set; }
 
         public bool IsAlive { get; private set; } = false;
@@ -161,6 +164,8 @@
             FleetID = netWorldView.FleetID;
             GameTime = netWorldView.Time;
             WorldSize = netWorldView.WorldSize;
+            CooldownBoost = netWorldView.CooldownBoost / 255f;
+            CooldownShoot = netWorldView.CooldownShoot / 255f;
 
             if (OnView != null)
                 await OnView();

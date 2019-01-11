@@ -1,7 +1,9 @@
 ﻿namespace Game.Robots
 {
     using Game.Robots.Behaviors;
+    using System.Linq;
     using System.Numerics;
+    using System.Threading.Tasks;
 
     public class ContextTurret : ContextRobot
     {
@@ -18,6 +20,21 @@
 
             Navigation.TargetPoint = target;
             Steps = 16;
+        }
+
+        protected async override Task AliveAsync()
+        {
+            if (CanShoot)
+            {
+                var closest = SensorFleets.Others
+                    .OrderBy(f => Vector2.Distance(this.Position, f.Center))
+                    .FirstOrDefault();
+
+                if (closest != null)
+                    ShootAt(closest.Center);
+            }
+
+            await base.AliveAsync();
         }
     }
 }

@@ -24,6 +24,12 @@
 
         public bool AutoFire { get; set; } = false;
 
+        public bool CanShoot { get => CooldownShoot == 1; }
+        public bool CanBoost { get => CooldownBoost == 1; }
+
+        public float CooldownShoot { get => Connection.CooldownShoot; }
+        public float CooldownBoost { get => Connection.CooldownBoost; }
+
         public IEnumerable<Body> Bodies { get => Connection.Bodies; }
         public Vector2 Position { get => this.Connection.Position; }
         public long GameTime { get => this.Connection.GameTime; }
@@ -34,6 +40,9 @@
         protected virtual Task DeadAsync() => Task.FromResult(0);
         protected virtual Task OnDeathAsync() => Task.FromResult(0);
         protected virtual Task OnSpawnAsync() => Task.FromResult(0);
+
+        public bool Shooting { get; private set; }
+        public Vector2 ShootingAt { get; private set; }
 
         public async Task Start(Connection connection)
         {
@@ -87,9 +96,21 @@
         {
             await AliveAsync();
 
+            if (!this.CanShoot && this.Shooting)
+            {
+                this.Shooting = false;
+                Connection.ControlIsShooting = false;
+            }
+
             if (AutoFire)
             {
                 this.Connection.ControlIsShooting = true;
+                this.Shooting = true;
+            }
+            else
+            {
+                if (Shooting)
+                    SteerPointAbsolute(ShootingAt);
             }
 
             await this.Connection.SendControlInputAsync();
@@ -106,6 +127,16 @@
                     await Connection.SpawnAsync(Name, Sprite, Color);
                     LastSpawn = DateTime.Now;
                 }
+            }
+        }
+
+        public void ShootAt(Vector2 target)
+        {
+            if (CanShoot)
+            {
+                Shooting = true;
+                ShootingAt = target; 
+                Connection.ControlIsShooting = true;
             }
         }
 
