@@ -1,6 +1,7 @@
 ﻿namespace Game.Robots
 {
     using Game.Robots.Behaviors;
+    using Newtonsoft.Json;
     using System.Linq;
     using System.Numerics;
     using System.Threading.Tasks;
@@ -34,9 +35,14 @@
                 {
                     ShootAt(closest.Center);
 
-                    CustomData = $"Shooting at ${closest.Name}";
                 }
             }
+
+            if (SensorFleets.Others != null)
+                CustomData = JsonConvert.SerializeObject(new
+                {
+                    spots = SensorFleets.Others.Select(f => f.Center)
+                });
 
             await base.AliveAsync();
         }

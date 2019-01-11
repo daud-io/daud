@@ -42,6 +42,11 @@
             MyFleet = AllVisibleFleets.FirstOrDefault(f => f.ID == Robot.FleetID);
         }
 
-        public IEnumerable<Fleet> Others { get => AllVisibleFleets.Except(new[] { MyFleet }); }
+        public IEnumerable<Fleet> Others
+        {
+            get => MyFleet != null
+                ? AllVisibleFleets.Except(new[] { MyFleet })
+                : AllVisibleFleets;
+        }
     }
 }

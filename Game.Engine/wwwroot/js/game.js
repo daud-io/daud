@@ -43,6 +43,9 @@ let lastOffset = false;
 let gameTime = false;
 let lastPosition = false;
 
+let CustomData = false;
+let CustomDataTime = false;
+
 Controls.registerCanvas(canvas);
 
 const connection = new Connection();
@@ -197,9 +200,17 @@ connection.onView = newView => {
         cooldownShoot: newView.cooldownShoot()
     })*/
 
-    var customData = newView.customData();
-    if (customData)
-        console.log(customData);
+    var data = newView.customData();
+    if (data)
+    {
+        CustomData = data;
+        CustomDataTime = view.time;
+    }
+    else
+    if (CustomDataTime + 5000 < view.time)
+    {
+        CustomData = false;
+    }
 
     view.camera = bodyFromServer(cache, newView.camera());
 };
@@ -334,6 +345,10 @@ function doPing() {
 doPing();
 setInterval(doPing, 1000);
 
+
+var graphics = new PIXI.Graphics();
+container.addChild(graphics);
+
 // Game Loop
 app.ticker.add(() => {
     const latency = connection.minLatency || 0;
@@ -371,6 +386,28 @@ app.ticker.add(() => {
             X: Settings.mouseScale * (pos.x - position.X),
             Y: Settings.mouseScale * (pos.y - position.Y)
         };
+    }
+
+    if (CustomData)
+    {
+        //console.log(CustomData);
+
+        graphics.clear();
+
+        var data = JSON.parse(CustomData);
+
+        if (data.spots)
+        {
+            for (var i=0; i<data.spots.length; i++)
+            {
+                var spot = data.spots[i];
+                console.log(spot);
+                graphics.beginFill(0xFF00BB, 0.25);
+                graphics.drawCircle(spot.X, spot.Y, 200);
+                graphics.endFill();
+            }
+        }
+        //CustomData = false;
     }
 
     /*
