@@ -43,6 +43,7 @@
 
         public bool Shooting { get; private set; }
         public Vector2 ShootingAt { get; private set; }
+        public long ShootUntil { get; set; }
 
         public async Task Start(Connection connection)
         {
@@ -96,7 +97,7 @@
         {
             await AliveAsync();
 
-            if (!this.CanShoot && this.Shooting)
+            if (!this.CanShoot && this.Shooting && GameTime > ShootUntil)
             {
                 this.Shooting = false;
                 Connection.ControlIsShooting = false;
@@ -135,7 +136,8 @@
             if (CanShoot)
             {
                 Shooting = true;
-                ShootingAt = target; 
+                ShootingAt = target;
+                ShootUntil = GameTime + 100;
                 Connection.ControlIsShooting = true;
             }
         }
