@@ -48,6 +48,8 @@
         public bool LastTouchedLeft { get; set; } = false;
         private bool FireVolley = false;
 
+        public string CustomData { get; set; }
+
         public Sprites BulletSprite
         {
             get

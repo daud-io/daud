@@ -2,6 +2,7 @@
 {
     public interface IBehaviors
     {
+        void Reset();
         ContextRing Behave(int steps);
     }
 }

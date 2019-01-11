@@ -184,6 +184,8 @@ public struct NetControlInput : IFlatbufferObject
   public bool Shoot { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public string SpectateControl { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
   public ArraySegment<byte>? GetSpectateControlBytes() { return __p.__vector_as_arraysegment(14); }
+  public string CustomData { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetCustomDataBytes() { return __p.__vector_as_arraysegment(16); }
 
   public static Offset<NetControlInput> CreateNetControlInput(FlatBufferBuilder builder,
       float angle = 0.0f,
@@ -191,8 +193,10 @@ public struct NetControlInput : IFlatbufferObject
       float y = 0.0f,
       bool boost = false,
       bool shoot = false,
-      StringOffset spectateControlOffset = default(StringOffset)) {
-    builder.StartObject(6);
+      StringOffset spectateControlOffset = default(StringOffset),
+      StringOffset customDataOffset = default(StringOffset)) {
+    builder.StartObject(7);
+    NetControlInput.AddCustomData(builder, customDataOffset);
     NetControlInput.AddSpectateControl(builder, spectateControlOffset);
     NetControlInput.AddY(builder, y);
     NetControlInput.AddX(builder, x);
@@ -202,13 +206,14 @@ public struct NetControlInput : IFlatbufferObject
     return NetControlInput.EndNetControlInput(builder);
   }
 
-  public static void StartNetControlInput(FlatBufferBuilder builder) { builder.StartObject(6); }
+  public static void StartNetControlInput(FlatBufferBuilder builder) { builder.StartObject(7); }
   public static void AddAngle(FlatBufferBuilder builder, float angle) { builder.AddFloat(0, angle, 0.0f); }
   public static void AddX(FlatBufferBuilder builder, float x) { builder.AddFloat(1, x, 0.0f); }
   public static void AddY(FlatBufferBuilder builder, float y) { builder.AddFloat(2, y, 0.0f); }
   public static void AddBoost(FlatBufferBuilder builder, bool boost) { builder.AddBool(3, boost, false); }
   public static void AddShoot(FlatBufferBuilder builder, bool shoot) { builder.AddBool(4, shoot, false); }
   public static void AddSpectateControl(FlatBufferBuilder builder, StringOffset spectateControlOffset) { builder.AddOffset(5, spectateControlOffset.Value, 0); }
+  public static void AddCustomData(FlatBufferBuilder builder, StringOffset customDataOffset) { builder.AddOffset(6, customDataOffset.Value, 0); }
   public static Offset<NetControlInput> EndNetControlInput(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetControlInput>(o);
@@ -299,8 +304,10 @@ public struct NetWorldView : IFlatbufferObject
   public byte CooldownShoot { get { int o = __p.__offset(26); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public byte CooldownBoost { get { int o = __p.__offset(28); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public ushort WorldSize { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  public string CustomData { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetCustomDataBytes() { return __p.__vector_as_arraysegment(32); }
 
-  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(14); }
+  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(15); }
   public static void AddTime(FlatBufferBuilder builder, uint time) { builder.AddUint(0, time, 0); }
   public static void AddCamera(FlatBufferBuilder builder, Offset<NetBody> cameraOffset) { builder.AddStruct(1, cameraOffset.Value, 0); }
   public static void AddFleetID(FlatBufferBuilder builder, uint fleetID) { builder.AddUint(2, fleetID, 0); }
@@ -324,6 +331,7 @@ public struct NetWorldView : IFlatbufferObject
   public static void AddCooldownShoot(FlatBufferBuilder builder, byte cooldownShoot) { builder.AddByte(11, cooldownShoot, 0); }
   public static void AddCooldownBoost(FlatBufferBuilder builder, byte cooldownBoost) { builder.AddByte(12, cooldownBoost, 0); }
   public static void AddWorldSize(FlatBufferBuilder builder, ushort worldSize) { builder.AddUshort(13, worldSize, 0); }
+  public static void AddCustomData(FlatBufferBuilder builder, StringOffset customDataOffset) { builder.AddOffset(14, customDataOffset.Value, 0); }
   public static Offset<NetWorldView> EndNetWorldView(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetWorldView>(o);

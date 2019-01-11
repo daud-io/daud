@@ -28,6 +28,22 @@
             }
         }
 
+        public Vector2 Momentum
+        {
+            get
+            {
+                Vector2 acc = new Vector2(0, 0);
+
+                foreach (var ship in Ships)
+                    acc += ship.Momentum;
+
+                if (Ships.Count > 0)
+                    return acc / Ships.Count;
+                else
+                    return Vector2.Zero;
+            }
+        }
+
         public class Ship
         {
             public Vector2 Position { get; set; }

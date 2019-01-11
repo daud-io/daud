@@ -39,6 +39,7 @@
 
                     existing.Size = update.Size;
                     existing.Sprite = update.Sprite;
+                    existing.GroupID = update.GroupID;
                 }
             }
 

@@ -51,6 +51,7 @@ table NetControlInput
 	boost:bool;
 	shoot:bool;
     spectateControl:string;
+    customData:string;
 }
 
 table NetPing
@@ -81,6 +82,7 @@ table NetWorldView
     cooldownShoot:ubyte;
     cooldownBoost:ubyte;
     worldSize:ushort;
+    customData:string;
 }
 
 table NetGroup

@@ -40,5 +40,16 @@
             Angle = OriginalAngle + timeDelta * AngularVelocity;
         }
 
+        public Body ProjectNew(long time)
+        {
+            var newBody = this.Clone() as Body;
+            newBody.Project(time);
+            return newBody;
+        }
+
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
     }
 }

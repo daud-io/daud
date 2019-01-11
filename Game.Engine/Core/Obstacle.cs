@@ -8,7 +8,6 @@
     {
         private Vector2 TargetMomentum = Vector2.Zero;
         private float Multiplier = 1;
-        private float GrowthRate = 0;
         private long DieByTime = 0;
         private float IdealSize = 1;
         private int TargetSize = 0;

@@ -16,6 +16,7 @@
         private readonly APIClient APIClient;
         private readonly string WorldName = null;
         public long GameTime { get; private set; }
+        public ushort WorldSize { get; private set; }
 
         private readonly Timer PingTimer;
         private ClientWebSocket Socket = null;
@@ -24,6 +25,11 @@
 
         public bool ControlIsBoosting { get; set; }
         public bool ControlIsShooting { get; set; }
+        public float CooldownBoost { get; set; }
+        public float CooldownShoot { get; set; }
+
+        public string CustomData { get; set; }
+
         public Vector2 ControlAimTarget { get; set; }
 
         public bool IsAlive { get; private set; } = false;
@@ -80,6 +86,12 @@
         public async Task SendControlInputAsync()
         {
             var builder = new FlatBufferBuilder(1);
+
+            StringOffset customOffset = new StringOffset();
+
+            if (CustomData != null)
+                customOffset = builder.CreateString(CustomData);
+
             NetControlInput.StartNetControlInput(builder);
 
             NetControlInput.AddAngle(builder, 0);
@@ -87,6 +99,8 @@
             NetControlInput.AddX(builder, ControlAimTarget.X);
             NetControlInput.AddY(builder, ControlAimTarget.Y);
             NetControlInput.AddShoot(builder, ControlIsShooting);
+            if (CustomData != null)
+                NetControlInput.AddCustomData(builder, customOffset);
 
             var controlInput = NetControlInput.EndNetControlInput(builder);
 
@@ -159,6 +173,9 @@
             IsAlive = netWorldView.IsAlive;
             FleetID = netWorldView.FleetID;
             GameTime = netWorldView.Time;
+            WorldSize = netWorldView.WorldSize;
+            CooldownBoost = netWorldView.CooldownBoost / 255f;
+            CooldownShoot = netWorldView.CooldownShoot / 255f;
 
             if (OnView != null)
                 await OnView();

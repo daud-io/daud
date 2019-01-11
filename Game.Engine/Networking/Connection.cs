@@ -48,6 +48,8 @@ namespace Game.Engine.Networking
 
         public Fleet SpectatingFleet = null;
 
+        public string CustomData = null;
+
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
@@ -179,6 +181,7 @@ namespace Game.Engine.Networking
                                 b.GroupUpdated.ID
                             ).ToArray());
 
+
                             NetWorldView.StartUpdatesVector(builder, updateBodies.Count());
                             foreach (var b in updateBodies)
                             {
@@ -225,6 +228,10 @@ namespace Game.Engine.Networking
                                 }).ToArray());
                             }
 
+                            StringOffset customOffset = new StringOffset();
+                            if (followFleet?.CustomData != null && followFleet.CustomData != CustomData)
+                                customOffset = builder.CreateString(followFleet.CustomData);
+
                             NetWorldView.StartNetWorldView(builder);
 
                             // define camera
@@ -255,6 +262,10 @@ namespace Game.Engine.Networking
                             NetWorldView.AddGroupDeletes(builder, groupDeletesVector);
                             if (messages != null && messages.Any())
                                 NetWorldView.AddAnnouncements(builder, announcementsVector);
+
+                            if (followFleet?.CustomData != null && followFleet.CustomData != CustomData)
+                                NetWorldView.AddCustomData(builder, customOffset);
+                            CustomData = followFleet?.CustomData;
 
                             var players = Player.GetWorldPlayers(world);
                             NetWorldView.AddPlayerCount(builder, (uint)players.Count(p => p.IsAlive || p.IsStillPlaying));
@@ -455,11 +466,13 @@ namespace Game.Engine.Networking
                     break;
                 case AllMessages.NetControlInput:
                     var input = quantum.Message<NetControlInput>().Value;
+
                     player?.SetControl(new ControlInput
                     {
                         Position = new Vector2(input.X, input.Y),
                         BoostRequested = input.Boost,
-                        ShootRequested = input.Shoot
+                        ShootRequested = input.Shoot,
+                        CustomData = input.CustomData
                     });
 
                     switch (input.SpectateControl)
