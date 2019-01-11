@@ -140,6 +140,7 @@
                 Fleet.AimTarget = ControlInput.Position;
                 Fleet.BoostRequested = ControlInput.BoostRequested;
                 Fleet.ShootRequested = ControlInput.ShootRequested;
+                Fleet.CustomData = ControlInput.CustomData;
             }
 
             this.IsControlNew = false;

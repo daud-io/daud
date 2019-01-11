@@ -45,6 +45,8 @@
         public Vector2 ShootingAt { get; private set; }
         public long ShootUntil { get; set; }
 
+        public string CustomData { get => Connection.CustomData; set => Connection.CustomData = value; }
+
         public async Task Start(Connection connection)
         {
             this.Connection = connection;

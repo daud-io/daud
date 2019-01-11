@@ -31,7 +31,11 @@
                     .FirstOrDefault();
 
                 if (closest != null)
+                {
                     ShootAt(closest.Center);
+
+                    CustomData = $"Shooting at ${closest.Name}";
+                }
             }
 
             await base.AliveAsync();

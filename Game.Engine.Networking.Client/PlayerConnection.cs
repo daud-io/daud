@@ -28,6 +28,8 @@
         public float CooldownBoost { get; set; }
         public float CooldownShoot { get; set; }
 
+        public string CustomData { get; set; }
+
         public Vector2 ControlAimTarget { get; set; }
 
         public bool IsAlive { get; private set; } = false;
@@ -84,6 +86,12 @@
         public async Task SendControlInputAsync()
         {
             var builder = new FlatBufferBuilder(1);
+
+            StringOffset customOffset = new StringOffset();
+
+            if (CustomData != null)
+                customOffset = builder.CreateString(CustomData);
+
             NetControlInput.StartNetControlInput(builder);
 
             NetControlInput.AddAngle(builder, 0);
@@ -91,6 +99,8 @@
             NetControlInput.AddX(builder, ControlAimTarget.X);
             NetControlInput.AddY(builder, ControlAimTarget.Y);
             NetControlInput.AddShoot(builder, ControlIsShooting);
+            if (CustomData != null)
+                NetControlInput.AddCustomData(builder, customOffset);
 
             var controlInput = NetControlInput.EndNetControlInput(builder);
 

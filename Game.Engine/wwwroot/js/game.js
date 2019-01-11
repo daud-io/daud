@@ -197,6 +197,10 @@ connection.onView = newView => {
         cooldownShoot: newView.cooldownShoot()
     })*/
 
+    var customData = newView.customData();
+    if (customData)
+        console.log(customData);
+
     view.camera = bodyFromServer(cache, newView.camera());
 };
 

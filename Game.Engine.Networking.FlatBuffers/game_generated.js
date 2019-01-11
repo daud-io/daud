@@ -640,10 +640,19 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.spectateControl = f
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetControlInput.prototype.customData = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 16);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.startNetControlInput = function(builder) {
-  builder.startObject(6);
+  builder.startObject(7);
 };
 
 /**
@@ -692,6 +701,14 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.addShoot = function(builder, 
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.addSpectateControl = function(builder, spectateControlOffset) {
   builder.addFieldOffset(5, spectateControlOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} customDataOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetControlInput.addCustomData = function(builder, customDataOffset) {
+  builder.addFieldOffset(6, customDataOffset, 0);
 };
 
 /**
@@ -1095,10 +1112,19 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.worldSize = function()
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.prototype.customData = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 32);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.startNetWorldView = function(builder) {
-  builder.startObject(14);
+  builder.startObject(15);
 };
 
 /**
@@ -1303,6 +1329,14 @@ Game.Engine.Networking.FlatBuffers.NetWorldView.addCooldownBoost = function(buil
  */
 Game.Engine.Networking.FlatBuffers.NetWorldView.addWorldSize = function(builder, worldSize) {
   builder.addFieldInt16(13, worldSize, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} customDataOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetWorldView.addCustomData = function(builder, customDataOffset) {
+  builder.addFieldOffset(14, customDataOffset, 0);
 };
 
 /**
