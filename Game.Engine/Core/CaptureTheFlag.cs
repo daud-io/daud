@@ -20,16 +20,18 @@
 
         public Leaderboard LeaderboardGenerator()
         {
+
             var entries = Teams.Select(t => new Leaderboard.Entry
             {
                 Color = t.ColorName,
                 Name = t.ColorName,
                 Score = t.Score,
-                Position = t.Flag?.Position ?? Vector2.Zero
+                Position = t.Flag?.Position ?? Vector2.Zero,
+                ModeData = new { flagStatus = t.Base.FlagIsHome() ? "Home" : "Taken" }
             }).ToList();
 
             var players = Player.GetWorldPlayers(World);
-
+            
             foreach (var team in Teams)
             {
                 entries.AddRange(players
@@ -37,6 +39,7 @@
                     .Where(p => p.IsAlive)
                     .Select(p => new Leaderboard.Entry
                     {
+                        FleetID = p.Fleet?.ID ?? 0,
                         Color = team.ColorName,
                         Name = p.Name,
                         Position = p.Fleet?.FleetCenter ?? Vector2.Zero,
@@ -111,6 +114,7 @@
             var flag = new Flag(flagSpriteBase, team, b);
             b.Flag = flag;
             team.Flag = flag;
+            team.Base = b;
 
             flag.Init(World);
             b.Init(World);
@@ -225,6 +229,7 @@
             public Vector2 BaseLocation { get; set; }
             public int Score { get; set; }
             public Flag Flag { get; set; }
+            public Base Base { get; set; }
 
             public void Scored()
             {
@@ -268,7 +273,7 @@
                 flag.ReturnToBase();
             }
 
-            private bool FlagIsHome()
+            public bool FlagIsHome()
             {
                 return Vector2.Distance(Flag.Position, this.Position)
                     < (Flag.Size + this.Size);
@@ -349,7 +354,7 @@
                 base.Init(world);
 
                 FlagGroup.Init(world);
-                FlagGroup.ZIndex = 10;
+                FlagGroup.ZIndex = 200;
                 this.Group = FlagGroup;
                 Position = world.RandomPosition();
             }

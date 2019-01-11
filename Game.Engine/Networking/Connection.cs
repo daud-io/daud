@@ -1,4 +1,6 @@
-﻿namespace Game.Engine.Networking
+﻿using Newtonsoft.Json;
+
+namespace Game.Engine.Networking
 {
     using Game.API.Common;
     using Game.Engine.Core;
@@ -101,15 +103,19 @@
                         // if we're watching a fleet, watch the center of their fleet
                         if (followFleet != null)
                         {
-                            var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
-
-                            followBody = new Body
+                            if (world.Hook.FollowFirstShip)
+                                followBody = followFleet.Ships.FirstOrDefault();
+                            else
                             {
-                                DefinitionTime = world.Time,
-                                OriginalPosition = center,
-                                Position = center,
-                                Momentum = followFleet.FleetMomentum
-                            };
+                                var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
+                                followBody = new Body
+                                {
+                                    DefinitionTime = world.Time,
+                                    OriginalPosition = center,
+                                    Position = center,
+                                    Momentum = followFleet.FleetMomentum
+                                };
+                            }
                         }
 
                         // we've found someone to spectate, record it
@@ -283,7 +289,7 @@
 
                         var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
                         var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
-
+                        
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
                         NetLeaderboardEntry.AddName(builder, stringName);
@@ -294,16 +300,26 @@
 
                         var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
                         {
+                            // the strings must be created into the buffer before the are referenced
+                            // and before the start of the entry object
                             stringName = builder.CreateString(e.Name ?? string.Empty);
                             stringColor = builder.CreateString(e.Color ?? string.Empty);
-                            // stringToken = builder.CreateString( ?? string.Empty);
+                            StringOffset stringModeData = new StringOffset();
 
+                            if (e.ModeData != null)
+                                stringModeData = builder.CreateString(JsonConvert.SerializeObject(e.ModeData));
+
+                            // here's the start of the entry object, after this we can only use
+                            // predefined string offsets
                             NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
+                            NetLeaderboardEntry.AddFleetID(builder, e.FleetID);
                             NetLeaderboardEntry.AddName(builder, stringName);
                             NetLeaderboardEntry.AddColor(builder, stringColor);
                             NetLeaderboardEntry.AddScore(builder, e.Score);
                             NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
                             NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(e.Token));
+                            if (e.ModeData != null)
+                                NetLeaderboardEntry.AddModeData(builder, stringModeData);
 
                             return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
                         }).ToArray());
@@ -390,41 +406,51 @@
 
                 case AllMessages.NetSpawn:
                     var spawn = quantum.Message<NetSpawn>().Value;
+                    var color = "red";
 
                     Sprites shipSprite = Sprites.ship_red;
 
-                    switch (spawn.Color)
+                    switch (spawn.Ship)
                     {
                         case "ship0":
                             shipSprite = Sprites.ship0;
+                            color = "green";
                             break;
                         case "ship_secret":
                             shipSprite = Sprites.ship_secret;
+                            color = "yellow";
                             break;
                         case "ship_zed":
                             shipSprite = Sprites.ship_zed;
+                            color = "red";
                             break;
-                        case "green":
+                        case "ship_green":
                             shipSprite = Sprites.ship_green;
+                            color = "green";
                             break;
-                        case "orange":
+                        case "ship_orange":
                             shipSprite = Sprites.ship_orange;
+                            color = "orange";
                             break;
-                        case "pink":
+                        case "ship_pink":
                             shipSprite = Sprites.ship_pink;
+                            color = "pink";
                             break;
-                        case "red":
+                        case "ship_red":
                             shipSprite = Sprites.ship_red;
+                            color = "red";
                             break;
-                        case "cyan":
+                        case "ship_cyan":
                             shipSprite = Sprites.ship_cyan;
+                            color = "cyan";
                             break;
-                        case "yellow":
+                        case "ship_yellow":
                             shipSprite = Sprites.ship_yellow;
+                            color = "yellow";
                             break;
                     }
 
-                    player.Spawn(spawn.Name, shipSprite, spawn.Color, spawn.Token);
+                    player.Spawn(spawn.Name, shipSprite, color, spawn.Token);
 
                     break;
                 case AllMessages.NetControlInput:

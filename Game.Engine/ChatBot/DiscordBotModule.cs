@@ -29,6 +29,14 @@ namespace Game.Engine.ChatBot
             await ReplyAsync(user.ToString());
         }
 
+        [Command("reset"), RequireUserPermission(GuildPermission.ManageChannels)]
+        public async Task ResetAsync()
+        {
+            
+            Program.Abort();
+            await ReplyAsync("woah... room spinning. so... cold...");
+        }
+
         [Command("worlds")]
         public async Task WorldsAsync()
         {
@@ -44,8 +52,15 @@ namespace Game.Engine.ChatBot
                     {
                         if (!string.IsNullOrWhiteSpace(player.Token))
                         {
-                            await drc.LoginAsync(TokenType.Bearer, player.Token);
-                            response += $"{world.Key}({world.Value.AdvertisedPlayerCount}): {player.Name} is @{drc.CurrentUser}\n";
+                            try
+                            {
+                                await drc.LoginAsync(TokenType.Bearer, player.Token);
+                                response += $"{world.Key}({world.Value.AdvertisedPlayerCount}): {player.Name} is @{drc.CurrentUser}\n";
+                            }
+                            catch (Exception e)
+                            {
+                                response += $"{world.Key}({world.Value.AdvertisedPlayerCount}): {player.Name} FAIL: ${e.Message}\n";
+                            }
                         }
                     }
 

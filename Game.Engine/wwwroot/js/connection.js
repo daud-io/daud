@@ -34,7 +34,9 @@ export class Connection {
             self.statBytesDown = 0;
         }, 1000);
     }
-
+    disconnect() {
+        if (this.socket) this.socket.close();
+    }
     connect(world) {
         let url;
         if (window.location.protocol === "https:") {
@@ -185,7 +187,7 @@ export class Connection {
     }
 
     send(databuffer) {
-        if (this.socket.readyState === 1) {
+        if (this.socket && this.socket.readyState === 1) {
             const self = this;
             if (this.simulateLatency > 0) {
                 setTimeout(() => {
@@ -245,6 +247,7 @@ export class Connection {
                     const entry = message.entries(i);
 
                     entries.push({
+                        FleetID: entry.fleetID(),
                         Name: entry.name(),
                         Color: entry.color(),
                         Score: entry.score(),
@@ -252,7 +255,8 @@ export class Connection {
                             X: entry.position().x(),
                             Y: entry.position().y()
                         },
-                        Token: entry.token()
+                        Token: entry.token(),
+                        ModeData: JSON.parse(entry.modeData()) || { flagStatus: "home" }
                     });
                 }
 
@@ -267,6 +271,7 @@ export class Connection {
                         Token: record.token()
                     }
                 });
+
                 break;
         }
     }

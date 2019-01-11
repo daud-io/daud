@@ -9,6 +9,8 @@
                 return new Hook
                 {
                     WorldSize = 6000,
+                    FollowFirstShip = false,
+                    FiringSequenceDelay = 0,
 
                     BaseThrustM = -0.003f,
                     BaseThrustB = 0.13f,
@@ -19,6 +21,7 @@
 
                     BoostCooldownTimeM = 4.0f,
                     BoostCooldownTimeB = 1096.0f,
+                    ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 1f,
                     BoostDuration = 420,
@@ -66,6 +69,7 @@
                     FlockSeparation = 80f,
                     FlockSeparationMinimumDistance = 200,
                     FlockWeight = 0.14f,
+                    SnakeWeight = 0f,
 
                     ShipGainBySizeM = -0.03f,
                     ShipGainBySizeB = 1.03f,
@@ -74,6 +78,7 @@
 
                     Pickups = 5,
                     Fishes = 50,
+                    FishThrust = 0.04f,
 
                     SeekerRange = 2100,
                     SeekerDelay = 250,
@@ -120,6 +125,7 @@
 
         public float ShotCooldownTimeM { get; set; }
         public float ShotCooldownTimeB { get; set; }
+        public int ShotCooldownTimeShark { get; set; }
 
         public float ShotCooldownTimeBotM { get; set; }
         public float ShotCooldownTimeBotB { get; set; }
@@ -137,6 +143,7 @@
         public int Obstacles { get; set; }
         public int Pickups { get; set; } = 0;
         public int Fishes { get; set; } = 0;
+        public float FishThrust { get; set; } = 0;
 
         public float ObstacleMaxMomentum { get; set; }
         public int ObstacleMinSize { get; set; }
@@ -157,6 +164,8 @@
         public float FlockSeparation { get; set; }
         public int FlockSeparationMinimumDistance { get; set; }
         public float FlockWeight { get; set; }
+        public float SnakeWeight { get; set; }
+
         public int FlockSpeed { get; set; }
 
         public int SeekerRange { get; set; }
@@ -171,6 +180,9 @@
         public float OutOfBoundsBorder { get; set; } = 300;
         public float OutOfBoundsDecayDistance { get; set; } = 900;
         public int BotRespawnDelay { get; set; }
+
+        public bool FollowFirstShip { get; set; }
+        public int FiringSequenceDelay { get; set; }
 
         public string SpawnLocationMode { get; set; }
 

@@ -1,4 +1,4 @@
-﻿@import url("https://fonts.googleapis.com/css?family=Exo+2");
+@import url("https://fonts.googleapis.com/css?family=Exo+2");
 
 html,
 body {
@@ -10,7 +10,9 @@ body {
     overflow: hidden;
     font-family: "Exo 2";
     color: white;
+    --bg-color-1: #222;
 }
+
 .aspectratio {
     width: 100vw;
     height: 56.25vw; /* 100/56.25 = 1.778 */
@@ -49,15 +51,6 @@ body {
     /* Dropdown effect Learnt From: https://davidwalsh.name/css-slide. Doesnt work as expected */
     overflow-y: hidden;
     max-height: 500px;
-    -webkit-transition-property: all;
-    -webkit-transition-duration: 0.5s;
-    -webkit-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-    -moz-transition-property: all;
-    -moz-transition-duration: 0.5s;
-    -moz-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-    -ms-transition-property: all;
-    -ms-transition-duration: 0.5s;
-    -ms-transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
     transition-property: all;
     transition-duration: 0.5s;
     transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
@@ -72,7 +65,12 @@ body {
 .loading .spawnscreen,
 .dead.spectating .spawnscreen,
 .alive .spawnscreen {
-    visibility: hidden;
+    display: none;
+}
+
+.alive #fullPageCard,
+.spectating #fullPageCard {
+    display: none;
 }
 
 .spawnscreen {
@@ -99,12 +97,11 @@ body {
 #logo {
     width: 90vmin;
     image-rendering: pixelated;
-    image-rendering: -moz-crisp-edges;
-    image-rendering: crisp-edges;
 }
 
 #hintbox {
     font-size: 14pt;
+    margin: 2rem 0 0 0;
 }
 
 a:visited,
@@ -112,11 +109,37 @@ a {
     color: white;
 }
 
+@media only screen and (max-width: 1200px) {
+    #twitterpated,
+    #controls_instructions {
+        transform: scale(0.6);
+        transform-origin: bottom left;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+    #twitterpated,
+    #socialMediaContainer,
+    #controls_instructions {
+        display: none;
+    }
+}
+#socialMediaContainer {
+    position: absolute;
+    bottom: 3vh;
+}
 #twitterpated {
-    left: 30px;
+    left: 0;
     width: 500px;
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.15);
     padding: 0.5em;
+    border-radius: 5px;
+    position: absolute;
+    bottom: 10vh;
+}
+
+#twitterpated h4 {
+    margin: 0 0 3px 3px;
 }
 
 #twitterpated .date {
@@ -127,17 +150,18 @@ a {
 
 #controls_instructions {
     position: absolute;
-    right: 20%;
+    right: 20vh;
     width: 240px;
-    margin-top: -14px;
+    bottom: 0;
 }
 
 .spawnscreen .social {
     text-align: left;
-    bottom: 50px;
-    margin-left: 50px;
+    bottom: 0;
+    margin-left: 2%;
+    margin-right: 2%;
     position: absolute;
-    width: 100%;
+    width: 96%;
 }
 
 .spectating #nipple-controls,
@@ -158,23 +182,22 @@ a {
 }
 
 #reddit {
-    width: 10%;
-    margin-left: 20px;
-    vertical-align: super;
+    height: 6vh;
+    vertical-align: middle;
 }
 
 #discord {
-    height: 40px;
+    height: 6vh;
+    vertical-align: middle;
 }
 
 #iogamesspace {
     vertical-align: middle;
-    width: 4%;
+    height: 4vh;
 }
 
 #titotu {
-    width: 9%;
-    margin-left: 20px;
+    height: 4vh;
     vertical-align: middle;
 }
 
@@ -189,8 +212,9 @@ a {
 }
 
 #spectate_container {
-    float: right;
-    margin-right: 10%;
+    position: absolute;
+    right: 0;
+    bottom: 3vh;
 }
 
 #stop_spectating_container {
@@ -223,30 +247,130 @@ a {
     opacity: 1;
 }
 
-.spawnscreen input,
-.spawnscreen select {
-    font-size: 1rem;
+.button1 {
+    border: 1px solid #9d9d9d;
     border-radius: 5px;
-    padding: 5px 5px 10px 5px;
-    border: none;
-    background: linear-gradient(to right, #008888 0%, #0066ff 100%) left bottom rgba(55, 55, 90, 0.8) no-repeat;
-    background-size: 100% 5px;
+    color: #9d9d9d;
+    background: none;
+    padding: 10px;
+    margin: 1vh 0.5vh;
+    font-size: 0.75rem;
     color: white;
-    margin: 0.5em;
+    text-transform: uppercase;
+    transition: border 1s, color 1s;
+}
+
+.button1:hover {
+    cursor: pointer;
+    border: 1px solid white;
+    color: #fff;
+}
+
+.button1:disabled {
+    border: none;
+}
+
+#nick {
+    border: none;
+    background: none;
+    border-bottom: 1px solid #9d9d9d;
+    text-align: center;
+    padding: 5px 0 5px 0;
+    font-size: 2rem;
+    color: white;
+    margin: 0 0 10px 0;
+    transition: border-bottom 1s;
+    width: 20rem;
+}
+
+#shipSelectorSwitch {
+    margin: 0 0 20px 0;
+}
+
+#shipSelectorSwitch .circle {
+    width: 8vh;
+    height: 8vh;
+    margin: 0 5px 0 5px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: transform 0.6s;
+    display: inline-block;
+    transform: rotate(-90deg);
+}
+
+#shipSelectorSwitch .circle:hover {
+    transform: rotate(-90deg) scale(1.1);
+}
+
+#shipSelectorSwitch .selected,
+#shipSelectorSwitch .selected:hover {
+    transform: rotate(-90deg) scale(1.3);
+}
+
+#nick:focus {
+    border-bottom: 1px solid white;
+    outline: none;
 }
 
 select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
     appearance: none;
 }
 
 .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+    user-select: none;
+}
+
+#ctf_arena {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    margin: 0;
+}
+
+#ctf_cyan {
+    position: absolute;
+    top: 20px;
+    margin-right: 25%;
+    font-size: 30px;
+    left: 0;
+    width: 50%;
+    text-align: right;
+}
+
+#ctf_cyan .flag_status {
+    margin-right: 150px;
+    opacity: 0.7;
+}
+
+#ctf_cyan .flag_status .home {
+    color: green;
+}
+
+#ctf_cyan .flag_status .taken {
+    color: red;
+}
+
+#ctf_red {
+    position: absolute;
+    top: 20px;
+    margin-right: 25%;
+    font-size: 30px;
+    text-align: left;
+    width: 50%;
+}
+
+#ctf_red .flag_status {
+    margin-left: 150px;
+    opacity: 0.7;
+}
+
+#ctf_red .flag_status .home {
+    color: green;
+}
+
+#ctf_red .flag_status .taken {
+    color: red;
 }
 
 .property-name {
@@ -319,15 +443,398 @@ table {
 
 #gear {
     position: absolute;
-    padding: 10vmin;
     top: 0;
     left: 0;
-    width: calc(100% - 20vmin);
-    height: calc(100% - 20vmin);
+    padding: 0;
+    width: 100%;
+    height: 100%;
+
     background: rgba(0, 0, 50, 0.8);
     z-index: 3;
     overflow-y: scroll;
 }
 #gear.closed {
     display: none;
+}
+
+#worldSelector {
+    color: white;
+}
+
+#worlds {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 75%;
+    height: 75%;
+    background: rgba(0, 0, 50, 0.8);
+    z-index: 3;
+    overflow-y: auto;
+    padding: 1em;
+    opacity: 1;
+    transition: 0.5s opacity ease-in-out;
+}
+
+#gear .button1,
+#worlds .button1 {
+    margin: 2px;
+}
+
+#worldList {
+    width: 100%;
+}
+.blur {
+    filter: blur(10px);
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 17px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 13px;
+    left: 4px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #0066ff;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #0066ff;
+}
+
+#worldList .empty {
+    color: #eee;
+    background-color: #222;
+}
+
+#worldList .details {
+    display: none;
+}
+
+#worldList .selected .details td {
+    border: solid 1px white;
+    padding: 3px;
+}
+
+#worldList .selected .details {
+    display: table-row;
+    color: ;
+}
+
+#worldList .details img {
+    float: right;
+    width: 100px;
+    height: 100px;
+    margin: 10px;
+}
+
+.closed {
+    opacity: 0 !important;
+    z-index: -2 !important;
+}
+input:checked + .slider:before {
+    transform: translateX(39px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+#fullPageCard {
+    background-color: var(--bg-color-1);
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    transition: transform 1s;
+}
+
+.hidden {
+    transform: translateY(100%);
+}
+
+#fullPageCard #openArrow {
+    color: #d9d9d9;
+    background-color: #222;
+    margin: auto;
+    width: 100px;
+    height: 30px;
+    text-align: center;
+    transform: translateY(-100%);
+    font-size: 25px;
+    cursor: pointer;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    transition: color 1s;
+}
+
+#fullPageCard #openArrow:hover i {
+    color: #fff;
+}
+
+#fullPageCard #close {
+    color: #9d9d9d;
+    text-align: right;
+    font-size: 25px;
+    transition: color 1s;
+    cursor: pointer;
+    margin-right: 20px;
+}
+
+#fullPageCard #close:hover {
+    color: #fff;
+}
+
+#fullPageCard h1,
+#fullPageCard h2 {
+    text-align: center;
+    text-transform: uppercase;
+}
+
+#fullPageCard #fullPageCardContainer {
+    text-align: justify;
+    column-count: 3;
+    column-gap: 40px;
+    margin: 0 40px 0 40px;
+    overflow-y: auto;
+}
+
+.spectating #fullPageCard,
+.alive #fullPageCard {
+    display: none;
+}
+
+#hud {
+    font-family: sans-serif;
+    font-size: 8pt;
+    position: absolute;
+    bottom: 30px;
+    left: 15px;
+}
+
+#record {
+    font-family: sans-serif;
+    font-size: 8pt;
+    position: absolute;
+    bottom: 15px;
+    left: 15px;
+}
+
+:root {
+    --leaderboard-width: 250px;
+}
+
+#leaderboard {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard-left {
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard-center {
+    position: absolute;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
+}
+
+#leaderboard td,
+#leaderboard tr,
+#leaderboard-left td,
+#leaderboard-left tr {
+    height: 28px;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+.overlap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 100px;
+    margin: 0;
+    padding: 0;
+}
+.arrow {
+    width: 18px;
+    height: 8px;
+    margin: auto;
+    display: block;
+}
+.blue {
+    color: cyan;
+}
+.score {
+    float: right;
+    right: 0px;
+    text-align: right;
+    width: 28px;
+}
+td.flag {
+    width: 27px;
+    height: 27px;
+    position: relative;
+}
+.name {
+    width: calc(var(--leaderboard-width) - 56px);
+}
+table {
+    border-spacing: 0;
+}
+.flag-arrow {
+    width: 27px;
+    height: 27px;
+    margin: auto;
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+}
+#log {
+    position: absolute;
+    bottom: 55px;
+    left: 15px;
+    font-size: 12pt;
+}
+#gameCanvas2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.hide {
+    display: none;
+}
+#chat {
+    z-index: 1;
+    display: absolute;
+    top: 10px;
+    left: 10px;
+    left: 10px;
+    width: 200px;
+    height: 150px;
+}
+
+.dead #cooldown,
+.spectating #cooldown {
+    display: none;
+}
+
+#cooldown {
+    position: absolute;
+    bottom: 3vh;
+    left: 50%;
+    width: 30%;
+    transform: translateX(-50%);
+    color: ;
+}
+
+option {
+    background-color: var(--bg-color-1);
+}
+.cirlce-red {
+    background: red;
+}
+.cirlce-pink {
+    background: pink;
+}
+.cirlce-orange {
+    background: orange;
+}
+.cirlce-yellow {
+    background: yellow;
+}
+.cirlce-cyan {
+    background: cyan;
+}
+.cirlce-green {
+    background: lime;
+}
+
+progress {
+    display: block; /* default: inline-block */
+    width: 300px;
+    margin: 2em auto;
+    padding: 4px;
+    border: 0 none;
+    background: rgba(4, 4, 4, 0.5);
+    border-radius: 14px;
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.5), 0px 1px 0px rgba(255, 255, 255, 0.2);
+}
+progress::-moz-progress-bar {
+    border-radius: 12px;
+    background: rgba(7, 7, 7, 0.5);
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 5px 0px rgba(0, 0, 0, 0.3);
+}
+/* webkit */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    progress {
+        height: 15px;
+    }
+}
+progress::-webkit-progress-bar {
+    background: transparent;
+}
+progress::-webkit-progress-value {
+    border-radius: 12px;
+    background: #444;
+    box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.4), 0 2px 5px 0px rgba(0, 0, 0, 0.3);
 }

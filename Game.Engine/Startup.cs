@@ -19,6 +19,7 @@
         public void ConfigureServices(IServiceCollection services)
         {
             var config = LoadConfiguration(services);
+            services.AddSingleton<GameConfiguration>(config);
 
             services.AddTransient<Connection>();
 
@@ -34,6 +35,16 @@
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
+            
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                );
+            });
 
             services
                 .AddSingleton<DiscordSocketClient>()
@@ -52,7 +63,12 @@
             return config.Object;
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider provider)
+        public void Configure(
+            IApplicationBuilder app, 
+            IHostingEnvironment env, 
+            IServiceProvider provider, 
+            GameConfiguration config
+        )
         {
             app.Use(async (httpContext, next) =>
             {
@@ -74,6 +90,13 @@
             app.UseAuthentication();
 
             app.UseMvc();
+
+            if (config.ForceHTTPS)
+                app.UseHttpsRedirection();
+            
+            if (config.AllowCORS)
+                app.UseCors();
+
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {

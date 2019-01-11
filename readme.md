@@ -2,7 +2,7 @@
 https://daud.io
 
 # Deploying to heroku
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/andylippitt/iogame)
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/daud-io/daud)
 
 # Setting Up on a Mac
 
@@ -18,22 +18,21 @@ node.js and npm need to be installed
 
 ### Running from the command line
 
-1. `git clone https://github.com/andylippitt/IOGame.git`
-2. `cd IOGame/Game.Engine`
+1. `git clone https://github.com/daud-io/daud.git`
+2. `cd daud/Game.Engine`
 3. `npm install --prefix wwwroot`
 4. `dotnet run` or `dotnet run -c Release`
 
 ### Publishing to Heroku
 1. Set up an account on Heroku and on Docker Hub
-2. `cd Game.Engine`
-3. `./deploy.sh`
+2. `./deploy.sh`
 
 If you get an error that the file './deploy.sh' is not executable by this user: run `chmod +x ./deploy.sh`
 
 ### Getting the Code
 
 If you don't have github, create a github account
-clone the repository https://github.com/andylippitt/IOGame
+clone the repository https://github.com/daud-io/daud
 
 ### Opening and Running
 
