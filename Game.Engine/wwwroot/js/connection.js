@@ -261,15 +261,27 @@ export class Connection {
                 }
 
                 const record = message.record();
-                this.onLeaderboard({
-                    Type: message.type(),
-                    Entries: entries,
-                    Record: {
+
+                var recordModel = 
+                {
+                    Name: "",
+                    Color: "red",
+                    Score: 0,
+                    Token: false
+                }
+
+                if (record) {
+                    recordModel = {
                         Name: record.name(),
                         Color: record.color(),
                         Score: record.score(),
                         Token: record.token()
                     }
+                }
+                this.onLeaderboard({
+                    Type: message.type(),
+                    Entries: entries,
+                    Record: recordModel
                 });
 
                 break;

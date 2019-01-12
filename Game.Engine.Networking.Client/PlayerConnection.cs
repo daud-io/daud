@@ -65,6 +65,13 @@
             return Task.FromResult(true);
         }
 
+        private Task HandleNetEvent(NetEvent netEvent)
+        {
+            Console.WriteLine($"NetEvent {netEvent.Type}: {netEvent.Data}");
+
+            return Task.FromResult(true);
+        }
+
         public IEnumerable<Body> Bodies
         {
             get
@@ -256,6 +263,10 @@
         {
             switch (netQuantum.MessageType)
             {
+                case AllMessages.NetEvent:
+                    await HandleNetEvent(netQuantum.Message<NetEvent>().Value);
+                    break;
+
                 case AllMessages.NetPing:
                     await HandleNetPing(netQuantum.Message<NetPing>().Value);
                     break;

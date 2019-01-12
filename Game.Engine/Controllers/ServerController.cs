@@ -62,6 +62,9 @@
             var world = Worlds.Find(worldName);
 
             JsonConvert.PopulateObject(json, world.Hook);
+            
+            // connection is using getHashCode for change detection
+            world.Hook = world.Hook.Clone();
 
             return JsonConvert.SerializeObject(world.Hook, Formatting.Indented);
         }

@@ -4,6 +4,7 @@ union AllMessages
 {
 	NetWorldView,
 	NetSpawn,
+	NetEvent,
 	NetControlInput,
 	NetPing,
 	NetLeaderboard,
@@ -52,6 +53,12 @@ table NetControlInput
 	shoot:bool;
     spectateControl:string;
     customData:string;
+}
+
+table NetEvent 
+{
+    type:string;
+    data:string;
 }
 
 table NetPing

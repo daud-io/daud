@@ -31,10 +31,11 @@ Game.Engine.Networking.FlatBuffers.AllMessages = {
   NONE: 0,
   NetWorldView: 1,
   NetSpawn: 2,
-  NetControlInput: 3,
-  NetPing: 4,
-  NetLeaderboard: 5,
-  NetExit: 6
+  NetEvent: 3,
+  NetControlInput: 4,
+  NetPing: 5,
+  NetLeaderboard: 6,
+  NetExit: 7
 };
 
 /**
@@ -716,6 +717,91 @@ Game.Engine.Networking.FlatBuffers.NetControlInput.addCustomData = function(buil
  * @returns {flatbuffers.Offset}
  */
 Game.Engine.Networking.FlatBuffers.NetControlInput.endNetControlInput = function(builder) {
+  var offset = builder.endObject();
+  return offset;
+};
+
+/**
+ * @constructor
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent = function() {
+  /**
+   * @type {flatbuffers.ByteBuffer}
+   */
+  this.bb = null;
+
+  /**
+   * @type {number}
+   */
+  this.bb_pos = 0;
+};
+
+/**
+ * @param {number} i
+ * @param {flatbuffers.ByteBuffer} bb
+ * @returns {Game.Engine.Networking.FlatBuffers.NetEvent}
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent.prototype.__init = function(i, bb) {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param {flatbuffers.ByteBuffer} bb
+ * @param {Game.Engine.Networking.FlatBuffers.NetEvent=} obj
+ * @returns {Game.Engine.Networking.FlatBuffers.NetEvent}
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent.getRootAsNetEvent = function(bb, obj) {
+  return (obj || new Game.Engine.Networking.FlatBuffers.NetEvent).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent.prototype.type = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 4);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent.prototype.data = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 6);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent.startNetEvent = function(builder) {
+  builder.startObject(2);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} typeOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent.addType = function(builder, typeOffset) {
+  builder.addFieldOffset(0, typeOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} dataOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent.addData = function(builder, dataOffset) {
+  builder.addFieldOffset(1, dataOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @returns {flatbuffers.Offset}
+ */
+Game.Engine.Networking.FlatBuffers.NetEvent.endNetEvent = function(builder) {
   var offset = builder.endObject();
   return offset;
 };

@@ -13,10 +13,11 @@ public enum AllMessages : byte
  NONE = 0,
  NetWorldView = 1,
  NetSpawn = 2,
- NetControlInput = 3,
- NetPing = 4,
- NetLeaderboard = 5,
- NetExit = 6,
+ NetEvent = 3,
+ NetControlInput = 4,
+ NetPing = 5,
+ NetLeaderboard = 6,
+ NetExit = 7,
 };
 
 public struct NetLeaderboard : IFlatbufferObject
@@ -217,6 +218,38 @@ public struct NetControlInput : IFlatbufferObject
   public static Offset<NetControlInput> EndNetControlInput(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetControlInput>(o);
+  }
+};
+
+public struct NetEvent : IFlatbufferObject
+{
+  private Table __p;
+  public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static NetEvent GetRootAsNetEvent(ByteBuffer _bb) { return GetRootAsNetEvent(_bb, new NetEvent()); }
+  public static NetEvent GetRootAsNetEvent(ByteBuffer _bb, NetEvent obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
+  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public NetEvent __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
+
+  public string Type { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetTypeBytes() { return __p.__vector_as_arraysegment(4); }
+  public string Data { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetDataBytes() { return __p.__vector_as_arraysegment(6); }
+
+  public static Offset<NetEvent> CreateNetEvent(FlatBufferBuilder builder,
+      StringOffset typeOffset = default(StringOffset),
+      StringOffset dataOffset = default(StringOffset)) {
+    builder.StartObject(2);
+    NetEvent.AddData(builder, dataOffset);
+    NetEvent.AddType(builder, typeOffset);
+    return NetEvent.EndNetEvent(builder);
+  }
+
+  public static void StartNetEvent(FlatBufferBuilder builder) { builder.StartObject(2); }
+  public static void AddType(FlatBufferBuilder builder, StringOffset typeOffset) { builder.AddOffset(0, typeOffset.Value, 0); }
+  public static void AddData(FlatBufferBuilder builder, StringOffset dataOffset) { builder.AddOffset(1, dataOffset.Value, 0); }
+  public static Offset<NetEvent> EndNetEvent(FlatBufferBuilder builder) {
+    int o = builder.EndObject();
+    return new Offset<NetEvent>(o);
   }
 };
 

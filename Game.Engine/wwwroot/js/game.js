@@ -2,7 +2,7 @@
 
 import { Renderer, sprites, spriteIndices } from "./renderer";
 import { Camera } from "./camera";
-import { Cache } from "./cache";
+import { Cache, textures } from "./cache";
 import { Interpolator } from "./interpolator";
 import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
 import { HUD } from "./hud";
@@ -350,6 +350,7 @@ var graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
 var lastCustomData = false;
+var spotSprites = [];
 
 // Game Loop
 app.ticker.add(() => {
@@ -393,7 +394,13 @@ app.ticker.add(() => {
     if (CustomData != lastCustomData)
     {
         lastCustomData = CustomData;
-        graphics.clear();
+
+        for(var i=0; i<spotSprites.length; i++)
+            container.removeChild(spotSprites[i]);
+        
+        spotSprites = [];
+
+        //graphics.clear();
 
         if (CustomData)
         {
@@ -403,14 +410,30 @@ app.ticker.add(() => {
                 for (var i=0; i<data.spots.length; i++)
                 {
                     var spot = data.spots[i];
-                    //console.log(spot);
-                    graphics.beginFill(0xFF00BB, 0.25);
-                    graphics.drawCircle(spot.X, spot.Y, 200);
-                    graphics.endFill();
+                    var texture = textures["obstacle"];
+                    if (texture)
+                    {
+                        var sprite = new PIXI.Sprite(texture);
+                        sprite.position.x = spot.X;
+                        sprite.position.y = spot.Y;
+                        sprite.scale.set(.1,.1);
+
+                        container.addChild(sprite);
+
+                        spotSprites.push(sprite);
+                    }
+                    else
+                        console.log('cannot find texture');
+
                 }
             }
         }
         //CustomData = false;
+        //console.log('new');
+    }
+    else
+    {
+        //console.log('repeat');
     }
 
     /*

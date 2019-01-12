@@ -189,5 +189,10 @@
         public int LifecycleDuration {get;set;}
 
         public int PlayerCountGracePeriodMS { get; set; }
+
+        public Hook Clone()
+        {
+            return this.MemberwiseClone() as Hook;
+        }
     }
 }

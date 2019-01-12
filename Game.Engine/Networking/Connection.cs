@@ -50,6 +50,8 @@ namespace Game.Engine.Networking
 
         public string CustomData = null;
 
+        public Queue<BroadcastEvent> Events = new Queue<BroadcastEvent>();
+
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
@@ -147,8 +149,6 @@ namespace Game.Engine.Networking
                             var updates = BodyCache.BodiesByError();
 
                             var updateBodies = updates.Take((int)this.Bandwidth);
-
-                            var newHash = world.Hook.GetHashCode();
 
                             float VELOCITY_SCALE_FACTOR = 5000;
 
@@ -283,13 +283,22 @@ namespace Game.Engine.Networking
 
                             var worldView = NetWorldView.EndNetWorldView(builder);
 
+                            var newHash = world.Hook.GetHashCode();
+                            if (HookHash != newHash)
+                            {
+                                this.Events.Enqueue(new BroadcastEvent
+                                {
+                                    EventType = "hook",
+                                    Data = JsonConvert.SerializeObject(world.Hook)
+                                });
+                            }
+
                             HookHash = newHash;
 
                             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetWorldView, worldView.Value);
                             builder.Finish(q.Value);
                         }
                     }
-
                     await this.SendAsync(builder.DataBuffer, cancellationToken);
 
                     if (LeaderboardTime != (world.Leaderboard?.Time ?? 0))
@@ -344,6 +353,21 @@ namespace Game.Engine.Networking
                         var leaderboardOffset = NetLeaderboard.EndNetLeaderboard(builder);
 
                         builder.Finish(NetQuantum.CreateNetQuantum(builder, AllMessages.NetLeaderboard, leaderboardOffset.Value).Value);
+                        await this.SendAsync(builder.DataBuffer, cancellationToken);
+                    }
+
+                    while(Events.Count > 0)
+                    {
+                        var e = Events.Dequeue();
+
+                        var eventType = builder.CreateString(e.EventType);
+                        var eventData = builder.CreateString(e.Data);
+                        NetEvent.StartNetEvent(builder);
+                        NetEvent.AddType(builder, eventType);
+                        NetEvent.AddData(builder, eventData);
+                        var eventOffset = NetEvent.EndNetEvent(builder);
+
+                        builder.Finish(NetQuantum.CreateNetQuantum(builder, AllMessages.NetEvent, eventOffset.Value).Value);
                         await this.SendAsync(builder.DataBuffer, cancellationToken);
                     }
                 }

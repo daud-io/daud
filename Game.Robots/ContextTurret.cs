@@ -1,7 +1,9 @@
 ﻿namespace Game.Robots
 {
     using Game.Robots.Behaviors;
+    using Game.Robots.Models;
     using Newtonsoft.Json;
+    using System;
     using System.Linq;
     using System.Numerics;
     using System.Threading.Tasks;
@@ -41,18 +43,26 @@
 
             if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > 8 )
                 Boost();
-
             
-            /*if (CustomDataTime + 200 < GameTime)
+            if (CustomDataTime + 1 < GameTime)
             {
                 CustomDataTime = GameTime;
                 CustomData = JsonConvert.SerializeObject(new
                 {
                     spots = Behaviors.OfType<Dodge>().Where(d => d.ConsideredPoints != null).SelectMany(d => d.ConsideredPoints)
                 });
-            }*/
+            }
 
             await base.AliveAsync();
         }
+
+        /*public Vector PredictPosition(Fleet fleet, float steeringAngle, int ms)
+        {
+
+            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
+
+            Momentum = (Momentum + thrust) * Drag;
+
+        }*/
     }
 }
