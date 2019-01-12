@@ -386,14 +386,18 @@ public struct NetGroup : IFlatbufferObject
   public ArraySegment<byte>? GetCaptionBytes() { return __p.__vector_as_arraysegment(8); }
   public uint Zindex { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public uint Owner { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  public string Color { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetColorBytes() { return __p.__vector_as_arraysegment(14); }
 
   public static Offset<NetGroup> CreateNetGroup(FlatBufferBuilder builder,
       uint group = 0,
       byte type = 0,
       StringOffset captionOffset = default(StringOffset),
       uint zindex = 0,
-      uint owner = 0) {
-    builder.StartObject(5);
+      uint owner = 0,
+      StringOffset colorOffset = default(StringOffset)) {
+    builder.StartObject(6);
+    NetGroup.AddColor(builder, colorOffset);
     NetGroup.AddOwner(builder, owner);
     NetGroup.AddZindex(builder, zindex);
     NetGroup.AddCaption(builder, captionOffset);
@@ -402,12 +406,13 @@ public struct NetGroup : IFlatbufferObject
     return NetGroup.EndNetGroup(builder);
   }
 
-  public static void StartNetGroup(FlatBufferBuilder builder) { builder.StartObject(5); }
+  public static void StartNetGroup(FlatBufferBuilder builder) { builder.StartObject(6); }
   public static void AddGroup(FlatBufferBuilder builder, uint group) { builder.AddUint(0, group, 0); }
   public static void AddType(FlatBufferBuilder builder, byte type) { builder.AddByte(1, type, 0); }
   public static void AddCaption(FlatBufferBuilder builder, StringOffset captionOffset) { builder.AddOffset(2, captionOffset.Value, 0); }
   public static void AddZindex(FlatBufferBuilder builder, uint zindex) { builder.AddUint(3, zindex, 0); }
   public static void AddOwner(FlatBufferBuilder builder, uint owner) { builder.AddUint(4, owner, 0); }
+  public static void AddColor(FlatBufferBuilder builder, StringOffset colorOffset) { builder.AddOffset(5, colorOffset.Value, 0); }
   public static Offset<NetGroup> EndNetGroup(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetGroup>(o);

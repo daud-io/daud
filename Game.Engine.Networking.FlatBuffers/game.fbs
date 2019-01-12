@@ -99,6 +99,7 @@ table NetGroup
     caption:string;
     zindex:uint;
     owner:uint;
+    color:string;
 }
 
 struct Vec2

@@ -9,6 +9,7 @@
         public string Name { get; set; }
         public uint ID { get; set; }
         public Sprites Sprite { get; set; }
+        public string Color { get; set; }
 
         public List<Ship> Ships { get; set; } = new List<Ship>();
 

@@ -49,6 +49,13 @@
 
         public string CustomData { get => Connection.CustomData; set => Connection.CustomData = value; }
 
+        public HookComputer HookComputer { get; private set; }
+
+        public Robot()
+        {
+            this.HookComputer = new HookComputer();
+        }
+
         public async Task Start(Connection connection)
         {
             this.Connection = connection;
@@ -58,6 +65,8 @@
 
         private async Task OnView()
         {
+            this.HookComputer.Hook = Connection.Hook;
+
             if (IsAlive && !Connection.IsAlive)
             {
                 this.SpawnTime = Connection.GameTime;

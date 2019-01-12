@@ -20,7 +20,8 @@
             return new RobotFleet
             {
                 Owner = this,
-                Caption = this.Name
+                Caption = this.Name,
+                Color = color
             };
         }
 

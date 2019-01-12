@@ -1511,10 +1511,19 @@ Game.Engine.Networking.FlatBuffers.NetGroup.prototype.owner = function() {
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.prototype.color = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 14);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetGroup.startNetGroup = function(builder) {
-  builder.startObject(5);
+  builder.startObject(6);
 };
 
 /**
@@ -1555,6 +1564,14 @@ Game.Engine.Networking.FlatBuffers.NetGroup.addZindex = function(builder, zindex
  */
 Game.Engine.Networking.FlatBuffers.NetGroup.addOwner = function(builder, owner) {
   builder.addFieldInt32(4, owner, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} colorOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetGroup.addColor = function(builder, colorOffset) {
+  builder.addFieldOffset(5, colorOffset, 0);
 };
 
 /**

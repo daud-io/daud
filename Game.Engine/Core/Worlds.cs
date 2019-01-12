@@ -176,6 +176,7 @@
                     {
                         Owner = p,
                         Caption = p.Name,
+                        Color = Color,
                         Shark = Color == "red",
                     };
                 }

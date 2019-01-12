@@ -160,13 +160,15 @@ namespace Game.Engine.Networking
                                     var serverGroup = b.GroupUpdated;
 
                                     var caption = builder.CreateString(serverGroup.Caption ?? " ");
+                                    var color = builder.CreateString(serverGroup.Color ?? "");
 
                                     var group = NetGroup.CreateNetGroup(builder,
                                         group: serverGroup.ID,
                                         type: (byte)serverGroup.GroupType,
                                         captionOffset: caption,
                                         zindex: serverGroup.ZIndex,
-                                        owner: serverGroup.OwnerID
+                                        owner: serverGroup.OwnerID,
+                                        colorOffset: color
                                     );
                                     return group;
                                 }).ToArray());

@@ -26,7 +26,8 @@
                 ZIndex = 50,
                 Size = fleet.Pickup?.Size ?? 20,
                 SpriteOverride = fleet.Pickup?.BulletSprite,
-                IsSeeker = fleet.Pickup != null
+                IsSeeker = fleet.Pickup != null,
+                Color = fleet.Color
             };
 
             for (var i=0; i<fleet.Ships.Count; i++)

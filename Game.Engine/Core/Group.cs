@@ -37,6 +37,20 @@
             }
         }
 
+        private string _color;
+        public virtual string Color
+        {
+            get
+            {
+                return _color;
+            }
+            set
+            {
+                IsDirty = IsDirty || _color != value;
+                _color = value;
+            }
+        }
+
         private uint _zIndex;
         public virtual uint ZIndex
         {

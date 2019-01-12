@@ -9,5 +9,6 @@
         public string Caption { get; set; }
         public uint ZIndex { get; set; }
         public uint Owner { get; set; }
+        public string Color { get; set; }
     }
 }

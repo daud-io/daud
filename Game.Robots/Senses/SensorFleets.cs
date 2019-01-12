@@ -29,6 +29,7 @@
                     ID = g.Key.ID,
                     Name = g.Key.Caption,
                     Sprite = g.Select(b => b.Sprite).FirstOrDefault(),
+                    Color = g.Key.Color,
                     Ships = g.Select(b => new Fleet.Ship
                     {
                         Angle = b.Angle,

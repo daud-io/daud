@@ -3,6 +3,7 @@
     using Game.API.Common;
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -45,6 +46,8 @@
 
         public uint FleetID { get; set; } = 0;
 
+        public Dictionary<string, object> Hook { get; set; }
+
         public Connection(APIClient apiClient, string worldName = null)
         {
             WorldName = worldName;
@@ -67,8 +70,13 @@
 
         private Task HandleNetEvent(NetEvent netEvent)
         {
-            Console.WriteLine($"NetEvent {netEvent.Type}: {netEvent.Data}");
 
+            switch(netEvent.Type)
+            {
+                case "hook":
+                    this.Hook = JsonConvert.DeserializeObject<Dictionary<string, object>>(netEvent.Data);
+                    break;
+            }
             return Task.FromResult(true);
         }
 
@@ -168,7 +176,8 @@
                         Caption = group.Caption,
                         Type = (GroupTypes)group.Type,
                         ZIndex = group.Zindex,
-                        Owner = group.Owner
+                        Owner = group.Owner,
+                        Color = group.Color
                     });
                 }
             }

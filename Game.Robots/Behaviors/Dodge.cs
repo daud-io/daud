@@ -24,7 +24,19 @@
 
         protected override void PreSweep(ContextRing ring)
         {
-            DangerousBullets = Robot.SensorBullets.VisibleBullets.Where(b => b.Group.Owner != Robot.FleetID);
+            var teamMode = Robot.HookComputer.TeamMode;
+
+            if (teamMode)
+            {
+                int i = 0;
+
+            }
+
+            DangerousBullets = Robot.SensorBullets.VisibleBullets
+                .Where(b => b.Group.Owner != Robot.FleetID)
+                .Where(b => !teamMode || b.Group.Color != Robot.Color)
+                .ToList();
+
             Projections = DangerousBullets.Select(b => b.ProjectNew(Robot.GameTime + LookAheadMS).Position).ToList();
             ConsideredPoints = new List<Vector2>();
         }

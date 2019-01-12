@@ -1,7 +1,6 @@
 ﻿namespace Game.Robots
 {
     using Game.Robots.Behaviors;
-    using Game.Robots.Models;
     using Newtonsoft.Json;
     using System;
     using System.Linq;
@@ -33,6 +32,7 @@
                 var closest = SensorFleets.Others
                     .OrderBy(f => Vector2.Distance(this.Position, f.Center))
                     .Where(f => f.Name != this.Name)
+                    .Where(f => !HookComputer.TeamMode || f.Color != this.Color)
                     .FirstOrDefault();
 
                 if (closest != null)
@@ -52,6 +52,8 @@
                     spots = Behaviors.OfType<Dodge>().Where(d => d.ConsideredPoints != null).SelectMany(d => d.ConsideredPoints)
                 });
             }
+
+            Console.WriteLine($"Thrust: {this.HookComputer.ShipThrust(this.SensorFleets?.MyFleet?.Ships.Count ?? 0)}");
 
             await base.AliveAsync();
         }
