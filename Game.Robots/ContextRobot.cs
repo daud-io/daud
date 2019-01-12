@@ -35,6 +35,7 @@
 
         private void Behave()
         {
+
             var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
             var angle = ContextRingBlending.Blend(contexts);
 

@@ -19,7 +19,7 @@
             Behaviors.Add(new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 4 });
             Behaviors.Add(new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
             Behaviors.Add(new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 1 });
-            Behaviors.Add(new StayInBounds(this) { BehaviorWeight = 1f });
+            Behaviors.Add(new StayInBounds(this) { LookAheadMS = 5000, BehaviorWeight = 1f });
 
             Navigation.TargetPoint = target;
             Steps = 16;

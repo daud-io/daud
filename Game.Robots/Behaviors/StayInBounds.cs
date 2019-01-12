@@ -5,27 +5,19 @@
 
     public class StayInBounds : ContextBehavior
     {
-        private readonly ContextRobot Robot;
-        public int LookAheadMS { get; set; } = 2000;
-
-        public StayInBounds(ContextRobot robot)
+        public StayInBounds(ContextRobot robot) : base(robot)
         {
-            this.Robot = robot;
         }
 
-        protected override float ScoreAngle(float angle)
+        protected override float ScoreAngle(float angle, Vector2 position)
         {
             float accumulator = 0f;
 
             var fleet = Robot.SensorFleets.MyFleet;
             if (fleet != null)
             {
-                var projectedCenter = fleet.Center +
-                    new Vector2(MathF.Cos(angle), MathF.Sin(angle))
-                    * fleet.Momentum.Length() * LookAheadMS;
-
-                var oobX = (MathF.Abs(projectedCenter.X) - Robot.WorldSize);
-                var oobY = (MathF.Abs(projectedCenter.Y) - Robot.WorldSize);
+                var oobX = (MathF.Abs(position.X) - Robot.WorldSize);
+                var oobY = (MathF.Abs(position.Y) - Robot.WorldSize);
 
                 if (oobX > 0)
                     accumulator -= 1;

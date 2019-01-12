@@ -15,6 +15,12 @@
         private float BaseThrustM { get => Get<float>("BaseThrustM"); }
         public bool TeamMode { get => Get<bool>("TeamMode", false); }
 
+        // this is bad that we need this... it means we have
+        // physics that aren't time scaled, rather step scaled.
+        public int StepSize { get => Get<int>("StepSize", 40); }
+
+        public float Drag { get => Get<float>("Drag"); }
+
         private T Get<T>(string key, T defaultValue = default(T))
         {
             if (Hook.ContainsKey(key))

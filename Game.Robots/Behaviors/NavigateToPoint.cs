@@ -5,15 +5,13 @@
 
     public class NavigateToPoint : ContextBehavior
     {
-        private readonly ContextRobot Robot;
         public Vector2 TargetPoint = Vector2.Zero;
 
-        public NavigateToPoint(ContextRobot robot)
+        public NavigateToPoint(ContextRobot robot) : base(robot)
         {
-            this.Robot = robot;
         }
 
-        protected override float ScoreAngle(float angle)
+        protected override float ScoreAngle(float angle, Vector2 position)
         {
             var vectorToPoint = Robot.VectorToAbsolutePoint(TargetPoint);
             var angleToPoint = MathF.Atan2(vectorToPoint.Y, vectorToPoint.X);
