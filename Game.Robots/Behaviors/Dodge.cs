@@ -11,6 +11,8 @@
         private readonly ContextRobot Robot;
         private IEnumerable<Body> DangerousBullets;
 
+        public List<Vector2> ConsideredPoints { get; set; } = null;
+
         public int LookAheadMS { get; set; } = 250;
 
         private IEnumerable<Vector2> Projections;
@@ -24,6 +26,7 @@
         {
             DangerousBullets = Robot.SensorBullets.VisibleBullets.Where(b => b.Group.Owner != Robot.FleetID);
             Projections = DangerousBullets.Select(b => b.ProjectNew(Robot.GameTime + LookAheadMS).Position).ToList();
+            ConsideredPoints = new List<Vector2>();
         }
 
         protected override float ScoreAngle(float angle)
@@ -31,11 +34,15 @@
             float accumulator = 0f;
 
             var fleet = Robot.SensorFleets.MyFleet;
+
             if (fleet != null)
             {
+
                 var projectedCenter = fleet.Center +
                     new Vector2(MathF.Cos(angle), MathF.Sin(angle))
                     * fleet.Momentum.Length() * LookAheadMS;
+
+                ConsideredPoints.Add(projectedCenter);
 
                 foreach (var danger in Projections)
                 {

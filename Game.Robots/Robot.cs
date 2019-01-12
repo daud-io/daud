@@ -45,6 +45,8 @@
         public Vector2 ShootingAt { get; private set; }
         public long ShootUntil { get; set; }
 
+        public long BoostUntil { get; set; }
+
         public string CustomData { get => Connection.CustomData; set => Connection.CustomData = value; }
 
         public async Task Start(Connection connection)
@@ -99,6 +101,10 @@
         {
             await AliveAsync();
 
+            if (!this.CanBoost && this.Connection.ControlIsBoosting && GameTime > BoostUntil)
+                this.Connection.ControlIsBoosting = false;
+
+
             if (!this.CanShoot && this.Shooting && GameTime > ShootUntil)
             {
                 this.Shooting = false;
@@ -117,6 +123,12 @@
             }
 
             await this.Connection.SendControlInputAsync();
+        }
+
+        public void Boost()
+        {
+            this.Connection.ControlIsBoosting = true;
+            BoostUntil = GameTime + 100;
         }
 
         private async Task StepDeadAsync()

@@ -349,6 +349,8 @@ setInterval(doPing, 1000);
 var graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
+var lastCustomData = false;
+
 // Game Loop
 app.ticker.add(() => {
     const latency = connection.minLatency || 0;
@@ -388,23 +390,24 @@ app.ticker.add(() => {
         };
     }
 
-    if (CustomData)
+    if (CustomData != lastCustomData)
     {
-        //console.log(CustomData);
-
+        lastCustomData = CustomData;
         graphics.clear();
 
-        var data = JSON.parse(CustomData);
-
-        if (data.spots)
+        if (CustomData)
         {
-            for (var i=0; i<data.spots.length; i++)
+            var data = JSON.parse(CustomData);
+            if (data.spots)
             {
-                var spot = data.spots[i];
-                console.log(spot);
-                graphics.beginFill(0xFF00BB, 0.25);
-                graphics.drawCircle(spot.X, spot.Y, 200);
-                graphics.endFill();
+                for (var i=0; i<data.spots.length; i++)
+                {
+                    var spot = data.spots[i];
+                    //console.log(spot);
+                    graphics.beginFill(0xFF00BB, 0.25);
+                    graphics.drawCircle(spot.X, spot.Y, 200);
+                    graphics.endFill();
+                }
             }
         }
         //CustomData = false;
