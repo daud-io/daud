@@ -10,6 +10,7 @@
     {
         private Connection Connection;
 
+        public string Target { get; set; } = "";
         public string Name { get; set; } = "Robot";
         public string Sprite { get; set; } = "ship0";
         public string Color { get; set; } = "ship0";

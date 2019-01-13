@@ -33,6 +33,7 @@
                 var closest = SensorFleets.Others
                     .OrderBy(f => Vector2.Distance(this.Position, f.Center))
                     .Where(f => f.Name != this.Name)
+                    .Where(f => f.Name.Contains(this.Target) || this.Target == "")
                     .Where(f => !HookComputer.TeamMode || f.Color != this.Color)
                     .FirstOrDefault();
 
