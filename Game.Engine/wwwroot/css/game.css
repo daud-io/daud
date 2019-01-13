@@ -631,12 +631,34 @@ input:checked + .slider:before {
     text-transform: uppercase;
 }
 
-#fullPageCard #fullPageCardContainer {
+#fullPageCard #fullPageCardOuterContainer {
+	max-height: 80vh;
+	overflow-y: auto;
+}
+
+#fullPageCard #fullPageCardInnerContainer {
     text-align: justify;
     column-count: 3;
     column-gap: 40px;
     margin: 0 40px 0 40px;
-    overflow-y: auto;
+}
+
+@media only screen and (max-width: 1250px) {
+	#fullPageCard #fullPageCardInnerContainer {
+		column-count: 2;
+	}
+}
+
+@media only screen and (max-width: 700px) {
+	#fullPageCard #fullPageCardInnerContainer {
+		column-count: 1;
+	}
+}
+
+#fullPageCard section {
+   -webkit-column-break-inside: avoid;
+   -moz-column-break-inside: avoid;
+   break-inside: avoid;
 }
 
 .spectating #fullPageCard,
