@@ -11,7 +11,9 @@
     public class ContextTurret : ContextRobot
     {
         protected readonly NavigateToPoint Navigation;
-        private long CustomDataTime = 0;
+        public int MaxFiringRange { get; set; } = 2000;
+
+        public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
 
         public ContextTurret(Vector2 target)
         {
@@ -31,10 +33,14 @@
             if (CanShoot)
             {
                 var closest = SensorFleets.Others
-                    .OrderBy(f => Vector2.Distance(this.Position, f.Center))
-                    .Where(f => f.Name != this.Name)
-                    .Where(f => !HookComputer.TeamMode || f.Color != this.Color)
-                    .FirstOrDefault();
+                    .Select(f => new { Fleet = f, Distance = Vector2.Distance(this.Position, f.Center) })
+                    .Where(p => MathF.Abs(p.Fleet.Center.X - this.Position.X) <= ViewportCrop.X
+                        && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
+                    .Where(p => p.Fleet.Name != this.Name)
+                    .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
+                    .OrderBy(p => p.Distance)
+                    .FirstOrDefault()
+                    ?.Fleet;
 
                 if (closest != null)
                     ShootAtFleet(closest);
