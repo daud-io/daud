@@ -1,6 +1,6 @@
 import { fetch } from "whatwg-fetch";
 
-import { sprites, sprite } from "./renderer";
+import { sprites, backgroundSprite } from "./renderer";
 import { toggleLobby } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
@@ -127,7 +127,7 @@ async function theme(v) {
                         const url = urlCreator.createObjectURL(blob);
                         if (element[0] == "bg") {
                             const background = new PIXI.Texture.fromImage(url);
-                            sprite.texture = background;
+                            backgroundSprite.texture = background;
                         } else {
                             sprites[element[0]].image.src = url;
                             textures[element[0]] = new PIXI.Texture.fromImage(url);

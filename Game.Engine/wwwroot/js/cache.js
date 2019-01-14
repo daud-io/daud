@@ -65,6 +65,9 @@ export class Cache {
             let oldSprite = existing ? this.bodies[`b-${update.ID}`].Sprite : false;
             this.bodies[`b-${update.ID}`] = update;
 
+            if (update.sprite == "ship_red")
+                update.sprite = 'thruster_default_red';
+
             if (existing) {
                 existing.previous = false;
                 existing.obsolete = time;
@@ -83,7 +86,9 @@ export class Cache {
                 let object = this.bodies[`p-${update.ID}`];
                 let texture = textures[update.Sprite];
                 if (object.texture != texture) {
-                    if (!texture) texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
+                    if (!texture) {
+                        texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
+                    }
                     object.pivot.x = sprite.image.width / 2;
                     object.pivot.y = sprite.image.height / 2;
                     object.texture = texture;
@@ -98,7 +103,42 @@ export class Cache {
                 let sprite = sprites[update.Sprite];
                 let texture = textures[update.Sprite];
                 if (!texture) texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
-                var object = new PIXI.Sprite(texture);
+
+                var object = false;
+
+                if (sprite.animated) {
+
+                    var tileSize = sprite.image.height;
+                    var totalTiles = (sprite.image.width / tileSize);
+
+                    for (var spriteIndex = 0; spriteIndex < totalTiles; spriteIndex++)
+                    {
+                        var spriteIndex = (Math.floor(timeIndex / pickupAnimationTotal * totalTiles)
+                            + object.ID % 3) % totalTiles;
+
+                        var sx = tileSize * (spriteIndex % totalTiles);
+                        var sy = 0;
+                        var sw = tileSize;
+                        var sh = tileSize;
+
+                        var dx = -0.5 * tileSize * spriteScale;
+                        var dy = -0.5 * tileSize * spriteScale;
+                        var dw = tileSize * spriteScale;
+                        var dh = tileSize * spriteScale;
+
+                        var textureArray = [];
+
+                        textureArray.push(new PIXI.Texture(texture, new PIXI.Rectangle(sx, sy, sw, sh)));
+
+                        object = new PIXI.extras.AnimatedSprite(textureArray);
+                        object.loop = sprite.loop;
+                        object.animationSpeed = sprite.animationSpeed;
+                    }
+
+                } else {
+                    object = new PIXI.Sprite(texture);
+                }
+
                 object.position.x = update.OriginalPosition.X;
                 object.position.y = update.OriginalPosition.Y;
                 object.pivot.x = sprite.image.width / 2;

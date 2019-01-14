@@ -1,14 +1,19 @@
 import { Settings } from "./settings";
+import { FleetRenderer } from "./renderers/fleetRenderer";
 import images from "../img/*.png";
+import {textures } from "./cache";
 
-function sprite(name, scale) {
+function sprite(name, scale, animated, loop, animationSpeed) {
     const img = new Image();
     img.src = images[name];
 
     return {
         image: img,
         name: name,
-        scale: scale || 0.02
+        scale: scale || 0.02,
+        animated: animated,
+        loop: loop,
+        animationSpeed: animationSpeed || 1
     };
 }
 
@@ -24,17 +29,17 @@ export const sprites = {
     ship_flash: sprite("ship_flash"),
     ship_secret: sprite("ship_secret"),
     ship_zed: sprite("ship_zed"),
-    bullet_green: sprite("bullet_green", 0.03, true),
-    bullet_orange: sprite("bullet_orange", 0.03, true),
-    bullet_pink: sprite("bullet_pink", 0.03, true),
-    bullet_red: sprite("bullet_red", 0.03, true),
-    bullet_cyan: sprite("bullet_cyan", 0.03, true),
-    bullet_yellow: sprite("bullet_yellow", 0.03, true),
-    fish: sprite("ship0", 0.01, true),
-    bullet: sprite("bullet", 0.02, true),
-    seeker: sprite("seeker", 0.02, true),
-    seeker_pickup: sprite("seeker_pickup", 0.02, true),
-    obstacle: sprite("obstacle", 0.0028, true),
+    bullet_green: sprite("bullet_green", 0.03),
+    bullet_orange: sprite("bullet_orange", 0.03),
+    bullet_pink: sprite("bullet_pink", 0.03),
+    bullet_red: sprite("bullet_red", 0.03),
+    bullet_cyan: sprite("bullet_cyan", 0.03),
+    bullet_yellow: sprite("bullet_yellow", 0.03),
+    fish: sprite("ship0", 0.01),
+    bullet: sprite("bullet", 0.02),
+    seeker: sprite("seeker", 0.02),
+    seeker_pickup: sprite("seeker_pickup", 0.02),
+    obstacle: sprite("obstacle", 0.0028),
     arrow: sprite("arrow", 0.03)
 };
 
@@ -70,6 +75,12 @@ function addSprite(name, size, file) {
     spriteIndices.push(name);
 }
 
+function addAnimation(name, size, loop, speed)
+{
+    sprites[name] = sprite(name, size, true, loop, speed);
+    spriteIndices.push(name);    
+}
+
 const flagScale = 0.003;
 
 addSprite("flag_blue_0", flagScale);
@@ -103,19 +114,19 @@ addSprite("ctf_score_stripes");
 addSprite("ctf_arrow_red", 0.05);
 addSprite("ctf_arrow_blue", 0.05);
 addSprite("ctf_arrow_trans_flag", 0.1);
-addSprite("thruster_default_green");
-addSprite("thruster_default_orange");
-addSprite("thruster_default_pink");
-addSprite("thruster_default_red");
-addSprite("thruster_default_cyan");
-addSprite("thruster_default_yellow");
-addSprite("thruster_retro_green");
-addSprite("thruster_retro_orange");
-addSprite("thruster_retro_pink");
-addSprite("thruster_retro_red");
-addSprite("thruster_retro_cyan");
-addSprite("thruster_retro_yellow");
-addSprite("circles");
+addAnimation("thruster_default_green");
+addAnimation("thruster_default_orange");
+addAnimation("thruster_default_pink");
+addAnimation("thruster_default_red");
+addAnimation("thruster_default_cyan");
+addAnimation("thruster_default_yellow");
+addAnimation("thruster_retro_green");
+addAnimation("thruster_retro_orange");
+addAnimation("thruster_retro_pink");
+addAnimation("thruster_retro_red");
+addAnimation("thruster_retro_cyan");
+addAnimation("thruster_retro_yellow");
+addAnimation("circles");
 
 const background = new PIXI.Texture.fromImage(images["bg"]);
 export const backgroundSprite = new PIXI.extras.TilingSprite(background, 200000, 200000);
@@ -133,6 +144,8 @@ export class Renderer {
         this.graphics = new PIXI.Graphics();
         this.updateWorldSize(6000);
         this.container.addChild(this.graphics);
+
+        //this.fleetRenderer = new FleetRenderer(context, settings);
     }
 
     updateWorldSize(size) {
