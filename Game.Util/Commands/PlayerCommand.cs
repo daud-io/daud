@@ -24,6 +24,9 @@
             public string Name { get; set; } = "Robot";
 
             [Option]
+            public string Target { get; set; } = "";
+
+            [Option]
             public string Color { get; set; } = "green";
 
             [Option]
@@ -42,6 +45,7 @@
                         AutoFire = Firing,
                         Color = Color,
                         Name = Name,
+                        Target = Target,
                         Sprite = Sprite
                     };
 
