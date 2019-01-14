@@ -11,21 +11,42 @@
     public class ContextTurret : ContextRobot
     {
         protected readonly NavigateToPoint Navigation;
+        protected readonly Efficiency Efficiency;
+        protected readonly Dodge Dodge0;
+        protected readonly Dodge Dodge1;
+        protected readonly Dodge Dodge2;
+        protected readonly StayInBounds StayInBounds;
+        protected readonly Separation Separation;
+
         public int MaxFiringRange { get; set; } = 2000;
+        public bool DontFireAtSameName { get; set; } = false;
 
         public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
+        public int BoostThreshold { get; set; } = 16;
 
         public ContextTurret(Vector2 target)
         {
             Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.00f });
-            Behaviors.Add(new Efficiency(this) { BehaviorWeight = 0.1f });
-            Behaviors.Add(new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
-            Behaviors.Add(new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
-            Behaviors.Add(new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
-            Behaviors.Add(new StayInBounds(this) { LookAheadMS = 2000, BehaviorWeight = 1f });
+            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.1f });
+            Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
+            Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
+            Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
+            Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 2000, BehaviorWeight = 0f });
+            Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
 
             Navigation.TargetPoint = target;
             Steps = 16;
+        }
+
+        public void Vary()
+        {
+            //Efficiency.BehaviorWeight = 0.5f;
+            Color = "cyan";
+            Sprite = "ship_cyan";
+
+            Separation.BehaviorWeight = 1;
+
+            Name += "++";
         }
 
         protected async override Task AliveAsync()
@@ -36,7 +57,7 @@
                     .Select(f => new { Fleet = f, Distance = Vector2.Distance(this.Position, f.Center) })
                     .Where(p => MathF.Abs(p.Fleet.Center.X - this.Position.X) <= ViewportCrop.X
                         && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
-                    .Where(p => p.Fleet.Name != this.Name)
+                    .Where(p => !DontFireAtSameName || p.Fleet.Name != this.Name)
                     .Where(p => p.Fleet.Name.Contains(this.Target) || this.Target == "")
                     .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
                     .OrderBy(p => p.Distance)
@@ -47,7 +68,7 @@
                     ShootAtFleet(closest);
             }
 
-            if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > 8 )
+            if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold)
                 Boost();
 
 

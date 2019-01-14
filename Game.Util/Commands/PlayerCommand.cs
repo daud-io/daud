@@ -32,12 +32,19 @@
             [Option]
             public string Sprite { get; set; } = "ship0";
 
+            [Option]
+            public bool Variation { get; set; } = false;
+
+            [Option]
+            public bool DontFireAtSameName { get; set; } = false;
+
             protected async override Task ExecuteAsync()
             {
                 var tasks = new List<Task>();
 
                 for (int i = 0; i < Replicas; i++)
                 {
+
                     var connection = await API.Player.ConnectAsync(World);
                     var robot = new ContextTurret(Vector2.Zero)
                     {
@@ -46,8 +53,12 @@
                         Color = Color,
                         Name = Name,
                         Target = Target,
-                        Sprite = Sprite
+                        Sprite = Sprite,
+                        DontFireAtSameName = DontFireAtSameName
                     };
+
+                    if (Variation && i % 2 == 0)
+                        robot.Vary();
 
                     tasks.Add(robot.Start(connection));
                 };
