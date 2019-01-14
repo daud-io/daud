@@ -144,7 +144,9 @@ export var Controls = {
             }
         }
 
-        Controls.ship = colors[0];
+		var shipIndex = Math.floor(Math.random() * colors.length);
+		
+        Controls.ship = colors[shipIndex];
         refreshSelectedStyle();
     },
     ship: "ship_green"
