@@ -31,7 +31,7 @@
             Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
             Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
             Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
-            Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 2000, BehaviorWeight = 0f });
+            Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0f });
             Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
 
             Navigation.TargetPoint = target;

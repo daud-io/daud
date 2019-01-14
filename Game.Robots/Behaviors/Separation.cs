@@ -22,8 +22,7 @@
                 foreach (var other in Robot.SensorFleets.Others)
                 {
                     var distSq = Vector2.DistanceSquared(other.Center, position);
-                    if (distSq < 100000)
-                        accumulator -= 1 / distSq;
+                    accumulator -= 1 / distSq;
                 }
             }
 
