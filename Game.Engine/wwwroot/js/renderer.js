@@ -118,17 +118,17 @@ addSprite("thruster_retro_yellow");
 addSprite("circles");
 
 const background = new PIXI.Texture.fromImage(images["bg"]);
-export const sprite = new PIXI.extras.TilingSprite(background, 200000, 200000);
-sprite.tileScale.set(10, 10);
-sprite.position.x = -100000;
-sprite.position.y = -100000;
+export const backgroundSprite = new PIXI.extras.TilingSprite(background, 200000, 200000);
+backgroundSprite.tileScale.set(10, 10);
+backgroundSprite.position.x = -100000;
+backgroundSprite.position.y = -100000;
 
 export class Renderer {
     constructor(container, settings = {}) {
         this.container = container;
         this.view = false;
 
-        this.container.addChild(sprite);
+        this.container.addChild(backgroundSprite);
 
         this.graphics = new PIXI.Graphics();
         this.updateWorldSize(6000);
@@ -152,6 +152,11 @@ export class Renderer {
     }
     draw(cache, interpolator, currentTime, fleetID) {
         const groupsUsed = [];
+
+        if (Settings.background == "none" && backgroundSprite.visible)
+            backgroundSprite.visible = false;
+        if (Settings.background == "on" && !backgroundSprite.visible)
+            backgroundSprite.visible = true;
 
         cache.foreach(function(body) {
             const object = body;

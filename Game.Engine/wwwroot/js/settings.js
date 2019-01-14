@@ -21,7 +21,8 @@ export const Settings = {
     showPickupSprites: false,
     showThrusterSprites: true,
     showOwnName: true,
-    nameSize: 48
+    nameSize: 48,
+    background: "on"
 };
 
 function parseQuery(queryString) {
@@ -59,6 +60,7 @@ function save() {
     Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
     Settings.nameSize = Number(document.getElementById("settingsNameSize").value);
+    Settings.background = document.getElementById("settingsBackground").value;
 
     Cookies.set("settings", Settings, cookieOptions);
 
@@ -96,6 +98,7 @@ function load() {
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
         document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
         document.getElementById("settingsNameSize").value = Settings.nameSize;
+        document.getElementById("settingsBackground").value = Settings.background;
     } catch (e) {
         // maybe reset()? will make debugging difficult
     }
