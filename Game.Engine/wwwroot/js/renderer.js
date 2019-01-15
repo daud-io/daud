@@ -1,7 +1,7 @@
 import { Settings } from "./settings";
 import { FleetRenderer } from "./renderers/fleetRenderer";
 import images from "../img/*.png";
-import {textures } from "./cache";
+import { textures } from "./cache";
 
 function sprite(name, scale, animated, loop, animationSpeed) {
     const img = new Image();
@@ -75,10 +75,9 @@ function addSprite(name, size, file) {
     spriteIndices.push(name);
 }
 
-function addAnimation(name, size, loop, speed)
-{
+function addAnimation(name, size, loop, speed) {
     sprites[name] = sprite(name, size, true, loop, speed);
-    spriteIndices.push(name);    
+    spriteIndices.push(name);
 }
 
 const flagScale = 0.003;
@@ -166,10 +165,8 @@ export class Renderer {
     draw(cache, interpolator, currentTime, fleetID) {
         const groupsUsed = [];
 
-        if (Settings.background == "none" && backgroundSprite.visible)
-            backgroundSprite.visible = false;
-        if (Settings.background == "on" && !backgroundSprite.visible)
-            backgroundSprite.visible = true;
+        if (Settings.background == "none" && backgroundSprite.visible) backgroundSprite.visible = false;
+        if (Settings.background == "on" && !backgroundSprite.visible) backgroundSprite.visible = true;
 
         cache.foreach(function(body) {
             const object = body;

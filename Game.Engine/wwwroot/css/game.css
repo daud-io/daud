@@ -632,8 +632,8 @@ input:checked + .slider:before {
 }
 
 #fullPageCard #fullPageCardOuterContainer {
-	max-height: 80vh;
-	overflow-y: auto;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 #fullPageCard #fullPageCardInnerContainer {
@@ -644,21 +644,21 @@ input:checked + .slider:before {
 }
 
 @media only screen and (max-width: 1250px) {
-	#fullPageCard #fullPageCardInnerContainer {
-		column-count: 2;
-	}
+    #fullPageCard #fullPageCardInnerContainer {
+        column-count: 2;
+    }
 }
 
 @media only screen and (max-width: 700px) {
-	#fullPageCard #fullPageCardInnerContainer {
-		column-count: 1;
-	}
+    #fullPageCard #fullPageCardInnerContainer {
+        column-count: 1;
+    }
 }
 
 #fullPageCard section {
-   -webkit-column-break-inside: avoid;
-   -moz-column-break-inside: avoid;
-   break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    break-inside: avoid;
 }
 
 .spectating #fullPageCard,

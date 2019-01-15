@@ -262,13 +262,12 @@ export class Connection {
 
                 const record = message.record();
 
-                var recordModel = 
-                {
+                var recordModel = {
                     Name: "",
                     Color: "red",
                     Score: 0,
                     Token: false
-                }
+                };
 
                 if (record) {
                     recordModel = {
@@ -276,7 +275,7 @@ export class Connection {
                         Color: record.color(),
                         Score: record.score(),
                         Token: record.token()
-                    }
+                    };
                 }
                 this.onLeaderboard({
                     Type: message.type(),

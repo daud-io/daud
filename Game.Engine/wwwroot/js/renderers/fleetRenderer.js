@@ -32,10 +32,8 @@ export class FleetRenderer {
             }
 
             ctx.drawImage(sprite.image, -spriteWidth / 2, -spriteHeight / 2, spriteWidth, spriteHeight);
-            if (object.Mode == 1 || group.group.boostAnimateUntil > performance.now())
-                this.drawBooster(object, group, sprite);
-            else
-                group.group.index = 0;
+            if (object.Mode == 1 || group.group.boostAnimateUntil > performance.now()) this.drawBooster(object, group, sprite);
+            else group.group.index = 0;
 
             ctx.restore();
         }
@@ -53,13 +51,11 @@ export class FleetRenderer {
 
         group.group.pickupIndex = index + 1;
 
-        if (!pickupSprite)
-            pickupSprite = sprites['circles']
+        if (!pickupSprite) pickupSprite = sprites["circles"];
         var spriteScale = 1.5;
 
-        var totalTiles = (pickupSprite.image.width / this.pickupSpriteSize);
-        var spriteIndex = (Math.floor(timeIndex / pickupAnimationTotal * totalTiles)
-            + object.ID % 3) % totalTiles;
+        var totalTiles = pickupSprite.image.width / this.pickupSpriteSize;
+        var spriteIndex = (Math.floor((timeIndex / pickupAnimationTotal) * totalTiles) + (object.ID % 3)) % totalTiles;
 
         var sx = this.pickupSpriteSize * (spriteIndex % totalTiles);
         var sy = 0;
@@ -93,52 +89,52 @@ export class FleetRenderer {
         var distance = -20;
 
         var thrusterSprite = group.group.thursterSprite;
-        if (Settings.theme == '') {
+        if (Settings.theme == "") {
             if (!thrusterSprite) {
                 switch (baseSprite.name) {
                     case "ship_green":
-                        thrusterSprite = sprites['thruster_default_green'];
+                        thrusterSprite = sprites["thruster_default_green"];
                         break;
                     case "ship_orange":
-                        thrusterSprite = sprites['thruster_default_orange'];
+                        thrusterSprite = sprites["thruster_default_orange"];
                         break;
                     case "ship_pink":
-                        thrusterSprite = sprites['thruster_default_pink'];
+                        thrusterSprite = sprites["thruster_default_pink"];
                         break;
                     case "ship_red":
-                        thrusterSprite = sprites['thruster_default_red'];
+                        thrusterSprite = sprites["thruster_default_red"];
                         break;
                     case "ship_cyan":
-                        thrusterSprite = sprites['thruster_default_cyan'];
+                        thrusterSprite = sprites["thruster_default_cyan"];
                         break;
                     case "ship_yellow":
-                        thrusterSprite = sprites['thruster_default_yellow'];
+                        thrusterSprite = sprites["thruster_default_yellow"];
                         break;
                 }
             }
             distance = -40;
         }
 
-        if (Settings.theme == '3ds2agh4z76feci') {
+        if (Settings.theme == "3ds2agh4z76feci") {
             if (!thrusterSprite) {
                 switch (baseSprite.name) {
                     case "ship_green":
-                        thrusterSprite = sprites['thruster_retro_green'];
+                        thrusterSprite = sprites["thruster_retro_green"];
                         break;
                     case "ship_orange":
-                        thrusterSprite = sprites['thruster_retro_orange'];
+                        thrusterSprite = sprites["thruster_retro_orange"];
                         break;
                     case "ship_pink":
-                        thrusterSprite = sprites['thruster_retro_pink'];
+                        thrusterSprite = sprites["thruster_retro_pink"];
                         break;
                     case "ship_red":
-                        thrusterSprite = sprites['thruster_retro_red'];
+                        thrusterSprite = sprites["thruster_retro_red"];
                         break;
                     case "ship_cyan":
-                        thrusterSprite = sprites['thruster_retro_cyan'];
+                        thrusterSprite = sprites["thruster_retro_cyan"];
                         break;
                     case "ship_yellow":
-                        thrusterSprite = sprites['thruster_retro_yellow'];
+                        thrusterSprite = sprites["thruster_retro_yellow"];
                         break;
                 }
             }
@@ -146,12 +142,10 @@ export class FleetRenderer {
             group.group.spriteScale = 1;
         }
 
-        if (!thrusterSprite)
-            thrusterSprite = sprites['thruster_default_cyan'];
+        if (!thrusterSprite) thrusterSprite = sprites["thruster_default_cyan"];
 
-        var totalTiles = (thrusterSprite.image.width / this.thrusterSpriteSize);
-        var spriteIndex = Math.floor(boostDuration / boostDurationTotal * totalTiles) % totalTiles
-            + object.ID % 3;
+        var totalTiles = thrusterSprite.image.width / this.thrusterSpriteSize;
+        var spriteIndex = (Math.floor((boostDuration / boostDurationTotal) * totalTiles) % totalTiles) + (object.ID % 3);
 
         group.group.thursterSprite = thrusterSprite;
 

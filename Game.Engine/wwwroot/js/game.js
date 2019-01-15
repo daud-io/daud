@@ -201,14 +201,10 @@ connection.onView = newView => {
     })*/
 
     var data = newView.customData();
-    if (data)
-    {
+    if (data) {
         CustomData = data;
         CustomDataTime = view.time;
-    }
-    else
-    if (CustomDataTime + 5000 < view.time)
-    {
+    } else if (CustomDataTime + 5000 < view.time) {
         CustomData = false;
     }
 
@@ -345,7 +341,6 @@ function doPing() {
 doPing();
 setInterval(doPing, 1000);
 
-
 var graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
@@ -391,48 +386,37 @@ app.ticker.add(() => {
         };
     }
 
-    if (CustomData != lastCustomData)
-    {
+    if (CustomData != lastCustomData) {
         lastCustomData = CustomData;
 
-        for(var i=0; i<spotSprites.length; i++)
-            container.removeChild(spotSprites[i]);
-        
+        for (var i = 0; i < spotSprites.length; i++) container.removeChild(spotSprites[i]);
+
         spotSprites = [];
 
         //graphics.clear();
 
-        if (CustomData)
-        {
+        if (CustomData) {
             var data = JSON.parse(CustomData);
-            if (data.spots)
-            {
-                for (var i=0; i<data.spots.length; i++)
-                {
+            if (data.spots) {
+                for (var i = 0; i < data.spots.length; i++) {
                     var spot = data.spots[i];
                     var texture = textures["obstacle"];
-                    if (texture)
-                    {
+                    if (texture) {
                         var sprite = new PIXI.Sprite(texture);
                         sprite.position.x = spot.X;
                         sprite.position.y = spot.Y;
-                        sprite.scale.set(.1,.1);
+                        sprite.scale.set(0.1, 0.1);
 
                         container.addChild(sprite);
 
                         spotSprites.push(sprite);
-                    }
-                    else
-                        console.log('cannot find texture');
-
+                    } else console.log("cannot find texture");
                 }
             }
         }
         //CustomData = false;
         //console.log('new');
-    }
-    else
-    {
+    } else {
         //console.log('repeat');
     }
 

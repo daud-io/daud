@@ -65,8 +65,7 @@ export class Cache {
             let oldSprite = existing ? this.bodies[`b-${update.ID}`].Sprite : false;
             this.bodies[`b-${update.ID}`] = update;
 
-            if (update.sprite == "ship_red")
-                update.sprite = 'thruster_default_red';
+            if (update.sprite == "ship_red") update.sprite = "thruster_default_red";
 
             if (existing) {
                 existing.previous = false;
@@ -107,14 +106,11 @@ export class Cache {
                 var object = false;
 
                 if (sprite.animated) {
-
                     var tileSize = sprite.image.height;
-                    var totalTiles = (sprite.image.width / tileSize);
+                    var totalTiles = sprite.image.width / tileSize;
 
-                    for (var spriteIndex = 0; spriteIndex < totalTiles; spriteIndex++)
-                    {
-                        var spriteIndex = (Math.floor(timeIndex / pickupAnimationTotal * totalTiles)
-                            + object.ID % 3) % totalTiles;
+                    for (var spriteIndex = 0; spriteIndex < totalTiles; spriteIndex++) {
+                        var spriteIndex = (Math.floor((timeIndex / pickupAnimationTotal) * totalTiles) + (object.ID % 3)) % totalTiles;
 
                         var sx = tileSize * (spriteIndex % totalTiles);
                         var sy = 0;
@@ -134,7 +130,6 @@ export class Cache {
                         object.loop = sprite.loop;
                         object.animationSpeed = sprite.animationSpeed;
                     }
-
                 } else {
                     object = new PIXI.Sprite(texture);
                 }
