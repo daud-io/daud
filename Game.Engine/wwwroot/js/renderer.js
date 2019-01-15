@@ -171,47 +171,8 @@ export class Renderer {
             backgroundSprite.visible = true;
 
         cache.foreach(function(body) {
-            const object = body;
-            let group = false;
-
-            const position = interpolator.projectObject(object, currentTime);
-
-            const ship = cache.bodies[`s-${body.ID}`];
-
-            if (ship)
-                ship.preRender(currentTime, interpolator);
-            else
-            {
-
-                const objec2 = cache.bodies[`p-${body.ID}`];
-                if (objec2)
-                {
-                    objec2.position.x = position.X;
-                    objec2.position.y = position.Y;
-                    objec2.rotation = position.Angle;
-                }
-                // keep track of which "groups" are used, and collect the points of all the objects
-                // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
-                if (object.Group) {
-                    for (let i = 0; i < groupsUsed.length; i++)
-                        if (groupsUsed[i].id == object.Group) {
-                            group = groupsUsed[i];
-                            break;
-                        }
-
-                    if (!group) {
-                        group = {
-                            id: object.Group,
-                            group: cache.groups[`g-${object.Group}`],
-                            points: []
-                        };
-
-                        groupsUsed.push(group);
-                    }
-
-                    group.points.push(position);
-                }
-            }
+            if (body.renderer)
+                body.renderer.preRender(currentTime, interpolator);
         }, this);
 
         // draw labels on groups
@@ -235,18 +196,12 @@ export class Renderer {
                         pt.Y /= group.points.length;
 
                         // draw a caption relative to the average above
-                        const body = cache.bodies[`p-${group.group.ID}`];
+                        /*const body = cache.bodies[`p-${group.group.ID}`];
                         body.position.x = pt.X;
                         body.position.y = pt.Y;
-                        body.visible = Settings.namesEnabled;
+                        body.visible = Settings.namesEnabled;*/
                     }
                 }
-            }
-        }
-        for (var k in cache.groups) {
-            if (!ids.includes(k)) {
-                const body = cache.bodies[`p-${k.substr(2)}`];
-                body.visible = false;
             }
         }
     }

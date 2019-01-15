@@ -1,6 +1,8 @@
-import { sprites } from "./renderer";
 import { Settings } from "./settings";
+import { Bullet } from "./models/bullet";
 import { Ship } from "./models/ship";
+import { RenderedObject } from "./models/renderedObject";
+
 export const textures = {};
 export class Cache {
     constructor(container) {
@@ -9,31 +11,22 @@ export class Cache {
     }
 
     clear() {
+        this.foreach(function(body) {
+            if (body && body.renderer)
+                body.renderer.destroy();
+        }, this);
+
         this.bodies = {};
         this.groups = {};
-        // this.textures = {};
         Cache.count = 0;
     }
 
     empty() {
-        for (let key in this.bodies) {
-            if (key.startsWith("p-")) {
-                this.container.removeChild(this.bodies[key]);
-            }
-        }
         this.clear();
     }
 
     refreshSprites() {
-        this.foreach(function(body) {
-            let sprite = sprites[body.Sprite];
-            let object = this.bodies[`p-${body.ID}`];
-            let texture = textures[body.Sprite];
-            object.pivot.x = sprite.image.width / 2;
-            object.pivot.y = sprite.image.height / 2;
-            object.texture = texture;
-            object.scale.set(sprite.scale * body.Size, sprite.scale * body.Size);
-        }, this);
+        // I used to loop all the bodies and reset the textures;
     }
 
     update(updates, deletes, groups, groupDeletes, time) {
@@ -43,16 +36,11 @@ export class Cache {
         for (i = 0; i < deletes.length; i++) {
             var deleteKey = deletes[i];
             var key = `b-${deleteKey}`;
-            this.container.removeChild(this.bodies[`p-${deleteKey}`]);
             if (key in this.bodies) Cache.count--;
 
-            var ship = this.bodies[`s-${deleteKey}`];
-            if (ship) {
-                ship.destroy();
-                delete this.bodies[`s-${deleteKey}`];
-            }
-
-            delete this.bodies[`p-${deleteKey}`];
+            var body = this.bodies[key];
+            if (body && body.renderer)
+                body.renderer.destroy();
             delete this.bodies[key];
         }
 
@@ -69,112 +57,38 @@ export class Cache {
         for (i = 0; i < updates.length; i++) {
             const update = updates[i];
             var existing = this.bodies[`b-${update.ID}`];
-
-            let oldSprite = existing ? this.bodies[`b-${update.ID}`].Sprite : false;
+            
             this.bodies[`b-${update.ID}`] = update;
 
             if (existing) {
-                existing.previous = false;
-                existing.obsolete = time;
+                update.renderer = existing.renderer;
                 update.previous = existing;
+
+                existing.previous = false;
+                existing.renderer = false;
+                existing.obsolete = time;
 
                 if (update.Size === -1) update.Size = existing.Size;
 
                 if (update.Sprite === null) update.Sprite = existing.Sprite;
-                if (update.Caption === null) update.Caption = existing.Caption;
-                if (update.Color === null) update.Color = existing.Color;
 
                 if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
                 if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
 
-
-                var ship = this.bodies[`s-${update.ID}`];
-                if (ship) {
-                    
-                    if (ship)
-                        ship.update(update);
-                }
-                else {
-                    let sprite = sprites[update.Sprite];
-                    let object = this.bodies[`p-${update.ID}`];
-                    let texture = textures[update.Sprite];
-                    if (object.texture != texture && !sprite.animated) {
-                        if (!texture) {
-                            texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
-                        }
-                        object.pivot.x = sprite.image.width / 2;
-                        object.pivot.y = sprite.image.height / 2;
-                        object.texture = texture;
-                    }
-                    object.position.x = update.OriginalPosition.X;
-                    object.position.y = update.OriginalPosition.Y;
-                    object.rotation = update.OriginalAngle;
-                    object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
-                }
+                if (update.renderer)
+                    update.renderer.update(update);
             }
 
             if (!existing) {
+                if (update.Sprite.indexOf("ship") == 0)
+                    update.renderer = new Ship(this.container);
+                else if (update.Sprite.indexOf("bullet"))
+                    update.renderer = new Bullet(this.container);
+                else
+                    update.renderer = new RenderedObject(this.container);
 
-
-                if (update.Sprite == "ship_red") {
-                    var ship = new Ship(this.container);
-                    this.bodies[`s-${update.ID}`] = ship;
-                } else {
-
-                    let sprite = sprites[update.Sprite];
-                    let texture = textures[update.Sprite];
-                    if (!texture) {
-                        if (!sprite.animated)
-                            texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
-                        else
-                            texture = textures[update.Sprite] = new PIXI.BaseTexture.from(sprite.image);
-                    }
-
-                    var object = false;
-
-                    if (sprite.animated) {
-
-                        var tileSize = sprite.image.height;
-                        var totalTiles = (sprite.image.width / tileSize);
-                        var textureArray = [];
-
-                        for (var spriteIndex = 0; spriteIndex < totalTiles; spriteIndex++) {
-                            var sx = tileSize * (spriteIndex % totalTiles);
-                            var sy = 0;
-                            var sw = tileSize;
-                            var sh = tileSize;
-
-                            var dx = -0.5 * tileSize * sprite.scale;
-                            var dy = -0.5 * tileSize * sprite.scale;
-                            var dw = tileSize * sprite.scale;
-                            var dh = tileSize * sprite.scale;
-
-                            textureArray.push(new PIXI.Texture(texture, new PIXI.Rectangle(sx, sy, sw, sh)));
-                        }
-
-                        object = new PIXI.extras.AnimatedSprite(textureArray);
-                        object.loop = sprite.loop;
-                        object.animationSpeed = sprite.animationSpeed;
-                        object.pivot.x = tileSize / 2;
-                        object.pivot.y = tileSize.height / 2;
-                        object.play();
-
-
-                    } else {
-                        object = new PIXI.Sprite(texture);
-                        object.pivot.x = sprite.image.width / 2;
-                        object.pivot.y = sprite.image.height / 2;
-                    }
-
-                    object.position.x = update.OriginalPosition.X;
-                    object.position.y = update.OriginalPosition.Y;
-                    object.rotation = update.OriginalAngle;
-                    object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
-
-                    this.container.addChildAt(object, 2);
-                    this.bodies[`p-${update.ID}`] = object;
-                    Cache.count++;
-                }
+                update.renderer.update(update);
+                Cache.count++;
             }
         }
 
@@ -184,11 +98,11 @@ export class Cache {
             var existing = this.groups[`g-${group.ID}`];
 
             if (!existing) {
-                let text = new PIXI.Text(group.Caption, { fontFamily: Settings.font, fontSize: Settings.nameSize, fill: 0xffffff });
+                /*let text = new PIXI.Text(group.Caption, { fontFamily: Settings.font, fontSize: Settings.nameSize, fill: 0xffffff });
                 text.anchor.set(0.5, 0.5);
                 this.container.addChild(text);
                 this.bodies[`p-${group.ID}`] = text;
-                if (!Settings.namesEnabled) text.visible = false;
+                if (!Settings.namesEnabled) text.visible = false;*/
                 existing = group;
             } else {
                 existing.ID = group.ID;
