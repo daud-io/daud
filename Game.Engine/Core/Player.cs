@@ -152,14 +152,6 @@
 
                 if (World.Time > SpawnTime + InvulnerableTime)
                     IsInvulnerable = false;
-
-                bool flash = (World.Time - this.SpawnTime) % 300 > 200;
-
-                foreach (var ship in Fleet.Ships)
-                    ship.Sprite = flash && IsInvulnerable
-                        ? Sprites.ship_flash
-                        : Fleet.Owner?.ShipSprite ?? Sprites.ship_gray;
-
             }
         }
 

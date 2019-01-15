@@ -1,5 +1,4 @@
 import { Settings } from "./settings";
-import { FleetRenderer } from "./renderers/fleetRenderer";
 import images from "../img/*.png";
 import {textures } from "./cache";
 
@@ -177,31 +176,41 @@ export class Renderer {
 
             const position = interpolator.projectObject(object, currentTime);
 
-            const objec2 = cache.bodies[`p-${body.ID}`];
-            objec2.position.x = position.X;
-            objec2.position.y = position.Y;
-            objec2.rotation = position.Angle;
+            const ship = cache.bodies[`s-${body.ID}`];
 
-            // keep track of which "groups" are used, and collect the points of all the objects
-            // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
-            if (object.Group) {
-                for (let i = 0; i < groupsUsed.length; i++)
-                    if (groupsUsed[i].id == object.Group) {
-                        group = groupsUsed[i];
-                        break;
+            if (ship)
+                ship.preRender(currentTime, interpolator);
+            else
+            {
+
+                const objec2 = cache.bodies[`p-${body.ID}`];
+                if (objec2)
+                {
+                    objec2.position.x = position.X;
+                    objec2.position.y = position.Y;
+                    objec2.rotation = position.Angle;
+                }
+                // keep track of which "groups" are used, and collect the points of all the objects
+                // in the groups... we'll use this later to draw a label on the group (eg, fleet of ships)
+                if (object.Group) {
+                    for (let i = 0; i < groupsUsed.length; i++)
+                        if (groupsUsed[i].id == object.Group) {
+                            group = groupsUsed[i];
+                            break;
+                        }
+
+                    if (!group) {
+                        group = {
+                            id: object.Group,
+                            group: cache.groups[`g-${object.Group}`],
+                            points: []
+                        };
+
+                        groupsUsed.push(group);
                     }
 
-                if (!group) {
-                    group = {
-                        id: object.Group,
-                        group: cache.groups[`g-${object.Group}`],
-                        points: []
-                    };
-
-                    groupsUsed.push(group);
+                    group.points.push(position);
                 }
-
-                group.points.push(position);
             }
         }, this);
 

@@ -1,5 +1,6 @@
 import { sprites } from "./renderer";
 import { Settings } from "./settings";
+import { Ship } from "./models/ship";
 export const textures = {};
 export class Cache {
     constructor(container) {
@@ -44,6 +45,13 @@ export class Cache {
             var key = `b-${deleteKey}`;
             this.container.removeChild(this.bodies[`p-${deleteKey}`]);
             if (key in this.bodies) Cache.count--;
+
+            var ship = this.bodies[`s-${deleteKey}`];
+            if (ship) {
+                ship.destroy();
+                delete this.bodies[`s-${deleteKey}`];
+            }
+
             delete this.bodies[`p-${deleteKey}`];
             delete this.bodies[key];
         }
@@ -65,9 +73,6 @@ export class Cache {
             let oldSprite = existing ? this.bodies[`b-${update.ID}`].Sprite : false;
             this.bodies[`b-${update.ID}`] = update;
 
-            if (update.Sprite == "ship_red")
-                update.Sprite = 'thruster_retro_red';
-
             if (existing) {
                 existing.previous = false;
                 existing.obsolete = time;
@@ -82,79 +87,94 @@ export class Cache {
                 if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
                 if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
 
-                let sprite = sprites[update.Sprite];
-                let object = this.bodies[`p-${update.ID}`];
-                let texture = textures[update.Sprite];
-                if (object.texture != texture && !sprite.animated) {
-                    if (!texture) {
-                        texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
-                    }
-                    object.pivot.x = sprite.image.width / 2;
-                    object.pivot.y = sprite.image.height / 2;
-                    object.texture = texture;
+
+                var ship = this.bodies[`s-${update.ID}`];
+                if (ship) {
+                    
+                    if (ship)
+                        ship.update(update);
                 }
-                object.position.x = update.OriginalPosition.X;
-                object.position.y = update.OriginalPosition.Y;
-                object.rotation = update.OriginalAngle;
-                object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
+                else {
+                    let sprite = sprites[update.Sprite];
+                    let object = this.bodies[`p-${update.ID}`];
+                    let texture = textures[update.Sprite];
+                    if (object.texture != texture && !sprite.animated) {
+                        if (!texture) {
+                            texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
+                        }
+                        object.pivot.x = sprite.image.width / 2;
+                        object.pivot.y = sprite.image.height / 2;
+                        object.texture = texture;
+                    }
+                    object.position.x = update.OriginalPosition.X;
+                    object.position.y = update.OriginalPosition.Y;
+                    object.rotation = update.OriginalAngle;
+                    object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
+                }
             }
 
             if (!existing) {
-                let sprite = sprites[update.Sprite];
-                let texture = textures[update.Sprite];
-                if (!texture) 
-                {
-                    if (!sprite.animated)
-                        texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
-                    else
-                        texture = textures[update.Sprite] = new PIXI.BaseTexture.from(sprite.image);
-                }
-
-                var object = false;
-
-                if (sprite.animated) {
-
-                    var tileSize = sprite.image.height;
-                    var totalTiles = (sprite.image.width / tileSize);
-                    var textureArray = [];
-
-                    for (var spriteIndex = 0; spriteIndex < totalTiles; spriteIndex++)
-                    {
-                        var sx = tileSize * (spriteIndex % totalTiles);
-                        var sy = 0;
-                        var sw = tileSize;
-                        var sh = tileSize;
-
-                        var dx = -0.5 * tileSize * sprite.scale;
-                        var dy = -0.5 * tileSize * sprite.scale;
-                        var dw = tileSize * sprite.scale;
-                        var dh = tileSize * sprite.scale;
-
-                        textureArray.push(new PIXI.Texture(texture, new PIXI.Rectangle(sx, sy, sw, sh)));
-                    }
-
-                    object = new PIXI.extras.AnimatedSprite(textureArray);
-                    object.loop = sprite.loop;
-                    object.animationSpeed = sprite.animationSpeed;
-                    object.pivot.x = tileSize / 2;
-                    object.pivot.y = tileSize.height / 2;
-                    object.play();
 
 
+                if (update.Sprite == "ship_red") {
+                    var ship = new Ship(this.container);
+                    this.bodies[`s-${update.ID}`] = ship;
                 } else {
-                    object = new PIXI.Sprite(texture);
-                    object.pivot.x = sprite.image.width / 2;
-                    object.pivot.y = sprite.image.height / 2;
+
+                    let sprite = sprites[update.Sprite];
+                    let texture = textures[update.Sprite];
+                    if (!texture) {
+                        if (!sprite.animated)
+                            texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
+                        else
+                            texture = textures[update.Sprite] = new PIXI.BaseTexture.from(sprite.image);
                     }
 
-                object.position.x = update.OriginalPosition.X;
-                object.position.y = update.OriginalPosition.Y;
-                object.rotation = update.OriginalAngle;
-                object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
+                    var object = false;
 
-                this.container.addChildAt(object, 2);
-                this.bodies[`p-${update.ID}`] = object;
-                Cache.count++;
+                    if (sprite.animated) {
+
+                        var tileSize = sprite.image.height;
+                        var totalTiles = (sprite.image.width / tileSize);
+                        var textureArray = [];
+
+                        for (var spriteIndex = 0; spriteIndex < totalTiles; spriteIndex++) {
+                            var sx = tileSize * (spriteIndex % totalTiles);
+                            var sy = 0;
+                            var sw = tileSize;
+                            var sh = tileSize;
+
+                            var dx = -0.5 * tileSize * sprite.scale;
+                            var dy = -0.5 * tileSize * sprite.scale;
+                            var dw = tileSize * sprite.scale;
+                            var dh = tileSize * sprite.scale;
+
+                            textureArray.push(new PIXI.Texture(texture, new PIXI.Rectangle(sx, sy, sw, sh)));
+                        }
+
+                        object = new PIXI.extras.AnimatedSprite(textureArray);
+                        object.loop = sprite.loop;
+                        object.animationSpeed = sprite.animationSpeed;
+                        object.pivot.x = tileSize / 2;
+                        object.pivot.y = tileSize.height / 2;
+                        object.play();
+
+
+                    } else {
+                        object = new PIXI.Sprite(texture);
+                        object.pivot.x = sprite.image.width / 2;
+                        object.pivot.y = sprite.image.height / 2;
+                    }
+
+                    object.position.x = update.OriginalPosition.X;
+                    object.position.y = update.OriginalPosition.Y;
+                    object.rotation = update.OriginalAngle;
+                    object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
+
+                    this.container.addChildAt(object, 2);
+                    this.bodies[`p-${update.ID}`] = object;
+                    Cache.count++;
+                }
             }
         }
 
