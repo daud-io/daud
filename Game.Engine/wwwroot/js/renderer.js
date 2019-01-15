@@ -123,7 +123,7 @@ addAnimation("thruster_default_yellow");
 addAnimation("thruster_retro_green");
 addAnimation("thruster_retro_orange");
 addAnimation("thruster_retro_pink");
-addAnimation("thruster_retro_red");
+addAnimation("thruster_retro_red",false, true);
 addAnimation("thruster_retro_cyan");
 addAnimation("thruster_retro_yellow");
 addAnimation("circles");

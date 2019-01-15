@@ -65,8 +65,8 @@ export class Cache {
             let oldSprite = existing ? this.bodies[`b-${update.ID}`].Sprite : false;
             this.bodies[`b-${update.ID}`] = update;
 
-            if (update.sprite == "ship_red")
-                update.sprite = 'thruster_default_red';
+            if (update.Sprite == "ship_red")
+                update.Sprite = 'thruster_retro_red';
 
             if (existing) {
                 existing.previous = false;
@@ -85,7 +85,7 @@ export class Cache {
                 let sprite = sprites[update.Sprite];
                 let object = this.bodies[`p-${update.ID}`];
                 let texture = textures[update.Sprite];
-                if (object.texture != texture) {
+                if (object.texture != texture && !sprite.animated) {
                     if (!texture) {
                         texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
                     }
@@ -102,7 +102,13 @@ export class Cache {
             if (!existing) {
                 let sprite = sprites[update.Sprite];
                 let texture = textures[update.Sprite];
-                if (!texture) texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
+                if (!texture) 
+                {
+                    if (!sprite.animated)
+                        texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
+                    else
+                        texture = textures[update.Sprite] = new PIXI.BaseTexture.from(sprite.image);
+                }
 
                 var object = false;
 
@@ -110,39 +116,39 @@ export class Cache {
 
                     var tileSize = sprite.image.height;
                     var totalTiles = (sprite.image.width / tileSize);
+                    var textureArray = [];
 
                     for (var spriteIndex = 0; spriteIndex < totalTiles; spriteIndex++)
                     {
-                        var spriteIndex = (Math.floor(timeIndex / pickupAnimationTotal * totalTiles)
-                            + object.ID % 3) % totalTiles;
-
                         var sx = tileSize * (spriteIndex % totalTiles);
                         var sy = 0;
                         var sw = tileSize;
                         var sh = tileSize;
 
-                        var dx = -0.5 * tileSize * spriteScale;
-                        var dy = -0.5 * tileSize * spriteScale;
-                        var dw = tileSize * spriteScale;
-                        var dh = tileSize * spriteScale;
-
-                        var textureArray = [];
+                        var dx = -0.5 * tileSize * sprite.scale;
+                        var dy = -0.5 * tileSize * sprite.scale;
+                        var dw = tileSize * sprite.scale;
+                        var dh = tileSize * sprite.scale;
 
                         textureArray.push(new PIXI.Texture(texture, new PIXI.Rectangle(sx, sy, sw, sh)));
-
-                        object = new PIXI.extras.AnimatedSprite(textureArray);
-                        object.loop = sprite.loop;
-                        object.animationSpeed = sprite.animationSpeed;
                     }
+
+                    object = new PIXI.extras.AnimatedSprite(textureArray);
+                    object.loop = sprite.loop;
+                    object.animationSpeed = sprite.animationSpeed;
+                    object.pivot.x = tileSize / 2;
+                    object.pivot.y = tileSize.height / 2;
+                    object.play();
+
 
                 } else {
                     object = new PIXI.Sprite(texture);
-                }
+                    object.pivot.x = sprite.image.width / 2;
+                    object.pivot.y = sprite.image.height / 2;
+                    }
 
                 object.position.x = update.OriginalPosition.X;
                 object.position.y = update.OriginalPosition.Y;
-                object.pivot.x = sprite.image.width / 2;
-                object.pivot.y = sprite.image.height / 2;
                 object.rotation = update.OriginalAngle;
                 object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
 
