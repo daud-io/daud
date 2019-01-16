@@ -243,7 +243,8 @@
         private uint _id = 0;
         public uint NextID()
         {
-            return _id++;
+            lock(this)
+                return _id++;
         }
 
         public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)

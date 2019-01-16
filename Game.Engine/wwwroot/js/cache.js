@@ -1,6 +1,8 @@
-import { sprites } from "./renderer";
-import { Settings } from "./settings";
-export const textures = {};
+import { Bullet } from "./models/bullet";
+import { Ship } from "./models/ship";
+import { RenderedObject } from "./models/renderedObject";
+import { Fleet } from "./models/fleet";
+
 export class Cache {
     constructor(container) {
         this.container = container;
@@ -8,143 +10,58 @@ export class Cache {
     }
 
     clear() {
+        this.foreach(function(body) {
+            if (body && body.renderer)
+                body.renderer.destroy();
+        }, this);
+
+        this.foreachGroup(function(group) {
+            if (group && group.renderer)
+                group.renderer.destroy();
+        });
+
         this.bodies = {};
         this.groups = {};
-        // this.textures = {};
         Cache.count = 0;
     }
 
     empty() {
-        for (let key in this.bodies) {
-            if (key.startsWith("p-")) {
-                this.container.removeChild(this.bodies[key]);
-            }
-        }
         this.clear();
     }
 
     refreshSprites() {
         this.foreach(function(body) {
-            let sprite = sprites[body.Sprite];
-            let object = this.bodies[`p-${body.ID}`];
-            let texture = textures[body.Sprite];
-            object.pivot.x = sprite.image.width / 2;
-            object.pivot.y = sprite.image.height / 2;
-            object.texture = texture;
-            object.scale.set(sprite.scale * body.Size, sprite.scale * body.Size);
+            if (body && body.renderer)
+                body.renderer.refreshSprite();
         }, this);
     }
 
-    update(updates, deletes, groups, groupDeletes, time) {
+    update(updates, deletes, groups, groupDeletes, time, myFleetID) {
         let i = 0;
 
         // delete objects that should no longer exist
         for (i = 0; i < deletes.length; i++) {
             var deleteKey = deletes[i];
             var key = `b-${deleteKey}`;
-            this.container.removeChild(this.bodies[`p-${deleteKey}`]);
             if (key in this.bodies) Cache.count--;
-            delete this.bodies[`p-${deleteKey}`];
+
+            var body = this.bodies[key];
+            if (body && body.renderer)
+                body.renderer.destroy();
             delete this.bodies[key];
         }
 
         // delete groups that should no longer exist
         for (i = 0; i < groupDeletes.length; i++) {
             var deleteKey = groupDeletes[i];
-            this.container.removeChild(this.bodies[`p-${deleteKey}`]);
-            delete this.bodies[`p-${deleteKey}`];
             var key = `g-${deleteKey}`;
+            var group = this.groups[key];
+            if (!group)
+                console.log('group delete on object not in cache');
+                
+            if (group && group.renderer)
+                group.renderer.destroy();
             delete this.groups[key];
-        }
-
-        // update objects that should be here
-        for (i = 0; i < updates.length; i++) {
-            const update = updates[i];
-            var existing = this.bodies[`b-${update.ID}`];
-
-            let oldSprite = existing ? this.bodies[`b-${update.ID}`].Sprite : false;
-            this.bodies[`b-${update.ID}`] = update;
-
-            if (update.sprite == "ship_red") update.sprite = "thruster_default_red";
-
-            if (existing) {
-                existing.previous = false;
-                existing.obsolete = time;
-                update.previous = existing;
-
-                if (update.Size === -1) update.Size = existing.Size;
-
-                if (update.Sprite === null) update.Sprite = existing.Sprite;
-                if (update.Caption === null) update.Caption = existing.Caption;
-                if (update.Color === null) update.Color = existing.Color;
-
-                if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
-                if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
-
-                let sprite = sprites[update.Sprite];
-                let object = this.bodies[`p-${update.ID}`];
-                let texture = textures[update.Sprite];
-                if (object.texture != texture) {
-                    if (!texture) {
-                        texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
-                    }
-                    object.pivot.x = sprite.image.width / 2;
-                    object.pivot.y = sprite.image.height / 2;
-                    object.texture = texture;
-                }
-                object.position.x = update.OriginalPosition.X;
-                object.position.y = update.OriginalPosition.Y;
-                object.rotation = update.OriginalAngle;
-                object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
-            }
-
-            if (!existing) {
-                let sprite = sprites[update.Sprite];
-                let texture = textures[update.Sprite];
-                if (!texture) texture = textures[update.Sprite] = new PIXI.Texture.fromLoader(sprite.image);
-
-                var object = false;
-
-                if (sprite.animated) {
-                    var tileSize = sprite.image.height;
-                    var totalTiles = sprite.image.width / tileSize;
-
-                    for (var spriteIndex = 0; spriteIndex < totalTiles; spriteIndex++) {
-                        var spriteIndex = (Math.floor((timeIndex / pickupAnimationTotal) * totalTiles) + (object.ID % 3)) % totalTiles;
-
-                        var sx = tileSize * (spriteIndex % totalTiles);
-                        var sy = 0;
-                        var sw = tileSize;
-                        var sh = tileSize;
-
-                        var dx = -0.5 * tileSize * spriteScale;
-                        var dy = -0.5 * tileSize * spriteScale;
-                        var dw = tileSize * spriteScale;
-                        var dh = tileSize * spriteScale;
-
-                        var textureArray = [];
-
-                        textureArray.push(new PIXI.Texture(texture, new PIXI.Rectangle(sx, sy, sw, sh)));
-
-                        object = new PIXI.extras.AnimatedSprite(textureArray);
-                        object.loop = sprite.loop;
-                        object.animationSpeed = sprite.animationSpeed;
-                    }
-                } else {
-                    object = new PIXI.Sprite(texture);
-                }
-
-                object.position.x = update.OriginalPosition.X;
-                object.position.y = update.OriginalPosition.Y;
-                object.pivot.x = sprite.image.width / 2;
-                object.pivot.y = sprite.image.height / 2;
-                object.rotation = update.OriginalAngle;
-                object.scale.set(sprite.scale * update.Size, sprite.scale * update.Size);
-
-                this.container.addChildAt(object, 2);
-                this.bodies[`p-${update.ID}`] = object;
-                Cache.count++;
-            }
         }
 
         // update groups that should be here
@@ -153,11 +70,9 @@ export class Cache {
             var existing = this.groups[`g-${group.ID}`];
 
             if (!existing) {
-                let text = new PIXI.Text(group.Caption, { fontFamily: Settings.font, fontSize: Settings.nameSize, fill: 0xffffff });
-                text.anchor.set(0.5, 0.5);
-                this.container.addChild(text);
-                this.bodies[`p-${group.ID}`] = text;
-                if (!Settings.namesEnabled) text.visible = false;
+                if (group.Type == 1)
+                    group.renderer = new Fleet(this.container, this);
+
                 existing = group;
             } else {
                 existing.ID = group.ID;
@@ -166,11 +81,100 @@ export class Cache {
                 existing.ZIndex = group.ZIndex;
             }
 
+            if (existing.renderer)
+                existing.renderer.update(existing);
+
             this.groups[`g-${group.ID}`] = existing;
+        }
+
+        // update objects that should be here
+        for (i = 0; i < updates.length; i++) {
+
+            const update = updates[i];
+            var existing = this.bodies[`b-${update.ID}`];
+            
+            this.bodies[`b-${update.ID}`] = update;
+
+            if (existing) {
+                update.renderer = existing.renderer;
+                update.previous = existing;
+
+                existing.previous = false;
+                existing.renderer = false;
+                existing.obsolete = time;
+
+                if (update.Size === -1) update.Size = existing.Size;
+
+                if (update.Sprite === null) update.Sprite = existing.Sprite;
+
+                if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
+                if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
+
+                if (update.renderer)
+                    update.renderer.update(update);
+            }
+
+            if (!existing) {
+                if (update.Sprite.indexOf("ship") == 0)
+                {
+                    var fleet = false;
+                    if (update.Group != 0)
+                    {
+                        var group = this.groups[`g-${update.Group}`];
+                        if (!group)
+                        {
+                            console.log('missing group');
+                        }
+                        else
+                        {
+                            if (group.Type == 1)
+                            {
+                                fleet = group.renderer;
+
+                                if (!fleet)
+                                    fleet = new Fleet(this.container, this);
+
+                                group.renderer = fleet;
+                                    
+                            }
+                        }
+                    }
+                    else
+                    {
+                        console.log('ship with no group: ' + update.Sprite);
+                        
+                    }
+
+                    var ship = update.renderer = new Ship(this.container);
+
+                    if (fleet)
+                        fleet.addShip(ship);
+                }
+                else if (update.Sprite.indexOf("bullet"))
+                    update.renderer = new Bullet(this.container);
+                else
+                    update.renderer = new RenderedObject(this.container);
+
+                update.renderer.update(update);
+                Cache.count++;
+            }
         }
     }
 
     foreach(action, thisObj) {
+        this.foreachGroup(function(group) {
+            for (var key in this.bodies) {
+                if (key.indexOf("b-") === 0) {
+                    const body = this.bodies[key];
+                    if (body.Group == group.ID) {
+                        action.apply(thisObj, [body]);
+                    }
+                }
+            }
+        }, this);
+    }
+
+    foreachGroup(action, thisObj) {
         const sortedGroups = [];
 
         for (var key in this.groups) {
@@ -183,15 +187,7 @@ export class Cache {
 
         for (let g = 0; g < sortedGroups.length; g++) {
             var group = sortedGroups[g];
-
-            for (var key in this.bodies) {
-                if (key.indexOf("b-") === 0) {
-                    const body = this.bodies[key];
-                    if (body.Group == group.ID) {
-                        action.apply(thisObj, [body]);
-                    }
-                }
-            }
+            action.apply(thisObj, [group]);
         }
     }
 

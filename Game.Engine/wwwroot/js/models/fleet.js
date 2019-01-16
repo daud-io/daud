@@ -36,7 +36,7 @@ export class Fleet {
     preRender(time, interpolator, myfleetID)
     {
         //console.log(`Group: ${this.ID} ${this.caption} ${this.ships.length}`);
-        if (this.ships.length > 0)
+        if (this.ships.length > 0 && (this.ID != myfleetID || Settings.showOwnName || document.body.classList.contains("spectating")))
         {
             if (this.text.visible != Settings.namesEnabled)
                 this.text.visible = Settings.namesEnabled;
@@ -47,7 +47,6 @@ export class Fleet {
                     this.text.text = this.caption;
                 else
                     this.text.text = "";
-
 
                 //this.text.text += " " + this.ships.length;
                 var accX = 0, accY = 0, count = 0;
@@ -72,6 +71,6 @@ export class Fleet {
     destroy()
     {
         this.container.removeChild(this.text);
-        console.log("fleet destroyed");
+        //console.log("fleet destroyed");
     }
 }

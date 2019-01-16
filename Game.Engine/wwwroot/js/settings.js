@@ -1,11 +1,11 @@
 import { fetch } from "whatwg-fetch";
-
-import { sprites, backgroundSprite } from "./renderer";
 import { toggleLobby } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
-import { textures } from "./cache";
+import { textureMap } from "./models/textureMap";
+
 import * as PIXI from "pixi.js";
+import { textureCache } from "./models/textureCache";
 
 export const Settings = {
     theme: false,
@@ -120,29 +120,38 @@ async function theme(v) {
             var version = 1;
             if (info.version) version = info.version;
 
-            info.files.forEach(element => {
-                zip.file(`daudmod/${element[0]}.png`)
-                    .async("arraybuffer")
-                    .then(ab => {
-                        const arrayBufferView = new Uint8Array(ab);
-                        const blob = new Blob([arrayBufferView], { type: "image/jpeg" });
-                        const urlCreator = window.URL || window.webkitURL;
-                        const url = urlCreator.createObjectURL(blob);
-                        if (element[0] == "bg") {
-                            const background = new PIXI.Texture.fromImage(url);
-                            backgroundSprite.texture = background;
-                        } else {
-                            sprites[element[0]].image.src = url;
-                            textures[element[0]] = new PIXI.Texture.fromImage(url);
-                            if (element[1]) {
-                                sprites[element[0]].scale = element[1];
-                                if (version == 1 && element[0].startsWith("ship")) sprites[element[0]].scale = 0.03;
-                            }
-                        }
+            if (info.files)
+            {
+                // old format info.json
+                info.files.forEach(element => {
+                    zip.file(`daudmod/${element[0]}.png`)
+                        .async("arraybuffer")
+                        .then(ab => {
+                            const arrayBufferView = new Uint8Array(ab);
+                            const blob = new Blob([arrayBufferView], { type: "image/jpeg" });
+                            const urlCreator = window.URL || window.webkitURL;
+                            const url = urlCreator.createObjectURL(blob);
 
-                        if (window.Game && window.Game.cache) window.Game.cache.refreshSprites();
-                    });
-            });
+                            textureMap[element[0]].url = url;
+                            if (element[1])
+                            {
+                                var scale = element[1];
+                                if (version == 1 && element[0].startsWith("ship"))
+                                    scale = 0.03;
+
+                                if (scale)
+                                    textureMap[element[0]].scale = scale;
+                            }
+
+                            if (window.Game && window.Game.cache)
+                            {
+                                textureCache.clear();
+                                window.Game.cache.refreshSprites();
+                                window.Game.reinitializeWorld();
+                            }
+                        });
+                });
+            }
         });
 }
 
