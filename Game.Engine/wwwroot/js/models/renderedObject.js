@@ -41,8 +41,8 @@ export class RenderedObject {
 
             if (textureDefinition.animated) {
 
-                var tileSize = textureDefinition.tileSize;
-                var totalTiles = textureDefinition.tileCount;
+                var tileSize = textureDefinition.tileSize || 32;
+                var totalTiles = textureDefinition.tileCount || 1;
 
                 for (var tileIndex = 0; tileIndex < totalTiles; tileIndex++) {
 
