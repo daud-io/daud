@@ -23,10 +23,12 @@ export class Log {
         log.innerHTML = out;
 		
 		var lastData = this.data[this.data.length-1]["entry"];
-		if (lastData.toLowerCase().indexOf("you killed") === 0 ) {
+		if (lastData.toLowerCase().indexOf("you killed") === 0) {
 			lastData = "<span style='color:#00ff00'>" + lastData + "</span>";
-		} else if (lastData.toLowerCase().indexOf("killed by") === 0 ) {
+		} else if (lastData.toLowerCase().indexOf("killed by") === 0) {
 			lastData = "<span style='color:#ff0000'>" + lastData + "</span>";
+		} else if (lastData.toLowerCase().indexOf("@") === 0) {
+			return;
 		}
 		bigLog.innerHTML = lastData;
     }
