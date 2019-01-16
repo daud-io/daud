@@ -880,3 +880,12 @@ progress::-webkit-progress-value {
 #settingsTable {
 	margin: 10px auto 10px auto;
 }
+
+#minimap {
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
+	border: 1px solid #aaa;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+	

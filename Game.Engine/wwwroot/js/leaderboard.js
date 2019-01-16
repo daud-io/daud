@@ -5,6 +5,9 @@ var record = document.getElementById("record");
 var leaderboard = document.getElementById("leaderboard");
 var leaderboardLeft = document.getElementById("leaderboard-left");
 var leaderboardCenter = document.getElementById("leaderboard-center");
+const minimap = document.getElementById("minimap");
+var minimapCtx = minimap.getContext("2d");
+
 
 export function clear() {
     leaderboard.innerHTML = "";
@@ -34,9 +37,16 @@ export class Leaderboard {
 
         if (this.data.Type == "FFA") {
             let out = "";
+			minimapCtx.clearRect(0, 0, minimap.width, minimap.height);
             for (let i = 0; i < this.data.Entries.length; i++) {
                 const entry = this.data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+				
+				// minimap
+				var minimapX = (entry.Position.X + 8000) / 16000 * 200 - 2;
+				var minimapY = (entry.Position.Y + 8000) / 16000 * 200 - 2;
+				minimapCtx.fillStyle = entry.Color;
+				minimapCtx.fillRect(minimapX, minimapY, 4, 4);
 
                 out +=
                     `<tr>` +
