@@ -44,18 +44,22 @@ export class Leaderboard {
                 const entry = this.data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 				
+				var entryIsSelf = (entry.FleetID == fleetID);
+				
 				// minimap
 				var minimapX = (entry.Position.X + worldSize) / 2 / worldSize * minimap.width - 2;
 				var minimapY = (entry.Position.Y + worldSize) / 2 / worldSize * minimap.height - 2;
 				
-				var entryIsSelf = (entry.FleetID == fleetID);
+				drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf);
+				
+				/*
                 if (!entryIsSelf) {
 					minimapCtx.fillStyle = entry.Color;
 					minimapCtx.fillRect(minimapX, minimapY, 4, 4);
                 } else {
 					minimapCtx.fillStyle = "white";
 					minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
-				}
+				}*/
 
                 out +=
                     `<tr>` +
@@ -217,4 +221,17 @@ export class Leaderboard {
             console.log("leaderboarded");
         }
     }
+}
+
+function drawMinimap(x, y, color, self) {
+	var minimapX = (x + worldSize) / 2 / worldSize * minimap.width - 2;
+	var minimapY = (y + worldSize) / 2 / worldSize * minimap.height - 2;
+	
+	if (!self) {
+		minimapCtx.fillStyle = entry.Color;
+		minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+	} else {
+		minimapCtx.fillStyle = "white";
+		minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
+	}
 }
