@@ -37,14 +37,16 @@ export class Leaderboard {
 
         if (this.data.Type == "FFA") {
             let out = "";
+			
 			minimapCtx.clearRect(0, 0, minimap.width, minimap.height);
-            for (let i = 0; i < this.data.Entries.length; i++) {
+            
+			for (let i = 0; i < this.data.Entries.length; i++) {
                 const entry = this.data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 				
 				// minimap
-				var minimapX = (entry.Position.X + 8000) / 16000 * 200 - 2;
-				var minimapY = (entry.Position.Y + 8000) / 16000 * 200 - 2;
+				var minimapX = (entry.Position.X + 8000) / 16000 * minimap.width - 2;
+				var minimapY = (entry.Position.Y + 8000) / 16000 * minimap.height - 2;
 				minimapCtx.fillStyle = entry.Color;
 				minimapCtx.fillRect(minimapX, minimapY, 4, 4);
 
@@ -61,9 +63,20 @@ export class Leaderboard {
             let outL = "";
             let outR = "";
             let outC = "";
+			
+			minimapCtx.clearRect(0, 0, minimap.width, minimap.height);
+			
             for (let i = 0; i < this.data.Entries.length; i++) {
                 const entry = this.data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+				
+				// minimap
+				var minimapX = (entry.Position.X + 8000) / 16000 * minimap.width - 2;
+				var minimapY = (entry.Position.Y + 8000) / 16000 * minimap.height - 2;
+				minimapCtx.fillStyle = entry.Color;
+				minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+
+				
                 let str =
                     `<tr>` +
                     `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
