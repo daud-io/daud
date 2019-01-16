@@ -451,10 +451,17 @@ table {
 
     background: rgba(0, 0, 50, 0.8);
     z-index: 3;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 #gear.closed {
     display: none;
+}
+
+#settingsContainer {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 #worldSelector {
@@ -870,3 +877,6 @@ progress::-webkit-progress-value {
 	/*text-shadow: 0px 0px 1px #FFF;*/
 }
 
+#settingsTable {
+	margin: 10px auto 10px auto;
+}
