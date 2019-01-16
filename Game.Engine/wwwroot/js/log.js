@@ -27,7 +27,7 @@ export class Log {
 			lastData = "<span style='color:#00ff00'>" + lastData + "</span>";
 		} else if (lastData.toLowerCase().indexOf("killed by") === 0) {
 			lastData = "<span style='color:#ff0000'>" + lastData + "</span>";
-		} else if (lastData.toLowerCase().indexOf("@") === 0) {
+		} else {
 			return;
 		}
 		bigLog.innerHTML = lastData;
