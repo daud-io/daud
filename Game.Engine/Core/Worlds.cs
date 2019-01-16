@@ -32,7 +32,7 @@
             AllWorlds.Add("team", WorldTeam());
             AllWorlds.Add("ctf", WorldCTF());
             AllWorlds.Add("sharks", WorldSharks());
-            AllWorlds.Add("snake", WorldSnake());
+            AllWorlds.Add("sumo", WorldSumo());
         }
 
         private static World WorldDefault()
@@ -80,6 +80,29 @@
                 Hook = hook,
                 Name = "Snake World",
                 Description = "Hisssssss...",
+                AllowedColors = AllColors.Append("ship0").ToArray()
+            };
+        }
+
+        private static World WorldSumo()
+        {
+            var hook = Hook.Default;
+            hook.BotBase = 0;
+            hook.WorldSize = 1250;
+            hook.Obstacles = 0;
+            hook.Fishes = 20;
+            hook.Pickups = 0;
+            hook.SpawnShipCount = 10;
+            hook.PointsPerKillFleet = 1;
+            hook.PointsPerKillShip = 0;
+            hook.PointsPerUniverseDeath = 0;
+            hook.PointsMultiplierDeath = 1.0f;
+
+            return new World
+            {
+                Hook = hook,
+                Name = "Sumo World",
+                Description = "Bigger Better...",
                 AllowedColors = AllColors.Append("ship0").ToArray()
             };
         }

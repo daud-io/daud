@@ -8,7 +8,7 @@
             {
                 return new Hook
                 {
-                    WorldSize = 6000,
+                    WorldSize = 8000,
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
@@ -76,8 +76,8 @@
 
                     FlockSpeed = 0,
 
-                    Pickups = 5,
-                    Fishes = 50,
+                    Pickups = 6,
+                    Fishes = 60,
                     FishThrust = 0.04f,
 
                     SeekerRange = 2100,

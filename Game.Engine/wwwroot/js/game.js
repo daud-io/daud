@@ -47,6 +47,7 @@ let serverTimeOffset = false;
 let lastOffset = false;
 let gameTime = false;
 let lastPosition = false;
+let worldSize = 1000;
 
 let CustomData = false;
 let CustomDataTime = false;
@@ -109,7 +110,7 @@ const groupFromServer = (cache, group) => {
 };
 
 connection.onLeaderboard = lb => {
-    leaderboard.setData(lb, lastPosition);
+    leaderboard.setData(lb, lastPosition, worldSize, fleetID);
     leaderboard.position = lastPosition;
 };
 
@@ -202,7 +203,10 @@ connection.onView = newView => {
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
 
-    if (newView.worldSize() != border.worldSize) border.updateWorldSize(newView.worldSize());
+    if (newView.worldSize() != border.worldSize) {
+        worldSize = newView.worldSize()
+        border.updateWorldSize(newView.worldSize());
+    };
 
     cooldown.setCooldown(newView.cooldownShoot());
     /*console.log({
@@ -212,14 +216,10 @@ connection.onView = newView => {
     })*/
 
     var data = newView.customData();
-    if (data)
-    {
+    if (data) {
         CustomData = data;
         CustomDataTime = view.time;
-    }
-    else
-    if (CustomDataTime + 5000 < view.time)
-    {
+    } else if (CustomDataTime + 5000 < view.time) {
         CustomData = false;
     }
 
@@ -357,7 +357,6 @@ function doPing() {
 doPing();
 setInterval(doPing, 1000);
 
-
 var graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
@@ -404,19 +403,16 @@ app.ticker.add(() => {
         };
     }
 
-    if (CustomData != lastCustomData)
-    {
+    if (CustomData != lastCustomData) {
         lastCustomData = CustomData;
 
-        for(var i=0; i<spotSprites.length; i++)
-            container.removeChild(spotSprites[i]);
-        
+        for (var i = 0; i < spotSprites.length; i++) container.removeChild(spotSprites[i]);
+
         spotSprites = [];
 
         //graphics.clear();
 
-        if (CustomData)
-        {
+        if (CustomData) {
             var data = JSON.parse(CustomData);
             /*if (data.spots)
             {
@@ -424,20 +420,16 @@ app.ticker.add(() => {
                 {
                     var spot = data.spots[i];
                     var texture = textures["obstacle"];
-                    if (texture)
-                    {
+                    if (texture) {
                         var sprite = new PIXI.Sprite(texture);
                         sprite.position.x = spot.X;
                         sprite.position.y = spot.Y;
-                        sprite.scale.set(.1,.1);
+                        sprite.scale.set(0.1, 0.1);
 
                         container.addChild(sprite);
 
                         spotSprites.push(sprite);
-                    }
-                    else
-                        console.log('cannot find texture');
-
+                    } else console.log("cannot find texture");
                 }
             }*/
         }

@@ -144,8 +144,8 @@ export var Controls = {
             }
         }
 
-		var shipIndex = Math.floor(Math.random() * colors.length);
-		
+        var shipIndex = Math.floor(Math.random() * colors.length);
+
         Controls.ship = colors[shipIndex];
         refreshSelectedStyle();
     },
