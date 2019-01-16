@@ -122,7 +122,7 @@ export var Controls = {
                     } else Controls.shoot = false;
                 }
             });
-            window.addEventListener("contextmenu", e => {
+            document.getElementById("gameArea").addEventListener("contextmenu", e => {
                 e.preventDefault();
                 return false;
             });
