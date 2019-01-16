@@ -106,6 +106,11 @@
 
     "obstacle": { modes: { default: [ "obstacle" ] } },
     "seeker": { modes: { default: [ "seeker" ] } },
-    "seeker_pickup": { modes: { default: [ "seeker_pickup" ] } }
+    "seeker_pickup": { modes: { default: [ "seeker_pickup" ] } },
 
+
+    "ctf_base": { modes: { default: [ "ctf_base" ] } },
+
+    "ctf_flag_blue": { modes: { default: [ "ctf_flag_blue" ] } },
+    "ctf_flag_red": { modes: { default: [ "ctf_flag_red" ] } }
 };

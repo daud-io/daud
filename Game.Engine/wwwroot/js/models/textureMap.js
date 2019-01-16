@@ -21,17 +21,17 @@
     "ship_secret": { file: "ship_secret",   scale: 0.02 },
     "ship_zed": { file: "ship_zed",   scale: 0.02 },
 
-    "bullet": { file: "bullet",   scale: 0.02 },
-    "bullet_cyan": { file: "bullet_cyan",   scale: 0.02 },
-    "bullet_green": { file: "bullet_green",   scale: 0.02 },
-    "bullet_orange": { file: "bullet_orange",   scale: 0.02 },
-    "bullet_pink": { file: "bullet_pink",   scale: 0.02 },
-    "bullet_red": { file: "bullet_red",   scale: 0.02 },
-    "bullet_yellow": { file: "bullet_yellow",   scale: 0.02 },
+    "bullet": { file: "bullet",   scale: 0.03 },
+    "bullet_cyan": { file: "bullet_cyan",   scale: 0.03 },
+    "bullet_green": { file: "bullet_green",   scale: 0.03 },
+    "bullet_orange": { file: "bullet_orange",   scale: 0.03 },
+    "bullet_pink": { file: "bullet_pink",   scale: 0.03 },
+    "bullet_red": { file: "bullet_red",   scale: 0.03 },
+    "bullet_yellow": { file: "bullet_yellow",   scale: 0.03 },
 
     "obstacle": { file: "obstacle", scale: 0.004 },
-    "seeker": { file: "seeker", scale: 0.03 },
-    "seeker_pickup": { file: "seeker_pickup", scale: 0.03 },
+    "seeker": { file: "seeker", scale: 0.025 },
+    "seeker_pickup": { file: "seeker_pickup", scale: 0.025 },
 
     "thruster_default_cyan": {
         file: "thruster_default_cyan",
@@ -108,5 +108,47 @@
         scale: 0.05,
         tileSize: 72,
         tileCount: 11
-    }
+    },
+
+
+    "arrow" : { file: "arrow", scale: 1},
+    
+
+    // Capture the Flag
+    "ctf_base": { file: "ctf_base", scale: 0.0075 },
+    "ctf_flag_blue": { 
+        file: "ctf_flag_blue", 
+        animated: true, 
+        tileSize: 66, 
+        tileCount: 6,
+        animationSpeed: 0.1,
+        scale: 0.015,
+        loop: true
+    },
+    "ctf_flag_red": { 
+        file: "ctf_flag_red", 
+        animated: true, 
+        tileSize: 66, 
+        tileCount: 6,
+        animationSpeed: 0.1,
+        scale: 0.015,
+        loop: true
+    },
+    "ctf_score_final" : { file: "ctf_score_final", scale: 1},
+    "ctf_score_final_blue" : { file: "ctf_score_final_blue", scale: 1},
+    "ctf_score_final_red" : { file: "ctf_score_final_red", scale: 1},
+    "ctf_score_left_0" : { file: "ctf_score_left_0", scale: 1},
+    "ctf_score_left_1" : { file: "ctf_score_left_1", scale: 1},
+    "ctf_score_left_2" : { file: "ctf_score_left_2", scale: 1},
+    "ctf_score_left_3" : { file: "ctf_score_left_3", scale: 1},
+    "ctf_score_left_4" : { file: "ctf_score_left_4", scale: 1},
+    "ctf_score_right_0" : { file: "ctf_score_right_0", scale: 1},
+    "ctf_score_right_1" : { file: "ctf_score_right_1", scale: 1},
+    "ctf_score_right_2" : { file: "ctf_score_right_2", scale: 1},
+    "ctf_score_right_3" : { file: "ctf_score_right_3", scale: 1},
+    "ctf_score_right_4" : { file: "ctf_score_right_4", scale: 1},
+    "ctf_score_stripes" : { file: "ctf_score_stripes", scale: 1},
+    "ctf_arrow_red" : { file: "ctf_arrow_red", scale: 0.05},
+    "ctf_arrow_blue" : { file: "ctf_arrow_blue", scale: 0.05},
+    "ctf_arrow_trans_flag" : { file: "ctf_arrow_trans_flag", scale: 0.1}
 };

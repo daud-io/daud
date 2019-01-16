@@ -18,6 +18,10 @@ export class RenderedObject {
     static getTextureImage(textureName)
     {
         var textureDefinition = RenderedObject.loadTextureDefinition(textureName);
+
+        if (textureDefinition === false)
+            console.log(`cannot load texture '${textureName}'`);
+
         var img = new Image();
         img.src = images[textureDefinition.file];
         return img;
@@ -60,6 +64,8 @@ export class RenderedObject {
             }
             else
                 textures.push(baseTexture);
+
+
 
             textureCache[textureName] = textures;
         }

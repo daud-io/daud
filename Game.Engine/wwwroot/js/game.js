@@ -3,7 +3,7 @@
 import { Renderer } from "./renderer";
 import { spriteIndices } from "./spriteIndices";
 import { Camera } from "./camera";
-import { Cache, textures } from "./cache";
+import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
 import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
 import { HUD } from "./hud";
@@ -406,7 +406,7 @@ app.ticker.add(() => {
         if (CustomData)
         {
             var data = JSON.parse(CustomData);
-            if (data.spots)
+            /*if (data.spots)
             {
                 for (var i=0; i<data.spots.length; i++)
                 {
@@ -427,22 +427,9 @@ app.ticker.add(() => {
                         console.log('cannot find texture');
 
                 }
-            }
+            }*/
         }
-        //CustomData = false;
-        //console.log('new');
     }
-    else
-    {
-        //console.log('repeat');
-    }
-
-    /*
-    if (Game.Controls.left || Game.Controls.up)
-        angle -= 0.1;
-    if (Game.Controls.right || Game.Controls.down)
-        angle += 0.1;
-    */
 });
 
 document.body.classList.remove("loading");

@@ -1,9 +1,7 @@
-import { Settings } from "./settings";
 import { Bullet } from "./models/bullet";
 import { Ship } from "./models/ship";
 import { RenderedObject } from "./models/renderedObject";
 
-export const textures = {};
 export class Cache {
     constructor(container) {
         this.container = container;
