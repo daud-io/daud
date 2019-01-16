@@ -1,6 +1,7 @@
 import { Bullet } from "./models/bullet";
 import { Ship } from "./models/ship";
 import { RenderedObject } from "./models/renderedObject";
+import { Fleet } from "./models/fleet";
 
 export class Cache {
     constructor(container) {
@@ -45,14 +46,39 @@ export class Cache {
         // delete groups that should no longer exist
         for (i = 0; i < groupDeletes.length; i++) {
             var deleteKey = groupDeletes[i];
-            this.container.removeChild(this.bodies[`p-${deleteKey}`]);
-            delete this.bodies[`p-${deleteKey}`];
             var key = `g-${deleteKey}`;
+            var group = this.groups[key];
+            if (group.renderer)
+                group.renderer.destroy();
             delete this.groups[key];
+        }
+
+        // update groups that should be here
+        for (i = 0; i < groups.length; i++) {
+            const group = groups[i];
+            var existing = this.groups[`g-${group.ID}`];
+
+            if (!existing) {
+                if (group.Type == 1)
+                    group.renderer = new Fleet(this.container, this);
+
+                existing = group;
+            } else {
+                existing.ID = group.ID;
+                existing.Caption = group.Caption;
+                existing.Type = group.Type;
+                existing.ZIndex = group.ZIndex;
+            }
+
+            if (existing.renderer)
+                existing.renderer.update(existing);
+
+            this.groups[`g-${group.ID}`] = existing;
         }
 
         // update objects that should be here
         for (i = 0; i < updates.length; i++) {
+
             const update = updates[i];
             var existing = this.bodies[`b-${update.ID}`];
             
@@ -79,7 +105,27 @@ export class Cache {
 
             if (!existing) {
                 if (update.Sprite.indexOf("ship") == 0)
-                    update.renderer = new Ship(this.container);
+                {
+                    var fleet = false;
+                    if (update.Group != 0)
+                    {
+                        var group = this.groups[`g-${update.Group}`];
+                        if (group.Type == 1)
+                        {
+                            fleet = group.renderer;
+
+                            if (!fleet)
+                                fleet = new Fleet(this.container, this);
+
+                            group.renderer = fleet;
+                                 
+                        }
+                    }
+
+                    var ship = update.renderer = new Ship(this.container);
+                    if (fleet)
+                        fleet.addShip(ship);
+                }
                 else if (update.Sprite.indexOf("bullet"))
                     update.renderer = new Bullet(this.container);
                 else
@@ -88,28 +134,6 @@ export class Cache {
                 update.renderer.update(update);
                 Cache.count++;
             }
-        }
-
-        // update groups that should be here
-        for (i = 0; i < groups.length; i++) {
-            const group = groups[i];
-            var existing = this.groups[`g-${group.ID}`];
-
-            if (!existing) {
-                /*let text = new PIXI.Text(group.Caption, { fontFamily: Settings.font, fontSize: Settings.nameSize, fill: 0xffffff });
-                text.anchor.set(0.5, 0.5);
-                this.container.addChild(text);
-                this.bodies[`p-${group.ID}`] = text;
-                if (!Settings.namesEnabled) text.visible = false;*/
-                existing = group;
-            } else {
-                existing.ID = group.ID;
-                existing.Caption = group.Caption;
-                existing.Type = group.Type;
-                existing.ZIndex = group.ZIndex;
-            }
-
-            this.groups[`g-${group.ID}`] = existing;
         }
     }
 

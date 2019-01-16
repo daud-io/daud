@@ -30,9 +30,9 @@
     "bullet_red": { file: "bullet_red",   scale: 0.03 },
     "bullet_yellow": { file: "bullet_yellow",   scale: 0.03 },
 
-    "obstacle": { file: "obstacle", scale: 0.004 },
-    "seeker": { file: "seeker", scale: 0.025 },
-    "seeker_pickup": { file: "seeker_pickup", scale: 0.025 },
+    "obstacle": { file: "obstacle", scale: 0.0028 },
+    "seeker": { file: "seeker", scale: 0.02 },
+    "seeker_pickup": { file: "seeker_pickup", scale: 0.02 },
 
     "thruster_default_cyan": {
         file: "thruster_default_cyan",
