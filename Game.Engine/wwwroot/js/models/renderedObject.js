@@ -8,7 +8,6 @@ export class RenderedObject {
         this.container = container;
         this.currentSpriteName = false;
         this.currentMode = 0;
-        this.spriteDefinition = false;
     }
 
     getMode(mode) {
@@ -23,7 +22,10 @@ export class RenderedObject {
             console.log(`cannot load texture '${textureName}'`);
 
         var img = new Image();
-        img.src = images[textureDefinition.file];
+        if (textureDefinition.url)
+            img.src = textureDefinition.url;
+        else
+            img.src = images[textureDefinition.file];
         return img;
     }
 
@@ -35,7 +37,10 @@ export class RenderedObject {
             textures = [];
 
             var img = new Image();
-            img.src = images[textureDefinition.file];
+            if (textureDefinition.url)
+                img.src = textureDefinition.url;
+            else
+                img.src = images[textureDefinition.file];
 
             var baseTexture = new PIXI.Texture.fromLoader(img);
 
@@ -128,7 +133,7 @@ export class RenderedObject {
         return layers;
     }
 
-    buildSpriteLayers(spriteModeMap, spriteName, mode) {
+    buildSpriteLayers(spriteName, mode) {
         var layers = this.getModeMap(spriteName, mode);
 
         if (layers) {
@@ -159,6 +164,11 @@ export class RenderedObject {
         }
     }
 
+    refreshSprite()
+    {
+        this.setSprite(this.currentSpriteName, this.currentMode, true);
+    }
+
     setSprite(spriteName, mode, reload) {
         // check that we really need to change anything
         if (reload || spriteName != this.currentSpriteName || mode != this.currentMode) {
@@ -169,7 +179,7 @@ export class RenderedObject {
 
             // if we have any existing sprites, destroy them
             this.destroySprites();
-            this.spriteLayers = this.buildSpriteLayers(spriteModeMap, spriteName, mode);
+            this.spriteLayers = this.buildSpriteLayers(spriteName, mode);
 
             this.foreachLayer(function(layer, index) {
                 this.container.addChildAt(layer, 2);
@@ -191,6 +201,9 @@ export class RenderedObject {
         var angle = interpolatedPosition.Angle;
 
         this.foreachLayer(function(layer, index) {
+
+            layer.pivot.x = layer.texture.width / 2;
+            layer.pivot.y = layer.texture.height / 2;
 
             layer.position.x = interpolatedPosition.X
                 + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle));

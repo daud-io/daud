@@ -51,6 +51,8 @@ let lastPosition = false;
 let CustomData = false;
 let CustomDataTime = false;
 
+let currentWorld = false;
+
 Controls.registerCanvas(canvas);
 
 const connection = new Connection();
@@ -60,6 +62,11 @@ else connection.connect();*/
 window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 window.Game.cache = cache;
+
+window.Game.reinitializeWorld = function()
+{
+    Controls.initializeWorld(currentWorld);
+}
 
 const bodyFromServer = (cache, body) => {
     const originalPosition = body.originalPosition();
@@ -245,6 +252,7 @@ LobbyCallbacks.onLobbyClose = function() {
 };
 
 LobbyCallbacks.onWorldJoin = function(worldKey, world) {
+    currentWorld = world;
     window.Game.primaryConnection.disconnect();
     cache.empty();
     window.Game.primaryConnection.connect(worldKey);

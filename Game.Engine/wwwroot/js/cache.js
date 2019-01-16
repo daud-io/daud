@@ -15,6 +15,11 @@ export class Cache {
                 body.renderer.destroy();
         }, this);
 
+        this.foreachGroup(function(group) {
+            if (group && group.renderer)
+                group.renderer.destroy();
+        });
+
         this.bodies = {};
         this.groups = {};
         Cache.count = 0;
@@ -25,7 +30,10 @@ export class Cache {
     }
 
     refreshSprites() {
-        // I used to loop all the bodies and reset the textures;
+        this.foreach(function(body) {
+            if (body && body.renderer)
+                body.renderer.refreshSprite();
+        }, this);
     }
 
     update(updates, deletes, groups, groupDeletes, time, myFleetID) {
@@ -154,6 +162,19 @@ export class Cache {
     }
 
     foreach(action, thisObj) {
+        this.foreachGroup(function(group) {
+            for (var key in this.bodies) {
+                if (key.indexOf("b-") === 0) {
+                    const body = this.bodies[key];
+                    if (body.Group == group.ID) {
+                        action.apply(thisObj, [body]);
+                    }
+                }
+            }
+        }, this);
+    }
+
+    foreachGroup(action, thisObj) {
         const sortedGroups = [];
 
         for (var key in this.groups) {
@@ -166,15 +187,7 @@ export class Cache {
 
         for (let g = 0; g < sortedGroups.length; g++) {
             var group = sortedGroups[g];
-
-            for (var key in this.bodies) {
-                if (key.indexOf("b-") === 0) {
-                    const body = this.bodies[key];
-                    if (body.Group == group.ID) {
-                        action.apply(thisObj, [body]);
-                    }
-                }
-            }
+            action.apply(thisObj, [group]);
         }
     }
 

@@ -9,6 +9,7 @@
     
     // abandoned ships
     "ship_gray": { file: "ship_gray", scale: 0.02 },
+    "ship_flash": { file: "ship_flash", scale: 0.02 },
     
     // default selectable ships
     "ship_cyan": { file: "ship_cyan",   scale: 0.02 },
