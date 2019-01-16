@@ -42,19 +42,20 @@ export class Leaderboard {
             
 			for (let i = 0; i < this.data.Entries.length; i++) {
                 const entry = this.data.Entries[i];
-
-                var entryIsSelf = (entry.FleetID == fleetID);
-                if (entryIsSelf) {
-
-                }
-
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 				
 				// minimap
 				var minimapX = (entry.Position.X + worldSize) / 2 / worldSize * minimap.width - 2;
 				var minimapY = (entry.Position.Y + worldSize) / 2 / worldSize * minimap.height - 2;
-				minimapCtx.fillStyle = entry.Color;
-				minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+				
+				var entryIsSelf = (entry.FleetID == fleetID);
+                if (!entryIsSelf) {
+					minimapCtx.fillStyle = entry.Color;
+					minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+                } else {
+					minimapCtx.fillStyle = "white";
+					minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
+				}
 
                 out +=
                     `<tr>` +
@@ -80,8 +81,15 @@ export class Leaderboard {
 				if (i > 1) {
 					var minimapX = (entry.Position.X + worldSize) / 2 / worldSize * minimap.width - 2;
 					var minimapY = (entry.Position.Y + worldSize) / 2 / worldSize * minimap.height - 2;
-					minimapCtx.fillStyle = entry.Color;
-					minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+					
+					var entryIsSelf = (entry.FleetID == fleetID);
+					if (!entryIsSelf) {
+						minimapCtx.fillStyle = entry.Color;
+						minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+					} else {
+						minimapCtx.fillStyle = "white";
+						minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
+					}
 				}
 
                 let str =
@@ -118,8 +126,15 @@ export class Leaderboard {
 				if (i > 1) {
 					var minimapX = (entry.Position.X + worldSize) / 2 / worldSize * minimap.width - 2;
 					var minimapY = (entry.Position.Y + worldSize) / 2 / worldSize * minimap.height - 2;
-					minimapCtx.fillStyle = entry.Color;
-					minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+					
+					var entryIsSelf = (entry.FleetID == fleetID);
+					if (!entryIsSelf) {
+						minimapCtx.fillStyle = entry.Color;
+						minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+					} else {
+						minimapCtx.fillStyle = "white";
+						minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
+					}
 				}
 				
                 let str =
