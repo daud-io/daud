@@ -42,6 +42,7 @@ let serverTimeOffset = false;
 let lastOffset = false;
 let gameTime = false;
 let lastPosition = false;
+let worldSize = 1000;
 
 let CustomData = false;
 let CustomDataTime = false;
@@ -98,7 +99,7 @@ const groupFromServer = (cache, group) => {
 };
 
 connection.onLeaderboard = lb => {
-    leaderboard.setData(lb, lastPosition);
+    leaderboard.setData(lb, lastPosition, worldSize, fleetID);
     leaderboard.position = lastPosition;
 };
 
@@ -191,7 +192,10 @@ connection.onView = newView => {
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
 
-    if (newView.worldSize() != renderer.worldSize) renderer.updateWorldSize(newView.worldSize());
+    if (newView.worldSize() != worldSize) {
+        worldSize = newView.worldSize()
+        renderer.updateWorldSize(worldSize);
+    };
 
     cooldown.setCooldown(newView.cooldownShoot());
     /*console.log({
