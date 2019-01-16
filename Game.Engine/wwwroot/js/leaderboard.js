@@ -21,7 +21,7 @@ export class Leaderboard {
         this.data = false;
     }
 
-    setData(data, position) {
+    setData(data, position, worldSize, fleetID) {
         this.data = data;
         if (this.data.Record) {
             record.style.fontFamily = Settings.font;
