@@ -24,9 +24,9 @@ export class Log {
 		
 		var lastData = this.data[this.data.length-1]["entry"];
 		if (lastData.toLowerCase().indexOf("you killed") === 0) {
-			lastData = "<span style='color:#00ff00'>" + lastData + "</span>";
+			lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData + "<span style='color:#00ff00'>&nbsp;]</span>";
 		} else if (lastData.toLowerCase().indexOf("killed by") === 0) {
-			lastData = "<span style='color:#ff0000'>" + lastData + "</span>";
+			lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData + "<span style='color:#ff0000'>&nbsp;]</span>";
 		} else {
 			return;
 		}
