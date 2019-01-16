@@ -775,6 +775,7 @@ table {
     bottom: 55px;
     left: 15px;
     font-size: 12pt;
+	text-align: left;
 }
 #gameCanvas2 {
     position: absolute;
