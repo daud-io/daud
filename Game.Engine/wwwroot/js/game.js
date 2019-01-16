@@ -1,6 +1,8 @@
 ﻿import "babel-polyfill";
 
 import { Renderer } from "./renderer";
+import { Background } from "./background";
+import { Border } from "./border";
 import { spriteIndices } from "./spriteIndices";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
@@ -25,7 +27,9 @@ const app = new PIXI.Application({ view: canvas, transparent: true });
 const container = new PIXI.Container();
 app.stage.addChild(container);
 
-const renderer = new Renderer(container, {});
+const renderer = new Renderer(container);
+const background = new Background(container);
+const border = new Border(container);
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
@@ -192,7 +196,7 @@ connection.onView = newView => {
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
 
-    if (newView.worldSize() != renderer.worldSize) renderer.updateWorldSize(newView.worldSize());
+    if (newView.worldSize() != border.worldSize) border.updateWorldSize(newView.worldSize());
 
     cooldown.setCooldown(newView.cooldownShoot());
     /*console.log({
@@ -374,8 +378,9 @@ app.ticker.add(() => {
     container.pivot.x = position.X - 5500 / 2;
     container.pivot.y = position.Y - (5500 / 2) * (9 / 16);
 
-    renderer.view = view;
     renderer.draw(cache, interpolator, gameTime, fleetID);
+    background.draw(cache, interpolator, gameTime);
+    border.draw(cache, interpolator, gameTime);
 
     lastPosition = position;
 

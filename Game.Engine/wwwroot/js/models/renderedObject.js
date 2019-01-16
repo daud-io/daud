@@ -17,7 +17,7 @@ export class RenderedObject {
 
     static getTextureImage(textureName)
     {
-        var textureDefinition = RenderedObject.loadTextureDefinition(textureName);
+        var textureDefinition = RenderedObject.getTextureDefinition(textureName);
 
         if (textureDefinition === false)
             console.log(`cannot load texture '${textureName}'`);
@@ -73,13 +73,13 @@ export class RenderedObject {
         return textures;
     }
 
-    static loadTextureDefinition(textureName)
+    static getTextureDefinition(textureName)
     {
         return textureMap[textureName];
     }
 
     buildSprite(textureName) {
-        var textureDefinition = RenderedObject.loadTextureDefinition(textureName);
+        var textureDefinition = RenderedObject.getTextureDefinition(textureName);
         var textures = RenderedObject.loadTexture(textureDefinition, textureName);
         var pixiSprite = false;
 

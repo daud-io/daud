@@ -1,4 +1,5 @@
 ﻿export var textureMap = {
+    "bg": { file: "bg", scale: 1 },
 
     // fish
     "fish": { file: "ship0", scale: 0.01 },

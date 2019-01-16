@@ -1,4 +1,9 @@
 ﻿export var spriteModeMap = {
+    "bg": {
+        texture: "bg",
+        scaleFactor: 10
+    },
+
     "fish": {
         modes: {
             default: [ "fish" ]
@@ -10,7 +15,6 @@
             default: [ "ship_gray" ]
         }
     },
-
 
     "ship0": {
         modes: {
