@@ -18,6 +18,7 @@ export const Settings = {
     bandwidth: 100,
     showCooldown: true,
     logLength: 4,
+	bigKillMessage: true,
     showPickupSprites: false,
     showThrusterSprites: true,
     showOwnName: true,
@@ -56,6 +57,7 @@ function save() {
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
+	Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
     Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
     Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
@@ -94,6 +96,7 @@ function load() {
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
         document.getElementById("settingsLog").value = Settings.logLength;
+		document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
         document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
         document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;

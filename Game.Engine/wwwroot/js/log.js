@@ -22,15 +22,17 @@ export class Log {
         }
         log.innerHTML = out;
 		
-		var lastData = this.data[this.data.length-1]["entry"];
-		if (lastData.toLowerCase().indexOf("you killed") === 0) {
-			lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData + "<span style='color:#00ff00'>&nbsp;]</span>";
-		} else if (lastData.toLowerCase().indexOf("killed by") === 0) {
-			lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData + "<span style='color:#ff0000'>&nbsp;]</span>";
-		} else {
-			return;
+		if (Settings.bigKillMessage) {
+			var lastData = this.data[this.data.length-1]["entry"];
+			if (lastData.toLowerCase().indexOf("you killed") === 0) {
+				lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData + "<span style='color:#00ff00'>&nbsp;]</span>";
+			} else if (lastData.toLowerCase().indexOf("killed by") === 0) {
+				lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData + "<span style='color:#ff0000'>&nbsp;]</span>";
+			} else {
+				return;
+			}
+			bigLog.innerHTML = lastData;
 		}
-		bigLog.innerHTML = lastData;
     }
 
     check() {
