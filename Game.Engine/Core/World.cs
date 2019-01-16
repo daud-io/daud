@@ -159,6 +159,7 @@
                             .ThenByDescending(p => p.Score)
                             .Select(p => new Leaderboard.Entry
                             {
+                                FleetID = p.Fleet?.ID ?? 0,
                                 Name = p.Name,
                                 Score = p.Score,
                                 Color = p.Color,
@@ -181,6 +182,7 @@
                                 .Where(p => p.IsAlive)
                                 .Select(p => new Leaderboard.Entry
                                 {
+                                    FleetID = p.Fleet?.ID ?? 0,
                                     Name = p.Name,
                                     Score = p.Score,
                                     Color = p.Color,

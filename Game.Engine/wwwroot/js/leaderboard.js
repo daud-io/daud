@@ -40,6 +40,12 @@ export class Leaderboard {
 			minimapCtx.clearRect(0, 0, minimap.width, minimap.height);
             for (let i = 0; i < this.data.Entries.length; i++) {
                 const entry = this.data.Entries[i];
+
+                var entryIsSelf = (entry.FleetID == fleetID);
+                if (entryIsSelf) {
+
+                }
+
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 				
 				// minimap
