@@ -241,12 +241,12 @@ setInterval(() => {
 }, 10);
 
 LobbyCallbacks.onLobbyClose = function() {
-    cache.empty();
     clearLeaderboards();
 };
 
 LobbyCallbacks.onWorldJoin = function(worldKey, world) {
     window.Game.primaryConnection.disconnect();
+    cache.empty();
     window.Game.primaryConnection.connect(worldKey);
 
     Controls.initializeWorld(world);
