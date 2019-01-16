@@ -100,7 +100,7 @@
             return Vector2.Zero;
         }
 
-        private void CreateTeam(string teamName, string flagSpriteBase, Vector2 basePosition)
+        private void CreateTeam(string teamName, Sprites flagSprite, Vector2 basePosition)
         {
             var team = new Team
             {
@@ -111,7 +111,7 @@
             Teams.Add(team);
 
             var b = new Base(this, basePosition, team);
-            var flag = new Flag(flagSpriteBase, team, b);
+            var flag = new Flag(flagSprite, team, b);
             b.Flag = flag;
             team.Flag = flag;
             team.Base = b;
@@ -134,8 +134,8 @@
 
             if (World.Hook.CTFMode && Flags.Count == 0)
             {
-                CreateTeam("cyan", "flag_blue", new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
-                CreateTeam("red", "flag_red", new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
+                CreateTeam("cyan", Sprites.ctf_flag_blue, new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
+                CreateTeam("red", Sprites.ctf_flag_red, new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
                 World.FleetSpawnPositionGenerator = this.FleetSpawnPosition;
                 World.LeaderboardGenerator = this.LeaderboardGenerator;
             }
@@ -312,41 +312,19 @@
 
         private class Flag : ActorBody, ICollide
         {
-            private readonly uint SpriteAnimationInterval = 100;
             public readonly Team Team;
             private readonly Base Base;
 
             private ActorGroup FlagGroup = new ActorGroup();
-            private List<Sprites> SpriteSet = new List<Sprites>();
-            private uint NextSpriteTime = 0;
-            private int SpriteIndex = 0;
             public Fleet CarriedBy = null;
 
-            public Flag(string baseSpriteName, Team team, Base b)
+            public Flag(Sprites flagSprite, Team team, Base b)
             {
+
                 Size = 200;
                 Team = team;
                 Base = b;
-
-                var i = 0;
-                var done = false;
-
-                while (!done)
-                {
-                    if (Enum.TryParse<Sprites>($"{baseSpriteName}_{i++}", out var result))
-                    {
-                        SpriteSet.Add(result);
-                    }
-                    else
-                    {
-                        done = true;
-                    }
-                }
-
-                if (SpriteSet.Any())
-                {
-                    Sprite = SpriteSet[0];
-                }
+                Sprite = flagSprite;
             }
 
             public override void Init(World world)
@@ -392,16 +370,6 @@
                         this.Momentum = Vector2.Normalize(-this.Position) * 0.1f;
                     else
                         this.Momentum = Vector2.Zero;
-                }
-
-
-                if (World.Time > NextSpriteTime)
-                {
-                    SpriteIndex = (SpriteIndex + 1) % SpriteSet.Count;
-
-                    Sprite = SpriteSet[SpriteIndex];
-
-                    NextSpriteTime = World.Time + SpriteAnimationInterval;
                 }
             }
 

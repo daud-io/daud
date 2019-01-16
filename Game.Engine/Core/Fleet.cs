@@ -258,11 +258,10 @@
                     ? 1.0f
                     : World.Hook.Drag;
 
-                ship.Mode = (byte)(isBoosting
-                    ? 1
-                    : (Pickup != null)
-                        ? 2
-                        : 0);
+                ship.Mode = (byte)
+                    (isBoosting ? 1 :
+                    (Pickup != null) ? 2 :
+                    (Owner.IsInvulnerable) ? 3 : 0);
 
                 if (isBoostInitial)
                     if (ship.Momentum != Vector2.Zero)

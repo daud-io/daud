@@ -1,8 +1,11 @@
 ﻿import "babel-polyfill";
 
-import { Renderer, sprites, spriteIndices } from "./renderer";
+import { Renderer } from "./renderer";
+import { Background } from "./background";
+import { Border } from "./border";
+import { spriteIndices } from "./spriteIndices";
 import { Camera } from "./camera";
-import { Cache, textures } from "./cache";
+import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
 import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
 import { HUD } from "./hud";
@@ -24,7 +27,9 @@ const app = new PIXI.Application({ view: canvas, transparent: true });
 const container = new PIXI.Container();
 app.stage.addChild(container);
 
-const renderer = new Renderer(container, {});
+const renderer = new Renderer(container);
+const background = new Background(container);
+const border = new Border(container);
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
@@ -47,6 +52,8 @@ let worldSize = 1000;
 let CustomData = false;
 let CustomDataTime = false;
 
+let currentWorld = false;
+
 Controls.registerCanvas(canvas);
 
 const connection = new Connection();
@@ -57,11 +64,15 @@ window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 window.Game.cache = cache;
 
+window.Game.reinitializeWorld = function()
+{
+    Controls.initializeWorld(currentWorld);
+}
+
 const bodyFromServer = (cache, body) => {
     const originalPosition = body.originalPosition();
     const momentum = body.velocity();
-    const group = cache.getGroup(body.group());
-    const groupID = (group && group.ID) || 0;
+    const groupID = body.group();
     const VELOCITY_SCALE_FACTOR = 5000.0;
 
     const newBody = {
@@ -187,14 +198,14 @@ connection.onView = newView => {
     const groupDeletesLength = newView.groupDeletesLength();
     for (var d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d));
 
-    cache.update(updates, deletes, groups, groupDeletes, gameTime);
+    cache.update(updates, deletes, groups, groupDeletes, gameTime, fleetID);
 
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();
 
-    if (newView.worldSize() != worldSize) {
+    if (newView.worldSize() != border.worldSize) {
         worldSize = newView.worldSize()
-        renderer.updateWorldSize(worldSize);
+        border.updateWorldSize(newView.worldSize());
     };
 
     cooldown.setCooldown(newView.cooldownShoot());
@@ -237,12 +248,13 @@ setInterval(() => {
 }, 10);
 
 LobbyCallbacks.onLobbyClose = function() {
-    cache.empty();
     clearLeaderboards();
 };
 
 LobbyCallbacks.onWorldJoin = function(worldKey, world) {
+    currentWorld = world;
     window.Game.primaryConnection.disconnect();
+    cache.empty();
     window.Game.primaryConnection.connect(worldKey);
 
     Controls.initializeWorld(world);
@@ -372,8 +384,9 @@ app.ticker.add(() => {
     container.pivot.x = position.X - 5500 / 2;
     container.pivot.y = position.Y - (5500 / 2) * (9 / 16);
 
-    renderer.view = view;
     renderer.draw(cache, interpolator, gameTime, fleetID);
+    background.draw(cache, interpolator, gameTime);
+    border.draw(cache, interpolator, gameTime);
 
     lastPosition = position;
 
@@ -401,8 +414,10 @@ app.ticker.add(() => {
 
         if (CustomData) {
             var data = JSON.parse(CustomData);
-            if (data.spots) {
-                for (var i = 0; i < data.spots.length; i++) {
+            /*if (data.spots)
+            {
+                for (var i=0; i<data.spots.length; i++)
+                {
                     var spot = data.spots[i];
                     var texture = textures["obstacle"];
                     if (texture) {
@@ -416,20 +431,9 @@ app.ticker.add(() => {
                         spotSprites.push(sprite);
                     } else console.log("cannot find texture");
                 }
-            }
+            }*/
         }
-        //CustomData = false;
-        //console.log('new');
-    } else {
-        //console.log('repeat');
     }
-
-    /*
-    if (Game.Controls.left || Game.Controls.up)
-        angle -= 0.1;
-    if (Game.Controls.right || Game.Controls.down)
-        angle += 0.1;
-    */
 });
 
 document.body.classList.remove("loading");
