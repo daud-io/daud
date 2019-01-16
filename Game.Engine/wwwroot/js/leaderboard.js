@@ -1,5 +1,5 @@
-﻿import { sprites } from "./renderer";
-import { Settings } from "./settings";
+﻿import { Settings } from "./settings";
+import { RenderedObject } from "./models/renderedObject";
 
 var record = document.getElementById("record");
 var leaderboard = document.getElementById("leaderboard");
@@ -137,8 +137,8 @@ export class Leaderboard {
             const cyanScore = Math.min(cyan.Score, 5);
             const redScore = Math.min(red.Score, 5);
 
-            const image = i => {
-                return `<img class="overlap" src="${sprites[i].image.src}"></img>`;
+            const image = textureName => {
+                return `<img class="overlap" src="${RenderedObject.getTextureImage(textureName).src}"></img>`;
             };
             const cyanAngle = Math.atan2(cyanFlag.Position.Y - position.Y, cyanFlag.Position.X - position.X);
             const redAngle = Math.atan2(redFlag.Position.Y - position.Y, redFlag.Position.X - position.X);
@@ -148,16 +148,15 @@ export class Leaderboard {
             leaderboardCenter.style.height = "83px";
             leaderboardCenter.innerHTML =
                 `<tbody><tr>` +
-                `<td class="flag"><img class="flag-arrow" src="${sprites["ctf_arrow_blue"].image.src}" style="transform:rotate(${cyanAngle}rad);right:-50px"></img></td>` +
+                `<td class="flag"><img class="flag-arrow" src="${RenderedObject.getTextureImage("ctf_arrow_blue").src}" style="transform:rotate(${cyanAngle}rad);right:-50px"></img></td>` +
                 `<td style="width:300px;position:relative">` +
                 image("ctf_score_stripes") +
                 image(`ctf_score_left_${Math.min(cyanScore, 4)}`) +
                 image(`ctf_score_right_${Math.min(redScore, 4)}`) +
                 image(`ctf_score_final${cyanScore >= 5 ? "_blue" : redScore >= 5 ? "_red" : ""}`) +
                 `</td>` +
-                `<td class="flag"><img class="flag-arrow" src="${sprites["ctf_arrow_red"].image.src}" style="transform:rotate(${redAngle}rad);left:-50px"></img></td>` +
+                `<td class="flag"><img class="flag-arrow" src="${RenderedObject.getTextureImage("ctf_arrow_red").src}" style="transform:rotate(${redAngle}rad);left:-50px"></img></td>` +
                 `</tr></tbody>`;
-            console.log("leaderboarded");
         }
     }
 }

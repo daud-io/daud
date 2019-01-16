@@ -1,6 +1,7 @@
 ﻿import "babel-polyfill";
 
-import { Renderer, sprites, spriteIndices } from "./renderer";
+import { Renderer } from "./renderer";
+import { spriteIndices } from "./spriteIndices";
 import { Camera } from "./camera";
 import { Cache, textures } from "./cache";
 import { Interpolator } from "./interpolator";

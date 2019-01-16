@@ -1,10 +1,7 @@
 import { fetch } from "whatwg-fetch";
-
-import { sprites, backgroundSprite } from "./renderer";
 import { toggleLobby } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
-import { textures } from "./cache";
 import * as PIXI from "pixi.js";
 
 export const Settings = {
@@ -116,7 +113,7 @@ async function theme(v) {
 
             var version = 1;
             if (info.version) version = info.version;
-
+            /*
             info.files.forEach(element => {
                 zip.file(`daudmod/${element[0]}.png`)
                     .async("arraybuffer")
@@ -140,6 +137,7 @@ async function theme(v) {
                         if (window.Game && window.Game.cache) window.Game.cache.refreshSprites();
                     });
             });
+            */
         });
 }
 

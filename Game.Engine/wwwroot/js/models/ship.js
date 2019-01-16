@@ -14,4 +14,14 @@ export class Ship extends RenderedObject {
             default: return "default";
         }
     }
+
+    static getSelectorImage(spriteName)
+    {
+        var spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
+
+        if (spriteDefinition.selector)
+            return RenderedObject.getTextureImage(spriteDefinition.selector);
+        else
+            return false;
+    }
 }

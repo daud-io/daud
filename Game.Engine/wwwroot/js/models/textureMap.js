@@ -40,7 +40,9 @@
         animationSpeed: 1.0,
         offset: {x: -145, y: 0 },
         scale: .04,
-        rotate: 6
+        rotate: 6,
+        tileSize: 64,
+        tileCount: 29
     },
     "thruster_default_green": {
         file: "thruster_default_green",
@@ -49,7 +51,9 @@
         animationSpeed: 1.0,
         offset: {x: -145, y: 0 },
         scale: .04,
-        rotate: 6
+        rotate: 6,
+        tileSize: 64,
+        tileCount: 29
     },
     "thruster_default_orange": {
         file: "thruster_default_orange",
@@ -58,7 +62,9 @@
         animationSpeed: 1.0,
         offset: {x: -145, y: 0 },
         scale: .04,
-        rotate: 6
+        rotate: 6,
+        tileSize: 64,
+        tileCount: 29
     },
     "thruster_default_pink": {
         file: "thruster_default_pink",
@@ -67,7 +73,9 @@
         animationSpeed: 1.0,
         offset: {x: -145, y: 0 },
         scale: .04,
-        rotate: 6
+        rotate: 6,
+        tileSize: 64,
+        tileCount: 29
     },
     "thruster_default_red": {
         file: "thruster_default_red",
@@ -76,7 +84,9 @@
         animationSpeed: 1.0,
         offset: {x: -145, y: 0 },
         scale: .04,
-        rotate: 6
+        rotate: 6,
+        tileSize: 64,
+        tileCount: 29
     },
     "thruster_default_yellow": {
         file: "thruster_default_yellow",
@@ -85,7 +95,9 @@
         animationSpeed: 1.0,
         offset: {x: -145, y: 0 },
         scale: .04,
-        rotate: 6
+        rotate: 6,
+        tileSize: 64,
+        tileCount: 29
     },
 
     "circles": {
@@ -93,6 +105,8 @@
         animated: true,
         loop: true,
         animationSpeed: 0.2,
-        scale: 0.05
+        scale: 0.05,
+        tileSize: 72,
+        tileCount: 11
     }
 };

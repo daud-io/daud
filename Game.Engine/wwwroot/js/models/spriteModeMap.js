@@ -18,7 +18,8 @@
             weaponupgrade: ["ship0", "circles"],
             boost: [ "ship0", "thruster_default_cyan"],
             invulnerable: ["ship0", "obstacle"]
-        }
+        },
+        selector: "ship0"
     },
     
     "ship_cyan": {
@@ -27,7 +28,8 @@
             weaponupgrade: ["ship_cyan", "circles"],
             boost: [ "ship_cyan", "thruster_default_cyan"],
             invulnerable: ["ship_cyan", "obstacle"]
-        }
+        },
+        selector: "ship_cyan"
     },
     "ship_green": {
         modes: {
@@ -35,7 +37,8 @@
             weaponupgrade: ["ship_green", "circles"],
             boost: [ "ship_green", "thruster_default_green"],
             invulnerable: ["ship_green", "obstacle"]
-        }
+        },
+        selector: "ship_green"
     },
     "ship_orange": {
         modes: {
@@ -43,7 +46,8 @@
             weaponupgrade: ["ship_orange", "circles"],
             boost: [ "ship_orange", "thruster_default_orange"],
             invulnerable: ["ship_orange", "obstacle"]
-        }
+        },
+        selector: "ship_orange"
     },
     "ship_pink": {
         modes: {
@@ -51,7 +55,8 @@
             weaponupgrade: ["ship_pink", "circles"],
             boost: [ "ship_pink", "thruster_default_pink"],
             invulnerable: ["ship_pink", "obstacle"]
-        }
+        },
+        selector: "ship_pink"
     },
     "ship_red": {
         modes: {
@@ -59,7 +64,8 @@
             weaponupgrade: ["ship_red", "circles"],
             boost: [ "ship_red", "thruster_default_red"],
             invulnerable: ["ship_red", "obstacle"]
-        }
+        },
+        selector: "ship_red"
     },
     "ship_yellow": {
         modes: {
@@ -67,7 +73,8 @@
             weaponupgrade: ["ship_yellow", "circles"],
             boost: [ "ship_yellow", "thruster_default_yellow"],
             invulnerable: ["ship_yellow", "obstacle"]
-        }
+        },
+        selector: "ship_yellow"
     },
 
     "ship_secret": {
@@ -76,7 +83,8 @@
             weaponupgrade: ["ship_secret", "circles"],
             boost: [ "ship_secret", "thruster_default_yellow"],
             invulnerable: ["ship_secret", "obstacle"]
-        }
+        },
+        selector: "ship_secret"
     },
     "ship_zed": {
         modes: {
@@ -84,7 +92,8 @@
             weaponupgrade: ["ship_zed", "circles"],
             boost: [ "ship_zed", "thruster_default_red"],
             invulnerable: ["ship_zed", "obstacle"]
-        }
+        },
+        selector: "ship_zed"
     },
 
     "bullet": { modes: { default: [ "bullet" ] } },

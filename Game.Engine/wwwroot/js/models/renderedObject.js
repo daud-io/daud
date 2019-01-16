@@ -8,15 +8,24 @@ export class RenderedObject {
         this.container = container;
         this.currentSpriteName = false;
         this.currentMode = 0;
+        this.spriteDefinition = false;
     }
 
     getMode(mode) {
         return "default";
     }
 
-    buildSprite(spriteName) {
-        var textureDefinition = textureMap[spriteName];
-        var textures = textureCache[spriteName];
+    static getTextureImage(textureName)
+    {
+        var textureDefinition = RenderedObject.loadTextureDefinition(textureName);
+        var img = new Image();
+        img.src = images[textureDefinition.file];
+        return img;
+    }
+
+    static loadTexture(textureDefinition, textureName)
+    {
+        var textures = textureCache[textureName];
 
         if (!textures) {
             textures = [];
@@ -28,8 +37,8 @@ export class RenderedObject {
 
             if (textureDefinition.animated) {
 
-                var tileSize = img.height;
-                var totalTiles = (img.width / tileSize);
+                var tileSize = textureDefinition.tileSize;
+                var totalTiles = textureDefinition.tileCount;
 
                 for (var tileIndex = 0; tileIndex < totalTiles; tileIndex++) {
 
@@ -52,9 +61,20 @@ export class RenderedObject {
             else
                 textures.push(baseTexture);
 
-            textureCache[spriteName] = textures;
+            textureCache[textureName] = textures;
         }
 
+        return textures;
+    }
+
+    static loadTextureDefinition(textureName)
+    {
+        return textureMap[textureName];
+    }
+
+    buildSprite(textureName) {
+        var textureDefinition = RenderedObject.loadTextureDefinition(textureName);
+        var textures = RenderedObject.loadTexture(textureDefinition, textureName);
         var pixiSprite = false;
 
         if (textureDefinition.animated) {
@@ -79,21 +99,31 @@ export class RenderedObject {
         return pixiSprite;
     }
 
-    getModeMap(spriteModeMap, spriteName, mode) {
+    static getSpriteDefinition(spriteName)
+    {
+        var spriteDefinition = false;
+        if (spriteModeMap[spriteName])
+            spriteDefinition = spriteModeMap[spriteName];
+
+        return spriteDefinition;
+    }
+
+    getModeMap(spriteName, mode) {
         var layers = false;
         var modeName = this.getMode(mode);
+        var spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
 
-        if (spriteModeMap[spriteName])
+        if (spriteDefinition.modes[modeName])
             layers = spriteModeMap[spriteName].modes[modeName];
 
-        if (!layers && spriteModeMap["default"])
+        if (!layers && spriteDefinition.modes["default"])
             layers = spriteModeMap[spriteName].modes["default"];
 
         return layers;
     }
 
     buildSpriteLayers(spriteModeMap, spriteName, mode) {
-        var layers = this.getModeMap(spriteModeMap, spriteName, mode);
+        var layers = this.getModeMap(spriteName, mode);
 
         if (layers) {
             var spriteLayers = [];

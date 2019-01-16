@@ -2,7 +2,7 @@
 import nipplejs from "nipplejs";
 import { setInterval, setTimeout } from "timers";
 import { Settings } from "./settings";
-import { sprites } from "./renderer";
+import { Ship } from "./models/ship";
 
 export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
@@ -135,12 +135,12 @@ export var Controls = {
         while (selector.firstChild) selector.removeChild(selector.firstChild);
 
         for (var i = 0; i < colors.length; i++) {
-            var sprite = sprites[colors[i]];
+            var selectorImage = Ship.getSelectorImage(colors[i]);
 
-            if (sprite) {
-                selector.appendChild(sprite.image);
-                sprite.image.setAttribute("data-color", colors[i]);
-                sprite.image.classList.add("circle");
+            if (selectorImage) {
+                selector.appendChild(selectorImage);
+                selectorImage.setAttribute("data-color", colors[i]);
+                selectorImage.classList.add("circle");
             }
         }
 
