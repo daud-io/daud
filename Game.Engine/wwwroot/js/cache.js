@@ -28,7 +28,7 @@ export class Cache {
         // I used to loop all the bodies and reset the textures;
     }
 
-    update(updates, deletes, groups, groupDeletes, time) {
+    update(updates, deletes, groups, groupDeletes, time, myFleetID) {
         let i = 0;
 
         // delete objects that should no longer exist
@@ -48,7 +48,10 @@ export class Cache {
             var deleteKey = groupDeletes[i];
             var key = `g-${deleteKey}`;
             var group = this.groups[key];
-            if (group.renderer)
+            if (!group)
+                console.log('group delete on object not in cache');
+                
+            if (group && group.renderer)
                 group.renderer.destroy();
             delete this.groups[key];
         }
@@ -110,19 +113,32 @@ export class Cache {
                     if (update.Group != 0)
                     {
                         var group = this.groups[`g-${update.Group}`];
-                        if (group.Type == 1)
+                        if (!group)
                         {
-                            fleet = group.renderer;
-
-                            if (!fleet)
-                                fleet = new Fleet(this.container, this);
-
-                            group.renderer = fleet;
-                                 
+                            console.log('missing group');
                         }
+                        else
+                        {
+                            if (group.Type == 1)
+                            {
+                                fleet = group.renderer;
+
+                                if (!fleet)
+                                    fleet = new Fleet(this.container, this);
+
+                                group.renderer = fleet;
+                                    
+                            }
+                        }
+                    }
+                    else
+                    {
+                        console.log('ship with no group: ' + update.Sprite);
+                        
                     }
 
                     var ship = update.renderer = new Ship(this.container);
+
                     if (fleet)
                         fleet.addShip(ship);
                 }

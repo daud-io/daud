@@ -10,23 +10,24 @@ export class Renderer {
             if (body.Group)
             {
                 var group = cache.getGroup(body.Group);
-                if (group)
+                if (group && groupsUsed.indexOf(group) == -1)
                     groupsUsed.push(group);
             }
 
             if (body.renderer)
-                body.renderer.preRender(currentTime, interpolator);
+                body.renderer.preRender(currentTime, interpolator, fleetID);
+
         }, this);
 
         let ids = [];
         for (let i = 0; i < groupsUsed.length; i++) {
             const group = groupsUsed[i];
 
-            if (group && group.group) {
-                ids.push(`g-${group.group.ID}`);
+            if (group) {
+                ids.push(`g-${group.ID}`);
 
                 if (group.renderer)
-                    group.renderer.preRender(currentTime, interpolator);
+                    group.renderer.preRender(currentTime, interpolator, fleetID);
             }
         }
     }

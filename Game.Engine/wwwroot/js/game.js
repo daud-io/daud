@@ -64,8 +64,7 @@ window.Game.cache = cache;
 const bodyFromServer = (cache, body) => {
     const originalPosition = body.originalPosition();
     const momentum = body.velocity();
-    const group = cache.getGroup(body.group());
-    const groupID = (group && group.ID) || 0;
+    const groupID = body.group();
     const VELOCITY_SCALE_FACTOR = 5000.0;
 
     const newBody = {
@@ -191,7 +190,7 @@ connection.onView = newView => {
     const groupDeletesLength = newView.groupDeletesLength();
     for (var d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d));
 
-    cache.update(updates, deletes, groups, groupDeletes, gameTime);
+    cache.update(updates, deletes, groups, groupDeletes, gameTime, fleetID);
 
     Game.Stats.playerCount = newView.playerCount();
     Game.Stats.spectatorCount = newView.spectatorCount();

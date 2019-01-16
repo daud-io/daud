@@ -120,7 +120,7 @@
     "ctf_flag_blue": { 
         file: "ctf_flag_blue", 
         animated: true, 
-        tileSize: 66, 
+        tileSize: 128, 
         tileCount: 6,
         animationSpeed: 0.1,
         scale: 0.015,
@@ -129,7 +129,7 @@
     "ctf_flag_red": { 
         file: "ctf_flag_red", 
         animated: true, 
-        tileSize: 66, 
+        tileSize: 128, 
         tileCount: 6,
         animationSpeed: 0.1,
         scale: 0.015,
