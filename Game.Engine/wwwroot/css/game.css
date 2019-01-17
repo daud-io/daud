@@ -861,7 +861,7 @@ progress::-webkit-progress-value {
 
 #bigLog {
     position: absolute;
-    top: 2em;
+    top: 4em;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 25px;
