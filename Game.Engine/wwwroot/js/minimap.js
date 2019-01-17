@@ -1,5 +1,9 @@
 import { Settings } from "./settings";
 
+const minimapSize = 200;
+const minimapMarginBottom = 15;
+const minimapMarginRight = 15;
+
 const colors = {
     red: 0xff0000,
     pink: 0xffc0cb,
@@ -12,8 +16,8 @@ const colors = {
 export class Minimap {
     constructor(stage, size) {
         this.ctx = new PIXI.Graphics();
-        this.ctx.position.x = size.width - 215;
-        this.ctx.position.y = size.height - 215;
+        this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
+        this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
         stage.addChild(this.ctx);
     }
     size(size) {
@@ -30,7 +34,7 @@ export class Minimap {
         this.ctx
             .lineStyle(1, 0x999999)
             .beginFill(0x000000, 0.5)
-            .drawRect(0, 0, 200, 200)
+            .drawRect(0, 0, minimapSize, minimapSize)
             .endFill()
             .lineStyle(0);
         for (let i = startIndex; i < data.Entries.length; i++) {
@@ -40,8 +44,8 @@ export class Minimap {
         }
     }
     drawMinimap(x, y, color, self) {
-        var minimapX = ((x + this.worldSize) / 2 / this.worldSize) * 200;
-        var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * 200;
+        var minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimapSize;
+        var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize;
 
         if (!self) {
             this.ctx
