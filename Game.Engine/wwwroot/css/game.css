@@ -233,14 +233,8 @@ a {
 }
 
 .spectating #stop_spectating {
-    font-size: 1rem;
-    border-radius: 5px;
-    padding: 5px 5px 10px 5px;
-    border: none;
-    background: linear-gradient(to right, #008888 0%, #0066ff 100%) left bottom rgba(55, 55, 90, 0.8) no-repeat;
-    background-size: 100% 5px;
-    color: white;
-    opacity: 0.1;
+    opacity: 0.2;
+    transition: opacity 1s;
 }
 
 .spectating #stop_spectating:hover {
@@ -663,8 +657,6 @@ input:checked + .slider:before {
 }
 
 #fullPageCard section {
-    -webkit-column-break-inside: avoid;
-    -moz-column-break-inside: avoid;
     break-inside: avoid;
 }
 
@@ -869,12 +861,11 @@ progress::-webkit-progress-value {
 
 #bigLog {
     position: absolute;
-    top: 15%;
+    top: 2em;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 25px;
     font-weight: bold;
-    /*text-shadow: 0px 0px 1px #FFF;*/
 }
 
 #settingsTable {
