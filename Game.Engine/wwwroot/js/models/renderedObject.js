@@ -8,6 +8,7 @@ export class RenderedObject {
         this.container = container;
         this.currentSpriteName = false;
         this.currentMode = 0;
+        this.currentZIndex = 0;
     }
 
     getMode(mode) {
@@ -113,13 +114,15 @@ export class RenderedObject {
         return layers;
     }
 
-    buildSpriteLayers(spriteName, mode) {
+    buildSpriteLayers(spriteName, mode, zIndex) {
         var layers = this.getModeMap(spriteName, mode);
 
         if (layers) {
             var spriteLayers = [];
             for (var i = 0; i < layers.length; i++) {
                 var spriteLayer = this.buildSprite(layers[i]);
+                spriteLayer.zIndex = zIndex;
+                
                 spriteLayers.push(spriteLayer);
             }
 
@@ -146,17 +149,23 @@ export class RenderedObject {
         this.setSprite(this.currentSpriteName, this.currentMode, true);
     }
 
-    setSprite(spriteName, mode, reload) {
+    setSprite(spriteName, mode, zIndex, reload) {
         // check that we really need to change anything
-        if (reload || spriteName != this.currentSpriteName || mode != this.currentMode) {
+        if (reload 
+            || spriteName != this.currentSpriteName 
+            || mode != this.currentMode
+            || zIndex != this.currentZIndex
+            ) {
+
             this.currentSpriteName = spriteName;
             this.currentMode = mode;
+            this.currentZIndex = zIndex;
 
             //console.log(mode);
 
             // if we have any existing sprites, destroy them
             this.destroySprites();
-            this.spriteLayers = this.buildSpriteLayers(spriteName, mode);
+            this.spriteLayers = this.buildSpriteLayers(spriteName, mode, zIndex);
 
             this.foreachLayer(function(layer, index) {
                 this.container.addChildAt(layer, 2);
@@ -189,8 +198,8 @@ export class RenderedObject {
 
     update(updateData) {
         this.body = updateData;
-        this.setSprite(updateData.Sprite, updateData.Mode);
-        //console.log(updateData.Mode);
+        
+        this.setSprite(updateData.Sprite, updateData.Mode, false, updateData.zIndex);
     }
 
     foreachLayer(action) {

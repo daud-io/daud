@@ -53,6 +53,7 @@
             SystemActor<RobotTender>();
             SystemActor<ObstacleTender>();
             SystemActor<CaptureTheFlag>();
+            SystemActor<Sumo>();
 
             InitializeStepTimer();
         }

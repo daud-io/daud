@@ -61,6 +61,9 @@
                     CTFCarryBurden = 0.2f,
                     CTFSpawnDistance = 6000,
 
+                    SumoMode = false,
+                    SumoRingSize = 1000,
+
                     SpawnShipCount = 5,
 
                     FlockAlignment = .35f,
@@ -155,6 +158,8 @@
         public bool CTFMode { get; set; }
         public float CTFCarryBurden { get; set; }
         public int CTFSpawnDistance { get; set; }
+        public bool SumoMode { get; set; }
+        public int SumoRingSize { get; set; }
 
         public int LeaderboardRefresh { get; set; } = 750;
 

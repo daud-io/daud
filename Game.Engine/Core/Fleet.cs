@@ -213,6 +213,9 @@
             ship.Abandoned = true;
             ship.Group = null;
             ship.ThrustAmount = 0;
+
+            if (Ships.Contains(ship))
+                Ships.Remove(ship);
         }
 
         public override void Think()
@@ -234,7 +237,6 @@
                 {
                     var ship = Ships.First();
                     AbandonShip(ship);
-                    Ships.Remove(ship);
                 }
             }
 
@@ -302,6 +304,10 @@
                 Owner.SpawnTime = World.Time;
                 Owner.Score++;
             }
+
+            if (!Ships.Where(s => !s.PendingDestruction).Any()
+                && !NewShips.Any())
+                Die(null);
         }
 
         private void Flock(Ship ship)
