@@ -5,9 +5,6 @@ var record = document.getElementById("record");
 var leaderboard = document.getElementById("leaderboard");
 var leaderboardLeft = document.getElementById("leaderboard-left");
 var leaderboardCenter = document.getElementById("leaderboard-center");
-const minimap = document.getElementById("minimap");
-var minimapCtx = minimap.getContext("2d");
-
 
 export function clear() {
     leaderboard.innerHTML = "";
@@ -16,46 +13,27 @@ export function clear() {
     leaderboardCenter.style.width = null;
     leaderboardCenter.style.height = null;
 }
-export class Leaderboard {
-    constructor() {
-        this.data = false;
-    }
 
-    setData(data, position, worldSize, fleetID) {
-        this.data = data;
-        if (this.data.Record) {
+export class Leaderboard {
+    update(data, position) {
+        if (data.Record) {
             record.style.fontFamily = Settings.font;
-            record.innerHTML = `record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`;
+            record.innerHTML = `record: ${data.Record.Name || "Unknown Fleet"} - ${data.Record.Score}`;
         }
 
         //Hide or show elements based on Arena.
-        if (this.data.Type == "CTF") {
+        if (data.Type == "CTF") {
             document.getElementById("ctf_arena").classList.remove("hide");
         } else {
             document.getElementById("ctf_arena").classList.add("hide");
         }
 
-        if (this.data.Type == "FFA") {
+        if (data.Type == "FFA") {
             let out = "";
-			
-			minimapCtx.clearRect(0, 0, minimap.width, minimap.height);
-            
-			for (let i = 0; i < this.data.Entries.length; i++) {
-                const entry = this.data.Entries[i];
+
+            for (let i = 0; i < data.Entries.length; i++) {
+                const entry = data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
-				
-				// minimap
-				var minimapX = (entry.Position.X + worldSize) / 2 / worldSize * minimap.width - 2;
-				var minimapY = (entry.Position.Y + worldSize) / 2 / worldSize * minimap.height - 2;
-				
-				var entryIsSelf = (entry.FleetID == fleetID);
-                if (!entryIsSelf) {
-					minimapCtx.fillStyle = entry.Color;
-					minimapCtx.fillRect(minimapX, minimapY, 4, 4);
-                } else {
-					minimapCtx.fillStyle = "white";
-					minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
-				}
 
                 out +=
                     `<tr>` +
@@ -66,31 +44,14 @@ export class Leaderboard {
                     `</tr>`;
             }
             leaderboard.innerHTML = `<tbody>${out}</tbody>`;
-        } else if (this.data.Type == "Team") {
+        } else if (data.Type == "Team") {
             let outL = "";
             let outR = "";
             let outC = "";
-			
-			minimapCtx.clearRect(0, 0, minimap.width, minimap.height);
-			
-            for (let i = 0; i < this.data.Entries.length; i++) {
-                const entry = this.data.Entries[i];
+
+            for (let i = 0; i < data.Entries.length; i++) {
+                const entry = data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
-				
-				// minimap
-				if (i > 1) {
-					var minimapX = (entry.Position.X + worldSize) / 2 / worldSize * minimap.width - 2;
-					var minimapY = (entry.Position.Y + worldSize) / 2 / worldSize * minimap.height - 2;
-					
-					var entryIsSelf = (entry.FleetID == fleetID);
-					if (!entryIsSelf) {
-						minimapCtx.fillStyle = entry.Color;
-						minimapCtx.fillRect(minimapX, minimapY, 4, 4);
-					} else {
-						minimapCtx.fillStyle = "white";
-						minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
-					}
-				}
 
                 let str =
                     `<tr>` +
@@ -110,33 +71,16 @@ export class Leaderboard {
             leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
             leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
             leaderboardCenter.innerHTML = `<tbody>${outC}</tbody>`;
-        } else if (this.data.Type == "CTF") {
+        } else if (data.Type == "CTF") {
             let outL = "";
             let outR = "";
             let redFlag = false;
             let cyanFlag = false;
-			
-			minimapCtx.clearRect(0, 0, minimap.width, minimap.height);
-			
-            for (let i = 0; i < this.data.Entries.length; i++) {
-                const entry = this.data.Entries[i];
+
+            for (let i = 0; i < data.Entries.length; i++) {
+                const entry = data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
-				
-				// minimap
-				if (i > 1) {
-					var minimapX = (entry.Position.X + worldSize) / 2 / worldSize * minimap.width - 2;
-					var minimapY = (entry.Position.Y + worldSize) / 2 / worldSize * minimap.height - 2;
-					
-					var entryIsSelf = (entry.FleetID == fleetID);
-					if (!entryIsSelf) {
-						minimapCtx.fillStyle = entry.Color;
-						minimapCtx.fillRect(minimapX, minimapY, 4, 4);
-					} else {
-						minimapCtx.fillStyle = "white";
-						minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
-					}
-				}
-				
+
                 let str =
                     `<tr>` +
                     `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +

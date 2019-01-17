@@ -23,7 +23,5 @@ export class Border {
         this.worldSize = size;
     }
 
-    draw(cache, interpolator, currentTime, fleetID) {
-
-    }
+    draw(cache, interpolator, currentTime, fleetID) {}
 }

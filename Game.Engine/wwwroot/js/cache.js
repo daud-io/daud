@@ -11,13 +11,11 @@ export class Cache {
 
     clear() {
         this.foreach(function(body) {
-            if (body && body.renderer)
-                body.renderer.destroy();
+            if (body && body.renderer) body.renderer.destroy();
         }, this);
 
         this.foreachGroup(function(group) {
-            if (group && group.renderer)
-                group.renderer.destroy();
+            if (group && group.renderer) group.renderer.destroy();
         });
 
         this.bodies = {};
@@ -31,8 +29,7 @@ export class Cache {
 
     refreshSprites() {
         this.foreach(function(body) {
-            if (body && body.renderer)
-                body.renderer.refreshSprite();
+            if (body && body.renderer) body.renderer.refreshSprite();
         }, this);
     }
 
@@ -46,8 +43,7 @@ export class Cache {
             if (key in this.bodies) Cache.count--;
 
             var body = this.bodies[key];
-            if (body && body.renderer)
-                body.renderer.destroy();
+            if (body && body.renderer) body.renderer.destroy();
             delete this.bodies[key];
         }
 
@@ -56,11 +52,9 @@ export class Cache {
             var deleteKey = groupDeletes[i];
             var key = `g-${deleteKey}`;
             var group = this.groups[key];
-            if (!group)
-                console.log('group delete on object not in cache');
-                
-            if (group && group.renderer)
-                group.renderer.destroy();
+            if (!group) console.log("group delete on object not in cache");
+
+            if (group && group.renderer) group.renderer.destroy();
             delete this.groups[key];
         }
 
@@ -70,8 +64,7 @@ export class Cache {
             var existing = this.groups[`g-${group.ID}`];
 
             if (!existing) {
-                if (group.Type == 1)
-                    group.renderer = new Fleet(this.container, this);
+                if (group.Type == 1) group.renderer = new Fleet(this.container, this);
 
                 existing = group;
             } else {
@@ -81,18 +74,16 @@ export class Cache {
                 existing.ZIndex = group.ZIndex;
             }
 
-            if (existing.renderer)
-                existing.renderer.update(existing);
+            if (existing.renderer) existing.renderer.update(existing);
 
             this.groups[`g-${group.ID}`] = existing;
         }
 
         // update objects that should be here
         for (i = 0; i < updates.length; i++) {
-
             const update = updates[i];
             var existing = this.bodies[`b-${update.ID}`];
-            
+
             this.bodies[`b-${update.ID}`] = update;
 
             if (existing) {
@@ -110,50 +101,34 @@ export class Cache {
                 if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
                 if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
 
-                if (update.renderer)
-                    update.renderer.update(update);
+                if (update.renderer) update.renderer.update(update);
             }
 
             if (!existing) {
-                if (update.Sprite.indexOf("ship") == 0)
-                {
+                if (update.Sprite.indexOf("ship") == 0) {
                     var fleet = false;
-                    if (update.Group != 0)
-                    {
+                    if (update.Group != 0) {
                         var group = this.groups[`g-${update.Group}`];
-                        if (!group)
-                        {
-                            console.log('missing group');
-                        }
-                        else
-                        {
-                            if (group.Type == 1)
-                            {
+                        if (!group) {
+                            console.log("missing group");
+                        } else {
+                            if (group.Type == 1) {
                                 fleet = group.renderer;
 
-                                if (!fleet)
-                                    fleet = new Fleet(this.container, this);
+                                if (!fleet) fleet = new Fleet(this.container, this);
 
                                 group.renderer = fleet;
-                                    
                             }
                         }
-                    }
-                    else
-                    {
-                        console.log('ship with no group: ' + update.Sprite);
-                        
+                    } else {
+                        console.log("ship with no group: " + update.Sprite);
                     }
 
-                    var ship = update.renderer = new Ship(this.container);
+                    var ship = (update.renderer = new Ship(this.container));
 
-                    if (fleet)
-                        fleet.addShip(ship);
-                }
-                else if (update.Sprite.indexOf("bullet"))
-                    update.renderer = new Bullet(this.container);
-                else
-                    update.renderer = new RenderedObject(this.container);
+                    if (fleet) fleet.addShip(ship);
+                } else if (update.Sprite.indexOf("bullet")) update.renderer = new Bullet(this.container);
+                else update.renderer = new RenderedObject(this.container);
 
                 update.renderer.update(update);
                 Cache.count++;

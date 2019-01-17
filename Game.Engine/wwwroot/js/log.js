@@ -21,18 +21,18 @@ export class Log {
             out += `<span><b style="color:gray">${slot.time.toLocaleTimeString()}</b> ${slot.entry}</span><br>`;
         }
         log.innerHTML = out;
-		
-		if (Settings.bigKillMessage) {
-			var lastData = this.data[this.data.length-1]["entry"];
-			if (lastData.toLowerCase().indexOf("you killed") === 0) {
-				lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData + "<span style='color:#00ff00'>&nbsp;]</span>";
-			} else if (lastData.toLowerCase().indexOf("killed by") === 0) {
-				lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData + "<span style='color:#ff0000'>&nbsp;]</span>";
-			} else {
-				return;
-			}
-			bigLog.innerHTML = lastData;
-		}
+
+        if (Settings.bigKillMessage) {
+            var lastData = this.data[this.data.length - 1]["entry"];
+            if (lastData.toLowerCase().indexOf("you killed") === 0) {
+                lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData + "<span style='color:#00ff00'>&nbsp;]</span>";
+            } else if (lastData.toLowerCase().indexOf("killed by") === 0) {
+                lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData + "<span style='color:#ff0000'>&nbsp;]</span>";
+            } else {
+                return;
+            }
+            bigLog.innerHTML = lastData;
+        }
     }
 
     check() {
@@ -40,8 +40,8 @@ export class Log {
         if (time > 6000) {
             log.innerHTML = "";
         }
-		
-		const time2 = performance.now() - this.lastDisplay;
+
+        const time2 = performance.now() - this.lastDisplay;
         if (time > 3000) {
             bigLog.innerHTML = "";
         }

@@ -8,6 +8,7 @@ import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
 import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
+import { Minimap } from "./minimap";
 import { HUD } from "./hud";
 import { Log } from "./log";
 import { Cooldown } from "./cooldown";
@@ -33,6 +34,7 @@ const border = new Border(container);
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
+const minimap = new Minimap(app.stage, size);
 const hud = new HUD();
 const log = new Log();
 const cooldown = new Cooldown();
@@ -113,8 +115,8 @@ const groupFromServer = (cache, group) => {
 };
 
 connection.onLeaderboard = lb => {
-    leaderboard.setData(lb, lastPosition, worldSize, fleetID);
-    leaderboard.position = lastPosition;
+    leaderboard.update(lb, lastPosition);
+    minimap.update(lb, worldSize, fleetID);
 };
 
 var fleetID = 0;
@@ -207,9 +209,9 @@ connection.onView = newView => {
     Game.Stats.spectatorCount = newView.spectatorCount();
 
     if (newView.worldSize() != border.worldSize) {
-        worldSize = newView.worldSize()
+        worldSize = newView.worldSize();
         border.updateWorldSize(newView.worldSize());
-    };
+    }
 
     cooldown.setCooldown(newView.cooldownShoot());
     /*console.log({
@@ -321,6 +323,7 @@ const sizeCanvas = () => {
 
     size.width = width;
     size.height = height;
+    minimap.size(size);
     app.renderer.resize(width, height);
     container.scale.set(width / 5500, width / 5500);
 };

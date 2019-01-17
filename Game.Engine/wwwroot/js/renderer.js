@@ -7,16 +7,12 @@ export class Renderer {
         const groupsUsed = [];
 
         cache.foreach(function(body) {
-            if (body.Group)
-            {
+            if (body.Group) {
                 var group = cache.getGroup(body.Group);
-                if (group && groupsUsed.indexOf(group) == -1)
-                    groupsUsed.push(group);
+                if (group && groupsUsed.indexOf(group) == -1) groupsUsed.push(group);
             }
 
-            if (body.renderer)
-                body.renderer.preRender(currentTime, interpolator, fleetID);
-
+            if (body.renderer) body.renderer.preRender(currentTime, interpolator, fleetID);
         }, this);
 
         let ids = [];
@@ -26,8 +22,7 @@ export class Renderer {
             if (group) {
                 ids.push(`g-${group.ID}`);
 
-                if (group.renderer)
-                    group.renderer.preRender(currentTime, interpolator, fleetID);
+                if (group.renderer) group.renderer.preRender(currentTime, interpolator, fleetID);
             }
         }
     }

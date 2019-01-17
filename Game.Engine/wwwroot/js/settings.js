@@ -19,7 +19,7 @@ export const Settings = {
     bandwidth: 100,
     showCooldown: true,
     logLength: 4,
-	bigKillMessage: true,
+    bigKillMessage: true,
     showPickupSprites: false,
     showThrusterSprites: true,
     showOwnName: true,
@@ -58,7 +58,7 @@ function save() {
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
-	Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
+    Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
     Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
     Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
@@ -97,7 +97,7 @@ function load() {
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
         document.getElementById("settingsLog").value = Settings.logLength;
-		document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
+        document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
         document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
         document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
@@ -121,8 +121,7 @@ async function theme(v) {
             var version = 1;
             if (info.version) version = info.version;
 
-            if (info.files)
-            {
+            if (info.files) {
                 // old format info.json
                 info.files.forEach(element => {
                     zip.file(`daudmod/${element[0]}.png`)
@@ -134,18 +133,14 @@ async function theme(v) {
                             const url = urlCreator.createObjectURL(blob);
 
                             textureMap[element[0]].url = url;
-                            if (element[1])
-                            {
+                            if (element[1]) {
                                 var scale = element[1];
-                                if (version == 1 && element[0].startsWith("ship"))
-                                    scale = 0.03;
+                                if (version == 1 && element[0].startsWith("ship")) scale = 0.03;
 
-                                if (scale)
-                                    textureMap[element[0]].scale = scale;
+                                if (scale) textureMap[element[0]].scale = scale;
                             }
 
-                            if (window.Game && window.Game.cache)
-                            {
+                            if (window.Game && window.Game.cache) {
                                 textureCache.clear();
                                 window.Game.cache.refreshSprites();
                                 window.Game.reinitializeWorld();

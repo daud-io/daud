@@ -29,11 +29,10 @@
         </div>
 
         <div id="gameArea" class="noselect aspectratio">
-			<canvas id="minimap" width="200" height="200"></canvas>
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
-			
-			<div id="bigLog"></div>
-			
+
+            <div id="bigLog"></div>
+
             <div id="ctf_arena" class="hide">
                 <span id="ctf_cyan">
                     <span class="flag_status">
@@ -91,160 +90,160 @@
             <div id="worlds" class="closed">
                 <div id="topbar">
                     <button class="button1" id="wcancel">Cancel</button>
-                </div>                
+                </div>
                 <table id="worldList"></table>
             </div>
             <div id="gear" class="closed">
-				<div id="settingsContainer">
-					<h1>Settings</h1>
+                <div id="settingsContainer">
+                    <h1>Settings</h1>
 
-					<label for="settingsThemeSelector">Theme Selection</label>
-					<select id="settingsThemeSelector" class="button1">
-						<option value="">default</option>
-						<option value="3ryhaa6boenvv2k">Bitty</option>
-						<option value="516mkwof6m4d4tg">Retro</option>
-						<option value="c4yh49qs8uvms87">Universe</option>
-					</select>
-					<input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" class="button1" value="">
-					<br>
-					<label for="settingsNameSize">Name Size</label>
-					<select id="settingsNameSize" class="button1">
-						<option value="20">tiny</option>
-						<option value="32">smaller</option>
-						<option value="48">small</option>
-						<option value="64">medium</option>
-						<option value="72">big</option>
-						<option value="96">woah</option>
-					</select>
-					<label for="settingsMouseScale">Mouse Sensitivity</label>
-					<select id="settingsMouseScale" class="button1">
-						<option value="1">sensitive</option>
-						<option value="4">medium</option>
-						<option value="10">straight-shooter</option>
-					</select>
+                    <label for="settingsThemeSelector">Theme Selection</label>
+                    <select id="settingsThemeSelector" class="button1">
+                        <option value="">default</option>
+                        <option value="3ryhaa6boenvv2k">Bitty</option>
+                        <option value="516mkwof6m4d4tg">Retro</option>
+                        <option value="c4yh49qs8uvms87">Universe</option>
+                    </select>
+                    <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" class="button1" value="">
+                    <br>
+                    <label for="settingsNameSize">Name Size</label>
+                    <select id="settingsNameSize" class="button1">
+                        <option value="20">tiny</option>
+                        <option value="32">smaller</option>
+                        <option value="48">small</option>
+                        <option value="64">medium</option>
+                        <option value="72">big</option>
+                        <option value="96">woah</option>
+                    </select>
+                    <label for="settingsMouseScale">Mouse Sensitivity</label>
+                    <select id="settingsMouseScale" class="button1">
+                        <option value="1">sensitive</option>
+                        <option value="4">medium</option>
+                        <option value="10">straight-shooter</option>
+                    </select>
 
-					<br />
+                    <br />
 
-					<label for="settingsBackground">Background</label>
-					<select id="settingsBackground" class="button1">
-						<option value="none">none</option>
-						<option value="on">enabled</option>
-					</select>
-					
-					<label for="settingsLog">Log Length</label>
-					<select id="settingsLog" class="button1">
-						<option value="0">none</option>
-						<option value="1">1 line</option>
-						<option value="2">2 lines</option>
-						<option value="3">3 lines</option>
-						<option value="4">4 lines</option>
-						<option value="10">historian</option>
-					</select>
-					<br />
+                    <label for="settingsBackground">Background</label>
+                    <select id="settingsBackground" class="button1">
+                        <option value="none">none</option>
+                        <option value="on">enabled</option>
+                    </select>
 
-					<label for="settingsBandwidth">Bandwidth</label>
-					<select id="settingsBandwidth" class="button1">
-						<option value="100">high</option>
-						<option value="50">medium</option>
-						<option value="25">low</option>
-					</select>
-					<br />
+                    <label for="settingsLog">Log Length</label>
+                    <select id="settingsLog" class="button1">
+                        <option value="0">none</option>
+                        <option value="1">1 line</option>
+                        <option value="2">2 lines</option>
+                        <option value="3">3 lines</option>
+                        <option value="4">4 lines</option>
+                        <option value="10">historian</option>
+                    </select>
+                    <br />
 
-					<label for="settingsFont">Font</label>
-					<select id="settingsFont" class="button1">
-						<option value="sans-serif">default</option>
-						<option value="&quot;Exo 2&quot;">experimental</option>
-					</select>
-					<br>
+                    <label for="settingsBandwidth">Bandwidth</label>
+                    <select id="settingsBandwidth" class="button1">
+                        <option value="100">high</option>
+                        <option value="50">medium</option>
+                        <option value="25">low</option>
+                    </select>
+                    <br />
 
-					<table id="settingsTable">
-						
-						<tr>
-							<td>Big Kill Message</td>
-							<td>
-								<label class="switch">
-									<input type="checkbox" id="settingsBigKillMessage">
-									<span class="slider round"></span>
-								</label>
-							</td>
-						</tr>
-						
-						<tr>
-							<td>Show Leaderboard</td>
-							<td>
-								<label class="switch">
-									<input type="checkbox" id="settingsLeaderboardEnabled">
-									<span class="slider round"></span>
-								</label>
-							</td>
-						</tr>
+                    <label for="settingsFont">Font</label>
+                    <select id="settingsFont" class="button1">
+                        <option value="sans-serif">default</option>
+                        <option value="&quot;Exo 2&quot;">experimental</option>
+                    </select>
+                    <br>
 
-						<tr>
-							<td>Show Stats</td>
-							<td>
-								<label class="switch">
-									<input type="checkbox" id="settingsHUDEnabled">
-									<span class="slider round"></span>
-								</label>
-							</td>
-						</tr>
+                    <table id="settingsTable">
 
-						<tr>
-							<td>Show Names</td>
-							<td>
-								<label class="switch">
-									<input type="checkbox" id="settingsNamesEnabled">
-									<span class="slider round"></span>
-								</label>
-							</td>
-						</tr>
+                        <tr>
+                            <td>Big Kill Message</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsBigKillMessage">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
 
-						<tr>
-							<td>Show OWN name</td>
-							<td>
-								<label class="switch">
-									<input type="checkbox" id="settingsShowOwnName">
-									<span class="slider round"></span>
-								</label>
-							</td>
-						</tr>
+                        <tr>
+                            <td>Show Leaderboard</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsLeaderboardEnabled">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
 
-						<tr>
-							<td>Show Cooldown Timer</td>
-							<td>
-								<label class="switch">
-									<input type="checkbox" id="settingsShowCooldown">
-									<span class="slider round"></span>
-								</label>
-							</td>
-						</tr>
+                        <tr>
+                            <td>Show Stats</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsHUDEnabled">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
 
-						<tr>
-							<td>Show Pickup Sprites</td>
-							<td>
-								<label class="switch">
-									<input type="checkbox" id="settingsShowPickupSprites">
-									<span class="slider round"></span>
-								</label>
-							</td>
-						</tr>
+                        <tr>
+                            <td>Show Names</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsNamesEnabled">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
 
-						<tr>
-							<td>Show Thruster Sprites</td>
-							<td>
-								<label class="switch">
-									<input type="checkbox" id="settingsShowThrusterSprites">
-									<span class="slider round"></span>
-								</label>
-							</td>
-						</tr>
-					</table>
+                        <tr>
+                            <td>Show OWN name</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsShowOwnName">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
 
-					<input type="button" id="settingsSave" class="button1" value="Save settings" />
-					<input type="button" id="settingsCancel" class="button1" value="Cancel (no changes)" />
-					<br>
-					<input type="button" id="settingsReset" class="button1" value="Reset to default (reloads the page)" />
-				</div>
+                        <tr>
+                            <td>Show Cooldown Timer</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsShowCooldown">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Show Pickup Sprites</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsShowPickupSprites">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>Show Thruster Sprites</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsShowThrusterSprites">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <input type="button" id="settingsSave" class="button1" value="Save settings" />
+                    <input type="button" id="settingsCancel" class="button1" value="Cancel (no changes)" />
+                    <br>
+                    <input type="button" id="settingsReset" class="button1" value="Reset to default (reloads the page)" />
+                </div>
             </div>
             <div class="social">
 
@@ -313,49 +312,49 @@
         </div>
         <h1>About daud.io</h1>
         <hr>
-		<div id="fullPageCardOuterContainer">
-			<div id="fullPageCardInnerContainer">
-				<section>
-					<h2>What is daud.io?</h2>
-					<p>Daud.io is a fleet-based space combat game, where players are pitted against each other in a free for all arena. The game’s skill-based combat system involves accumulating a fleet over time by attacking enemies, then leveraging the individual directionality of your fleets bullets to outmaneuver your enemies and destroy them. Each player begins the game with a small fleet of basic ships, each controlled independently by your mouse pointer. By destroying enemy fleets and collecting special power ups, your fleet grows in power, allowing you to take on the most difficult foes. Size isn’t everything, however, and through our unique combat system, a small fleet in the hands of a skilled player can easily overpower the largest armada.</p>
-					<p>To begin your journey in the daud.io arena, start by focusing your efforts on the smaller ships flying around the arena. Use these to grow your fleet. Be wary of other players while your fleet is too small, as they can easily take advantage of your small numbers to destroy you. As you grow your fleet, leverage the power ups scattered around the map to gain an advantage over your foes. Each ship in your fleet moves individually towards your mouse, so to best stronger players you will need to utilize different bullet spreads to both weaken their numbers with larger volleys, then finishing them off with concentrated bursts.</p>
-					<p>If you have any questions or feedback, feel free to head over to our discord server or subreddit. Links to both can be found on the intro screen of our game.</p>
-					<p>Now, we would like to take a minute to thank our sponsors, of which we have none. If you enjoyed this game, please tell all your friends, and take a minute to reflect on the availability of Indian Ocean based web entertainment. We hope you enjoy this artisanal electronic gaming experience if you decide to partake in our creation. We hope you have a wonderful day, and please enjoy your flight.</p>
-				</section>
+        <div id="fullPageCardOuterContainer">
+            <div id="fullPageCardInnerContainer">
+                <section>
+                    <h2>What is daud.io?</h2>
+                    <p>Daud.io is a fleet-based space combat game, where players are pitted against each other in a free for all arena. The game’s skill-based combat system involves accumulating a fleet over time by attacking enemies, then leveraging the individual directionality of your fleets bullets to outmaneuver your enemies and destroy them. Each player begins the game with a small fleet of basic ships, each controlled independently by your mouse pointer. By destroying enemy fleets and collecting special power ups, your fleet grows in power, allowing you to take on the most difficult foes. Size isn’t everything, however, and through our unique combat system, a small fleet in the hands of a skilled player can easily overpower the largest armada.</p>
+                    <p>To begin your journey in the daud.io arena, start by focusing your efforts on the smaller ships flying around the arena. Use these to grow your fleet. Be wary of other players while your fleet is too small, as they can easily take advantage of your small numbers to destroy you. As you grow your fleet, leverage the power ups scattered around the map to gain an advantage over your foes. Each ship in your fleet moves individually towards your mouse, so to best stronger players you will need to utilize different bullet spreads to both weaken their numbers with larger volleys, then finishing them off with concentrated bursts.</p>
+                    <p>If you have any questions or feedback, feel free to head over to our discord server or subreddit. Links to both can be found on the intro screen of our game.</p>
+                    <p>Now, we would like to take a minute to thank our sponsors, of which we have none. If you enjoyed this game, please tell all your friends, and take a minute to reflect on the availability of Indian Ocean based web entertainment. We hope you enjoy this artisanal electronic gaming experience if you decide to partake in our creation. We hope you have a wonderful day, and please enjoy your flight.</p>
+                </section>
 
-				<section>
-					<h2>How to play:</h2>
-					<ul>
-						<li>Your ships go towards your mouse - move your mouse across the screen to control them.</li>
-						<li>Press space or click the mouse to shoot</li>
-						<li>Press S for a speed boost - but beware! You lose half your fleet doing this!</li>
-						<li>Bullets that hit other players give you more ships!</li>
-						<li>Kill other players to gain points</li>
-						<li>Missile power ups make you shoot homing missile - use them wisely</li>
-					</ul>
-				</section>
+                <section>
+                    <h2>How to play:</h2>
+                    <ul>
+                        <li>Your ships go towards your mouse - move your mouse across the screen to control them.</li>
+                        <li>Press space or click the mouse to shoot</li>
+                        <li>Press S for a speed boost - but beware! You lose half your fleet doing this!</li>
+                        <li>Bullets that hit other players give you more ships!</li>
+                        <li>Kill other players to gain points</li>
+                        <li>Missile power ups make you shoot homing missile - use them wisely</li>
+                    </ul>
+                </section>
 
-				<section>
-					<h2>Advanced gameplay:</h2>
-					<ul>
-						<li>Fleet speed depends on number of ships - smaller fleets are faster</li>
-						<li>Bullet speed is also modified by ship size</li>
-						<li>Circular barriers destroy bullets, use them for cover</li>
-						<li>Red arena borders slow down your ship - be careful of them</li>
-						<li>Use splitting to flank your opponents</li>
-						<li>Position yourself wisely to trap your opponents between other players</li>
-						<li>Homing missiles can be shot down by normal bullets</li>
-						<li>Spread your bullets in an arc to hit more enemies, or concentrate your bullets to deal more damage in a smaller area.</li>
-					</ul>
-				</section>
+                <section>
+                    <h2>Advanced gameplay:</h2>
+                    <ul>
+                        <li>Fleet speed depends on number of ships - smaller fleets are faster</li>
+                        <li>Bullet speed is also modified by ship size</li>
+                        <li>Circular barriers destroy bullets, use them for cover</li>
+                        <li>Red arena borders slow down your ship - be careful of them</li>
+                        <li>Use splitting to flank your opponents</li>
+                        <li>Position yourself wisely to trap your opponents between other players</li>
+                        <li>Homing missiles can be shot down by normal bullets</li>
+                        <li>Spread your bullets in an arc to hit more enemies, or concentrate your bullets to deal more damage in a smaller area.</li>
+                    </ul>
+                </section>
 
-				<section>
-					<h2>More good stuff</h2>
-					<iframe width="280" height="157" src="https://www.youtube.com/embed/SpBXw-fv0oc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br /><br />
-				</section>
-				<!--<p>Also visit daud.io game official webpage: <a href="https://daudnetwork.com" target="_blank">daudnetwork.com</a></p>-->
-			</div>
-		</div>
+                <section>
+                    <h2>More good stuff</h2>
+                    <iframe width="280" height="157" src="https://www.youtube.com/embed/SpBXw-fv0oc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br /><br />
+                </section>
+                <!--<p>Also visit daud.io game official webpage: <a href="https://daudnetwork.com" target="_blank">daudnetwork.com</a></p>-->
+            </div>
+        </div>
     </div>
 
     <script type="text/javascript" src="js/init.js"></script>
@@ -367,4 +366,5 @@
     <script type="text/javascript" src="js/aboutCard.js"></script>
 
 </body>
+
 </html>
