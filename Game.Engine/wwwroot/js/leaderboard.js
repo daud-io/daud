@@ -15,7 +15,6 @@ export function clear() {
 }
 
 export class Leaderboard {
-
     update(data, position) {
         if (data.Record) {
             record.style.fontFamily = Settings.font;
