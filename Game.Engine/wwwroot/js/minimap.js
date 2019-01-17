@@ -1,4 +1,6 @@
 const minimapSize = 200;
+const minimapMarginBottom = 15;
+const minimapMarginRight = 15;
 
 const colors = {
     red: 0xff0000,
@@ -12,13 +14,13 @@ const colors = {
 export class Minimap {
     constructor(stage, size) {
         this.ctx = new PIXI.Graphics();
-        this.ctx.position.x = size.width - minimapSize - 15;
-        this.ctx.position.y = size.height - minimapSize - 15;
+        this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
+        this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
         stage.addChild(this.ctx);
     }
     size(size) {
-        this.ctx.position.x = size.width - minimapSize - 15;
-        this.ctx.position.y = size.height - minimapSize - 15;
+        this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
+        this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
     }
     update(data, worldSize, fleetID) {
         this.worldSize = worldSize;
