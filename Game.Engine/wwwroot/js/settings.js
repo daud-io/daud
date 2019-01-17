@@ -84,6 +84,9 @@ function load() {
             // copying value by value because cookies can be old versions
             // any values NOT in the cookie will remain defined with the new defaults
             for (const key in savedSettings) Settings[key] = savedSettings[key];
+
+            if (Settings.theme == "3ds2agh4z76feci")
+                Settings.theme = "516mkwof6m4d4tg";
         }
 
         document.getElementById("settingsThemeSelector").value = Settings.theme;
@@ -197,7 +200,7 @@ async function theme(v) {
 
                         textureMap[key][textureKey] = map[textureKey];
                     }
-                    
+
                     downloadFile(key, map.file);
                 }
             }
