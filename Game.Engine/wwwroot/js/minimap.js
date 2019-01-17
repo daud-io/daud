@@ -1,12 +1,12 @@
 import { Settings } from "./settings";
 
 const colors = {
-    red: 0xff0000,
-    pink: 0xffc0cb,
-    orange: 0xffa500,
-    yellow: 0xffff00,
-    cyan: 0x00ffff,
-    green: 0x00ff00
+    red: "#ff0000",
+    pink: "#ffc0cb",
+    orange: "#ffa500",
+    yellow: "#ffff00",
+    cyan: "#00ffff",
+    green: "#00ff00"
 };
 
 const minimap = document.getElementById("minimap");
@@ -20,7 +20,7 @@ export class Minimap {
         for (let i = startIndex; i < data.Entries.length; i++) {
             const entry = data.Entries[i];
             var entryIsSelf = entry.FleetID == fleetID;
-            this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf);
+            this.drawMinimap(entry.Position.X, entry.Position.Y, colors[entry.Color], entryIsSelf);
         }
     }
     drawMinimap(x, y, color, self) {
