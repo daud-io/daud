@@ -873,8 +873,9 @@ progress::-webkit-progress-value {
 }
 
 #minimapTip {
-	display: block;
-	position: absolute;
-	bottom: 0;
-	right: 10px;
+    display: block;
+    position: absolute;
+    bottom: 0;
+    right: 10px;
+    color: #999;
 }
