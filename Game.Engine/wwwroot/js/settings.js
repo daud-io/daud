@@ -73,17 +73,7 @@ function save() {
 
     if (reload) window.location.reload();
 	
-	// minimap display
-	if (Settings.displayMinimap === "never") {
-		document.getElementById("minimap").setAttribute("hidden", "hidden");
-		document.getElementById("minimapTip").setAttribute("hidden", "hidden");
-	} else if ( Settings.displayMinimap === "onkeypress") {
-		document.getElementById("minimap").removeAttribute("hidden");
-		document.getElementById("minimapTip").removeAttribute("hidden");
-	} else if ( Settings.displayMinimap === "always") {
-		document.getElementById("minimap").removeAttribute("hidden");
-		document.getElementById("minimapTip").setAttribute("hidden", "hidden");
-	}
+	executeMinimapSettings()
 }
 
 function reset() {
@@ -262,12 +252,27 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 
-// minimap toggle
+// minimap
+
+executeMinimapSettings()
 
 window.onkeydown = function(e) {
-	if (e.key === "w" && Settings.displayMinimap === "onkeypress") { document.getElementById("minimap").removeAttribute("hidden") };
+	if (e.key === "w" && Settings.displayMinimap === "onkeypress") { document.getElementById("minimap").style.display = "block"; };
 }
 
 window.onkeyup = function(e) {
-	if (e.key === "w" && Settings.displayMinimap === "onkeypress" ) { document.getElementById("minimap").setAttribute("hidden", "hidden") };
+	if (e.key === "w" && Settings.displayMinimap === "onkeypress" ) { document.getElementById("minimap").style.display = "none"; };
+}
+
+function executeMinimapSettings() {
+	if (Settings.displayMinimap === "never") {
+		document.getElementById("minimap").style.display = "none";
+		document.getElementById("minimapTip").style.display = "none";
+	} else if ( Settings.displayMinimap === "onkeypress") {
+		document.getElementById("minimap").style.display = "none";
+		document.getElementById("minimapTip").style.display = "block";
+	} else if ( Settings.displayMinimap === "always") {
+		document.getElementById("minimap").style.display = "block";
+		document.getElementById("minimapTip").style.display = "none";
+	}
 }
