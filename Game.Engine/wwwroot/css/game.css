@@ -871,3 +871,10 @@ progress::-webkit-progress-value {
 #settingsTable {
     margin: 10px auto 10px auto;
 }
+
+#minimapTip {
+	display: block;
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+}
