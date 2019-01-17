@@ -2,7 +2,7 @@ import { Settings } from "./settings";
 
 const colors = {
     red: "#ff0000",
-    pink: "#ffc0cb",
+    pink: "#ff00cb",
     orange: "#ffa500",
     yellow: "#ffff00",
     cyan: "#00ffff",
