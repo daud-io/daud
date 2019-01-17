@@ -35,8 +35,8 @@
     "seeker": { file: "seeker", scale: 0.02 },
     "seeker_pickup": { file: "seeker_pickup", scale: 0.02 },
 
-    "thruster_default_cyan": {
-        file: "thruster_default_cyan",
+    "thruster_cyan": {
+        file: "thruster_cyan",
         animated: true,
         loop: false,
         animationSpeed: 1.0,
@@ -46,8 +46,8 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_default_green": {
-        file: "thruster_default_green",
+    "thruster_green": {
+        file: "thruster_green",
         animated: true,
         loop: false,
         animationSpeed: 1.0,
@@ -57,8 +57,8 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_default_orange": {
-        file: "thruster_default_orange",
+    "thruster_orange": {
+        file: "thruster_orange",
         animated: true,
         loop: false,
         animationSpeed: 1.0,
@@ -68,8 +68,8 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_default_pink": {
-        file: "thruster_default_pink",
+    "thruster_pink": {
+        file: "thruster_pink",
         animated: true,
         loop: false,
         animationSpeed: 1.0,
@@ -79,8 +79,8 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_default_red": {
-        file: "thruster_default_red",
+    "thruster_red": {
+        file: "thruster_red",
         animated: true,
         loop: false,
         animationSpeed: 1.0,
@@ -90,8 +90,8 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_default_yellow": {
-        file: "thruster_default_yellow",
+    "thruster_yellow": {
+        file: "thruster_yellow",
         animated: true,
         loop: false,
         animationSpeed: 1.0,

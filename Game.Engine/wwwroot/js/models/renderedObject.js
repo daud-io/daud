@@ -14,6 +14,21 @@ export class RenderedObject {
         return "default";
     }
 
+    static getImageFromTextureDefinition(textureDefinition)
+    {
+        var img = new Image();
+        if (textureDefinition.url)
+            img.src = textureDefinition.url;
+        else
+        {
+            var src = images[textureDefinition.file];
+            if (src)
+                img.src = src;
+        }
+
+        return img;
+    }
+
     static getTextureImage(textureName)
     {
         var textureDefinition = RenderedObject.getTextureDefinition(textureName);
@@ -21,12 +36,7 @@ export class RenderedObject {
         if (textureDefinition === false)
             console.log(`cannot load texture '${textureName}'`);
 
-        var img = new Image();
-        if (textureDefinition.url)
-            img.src = textureDefinition.url;
-        else
-            img.src = images[textureDefinition.file];
-        return img;
+        return RenderedObject.getImageFromTextureDefinition(textureDefinition);
     }
 
     static loadTexture(textureDefinition, textureName)
@@ -36,11 +46,7 @@ export class RenderedObject {
         if (!textures) {
             textures = [];
 
-            var img = new Image();
-            if (textureDefinition.url)
-                img.src = textureDefinition.url;
-            else
-                img.src = images[textureDefinition.file];
+            var img = RenderedObject.getImageFromTextureDefinition(textureDefinition);
 
             var baseTexture = new PIXI.Texture.fromLoader(img);
 
@@ -95,6 +101,9 @@ export class RenderedObject {
         } else {
             pixiSprite = new PIXI.Sprite(textures[0]);
         }
+
+        if (textureDefinition.tint)
+            pixiSprite.tint = textureDefinition.tint;
 
         pixiSprite.pivot.x = pixiSprite.width / 2;
         pixiSprite.pivot.y = pixiSprite.height / 2;

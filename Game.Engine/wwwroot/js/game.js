@@ -66,7 +66,10 @@ window.Game.cache = cache;
 
 window.Game.reinitializeWorld = function()
 {
-    Controls.initializeWorld(currentWorld);
+    if (currentWorld)
+        Controls.initializeWorld(currentWorld);
+        
+    background.refreshSprite();
 }
 
 const bodyFromServer = (cache, body) => {

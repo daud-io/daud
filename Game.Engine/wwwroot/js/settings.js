@@ -3,6 +3,7 @@ import { toggleLobby } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
 import { textureMap } from "./models/textureMap";
+import { spriteModeMap } from "./models/spriteModeMap";
 
 import * as PIXI from "pixi.js";
 import { textureCache } from "./models/textureCache";
@@ -151,6 +152,59 @@ async function theme(v) {
                             }
                         });
                 });
+            }
+
+            if (info.spriteModeMap)
+            {
+                for(var key in info.spriteModeMap)
+                {
+                    var modeMap = info.spriteModeMap[key];
+                    
+                    for(var mapKey in modeMap)
+                        spriteModeMap[key][mapKey] = modeMap[mapKey];
+                }
+            }
+
+
+            var downloadFile = function(key, filename)
+            {
+                zip.file(`daudmod/${filename}.png`)
+                .async("arraybuffer")
+                .then(ab => {
+                    const arrayBufferView = new Uint8Array(ab);
+                    const blob = new Blob([arrayBufferView], { type: "image/png" });
+                    const urlCreator = window.URL || window.webkitURL;
+                    const url = urlCreator.createObjectURL(blob);
+
+                    textureMap[key].url = url;
+
+                    if (window.Game && window.Game.cache)
+                    {
+                        textureCache.clear();
+                        window.Game.cache.refreshSprites();
+                        window.Game.reinitializeWorld();
+                    }
+
+                });
+
+            };
+
+            if (info.textureMap)
+            {
+                for(var key in info.textureMap)
+                {
+                    var map = info.textureMap[key];
+
+                    for(var textureKey in map)
+                    {
+                        if (!textureMap[key])
+                            textureMap[key] = {};
+
+                        textureMap[key][textureKey] = map[textureKey];
+                    }
+                    
+                    downloadFile(key, map.file);
+                }
             }
         });
 }
