@@ -14,23 +14,18 @@ export class RenderedObject {
         return "default";
     }
 
-    static getImageFromTextureDefinition(textureDefinition)
-    {
+    static getImageFromTextureDefinition(textureDefinition) {
         var img = new Image();
-        if (textureDefinition.url)
-            img.src = textureDefinition.url;
-        else
-        {
+        if (textureDefinition.url) img.src = textureDefinition.url;
+        else {
             var src = images[textureDefinition.file];
-            if (src)
-                img.src = src;
+            if (src) img.src = src;
         }
 
         return img;
     }
 
-    static getTextureImage(textureName)
-    {
+    static getTextureImage(textureName) {
         var textureDefinition = RenderedObject.getTextureDefinition(textureName);
 
         if (textureDefinition === false) console.log(`cannot load texture '${textureName}'`);
@@ -85,8 +80,7 @@ export class RenderedObject {
             pixiSprite = new PIXI.Sprite(textures[0]);
         }
 
-        if (textureDefinition.tint)
-            pixiSprite.tint = textureDefinition.tint;
+        if (textureDefinition.tint) pixiSprite.tint = textureDefinition.tint;
 
         pixiSprite.pivot.x = pixiSprite.width / 2;
         pixiSprite.pivot.y = pixiSprite.height / 2;

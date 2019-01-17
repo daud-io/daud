@@ -66,13 +66,11 @@ window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 window.Game.cache = cache;
 
-window.Game.reinitializeWorld = function()
-{
-    if (currentWorld)
-        Controls.initializeWorld(currentWorld);
-        
+window.Game.reinitializeWorld = function() {
+    if (currentWorld) Controls.initializeWorld(currentWorld);
+
     background.refreshSprite();
-}
+};
 
 const bodyFromServer = (cache, body) => {
     const originalPosition = body.originalPosition();
@@ -392,6 +390,7 @@ app.ticker.add(() => {
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
     background.draw(cache, interpolator, gameTime);
+    minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
 
     lastPosition = position;

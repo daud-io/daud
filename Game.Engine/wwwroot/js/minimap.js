@@ -1,3 +1,5 @@
+import { Settings } from "./settings";
+
 const colors = {
     red: 0xff0000,
     pink: 0xffc0cb,
@@ -17,6 +19,9 @@ export class Minimap {
     size(size) {
         this.ctx.position.x = size.width - 215;
         this.ctx.position.y = size.height - 215;
+    }
+    checkDisplay() {
+        if (Settings.displayMinimap != this.ctx.visible) this.ctx.visible = Settings.displayMinimap;
     }
     update(data, worldSize, fleetID) {
         this.worldSize = worldSize;
