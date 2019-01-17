@@ -3,6 +3,7 @@ import { toggleLobby } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
 import { textureMap } from "./models/textureMap";
+import { spriteModeMap } from "./models/spriteModeMap";
 
 import * as PIXI from "pixi.js";
 import { textureCache } from "./models/textureCache";
@@ -13,6 +14,7 @@ export const Settings = {
     mouseScale: 1.0,
     font: "sans-serif",
     leaderboardEnabled: true,
+	displayMinimap: "always",
     hudEnabled: true,
     namesEnabled: true,
     bandwidth: 100,
@@ -52,6 +54,7 @@ function save() {
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
     Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
+	Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").value;
     Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
@@ -69,6 +72,8 @@ function save() {
     console.log(Settings);
 
     if (reload) window.location.reload();
+	
+	executeMinimapSettings()
 }
 
 function reset() {
@@ -83,6 +88,9 @@ function load() {
             // copying value by value because cookies can be old versions
             // any values NOT in the cookie will remain defined with the new defaults
             for (const key in savedSettings) Settings[key] = savedSettings[key];
+
+            if (Settings.theme == "3ds2agh4z76feci")
+                Settings.theme = "516mkwof6m4d4tg";
         }
 
         document.getElementById("settingsThemeSelector").value = Settings.theme;
@@ -91,6 +99,7 @@ function load() {
         document.getElementById("settingsMouseScale").value = Settings.mouseScale;
         document.getElementById("settingsFont").value = Settings.font;
         document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
+		document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap
         document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
@@ -147,6 +156,59 @@ async function theme(v) {
                         });
                 });
             }
+
+            if (info.spriteModeMap)
+            {
+                for(var key in info.spriteModeMap)
+                {
+                    var modeMap = info.spriteModeMap[key];
+                    
+                    for(var mapKey in modeMap)
+                        spriteModeMap[key][mapKey] = modeMap[mapKey];
+                }
+            }
+
+
+            var downloadFile = function(key, filename)
+            {
+                zip.file(`daudmod/${filename}.png`)
+                .async("arraybuffer")
+                .then(ab => {
+                    const arrayBufferView = new Uint8Array(ab);
+                    const blob = new Blob([arrayBufferView], { type: "image/png" });
+                    const urlCreator = window.URL || window.webkitURL;
+                    const url = urlCreator.createObjectURL(blob);
+
+                    textureMap[key].url = url;
+
+                    if (window.Game && window.Game.cache)
+                    {
+                        textureCache.clear();
+                        window.Game.cache.refreshSprites();
+                        window.Game.reinitializeWorld();
+                    }
+
+                });
+
+            };
+
+            if (info.textureMap)
+            {
+                for(var key in info.textureMap)
+                {
+                    var map = info.textureMap[key];
+
+                    for(var textureKey in map)
+                    {
+                        if (!textureMap[key])
+                            textureMap[key] = {};
+
+                        textureMap[key][textureKey] = map[textureKey];
+                    }
+
+                    downloadFile(key, map.file);
+                }
+            }
         });
 }
 
@@ -188,3 +250,29 @@ document.getElementById("settingsReset").addEventListener("click", () => {
     reset();
     window.location.reload();
 });
+
+
+// minimap
+
+executeMinimapSettings()
+
+window.onkeydown = function(e) {
+	if (e.key === "w" && Settings.displayMinimap === "onkeypress") { document.getElementById("minimap").style.display = "block"; };
+}
+
+window.onkeyup = function(e) {
+	if (e.key === "w" && Settings.displayMinimap === "onkeypress" ) { document.getElementById("minimap").style.display = "none"; };
+}
+
+function executeMinimapSettings() {
+	if (Settings.displayMinimap === "never") {
+		document.getElementById("minimap").style.display = "none";
+		document.getElementById("minimapTip").style.display = "none";
+	} else if ( Settings.displayMinimap === "onkeypress") {
+		document.getElementById("minimap").style.display = "none";
+		document.getElementById("minimapTip").style.display = "block";
+	} else if ( Settings.displayMinimap === "always") {
+		document.getElementById("minimap").style.display = "block";
+		document.getElementById("minimapTip").style.display = "none";
+	}
+}

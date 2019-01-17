@@ -102,7 +102,7 @@
                     <select id="settingsThemeSelector" class="button1">
                         <option value="">default</option>
                         <option value="3ryhaa6boenvv2k">Bitty</option>
-                        <option value="3ds2agh4z76feci">Retro</option>
+                        <option value="516mkwof6m4d4tg">Retro</option>
                         <option value="c4yh49qs8uvms87">Universe</option>
                     </select>
                     <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" class="button1" value="">
@@ -130,6 +130,14 @@
                         <option value="none">none</option>
                         <option value="on">enabled</option>
                     </select>
+					
+					<label for="settingsDisplayMinimap">Display Minimap</label>
+                    <select id="settingsDisplayMinimap" class="button1">
+                        <option value="always">always</option>
+                        <option value="onkeypress">onkeypress</option>
+                        <option value="never">never</option>
+                    </select>
+                    <br />
 
                     <label for="settingsLog">Log Length</label>
                     <select id="settingsLog" class="button1">
@@ -361,11 +369,13 @@
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/flatbuffers.js"></script>
     <script type="text/javascript" src="js/game_generated.js"></script>
+	
+	<script type="text/javascript" src="js/settings.js"></script>
 
     <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="js/panel.js"></script>
     <script type="text/javascript" src="js/aboutCard.js"></script>
-
+	
 </body>
 
 </html>
