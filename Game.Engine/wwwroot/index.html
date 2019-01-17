@@ -30,6 +30,9 @@
 
         <div id="gameArea" class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
+			
+			<canvas id="minimap" width="200" height="200"></canvas>
+			<small id="minimapTip">Press W to toggle the minimap</small>
 
             <div id="bigLog"></div>
 
@@ -129,6 +132,14 @@
                         <option value="none">none</option>
                         <option value="on">enabled</option>
                     </select>
+					
+					<label for="settingsDisplayMinimap">Display Minimap</label>
+                    <select id="settingsDisplayMinimap" class="button1">
+                        <option value="always">always</option>
+                        <option value="onkeypress">onkeypress</option>
+                        <option value="never">never</option>
+                    </select>
+                    <br />
 
                     <label for="settingsLog">Log Length</label>
                     <select id="settingsLog" class="button1">
@@ -360,11 +371,13 @@
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/flatbuffers.js"></script>
     <script type="text/javascript" src="js/game_generated.js"></script>
+	
+	<script type="text/javascript" src="js/settings.js"></script>
 
     <script type="text/javascript" src="js/game.js"></script>
     <script type="text/javascript" src="js/panel.js"></script>
     <script type="text/javascript" src="js/aboutCard.js"></script>
-
+	
 </body>
 
 </html>

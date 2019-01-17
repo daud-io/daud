@@ -14,6 +14,7 @@ export const Settings = {
     mouseScale: 1.0,
     font: "sans-serif",
     leaderboardEnabled: true,
+	displayMinimap: "always",
     hudEnabled: true,
     namesEnabled: true,
     bandwidth: 100,
@@ -53,6 +54,7 @@ function save() {
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
     Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
+	Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").value;
     Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
@@ -70,6 +72,18 @@ function save() {
     console.log(Settings);
 
     if (reload) window.location.reload();
+	
+	// minimap display
+	if (Settings.displayMinimap === "never") {
+		document.getElementById("minimap").setAttribute("hidden", "hidden");
+		document.getElementById("minimapTip").setAttribute("hidden", "hidden");
+	} else if ( Settings.displayMinimap === "onkeypress") {
+		document.getElementById("minimap").removeAttribute("hidden");
+		document.getElementById("minimapTip").removeAttribute("hidden");
+	} else if ( Settings.displayMinimap === "always") {
+		document.getElementById("minimap").removeAttribute("hidden");
+		document.getElementById("minimapTip").setAttribute("hidden", "hidden");
+	}
 }
 
 function reset() {
@@ -95,6 +109,7 @@ function load() {
         document.getElementById("settingsMouseScale").value = Settings.mouseScale;
         document.getElementById("settingsFont").value = Settings.font;
         document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
+		document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap
         document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
         document.getElementById("settingsBandwidth").value = Settings.bandwidth;
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
@@ -245,3 +260,14 @@ document.getElementById("settingsReset").addEventListener("click", () => {
     reset();
     window.location.reload();
 });
+
+
+// minimap toggle
+
+window.onkeydown = function(e) {
+	if (e.key === "w" && Settings.displayMinimap === "onkeypress") { document.getElementById("minimap").removeAttribute("hidden") };
+}
+
+window.onkeyup = function(e) {
+	if (e.key === "w" && Settings.displayMinimap === "onkeypress" ) { document.getElementById("minimap").setAttribute("hidden", "hidden") };
+}
