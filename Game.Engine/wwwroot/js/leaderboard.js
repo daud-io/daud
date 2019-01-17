@@ -6,7 +6,7 @@ var leaderboard = document.getElementById("leaderboard");
 var leaderboardLeft = document.getElementById("leaderboard-left");
 var leaderboardCenter = document.getElementById("leaderboard-center");
 const minimap = document.getElementById("minimap");
-var minimapCtx = minimap.getContext("2d");
+const minimapCtx = minimap.getContext("2d");
 
 export function clear() {
     leaderboard.innerHTML = "";
@@ -15,6 +15,7 @@ export function clear() {
     leaderboardCenter.style.width = null;
     leaderboardCenter.style.height = null;
 }
+
 export class Leaderboard {
     constructor() {
         this.data = false;
@@ -22,6 +23,8 @@ export class Leaderboard {
 
     setData(data, position, worldSize, fleetID) {
         this.data = data;
+        this.worldSize = worldSize;
+
         if (this.data.Record) {
             record.style.fontFamily = Settings.font;
             record.innerHTML = `record: ${this.data.Record.Name || "Unknown Fleet"} - ${this.data.Record.Score}`;
@@ -43,22 +46,9 @@ export class Leaderboard {
                 const entry = this.data.Entries[i];
                 const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 
-                var entryIsSelf = entry.FleetID == fleetID;
-
                 // minimap
-                var minimapX = ((entry.Position.X + worldSize) / 2 / worldSize) * minimap.width - 2;
-                var minimapY = ((entry.Position.Y + worldSize) / 2 / worldSize) * minimap.height - 2;
-
-                drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf);
-
-                /*
-                if (!entryIsSelf) {
-					minimapCtx.fillStyle = entry.Color;
-					minimapCtx.fillRect(minimapX, minimapY, 4, 4);
-                } else {
-					minimapCtx.fillStyle = "white";
-					minimapCtx.fillRect(minimapX-1, minimapY-1, 6, 6);
-				}*/
+                var entryIsSelf = entry.FleetID == fleetID;
+                this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf);
 
                 out +=
                     `<tr>` +
@@ -82,17 +72,8 @@ export class Leaderboard {
 
                 // minimap
                 if (i > 1) {
-                    var minimapX = ((entry.Position.X + worldSize) / 2 / worldSize) * minimap.width - 2;
-                    var minimapY = ((entry.Position.Y + worldSize) / 2 / worldSize) * minimap.height - 2;
-
                     var entryIsSelf = entry.FleetID == fleetID;
-                    if (!entryIsSelf) {
-                        minimapCtx.fillStyle = entry.Color;
-                        minimapCtx.fillRect(minimapX, minimapY, 4, 4);
-                    } else {
-                        minimapCtx.fillStyle = "white";
-                        minimapCtx.fillRect(minimapX - 1, minimapY - 1, 6, 6);
-                    }
+                    this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf);
                 }
 
                 let str =
@@ -127,17 +108,8 @@ export class Leaderboard {
 
                 // minimap
                 if (i > 1) {
-                    var minimapX = ((entry.Position.X + worldSize) / 2 / worldSize) * minimap.width - 2;
-                    var minimapY = ((entry.Position.Y + worldSize) / 2 / worldSize) * minimap.height - 2;
-
                     var entryIsSelf = entry.FleetID == fleetID;
-                    if (!entryIsSelf) {
-                        minimapCtx.fillStyle = entry.Color;
-                        minimapCtx.fillRect(minimapX, minimapY, 4, 4);
-                    } else {
-                        minimapCtx.fillStyle = "white";
-                        minimapCtx.fillRect(minimapX - 1, minimapY - 1, 6, 6);
-                    }
+                    this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf);
                 }
 
                 let str =
@@ -219,17 +191,17 @@ export class Leaderboard {
                 `</tr></tbody>`;
         }
     }
-}
 
-function drawMinimap(x, y, color, self) {
-    var minimapX = ((x + worldSize) / 2 / worldSize) * minimap.width - 2;
-    var minimapY = ((y + worldSize) / 2 / worldSize) * minimap.height - 2;
+    drawMinimap(x, y, color, self) {
+        var minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimap.width - 2;
+        var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimap.height - 2;
 
-    if (!self) {
-        minimapCtx.fillStyle = entry.Color;
-        minimapCtx.fillRect(minimapX, minimapY, 4, 4);
-    } else {
-        minimapCtx.fillStyle = "white";
-        minimapCtx.fillRect(minimapX - 1, minimapY - 1, 6, 6);
+        if (!self) {
+            minimapCtx.fillStyle = color;
+            minimapCtx.fillRect(minimapX, minimapY, 4, 4);
+        } else {
+            minimapCtx.fillStyle = "white";
+            minimapCtx.fillRect(minimapX - 1, minimapY - 1, 6, 6);
+        }
     }
 }
