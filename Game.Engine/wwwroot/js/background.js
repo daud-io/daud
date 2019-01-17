@@ -10,8 +10,7 @@ export class Background {
         var textureDefinition = RenderedObject.getTextureDefinition(textureName);
         var textures = RenderedObject.loadTexture(textureDefinition, textureName);
 
-        if (textures.length > 0)
-        {
+        if (textures.length > 0) {
             this.backgroundSprite = new PIXI.extras.TilingSprite(textures[0], 200000, 200000);
             this.backgroundSprite.tileScale.set(spriteDefinition.scaleFactor || 10, spriteDefinition.scaleFactor || 10);
             this.backgroundSprite.position.x = -100000;
@@ -22,10 +21,7 @@ export class Background {
     }
 
     draw(cache, interpolator, currentTime) {
-
-        if (Settings.background == "none" && this.backgroundSprite.visible)
-            this.backgroundSprite.visible = false;
-        if (Settings.background == "on" && !this.backgroundSprite.visible)
-            this.backgroundSprite.visible = true;
+        if (Settings.background == "none" && this.backgroundSprite.visible) this.backgroundSprite.visible = false;
+        if (Settings.background == "on" && !this.backgroundSprite.visible) this.backgroundSprite.visible = true;
     }
 }

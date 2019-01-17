@@ -14,63 +14,42 @@ export class RenderedObject {
         return "default";
     }
 
-    static getTextureImage(textureName)
-    {
+    static getTextureImage(textureName) {
         var textureDefinition = RenderedObject.getTextureDefinition(textureName);
 
-        if (textureDefinition === false)
-            console.log(`cannot load texture '${textureName}'`);
+        if (textureDefinition === false) console.log(`cannot load texture '${textureName}'`);
 
         var img = new Image();
-        if (textureDefinition.url)
-            img.src = textureDefinition.url;
-        else
-            img.src = images[textureDefinition.file];
+        if (textureDefinition.url) img.src = textureDefinition.url;
+        else img.src = images[textureDefinition.file];
         return img;
     }
 
-    static loadTexture(textureDefinition, textureName)
-    {
+    static loadTexture(textureDefinition, textureName) {
         var textures = textureCache[textureName];
 
         if (!textures) {
             textures = [];
 
             var img = new Image();
-            if (textureDefinition.url)
-                img.src = textureDefinition.url;
-            else
-                img.src = images[textureDefinition.file];
+            if (textureDefinition.url) img.src = textureDefinition.url;
+            else img.src = images[textureDefinition.file];
 
             var baseTexture = new PIXI.Texture.fromLoader(img);
 
             if (textureDefinition.animated) {
-
                 var tileSize = textureDefinition.tileSize || 32;
                 var totalTiles = textureDefinition.tileCount || 1;
 
                 for (var tileIndex = 0; tileIndex < totalTiles; tileIndex++) {
-
                     var sx = tileSize * (tileIndex % totalTiles);
                     var sy = 0;
                     var sw = tileSize;
                     var sh = tileSize;
 
-                    textures.push(
-                        new PIXI.Texture(
-                            baseTexture, 
-                            new PIXI.Rectangle(sx, sy, sw, sh), 
-                            false,
-                            false, 
-                            textureDefinition.rotate || 0
-                        )
-                    );
+                    textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), false, false, textureDefinition.rotate || 0));
                 }
-            }
-            else
-                textures.push(baseTexture);
-
-
+            } else textures.push(baseTexture);
 
             textureCache[textureName] = textures;
         }
@@ -78,8 +57,7 @@ export class RenderedObject {
         return textures;
     }
 
-    static getTextureDefinition(textureName)
-    {
+    static getTextureDefinition(textureName) {
         return textureMap[textureName];
     }
 
@@ -99,22 +77,18 @@ export class RenderedObject {
         pixiSprite.pivot.x = pixiSprite.width / 2;
         pixiSprite.pivot.y = pixiSprite.height / 2;
         pixiSprite.position.x = 0;
-        pixiSprite.position.y = 0
+        pixiSprite.position.y = 0;
         pixiSprite.baseScale = textureDefinition.scale;
-        pixiSprite.baseOffset = textureDefinition.offset || {x:0,y:0};
+        pixiSprite.baseOffset = textureDefinition.offset || { x: 0, y: 0 };
 
-
-        if (textureDefinition.animated)
-            pixiSprite.play();
+        if (textureDefinition.animated) pixiSprite.play();
 
         return pixiSprite;
     }
 
-    static getSpriteDefinition(spriteName)
-    {
+    static getSpriteDefinition(spriteName) {
         var spriteDefinition = false;
-        if (spriteModeMap[spriteName])
-            spriteDefinition = spriteModeMap[spriteName];
+        if (spriteModeMap[spriteName]) spriteDefinition = spriteModeMap[spriteName];
 
         return spriteDefinition;
     }
@@ -124,11 +98,9 @@ export class RenderedObject {
         var modeName = this.getMode(mode);
         var spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
 
-        if (spriteDefinition.modes[modeName])
-            layers = spriteModeMap[spriteName].modes[modeName];
+        if (spriteDefinition.modes[modeName]) layers = spriteModeMap[spriteName].modes[modeName];
 
-        if (!layers && spriteDefinition.modes["default"])
-            layers = spriteModeMap[spriteName].modes["default"];
+        if (!layers && spriteDefinition.modes["default"]) layers = spriteModeMap[spriteName].modes["default"];
 
         return layers;
     }
@@ -144,9 +116,7 @@ export class RenderedObject {
             }
 
             return spriteLayers;
-        }
-        else
-            return false;
+        } else return false;
     }
 
     destroy() {
@@ -164,8 +134,7 @@ export class RenderedObject {
         }
     }
 
-    refreshSprite()
-    {
+    refreshSprite() {
         this.setSprite(this.currentSpriteName, this.currentMode, true);
     }
 
@@ -187,29 +156,23 @@ export class RenderedObject {
         }
     }
 
-    preRender(time, interpolator)
-    {
-        if (this.body)
-        {
+    preRender(time, interpolator) {
+        if (this.body) {
             var newPosition = interpolator.projectObject(this.body, time);
             this.moveSprites(newPosition, this.body.Size);
         }
     }
 
-    moveSprites(interpolatedPosition, size)
-    {
+    moveSprites(interpolatedPosition, size) {
         var angle = interpolatedPosition.Angle;
 
         this.foreachLayer(function(layer, index) {
-
             layer.pivot.x = layer.texture.width / 2;
             layer.pivot.y = layer.texture.height / 2;
 
-            layer.position.x = interpolatedPosition.X
-                + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle));
+            layer.position.x = interpolatedPosition.X + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle));
 
-            layer.position.y = interpolatedPosition.Y
-                + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle));
+            layer.position.y = interpolatedPosition.Y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle));
 
             layer.rotation = angle;
             layer.scale.set(size * layer.baseScale, size * layer.baseScale);
@@ -224,9 +187,9 @@ export class RenderedObject {
 
     foreachLayer(action) {
         if (this.spriteLayers && this.spriteLayers.length)
-        for (var i = 0; i < this.spriteLayers.length; i++) {
-            var layer = this.spriteLayers[i];
-            action.apply(this, [layer, i]);
-        }
+            for (var i = 0; i < this.spriteLayers.length; i++) {
+                var layer = this.spriteLayers[i];
+                action.apply(this, [layer, i]);
+            }
     }
 }

@@ -64,10 +64,9 @@ window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 window.Game.cache = cache;
 
-window.Game.reinitializeWorld = function()
-{
+window.Game.reinitializeWorld = function() {
     Controls.initializeWorld(currentWorld);
-}
+};
 
 const bodyFromServer = (cache, body) => {
     const originalPosition = body.originalPosition();
@@ -204,9 +203,9 @@ connection.onView = newView => {
     Game.Stats.spectatorCount = newView.spectatorCount();
 
     if (newView.worldSize() != border.worldSize) {
-        worldSize = newView.worldSize()
+        worldSize = newView.worldSize();
         border.updateWorldSize(newView.worldSize());
-    };
+    }
 
     cooldown.setCooldown(newView.cooldownShoot());
     /*console.log({

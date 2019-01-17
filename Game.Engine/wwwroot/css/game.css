@@ -458,10 +458,10 @@ table {
 }
 
 #settingsContainer {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #worldSelector {
@@ -639,8 +639,8 @@ input:checked + .slider:before {
 }
 
 #fullPageCard #fullPageCardOuterContainer {
-	max-height: 80vh;
-	overflow-y: auto;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 #fullPageCard #fullPageCardInnerContainer {
@@ -651,21 +651,21 @@ input:checked + .slider:before {
 }
 
 @media only screen and (max-width: 1250px) {
-	#fullPageCard #fullPageCardInnerContainer {
-		column-count: 2;
-	}
+    #fullPageCard #fullPageCardInnerContainer {
+        column-count: 2;
+    }
 }
 
 @media only screen and (max-width: 700px) {
-	#fullPageCard #fullPageCardInnerContainer {
-		column-count: 1;
-	}
+    #fullPageCard #fullPageCardInnerContainer {
+        column-count: 1;
+    }
 }
 
 #fullPageCard section {
-   -webkit-column-break-inside: avoid;
-   -moz-column-break-inside: avoid;
-   break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    break-inside: avoid;
 }
 
 .spectating #fullPageCard,
@@ -782,7 +782,7 @@ table {
     bottom: 55px;
     left: 15px;
     font-size: 12pt;
-	text-align: left;
+    text-align: left;
 }
 #gameCanvas2 {
     position: absolute;
@@ -868,24 +868,23 @@ progress::-webkit-progress-value {
 }
 
 #bigLog {
-	position: absolute;
-	top: 15%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 25px;
-	font-weight: bold;
-	/*text-shadow: 0px 0px 1px #FFF;*/
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 25px;
+    font-weight: bold;
+    /*text-shadow: 0px 0px 1px #FFF;*/
 }
 
 #settingsTable {
-	margin: 10px auto 10px auto;
+    margin: 10px auto 10px auto;
 }
 
 #minimap {
-	position: absolute;
-	right: 15px;
-	bottom: 15px;
-	border: 1px solid #999;
-	background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
+    border: 1px solid #999;
+    background-color: rgba(0, 0, 0, 0.5);
 }
-	
