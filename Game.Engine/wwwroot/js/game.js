@@ -8,6 +8,7 @@ import { Camera } from "./camera";
 import { Cache } from "./cache";
 import { Interpolator } from "./interpolator";
 import { Leaderboard, clear as clearLeaderboards } from "./leaderboard";
+import { Minimap } from "./minimap";
 import { HUD } from "./hud";
 import { Log } from "./log";
 import { Cooldown } from "./cooldown";
@@ -33,6 +34,7 @@ const border = new Border(container);
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
+const minimap = new Minimap();
 const hud = new HUD();
 const log = new Log();
 const cooldown = new Cooldown();
@@ -109,8 +111,8 @@ const groupFromServer = (cache, group) => {
 };
 
 connection.onLeaderboard = lb => {
-    leaderboard.setData(lb, lastPosition, worldSize, fleetID);
-    leaderboard.position = lastPosition;
+    leaderboard.update(lb, lastPosition);
+    minimap.update(lb, worldSize, fleetID);
 };
 
 var fleetID = 0;
