@@ -25,3 +25,13 @@ export class Background {
         if (Settings.background == "on" && !this.backgroundSprite.visible) this.backgroundSprite.visible = true;
     }
 }
+
+/*
+window.onkeydown = function(e) {
+	if (e.key === "w" && Settings.displayMinimap === "onkeypress") { alert("test1") };
+}
+
+window.onkeyup = function(e) {
+	if (e.key === "w" && Settings.displayMinimap === "onkeypress" ) { alert("test2") };
+}
+*/

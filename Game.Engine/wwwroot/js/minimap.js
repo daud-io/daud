@@ -35,8 +35,8 @@ export class Minimap {
         }
     }
     drawMinimap(x, y, color, self) {
-        var minimapX = ((x + this.worldSize) / 2 / this.worldSize) * 200;
-        var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * 200;
+        var minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimap.width - 2;
+		var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimap.height - 2;
 
         if (!self) {
             this.ctx

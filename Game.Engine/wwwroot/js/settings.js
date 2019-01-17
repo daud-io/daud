@@ -73,7 +73,7 @@ function save() {
 
     if (reload) window.location.reload();
 	
-	executeMinimapSettings()
+	//executeMinimapSettings()
 }
 
 function reset() {
@@ -254,15 +254,7 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 
 // minimap
 
-executeMinimapSettings()
-
-window.onkeydown = function(e) {
-	if (e.key === "w" && Settings.displayMinimap === "onkeypress") { document.getElementById("minimap").style.display = "block"; };
-}
-
-window.onkeyup = function(e) {
-	if (e.key === "w" && Settings.displayMinimap === "onkeypress" ) { document.getElementById("minimap").style.display = "none"; };
-}
+// executeMinimapSettings()
 
 function executeMinimapSettings() {
 	if (Settings.displayMinimap === "never") {
