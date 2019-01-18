@@ -1,6 +1,6 @@
 import { Settings } from "./settings";
 
-const minimapSize = 200;
+const minimapSize = 180;
 const minimapMarginBottom = 15;
 const minimapMarginRight = 15;
 
@@ -21,8 +21,8 @@ export class Minimap {
         stage.addChild(this.ctx);
     }
     size(size) {
-        this.ctx.position.x = size.width - 215;
-        this.ctx.position.y = size.height - 215;
+        this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
+        this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
     }
     checkDisplay() {
         if (Settings.displayMinimap != this.ctx.visible) this.ctx.visible = Settings.displayMinimap;
