@@ -7,7 +7,7 @@ const crownImg = document.getElementById("crownImg");
 
 const colors = {
     red: 0xff0000,
-    pink: 0xffc0cb,
+    pink: 0xff00cb,
     orange: 0xffa500,
     yellow: 0xffff00,
     cyan: 0x00ffff,
@@ -52,34 +52,32 @@ export class Minimap {
 			// mark "self" player
 			this.ctx
                 .beginFill(0xffffff)
+				.lineStyle(1, 0xffffff)
                 .drawRect(minimapX - 3, minimapY - 3, 6, 6)
                 .endFill();
         } else if (rank === 0) {
 			// mark the king
-			this.ctx
-				.beginFill(0xdaa520)
-                .drawRect(minimapX - 3, minimapY - 3, 6, 6)
-                .endFill();
-			/*
+			//this.ctx.drawImage(crownImg, 0, 0);
+				//.beginFill(0xdaa520)
+                //.drawRect(minimapX - 3, minimapY - 3, 6, 6)
+                //.endFill();
 			var x = minimapX - 4;
 			var y = minimapY - 2;
-			const ctx2 = this.ctx;
-			this.ctx.beginPath();
-			this.ctx.moveTo(0+x, 0+y);
-			this.ctx.lineTo(2+x, 2+y);
-			this.ctx.lineTo(4+x, 0+y);
-			this.ctx.lineTo(6+x, 2+y);
-			this.ctx.lineTo(8+x, 0+y);
-			this.ctx.lineTo(8+x, 4+y);
-			this.ctx.lineTo(0+x, 4+y);
-			this.ctx.closePath();
-			this.ctx.strokeStyle = "gold";
-			this.ctx.stroke();
-			this.ctx.fillStyle = "gold";
-			this.ctx.fill();
-			*/
+			this.ctx
+				.beginFill(0xdaa520)
+				.lineStyle(1, 0xdaa520)
+			    .moveTo(x,y)
+				.lineTo(2+x, 2+y)
+				.lineTo(4+x, 0+y)
+				.lineTo(6+x, 2+y)
+				.lineTo(8+x, 0+y)
+				.lineTo(8+x, 4+y)
+				.lineTo(0+x, 4+y)
+				.closePath()
+				.endFill();
 		} else {
             this.ctx
+				.lineStyle(1, colors[color])
                 .beginFill(colors[color])
                 .drawRect(minimapX - 2, minimapY - 2, 4, 4)
                 .endFill();
