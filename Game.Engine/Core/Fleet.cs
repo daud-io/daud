@@ -201,7 +201,7 @@
 
         public void Abandon()
         {
-            foreach (var ship in Ships)
+            foreach (var ship in Ships.ToList())
                 this.AbandonShip(ship);
         }
 

@@ -1,4 +1,3 @@
-/*
 const hintbox = document.getElementById("hintbox");
 
 const texts = [
@@ -36,4 +35,3 @@ if (new Date().getTime() < eventStart.getTime()) {
         index++;
     }, 6000);
 }
-*/
