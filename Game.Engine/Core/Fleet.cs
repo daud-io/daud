@@ -341,6 +341,7 @@
                         MathF.Cos(angle), 
                         MathF.Sin(angle)
                     ) * 100;
+                ship.Momentum = Ships[0].Momentum;
                 ship.Angle = angle;
             }
         }
