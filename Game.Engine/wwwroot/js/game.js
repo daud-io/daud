@@ -34,7 +34,7 @@ const border = new Border(container);
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
-const minimap = new Minimap();
+const minimap = new Minimap(app.stage, size);
 const hud = new HUD();
 const log = new Log();
 const cooldown = new Cooldown();
@@ -324,6 +324,7 @@ const sizeCanvas = () => {
 
     size.width = width;
     size.height = height;
+    minimap.size(size);
     app.renderer.resize(width, height);
     container.scale.set(width / 5500, width / 5500);
 };
