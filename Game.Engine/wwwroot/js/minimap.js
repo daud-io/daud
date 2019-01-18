@@ -61,8 +61,8 @@ export class Minimap {
 				//.beginFill(0xdaa520)
                 //.drawRect(minimapX - 3, minimapY - 3, 6, 6)
                 //.endFill();
-			var x = minimapX - 4;
-			var y = minimapY - 2;
+			var x = Math.floor(minimapX - 4);
+			var y = Math.floor(minimapY - 2);
 			this.ctx
 				.beginFill(0xdaa520)
 				.lineStyle(1, 0xdaa520)
