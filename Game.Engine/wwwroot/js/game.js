@@ -263,8 +263,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
     Controls.initializeWorld(world);
 };
 
-function doSpawn()
-{
+function doSpawn() {
     Events.Spawn();
     aliveSince = gameTime;
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());

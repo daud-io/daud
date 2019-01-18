@@ -104,7 +104,6 @@ export class Cache {
                 if (update.renderer) update.renderer.update(update);
             }
 
-
             if (!existing) {
                 if (update.Sprite.indexOf("ship") == 0) {
                     var fleet = false;
@@ -131,10 +130,8 @@ export class Cache {
                 } else if (update.Sprite.indexOf("bullet")) update.renderer = new Bullet(this.container);
                 else update.renderer = new RenderedObject(this.container);
 
-
                 var group = false;
-                if (update.Group != 0)
-                    group = this.groups[`g-${update.Group}`];
+                if (update.Group != 0) group = this.groups[`g-${update.Group}`];
 
                 update.zIndex = group.ZIndex || 0;
                 update.renderer.update(update);

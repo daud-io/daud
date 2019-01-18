@@ -873,17 +873,17 @@ progress::-webkit-progress-value {
 }
 
 #minimap {
-	position: absolute;
-	bottom: 15px;
-	right: 15px;
-	background-color: rgba(0, 0, 0, 0.5);
-	border: 1px solid #999;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #999;
 }
 
 #minimapTip {
-	display: block;
-	position: absolute;
-	bottom: 0px;
-	right: 15px;
-	color: #777;
+    display: block;
+    position: absolute;
+    bottom: 0px;
+    right: 15px;
+    color: #777;
 }

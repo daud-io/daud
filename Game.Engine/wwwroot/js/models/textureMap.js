@@ -115,7 +115,7 @@
     arrow: { file: "arrow", scale: 1 },
 
     // Capture the Flag
-    ctf_base: { file: "ctf_base", scale: 0.0030 },
+    ctf_base: { file: "ctf_base", scale: 0.003 },
     ctf_flag_blue: {
         file: "ctf_flag_blue",
         animated: true,

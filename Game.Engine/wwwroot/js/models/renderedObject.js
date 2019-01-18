@@ -122,7 +122,7 @@ export class RenderedObject {
             for (var i = 0; i < layers.length; i++) {
                 var spriteLayer = this.buildSprite(layers[i]);
                 spriteLayer.zIndex = zIndex;
-                
+
                 spriteLayers.push(spriteLayer);
             }
 
@@ -151,12 +151,7 @@ export class RenderedObject {
 
     setSprite(spriteName, mode, zIndex, reload) {
         // check that we really need to change anything
-        if (reload 
-            || spriteName != this.currentSpriteName 
-            || mode != this.currentMode
-            || zIndex != this.currentZIndex
-            ) {
-
+        if (reload || spriteName != this.currentSpriteName || mode != this.currentMode || zIndex != this.currentZIndex) {
             this.currentSpriteName = spriteName;
             this.currentMode = mode;
             this.currentZIndex = zIndex;
@@ -198,7 +193,7 @@ export class RenderedObject {
 
     update(updateData) {
         this.body = updateData;
-        
+
         this.setSprite(updateData.Sprite, updateData.Mode, false, updateData.zIndex);
     }
 
