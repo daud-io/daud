@@ -99,11 +99,10 @@ export class Leaderboard {
                 }
             }
 
-            const self = this;
 
             const flagStatus = {
-                cyan: self.data.Entries[0].ModeData.flagStatus,
-                red: self.data.Entries[1].ModeData.flagStatus
+                cyan: data.Entries[0].ModeData.flagStatus,
+                red: data.Entries[1].ModeData.flagStatus
             };
 
             const cyanFlagStatus = document.getElementById("ctf_cyan").getElementsByClassName("flag_status")[0];
@@ -126,8 +125,8 @@ export class Leaderboard {
             }
 
             const findTeam = teamName => {
-                for (let i = 0; i < self.data.Entries.length; i++) {
-                    if (self.data.Entries[i].Name == teamName) return self.data.Entries[i];
+                for (let i = 0; i < data.Entries.length; i++) {
+                    if (data.Entries[i].Name == teamName) return data.Entries[i];
                 }
                 return false;
             };
