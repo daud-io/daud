@@ -224,6 +224,7 @@
                 Hook = hook,
                 Name = "Boss Mode",
                 Description = "So many Circles! Much wow!",
+                AllowedColors = AllColors
             };
         }
 
