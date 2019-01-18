@@ -64,7 +64,8 @@
     },
     ship_red: {
         modes: {
-            default: ["ship_red"],
+            //default: ["ship_red"],
+            default: ["ship_red", "ship_gray"],
             weaponupgrade: ["ship_red", "circles"],
             boost: ["ship_red", "thruster_red"],
             invulnerable: ["ship_red", "obstacle"]

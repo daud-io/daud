@@ -81,7 +81,19 @@ export class RenderedObject {
             pixiSprite = new PIXI.Sprite(textures[0]);
         }
 
-        if (textureDefinition.tint) pixiSprite.tint = textureDefinition.tint;
+        if (textureDefinition.tint)
+        {
+            if (typeof textureDefinition.tint == "string")
+                pixiSprite.tint = parseInt(textureDefinition.tint)
+            else
+                pixiSprite.tint = textureDefinition.tint;
+        }
+
+        if (textureDefinition.blendMode)
+            pixiSprite.alpha = textureDefinition.alpha;
+
+        if (textureDefinition.blendMode)
+            pixiSprite.blendMode = textureDefinition.blendMode;
 
         pixiSprite.pivot.x = pixiSprite.width / 2;
         pixiSprite.pivot.y = pixiSprite.height / 2;

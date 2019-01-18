@@ -1,4 +1,29 @@
-﻿export var textureMap = {
+﻿/*export const BLEND_MODES = {
+    NORMAL:         0,
+    ADD:            1,
+    MULTIPLY:       2,
+    SCREEN:         3,
+    OVERLAY:        4,
+    DARKEN:         5,
+    LIGHTEN:        6,
+    COLOR_DODGE:    7,
+    COLOR_BURN:     8,
+    HARD_LIGHT:     9,
+    SOFT_LIGHT:     10,
+    DIFFERENCE:     11,
+    EXCLUSION:      12,
+    HUE:            13,
+    SATURATION:     14,
+    COLOR:          15,
+    LUMINOSITY:     16,
+    NORMAL_NPM:     17,
+    ADD_NPM:        18,
+    SCREEN_NPM:     19,
+};
+*/
+
+
+export var textureMap = {
     bg: { file: "bg", scale: 1 },
 
     // fish
@@ -16,7 +41,8 @@
     ship_green: { file: "ship_green", scale: 0.02 },
     ship_orange: { file: "ship_orange", scale: 0.02 },
     ship_pink: { file: "ship_pink", scale: 0.02 },
-    ship_red: { file: "ship_red", scale: 0.02 },
+    //ship_red: { file: "ship_red", scale: 0.02 },
+    ship_red: { file: "ship_flash", scale: 0.02, tint: "0xFF0000", alpha: 0.4, blendMode: 1 },
     ship_yellow: { file: "ship_yellow", scale: 0.02 },
 
     // premium ships
