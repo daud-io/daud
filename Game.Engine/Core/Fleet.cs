@@ -251,6 +251,7 @@
 
                 Flock(ship);
                 Snake(ship);
+                Ring(ship);
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
@@ -329,6 +330,24 @@
             ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
         }
 
+        private void Ring(Ship ship)
+        {
+            if (World.Hook.BossMode == false)
+                return;
+
+            var shipIndex = Ships.IndexOf(ship);
+            var angle = (shipIndex-1)/(float)(Ships.Count-1) * 2 * MathF.PI;
+            if (shipIndex > 0)
+            {
+                ship.Position = Ships[0].Position + 
+                    new Vector2(
+                        MathF.Cos(angle), 
+                        MathF.Sin(angle)
+                    ) * (30 + 10 * Ships.Count);
+                ship.Momentum = Ships[0].Momentum;
+                ship.Angle = angle;
+            }
+        }
         private void Snake(Ship ship)
         {
             if (World.Hook.SnakeWeight == 0)
