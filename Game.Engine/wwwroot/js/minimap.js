@@ -61,8 +61,15 @@ export class Minimap {
 				//.beginFill(0xdaa520)
                 //.drawRect(minimapX - 3, minimapY - 3, 6, 6)
                 //.endFill();
-			var x = Math.floor(minimapX - 4);
-			var y = Math.floor(minimapY - 2);
+			var x = minimapX - 4;
+			var y = minimapY - 2;
+			var crown = PIXI.Sprite.fromImage("../img/crown.png");
+			crown.scale = 8 / 64;
+			crown.anchor.set(0.5);
+			crown.x = minimapX;
+			crown.y = minimapY;
+			this.ctx.addChild(crown);
+			/*
 			this.ctx
 				.beginFill(0xdaa520)
 				.lineStyle(1, 0xdaa520)
@@ -74,7 +81,7 @@ export class Minimap {
 				.lineTo(8+x, 4+y)
 				.lineTo(0+x, 4+y)
 				.closePath()
-				.endFill();
+				.endFill();*/
 		} else {
             this.ctx
 				.lineStyle(1, colors[color])
