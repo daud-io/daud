@@ -73,6 +73,7 @@
                     FlockSeparationMinimumDistance = 200,
                     FlockWeight = 0.14f,
                     SnakeWeight = 0f,
+                    BossMode = false,
 
                     ShipGainBySizeM = -0.03f,
                     ShipGainBySizeB = 1.03f,
@@ -170,6 +171,7 @@
         public int FlockSeparationMinimumDistance { get; set; }
         public float FlockWeight { get; set; }
         public float SnakeWeight { get; set; }
+        public bool BossMode { get; set; }
 
         public int FlockSpeed { get; set; }
 

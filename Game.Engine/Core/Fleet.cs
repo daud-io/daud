@@ -332,6 +332,9 @@
 
         private void Ring(Ship ship)
         {
+            if (World.Hook.BossMode == false)
+                return;
+
             var shipIndex = Ships.IndexOf(ship);
             var angle = (shipIndex-1)/(float)(Ships.Count-1) * 2 * MathF.PI;
             if (shipIndex > 0)

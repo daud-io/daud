@@ -33,6 +33,7 @@
             AllWorlds.Add("ctf", WorldCTF());
             AllWorlds.Add("sharks", WorldSharks());
             AllWorlds.Add("sumo", WorldSumo());
+            AllWorlds.Add("boss", WorldBoss());
         }
 
         private static World WorldDefault()
@@ -205,6 +206,21 @@
                         Shark = Color == "red",
                     };
                 }
+            };
+        }
+
+        private static World WorldBoss()
+        {
+            var hook = Hook.Default;
+            hook.BotBase = 3;
+            hook.BossMode = true;
+            hook.SpawnShipCount = 8;
+
+            return new World
+            {
+                Hook = hook,
+                Name = "Boss Mode",
+                Description = "So many Circles! Much wow!",
             };
         }
 
