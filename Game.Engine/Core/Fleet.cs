@@ -340,7 +340,7 @@
                     new Vector2(
                         MathF.Cos(angle), 
                         MathF.Sin(angle)
-                    ) * 100;
+                    ) * (30 + 10 * Ships.Count);
                 ship.Momentum = Ships[0].Momentum;
                 ship.Angle = angle;
             }
