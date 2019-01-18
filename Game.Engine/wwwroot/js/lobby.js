@@ -71,6 +71,9 @@ export var LobbyCallbacks = {
 function refreshList() {
     if (!showing && !firstLoad) return;
 
+    var autoJoin = firstLoad;
+    firstLoad = false;
+
     fetch("/api/v1/server/worlds", {
         method: "GET",
         headers: {
@@ -87,9 +90,7 @@ function refreshList() {
 
                 buildList(response);
 
-                if (firstLoad) joinWorld("default");
-
-                firstLoad = false;
+                if (autoJoin) joinWorld("default");
             }
         });
 }
@@ -112,7 +113,8 @@ function show() {
 }
 
 function joinWorld(worldKey) {
-    LobbyCallbacks.onWorldJoin(worldKey, allWorlds[worldKey]);
+    if (LobbyCallbacks.onWorldJoin)
+        LobbyCallbacks.onWorldJoin(worldKey, allWorlds[worldKey]);
     hide();
 }
 
@@ -133,5 +135,5 @@ document.getElementById("arenas").addEventListener("click", e => {
     return false;
 });
 
-refreshList();
+//refreshList();
 setInterval(refreshList, 1000);

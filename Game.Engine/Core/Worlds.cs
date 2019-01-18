@@ -194,7 +194,10 @@
             {
                 Hook = hook,
                 Name = "Sharks and Minnows",
-                Description = "Sharks vs. Minnows",
+                Description = "Sharks and Minnows",
+                Instructions = "how to score:<br><br>"
+                    + " - Sharks (red) hunt<br>"
+                    + " - Minnows (blue) run towards borders (left & right)",
                 AllowedColors = TeamColors,
                 NewFleetGenerator = delegate (Player p, string Color)
                 {
@@ -221,6 +224,7 @@
                 Hook = hook,
                 Name = "Boss Mode",
                 Description = "So many Circles! Much wow!",
+                AllowedColors = AllColors
             };
         }
 

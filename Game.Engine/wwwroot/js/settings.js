@@ -1,5 +1,4 @@
 import { fetch } from "whatwg-fetch";
-import { toggleLobby } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
 import { textureMap } from "./models/textureMap";
@@ -220,19 +219,16 @@ if (Settings.themeCustom) {
 
 const gear = document.getElementById("gear");
 document.getElementById("settings").addEventListener("click", () => {
-    toggleLobby();
     gear.classList.remove("closed");
 });
 
 document.getElementById("settingsCancel").addEventListener("click", () => {
-    toggleLobby();
     gear.classList.add("closed");
 });
 
 document.getElementById("settingsSave").addEventListener("click", () => {
     save();
     load();
-    toggleLobby();
     gear.classList.add("closed");
 });
 
