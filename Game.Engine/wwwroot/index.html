@@ -30,7 +30,8 @@
 
         <div id="gameArea" class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
-			<small id="minimapTip">Press W to toggle the minimap</small>
+
+            <small id="minimapTip">Press M to toggle the minimap</small>
 
             <div id="bigLog"></div>
 
@@ -166,7 +167,15 @@
                     <br>
 
                     <table id="settingsTable">
-
+                        <tr>
+                            <td>Display Minimap</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsDisplayMinimap">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
                         <tr>
                             <td>Big Kill Message</td>
                             <td>

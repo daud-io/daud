@@ -1,3 +1,5 @@
+import { Settings } from "./settings";
+
 const minimapSize = 200;
 const minimapMarginBottom = 15;
 const minimapMarginRight = 15;
@@ -19,8 +21,11 @@ export class Minimap {
         stage.addChild(this.ctx);
     }
     size(size) {
-        this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
-        this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
+        this.ctx.position.x = size.width - 215;
+        this.ctx.position.y = size.height - 215;
+    }
+    checkDisplay() {
+        if (Settings.displayMinimap != this.ctx.visible) this.ctx.visible = Settings.displayMinimap;
     }
     update(data, worldSize, fleetID) {
         this.worldSize = worldSize;
@@ -39,8 +44,8 @@ export class Minimap {
         }
     }
     drawMinimap(x, y, color, self) {
-        var minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimapSize - 2;
-		var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize - 2;
+        var minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimapSize;
+        var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize;
 
         if (!self) {
             this.ctx

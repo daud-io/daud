@@ -49,7 +49,7 @@ export class Fleet {
                     count++;
                 });
 
-                const offsetY = 180;
+                const offsetY = 0;
                 this.text.position.x = accX / count;
                 this.text.position.y = accY / count + offsetY;
             }
