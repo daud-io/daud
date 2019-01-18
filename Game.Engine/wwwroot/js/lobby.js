@@ -71,6 +71,9 @@ export var LobbyCallbacks = {
 function refreshList() {
     if (!showing && !firstLoad) return;
 
+    var autoJoin = firstLoad;
+    firstLoad = false;
+
     fetch("/api/v1/server/worlds", {
         method: "GET",
         headers: {
@@ -87,9 +90,7 @@ function refreshList() {
 
                 buildList(response);
 
-                if (firstLoad) joinWorld("default");
-
-                firstLoad = false;
+                if (autoJoin) joinWorld("default");
             }
         });
 }
@@ -134,5 +135,5 @@ document.getElementById("arenas").addEventListener("click", e => {
     return false;
 });
 
-refreshList();
+//refreshList();
 setInterval(refreshList, 1000);
