@@ -66,13 +66,11 @@ window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 window.Game.cache = cache;
 
-window.Game.reinitializeWorld = function()
-{
-    if (currentWorld)
-        Controls.initializeWorld(currentWorld);
-        
+window.Game.reinitializeWorld = function() {
+    if (currentWorld) Controls.initializeWorld(currentWorld);
+
     background.refreshSprite();
-}
+};
 
 const bodyFromServer = (cache, body) => {
     const originalPosition = body.originalPosition();
@@ -134,12 +132,14 @@ connection.onView = newView => {
         lastAliveState = true;
         fleetID = newView.fleetID();
         document.body.classList.remove("dead");
+        document.body.classList.remove("spectating");
         document.body.classList.add("alive");
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
 
         setTimeout(function() {
             document.body.classList.remove("alive");
+            document.body.classList.add("spectating");
             document.body.classList.add("dead");
         }, 500);
 
@@ -149,16 +149,14 @@ connection.onView = newView => {
         var interval = false;
         var updateButton = function() {
             var button = document.getElementById("spawn");
-            console.log(`cooldown: ${countDown}`);
+            var buttonSpectate = document.getElementById("spawnSpectate");
 
             if (countDown > 0) {
-                console.log("hold");
-                button.value = `${countDown--} ...`;
-                button.disabled = true;
+                buttonSpectate.value = button.value = `${countDown--} ...`;
+                buttonSpectate.disabled = button.disabled = true;
             } else {
-                console.log("Launch!");
-                button.value = `LAUNCH!`;
-                button.disabled = false;
+                buttonSpectate.value = button.value = `LAUNCH!`;
+                buttonSpectate.disabled = button.disabled = false;
                 clearInterval(interval);
             }
         };
@@ -265,11 +263,14 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
     Controls.initializeWorld(world);
 };
 
-document.getElementById("spawn").addEventListener("click", () => {
+function doSpawn()
+{
     Events.Spawn();
     aliveSince = gameTime;
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
-});
+}
+document.getElementById("spawn").addEventListener("click", doSpawn);
+document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
 
 function startSpectate(hideButton) {
     isSpectating = true;
@@ -391,6 +392,7 @@ app.ticker.add(() => {
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
     background.draw(cache, interpolator, gameTime);
+    minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
 
     lastPosition = position;

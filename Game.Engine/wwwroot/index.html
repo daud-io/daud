@@ -30,9 +30,8 @@
 
         <div id="gameArea" class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
-			
-			<canvas id="minimap" width="200" height="200"></canvas>
-			<small id="minimapTip">Press W to toggle the minimap</small>
+
+            <small id="minimapTip">Press M to toggle the minimap</small>
 
             <div id="bigLog"></div>
 
@@ -52,7 +51,8 @@
             </div>
 
             <div id="stop_spectating_container">
-                <input type="button" id="stop_spectating" class="button1" value="Stop Spectating" />
+                <input type="button" id="stop_spectating" class="button1" value="Menu" />
+                <input type="button" id="spawnSpectate" class="button1" value="Launch as guest!">
             </div>
             <table id="leaderboard" cellspacing="0"></table>
             <table id="leaderboard-left" cellspacing="0"></table>
@@ -168,7 +168,15 @@
                     <br>
 
                     <table id="settingsTable">
-
+                        <tr>
+                            <td>Display Minimap</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsDisplayMinimap">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
                         <tr>
                             <td>Big Kill Message</td>
                             <td>
@@ -261,6 +269,12 @@
                 <div id="twitterpated">
                     <h4>Changelog</h4>
                     <table>
+						<tr>
+							<td>
+								<bold>1/17/2019</bold>
+							</td>
+							<td>integrated pixi.js renderer. mini map and new Arena: Sumo world.</td>
+						</tr>
                         <tr>
                             <td>
                                 <bold>12/05/2018</bold>

@@ -20,6 +20,7 @@ export const Settings = {
     bandwidth: 100,
     showCooldown: true,
     logLength: 4,
+    displayMinimap: true,
     bigKillMessage: true,
     showPickupSprites: false,
     showThrusterSprites: true,
@@ -60,6 +61,7 @@ function save() {
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
+    Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").checked;
     Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
     Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
     Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
@@ -89,8 +91,7 @@ function load() {
             // any values NOT in the cookie will remain defined with the new defaults
             for (const key in savedSettings) Settings[key] = savedSettings[key];
 
-            if (Settings.theme == "3ds2agh4z76feci")
-                Settings.theme = "516mkwof6m4d4tg";
+            if (Settings.theme == "3ds2agh4z76feci") Settings.theme = "516mkwof6m4d4tg";
         }
 
         document.getElementById("settingsThemeSelector").value = Settings.theme;
@@ -105,6 +106,7 @@ function load() {
         document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
         document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
         document.getElementById("settingsLog").value = Settings.logLength;
+        document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
         document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
         document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
         document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
@@ -157,51 +159,39 @@ async function theme(v) {
                 });
             }
 
-            if (info.spriteModeMap)
-            {
-                for(var key in info.spriteModeMap)
-                {
+            if (info.spriteModeMap) {
+                for (var key in info.spriteModeMap) {
                     var modeMap = info.spriteModeMap[key];
-                    
-                    for(var mapKey in modeMap)
-                        spriteModeMap[key][mapKey] = modeMap[mapKey];
+
+                    for (var mapKey in modeMap) spriteModeMap[key][mapKey] = modeMap[mapKey];
                 }
             }
 
-
-            var downloadFile = function(key, filename)
-            {
+            var downloadFile = function(key, filename) {
                 zip.file(`daudmod/${filename}.png`)
-                .async("arraybuffer")
-                .then(ab => {
-                    const arrayBufferView = new Uint8Array(ab);
-                    const blob = new Blob([arrayBufferView], { type: "image/png" });
-                    const urlCreator = window.URL || window.webkitURL;
-                    const url = urlCreator.createObjectURL(blob);
+                    .async("arraybuffer")
+                    .then(ab => {
+                        const arrayBufferView = new Uint8Array(ab);
+                        const blob = new Blob([arrayBufferView], { type: "image/png" });
+                        const urlCreator = window.URL || window.webkitURL;
+                        const url = urlCreator.createObjectURL(blob);
 
-                    textureMap[key].url = url;
+                        textureMap[key].url = url;
 
-                    if (window.Game && window.Game.cache)
-                    {
-                        textureCache.clear();
-                        window.Game.cache.refreshSprites();
-                        window.Game.reinitializeWorld();
-                    }
-
-                });
-
+                        if (window.Game && window.Game.cache) {
+                            textureCache.clear();
+                            window.Game.cache.refreshSprites();
+                            window.Game.reinitializeWorld();
+                        }
+                    });
             };
 
-            if (info.textureMap)
-            {
-                for(var key in info.textureMap)
-                {
+            if (info.textureMap) {
+                for (var key in info.textureMap) {
                     var map = info.textureMap[key];
 
-                    for(var textureKey in map)
-                    {
-                        if (!textureMap[key])
-                            textureMap[key] = {};
+                    for (var textureKey in map) {
+                        if (!textureMap[key]) textureMap[key] = {};
 
                         textureMap[key][textureKey] = map[textureKey];
                     }
@@ -252,27 +242,14 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 
-// minimap
+var minimapChanged = false;
+window.addEventListener("keydown", function(e) {
+    if (e.keyCode == 77 && !minimapChanged) {
+        Settings.displayMinimap = !Settings.displayMinimap;
+        minimapChanged = true;
+    }
+});
 
-executeMinimapSettings()
-
-window.onkeydown = function(e) {
-	if (e.key === "w" && Settings.displayMinimap === "onkeypress") { document.getElementById("minimap").style.display = "block"; };
-}
-
-window.onkeyup = function(e) {
-	if (e.key === "w" && Settings.displayMinimap === "onkeypress" ) { document.getElementById("minimap").style.display = "none"; };
-}
-
-function executeMinimapSettings() {
-	if (Settings.displayMinimap === "never") {
-		document.getElementById("minimap").style.display = "none";
-		document.getElementById("minimapTip").style.display = "none";
-	} else if ( Settings.displayMinimap === "onkeypress") {
-		document.getElementById("minimap").style.display = "none";
-		document.getElementById("minimapTip").style.display = "block";
-	} else if ( Settings.displayMinimap === "always") {
-		document.getElementById("minimap").style.display = "block";
-		document.getElementById("minimapTip").style.display = "none";
-	}
-}
+window.addEventListener("keyup", function(e) {
+    if (e.keyCode == 77) minimapChanged = false;
+});

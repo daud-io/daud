@@ -201,7 +201,7 @@
 
         public void Abandon()
         {
-            foreach (var ship in Ships)
+            foreach (var ship in Ships.ToList())
                 this.AbandonShip(ship);
         }
 
@@ -213,6 +213,9 @@
             ship.Abandoned = true;
             ship.Group = null;
             ship.ThrustAmount = 0;
+
+            if (Ships.Contains(ship))
+                Ships.Remove(ship);
         }
 
         public override void Think()
@@ -234,7 +237,6 @@
                 {
                     var ship = Ships.First();
                     AbandonShip(ship);
-                    Ships.Remove(ship);
                 }
             }
 
@@ -249,6 +251,7 @@
 
                 Flock(ship);
                 Snake(ship);
+                Ring(ship);
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
@@ -302,6 +305,10 @@
                 Owner.SpawnTime = World.Time;
                 Owner.Score++;
             }
+
+            if (!Ships.Where(s => !s.PendingDestruction).Any()
+                && !NewShips.Any())
+                Die(null);
         }
 
         private void Flock(Ship ship)
@@ -323,6 +330,24 @@
             ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
         }
 
+        private void Ring(Ship ship)
+        {
+            if (World.Hook.BossMode == false)
+                return;
+
+            var shipIndex = Ships.IndexOf(ship);
+            var angle = (shipIndex-1)/(float)(Ships.Count-1) * 2 * MathF.PI;
+            if (shipIndex > 0)
+            {
+                ship.Position = Ships[0].Position + 
+                    new Vector2(
+                        MathF.Cos(angle), 
+                        MathF.Sin(angle)
+                    ) * (30 + 10 * Ships.Count);
+                ship.Momentum = Ships[0].Momentum;
+                ship.Angle = angle;
+            }
+        }
         private void Snake(Ship ship)
         {
             if (World.Hook.SnakeWeight == 0)

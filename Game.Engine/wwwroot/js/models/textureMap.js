@@ -35,7 +35,7 @@
     seeker: { file: "seeker", scale: 0.02 },
     seeker_pickup: { file: "seeker_pickup", scale: 0.02 },
 
-    "thruster_cyan": {
+    thruster_cyan: {
         file: "thruster_cyan",
         animated: true,
         loop: false,
@@ -46,7 +46,7 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_green": {
+    thruster_green: {
         file: "thruster_green",
         animated: true,
         loop: false,
@@ -57,7 +57,7 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_orange": {
+    thruster_orange: {
         file: "thruster_orange",
         animated: true,
         loop: false,
@@ -68,7 +68,7 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_pink": {
+    thruster_pink: {
         file: "thruster_pink",
         animated: true,
         loop: false,
@@ -79,7 +79,7 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_red": {
+    thruster_red: {
         file: "thruster_red",
         animated: true,
         loop: false,
@@ -90,7 +90,7 @@
         tileSize: 64,
         tileCount: 29
     },
-    "thruster_yellow": {
+    thruster_yellow: {
         file: "thruster_yellow",
         animated: true,
         loop: false,
@@ -115,7 +115,7 @@
     arrow: { file: "arrow", scale: 1 },
 
     // Capture the Flag
-    ctf_base: { file: "ctf_base", scale: 0.0075 },
+    ctf_base: { file: "ctf_base", scale: 0.0030 },
     ctf_flag_blue: {
         file: "ctf_flag_blue",
         animated: true,

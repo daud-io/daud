@@ -17,8 +17,7 @@
 
         private bool IsAlive = false;
         public bool AutoSpawn { get; set; } = true;
-        private const int RESPAWN_FALLOFF = 1000;
-        private DateTime LastSpawn = DateTime.MinValue;
+        private const int RESPAWN_FALLOFF = 3000;
 
         protected long SpawnTime { get; private set; }
         protected long DeathTime { get; private set; }
@@ -70,11 +69,12 @@
 
             if (IsAlive && !Connection.IsAlive)
             {
-                this.SpawnTime = Connection.GameTime;
+                this.DeathTime = Connection.GameTime;
                 await OnDeathAsync();
             }
             if (!IsAlive && Connection.IsAlive)
             {
+                this.SpawnTime = Connection.GameTime;
                 await OnSpawnAsync();
             }
 
@@ -147,10 +147,9 @@
 
             if (AutoSpawn)
             {
-                if (DateTime.Now.Subtract(LastSpawn).TotalMilliseconds > RESPAWN_FALLOFF)
+                if (DeathTime + RESPAWN_FALLOFF < GameTime)
                 {
                     await Connection.SpawnAsync(Name, Sprite, Color);
-                    LastSpawn = DateTime.Now;
                 }
             }
         }
