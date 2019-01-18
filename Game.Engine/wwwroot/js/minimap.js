@@ -61,10 +61,8 @@ export class Minimap {
 				//.beginFill(0xdaa520)
                 //.drawRect(minimapX - 3, minimapY - 3, 6, 6)
                 //.endFill();
-			var x = minimapX - 4;
-			var y = minimapY - 2;
 			var crown = PIXI.Sprite.fromImage("../img/crown.png");
-			crown.scale = 8 / 64;
+			crown.scale = 1/8;
 			crown.anchor.set(0.5);
 			crown.x = minimapX;
 			crown.y = minimapY;
