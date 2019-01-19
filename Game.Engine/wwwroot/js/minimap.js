@@ -58,13 +58,19 @@ export class Minimap {
                 .endFill();
         } else if (rank === 0) {
             // mark the king
+			/*
             var crown = PIXI.Sprite.fromImage(images["crown"]);
             crown.scale = 1 / 8;
             crown.anchor.set(0.5);
             crown.x = minimapX;
             crown.y = minimapY;
-            this.ctx.addChild(crown);
-            /*
+			console.log(crown.x + ", " + crown.y);
+			this.ctx
+				.beginFill(0xdaa520)
+				.drawRect(minimapX, minimapY, 6, 6) // for tests 
+				.endFill();
+            //this.ctx.addChild(crown);
+            */
 			this.ctx
 				.beginFill(0xdaa520)
 				.lineStyle(1, 0xdaa520)
@@ -76,7 +82,7 @@ export class Minimap {
 				.lineTo(8+x, 4+y)
 				.lineTo(0+x, 4+y)
 				.closePath()
-				.endFill();*/
+				.endFill();
         } else {
             this.ctx
                 .lineStyle(1, colors[color])
