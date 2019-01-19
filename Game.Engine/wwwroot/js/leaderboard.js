@@ -1,10 +1,10 @@
 ﻿import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
 
-var record = document.getElementById("record");
-var leaderboard = document.getElementById("leaderboard");
-var leaderboardLeft = document.getElementById("leaderboard-left");
-var leaderboardCenter = document.getElementById("leaderboard-center");
+const record = document.getElementById("record");
+const leaderboard = document.getElementById("leaderboard");
+const leaderboardLeft = document.getElementById("leaderboard-left");
+const leaderboardCenter = document.getElementById("leaderboard-center");
 
 export function clear() {
     leaderboard.innerHTML = "";
@@ -15,7 +15,7 @@ export function clear() {
 }
 
 function escapeHtml(str) {
-    var div = document.createElement("div");
+    const div = document.createElement("div");
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
 }
@@ -55,9 +55,7 @@ export class Leaderboard {
             let outR = "";
             let outC = "";
 
-            for (let i = 0; i < data.Entries.length; i++) {
-                const entry = data.Entries[i];
-
+            data.Entries.forEach((entry, i) => {
                 let str = getOut(entry, position);
                 if (i == 0 || i == 1) {
                     outC += str;
@@ -66,7 +64,8 @@ export class Leaderboard {
                 } else {
                     outR += str;
                 }
-            }
+            });
+
             leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
             leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
             leaderboardCenter.innerHTML = `<tbody>${outC}</tbody>`;
@@ -76,9 +75,7 @@ export class Leaderboard {
             let redFlag = false;
             let cyanFlag = false;
 
-            for (let i = 0; i < data.Entries.length; i++) {
-                const entry = data.Entries[i];
-
+            data.Entries.forEach((entry, i) => {
                 let str = getOut(entry, position);
                 if (i == 0) {
                     cyanFlag = entry;
@@ -89,7 +86,7 @@ export class Leaderboard {
                 } else {
                     outR += str;
                 }
-            }
+            });
 
             const flagStatus = {
                 cyan: data.Entries[0].ModeData.flagStatus,

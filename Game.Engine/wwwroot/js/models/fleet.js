@@ -38,12 +38,12 @@ export class Fleet {
                 else this.text.text = "";
 
                 //this.text.text += " " + this.ships.length;
-                var accX = 0,
+                let accX = 0,
                     accY = 0,
                     count = 0;
 
                 this.ships.forEach(ship => {
-                    var position = interpolator.projectObject(ship.body, time);
+                    const position = interpolator.projectObject(ship.body, time);
                     accX += position.X;
                     accY += position.Y;
                     count++;

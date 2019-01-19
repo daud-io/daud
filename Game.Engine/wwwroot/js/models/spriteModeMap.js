@@ -1,4 +1,4 @@
-﻿export var spriteModeMap = {
+export const spriteModeMap = {
     bg: {
         texture: "bg",
         scaleFactor: 10

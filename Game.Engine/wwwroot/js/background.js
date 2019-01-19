@@ -16,10 +16,10 @@ export class Background {
     }
 
     refreshSprite() {
-        var spriteDefinition = RenderedObject.getSpriteDefinition("bg");
-        var textureName = spriteDefinition.texture;
-        var textureDefinition = RenderedObject.getTextureDefinition(textureName);
-        var textures = RenderedObject.loadTexture(textureDefinition, textureName);
+        const spriteDefinition = RenderedObject.getSpriteDefinition("bg");
+        const textureName = spriteDefinition.texture;
+        const textureDefinition = RenderedObject.getTextureDefinition(textureName);
+        const textures = RenderedObject.loadTexture(textureDefinition, textureName);
 
         if (textures.length > 0) {
             if (!this.backgroundSprite) {

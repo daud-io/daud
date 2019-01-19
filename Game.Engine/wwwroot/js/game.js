@@ -145,11 +145,11 @@ connection.onView = newView => {
 
         Events.Death((gameTime - aliveSince) / 1000);
 
-        var countDown = 3;
-        var interval = false;
-        var updateButton = function() {
-            var button = document.getElementById("spawn");
-            var buttonSpectate = document.getElementById("spawnSpectate");
+        let countDown = 3;
+        let interval = false;
+        const updateButton = function() {
+            const button = document.getElementById("spawn");
+            const buttonSpectate = document.getElementById("spawnSpectate");
 
             if (countDown > 0) {
                 buttonSpectate.value = button.value = `${countDown--} ...`;
@@ -171,7 +171,7 @@ connection.onView = newView => {
 
     const groupsLength = newView.groupsLength();
     const groups = [];
-    for (var u = 0; u < groupsLength; u++) {
+    for (let u = 0; u < groupsLength; u++) {
         const group = newView.groups(u);
 
         groups.push(groupFromServer(cache, group));
@@ -179,14 +179,14 @@ connection.onView = newView => {
 
     const updatesLength = newView.updatesLength();
     const updates = [];
-    for (var u = 0; u < updatesLength; u++) {
+    for (let u = 0; u < updatesLength; u++) {
         const update = newView.updates(u);
 
         updates.push(bodyFromServer(cache, update));
     }
 
     const announcementsLength = newView.announcementsLength();
-    for (var u = 0; u < announcementsLength; u++) {
+    for (let u = 0; u < announcementsLength; u++) {
         const announcement = newView.announcements(u);
         log.addEntry(announcement.text());
     }
@@ -195,16 +195,16 @@ connection.onView = newView => {
 
     const deletes = [];
     const deletesLength = newView.deletesLength();
-    for (var d = 0; d < deletesLength; d++) deletes.push(newView.deletes(d));
+    for (let d = 0; d < deletesLength; d++) deletes.push(newView.deletes(d));
 
     const groupDeletes = [];
     const groupDeletesLength = newView.groupDeletesLength();
-    for (var d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d));
+    for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d));
 
     cache.update(updates, deletes, groups, groupDeletes, gameTime, fleetID);
 
-    Game.Stats.playerCount = newView.playerCount();
-    Game.Stats.spectatorCount = newView.spectatorCount();
+    hud.playerCount = newView.playerCount();
+    hud.spectatorCount = newView.spectatorCount();
 
     if (newView.worldSize() != border.worldSize) {
         worldSize = newView.worldSize();
@@ -218,7 +218,7 @@ connection.onView = newView => {
         cooldownShoot: newView.cooldownShoot()
     })*/
 
-    var data = newView.customData();
+    const data = newView.customData();
     if (data) {
         CustomData = data;
         CustomDataTime = view.time;
@@ -256,9 +256,9 @@ LobbyCallbacks.onLobbyClose = function() {
 
 LobbyCallbacks.onWorldJoin = function(worldKey, world) {
     currentWorld = world;
-    window.Game.primaryConnection.disconnect();
+    connection.disconnect();
     cache.empty();
-    window.Game.primaryConnection.connect(worldKey);
+    connection.connect(worldKey);
 
     Controls.initializeWorld(world);
 };
@@ -334,22 +334,17 @@ window.addEventListener("resize", () => {
     sizeCanvas();
 });
 
-window.Game.Stats = {
-    framesPerSecond: 0,
-    viewsPerSecond: 0,
-    updatesPerSecond: 0
-};
-
 let frameCounter = 0;
 var viewCounter = 0;
 var updateCounter = 0;
 let lastCamera = { X: 0, Y: 0 };
 
 function doPing() {
-    window.Game.Stats.framesPerSecond = frameCounter;
-    window.Game.Stats.viewsPerSecond = viewCounter;
-    window.Game.Stats.updatesPerSecond = updateCounter;
-    hud.update();
+    connection.framesPerSecond = frameCounter;
+    connection.viewsPerSecond = viewCounter;
+    connection.updatesPerSecond = updateCounter;
+
+    hud.latency = connection.latency;
 
     if (frameCounter === 0) {
         console.log("backgrounded");
@@ -363,11 +358,11 @@ function doPing() {
 doPing();
 setInterval(doPing, 1000);
 
-var graphics = new PIXI.Graphics();
+const graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
-var lastCustomData = false;
-var spotSprites = [];
+let lastCustomData = false;
+let spotSprites = [];
 
 // Game Loop
 app.ticker.add(() => {
@@ -413,22 +408,22 @@ app.ticker.add(() => {
     if (CustomData != lastCustomData) {
         lastCustomData = CustomData;
 
-        for (var i = 0; i < spotSprites.length; i++) container.removeChild(spotSprites[i]);
+        for (let i = 0; i < spotSprites.length; i++) container.removeChild(spotSprites[i]);
 
         spotSprites = [];
 
         //graphics.clear();
 
         if (CustomData) {
-            var data = JSON.parse(CustomData);
+            const data = JSON.parse(CustomData);
             /*if (data.spots)
             {
-                for (var i=0; i<data.spots.length; i++)
+                for (let i=0; i<data.spots.length; i++)
                 {
-                    var spot = data.spots[i];
-                    var texture = textures["obstacle"];
+                    let spot = data.spots[i];
+                    let texture = textures["obstacle"];
                     if (texture) {
-                        var sprite = new PIXI.Sprite(texture);
+                        let sprite = new PIXI.Sprite(texture);
                         sprite.position.x = spot.X;
                         sprite.position.y = spot.Y;
                         sprite.scale.set(0.1, 0.1);

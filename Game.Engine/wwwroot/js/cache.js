@@ -38,20 +38,20 @@ export class Cache {
 
         // delete objects that should no longer exist
         for (i = 0; i < deletes.length; i++) {
-            var deleteKey = deletes[i];
-            var key = `b-${deleteKey}`;
+            let deleteKey = deletes[i];
+            let key = `b-${deleteKey}`;
             if (key in this.bodies) Cache.count--;
 
-            var body = this.bodies[key];
+            const body = this.bodies[key];
             if (body && body.renderer) body.renderer.destroy();
             delete this.bodies[key];
         }
 
         // delete groups that should no longer exist
         for (i = 0; i < groupDeletes.length; i++) {
-            var deleteKey = groupDeletes[i];
-            var key = `g-${deleteKey}`;
-            var group = this.groups[key];
+            let deleteKey = groupDeletes[i];
+            let key = `g-${deleteKey}`;
+            let group = this.groups[key];
             if (!group) console.log("group delete on object not in cache");
 
             if (group && group.renderer) group.renderer.destroy();
@@ -61,7 +61,7 @@ export class Cache {
         // update groups that should be here
         for (i = 0; i < groups.length; i++) {
             const group = groups[i];
-            var existing = this.groups[`g-${group.ID}`];
+            let existing = this.groups[`g-${group.ID}`];
 
             if (!existing) {
                 if (group.Type == 1) group.renderer = new Fleet(this.container, this);
@@ -82,7 +82,7 @@ export class Cache {
         // update objects that should be here
         for (i = 0; i < updates.length; i++) {
             const update = updates[i];
-            var existing = this.bodies[`b-${update.ID}`];
+            let existing = this.bodies[`b-${update.ID}`];
 
             this.bodies[`b-${update.ID}`] = update;
 
@@ -106,9 +106,9 @@ export class Cache {
 
             if (!existing) {
                 if (update.Sprite.indexOf("ship") == 0) {
-                    var fleet = false;
+                    let fleet = false;
                     if (update.Group != 0) {
-                        var group = this.groups[`g-${update.Group}`];
+                        let group = this.groups[`g-${update.Group}`];
                         if (!group) {
                             console.log("missing group");
                         } else {
@@ -124,13 +124,13 @@ export class Cache {
                         console.log("ship with no group: " + update.Sprite);
                     }
 
-                    var ship = (update.renderer = new Ship(this.container));
+                    const ship = (update.renderer = new Ship(this.container));
 
                     if (fleet) fleet.addShip(ship);
                 } else if (update.Sprite.indexOf("bullet")) update.renderer = new Bullet(this.container);
                 else update.renderer = new RenderedObject(this.container);
 
-                var group = false;
+                let group = false;
                 if (update.Group != 0) group = this.groups[`g-${update.Group}`];
 
                 update.zIndex = group.ZIndex || 0;
@@ -142,7 +142,7 @@ export class Cache {
 
     foreach(action, thisObj) {
         this.foreachGroup(function(group) {
-            for (var key in this.bodies) {
+            for (const key in this.bodies) {
                 if (key.indexOf("b-") === 0) {
                     const body = this.bodies[key];
                     if (body.Group == group.ID) {
@@ -156,16 +156,15 @@ export class Cache {
     foreachGroup(action, thisObj) {
         const sortedGroups = [];
 
-        for (var key in this.groups) {
-            var group = this.groups[key];
+        for (const key in this.groups) {
+            let group = this.groups[key];
             sortedGroups.push(group);
         }
 
         sortedGroups.sort((a, b) => a.ZIndex - b.ZIndex);
         sortedGroups.unshift({ ID: 0 });
 
-        for (let g = 0; g < sortedGroups.length; g++) {
-            var group = sortedGroups[g];
+        for (let group of sortedGroups) {
             action.apply(thisObj, [group]);
         }
     }
