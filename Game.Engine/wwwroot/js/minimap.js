@@ -3,6 +3,7 @@ import images from "../img/*.png";
 
 const canvas = document.getElementById("gameCanvas");
 const app = new PIXI.Application({ view: canvas, transparent: true });
+const crown = PIXI.Sprite.fromImage(images["crown"]);
 
 const minimapSize = 180;
 const minimapMarginBottom = 15;
@@ -60,12 +61,11 @@ export class Minimap {
                 .endFill();
         } else if (rank === 0) {
             // mark the king
-            var crown = PIXI.Sprite.fromImage(images["crown"]);
             crown.scale = 1 / 8;
             crown.anchor.set(0.5);
-            crown.x = minimapX;
-            crown.y = minimapY;
-			console.log(crown.x + ", " + crown.y);
+            crown.position.x = minimapX;
+            crown.position.y = minimapY;
+			// console.log(crown.x + ", " + crown.y);
 			/*
 			this.ctx
 				.beginFill(0xdaa520)
