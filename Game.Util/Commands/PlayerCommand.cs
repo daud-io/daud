@@ -38,8 +38,14 @@
             [Option]
             public bool DontFireAtSameName { get; set; } = false;
 
+            [Option("--startup-delay")]
+            public int StartupDelay{ get; set; } = 0;
+
             protected async override Task ExecuteAsync()
             {
+                if (StartupDelay > 0)
+                    await Task.Delay(StartupDelay);
+
                 var tasks = new List<Task>();
 
                 for (int i = 0; i < Replicas; i++)
