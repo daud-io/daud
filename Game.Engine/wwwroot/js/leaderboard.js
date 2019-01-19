@@ -14,11 +14,27 @@ export function clear() {
     leaderboardCenter.style.height = null;
 }
 
+function escapeHtml(str) {
+    var div = document.createElement("div");
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+function getOut(entry, position) {
+    const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+    return (
+        `<tr>` +
+        `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+        `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
+        `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
+        `<td class="score">${entry.Score}</td>` +
+        `</tr>`
+    );
+}
 export class Leaderboard {
     update(data, position) {
         if (data.Record) {
             record.style.fontFamily = Settings.font;
-            record.innerHTML = `record: ${data.Record.Name || "Unknown Fleet"} - ${data.Record.Score}`;
+            record.innerHTML = `record: ${escapeHtml(data.Record.Name) || "Unknown Fleet"} - ${data.Record.Score}`;
         }
 
         //Hide or show elements based on Arena.
@@ -30,18 +46,8 @@ export class Leaderboard {
 
         if (data.Type == "FFA") {
             let out = "";
-
             for (let i = 0; i < data.Entries.length; i++) {
-                const entry = data.Entries[i];
-                const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
-
-                out +=
-                    `<tr>` +
-                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
-                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-                    `<td class="name">${entry.Name || "Unknown Fleet"}</td>` +
-                    `<td class="score">${entry.Score}</td>` +
-                    `</tr>`;
+                out += getOut(data.Entries[i], position);
             }
             leaderboard.innerHTML = `<tbody>${out}</tbody>`;
         } else if (data.Type == "Team") {
@@ -51,15 +57,8 @@ export class Leaderboard {
 
             for (let i = 0; i < data.Entries.length; i++) {
                 const entry = data.Entries[i];
-                const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 
-                let str =
-                    `<tr>` +
-                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
-                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-                    `<td class="name">${entry.Name || "Unknown Fleet"}</td>` +
-                    `<td class="score">${entry.Score}</td>` +
-                    `</tr>`;
+                let str = getOut(entry, position);
                 if (i == 0 || i == 1) {
                     outC += str;
                 } else if (entry.Color == "cyan") {
@@ -79,15 +78,8 @@ export class Leaderboard {
 
             for (let i = 0; i < data.Entries.length; i++) {
                 const entry = data.Entries[i];
-                const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 
-                let str =
-                    `<tr>` +
-                    `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
-                    `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-                    `<td class="name">${entry.Name || "Unknown Fleet"}</td>` +
-                    `<td class="score">${entry.Score}</td>` +
-                    `</tr>`;
+                let str = getOut(entry, position);
                 if (i == 0) {
                     cyanFlag = entry;
                 } else if (i == 1) {
@@ -98,7 +90,6 @@ export class Leaderboard {
                     outR += str;
                 }
             }
-
 
             const flagStatus = {
                 cyan: data.Entries[0].ModeData.flagStatus,

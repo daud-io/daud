@@ -73,8 +73,6 @@ function save() {
     console.log(Settings);
 
     if (reload) window.location.reload();
-
-    executeMinimapSettings();
 }
 
 function reset() {
