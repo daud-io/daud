@@ -83,7 +83,7 @@
             });
 
 
-            Console.WriteLine(JsonConvert.SerializeObject(Leaderboard, Formatting.Indented));
+            Console.WriteLine(JsonConvert.SerializeObject(Leaderboard));
 
 //            Console.WriteLine($"Thrust: {this.HookComputer.ShipThrust(this.SensorFleets?.MyFleet?.Ships.Count ?? 0)}");
 

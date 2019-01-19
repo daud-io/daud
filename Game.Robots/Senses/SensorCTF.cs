@@ -75,7 +75,7 @@
 
         private void EvaluateLeaderboard()
         {
-            this.CTFModeEnabled = this.Leaderboard.Type == "ctf";
+            this.CTFModeEnabled = this.Leaderboard.Type == "CTF";
 
             if (this.CTFModeEnabled && Leaderboard.Entries.Count > 1)
             {

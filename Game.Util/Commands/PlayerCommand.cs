@@ -50,9 +50,8 @@
 
                 for (int i = 0; i < Replicas; i++)
                 {
-
                     var connection = await API.Player.ConnectAsync(World);
-                    var robot = new ContextTurret(Vector2.Zero)
+                    /*var robot = new ContextTurret(Vector2.Zero)
                     {
                         AutoSpawn = true,
                         AutoFire = Firing,
@@ -64,7 +63,18 @@
                     };
 
                     if (Variation && i % 2 == 0)
-                        robot.Vary();
+                        robot.Vary();*/
+
+                    var robot = new CTFBot(Vector2.Zero)
+                    {
+                        AutoSpawn = true,
+                        AutoFire = Firing,
+                        Color = Color,
+                        Name = Name,
+                        Target = Target,
+                        Sprite = Sprite
+                    };
+
 
                     tasks.Add(robot.Start(connection));
                 };

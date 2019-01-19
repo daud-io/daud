@@ -156,7 +156,7 @@
             for (var i=0; i<entryCount; i++)
                 leaderboard.Entries.Add(EntryFromNetEntry(netLeaderboard.Entries(i)));
             
-            leaderboard.Type = leaderboard.Type;
+            leaderboard.Type = netLeaderboard.Type;
 
             Leaderboard = leaderboard;
 
