@@ -113,8 +113,7 @@ function show() {
 }
 
 function joinWorld(worldKey) {
-    if (LobbyCallbacks.onWorldJoin)
-        LobbyCallbacks.onWorldJoin(worldKey, allWorlds[worldKey]);
+    if (LobbyCallbacks.onWorldJoin) LobbyCallbacks.onWorldJoin(worldKey, allWorlds[worldKey]);
     hide();
 }
 

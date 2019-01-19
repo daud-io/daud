@@ -99,7 +99,6 @@ export class Leaderboard {
                 }
             }
 
-
             const flagStatus = {
                 cyan: data.Entries[0].ModeData.flagStatus,
                 red: data.Entries[1].ModeData.flagStatus

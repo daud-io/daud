@@ -12,7 +12,7 @@ const colors = {
     orange: 0xffa500,
     yellow: 0xffff00,
     cyan: 0x00ffff,
-    green: 0x00ff00,
+    green: 0x00ff00
 };
 
 export class Minimap {
@@ -50,21 +50,21 @@ export class Minimap {
         var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize;
 
         if (self) {
-			// mark "self" player
-			this.ctx
+            // mark "self" player
+            this.ctx
                 .beginFill(0xffffff)
-				.lineStyle(1, 0xffffff)
+                .lineStyle(1, 0xffffff)
                 .drawRect(minimapX - 3, minimapY - 3, 6, 6)
                 .endFill();
         } else if (rank === 0) {
-			// mark the king
-			var crown = PIXI.Sprite.fromImage(images["crown"]);
-			crown.scale = 1/8;
-			crown.anchor.set(0.5);
-			crown.x = minimapX;
-			crown.y = minimapY;
-			this.ctx.addChild(crown);
-			/*
+            // mark the king
+            var crown = PIXI.Sprite.fromImage(images["crown"]);
+            crown.scale = 1 / 8;
+            crown.anchor.set(0.5);
+            crown.x = minimapX;
+            crown.y = minimapY;
+            this.ctx.addChild(crown);
+            /*
 			this.ctx
 				.beginFill(0xdaa520)
 				.lineStyle(1, 0xdaa520)
@@ -77,9 +77,9 @@ export class Minimap {
 				.lineTo(0+x, 4+y)
 				.closePath()
 				.endFill();*/
-		} else {
+        } else {
             this.ctx
-				.lineStyle(1, colors[color])
+                .lineStyle(1, colors[color])
                 .beginFill(colors[color])
                 .drawRect(minimapX - 2, minimapY - 2, 4, 4)
                 .endFill();

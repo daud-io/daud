@@ -250,7 +250,6 @@ setInterval(() => {
     }
 }, 10);
 
-
 LobbyCallbacks.onLobbyClose = function() {
     clearLeaderboards();
 };
