@@ -71,7 +71,6 @@
             if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold)
                 Boost();
 
-
             /*CustomData = JsonConvert.SerializeObject(new
             {
                 spots = Behaviors.OfType<Dodge>().Where(d => d.ConsideredPoints != null).SelectMany(d => d.ConsideredPoints)
@@ -83,9 +82,19 @@
                 spots = SensorFleets.Others?.Select(f => RoboMath.FiringIntercept(HookComputer, this.Position, f.Center, f.Momentum, this.SensorFleets.MyFleet?.Ships.Count ?? 0))
             });
 
+
+            Console.WriteLine(JsonConvert.SerializeObject(Leaderboard, Formatting.Indented));
+
 //            Console.WriteLine($"Thrust: {this.HookComputer.ShipThrust(this.SensorFleets?.MyFleet?.Ships.Count ?? 0)}");
 
+
             await base.AliveAsync();
+        }
+
+        protected override Task OnNewLeaderboardAsync()
+        {
+
+            return Task.FromResult(0);
         }
 
         private void ShootAtFleet(Fleet f)

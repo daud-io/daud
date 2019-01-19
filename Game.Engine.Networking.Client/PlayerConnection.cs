@@ -1,6 +1,7 @@
 ﻿namespace Game.API.Client
 {
     using Game.API.Common;
+    using Game.Engine.Networking.Client;
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
     using Newtonsoft.Json;
@@ -41,10 +42,13 @@
 
         public Vector2 Position { get; set; } = Vector2.Zero;
 
+        public Func<Task> OnLeaderboard { get; set; } = null;
         public Func<Task> OnView { get; set; } = null;
         public Func<Task> OnConnected { get; set; } = null;
 
         public uint FleetID { get; set; } = 0;
+
+        public Leaderboard Leaderboard {get; private set;} = null;
 
         public Dictionary<string, object> Hook { get; set; }
 
@@ -123,6 +127,41 @@
             builder.Finish(q.Value);
 
             await SendAsync(builder.DataBuffer, default(CancellationToken));
+        }
+
+        private Leaderboard.Entry EntryFromNetEntry(NetLeaderboardEntry? entry)
+        {
+            return entry != null
+                ? new Leaderboard.Entry {
+                    Color = entry?.Color,
+                    FleetID= entry?.FleetID ?? 0,
+                    ModeData = entry?.ModeData,
+                    Name = entry?.Name,
+                    Position = new Vector2(entry?.Position?.X ?? 0, entry?.Position?.Y ?? 0),
+                    Score = entry?.Score ?? 0,
+                    Token = entry?.Token ?? false
+                }
+                : null;
+        }
+
+        private async Task HandleNetLeaderboard(NetLeaderboard netLeaderboard)
+        {
+            var entryCount = netLeaderboard.EntriesLength;
+            var leaderboard = new Leaderboard
+            {
+                ArenaRecord = EntryFromNetEntry(netLeaderboard.Record),
+                Entries = new List<Leaderboard.Entry>()
+            };
+
+            for (var i=0; i<entryCount; i++)
+                leaderboard.Entries.Add(EntryFromNetEntry(netLeaderboard.Entries(i)));
+            
+            leaderboard.Type = leaderboard.Type;
+
+            Leaderboard = leaderboard;
+
+            if (OnLeaderboard != null)
+                await OnLeaderboard();
         }
 
         private async Task HandleNetWorldView(NetWorldView netWorldView)
@@ -282,6 +321,10 @@
 
                 case AllMessages.NetWorldView:
                     await HandleNetWorldView(netQuantum.Message<NetWorldView>().Value);
+                    break;
+
+                case AllMessages.NetLeaderboard:
+                    await HandleNetLeaderboard(netQuantum.Message<NetLeaderboard>().Value);
                     break;
 
                 default:
