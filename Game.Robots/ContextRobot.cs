@@ -13,6 +13,7 @@
         protected readonly List<IBehaviors> Behaviors = new List<IBehaviors>();
         public readonly SensorBullets SensorBullets;
         public readonly SensorFleets SensorFleets;
+        public readonly SensorTeam SensorTeam;
 
         protected IContextRingBlending ContextRingBlending { get; set; }
 
@@ -23,6 +24,7 @@
             Steps = 8;
             Sensors.Add(SensorBullets = new SensorBullets(this));
             Sensors.Add(SensorFleets = new SensorFleets(this));
+            Sensors.Add(SensorTeam = new SensorTeam(this));
 
             ContextRingBlending = new ContextRingBlendingWeighted(this);
         }

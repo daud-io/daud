@@ -2,13 +2,14 @@
 {
     using Game.Robots.Behaviors;
     using Game.Robots.Models;
+    using Game.Robots.Senses;
     using Newtonsoft.Json;
     using System;
     using System.Linq;
     using System.Numerics;
     using System.Threading.Tasks;
 
-    public class ContextTurret : ContextRobot
+    public class CTFBot : ContextRobot
     {
         protected readonly NavigateToPoint Navigation;
         protected readonly Efficiency Efficiency;
@@ -18,15 +19,15 @@
         protected readonly StayInBounds StayInBounds;
         protected readonly Separation Separation;
 
-        public int MaxFiringRange { get; set; } = 2000;
-        public bool DontFireAtSameName { get; set; } = false;
+        public readonly SensorCTF SensorCTF;
 
         public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
         public int BoostThreshold { get; set; } = 16;
 
-        public ContextTurret(Vector2 target)
+
+        public CTFBot(Vector2 target)
         {
-            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.00f });
+            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 1f });
             Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.1f });
             Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
             Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
@@ -34,19 +35,10 @@
             Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0f });
             Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
 
+            Sensors.Add(SensorCTF = new SensorCTF(this));
+
             Navigation.TargetPoint = target;
             Steps = 16;
-        }
-
-        public void Vary()
-        {
-            //Efficiency.BehaviorWeight = 0.5f;
-            Color = "cyan";
-            Sprite = "ship_cyan";
-
-            Separation.BehaviorWeight = 1;
-
-            Name += "++";
         }
 
         protected async override Task AliveAsync()
@@ -57,8 +49,6 @@
                     .Select(f => new { Fleet = f, Distance = Vector2.Distance(this.Position, f.Center) })
                     .Where(p => MathF.Abs(p.Fleet.Center.X - this.Position.X) <= ViewportCrop.X
                         && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
-                    .Where(p => !DontFireAtSameName || p.Fleet.Name != this.Name)
-                    .Where(p => p.Fleet.Name.Contains(this.Target) || this.Target == "")
                     .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
                     .OrderBy(p => p.Distance)
                     .FirstOrDefault()
@@ -71,22 +61,43 @@
             if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold)
                 Boost();
 
-            /*CustomData = JsonConvert.SerializeObject(new
+
+            if (SensorCTF.CTFModeEnabled)
             {
-                spots = Behaviors.OfType<Dodge>().Where(d => d.ConsideredPoints != null).SelectMany(d => d.ConsideredPoints)
-            });*/
+                if (SensorCTF.IsCarryingFlag)
+                {
+                    // I'm carrying the flag
 
+                    if (SensorCTF.OurTeam.FlagIsHome)
+                        // our flag is home, head to base to score
+                        Navigation.TargetPoint = SensorCTF.OurTeam.BasePosition;
+                    else
+                        // our flag is not home, attack the guy who stole it
+                        // this seems required for 1v1, we might get trickier and
+                        // change behavior here if we have a teammate
+                        Navigation.TargetPoint = SensorCTF.OurTeam.FlagPosition;
+                }
+                else
+                {
+                    // I'm not carrying a flag
 
-            CustomData = JsonConvert.SerializeObject(new
-            {
-                spots = SensorFleets.Others?.Select(f => RoboMath.FiringIntercept(HookComputer, this.Position, f.Center, f.Momentum, this.SensorFleets.MyFleet?.Ships.Count ?? 0))
-            });
-
-
-            Console.WriteLine(JsonConvert.SerializeObject(Leaderboard));
-
-//            Console.WriteLine($"Thrust: {this.HookComputer.ShipThrust(this.SensorFleets?.MyFleet?.Ships.Count ?? 0)}");
-
+                    if (!SensorCTF.ThierTeam.FlagIsHome)
+                    {
+                        // our teammate is carrying a flag
+                        if (!SensorCTF.OurTeam.FlagIsHome)
+                            // our flag is not home, attack it
+                            Navigation.TargetPoint = SensorCTF.OurTeam.FlagPosition;
+                        else
+                            // our flag is home, defend teammate
+                            Navigation.TargetPoint = SensorCTF.ThierTeam.FlagPosition;
+                    }
+                    else
+                    {
+                        // their flag is home
+                        Navigation.TargetPoint = SensorCTF.ThierTeam.BasePosition;
+                    }
+                }
+            }
 
             await base.AliveAsync();
         }
@@ -109,14 +120,5 @@
                 )
             );
         }
-
-        /*public Vector PredictPosition(Fleet fleet, float steeringAngle, int ms)
-        {
-
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
-
-            Momentum = (Momentum + thrust) * Drag;
-
-        }*/
     }
 }
