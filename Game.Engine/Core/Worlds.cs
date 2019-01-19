@@ -34,6 +34,7 @@
             AllWorlds.Add("sharks", WorldSharks());
             AllWorlds.Add("sumo", WorldSumo());
             AllWorlds.Add("boss", WorldBoss());
+            AllWorlds.Add("wormhole", WorldWormhole());
         }
 
         private static World WorldDefault()
@@ -209,6 +210,24 @@
                         Shark = Color == "red",
                     };
                 }
+            };
+        }
+
+        private static World WorldWormhole()
+        {
+            var hook = Hook.Default;
+            hook.WorldSize = 1000;
+            hook.BotBase = 0;
+            hook.Obstacles = 0;
+            hook.Wormholes = 1;
+            hook.WormholesDestination = "duel";
+
+            return new World
+            {
+                Hook = hook,
+                Name = "Wormhole test",
+                Description = "Wormhole test",
+                AllowedColors = TeamColors
             };
         }
 

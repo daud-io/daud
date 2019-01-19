@@ -23,7 +23,7 @@
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
 
-        public List<string> Messages { get; set; } = new List<string>();
+        public List<PlayerMessage> Messages { get; set; } = new List<PlayerMessage>();
 
         public bool IsAlive { get; set; } = false;
         public bool IsStillPlaying {get;set;} = false;
@@ -237,17 +237,21 @@
             }
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(string message, string type = "message")
         {
-            this.Messages.Add(message);
+            this.Messages.Add(new PlayerMessage
+            {
+                Type = type,
+                Message = message
+            });
         }
 
-        public List<string> GetMessages()
+        public List<PlayerMessage> GetMessages()
         {
             if (Messages.Count > 0)
             {
                 var m = Messages;
-                Messages = new List<string>();
+                Messages = new List<PlayerMessage>();
                 return m;
             }
             else

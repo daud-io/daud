@@ -188,7 +188,14 @@ connection.onView = newView => {
     const announcementsLength = newView.announcementsLength();
     for (var u = 0; u < announcementsLength; u++) {
         const announcement = newView.announcements(u);
-        log.addEntry(announcement.text());
+        switch (announcement.type()) {
+            case "message":
+                log.addEntry(announcement.text());
+                break;
+            case "join":
+                console.log('received join: ' + announcement.text());
+                break;
+        }
     }
 
     updateCounter += updatesLength;

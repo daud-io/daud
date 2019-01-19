@@ -12,8 +12,7 @@
         private float IdealSize = 1;
         private int TargetSize = 0;
 
-
-        public void CollisionExecute(Body projectedBody)
+        public virtual void CollisionExecute(Body projectedBody)
         {
             if (projectedBody is Bullet bullet)
             {
@@ -28,11 +27,13 @@
             }
         }
 
-        public bool IsCollision(Body projectedBody)
+        public virtual bool IsCollision(Body projectedBody)
         {
+            var isHit = false;
 
-            var isHit = Vector2.Distance(projectedBody.Position, this.Position)
-                < (projectedBody.Size + this.Size);
+            if (projectedBody is Bullet bullet)
+                isHit = Vector2.Distance(projectedBody.Position, this.Position)
+                    < (projectedBody.Size + this.Size);
 
             return isHit;
         }

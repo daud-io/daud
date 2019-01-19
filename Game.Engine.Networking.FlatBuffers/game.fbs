@@ -125,6 +125,7 @@ struct NetBody
 table NetAnnouncement
 {
 	text:string;
+    type:string;
 }
 
 table NetQuantum
