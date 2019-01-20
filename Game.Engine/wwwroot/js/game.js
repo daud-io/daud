@@ -244,8 +244,10 @@ connection.onView = newView => {
 
     view.camera = bodyFromServer(cache, newView.camera());
 
-    if (spawnOnView)
+    if (spawnOnView) {
+        spawnOnView = false;
         doSpawn();
+    }
 };
 
 let lastControl = {};
