@@ -236,6 +236,7 @@
             var hook = Hook.Default;
             hook.BotBase = 3;
             hook.BossMode = true;
+            hook.BossModeSprites = new API.Common.Sprites[] { API.Common.Sprites.ship0 };
             hook.ShotCooldownTimeBotB = 200;
             hook.SpawnShipCount = 3;
             hook.ShipGainBySizeB = 1.03f;
@@ -246,7 +247,7 @@
                 Hook = hook,
                 Name = "Boss Mode",
                 Description = "So many Circles! Much wow!",
-                AllowedColors = AllColors
+                AllowedColors = AllColors.Append("ship0").ToArray()
             };
         }
 

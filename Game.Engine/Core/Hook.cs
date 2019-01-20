@@ -1,4 +1,6 @@
-﻿namespace Game.Engine.Core
+﻿using Game.API.Common;
+
+namespace Game.Engine.Core
 {
     public class Hook
     {
@@ -179,6 +181,7 @@
         public float FlockWeight { get; set; }
         public float SnakeWeight { get; set; }
         public bool BossMode { get; set; }
+        public Sprites[] BossModeSprites { get; set; }
 
         public int FlockSpeed { get; set; }
 
@@ -203,6 +206,8 @@
         public int LifecycleDuration {get;set;}
 
         public int PlayerCountGracePeriodMS { get; set; }
+
+
 
         public Hook Clone()
         {

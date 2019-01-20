@@ -20,7 +20,7 @@
 
         public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
 
-        public virtual bool BossMode { get => false; }
+        public virtual bool BossMode { get => World.Hook.BossMode && World.Hook.BossModeSprites.Contains(this.Owner.ShipSprite); }
 
         public Player Owner { get; set; }
 
