@@ -234,10 +234,12 @@
         private static World WorldBoss()
         {
             var hook = Hook.Default;
-            hook.BotBase = 5;
+            hook.BotBase = 3;
             hook.BossMode = true;
             hook.ShotCooldownTimeBotB = 200;
-            hook.SpawnShipCount = 20;
+            hook.SpawnShipCount = 3;
+            hook.ShipGainBySizeB = 1.03f;
+            hook.ShipGainBySizeM = -0.01f;
 
             return new World
             {

@@ -18,6 +18,8 @@
         public virtual float BaseThrustB { get => World.Hook.BaseThrustB; }
         public virtual float BoostThrust { get => World.Hook.BoostThrust; }
 
+        public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
+
         public virtual bool BossMode { get => false; }
 
         public Player Owner { get; set; }
@@ -170,7 +172,7 @@
 
             FleetCenter = world.RandomSpawnPosition(this);
 
-            for (int i = 0; i < world.Hook.SpawnShipCount; i++)
+            for (int i = 0; i < SpawnShipCount; i++)
                 this.AddShip();
         }
 
@@ -350,11 +352,11 @@
             {
                 ship.Position = average/5 + 
                     new Vector2(
-                        MathF.Cos(angle), 
-                        MathF.Sin(angle)
+                        MathF.Cos(angle+Ships[0].Angle), 
+                        MathF.Sin(angle+Ships[0].Angle)
                     ) * (50 + 15 * Ships.Count);
-                ship.Momentum = momentum/5;
-                ship.Angle = angle;
+                ship.Momentum = momentum / 5;
+                ship.Angle = Ships[0].Angle;
             }
         }
         private void Snake(Ship ship)

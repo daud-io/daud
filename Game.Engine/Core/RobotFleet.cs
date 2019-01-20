@@ -8,5 +8,6 @@
         public override float BaseThrustM { get => World.Hook.BaseThrustM; }
         public override float BaseThrustB { get => World.Hook.BaseThrustB; }
         public override bool BossMode { get => World.Hook.BossMode; }
+        public override int SpawnShipCount {get => World.Hook.BossMode ? 20 : World.Hook.SpawnShipCount; }
     }
 }
