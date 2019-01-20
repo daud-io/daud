@@ -65,7 +65,7 @@
                     if (Variation && i % 2 == 0)
                         robot.Vary();*/
 
-                    var robot = new CTFBot(Vector2.Zero)
+                    var robot = new MadBot(Vector2.Zero)
                     {
                         AutoSpawn = true,
                         AutoFire = Firing,
