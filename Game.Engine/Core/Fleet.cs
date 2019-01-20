@@ -18,6 +18,8 @@
         public virtual float BaseThrustB { get => World.Hook.BaseThrustB; }
         public virtual float BoostThrust { get => World.Hook.BoostThrust; }
 
+        public virtual bool BossMode { get => false; }
+
         public Player Owner { get; set; }
 
         public bool BoostRequested { get; set; }
@@ -243,15 +245,21 @@
             FleetCenter = Flocking.FleetCenterNaive(this.Ships);
             FleetMomentum = Flocking.FleetMomentum(this.Ships);
 
+            var summation = new Vector2();
+            var moment = new Vector2();
             foreach (var ship in Ships)
             {
                 var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
                 ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
 
+                if(Ships.IndexOf(ship)<5){
+                    summation+=ship.Position;
+                    moment += ship.Momentum;
+                }
                 Flock(ship);
                 Snake(ship);
-                Ring(ship);
+                Ring(ship, summation, moment);
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
@@ -330,21 +338,22 @@
             ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
         }
 
-        private void Ring(Ship ship)
+        private void Ring(Ship ship, Vector2 average, Vector2 momentum)
         {
-            if (World.Hook.BossMode == false)
+            if (!BossMode)
                 return;
 
             var shipIndex = Ships.IndexOf(ship);
-            var angle = (shipIndex-1)/(float)(Ships.Count-1) * 2 * MathF.PI;
-            if (shipIndex > 0)
+            var innerAngle = (shipIndex - 5) / (float)(Ships.Count - 5) * 2 * MathF.PI;
+            var angle = (shipIndex - 5) / (float)(Ships.Count - 5) * 2 * MathF.PI;
+            if (shipIndex > 4)
             {
-                ship.Position = Ships[0].Position + 
+                ship.Position = average/5 + 
                     new Vector2(
                         MathF.Cos(angle), 
                         MathF.Sin(angle)
-                    ) * (30 + 10 * Ships.Count);
-                ship.Momentum = Ships[0].Momentum;
+                    ) * (50 + 15 * Ships.Count);
+                ship.Momentum = momentum/5;
                 ship.Angle = angle;
             }
         }
