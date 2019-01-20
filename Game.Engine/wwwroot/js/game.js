@@ -120,6 +120,8 @@ connection.onLeaderboard = lb => {
 var fleetID = 0;
 let lastAliveState = false;
 let aliveSince = false;
+let joiningWorld = false;
+
 connection.onView = newView => {
     viewCounter++;
 
@@ -186,9 +188,23 @@ connection.onView = newView => {
     }
 
     const announcementsLength = newView.announcementsLength();
+    
     for (var u = 0; u < announcementsLength; u++) {
         const announcement = newView.announcements(u);
-        log.addEntry(announcement.text());
+        switch (announcement.type()) {
+            case "message":
+                log.addEntry(announcement.text());
+                break;
+            case "join":
+                let worldKey = announcement.text();
+
+                if (!joiningWorld) {
+                    joiningWorld = true;
+                    console.log('received join: ' + worldKey);
+                    LobbyCallbacks.joinWorld(worldKey);
+                }
+                break;
+        }
     }
 
     updateCounter += updatesLength;
@@ -227,6 +243,9 @@ connection.onView = newView => {
     }
 
     view.camera = bodyFromServer(cache, newView.camera());
+
+    if (spawnOnView)
+        doSpawn();
 };
 
 let lastControl = {};
@@ -254,7 +273,13 @@ LobbyCallbacks.onLobbyClose = function() {
     clearLeaderboards();
 };
 
-LobbyCallbacks.onWorldJoin = function(worldKey, world) {
+var spawnOnView = false;
+LobbyCallbacks.onWorldJoin = function (worldKey, world) {
+    if (joiningWorld) {
+        joiningWorld = false;
+        spawnOnView = true;
+    }
+
     currentWorld = world;
     window.Game.primaryConnection.disconnect();
     cache.empty();

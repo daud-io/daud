@@ -49,6 +49,9 @@
                     BotRespawnDelay = 10000,
 
                     StepTime = 40,
+                    Wormholes = 0,
+                    WormholesDestination = null,
+
                     Obstacles = 10,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
@@ -144,6 +147,10 @@
         public float SeekerLifeMultiplier { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
+
+        public int Wormholes { get; set; }
+        public string WormholesDestination { get; set; }
+
         public int Obstacles { get; set; }
         public int Pickups { get; set; } = 0;
         public int Fishes { get; set; } = 0;

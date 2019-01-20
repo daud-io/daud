@@ -487,16 +487,21 @@ public struct NetAnnouncement : IFlatbufferObject
 
   public string Text { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
   public ArraySegment<byte>? GetTextBytes() { return __p.__vector_as_arraysegment(4); }
+  public string Type { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetTypeBytes() { return __p.__vector_as_arraysegment(6); }
 
   public static Offset<NetAnnouncement> CreateNetAnnouncement(FlatBufferBuilder builder,
-      StringOffset textOffset = default(StringOffset)) {
-    builder.StartObject(1);
+      StringOffset textOffset = default(StringOffset),
+      StringOffset typeOffset = default(StringOffset)) {
+    builder.StartObject(2);
+    NetAnnouncement.AddType(builder, typeOffset);
     NetAnnouncement.AddText(builder, textOffset);
     return NetAnnouncement.EndNetAnnouncement(builder);
   }
 
-  public static void StartNetAnnouncement(FlatBufferBuilder builder) { builder.StartObject(1); }
+  public static void StartNetAnnouncement(FlatBufferBuilder builder) { builder.StartObject(2); }
   public static void AddText(FlatBufferBuilder builder, StringOffset textOffset) { builder.AddOffset(0, textOffset.Value, 0); }
+  public static void AddType(FlatBufferBuilder builder, StringOffset typeOffset) { builder.AddOffset(1, typeOffset.Value, 0); }
   public static Offset<NetAnnouncement> EndNetAnnouncement(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetAnnouncement>(o);
