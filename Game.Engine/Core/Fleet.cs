@@ -356,7 +356,8 @@
                         MathF.Sin(angle+Ships[0].Angle)
                     ) * (50 + 15 * Ships.Count);
                 ship.Momentum = momentum / 5;
-                ship.Angle = Ships[0].Angle;
+                ship.Angle = angle + Ships[0].Angle;
+
             }
         }
         private void Snake(Ship ship)
