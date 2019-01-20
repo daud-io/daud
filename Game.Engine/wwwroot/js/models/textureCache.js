@@ -1,5 +1,5 @@
-﻿export var textureCache = {};
+export const textureCache = {};
 
 textureCache.clear = function() {
-    for (var key in textureCache) if (key != "clear") delete textureCache[key];
+    for (const key in textureCache) if (key != "clear") delete textureCache[key];
 };

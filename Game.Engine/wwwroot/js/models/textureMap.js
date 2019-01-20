@@ -1,4 +1,4 @@
-﻿export var textureMap = {
+export const textureMap = {
     bg: { file: "bg", scale: 1 },
 
     // fish

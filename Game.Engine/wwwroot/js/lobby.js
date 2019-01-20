@@ -2,14 +2,14 @@
 import { Controls } from "./controls";
 import { __esModule } from "pixi.js/lib/core";
 
-var worlds = document.getElementById("worlds");
-var worldList = document.getElementById("worldList");
+const worlds = document.getElementById("worlds");
+const worldList = document.getElementById("worldList");
 
-var allWorlds = false;
+let allWorlds = false;
 
 function selectRow(selectedWorld) {
-    for (var world in allWorlds) {
-        var row = document.getElementById(`${world}_row`);
+    for (const world in allWorlds) {
+        const row = document.getElementById(`${world}_row`);
         if (world == selectedWorld) row.classList.add("selected");
         else row.classList.remove("selected");
     }
@@ -20,8 +20,8 @@ function buildList(response) {
 
     allWorlds = {};
 
-    var options = "";
-    for (var world of response) {
+    let options = "";
+    for (const world of response) {
         allWorlds[world.world] = world;
 
         options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
@@ -31,7 +31,7 @@ function buildList(response) {
             `<td><b>${world.name}</b>: ${world.description}</td>` +
             `</tr>`;
 
-        var img = world.image ? `<img src="${imgs[world.image]}" />` : "";
+        const img = world.image ? `<img src="${imgs[world.image]}" />` : "";
         if (world.instructions || img) options += `<tr class="details"><td colspan="2">${img}${world.instructions || ""}</td></tr>`;
         options += `</tbody>`;
     }
@@ -40,7 +40,7 @@ function buildList(response) {
 
     document.querySelectorAll(".worldrow").forEach(worldRow =>
         worldRow.addEventListener("click", function(e) {
-            var worldKey = this.getAttribute("world");
+            const worldKey = this.getAttribute("world");
 
             if (e.srcElement.tagName == "BUTTON") joinWorld(worldKey);
             else selectRow(worldKey);
@@ -49,33 +49,33 @@ function buildList(response) {
 }
 
 function updateList(response) {
-    for (var world of response) {
+    for (const world of response) {
         document.getElementById(`${world.world}_playercount`).innerHTML = world.players;
-        var row = document.getElementById(`${world.world}_row`);
+        const row = document.getElementById(`${world.world}_row`);
 
         if (world.players > 0) row.classList.remove("empty");
         else row.classList.add("empty");
     }
 }
 
-var controls = document.querySelector(".controls");
-var social = document.querySelector(".social");
-var showing = false;
-var firstLoad = true;
+const controls = document.querySelector(".controls");
+const social = document.querySelector(".social");
+let showing = false;
+let firstLoad = true;
 
-export var LobbyCallbacks = {
+export const LobbyCallbacks = {
     onLobbyClose: false,
     onWorldJoin: false
 };
 
-LobbyCallbacks.joinWorld = function (worldKey) {
+LobbyCallbacks.joinWorld = function(worldKey) {
     refreshList(worldKey);
-}
+};
 
 function refreshList(autoJoinWorld) {
     if (!showing && !firstLoad && !autoJoinWorld) return;
 
-    var autoJoin = firstLoad || autoJoinWorld;
+    const autoJoin = firstLoad || autoJoinWorld;
     firstLoad = false;
 
     fetch("/api/v1/server/worlds", {
@@ -88,7 +88,7 @@ function refreshList(autoJoinWorld) {
         .then(({ success, response }) => {
             if (success) {
                 if (window.location.hash) {
-                    var selected = window.location.hash.substring(1);
+                    const selected = window.location.hash.substring(1);
                     window.Game.primaryConnection.connect(selected);
                 }
 

@@ -22,7 +22,7 @@ export class Ship extends RenderedObject {
     }
 
     static getSelectorImage(spriteName) {
-        var spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
+        const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
 
         if (spriteDefinition.selector) return RenderedObject.getTextureImage(spriteDefinition.selector);
         else return false;
