@@ -68,10 +68,14 @@ export var LobbyCallbacks = {
     onWorldJoin: false
 };
 
-function refreshList() {
-    if (!showing && !firstLoad) return;
+LobbyCallbacks.joinWorld = function (worldKey) {
+    refreshList(worldKey);
+}
 
-    var autoJoin = firstLoad;
+function refreshList(autoJoinWorld) {
+    if (!showing && !firstLoad && !autoJoinWorld) return;
+
+    var autoJoin = firstLoad || autoJoinWorld;
     firstLoad = false;
 
     fetch("/api/v1/server/worlds", {
@@ -90,7 +94,7 @@ function refreshList() {
 
                 buildList(response);
 
-                if (autoJoin) joinWorld("default");
+                if (autoJoin) joinWorld(autoJoinWorld || "default");
             }
         });
 }

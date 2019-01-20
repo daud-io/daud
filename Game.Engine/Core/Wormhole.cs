@@ -6,6 +6,7 @@
 
         public Wormhole()
         {
+            AngularVelocity = 0.005f;
         }
 
         public Wormhole(string targetWorld = null)
