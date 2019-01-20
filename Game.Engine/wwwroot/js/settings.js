@@ -118,6 +118,7 @@ async function theme(v) {
             }
 
             if (info.textureMap) {
+                const promises = [];
                 for (let key in info.textureMap) {
                     const map = info.textureMap[key];
 
@@ -127,23 +128,27 @@ async function theme(v) {
                         textureMap[key][textureKey] = map[textureKey];
                     }
 
-                    zip.file(`daudmod/${map.file}.png`)
-                        .async("arraybuffer")
-                        .then(ab => {
-                            const arrayBufferView = new Uint8Array(ab);
-                            const blob = new Blob([arrayBufferView], { type: "image/png" });
-                            const urlCreator = window.URL || window.webkitURL;
-                            const url = urlCreator.createObjectURL(blob);
+                    promises.push(
+                        zip
+                            .file(`daudmod/${map.file}.png`)
+                            .async("arraybuffer")
+                            .then(ab => {
+                                const arrayBufferView = new Uint8Array(ab);
+                                const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                const urlCreator = window.URL || window.webkitURL;
+                                const url = urlCreator.createObjectURL(blob);
 
-                            textureMap[key].url = url;
-
-                            if (window.Game && window.Game.cache) {
-                                textureCache.clear();
-                                window.Game.cache.refreshSprites();
-                                window.Game.reinitializeWorld();
-                            }
-                        });
+                                textureMap[key].url = url;
+                            })
+                    );
                 }
+                Promise.all(promises).then(() => {
+                    if (window.Game && window.Game.cache) {
+                        textureCache.clear();
+                        window.Game.cache.refreshSprites();
+                        window.Game.reinitializeWorld();
+                    }
+                });
             }
         });
 }
