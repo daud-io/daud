@@ -21,7 +21,7 @@ export const spriteModeMap = {
             default: ["ship0"],
             weaponupgrade: ["ship0", "circles"],
             boost: ["ship0", "thruster_cyan"],
-            invulnerable: ["ship0", "obstacle"]
+            invulnerable: ["ship0", "shield"]
         },
         selector: "ship0"
     },
@@ -31,7 +31,7 @@ export const spriteModeMap = {
             default: ["ship_cyan"],
             weaponupgrade: ["ship_cyan", "circles"],
             boost: ["ship_cyan", "thruster_cyan"],
-            invulnerable: ["ship_cyan", "obstacle"]
+            invulnerable: ["ship_cyan", "shield"]
         },
         selector: "ship_cyan"
     },
@@ -40,7 +40,7 @@ export const spriteModeMap = {
             default: ["ship_green"],
             weaponupgrade: ["ship_green", "circles"],
             boost: ["ship_green", "thruster_green"],
-            invulnerable: ["ship_green", "obstacle"]
+            invulnerable: ["ship_green", "shield"]
         },
         selector: "ship_green"
     },
@@ -49,7 +49,7 @@ export const spriteModeMap = {
             default: ["ship_orange"],
             weaponupgrade: ["ship_orange", "circles"],
             boost: ["ship_orange", "thruster_orange"],
-            invulnerable: ["ship_orange", "obstacle"]
+            invulnerable: ["ship_orange", "shield"]
         },
         selector: "ship_orange"
     },
@@ -58,7 +58,7 @@ export const spriteModeMap = {
             default: ["ship_pink"],
             weaponupgrade: ["ship_pink", "circles"],
             boost: ["ship_pink", "thruster_pink"],
-            invulnerable: ["ship_pink", "obstacle"]
+            invulnerable: ["ship_pink", "shield"]
         },
         selector: "ship_pink"
     },
@@ -67,7 +67,7 @@ export const spriteModeMap = {
             default: ["ship_red"],
             weaponupgrade: ["ship_red", "circles"],
             boost: ["ship_red", "thruster_red"],
-            invulnerable: ["ship_red", "obstacle"]
+            invulnerable: ["ship_red", "shield"]
         },
         selector: "ship_red"
     },
@@ -76,7 +76,7 @@ export const spriteModeMap = {
             default: ["ship_yellow"],
             weaponupgrade: ["ship_yellow", "circles"],
             boost: ["ship_yellow", "thruster_yellow"],
-            invulnerable: ["ship_yellow", "obstacle"]
+            invulnerable: ["ship_yellow", "shield"]
         },
         selector: "ship_yellow"
     },
@@ -86,7 +86,7 @@ export const spriteModeMap = {
             default: ["ship_secret"],
             weaponupgrade: ["ship_secret", "circles"],
             boost: ["ship_secret", "thruster_yellow"],
-            invulnerable: ["ship_secret", "obstacle"]
+            invulnerable: ["ship_secret", "shield"]
         },
         selector: "ship_secret"
     },
@@ -95,7 +95,7 @@ export const spriteModeMap = {
             default: ["ship_zed"],
             weaponupgrade: ["ship_zed", "circles"],
             boost: ["ship_zed", "thruster_red"],
-            invulnerable: ["ship_zed", "obstacle"]
+            invulnerable: ["ship_zed", "shield"]
         },
         selector: "ship_zed"
     },
@@ -109,8 +109,10 @@ export const spriteModeMap = {
     bullet_yellow: { modes: { default: ["bullet_yellow"] } },
 
     obstacle: { modes: { default: ["obstacle"] } },
+    wormhole: { modes: { default: ["wormhole"] } },
     seeker: { modes: { default: ["seeker"] } },
     seeker_pickup: { modes: { default: ["seeker_pickup"] } },
+    shield: { modes: { default: ["shield"] } },
 
     ctf_base: { modes: { default: ["ctf_base"] } },
 

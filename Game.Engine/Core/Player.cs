@@ -32,7 +32,8 @@
         public bool IsInvulnerable { get; set; } = false;
 
         public long SpawnTime;
-        public const int InvulnerableTime = 2000;
+        public int SpawnInvulnerableTime => World.Hook.SpawnInvulnerabilityTime;
+        public long InvulnerableUntil = 0;
 
         public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
@@ -68,7 +69,7 @@
 
                 Fleet.Init(World);
 
-                IsInvulnerable = true;
+                SetInvulnerability(SpawnInvulnerableTime);
                 SpawnTime = World.Time;
             }
 
@@ -135,6 +136,12 @@
             }
         }
 
+        public void SetInvulnerability(int duration)
+        {
+            InvulnerableUntil = World.Time + duration;
+            IsInvulnerable = true;
+        }
+
         public virtual void Think()
         {
             if (!IsAlive)
@@ -159,10 +166,10 @@
 
             if (IsInvulnerable)
             {
-                if (this.ControlInput?.ShootRequested ?? false)
+                if (CummulativeShootRequested && this.Fleet.ShootCooldownStatus == 1)
                     IsInvulnerable = false;
 
-                if (World.Time > SpawnTime + InvulnerableTime)
+                if (World.Time > InvulnerableUntil)
                     IsInvulnerable = false;
             }
         }

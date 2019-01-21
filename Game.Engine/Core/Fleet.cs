@@ -182,6 +182,7 @@
 
             if (FireWeapon)
             {
+
                 var weapon = this.WeaponStack.Any()
                     ? this.WeaponStack.Pop()
                     : this.BaseWeapon;
@@ -222,6 +223,14 @@
 
             if (Ships.Contains(ship))
                 Ships.Remove(ship);
+        }
+
+
+        public void PushStackWeapon(IFleetWeapon weapon)
+        {
+            WeaponStack.Push(weapon);
+            if (WeaponStack.Count > World.Hook.FleetWeaponStackDepth)
+                WeaponStack = new Stack<IFleetWeapon>(WeaponStack.TakeLast(World.Hook.FleetWeaponStackDepth));
         }
 
         public override void Think()

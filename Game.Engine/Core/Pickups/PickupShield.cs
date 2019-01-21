@@ -3,17 +3,17 @@
     using Game.API.Common;
     using Game.Engine.Core.Weapons;
 
-    public class PickupSeeker : PickupBase
+    public class PickupShield : PickupBase
     {
-        public PickupSeeker()
+        public PickupShield()
         {
             Size = 100;
-            Sprite = Sprites.seeker_pickup;
+            Sprite = Sprites.shield;
         }
 
         protected override void EquipFleet(Fleet fleet)
         {
-            fleet.PushStackWeapon(new FleetWeaponGeneric<ShipWeaponSeeker>());
+            fleet.PushStackWeapon(new FleetWeaponShield());
         }
     }
 }
