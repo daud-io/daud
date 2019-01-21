@@ -239,8 +239,6 @@
             hook.BossModeSprites = new API.Common.Sprites[] { API.Common.Sprites.ship0 };
             hook.ShotCooldownTimeBotB = 200;
             hook.SpawnShipCount = 3;
-            hook.ShipGainBySizeB = 1.03f;
-            hook.ShipGainBySizeM = -0.01f;
 
             return new World
             {

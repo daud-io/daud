@@ -345,6 +345,7 @@
             if (!BossMode)
                 return;
 
+            var targetAngle = MathF.Atan2(AimTarget.Y, AimTarget.X);
             var shipIndex = Ships.IndexOf(ship);
             var innerAngle = (shipIndex - 5) / (float)(Ships.Count - 5) * 2 * MathF.PI;
             var angle = (shipIndex - 5) / (float)(Ships.Count - 5) * 2 * MathF.PI;
@@ -352,11 +353,11 @@
             {
                 ship.Position = average/5 + 
                     new Vector2(
-                        MathF.Cos(angle+Ships[0].Angle), 
-                        MathF.Sin(angle+Ships[0].Angle)
+                        MathF.Cos(angle + targetAngle), 
+                        MathF.Sin(angle + targetAngle)
                     ) * (50 + 15 * Ships.Count);
                 ship.Momentum = momentum / 5;
-                ship.Angle = angle + Ships[0].Angle;
+                ship.Angle = angle + targetAngle;
 
             }
         }
