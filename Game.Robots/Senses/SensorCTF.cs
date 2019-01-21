@@ -46,8 +46,6 @@
 
             var modeData = entry.ModeData;
             var ctfData = JsonConvert.DeserializeAnonymousType(modeData, new { flagStatus = "" });
-            ;
-            var CyanFlagPosition = entry.Position;
 
             var ctfTeam = new CTFTeam
             {

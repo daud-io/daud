@@ -17,15 +17,14 @@
         public SensorTeam(ContextRobot robot)
         {
             this.Robot = robot;
-            if (this.Robot.Color == "cyan")
-                this.Team = Teams.Cyan;
-            else
-                this.Team = Teams.Red;
-            
         }
 
         public void Sense()
         {
+            if (this.Robot.Color == "cyan")
+                this.Team = Teams.Cyan;
+            else
+                this.Team = Teams.Red;
         }
     }
 }

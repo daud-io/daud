@@ -25,19 +25,19 @@
         public int BoostThreshold { get; set; } = 16;
 
 
-        public CTFBot(Vector2 target)
+        public CTFBot()
         {
-            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 1f });
+            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.1f });
             Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.1f });
             Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
             Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
             Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
             Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0f });
-            Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
+            Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 200, BehaviorWeight = 0.3f });
 
             Sensors.Add(SensorCTF = new SensorCTF(this));
 
-            Navigation.TargetPoint = target;
+            Navigation.TargetPoint = Vector2.Zero;
             Steps = 16;
         }
 
