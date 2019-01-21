@@ -27,7 +27,7 @@
         public ContextTurret()
         {
             Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.00f });
-            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.1f });
+            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 1f, MaximumAngle = MathF.PI / 4});
             Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
             Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
             Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
