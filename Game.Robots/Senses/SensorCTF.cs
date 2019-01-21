@@ -29,7 +29,6 @@
             this.Robot = robot;
         }
 
-
         public bool IsCarryingFlag
         {
             get
