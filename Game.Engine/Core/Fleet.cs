@@ -2,6 +2,7 @@
 {
     using Game.API.Common;
     using Game.Engine.Core.Steering;
+    using Game.Engine.Core.Weapons;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -42,6 +43,8 @@
 
         public List<Bullet> NewBullets { get; set; } = new List<Bullet>();
 
+        public IFleetWeapon Weapon { get; set; }
+
         public Pickup Pickup = null;
 
         public Vector2 FleetCenter = Vector2.Zero;
@@ -50,7 +53,7 @@
         public float Burden { get; set; } = 0f;
         public bool Shark { get; set; } = false;
         public bool LastTouchedLeft { get; set; } = false;
-        private bool FireVolley = false;
+        private bool FireWeapon = false;
 
         public string CustomData { get; set; }
 
@@ -170,6 +173,8 @@
             this.GroupType = GroupTypes.Fleet;
             this.ZIndex = 100;
 
+            this.Weapon = new FleetWeaponBullet();
+
             FleetCenter = world.RandomSpawnPosition(this);
 
             for (int i = 0; i < SpawnShipCount; i++)
@@ -181,10 +186,11 @@
             /*if (this.Owner != null && this.Owner.IsAlive)
                 this.PendingDestruction = true;*/
 
-            if (FireVolley)
+            if (FireWeapon)
             {
-                Volley.FireFrom(this);
-                FireVolley = false;
+                this.Weapon.FireFrom(this);
+
+                FireWeapon = false;
                 Pickup = null;
             }
 
@@ -289,7 +295,7 @@
                 /*foreach (var ship in Ships)
                     NewBullets.Add(Bullet.FireFrom(ship));*/
 
-                FireVolley = true;
+                FireWeapon = true;
             }
 
             if (World.Time > BoostCooldownTime)

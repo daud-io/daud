@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.Engine.Core.Weapons;
     using System;
     using System.Linq;
     using System.Numerics;

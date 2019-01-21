@@ -1,32 +1,26 @@
-﻿namespace Game.Engine.Core
+﻿namespace Game.Engine.Core.Weapons
 {
     using Game.API.Common;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class Volley : ActorGroup
+    public class ShipWeaponVolley<T> : ActorGroup
+        where T: IShipWeapon, new()
     {
         public Fleet FiredFrom { get; set; }
-        public List<Bullet> NewBullets { get; set; } = new List<Bullet>();
-        public List<Bullet> AllBullets { get; set; } = new List<Bullet>();
+        public List<IShipWeapon> NewWeapons { get; set; } = new List<IShipWeapon>();
+        public List<IShipWeapon> AllWeapons { get; set; } = new List<IShipWeapon>();
         public List<Tuple<Ship, long>> FiringSequence = new List<Tuple<Ship, long>>();
-
-        private int Size = 20;
-        private bool IsSeeker = false;
-        private Sprites? SpriteOverride = null;
 
         public static void FireFrom(Fleet fleet)
         {
-            var volley = new Volley
+            var volley = new ShipWeaponVolley<T>
             {
                 FiredFrom = fleet,
                 GroupType = GroupTypes.VolleyBullet,
                 OwnerID = fleet.ID,
                 ZIndex = 50,
-                Size = fleet.Pickup?.Size ?? 20,
-                SpriteOverride = fleet.Pickup?.BulletSprite,
-                IsSeeker = fleet.Pickup != null,
                 Color = fleet.Color
             };
 
@@ -59,9 +53,10 @@
                     && fireBy <= ship.World.Time 
                     && fireBy > 0)
                 {
-                    var bullet = Bullet.FireFrom(ship, IsSeeker, SpriteOverride, Size);
-                    bullet.Group = this;
-                    this.NewBullets.Add(bullet);
+
+                    var shipWeapon = new T();
+                    shipWeapon.FireFrom(ship, this);
+                    this.NewWeapons.Add(shipWeapon);
                     fired.Add(pair);
                 }
             }
@@ -72,8 +67,8 @@
             this.PendingDestruction = 
                 this.PendingDestruction
                 || (
-                    !NewBullets.Any() 
-                    && !AllBullets.Any(b => b.Exists)
+                    !NewWeapons.Any() 
+                    && !AllWeapons.Any(b => b.Active)
                 );
         }
 
@@ -81,11 +76,11 @@
         {
             base.CreateDestroy();
 
-            foreach (var bullet in NewBullets)
+            foreach (var bullet in NewWeapons)
                 bullet.Init(World);
 
-            AllBullets.AddRange(NewBullets);
-            NewBullets.Clear();
+            AllWeapons.AddRange(NewWeapons);
+            NewWeapons.Clear();
         }
     }
 }
