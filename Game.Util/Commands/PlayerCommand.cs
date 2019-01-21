@@ -2,6 +2,7 @@
 {
     using Game.Robots;
     using McMaster.Extensions.CommandLineUtils;
+    using System;
     using System.Collections.Generic;
     using System.Numerics;
     using System.Threading.Tasks;
@@ -35,8 +36,8 @@
             [Option]
             public bool Variation { get; set; } = false;
 
-            [Option]
-            public bool DontFireAtSameName { get; set; } = false;
+            [Option("--type-name")]
+            public string TypeName { get; set; } = "Game.Robots.ContextTurret";
 
             [Option("--startup-delay")]
             public int StartupDelay{ get; set; } = 0;
@@ -48,35 +49,20 @@
 
                 var tasks = new List<Task>();
 
+                var type = Type.GetType(TypeName);
+
                 for (int i = 0; i < Replicas; i++)
                 {
                     var connection = await API.Player.ConnectAsync(World);
-                    /*var robot = new ContextTurret(Vector2.Zero)
-                    {
-                        AutoSpawn = true,
-                        AutoFire = Firing,
-                        Color = Color,
-                        Name = Name,
-                        Target = Target,
-                        Sprite = Sprite,
-                        DontFireAtSameName = DontFireAtSameName
-                    };
-
-                    if (Variation && i % 2 == 0)
-                        robot.Vary();*/
-
-                    var robot = new MadBot(Vector2.Zero)
-                    {
-                        AutoSpawn = true,
-                        AutoFire = Firing,
-                        Color = Color,
-                        Name = Name,
-                        Target = Target,
-                        Sprite = Sprite
-                    };
-
-
+                    var robot = Activator.CreateInstance(type) as Robot;
+                    robot.AutoSpawn = true;
+                    robot.AutoFire = Firing;
+                    robot.Color = Color;
+                    robot.Name = Name;
+                    robot.Target = Target;
+                    robot.Sprite = Sprite;
                     tasks.Add(robot.Start(connection));
+
                 };
 
                 await Task.WhenAll(tasks);

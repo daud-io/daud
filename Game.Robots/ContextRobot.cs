@@ -3,6 +3,7 @@
     using Game.Robots.Behaviors;
     using Game.Robots.Behaviors.Blending;
     using Game.Robots.Senses;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -47,6 +48,26 @@
         protected virtual Task OnSensors()
         {
             return Task.FromResult(0);
+        }
+
+        protected void Log(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write($"[{this.FleetID}\t{this.Name}]\t");
+            Console.ResetColor();
+            Console.WriteLine(message);
+        }
+
+        protected override Task OnDeathAsync()
+        {
+            this.Log("Oh snap, I'm dead.");
+            return base.OnDeathAsync();
+        }
+
+        protected override Task OnSpawnAsync()
+        {
+            this.Log("Hooray, I'm alive!");
+            return base.OnSpawnAsync();
         }
 
         protected async override Task AliveAsync()

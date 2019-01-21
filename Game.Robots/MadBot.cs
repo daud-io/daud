@@ -25,7 +25,7 @@
         public int BoostThreshold { get; set; } = 16;
 
 
-        public MadBot(Vector2 target)
+        public MadBot()
         {
             Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.01f });
             Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.1f });
@@ -37,7 +37,7 @@
 
             Sensors.Add(SensorCTF = new SensorCTF(this));
 
-            Navigation.TargetPoint = target;
+            Navigation.TargetPoint = new Vector2(0, 0);
             Steps = 16;
         }
 
