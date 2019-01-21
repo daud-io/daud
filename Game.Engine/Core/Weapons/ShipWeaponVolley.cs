@@ -12,11 +12,13 @@
         public List<IShipWeapon> NewWeapons { get; set; } = new List<IShipWeapon>();
         public List<IShipWeapon> AllWeapons { get; set; } = new List<IShipWeapon>();
         public List<Tuple<Ship, long>> FiringSequence = new List<Tuple<Ship, long>>();
+        private Action<IShipWeapon> Configure;
 
-        public static void FireFrom(Fleet fleet)
+        public static void FireFrom(Fleet fleet, Action<IShipWeapon> configure = null)
         {
             var volley = new ShipWeaponVolley<T>
             {
+                Configure = configure,
                 FiredFrom = fleet,
                 GroupType = GroupTypes.VolleyBullet,
                 OwnerID = fleet.ID,
@@ -56,6 +58,8 @@
 
                     var shipWeapon = new T();
                     shipWeapon.FireFrom(ship, this);
+                    Configure?.Invoke(shipWeapon);
+
                     this.NewWeapons.Add(shipWeapon);
                     fired.Add(pair);
                 }

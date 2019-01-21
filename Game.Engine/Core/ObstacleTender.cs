@@ -1,4 +1,6 @@
-﻿namespace Game.Engine.Core
+﻿using Game.Engine.Core.Pickups;
+
+namespace Game.Engine.Core
 {
     public class ObstacleTender : IActor
     {
@@ -6,14 +8,14 @@
 
         private readonly GenericTender<Obstacle> Obstacles = new GenericTender<Obstacle>();
         private readonly GenericTender<Fish> Fishes = new GenericTender<Fish>();
-        private readonly GenericTender<Pickup> Pickups = new GenericTender<Pickup>();
+        private readonly GenericTender<PickupSeeker> PickupSeekers = new GenericTender<PickupSeeker>();
         private readonly GenericTender<Wormhole> Wormholes = new GenericTender<Wormhole>();
 
         public void Think()
         {
             Obstacles.DesiredCount = World.Hook.Obstacles;
             Fishes.DesiredCount = World.Hook.Fishes;
-            Pickups.DesiredCount = World.Hook.Pickups;
+            PickupSeekers.DesiredCount = World.Hook.PickupSeekers;
             Wormholes.DesiredCount = World.Hook.Wormholes;
         }
 
@@ -24,7 +26,7 @@
 
             Obstacles.Init(world);
             Fishes.Init(world);
-            Pickups.Init(world);
+            PickupSeekers.Init(world);
             Wormholes.Init(world);
         }
 
@@ -33,7 +35,7 @@
             this.World.Actors.Remove(this);
             Obstacles.Destroy();
             Fishes.Destroy();
-            Pickups.Destroy();
+            PickupSeekers.Destroy();
             Wormholes.Destroy();
         }
 

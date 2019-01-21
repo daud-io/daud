@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace Game.Engine.Core.Weapons
 {
-    public class ShipWeaponSeeker : Bullet, ICollide
+    public class ShipWeaponSeeker : ShipWeaponBullet, ICollide
     {
         public override void FireFrom(Ship ship, ActorGroup group)
         {
@@ -13,6 +13,8 @@ namespace Game.Engine.Core.Weapons
             this.Momentum /= 2.0f;
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife * World.Hook.SeekerLifeMultiplier);
             this.Sprite = API.Common.Sprites.seeker;
+            this.Size = 100;
+
         }
 
         public override void Think()
@@ -33,23 +35,24 @@ namespace Game.Engine.Core.Weapons
                     .FirstOrDefault();
             }
 
+            float thrustAngle = 0;
             if (target != null)
             {
                 var delta = target.Position - Position;
-                ThrustAngle = MathF.Atan2(delta.Y, delta.X);
+                thrustAngle = MathF.Atan2(delta.Y, delta.X);
 
                 Angle = MathF.Atan2(Momentum.Y, Momentum.X);
             }
             else
-                ThrustAngle = Angle;
+                thrustAngle = Angle;
 
-            var thrust = new Vector2(MathF.Cos(ThrustAngle), MathF.Sin(ThrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
+            var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
             Momentum = (Momentum + thrust) * Drag;
         }
 
         public virtual void CollisionExecute(Body projectedBody)
         {
-            var bullet = projectedBody as Bullet;
+            var bullet = projectedBody as ShipWeaponBullet;
             var fleet = bullet?.OwnedByFleet;
             var player = fleet?.Owner;
             bullet.Consumed = true;
@@ -63,7 +66,7 @@ namespace Game.Engine.Core.Weapons
             if (PendingDestruction)
                 return false;
 
-            if (projectedBody is Bullet bullet)
+            if (projectedBody is ShipWeaponBullet bullet)
             {
                 // avoid "piercing" shots
                 if (bullet.Consumed)

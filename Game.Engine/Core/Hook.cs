@@ -85,7 +85,7 @@ namespace Game.Engine.Core
 
                     FlockSpeed = 0,
 
-                    Pickups = 6,
+                    PickupSeekers = 6,
                     Fishes = 60,
                     FishThrust = 0.04f,
 
@@ -154,7 +154,7 @@ namespace Game.Engine.Core
         public string WormholesDestination { get; set; }
 
         public int Obstacles { get; set; }
-        public int Pickups { get; set; } = 0;
+        public int PickupSeekers { get; set; } = 0;
         public int Fishes { get; set; } = 0;
         public float FishThrust { get; set; } = 0;
 

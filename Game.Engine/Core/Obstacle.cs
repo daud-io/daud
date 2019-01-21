@@ -15,7 +15,7 @@
 
         public virtual void CollisionExecute(Body projectedBody)
         {
-            if (projectedBody is Bullet bullet)
+            if (projectedBody is ShipWeaponBullet bullet)
             {
                 if (!bullet.Consumed)
                 {
@@ -32,7 +32,7 @@
         {
             var isHit = false;
 
-            if (projectedBody is Bullet bullet)
+            if (projectedBody is ShipWeaponBullet bullet)
                 isHit = Vector2.Distance(projectedBody.Position, this.Position)
                     < (projectedBody.Size + this.Size);
 
