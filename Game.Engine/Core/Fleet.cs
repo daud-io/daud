@@ -83,10 +83,10 @@
             {
                 player.Score += World.Hook.PointsPerKillFleet;
 
-                player.SendMessage($"You Killed {this.Owner.Name}");
+                player.SendMessage($"You Killed {this.Owner.Name} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");
                 if (this.Owner.Connection != null)
                     this.Owner.Connection.SpectatingFleet = player.Fleet;
-                this.Owner.SendMessage($"Killed by {player.Name}");
+                this.Owner.SendMessage($"Killed by {player.Name} - ping (you: {this.Owner?.Connection?.Latency ?? 0} them:{player?.Connection?.Latency ?? 0})");
             }
             else
             {
