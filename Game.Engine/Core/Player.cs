@@ -42,8 +42,16 @@
 
         public string IP { get; set; } = null;
 
+        private bool CummulativeBoostRequested = false;
+        private bool CummulativeShootRequested = false;
+
         public void SetControl(ControlInput input)
         {
+            if (input.BoostRequested)
+                CummulativeBoostRequested = true;
+            if (input.ShootRequested)
+                CummulativeShootRequested = true;
+
             this.ControlInput = input;
             this.IsControlNew = true;
         }
@@ -138,8 +146,12 @@
                     ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
                 Fleet.AimTarget = ControlInput.Position;
-                Fleet.BoostRequested = ControlInput.BoostRequested;
-                Fleet.ShootRequested = ControlInput.ShootRequested;
+                Fleet.BoostRequested = CummulativeBoostRequested;
+                Fleet.ShootRequested = CummulativeShootRequested;
+
+                CummulativeBoostRequested = false;
+                CummulativeShootRequested = false;
+
                 Fleet.CustomData = ControlInput.CustomData;
             }
 
