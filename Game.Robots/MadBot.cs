@@ -86,7 +86,7 @@
                 {
                     // I'm not carrying a flag
 
-                    if (!SensorCTF.ThierTeam.FlagIsHome)
+                    if (!SensorCTF.TheirTeam.FlagIsHome)
                     {
                         // our teammate is carrying a flag
                         if (!SensorCTF.OurTeam.FlagIsHome)
@@ -94,12 +94,12 @@
                             Navigation.TargetPoint = SensorCTF.OurTeam.FlagPosition;
                         else
                             // our flag is home, defend teammate
-                            Navigation.TargetPoint = SensorCTF.ThierTeam.FlagPosition;
+                            Navigation.TargetPoint = SensorCTF.TheirTeam.FlagPosition;
                     }
                     else
                     {
                         // their flag is home
-                        Navigation.TargetPoint = SensorCTF.ThierTeam.BasePosition;
+                        Navigation.TargetPoint = SensorCTF.TheirTeam.BasePosition;
                     }
                 }
             }

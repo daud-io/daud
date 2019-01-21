@@ -22,7 +22,7 @@
         public bool CTFModeEnabled { get; private set; }
 
         public CTFTeam OurTeam { get; set; }
-        public CTFTeam ThierTeam { get; set; }
+        public CTFTeam TheirTeam { get; set; }
 
         public SensorCTF(ContextRobot robot)
         {
@@ -34,7 +34,7 @@
         {
             get
             {
-                return this.Robot.FleetID == ThierTeam.FlagCarriedBy;
+                return this.Robot.FleetID == TheirTeam.FlagCarriedBy;
             }
         }
 
@@ -83,12 +83,12 @@
                 if (this.Robot.SensorTeam.Team == SensorTeam.Teams.Cyan)
                 {
                     OurTeam = cyan;
-                    ThierTeam = red;
+                    TheirTeam = red;
                 }
                 else
                 {
                     OurTeam = red;
-                    ThierTeam = cyan;
+                    TheirTeam = cyan;
                 }
             }
         }
