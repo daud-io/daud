@@ -45,6 +45,16 @@ export const textureMap = {
         tileCount: 90
     },
 
+    shield_pickup: {
+        file: "shield_pickup",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.50,
+        scale: 0.04,
+        tileSize: 64,
+        tileCount: 90
+    },
+
     wormhole: {
         file: "wormhole",
         animated: true,

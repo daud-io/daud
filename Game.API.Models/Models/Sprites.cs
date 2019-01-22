@@ -53,7 +53,7 @@
         thruster_cyan,
         thruster_yellow,
         circles,
-        shield,
+        shield_pickup,
         wormhole
     }
 }
