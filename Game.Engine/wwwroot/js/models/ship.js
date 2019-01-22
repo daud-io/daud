@@ -6,19 +6,25 @@ export class Ship extends RenderedObject {
         this.fleet = false;
     }
 
-    getMode(mode) {
-        switch (mode) {
-            case 0:
-                return "default";
-            case 1:
-                return "boost";
-            case 2:
-                return "weaponupgrade";
-            case 3:
-                return "invulnerable";
-            default:
-                return "default";
-        }
+    decodeModes(mode) {
+        var modes = ['default'];
+
+        if ((mode & 1) != 0)
+            modes.push('boost');
+
+        if ((mode & 2) != 0)
+            modes.push('invulnerable');
+
+        if ((mode & 4) != 0)
+            modes.push('defenseupgrade');
+
+        if ((mode & 8) != 0)
+            modes.push('offenseupgrade');
+
+        if ((mode & 16) != 0)
+            modes.push('invulnerable');
+
+        return modes;
     }
 
     static getSelectorImage(spriteName) {

@@ -9,10 +9,13 @@ export class RenderedObject {
         this.currentSpriteName = false;
         this.currentMode = 0;
         this.currentZIndex = 0;
+
+        this.activeTextures = {};
+
     }
 
-    getMode(mode) {
-        return "default";
+    decodeModes(mode) {
+        return ["default"];
     }
 
     static getImageFromTextureDefinition(textureDefinition) {
@@ -69,6 +72,7 @@ export class RenderedObject {
     }
 
     buildSprite(textureName) {
+
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
         const textures = RenderedObject.loadTexture(textureDefinition, textureName);
         let pixiSprite = false;
@@ -103,13 +107,15 @@ export class RenderedObject {
     }
 
     getModeMap(spriteName, mode) {
-        let layers = false;
-        const modeName = this.getMode(mode);
+        let layers = [];
         const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
+        const modes = this.decodeModes(mode);
 
-        if (spriteDefinition.modes[modeName]) layers = spriteModeMap[spriteName].modes[modeName];
-
-        if (!layers && spriteDefinition.modes["default"]) layers = spriteModeMap[spriteName].modes["default"];
+        modes.forEach(modeName => {
+            var modeLayers = spriteDefinition.modes[modeName];
+            if (modeLayers)
+                modeLayers.forEach(layer => layers.push(layer));
+        });
 
         return layers;
     }
@@ -120,10 +126,28 @@ export class RenderedObject {
         if (layers) {
             const spriteLayers = [];
             for (let i = 0; i < layers.length; i++) {
-                const spriteLayer = this.buildSprite(layers[i]);
+
+                let spriteLayer = false;
+                var textureName = layers[i];
+                if (this.activeTextures[textureName])
+                    spriteLayer = this.activeTextures[textureName];
+                else
+                    spriteLayer = this.buildSprite(textureName);
+
                 spriteLayer.zIndex = zIndex;
 
                 spriteLayers.push(spriteLayer);
+                this.activeTextures[textureName] = spriteLayer;
+            }
+
+            for(var key in this.activeTextures)
+            {
+                if (layers.indexOf(key) == -1)
+                {
+                    this.container.removeChild(this.activeTextures[key]);
+                    delete this.activeTextures[key];
+                }
+                    
             }
 
             return spriteLayers;
@@ -141,6 +165,7 @@ export class RenderedObject {
             }
 
             this.spriteLayers = false;
+            this.activeTextures = {};
         }
     }
 
@@ -158,7 +183,7 @@ export class RenderedObject {
             //console.log(mode);
 
             // if we have any existing sprites, destroy them
-            this.destroySprites();
+            //this.destroySprites();
             this.spriteLayers = this.buildSpriteLayers(spriteName, mode, zIndex);
 
             this.foreachLayer(function(layer, index) {

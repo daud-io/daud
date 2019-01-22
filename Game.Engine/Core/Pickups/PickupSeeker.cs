@@ -13,7 +13,7 @@
 
         protected override void EquipFleet(Fleet fleet)
         {
-            fleet.PushStackWeapon(new FleetWeaponGeneric<ShipWeaponSeeker>());
+            fleet.PushStackWeapon(new FleetWeaponGeneric<ShipWeaponSeeker>() { IsOffense = true });
         }
     }
 }

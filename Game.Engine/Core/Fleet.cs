@@ -56,6 +56,17 @@
 
         public string CustomData { get; set; }
 
+        [Flags]
+        public enum ShipModeEnum
+        {
+            none = 0,
+            boost = 1,
+            invulnerable = 2,
+            defense_upgrade = 4,
+            offense_upgrade = 8,
+            shield = 16
+        }
+
         public Sprites BulletSprite
         {
             get
@@ -283,9 +294,13 @@
                     : World.Hook.Drag;
 
                 ship.Mode = (byte)
-                    (isBoosting ? 1 :
-                    (WeaponStack.Any()) ? 2 :
-                    (Owner.IsInvulnerable) ? 3 : 0);
+                    (
+                        (isBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
+                        | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
+                        | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
+                        | (Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
+                        | (Owner.IsShielded ? ShipModeEnum.shield : ShipModeEnum.none)
+                    );
 
                 if (isBoostInitial)
                     if (ship.Momentum != Vector2.Zero)
