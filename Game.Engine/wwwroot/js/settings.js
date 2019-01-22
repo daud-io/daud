@@ -36,7 +36,7 @@ function save() {
     }
     if (Settings.themeCustom != document.getElementById("settingsThemeSelectorCustom").value) {
         Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value;
-        theme(Settings.theme);
+        theme(Settings.themeCustom);
     }
 
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
@@ -98,6 +98,8 @@ function load() {
 }
 
 async function theme(v) {
+    if (v)
+        v = v.toLowerCase();
     const link = `https://dl.dropboxusercontent.com/s/${v}/daudmod.zip`;
     const zip = await fetch(link)
         .then(response => response.blob())
