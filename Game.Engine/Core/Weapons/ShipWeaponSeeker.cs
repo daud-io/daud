@@ -43,7 +43,8 @@ namespace Game.Engine.Core.Weapons
                 var delta = target.Position - Position;
                 thrustAngle = MathF.Atan2(delta.Y, delta.X);
 
-                Angle = MathF.Atan2(Momentum.Y, Momentum.X);
+                Angle = thrustAngle;
+                
             }
             else
                 thrustAngle = Angle;
