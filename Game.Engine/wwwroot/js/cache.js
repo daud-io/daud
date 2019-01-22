@@ -54,6 +54,8 @@ export class Cache {
             let group = this.groups[key];
             if (!group) console.log("group delete on object not in cache");
 
+            //console.log(`deleting group: ${key}`);
+
             if (group && group.renderer) group.renderer.destroy();
             delete this.groups[key];
         }
@@ -121,7 +123,7 @@ export class Cache {
                             }
                         }
                     } else {
-                        console.log("ship with no group: " + update.Sprite);
+                        //console.log("ship with no group: " + update.Sprite);
                     }
 
                     const ship = (update.renderer = new Ship(this.container));

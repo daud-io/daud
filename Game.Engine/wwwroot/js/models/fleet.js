@@ -26,6 +26,10 @@ export class Fleet {
     update(groupUpdate) {
         this.caption = groupUpdate.Caption;
         this.ID = groupUpdate.ID;
+
+        if (this.ships.length == 0) {
+            console.log('update on zero length fleet');
+        }
     }
 
     preRender(time, interpolator, myfleetID) {
