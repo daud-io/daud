@@ -19,6 +19,8 @@ namespace Game.Engine.Core.Weapons
 
         public override void Think()
         {
+            var originalMomentum = Momentum;
+
             base.Think();
 
             Ship target = null;
@@ -47,7 +49,7 @@ namespace Game.Engine.Core.Weapons
                 thrustAngle = Angle;
 
             var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
-            Momentum = (Momentum + thrust) * Drag;
+            Momentum = (originalMomentum + thrust) * Drag;
         }
 
         public virtual void CollisionExecute(Body projectedBody)
