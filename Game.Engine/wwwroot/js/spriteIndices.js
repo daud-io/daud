@@ -51,5 +51,6 @@ export const spriteIndices = [
     "thruster_yellow",
     "circles",
     "shield",
+    "shield_pickup",
     "wormhole"
 ];

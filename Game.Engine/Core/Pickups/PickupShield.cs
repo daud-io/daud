@@ -8,7 +8,7 @@
         public PickupShield()
         {
             Size = 100;
-            Sprite = Sprites.shield;
+            Sprite = Sprites.shield_pickup;
         }
 
         protected override void EquipFleet(Fleet fleet)

@@ -113,6 +113,7 @@ export const spriteModeMap = {
     seeker: { modes: { default: ["seeker"] } },
     seeker_pickup: { modes: { default: ["seeker_pickup"] } },
     shield: { modes: { default: ["shield"] } },
+    shield_pickup: { modes: { default: ["shield_pickup"] } },
 
     ctf_base: { modes: { default: ["ctf_base"] } },
 
