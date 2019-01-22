@@ -166,7 +166,7 @@
 
             if (IsInvulnerable)
             {
-                if (CummulativeShootRequested && this.Fleet.ShootCooldownStatus == 1)
+                if (!this.Fleet.FiringWeapon && CummulativeShootRequested && this.Fleet.ShootCooldownStatus == 1)
                     IsInvulnerable = false;
 
                 if (World.Time > InvulnerableUntil)

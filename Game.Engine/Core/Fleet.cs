@@ -52,7 +52,7 @@
         public float Burden { get; set; } = 0f;
         public bool Shark { get; set; } = false;
         public bool LastTouchedLeft { get; set; } = false;
-        private bool FireWeapon = false;
+        public bool FiringWeapon { get; private set; } = false;
 
         public string CustomData { get; set; }
 
@@ -180,7 +180,7 @@
             /*if (this.Owner != null && this.Owner.IsAlive)
                 this.PendingDestruction = true;*/
 
-            if (FireWeapon)
+            if (FiringWeapon)
             {
 
                 var weapon = this.WeaponStack.Any()
@@ -188,7 +188,7 @@
                     : this.BaseWeapon;
 
                 weapon.FireFrom(this);
-                FireWeapon = false;
+                FiringWeapon = false;
             }
 
             foreach (var ship in NewShips)
@@ -297,7 +297,7 @@
                 ShootCooldownTime = World.Time + (Shark ? ShotCooldownTimeShark : (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB));
                 ShootCooldownTimeStart = World.Time;
 
-                FireWeapon = true;
+                FiringWeapon = true;
             }
 
             if (World.Time > BoostCooldownTime)
