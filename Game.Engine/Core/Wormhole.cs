@@ -4,19 +4,26 @@
     {
         public string TargetWorld { get; set; }
 
-        public Wormhole()
-        {
-            AngularVelocity = 0.005f;
-        }
         public override void Init(World world)
         {
             base.Init(world);
             Sprite = API.Common.Sprites.wormhole;
+            AngularVelocity = 0.000f;
+        }
+
+        public Wormhole()
+        {
         }
 
         public Wormhole(string targetWorld = null)
         {
             TargetWorld = targetWorld ?? World.Hook.WormholesDestination;
+        }
+
+        public override void Think()
+        {
+            base.Think();
+            this.Size = 200;
         }
 
         public override void CollisionExecute(Body projectedBody)

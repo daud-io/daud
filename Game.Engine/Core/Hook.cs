@@ -70,7 +70,7 @@ namespace Game.Engine.Core
                     SumoRingSize = 1000,
 
                     SpawnShipCount = 5,
-                    SpawnInvulnerabilityTime = 2000,
+                    SpawnInvulnerabilityTime = 3000,
 
                     FlockAlignment = .35f,
                     FlockCohesion = 0.006f,
@@ -87,7 +87,7 @@ namespace Game.Engine.Core
                     FlockSpeed = 0,
 
                     PickupSeekers = 6,
-                    PickupShields = 0,
+                    PickupShields = 4,
 
                     Fishes = 60,
                     FishThrust = 0.04f,

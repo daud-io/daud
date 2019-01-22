@@ -11,7 +11,7 @@
         private float Multiplier = 1;
         private long DieByTime = 0;
         private float IdealSize = 1;
-        private int TargetSize = 0;
+        protected int TargetSize = 0;
 
         public virtual void CollisionExecute(Body projectedBody)
         {

@@ -39,7 +39,7 @@ export const textureMap = {
         file: "shield",
         animated: true,
         loop: true,
-        animationSpeed: 0.80,
+        animationSpeed: 0.50,
         scale: 0.04,
         tileSize: 64,
         tileCount: 90
@@ -49,7 +49,7 @@ export const textureMap = {
         file: "wormhole",
         animated: true,
         loop: true,
-        animationSpeed: 1.0,
+        animationSpeed: 0.50,
         scale: 0.04,
         tileSize: 128,
         tileCount: 90
