@@ -35,6 +35,26 @@ export const textureMap = {
     seeker: { file: "seeker", scale: 0.02 },
     seeker_pickup: { file: "seeker_pickup", scale: 0.02 },
 
+    shield: {
+        file: "shield",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.80,
+        scale: 0.04,
+        tileSize: 64,
+        tileCount: 90
+    },
+
+    wormhole: {
+        file: "wormhole",
+        animated: true,
+        loop: true,
+        animationSpeed: 1.0,
+        scale: 0.04,
+        tileSize: 128,
+        tileCount: 90
+    },
+
     thruster_cyan: {
         file: "thruster_cyan",
         animated: true,

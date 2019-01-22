@@ -2,6 +2,7 @@
 {
     using Game.API.Common;
     using Game.Engine.Core.Steering;
+    using Game.Engine.Core.Weapons;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -40,9 +41,10 @@
         public List<Ship> Ships { get; set; } = new List<Ship>();
         public List<Ship> NewShips { get; set; } = new List<Ship>();
 
-        public List<Bullet> NewBullets { get; set; } = new List<Bullet>();
+        public List<ShipWeaponBullet> NewBullets { get; set; } = new List<ShipWeaponBullet>();
 
-        public Pickup Pickup = null;
+        public IFleetWeapon BaseWeapon { get; set; }
+        public Stack<IFleetWeapon> WeaponStack { get; set; } = new Stack<IFleetWeapon>();
 
         public Vector2 FleetCenter = Vector2.Zero;
         public Vector2 FleetMomentum = Vector2.Zero;
@@ -50,7 +52,7 @@
         public float Burden { get; set; } = 0f;
         public bool Shark { get; set; } = false;
         public bool LastTouchedLeft { get; set; } = false;
-        private bool FireVolley = false;
+        public bool FiringWeapon { get; private set; } = false;
 
         public string CustomData { get; set; }
 
@@ -70,11 +72,6 @@
                     default: return Sprites.bullet;
                 }
             }
-        }
-
-        public void AcceptPickup(Pickup pickup)
-        {
-            this.Pickup = pickup;
         }
 
         private void Die(Player player)
@@ -111,7 +108,7 @@
             base.Destroy();
         }
 
-        public void ShipDeath(Player player, Ship ship, Bullet bullet)
+        public void ShipDeath(Player player, Ship ship, ShipWeaponBullet bullet)
         {
             if (!Ships.Where(s => !s.PendingDestruction).Any())
                 Die(player);
@@ -170,6 +167,8 @@
             this.GroupType = GroupTypes.Fleet;
             this.ZIndex = 100;
 
+            this.BaseWeapon = new FleetWeaponGeneric<ShipWeaponBullet>();
+
             FleetCenter = world.RandomSpawnPosition(this);
 
             for (int i = 0; i < SpawnShipCount; i++)
@@ -181,11 +180,15 @@
             /*if (this.Owner != null && this.Owner.IsAlive)
                 this.PendingDestruction = true;*/
 
-            if (FireVolley)
+            if (FiringWeapon)
             {
-                Volley.FireFrom(this);
-                FireVolley = false;
-                Pickup = null;
+
+                var weapon = this.WeaponStack.Any()
+                    ? this.WeaponStack.Pop()
+                    : this.BaseWeapon;
+
+                weapon.FireFrom(this);
+                FiringWeapon = false;
             }
 
             foreach (var ship in NewShips)
@@ -220,6 +223,14 @@
 
             if (Ships.Contains(ship))
                 Ships.Remove(ship);
+        }
+
+
+        public void PushStackWeapon(IFleetWeapon weapon)
+        {
+            WeaponStack.Push(weapon);
+            if (WeaponStack.Count > World.Hook.FleetWeaponStackDepth)
+                WeaponStack = new Stack<IFleetWeapon>(WeaponStack.TakeLast(World.Hook.FleetWeaponStackDepth));
         }
 
         public override void Think()
@@ -273,7 +284,7 @@
 
                 ship.Mode = (byte)
                     (isBoosting ? 1 :
-                    (Pickup != null) ? 2 :
+                    (WeaponStack.Any()) ? 2 :
                     (Owner.IsInvulnerable) ? 3 : 0);
 
                 if (isBoostInitial)
@@ -286,10 +297,7 @@
                 ShootCooldownTime = World.Time + (Shark ? ShotCooldownTimeShark : (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB));
                 ShootCooldownTimeStart = World.Time;
 
-                /*foreach (var ship in Ships)
-                    NewBullets.Add(Bullet.FireFrom(ship));*/
-
-                FireVolley = true;
+                FiringWeapon = true;
             }
 
             if (World.Time > BoostCooldownTime)

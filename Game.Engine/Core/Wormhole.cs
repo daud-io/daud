@@ -8,6 +8,11 @@
         {
             AngularVelocity = 0.005f;
         }
+        public override void Init(World world)
+        {
+            base.Init(world);
+            Sprite = API.Common.Sprites.wormhole;
+        }
 
         public Wormhole(string targetWorld = null)
         {

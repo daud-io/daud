@@ -56,6 +56,8 @@
             var hook = Hook.Default;
             hook.BotBase = 10;
             hook.BotRespawnDelay = 0;
+            hook.PickupShields = 10;
+
             return new World
             {
                 Hook = hook,
@@ -93,7 +95,7 @@
             hook.WorldSize = 1500;
             hook.Obstacles = 0;
             hook.Fishes = 20;
-            hook.Pickups = 0;
+            hook.PickupSeekers = 0;
             hook.SpawnShipCount = 10;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
@@ -118,7 +120,7 @@
             hook.WorldSize = 4200;
             hook.Obstacles = 3;
             hook.Fishes = 7;
-            hook.Pickups = 3;
+            hook.PickupSeekers = 3;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = -1;

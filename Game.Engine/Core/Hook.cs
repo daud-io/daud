@@ -70,6 +70,7 @@ namespace Game.Engine.Core
                     SumoRingSize = 1000,
 
                     SpawnShipCount = 5,
+                    SpawnInvulnerabilityTime = 2000,
 
                     FlockAlignment = .35f,
                     FlockCohesion = 0.006f,
@@ -85,7 +86,9 @@ namespace Game.Engine.Core
 
                     FlockSpeed = 0,
 
-                    Pickups = 6,
+                    PickupSeekers = 6,
+                    PickupShields = 0,
+
                     Fishes = 60,
                     FishThrust = 0.04f,
 
@@ -99,7 +102,8 @@ namespace Game.Engine.Core
                     PointsPerUniverseDeath = -1,
                     PointsMultiplierDeath = 0.5f,
 
-                PlayerCountGracePeriodMS = 15000,
+                    PlayerCountGracePeriodMS = 15000,
+                    FleetWeaponStackDepth = 1,
 
                     LifecycleDuration = 10000
                 };
@@ -154,7 +158,7 @@ namespace Game.Engine.Core
         public string WormholesDestination { get; set; }
 
         public int Obstacles { get; set; }
-        public int Pickups { get; set; } = 0;
+        public int PickupSeekers { get; set; } = 0;
         public int Fishes { get; set; } = 0;
         public float FishThrust { get; set; } = 0;
 
@@ -197,6 +201,7 @@ namespace Game.Engine.Core
         public float OutOfBoundsBorder { get; set; } = 300;
         public float OutOfBoundsDecayDistance { get; set; } = 900;
         public int BotRespawnDelay { get; set; }
+        public int PickupShields { get; set; }
 
         public bool FollowFirstShip { get; set; }
         public int FiringSequenceDelay { get; set; }
@@ -206,8 +211,8 @@ namespace Game.Engine.Core
         public int LifecycleDuration {get;set;}
 
         public int PlayerCountGracePeriodMS { get; set; }
-
-
+        public int FleetWeaponStackDepth { get; set; }
+        public int SpawnInvulnerabilityTime { get; set; }
 
         public Hook Clone()
         {
