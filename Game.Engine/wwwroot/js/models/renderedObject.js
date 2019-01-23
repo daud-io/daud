@@ -34,9 +34,6 @@ export class RenderedObject {
 
     static getTextureImage(textureName) {
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
-
-        if (textureDefinition === false) console.log(`cannot load texture '${textureName}'`);
-
         return RenderedObject.getImageFromTextureDefinition(textureDefinition);
     }
 
@@ -71,7 +68,11 @@ export class RenderedObject {
     }
 
     static getTextureDefinition(textureName) {
-        return textureMap[textureName];
+
+        var textureDefinition = textureMap[textureName];
+        if (!textureDefinition) console.log(`cannot load texture '${textureName}'`);
+
+        return textureDefinition;
     }
 
     buildSprite(textureName) {
