@@ -27,24 +27,19 @@ const canvas = document.getElementById("gameCanvas");
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 const app = new PIXI.Application({ view: canvas, transparent: true });
+app.stage = new PIXI.display.Stage();
+app.stage.group.enableSort = true;
+const container = new PIXI.Container();
+app.stage.addChild(container);
 
 var backgroundGroup = new PIXI.display.Group(0, true);
 var bodyGroup = new PIXI.display.Group(1, true);
-var overlayGroup = new PIXI.display.Group(2, true);
-
-app.stage = new PIXI.display.Stage();
-app.stage.group.enableSort = true;
 
 app.stage.addChild(new PIXI.display.Layer(backgroundGroup));
 app.stage.addChild(new PIXI.display.Layer(bodyGroup));
-app.stage.addChild(new PIXI.display.Layer(overlayGroup));
 
-const container = app.stage; //new PIXI.Container();
 container.backgroundGroup = backgroundGroup;
 container.bodyGroup = bodyGroup;
-container.overlayGroup = overlayGroup;
-//container.parentGroup = app.stage;
-//app.stage.addChild(container);
 
 const renderer = new Renderer(container);
 const background = new Background(container);
