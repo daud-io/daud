@@ -159,7 +159,7 @@ export class RenderedObject {
                 if (zIndex == 0)
                     zIndex = 255;
 
-                spriteLayer.zOrder = zIndex + (this.body.ID / 100000);
+                spriteLayer.zOrder = zIndex - i + (this.body.ID / 100000);
 
                 spriteLayers.push(spriteLayer);
                 this.activeTextures[textureName] = spriteLayer;
