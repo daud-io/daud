@@ -119,8 +119,15 @@ async function theme(v) {
                         console.log(`[warning] theme attempted to define a non-existant sprite: ${key}`);
                         continue;
                     }
+                    for (const mapKey in modeMap)
+                    {
+                        if (mapKey != "modes")
+                            spriteModeMap[key][mapKey] = modeMap[mapKey];
+                    }
+                    
+                    if (modeMap.modes)
+                        for (const mapKey in modeMap.modes) spriteModeMap[key].modes[mapKey] = modeMap.modes[mapKey];
 
-                    for (const mapKey in modeMap) spriteModeMap[key][mapKey] = modeMap[mapKey];
                 }
             }
 
