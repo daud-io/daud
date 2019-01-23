@@ -11,6 +11,7 @@ export class Fleet {
         this.text.anchor.set(0.5, 0.5);
         this.text.position.x = 0;
         this.text.position.y = 0;
+        this.text.parentGroup = this.container.bodyGroup;
         this.container.addChild(this.text);
     }
 
