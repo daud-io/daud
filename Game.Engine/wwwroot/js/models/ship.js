@@ -22,7 +22,7 @@ export class Ship extends RenderedObject {
             modes.push('offenseupgrade');
 
         if ((mode & 16) != 0)
-            modes.push('invulnerable');
+            modes.push('shield');
 
         return modes;
     }
