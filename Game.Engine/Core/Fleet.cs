@@ -298,7 +298,7 @@
                         (isBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
                         | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
                         | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
-                        | (Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
+                        | (!Owner.IsShielded && Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
                         | (Owner.IsShielded ? ShipModeEnum.shield : ShipModeEnum.none)
                     );
 
