@@ -1,6 +1,7 @@
 ﻿namespace Game.Robots
 {
     using Game.API.Client;
+    using Game.Engine.Networking.Client;
     using System;
     using System.Collections.Generic;
     using System.Numerics;
@@ -40,6 +41,7 @@
         protected virtual Task DeadAsync() => Task.FromResult(0);
         protected virtual Task OnDeathAsync() => Task.FromResult(0);
         protected virtual Task OnSpawnAsync() => Task.FromResult(0);
+        protected virtual Task OnNewLeaderboardAsync() => Task.FromResult(0);
 
         public bool Shooting { get; private set; }
         public Vector2 ShootingAt { get; private set; }
@@ -48,6 +50,8 @@
         public long BoostUntil { get; set; }
 
         public string CustomData { get => Connection.CustomData; set => Connection.CustomData = value; }
+
+        public Leaderboard Leaderboard {get => Connection.Leaderboard; }
 
         public HookComputer HookComputer { get; private set; }
 
@@ -60,7 +64,13 @@
         {
             this.Connection = connection;
             this.Connection.OnView = OnView;
+            this.Connection.OnLeaderboard = OnLeaderboard;
             await this.Connection.ListenAsync();
+        }
+
+        private async Task OnLeaderboard()
+        {
+            await this.OnNewLeaderboardAsync();
         }
 
         private async Task OnView()

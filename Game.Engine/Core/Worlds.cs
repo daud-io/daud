@@ -33,6 +33,8 @@
             AllWorlds.Add("ctf", WorldCTF());
             AllWorlds.Add("sharks", WorldSharks());
             AllWorlds.Add("sumo", WorldSumo());
+            AllWorlds.Add("boss", WorldBoss());
+            AllWorlds.Add("wormhole", WorldWormhole());
         }
 
         private static World WorldDefault()
@@ -54,6 +56,8 @@
             var hook = Hook.Default;
             hook.BotBase = 10;
             hook.BotRespawnDelay = 0;
+            hook.PickupShields = 10;
+
             return new World
             {
                 Hook = hook,
@@ -91,7 +95,7 @@
             hook.WorldSize = 1500;
             hook.Obstacles = 0;
             hook.Fishes = 20;
-            hook.Pickups = 0;
+            hook.PickupSeekers = 0;
             hook.SpawnShipCount = 10;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
@@ -116,7 +120,7 @@
             hook.WorldSize = 4200;
             hook.Obstacles = 3;
             hook.Fishes = 7;
-            hook.Pickups = 3;
+            hook.PickupSeekers = 3;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = -1;
@@ -193,7 +197,10 @@
             {
                 Hook = hook,
                 Name = "Sharks and Minnows",
-                Description = "Sharks vs. Minnows",
+                Description = "Sharks and Minnows",
+                Instructions = "how to score:<br><br>"
+                    + " - Sharks (red) hunt<br>"
+                    + " - Minnows (blue) run towards borders (left & right)",
                 AllowedColors = TeamColors,
                 NewFleetGenerator = delegate (Player p, string Color)
                 {
@@ -205,6 +212,42 @@
                         Shark = Color == "red",
                     };
                 }
+            };
+        }
+
+        private static World WorldWormhole()
+        {
+            var hook = Hook.Default;
+            hook.WorldSize = 1000;
+            hook.BotBase = 0;
+            hook.Obstacles = 0;
+            hook.Wormholes = 1;
+            hook.WormholesDestination = "duel";
+
+            return new World
+            {
+                Hook = hook,
+                Name = "Wormhole test",
+                Description = "Wormhole test",
+                AllowedColors = TeamColors
+            };
+        }
+
+        private static World WorldBoss()
+        {
+            var hook = Hook.Default;
+            hook.BotBase = 3;
+            hook.BossMode = true;
+            hook.BossModeSprites = new API.Common.Sprites[] { API.Common.Sprites.ship0 };
+            hook.ShotCooldownTimeBotB = 200;
+            hook.SpawnShipCount = 3;
+
+            return new World
+            {
+                Hook = hook,
+                Name = "Boss Mode",
+                Description = "So many Circles! Much wow!",
+                AllowedColors = AllColors.Append("ship0").ToArray()
             };
         }
 

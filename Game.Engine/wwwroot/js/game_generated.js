@@ -1829,10 +1829,19 @@ Game.Engine.Networking.FlatBuffers.NetAnnouncement.prototype.text = function(opt
 };
 
 /**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetAnnouncement.prototype.type = function(optionalEncoding) {
+    var offset = this.bb.__offset(this.bb_pos, 6);
+    return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetAnnouncement.startNetAnnouncement = function(builder) {
-    builder.startObject(1);
+    builder.startObject(2);
 };
 
 /**
@@ -1841,6 +1850,14 @@ Game.Engine.Networking.FlatBuffers.NetAnnouncement.startNetAnnouncement = functi
  */
 Game.Engine.Networking.FlatBuffers.NetAnnouncement.addText = function(builder, textOffset) {
     builder.addFieldOffset(0, textOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} typeOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetAnnouncement.addType = function(builder, typeOffset) {
+    builder.addFieldOffset(1, typeOffset, 0);
 };
 
 /**

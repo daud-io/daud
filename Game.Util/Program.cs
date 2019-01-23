@@ -10,7 +10,6 @@
         public async static Task<int> Main(string[] args)
         {
             try
-
             {
                 return await CommandLineApplication.ExecuteAsync<RootCommand>(args);
             }

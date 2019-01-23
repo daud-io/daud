@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -8,8 +9,12 @@
     {
         private readonly List<T> Herd = new List<T>();
         private World World = null;
+        private readonly Func<int> DesiredCount = () => 0;
 
-        public int DesiredCount = 0;
+        public GenericTender(Func<int> desiredCount)
+        {
+            this.DesiredCount = desiredCount;
+        }
 
         private void Add()
         {
@@ -41,10 +46,10 @@
             foreach (var member in Herd.Where(f => !f.Exists).ToList())
                 Herd.Remove(member);
 
-            while (Herd.Count < DesiredCount)
+            while (Herd.Count < DesiredCount())
                 Add();
 
-            while (Herd.Count > DesiredCount)
+            while (Herd.Count > DesiredCount())
                 Remove();
         }
 

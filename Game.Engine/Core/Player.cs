@@ -23,16 +23,18 @@
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
 
-        public List<string> Messages { get; set; } = new List<string>();
+        public List<PlayerMessage> Messages { get; set; } = new List<PlayerMessage>();
 
         public bool IsAlive { get; set; } = false;
         public bool IsStillPlaying {get;set;} = false;
         public long DeadSince { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
+        public bool IsShielded { get; set; } = false;
 
         public long SpawnTime;
-        public const int InvulnerableTime = 2000;
+        public int SpawnInvulnerableTime => World.Hook.SpawnInvulnerabilityTime;
+        public long InvulnerableUntil = 0;
 
         public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
@@ -42,8 +44,16 @@
 
         public string IP { get; set; } = null;
 
+        private bool CummulativeBoostRequested = false;
+        private bool CummulativeShootRequested = false;
+
         public void SetControl(ControlInput input)
         {
+            if (input.BoostRequested)
+                CummulativeBoostRequested = true;
+            if (input.ShootRequested)
+                CummulativeShootRequested = true;
+
             this.ControlInput = input;
             this.IsControlNew = true;
         }
@@ -60,7 +70,7 @@
 
                 Fleet.Init(World);
 
-                IsInvulnerable = true;
+                SetInvulnerability(SpawnInvulnerableTime);
                 SpawnTime = World.Time;
             }
 
@@ -127,6 +137,13 @@
             }
         }
 
+        public void SetInvulnerability(int duration, bool isShield = false)
+        {
+            InvulnerableUntil = World.Time + duration;
+            IsInvulnerable = true;
+            IsShielded = isShield;
+        }
+
         public virtual void Think()
         {
             if (!IsAlive)
@@ -138,8 +155,12 @@
                     ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
                 Fleet.AimTarget = ControlInput.Position;
-                Fleet.BoostRequested = ControlInput.BoostRequested;
-                Fleet.ShootRequested = ControlInput.ShootRequested;
+                Fleet.BoostRequested = CummulativeBoostRequested;
+                Fleet.ShootRequested = CummulativeShootRequested;
+
+                CummulativeBoostRequested = false;
+                CummulativeShootRequested = false;
+
                 Fleet.CustomData = ControlInput.CustomData;
             }
 
@@ -147,11 +168,14 @@
 
             if (IsInvulnerable)
             {
-                if (this.ControlInput?.ShootRequested ?? false)
+                if (!this.Fleet.FiringWeapon && CummulativeShootRequested && this.Fleet.ShootCooldownStatus == 1)
                     IsInvulnerable = false;
 
-                if (World.Time > SpawnTime + InvulnerableTime)
+                if (World.Time > InvulnerableUntil)
                     IsInvulnerable = false;
+
+                if (!IsInvulnerable)
+                    IsShielded = false;
             }
         }
 
@@ -237,17 +261,21 @@
             }
         }
 
-        public void SendMessage(string message)
+        public void SendMessage(string message, string type = "message")
         {
-            this.Messages.Add(message);
+            this.Messages.Add(new PlayerMessage
+            {
+                Type = type,
+                Message = message
+            });
         }
 
-        public List<string> GetMessages()
+        public List<PlayerMessage> GetMessages()
         {
             if (Messages.Count > 0)
             {
                 var m = Messages;
-                Messages = new List<string>();
+                Messages = new List<PlayerMessage>();
                 return m;
             }
             else

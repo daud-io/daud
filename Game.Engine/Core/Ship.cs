@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.Engine.Core.Weapons;
     using System;
     using System.Linq;
     using System.Numerics;
@@ -42,7 +43,7 @@
                 Fleet.Ships.Remove(this);
         }
 
-        private void Die(Player player, Fleet fleet, Bullet bullet)
+        private void Die(Player player, Fleet fleet, ShipWeaponBullet bullet)
         {
             if (player != null)
                 player.Score += World.Hook.PointsPerKillShip;
@@ -65,7 +66,7 @@
 
         public virtual void CollisionExecute(Body projectedBody)
         {
-            var bullet = projectedBody as Bullet;
+            var bullet = projectedBody as ShipWeaponBullet;
             var fleet = bullet?.OwnedByFleet;
             var player = fleet?.Owner;
             bullet.Consumed = true;
@@ -84,7 +85,7 @@
             if (PendingDestruction)
                 return false;
 
-            if (projectedBody is Bullet bullet)
+            if (projectedBody is ShipWeaponBullet bullet)
             {
                 // avoid "piercing" shots
                 if (bullet.Consumed)

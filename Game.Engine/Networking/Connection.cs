@@ -221,10 +221,12 @@ namespace Game.Engine.Networking
                             {
                                 announcementsVector = NetWorldView.CreateAnnouncementsVector(builder, messages.Select(e =>
                                 {
-                                    var stringName = builder.CreateString(e);
+                                    var stringType = builder.CreateString(e.Type);
+                                    var stringMessage = builder.CreateString(e.Message);
 
                                     NetAnnouncement.StartNetAnnouncement(builder);
-                                    NetAnnouncement.AddText(builder, stringName);
+                                    NetAnnouncement.AddType(builder, stringType);
+                                    NetAnnouncement.AddText(builder, stringMessage);
 
                                     return NetAnnouncement.EndNetAnnouncement(builder);
                                 }).ToArray());

@@ -14,12 +14,12 @@ if (!isMobile) {
     document.getElementById("nipple-controls").style.display = "none";
 }
 
-var shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
+const shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
 
-var refreshSelectedStyle = function() {
-    var options = Array.from(document.getElementById("shipSelectorSwitch").children);
-    for (var i = 0; i < options.length; i++) {
-        var option = options[i];
+const refreshSelectedStyle = function() {
+    const options = Array.from(document.getElementById("shipSelectorSwitch").children);
+
+    for (const option of options) {
         if (option.getAttribute("data-color") == Controls.ship) option.classList.add("selected");
         else option.classList.remove("selected");
     }
@@ -106,7 +106,7 @@ export var Controls = {
                     Controls.boost = false;
                 else {
                     if (Settings.mouseOneButton > 0) {
-                        var timeDelta = new Date().getTime() - Controls.downSince;
+                        const timeDelta = new Date().getTime() - Controls.downSince;
                         Controls.downSince = false;
                         if (timeDelta < Settings.mouseOneButton) {
                             Controls.shoot = true;
@@ -130,12 +130,12 @@ export var Controls = {
         Controls.canvas = canvas;
     },
     initializeWorld: function(world) {
-        var colors = world.allowedColors;
-        var selector = document.getElementById("shipSelectorSwitch");
+        const colors = world.allowedColors;
+        const selector = document.getElementById("shipSelectorSwitch");
         while (selector.firstChild) selector.removeChild(selector.firstChild);
 
-        for (var i = 0; i < colors.length; i++) {
-            var selectorImage = Ship.getSelectorImage(colors[i]);
+        for (let i = 0; i < colors.length; i++) {
+            const selectorImage = Ship.getSelectorImage(colors[i]);
 
             if (selectorImage) {
                 selector.appendChild(selectorImage);
@@ -144,7 +144,7 @@ export var Controls = {
             }
         }
 
-        var shipIndex = Math.floor(Math.random() * colors.length);
+        const shipIndex = Math.floor(Math.random() * colors.length);
 
         Controls.ship = colors[shipIndex];
         refreshSelectedStyle();

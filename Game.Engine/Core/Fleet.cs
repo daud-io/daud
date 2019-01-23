@@ -2,6 +2,7 @@
 {
     using Game.API.Common;
     using Game.Engine.Core.Steering;
+    using Game.Engine.Core.Weapons;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -17,6 +18,10 @@
         public virtual float BaseThrustM { get => World.Hook.BaseThrustM; }
         public virtual float BaseThrustB { get => World.Hook.BaseThrustB; }
         public virtual float BoostThrust { get => World.Hook.BoostThrust; }
+
+        public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
+
+        public virtual bool BossMode { get => World.Hook.BossMode && World.Hook.BossModeSprites.Contains(this.Owner.ShipSprite); }
 
         public Player Owner { get; set; }
 
@@ -36,9 +41,10 @@
         public List<Ship> Ships { get; set; } = new List<Ship>();
         public List<Ship> NewShips { get; set; } = new List<Ship>();
 
-        public List<Bullet> NewBullets { get; set; } = new List<Bullet>();
+        public List<ShipWeaponBullet> NewBullets { get; set; } = new List<ShipWeaponBullet>();
 
-        public Pickup Pickup = null;
+        public IFleetWeapon BaseWeapon { get; set; }
+        public Stack<IFleetWeapon> WeaponStack { get; set; } = new Stack<IFleetWeapon>();
 
         public Vector2 FleetCenter = Vector2.Zero;
         public Vector2 FleetMomentum = Vector2.Zero;
@@ -46,9 +52,20 @@
         public float Burden { get; set; } = 0f;
         public bool Shark { get; set; } = false;
         public bool LastTouchedLeft { get; set; } = false;
-        private bool FireVolley = false;
+        public bool FiringWeapon { get; private set; } = false;
 
         public string CustomData { get; set; }
+
+        [Flags]
+        public enum ShipModeEnum
+        {
+            none = 0,
+            boost = 1,
+            invulnerable = 2,
+            defense_upgrade = 4,
+            offense_upgrade = 8,
+            shield = 16
+        }
 
         public Sprites BulletSprite
         {
@@ -68,21 +85,16 @@
             }
         }
 
-        public void AcceptPickup(Pickup pickup)
-        {
-            this.Pickup = pickup;
-        }
-
         private void Die(Player player)
         {
             if (player != null)
             {
                 player.Score += World.Hook.PointsPerKillFleet;
 
-                player.SendMessage($"You Killed {this.Owner.Name}");
+                player.SendMessage($"You Killed {this.Owner.Name} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");
                 if (this.Owner.Connection != null)
                     this.Owner.Connection.SpectatingFleet = player.Fleet;
-                this.Owner.SendMessage($"Killed by {player.Name}");
+                this.Owner.SendMessage($"Killed by {player.Name} - ping (you: {this.Owner?.Connection?.Latency ?? 0} them:{player?.Connection?.Latency ?? 0})");
             }
             else
             {
@@ -107,7 +119,7 @@
             base.Destroy();
         }
 
-        public void ShipDeath(Player player, Ship ship, Bullet bullet)
+        public void ShipDeath(Player player, Ship ship, ShipWeaponBullet bullet)
         {
             if (!Ships.Where(s => !s.PendingDestruction).Any())
                 Die(player);
@@ -166,9 +178,11 @@
             this.GroupType = GroupTypes.Fleet;
             this.ZIndex = 100;
 
+            this.BaseWeapon = new FleetWeaponGeneric<ShipWeaponBullet>();
+
             FleetCenter = world.RandomSpawnPosition(this);
 
-            for (int i = 0; i < world.Hook.SpawnShipCount; i++)
+            for (int i = 0; i < SpawnShipCount; i++)
                 this.AddShip();
         }
 
@@ -177,11 +191,15 @@
             /*if (this.Owner != null && this.Owner.IsAlive)
                 this.PendingDestruction = true;*/
 
-            if (FireVolley)
+            if (FiringWeapon)
             {
-                Volley.FireFrom(this);
-                FireVolley = false;
-                Pickup = null;
+
+                var weapon = this.WeaponStack.Any()
+                    ? this.WeaponStack.Pop()
+                    : this.BaseWeapon;
+
+                weapon.FireFrom(this);
+                FiringWeapon = false;
             }
 
             foreach (var ship in NewShips)
@@ -201,7 +219,7 @@
 
         public void Abandon()
         {
-            foreach (var ship in Ships)
+            foreach (var ship in Ships.ToList())
                 this.AbandonShip(ship);
         }
 
@@ -216,6 +234,14 @@
 
             if (Ships.Contains(ship))
                 Ships.Remove(ship);
+        }
+
+
+        public void PushStackWeapon(IFleetWeapon weapon)
+        {
+            WeaponStack.Push(weapon);
+            if (WeaponStack.Count > World.Hook.FleetWeaponStackDepth)
+                WeaponStack = new Stack<IFleetWeapon>(WeaponStack.TakeLast(World.Hook.FleetWeaponStackDepth));
         }
 
         public override void Think()
@@ -243,14 +269,21 @@
             FleetCenter = Flocking.FleetCenterNaive(this.Ships);
             FleetMomentum = Flocking.FleetMomentum(this.Ships);
 
+            var summation = new Vector2();
+            var moment = new Vector2();
             foreach (var ship in Ships)
             {
                 var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
                 ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
 
+                if(Ships.IndexOf(ship)<5){
+                    summation+=ship.Position;
+                    moment += ship.Momentum;
+                }
                 Flock(ship);
                 Snake(ship);
+                Ring(ship, summation, moment);
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
@@ -261,9 +294,13 @@
                     : World.Hook.Drag;
 
                 ship.Mode = (byte)
-                    (isBoosting ? 1 :
-                    (Pickup != null) ? 2 :
-                    (Owner.IsInvulnerable) ? 3 : 0);
+                    (
+                        (isBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
+                        | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
+                        | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
+                        | (Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
+                        | (Owner.IsShielded ? ShipModeEnum.shield : ShipModeEnum.none)
+                    );
 
                 if (isBoostInitial)
                     if (ship.Momentum != Vector2.Zero)
@@ -275,10 +312,7 @@
                 ShootCooldownTime = World.Time + (Shark ? ShotCooldownTimeShark : (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB));
                 ShootCooldownTimeStart = World.Time;
 
-                /*foreach (var ship in Ships)
-                    NewBullets.Add(Bullet.FireFrom(ship));*/
-
-                FireVolley = true;
+                FiringWeapon = true;
             }
 
             if (World.Time > BoostCooldownTime)
@@ -329,6 +363,27 @@
             ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
         }
 
+        private void Ring(Ship ship, Vector2 average, Vector2 momentum)
+        {
+            if (!BossMode)
+                return;
+
+            var targetAngle = MathF.Atan2(AimTarget.Y, AimTarget.X);
+            var shipIndex = Ships.IndexOf(ship);
+            var innerAngle = (shipIndex - 5) / (float)(Ships.Count - 5) * 2 * MathF.PI;
+            var angle = (shipIndex - 5) / (float)(Ships.Count - 5) * 2 * MathF.PI;
+            if (shipIndex > 4)
+            {
+                ship.Position = average/5 + 
+                    new Vector2(
+                        MathF.Cos(angle + targetAngle), 
+                        MathF.Sin(angle + targetAngle)
+                    ) * (50 + 15 * Ships.Count);
+                ship.Momentum = momentum / 5;
+                ship.Angle = angle + targetAngle;
+
+            }
+        }
         private void Snake(Ship ship)
         {
             if (World.Hook.SnakeWeight == 0)

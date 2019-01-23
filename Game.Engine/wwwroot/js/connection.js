@@ -11,6 +11,10 @@ export class Connection {
         this.reloading = false;
         this.connected = false;
 
+        this.framesPerSecond = false;
+        this.viewsPerSecond = false;
+        this.updatesPerSecond = false;
+
         this.statBytesUp = 0;
         this.statBytesDown = 0;
         this.statBytesDownPerSecond = 0;
@@ -45,7 +49,7 @@ export class Connection {
             url = "ws:";
         }
 
-        var hostname = window.location.host;
+        let hostname = window.location.host;
 
         if (!hostname) {
             hostname = "daud.io";
@@ -86,7 +90,6 @@ export class Connection {
             self.onClose(event);
         };
     }
-
     sendPing() {
         const builder = new flatbuffers.Builder(0);
 
@@ -96,11 +99,11 @@ export class Connection {
 
         //this.fb.Ping.addTime(builder, this.pingSent);
         this.fb.NetPing.addLatency(builder, this.latency);
-        this.fb.NetPing.addVps(builder, window.Game.Stats.viewsPerSecond);
-        this.fb.NetPing.addUps(builder, window.Game.Stats.updatesPerSecond);
-        this.fb.NetPing.addFps(builder, window.Game.Stats.framesPerSecond);
+        this.fb.NetPing.addVps(builder, this.viewsPerSecond);
+        this.fb.NetPing.addUps(builder, this.updatesPerSecond);
+        this.fb.NetPing.addFps(builder, this.framesPerSecond);
         this.fb.NetPing.addCs(builder, Cache.count);
-        this.fb.NetPing.addBackgrounded(builder, window.Game.isBackgrounded);
+        this.fb.NetPing.addBackgrounded(builder, this.isBackgrounded);
         this.fb.NetPing.addBandwidthThrottle(builder, Settings.bandwidth);
 
         const ping = this.fb.NetPing.endNetPing(builder);
@@ -262,7 +265,7 @@ export class Connection {
 
                 const record = message.record();
 
-                var recordModel = {
+                let recordModel = {
                     Name: "",
                     Color: "red",
                     Score: 0,

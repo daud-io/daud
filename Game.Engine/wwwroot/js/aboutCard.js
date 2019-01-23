@@ -1,6 +1,6 @@
 // about card open and close script
 
-var aboutCard = document.getElementById("fullPageCard");
+const aboutCard = document.getElementById("fullPageCard");
 
 document.getElementById("openArrow").addEventListener("click", function() {
     aboutCard.classList.remove("hidden");

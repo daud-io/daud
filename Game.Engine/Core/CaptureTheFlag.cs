@@ -27,7 +27,8 @@
                 Name = t.ColorName,
                 Score = t.Score,
                 Position = t.Flag?.Position ?? Vector2.Zero,
-                ModeData = new { flagStatus = t.Base.FlagIsHome() ? "Home" : "Taken" }
+                ModeData = new { flagStatus = t.Base.FlagIsHome() ? "Home" : "Taken" },
+                FleetID = t.Flag.CarriedBy?.ID ?? 0
             }).ToList();
 
             var players = Player.GetWorldPlayers(World);
@@ -347,8 +348,7 @@
             {
                 base.Think();
 
-                if (CarriedBy?.Owner?.IsAlive ?? false
-                    && !(CarriedBy?.Owner?.PendingDestruction ?? true))
+                if (!(CarriedBy?.PendingDestruction ?? true))
                 {
                     this.Position = CarriedBy.FleetCenter;
                     this.Momentum = CarriedBy.FleetMomentum;

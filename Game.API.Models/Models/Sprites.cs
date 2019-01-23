@@ -45,6 +45,16 @@
         ctf_score_stripes,
         ctf_arrow_red,
         ctf_arrow_blue,
-        ctf_arrow_trans_flag
+        ctf_arrow_trans_flag,
+        thruster_green,
+        thruster_orange,
+        thruster_pink,
+        thruster_red,
+        thruster_cyan,
+        thruster_yellow,
+        circles,
+        shield,
+        shield_pickup,
+        wormhole
     }
 }

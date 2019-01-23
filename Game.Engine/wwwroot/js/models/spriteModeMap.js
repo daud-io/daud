@@ -1,4 +1,4 @@
-﻿export var spriteModeMap = {
+export const spriteModeMap = {
     bg: {
         texture: "bg",
         scaleFactor: 10
@@ -19,9 +19,11 @@
     ship0: {
         modes: {
             default: ["ship0"],
-            weaponupgrade: ["ship0", "circles"],
-            boost: ["ship0", "thruster_cyan"],
-            invulnerable: ["ship0", "obstacle"]
+            boost: ["thruster_cyan"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship0"
     },
@@ -29,55 +31,66 @@
     ship_cyan: {
         modes: {
             default: ["ship_cyan"],
-            weaponupgrade: ["ship_cyan", "circles"],
-            boost: ["ship_cyan", "thruster_cyan"],
-            invulnerable: ["ship_cyan", "obstacle"]
+            boost: ["thruster_cyan"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship_cyan"
     },
     ship_green: {
         modes: {
             default: ["ship_green"],
-            weaponupgrade: ["ship_green", "circles"],
-            boost: ["ship_green", "thruster_green"],
-            invulnerable: ["ship_green", "obstacle"]
+            boost: ["thruster_green"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship_green"
     },
     ship_orange: {
         modes: {
             default: ["ship_orange"],
-            weaponupgrade: ["ship_orange", "circles"],
-            boost: ["ship_orange", "thruster_orange"],
-            invulnerable: ["ship_orange", "obstacle"]
+            boost: ["thruster_orange"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship_orange"
     },
     ship_pink: {
         modes: {
             default: ["ship_pink"],
-            weaponupgrade: ["ship_pink", "circles"],
-            boost: ["ship_pink", "thruster_pink"],
-            invulnerable: ["ship_pink", "obstacle"]
+            boost: ["thruster_pink"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship_pink"
     },
     ship_red: {
         modes: {
-            //default: ["ship_red"],
-            default: ["ship_red", "ship_gray"],
-            weaponupgrade: ["ship_red", "circles"],
-            boost: ["ship_red", "thruster_red"],
-            invulnerable: ["ship_red", "obstacle"]
+            default: ["ship_red"],
+            boost: ["thruster_red"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship_red"
     },
     ship_yellow: {
         modes: {
             default: ["ship_yellow"],
-            weaponupgrade: ["ship_yellow", "circles"],
-            boost: ["ship_yellow", "thruster_yellow"],
-            invulnerable: ["ship_yellow", "obstacle"]
+            boost: ["thruster_yellow"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship_yellow"
     },
@@ -85,18 +98,22 @@
     ship_secret: {
         modes: {
             default: ["ship_secret"],
-            weaponupgrade: ["ship_secret", "circles"],
-            boost: ["ship_secret", "thruster_yellow"],
-            invulnerable: ["ship_secret", "obstacle"]
+            boost: ["thruster_cyan"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship_secret"
     },
     ship_zed: {
         modes: {
             default: ["ship_zed"],
-            weaponupgrade: ["ship_zed", "circles"],
-            boost: ["ship_zed", "thruster_red"],
-            invulnerable: ["ship_zed", "obstacle"]
+            boost: ["thruster_cyan"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
         },
         selector: "ship_zed"
     },
@@ -110,8 +127,11 @@
     bullet_yellow: { modes: { default: ["bullet_yellow"] } },
 
     obstacle: { modes: { default: ["obstacle"] } },
+    wormhole: { modes: { default: ["wormhole"] } },
     seeker: { modes: { default: ["seeker"] } },
     seeker_pickup: { modes: { default: ["seeker_pickup"] } },
+
+    shield_pickup: { modes: { default: ["shield_pickup"] } },
 
     ctf_base: { modes: { default: ["ctf_base"] } },
 

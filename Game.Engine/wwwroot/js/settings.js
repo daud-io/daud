@@ -1,11 +1,8 @@
 import { fetch } from "whatwg-fetch";
-import { toggleLobby } from "./lobby";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
 import { textureMap } from "./models/textureMap";
 import { spriteModeMap } from "./models/spriteModeMap";
-
-import * as PIXI from "pixi.js";
 import { textureCache } from "./models/textureCache";
 
 export const Settings = {
@@ -14,6 +11,7 @@ export const Settings = {
     mouseScale: 1.0,
     font: "sans-serif",
     leaderboardEnabled: true,
+    displayMinimap: "always",
     hudEnabled: true,
     namesEnabled: true,
     bandwidth: 100,
@@ -28,32 +26,23 @@ export const Settings = {
     background: "on"
 };
 
-function parseQuery(queryString) {
-    const query = {};
-    const pairs = (queryString[0] === "?" ? queryString.substr(1) : queryString).split("&");
-    for (let i = 0; i < pairs.length; i++) {
-        const pair = pairs[i].split("=");
-        query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || "");
-    }
-    return query;
-}
-
 function save() {
     const cookieOptions = { expires: 300 };
     let reload = false;
 
     if (Settings.theme != document.getElementById("settingsThemeSelector").value) {
         Settings.theme = document.getElementById("settingsThemeSelector").value;
-        reload = true;
+        theme(Settings.theme);
     }
     if (Settings.themeCustom != document.getElementById("settingsThemeSelectorCustom").value) {
         Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value;
-        reload = true;
+        theme(Settings.themeCustom);
     }
 
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
     Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
+    Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").value;
     Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
@@ -69,8 +58,6 @@ function save() {
 
     Cookies.set("settings", Settings, cookieOptions);
 
-    console.log(Settings);
-
     if (reload) window.location.reload();
 }
 
@@ -79,41 +66,42 @@ function reset() {
 }
 
 function load() {
-    try {
-        const savedSettings = Cookies.getJSON("settings");
+    const savedSettings = Cookies.getJSON("settings");
 
-        if (savedSettings) {
-            // copying value by value because cookies can be old versions
-            // any values NOT in the cookie will remain defined with the new defaults
-            for (const key in savedSettings) Settings[key] = savedSettings[key];
+    if (savedSettings) {
+        // copying value by value because cookies can be old versions
+        // any values NOT in the cookie will remain defined with the new defaults
+        for (const key in savedSettings) Settings[key] = savedSettings[key];
 
-            if (Settings.theme == "3ds2agh4z76feci") Settings.theme = "516mkwof6m4d4tg";
-        }
-
-        document.getElementById("settingsThemeSelector").value = Settings.theme;
-        document.getElementById("settingsThemeSelectorCustom").value = Settings.themeCustom || "";
-
-        document.getElementById("settingsMouseScale").value = Settings.mouseScale;
-        document.getElementById("settingsFont").value = Settings.font;
-        document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
-        document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
-        document.getElementById("settingsBandwidth").value = Settings.bandwidth;
-        document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
-        document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
-        document.getElementById("settingsLog").value = Settings.logLength;
-        document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
-        document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
-        document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
-        document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
-        document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
-        document.getElementById("settingsNameSize").value = Settings.nameSize;
-        document.getElementById("settingsBackground").value = Settings.background;
-    } catch (e) {
-        // maybe reset()? will make debugging difficult
+        if (Settings.theme == "3ds2agh4z76feci") Settings.theme = "516mkwof6m4d4tg";
     }
+
+    document.getElementById("settingsThemeSelector").value = Settings.theme;
+    document.getElementById("settingsThemeSelectorCustom").value = Settings.themeCustom || "";
+
+    document.getElementById("settingsMouseScale").value = Settings.mouseScale;
+    document.getElementById("settingsFont").value = Settings.font;
+    document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
+    document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
+    document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
+    document.getElementById("settingsBandwidth").value = Settings.bandwidth;
+    document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
+    document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
+    document.getElementById("settingsLog").value = Settings.logLength;
+    document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
+    document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
+    document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
+    document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
+    document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
+    document.getElementById("settingsNameSize").value = Settings.nameSize;
+    document.getElementById("settingsBackground").value = Settings.background;
 }
 
+const debug = true;
+
 async function theme(v) {
+    if (v)
+        v = v.toLowerCase();
     const link = `https://dl.dropboxusercontent.com/s/${v}/daudmod.zip`;
     const zip = await fetch(link)
         .then(response => response.blob())
@@ -123,76 +111,67 @@ async function theme(v) {
         .then(text => {
             const info = JSON.parse(text);
 
-            var version = 1;
-            if (info.version) version = info.version;
-
-            if (info.files) {
-                // old format info.json
-                info.files.forEach(element => {
-                    zip.file(`daudmod/${element[0]}.png`)
-                        .async("arraybuffer")
-                        .then(ab => {
-                            const arrayBufferView = new Uint8Array(ab);
-                            const blob = new Blob([arrayBufferView], { type: "image/jpeg" });
-                            const urlCreator = window.URL || window.webkitURL;
-                            const url = urlCreator.createObjectURL(blob);
-
-                            textureMap[element[0]].url = url;
-                            if (element[1]) {
-                                var scale = element[1];
-                                if (version == 1 && element[0].startsWith("ship")) scale = 0.03;
-
-                                if (scale) textureMap[element[0]].scale = scale;
-                            }
-
-                            if (window.Game && window.Game.cache) {
-                                textureCache.clear();
-                                window.Game.cache.refreshSprites();
-                                window.Game.reinitializeWorld();
-                            }
-                        });
-                });
-            }
+            const version = info.version || 1;
 
             if (info.spriteModeMap) {
-                for (var key in info.spriteModeMap) {
-                    var modeMap = info.spriteModeMap[key];
+                for (let key in info.spriteModeMap) {
+                    const modeMap = info.spriteModeMap[key];
 
-                    for (var mapKey in modeMap) spriteModeMap[key][mapKey] = modeMap[mapKey];
+                    if (!spriteModeMap.hasOwnProperty(key))
+                    {
+                        console.log(`[warning] theme attempted to define a non-existant sprite: ${key}`);
+                        continue;
+                    }
+
+                    for (const mapKey in modeMap) spriteModeMap[key][mapKey] = modeMap[mapKey];
                 }
             }
 
-            var downloadFile = function(key, filename) {
-                zip.file(`daudmod/${filename}.png`)
-                    .async("arraybuffer")
-                    .then(ab => {
-                        const arrayBufferView = new Uint8Array(ab);
-                        const blob = new Blob([arrayBufferView], { type: "image/png" });
-                        const urlCreator = window.URL || window.webkitURL;
-                        const url = urlCreator.createObjectURL(blob);
-
-                        textureMap[key].url = url;
-
-                        if (window.Game && window.Game.cache) {
-                            textureCache.clear();
-                            window.Game.cache.refreshSprites();
-                            window.Game.reinitializeWorld();
-                        }
-                    });
-            };
-
             if (info.textureMap) {
-                for (var key in info.textureMap) {
-                    var map = info.textureMap[key];
+                const promises = [];
+                for (let key in info.textureMap) {
+                    const map = info.textureMap[key];
 
-                    for (var textureKey in map) {
-                        if (!textureMap[key]) textureMap[key] = {};
+                    for (const textureKey in map) {
+                        if (!textureMap[key])
+                        {
+                            if (debug) console.log(`creating texture: ${key}`);
+                            textureMap[key] = {};
+                        }
 
+                        if (debug) console.log(`textureMap.${key}.${textureKey}: ${map[textureKey]}`);
                         textureMap[key][textureKey] = map[textureKey];
                     }
 
-                    downloadFile(key, map.file);
+                    promises.push(
+                        zip
+                            .file(`daudmod/${map.file}.png`)
+                            .async("arraybuffer")
+                            .then(ab => {
+                                const arrayBufferView = new Uint8Array(ab);
+                                const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                const urlCreator = window.URL || window.webkitURL;
+                                const url = urlCreator.createObjectURL(blob);
+
+                                if (key == 'shield')
+                                {
+                                    console.log('breakpoint');
+                                    textureMap[key].flag = true;
+                                }
+
+                                if (debug) console.log(`textureMap.${key}.url: set to blob`);
+                                textureMap[key].url = url;
+                            })
+                    );
                 }
+                Promise.all(promises).then(() => {
+                    if (window.Game && window.Game.cache) {
+                        if (debug) console.log(`theme loading complete`);
+                        textureCache.clear();
+                        window.Game.cache.refreshSprites();
+                        window.Game.reinitializeWorld();
+                    }
+                });
             }
         });
 }
@@ -200,12 +179,12 @@ async function theme(v) {
 load();
 
 // override settins from querystring values
-const qs = parseQuery(window.location.search);
-if (qs.themeCustom) Settings.themeCustom = qs.themeCustom;
-if (qs.leaderboardEnabled) Settings.leaderboardEnabled = qs.leaderboardEnabled == "true";
-if (qs.hudEnabled) Settings.hudEnabled = qs.hudEnabled == "true";
-if (qs.namesEnabled) Settings.namesEnabled = qs.namesEnabled == "true";
-if (qs.bandwidth) Settings.bandwidth = Number(qs.bandwidth);
+const qs = new URLSearchParams(window.location.search);
+if (qs.has("themeCustom")) Settings.themeCustom = qs.get("themeCustom");
+if (qs.has("leaderboardEnabled")) Settings.leaderboardEnabled = qs.get("leaderboardEnabled") == "true";
+if (qs.has("hudEnabled")) Settings.hudEnabled = qs.get("hudEnabled") == "true";
+if (qs.has("namesEnabled")) Settings.namesEnabled = qs.get("namesEnabled") == "true";
+if (qs.has("bandwidth")) Settings.bandwidth = Number(qs.get("bandwidth"));
 
 if (Settings.themeCustom) {
     theme(Settings.themeCustom);
@@ -215,19 +194,16 @@ if (Settings.themeCustom) {
 
 const gear = document.getElementById("gear");
 document.getElementById("settings").addEventListener("click", () => {
-    toggleLobby();
     gear.classList.remove("closed");
 });
 
 document.getElementById("settingsCancel").addEventListener("click", () => {
-    toggleLobby();
     gear.classList.add("closed");
 });
 
 document.getElementById("settingsSave").addEventListener("click", () => {
     save();
     load();
-    toggleLobby();
     gear.classList.add("closed");
 });
 
@@ -236,7 +212,7 @@ document.getElementById("settingsReset").addEventListener("click", () => {
     window.location.reload();
 });
 
-var minimapChanged = false;
+let minimapChanged = false;
 window.addEventListener("keydown", function(e) {
     if (e.keyCode == 77 && !minimapChanged) {
         Settings.displayMinimap = !Settings.displayMinimap;

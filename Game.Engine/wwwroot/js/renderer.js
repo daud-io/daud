@@ -8,7 +8,7 @@ export class Renderer {
 
         cache.foreach(function(body) {
             if (body.Group) {
-                var group = cache.getGroup(body.Group);
+                const group = cache.getGroup(body.Group);
                 if (group && groupsUsed.indexOf(group) == -1) groupsUsed.push(group);
             }
 
@@ -16,9 +16,8 @@ export class Renderer {
         }, this);
 
         let ids = [];
-        for (let i = 0; i < groupsUsed.length; i++) {
-            const group = groupsUsed[i];
 
+        for (const group of groupsUsed) {
             if (group) {
                 ids.push(`g-${group.ID}`);
 

@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.API.Common;
+    using Game.Engine.Core.Weapons;
     using System;
     using System.Numerics;
 
@@ -10,12 +11,11 @@
         private float Multiplier = 1;
         private long DieByTime = 0;
         private float IdealSize = 1;
-        private int TargetSize = 0;
+        protected int TargetSize = 0;
 
-
-        public void CollisionExecute(Body projectedBody)
+        public virtual void CollisionExecute(Body projectedBody)
         {
-            if (projectedBody is Bullet bullet)
+            if (projectedBody is ShipWeaponBullet bullet)
             {
                 if (!bullet.Consumed)
                 {
@@ -28,11 +28,13 @@
             }
         }
 
-        public bool IsCollision(Body projectedBody)
+        public virtual bool IsCollision(Body projectedBody)
         {
+            var isHit = false;
 
-            var isHit = Vector2.Distance(projectedBody.Position, this.Position)
-                < (projectedBody.Size + this.Size);
+            if (projectedBody is ShipWeaponBullet bullet)
+                isHit = Vector2.Distance(projectedBody.Position, this.Position)
+                    < (projectedBody.Size + this.Size);
 
             return isHit;
         }

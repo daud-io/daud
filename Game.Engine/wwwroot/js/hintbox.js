@@ -1,4 +1,3 @@
-/*
 const hintbox = document.getElementById("hintbox");
 
 const texts = [
@@ -16,18 +15,18 @@ const texts = [
 
 let index = 1; // zero is duplicated in the HTML
 
-var eventStart = new Date("2018-12-13T17:00:00.000Z");
+const eventStart = new Date("2018-12-13T17:00:00.000Z");
 if (new Date().getTime() < eventStart.getTime()) {
     window.setInterval(() => {
-        var distance = eventStart.getTime() - new Date().getTime();
+        const distance = eventStart.getTime() - new Date().getTime();
 
         // Time calculations for days, hours, minutes and seconds
-        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        var remaining = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+        const remaining = `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
         hintbox.innerText = `Team match begins in ${remaining}`;
     }, 1000);
 } else {
@@ -36,4 +35,3 @@ if (new Date().getTime() < eventStart.getTime()) {
         index++;
     }, 6000);
 }
-*/

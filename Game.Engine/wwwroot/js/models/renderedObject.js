@@ -9,17 +9,20 @@ export class RenderedObject {
         this.currentSpriteName = false;
         this.currentMode = 0;
         this.currentZIndex = 0;
+
+        this.activeTextures = {};
+
     }
 
-    getMode(mode) {
-        return "default";
+    decodeModes(mode) {
+        return ["default"];
     }
 
     static getImageFromTextureDefinition(textureDefinition) {
-        var img = new Image();
+        const img = new Image();
         if (textureDefinition.url) img.src = textureDefinition.url;
         else {
-            var src = images[textureDefinition.file];
+            const src = images[textureDefinition.file];
             if (src) img.src = src;
         }
 
@@ -27,7 +30,7 @@ export class RenderedObject {
     }
 
     static getTextureImage(textureName) {
-        var textureDefinition = RenderedObject.getTextureDefinition(textureName);
+        const textureDefinition = RenderedObject.getTextureDefinition(textureName);
 
         if (textureDefinition === false) console.log(`cannot load texture '${textureName}'`);
 
@@ -35,24 +38,24 @@ export class RenderedObject {
     }
 
     static loadTexture(textureDefinition, textureName) {
-        var textures = textureCache[textureName];
+        let textures = textureCache[textureName];
 
         if (!textures) {
             textures = [];
 
-            var img = RenderedObject.getImageFromTextureDefinition(textureDefinition);
+            const img = RenderedObject.getImageFromTextureDefinition(textureDefinition);
 
-            var baseTexture = new PIXI.Texture.fromLoader(img);
+            const baseTexture = new PIXI.Texture.fromLoader(img);
 
             if (textureDefinition.animated) {
-                var tileSize = textureDefinition.tileSize || 32;
-                var totalTiles = textureDefinition.tileCount || 1;
+                const tileSize = textureDefinition.tileSize || 32;
+                const totalTiles = textureDefinition.tileCount || 1;
 
-                for (var tileIndex = 0; tileIndex < totalTiles; tileIndex++) {
-                    var sx = tileSize * (tileIndex % totalTiles);
-                    var sy = 0;
-                    var sw = tileSize;
-                    var sh = tileSize;
+                for (let tileIndex = 0; tileIndex < totalTiles; tileIndex++) {
+                    const sx = tileSize * (tileIndex % totalTiles);
+                    const sy = 0;
+                    const sw = tileSize;
+                    const sh = tileSize;
 
                     textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), false, false, textureDefinition.rotate || 0));
                 }
@@ -69,9 +72,10 @@ export class RenderedObject {
     }
 
     buildSprite(textureName) {
-        var textureDefinition = RenderedObject.getTextureDefinition(textureName);
-        var textures = RenderedObject.loadTexture(textureDefinition, textureName);
-        var pixiSprite = false;
+
+        const textureDefinition = RenderedObject.getTextureDefinition(textureName);
+        const textures = RenderedObject.loadTexture(textureDefinition, textureName);
+        let pixiSprite = false;
 
         if (textureDefinition.animated) {
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);
@@ -108,34 +112,53 @@ export class RenderedObject {
     }
 
     static getSpriteDefinition(spriteName) {
-        var spriteDefinition = false;
+        let spriteDefinition = false;
         if (spriteModeMap[spriteName]) spriteDefinition = spriteModeMap[spriteName];
 
         return spriteDefinition;
     }
 
     getModeMap(spriteName, mode) {
-        var layers = false;
-        var modeName = this.getMode(mode);
-        var spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
+        let layers = [];
+        const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
+        const modes = this.decodeModes(mode);
 
-        if (spriteDefinition.modes[modeName]) layers = spriteModeMap[spriteName].modes[modeName];
-
-        if (!layers && spriteDefinition.modes["default"]) layers = spriteModeMap[spriteName].modes["default"];
+        modes.forEach(modeName => {
+            var modeLayers = spriteDefinition.modes[modeName];
+            if (modeLayers)
+                modeLayers.forEach(layer => layers.push(layer));
+        });
 
         return layers;
     }
 
     buildSpriteLayers(spriteName, mode, zIndex) {
-        var layers = this.getModeMap(spriteName, mode);
+        const layers = this.getModeMap(spriteName, mode);
 
         if (layers) {
-            var spriteLayers = [];
-            for (var i = 0; i < layers.length; i++) {
-                var spriteLayer = this.buildSprite(layers[i]);
+            const spriteLayers = [];
+            for (let i = 0; i < layers.length; i++) {
+
+                let spriteLayer = false;
+                var textureName = layers[i];
+                if (this.activeTextures[textureName])
+                    spriteLayer = this.activeTextures[textureName];
+                else
+                    spriteLayer = this.buildSprite(textureName);
+
                 spriteLayer.zIndex = zIndex;
-                
+
                 spriteLayers.push(spriteLayer);
+                this.activeTextures[textureName] = spriteLayer;
+            }
+
+            for(var key in this.activeTextures)
+            {
+                if (layers.indexOf(key) == -1)
+                {
+                    this.container.removeChild(this.activeTextures[key]);
+                    delete this.activeTextures[key];
+                }
             }
 
             return spriteLayers;
@@ -148,12 +171,12 @@ export class RenderedObject {
 
     destroySprites() {
         if (this.spriteLayers) {
-            for (var i = 0; i < this.spriteLayers.length; i++) {
-                var layer = this.spriteLayers[i];
+            for (const layer of this.spriteLayers) {
                 this.container.removeChild(layer);
             }
 
             this.spriteLayers = false;
+            this.activeTextures = {};
         }
     }
 
@@ -163,12 +186,7 @@ export class RenderedObject {
 
     setSprite(spriteName, mode, zIndex, reload) {
         // check that we really need to change anything
-        if (reload 
-            || spriteName != this.currentSpriteName 
-            || mode != this.currentMode
-            || zIndex != this.currentZIndex
-            ) {
-
+        if (reload || spriteName != this.currentSpriteName || mode != this.currentMode || zIndex != this.currentZIndex) {
             this.currentSpriteName = spriteName;
             this.currentMode = mode;
             this.currentZIndex = zIndex;
@@ -176,7 +194,9 @@ export class RenderedObject {
             //console.log(mode);
 
             // if we have any existing sprites, destroy them
-            this.destroySprites();
+            if (reload)
+                this.destroySprites();
+            
             this.spriteLayers = this.buildSpriteLayers(spriteName, mode, zIndex);
 
             this.foreachLayer(function(layer, index) {
@@ -187,13 +207,13 @@ export class RenderedObject {
 
     preRender(time, interpolator) {
         if (this.body) {
-            var newPosition = interpolator.projectObject(this.body, time);
+            const newPosition = interpolator.projectObject(this.body, time);
             this.moveSprites(newPosition, this.body.Size);
         }
     }
 
     moveSprites(interpolatedPosition, size) {
-        var angle = interpolatedPosition.Angle;
+        const angle = interpolatedPosition.Angle;
 
         this.foreachLayer(function(layer, index) {
             layer.pivot.x = layer.texture.width / 2;
@@ -210,15 +230,14 @@ export class RenderedObject {
 
     update(updateData) {
         this.body = updateData;
-        
+
         this.setSprite(updateData.Sprite, updateData.Mode, false, updateData.zIndex);
     }
 
     foreachLayer(action) {
         if (this.spriteLayers && this.spriteLayers.length)
-            for (var i = 0; i < this.spriteLayers.length; i++) {
-                var layer = this.spriteLayers[i];
+            this.spriteLayers.forEach((layer, i) => {
                 action.apply(this, [layer, i]);
-            }
+            });
     }
 }

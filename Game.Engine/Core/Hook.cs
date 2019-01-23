@@ -1,4 +1,6 @@
-﻿namespace Game.Engine.Core
+﻿using Game.API.Common;
+
+namespace Game.Engine.Core
 {
     public class Hook
     {
@@ -49,6 +51,9 @@
                     BotRespawnDelay = 10000,
 
                     StepTime = 40,
+                    Wormholes = 0,
+                    WormholesDestination = null,
+
                     Obstacles = 10,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
@@ -65,6 +70,7 @@
                     SumoRingSize = 1000,
 
                     SpawnShipCount = 5,
+                    SpawnInvulnerabilityTime = 3000,
 
                     FlockAlignment = .35f,
                     FlockCohesion = 0.006f,
@@ -73,13 +79,16 @@
                     FlockSeparationMinimumDistance = 200,
                     FlockWeight = 0.14f,
                     SnakeWeight = 0f,
+                    BossMode = false,
 
                     ShipGainBySizeM = -0.03f,
                     ShipGainBySizeB = 1.03f,
 
                     FlockSpeed = 0,
 
-                    Pickups = 6,
+                    PickupSeekers = 6,
+                    PickupShields = 4,
+
                     Fishes = 60,
                     FishThrust = 0.04f,
 
@@ -93,7 +102,8 @@
                     PointsPerUniverseDeath = -1,
                     PointsMultiplierDeath = 0.5f,
 
-                PlayerCountGracePeriodMS = 15000,
+                    PlayerCountGracePeriodMS = 15000,
+                    FleetWeaponStackDepth = 1,
 
                     LifecycleDuration = 10000
                 };
@@ -143,8 +153,12 @@
         public float SeekerLifeMultiplier { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
+
+        public int Wormholes { get; set; }
+        public string WormholesDestination { get; set; }
+
         public int Obstacles { get; set; }
-        public int Pickups { get; set; } = 0;
+        public int PickupSeekers { get; set; } = 0;
         public int Fishes { get; set; } = 0;
         public float FishThrust { get; set; } = 0;
 
@@ -170,6 +184,8 @@
         public int FlockSeparationMinimumDistance { get; set; }
         public float FlockWeight { get; set; }
         public float SnakeWeight { get; set; }
+        public bool BossMode { get; set; }
+        public Sprites[] BossModeSprites { get; set; }
 
         public int FlockSpeed { get; set; }
 
@@ -185,6 +201,7 @@
         public float OutOfBoundsBorder { get; set; } = 300;
         public float OutOfBoundsDecayDistance { get; set; } = 900;
         public int BotRespawnDelay { get; set; }
+        public int PickupShields { get; set; }
 
         public bool FollowFirstShip { get; set; }
         public int FiringSequenceDelay { get; set; }
@@ -194,6 +211,8 @@
         public int LifecycleDuration {get;set;}
 
         public int PlayerCountGracePeriodMS { get; set; }
+        public int FleetWeaponStackDepth { get; set; }
+        public int SpawnInvulnerabilityTime { get; set; }
 
         public Hook Clone()
         {

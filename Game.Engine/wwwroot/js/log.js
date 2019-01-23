@@ -15,15 +15,16 @@ export class Log {
 
         this.lastDisplay = performance.now();
 
-        var out = "";
-        for (let i = 0; i < this.data.length; i++) {
-            const slot = this.data[i];
+        let out = "";
+
+        for (const slot of this.data) {
             out += `<span><b style="color:gray">${slot.time.toLocaleTimeString()}</b> ${slot.entry}</span><br>`;
         }
+
         log.innerHTML = out;
 
         if (Settings.bigKillMessage) {
-            var lastData = this.data[this.data.length - 1]["entry"];
+            let lastData = this.data[this.data.length - 1]["entry"];
             if (lastData.toLowerCase().indexOf("you killed") === 0) {
                 lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData + "<span style='color:#00ff00'>&nbsp;]</span>";
             } else if (lastData.toLowerCase().indexOf("killed by") === 0) {

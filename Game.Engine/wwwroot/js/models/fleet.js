@@ -26,6 +26,10 @@ export class Fleet {
     update(groupUpdate) {
         this.caption = groupUpdate.Caption;
         this.ID = groupUpdate.ID;
+
+        if (this.ships.length == 0) {
+            console.log('update on zero length fleet');
+        }
     }
 
     preRender(time, interpolator, myfleetID) {
@@ -38,12 +42,12 @@ export class Fleet {
                 else this.text.text = "";
 
                 //this.text.text += " " + this.ships.length;
-                var accX = 0,
+                let accX = 0,
                     accY = 0,
                     count = 0;
 
                 this.ships.forEach(ship => {
-                    var position = interpolator.projectObject(ship.body, time);
+                    const position = interpolator.projectObject(ship.body, time);
                     accX += position.X;
                     accY += position.Y;
                     count++;

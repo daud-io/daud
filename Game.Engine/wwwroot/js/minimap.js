@@ -1,12 +1,12 @@
 import { Settings } from "./settings";
 
-const minimapSize = 200;
+const minimapSize = 180;
 const minimapMarginBottom = 15;
 const minimapMarginRight = 15;
 
 const colors = {
     red: 0xff0000,
-    pink: 0xffc0cb,
+    pink: 0xff00cb,
     orange: 0xffa500,
     yellow: 0xffff00,
     cyan: 0x00ffff,
@@ -21,8 +21,8 @@ export class Minimap {
         stage.addChild(this.ctx);
     }
     size(size) {
-        this.ctx.position.x = size.width - 215;
-        this.ctx.position.y = size.height - 215;
+        this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
+        this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
     }
     checkDisplay() {
         if (Settings.displayMinimap != this.ctx.visible) this.ctx.visible = Settings.displayMinimap;
@@ -39,23 +39,46 @@ export class Minimap {
             .lineStyle(0);
         for (let i = startIndex; i < data.Entries.length; i++) {
             const entry = data.Entries[i];
-            var entryIsSelf = entry.FleetID == fleetID;
-            this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf);
+            const entryIsSelf = entry.FleetID == fleetID;
+            this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf, i);
         }
     }
-    drawMinimap(x, y, color, self) {
-        var minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimapSize;
-        var minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize;
+    drawMinimap(x, y, color, self, rank) {
+        const minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimapSize;
+        const minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize;
 
-        if (!self) {
+        if (self) {
+            // mark "self" player
             this.ctx
-                .beginFill(colors[color])
-                .drawRect(minimapX - 2, minimapY - 2, 4, 4)
+                .beginFill(0xffffff)
+                .lineStyle(1, 0xffffff)
+                .drawRect(minimapX - 3, minimapY - 3, 6, 6)
+                .endFill();
+        } else if (rank === 0) {
+            // mark the king
+            //this.ctx.drawImage(crownImg, 0, 0);
+            //.beginFill(0xdaa520)
+            //.drawRect(minimapX - 3, minimapY - 3, 6, 6)
+            //.endFill();
+            var x = Math.floor(minimapX - 4);
+            var y = Math.floor(minimapY - 2);
+            this.ctx
+                .beginFill(0xdaa520)
+                .lineStyle(1, 0xdaa520)
+                .moveTo(x, y)
+                .lineTo(2 + x, 2 + y)
+                .lineTo(4 + x, 0 + y)
+                .lineTo(6 + x, 2 + y)
+                .lineTo(8 + x, 0 + y)
+                .lineTo(8 + x, 4 + y)
+                .lineTo(0 + x, 4 + y)
+                .closePath()
                 .endFill();
         } else {
             this.ctx
-                .beginFill(0xffffff)
-                .drawRect(minimapX - 3, minimapY - 3, 6, 6)
+                .lineStyle(1, colors[color])
+                .beginFill(colors[color])
+                .drawRect(minimapX - 2, minimapY - 2, 4, 4)
                 .endFill();
         }
     }

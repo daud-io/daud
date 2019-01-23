@@ -1,19 +1,15 @@
-﻿namespace Game.Engine.Core
+﻿namespace Game.Engine.Core.Pickups
 {
     using Game.API.Common;
     using System;
     using System.Numerics;
 
-    public class Pickup : ActorBody, ICollide
+    public abstract class PickupBase : ActorBody, ICollide
     {
-        public Sprites BulletSprite { get; set; }
-
-        public Pickup()
+        public PickupBase()
         {
             Size = 100;
             Sprite = Sprites.seeker_pickup;
-            BulletSprite = Sprites.seeker;
-            Color = "rgba(128,128,128,.2)";
         }
 
         public override void Init(World world)
@@ -23,7 +19,7 @@
             base.Init(world);
         }
 
-        public void Randomize()
+        public virtual void Randomize()
         {
             var r = new Random();
             Position = World.RandomPosition();
@@ -31,7 +27,11 @@
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
             );
+
+            AngularVelocity = 0.005f;
         }
+
+        protected abstract void EquipFleet(Fleet fleet);
 
         public void CollisionExecute(Body projectedBody)
         {
@@ -40,8 +40,8 @@
 
             if (fleet != null)
             {
-                // powerup the fleet
-                fleet.AcceptPickup(this);
+                EquipFleet(fleet);
+
                 Randomize();
             }
         }
@@ -62,8 +62,6 @@
         public override void Think()
         {
             base.Think();
-
-            AngularVelocity = 0.005f;
 
             if (World.DistanceOutOfBounds(Position) > 0)
             {

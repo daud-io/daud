@@ -24,29 +24,18 @@
         public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
         public int BoostThreshold { get; set; } = 16;
 
-        public ContextTurret(Vector2 target)
+        public ContextTurret()
         {
             Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.00f });
-            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.1f });
+            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 1f, MaximumAngle = MathF.PI / 4});
             Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
             Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
             Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
             Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0f });
             Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
 
-            Navigation.TargetPoint = target;
+            Navigation.TargetPoint = new Vector2(0,0);
             Steps = 16;
-        }
-
-        public void Vary()
-        {
-            //Efficiency.BehaviorWeight = 0.5f;
-            Color = "cyan";
-            Sprite = "ship_cyan";
-
-            Separation.BehaviorWeight = 1;
-
-            Name += "++";
         }
 
         protected async override Task AliveAsync()
@@ -71,7 +60,6 @@
             if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold)
                 Boost();
 
-
             /*CustomData = JsonConvert.SerializeObject(new
             {
                 spots = Behaviors.OfType<Dodge>().Where(d => d.ConsideredPoints != null).SelectMany(d => d.ConsideredPoints)
@@ -83,9 +71,13 @@
                 spots = SensorFleets.Others?.Select(f => RoboMath.FiringIntercept(HookComputer, this.Position, f.Center, f.Momentum, this.SensorFleets.MyFleet?.Ships.Count ?? 0))
             });
 
-//            Console.WriteLine($"Thrust: {this.HookComputer.ShipThrust(this.SensorFleets?.MyFleet?.Ships.Count ?? 0)}");
-
             await base.AliveAsync();
+        }
+
+        protected override Task OnNewLeaderboardAsync()
+        {
+
+            return Task.FromResult(0);
         }
 
         private void ShootAtFleet(Fleet f)

@@ -1,0 +1,13 @@
+﻿namespace Game.Engine.Core.Weapons
+{
+    public class FleetWeaponShield : IFleetWeapon
+    {
+        public bool IsOffense => false;
+        public bool IsDefense => true;
+
+        public void FireFrom(Fleet fleet)
+        {
+            fleet.Owner?.SetInvulnerability(fleet.World.Hook.SpawnInvulnerabilityTime, true);
+        }
+    }
+}

@@ -23,7 +23,7 @@
 */
 
 
-export var textureMap = {
+export const textureMap = {
     bg: { file: "bg", scale: 1 },
 
     // fish
@@ -60,6 +60,46 @@ export var textureMap = {
     obstacle: { file: "obstacle", scale: 0.0028 },
     seeker: { file: "seeker", scale: 0.02 },
     seeker_pickup: { file: "seeker_pickup", scale: 0.02 },
+
+    shield: {
+        file: "shield",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.50,
+        scale: 0.04,
+        tileSize: 64,
+        tileCount: 90
+    },
+
+    invulnerable: {
+        file: "shield",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.50,
+        scale: 0.04,
+        tileSize: 64,
+        tileCount: 90
+    },
+
+    shield_pickup: {
+        file: "shield_pickup",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.50,
+        scale: 0.04,
+        tileSize: 64,
+        tileCount: 90
+    },
+
+    wormhole: {
+        file: "wormhole",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.50,
+        scale: 0.04,
+        tileSize: 128,
+        tileCount: 90
+    },
 
     thruster_cyan: {
         file: "thruster_cyan",
@@ -128,12 +168,24 @@ export var textureMap = {
         tileCount: 29
     },
 
-    circles: {
+    offenseupgrade: {
         file: "circles",
         animated: true,
         loop: true,
         animationSpeed: 0.2,
         scale: 0.05,
+        tint: 16711680,
+        tileSize: 72,
+        tileCount: 11
+    },
+
+    defenseupgrade: {
+        file: "circles",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.4,
+        scale: 0.05,
+        tint: 6711039,
         tileSize: 72,
         tileCount: 11
     },
@@ -141,7 +193,7 @@ export var textureMap = {
     arrow: { file: "arrow", scale: 1 },
 
     // Capture the Flag
-    ctf_base: { file: "ctf_base", scale: 0.0030 },
+    ctf_base: { file: "ctf_base", scale: 0.003 },
     ctf_flag_blue: {
         file: "ctf_flag_blue",
         animated: true,

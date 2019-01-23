@@ -8,6 +8,7 @@
         // reset each PreSweep
         private float TargetAngle;
         private float Scale = 0f;
+        public float MaximumAngle = 0;
 
         public Efficiency(ContextRobot robot): base(robot)
         {
@@ -28,7 +29,11 @@
         protected override float ScoreAngle(float angle, Vector2 position)
         {
             var difference = RoboMath.CalculateDifferenceBetweenAngles(angle, TargetAngle);
-            return -MathF.Abs(difference) * Scale;
+
+            if (MaximumAngle > 0 && difference > MaximumAngle)
+                return -10000000;
+            else
+                return -MathF.Abs(difference) * Scale;
         }
     }
 }

@@ -34,7 +34,6 @@
         {
             if (PendingDestruction)
             {
-                PendingDestruction = false;
                 Destroy();
             }
         }

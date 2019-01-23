@@ -861,7 +861,7 @@ progress::-webkit-progress-value {
 
 #bigLog {
     position: absolute;
-    top: 2em;
+    top: 4em;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 25px;
@@ -872,10 +872,18 @@ progress::-webkit-progress-value {
     margin: 10px auto 10px auto;
 }
 
+#minimap {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #999;
+}
+
 #minimapTip {
     display: block;
     position: absolute;
-    bottom: 0;
-    right: 10px;
-    color: #999;
+    bottom: 0px;
+    right: 15px;
+    color: #777;
 }

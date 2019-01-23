@@ -24,7 +24,7 @@
             // update cache items and flag missing ones as stale
             UpdateLocalBodies(filtered);
 
-            UpdateLocalGroups(groups);
+            UpdateLocalGroups(filtered.Where(f => f.Group != null).Select(f => f.Group).Distinct());
 
             // project the current bodies and calculate errors
             foreach (var bucket in Bodies.Values)
