@@ -5,6 +5,8 @@
     public class FleetWeaponGeneric<T> : IFleetWeapon
         where T : IShipWeapon, new()
     {
+        public bool IsOffense { get; set; }
+        public bool IsDefense { get; set; }
 
         public FleetWeaponGeneric(Action<T> configure = null)
         {

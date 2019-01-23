@@ -45,6 +45,16 @@ export const textureMap = {
         tileCount: 90
     },
 
+    invulnerable: {
+        file: "shield",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.50,
+        scale: 0.04,
+        tileSize: 64,
+        tileCount: 90
+    },
+
     shield_pickup: {
         file: "shield_pickup",
         animated: true,
@@ -132,12 +142,24 @@ export const textureMap = {
         tileCount: 29
     },
 
-    circles: {
+    offenseupgrade: {
         file: "circles",
         animated: true,
         loop: true,
         animationSpeed: 0.2,
         scale: 0.05,
+        tint: 16711680,
+        tileSize: 72,
+        tileCount: 11
+    },
+
+    defenseupgrade: {
+        file: "circles",
+        animated: true,
+        loop: true,
+        animationSpeed: 0.4,
+        scale: 0.05,
+        tint: 6711039,
         tileSize: 72,
         tileCount: 11
     },

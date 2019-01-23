@@ -30,6 +30,7 @@
         public long DeadSince { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
+        public bool IsShielded { get; set; } = false;
 
         public long SpawnTime;
         public int SpawnInvulnerableTime => World.Hook.SpawnInvulnerabilityTime;
@@ -136,10 +137,11 @@
             }
         }
 
-        public void SetInvulnerability(int duration)
+        public void SetInvulnerability(int duration, bool isShield = false)
         {
             InvulnerableUntil = World.Time + duration;
             IsInvulnerable = true;
+            IsShielded = isShield;
         }
 
         public virtual void Think()
@@ -171,6 +173,9 @@
 
                 if (World.Time > InvulnerableUntil)
                     IsInvulnerable = false;
+
+                if (!IsInvulnerable)
+                    IsShielded = false;
             }
         }
 
