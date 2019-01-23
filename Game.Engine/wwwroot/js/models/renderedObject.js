@@ -153,7 +153,7 @@ export class RenderedObject {
                     spriteLayer = this.activeTextures[textureName];
                 else
                 {
-                    console.log('building sprite for ' + textureName);
+                    //console.log('building sprite for ' + textureName);
                     spriteLayer = this.buildSprite(textureName);
                 }
 
@@ -171,7 +171,7 @@ export class RenderedObject {
                 if (layers.indexOf(key) == -1)
                 {
                     this.container.removeChild(this.activeTextures[key]);
-                    console.log(`delete sprite layer ${spriteName}:${key}`);
+                    //console.log(`delete sprite layer ${spriteName}:${key}`);
                     delete this.activeTextures[key];
                 }
             }
