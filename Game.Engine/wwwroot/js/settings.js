@@ -97,6 +97,8 @@ function load() {
     document.getElementById("settingsBackground").value = Settings.background;
 }
 
+const debug = true;
+
 async function theme(v) {
     if (v)
         v = v.toLowerCase();
@@ -115,6 +117,12 @@ async function theme(v) {
                 for (let key in info.spriteModeMap) {
                     const modeMap = info.spriteModeMap[key];
 
+                    if (!spriteModeMap.hasOwnProperty(key))
+                    {
+                        console.log(`[warning] theme attempted to define a non-existant sprite: ${key}`);
+                        continue;
+                    }
+
                     for (const mapKey in modeMap) spriteModeMap[key][mapKey] = modeMap[mapKey];
                 }
             }
@@ -125,8 +133,13 @@ async function theme(v) {
                     const map = info.textureMap[key];
 
                     for (const textureKey in map) {
-                        if (!textureMap[key]) textureMap[key] = {};
+                        if (!textureMap[key])
+                        {
+                            if (debug) console.log(`creating texture: ${key}`);
+                            textureMap[key] = {};
+                        }
 
+                        if (debug) console.log(`textureMap.${key}.${textureKey}: ${map[textureKey]}`);
                         textureMap[key][textureKey] = map[textureKey];
                     }
 
@@ -140,12 +153,20 @@ async function theme(v) {
                                 const urlCreator = window.URL || window.webkitURL;
                                 const url = urlCreator.createObjectURL(blob);
 
+                                if (key == 'shield')
+                                {
+                                    console.log('breakpoint');
+                                    textureMap[key].flag = true;
+                                }
+
+                                if (debug) console.log(`textureMap.${key}.url: set to blob`);
                                 textureMap[key].url = url;
                             })
                     );
                 }
                 Promise.all(promises).then(() => {
                     if (window.Game && window.Game.cache) {
+                        if (debug) console.log(`theme loading complete`);
                         textureCache.clear();
                         window.Game.cache.refreshSprites();
                         window.Game.reinitializeWorld();

@@ -147,7 +147,6 @@ export class RenderedObject {
                     this.container.removeChild(this.activeTextures[key]);
                     delete this.activeTextures[key];
                 }
-                    
             }
 
             return spriteLayers;
@@ -183,7 +182,9 @@ export class RenderedObject {
             //console.log(mode);
 
             // if we have any existing sprites, destroy them
-            //this.destroySprites();
+            if (reload)
+                this.destroySprites();
+            
             this.spriteLayers = this.buildSpriteLayers(spriteName, mode, zIndex);
 
             this.foreachLayer(function(layer, index) {
