@@ -1,4 +1,4 @@
-﻿/*export const BLEND_MODES = {
+﻿﻿/*export const BLEND_MODES = {
     NORMAL:         0,
     ADD:            1,
     MULTIPLY:       2,
@@ -41,8 +41,7 @@ export const textureMap = {
     ship_green: { file: "ship_green", scale: 0.02 },
     ship_orange: { file: "ship_orange", scale: 0.02 },
     ship_pink: { file: "ship_pink", scale: 0.02 },
-    //ship_red: { file: "ship_red", scale: 0.02 },
-    ship_red: { file: "ship_flash", scale: 0.02, tint: "0xFF0000", alpha: 0.4, blendMode: 1 },
+    ship_red: { file: "ship_red", scale: 0.02 },
     ship_yellow: { file: "ship_yellow", scale: 0.02 },
 
     // premium ships
@@ -66,7 +65,7 @@ export const textureMap = {
         animated: true,
         loop: true,
         animationSpeed: 0.50,
-        scale: 0.04,
+        scale: 0.4,
         tileSize: 64,
         tileCount: 90
     },
@@ -107,7 +106,7 @@ export const textureMap = {
         loop: false,
         animationSpeed: 1.0,
         offset: { x: -145, y: 0 },
-        scale: 0.04,
+        scale: 0.08,
         rotate: 6,
         tileSize: 64,
         tileCount: 29

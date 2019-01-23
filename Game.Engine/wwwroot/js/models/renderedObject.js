@@ -2,6 +2,8 @@
 import { textureCache } from "./textureCache";
 import { textureMap } from "./textureMap";
 import { spriteModeMap } from "./spriteModeMap";
+import 'pixi.js';
+import 'pixi-layers';
 
 export class RenderedObject {
     constructor(container) {
@@ -16,6 +18,11 @@ export class RenderedObject {
 
     decodeModes(mode) {
         return ["default"];
+    }
+
+    static getScalingCanvas()
+    {
+
     }
 
     static getImageFromTextureDefinition(textureDefinition) {
@@ -81,8 +88,10 @@ export class RenderedObject {
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);
             pixiSprite.loop = textureDefinition.loop;
             pixiSprite.animationSpeed = textureDefinition.animationSpeed;
+            pixiSprite.parentGroup = this.container.bodyGroup;
         } else {
             pixiSprite = new PIXI.Sprite(textures[0]);
+            pixiSprite.parentGroup = this.container.bodyGroup;
         }
 
         if (textureDefinition.tint)
@@ -146,7 +155,10 @@ export class RenderedObject {
                 else
                     spriteLayer = this.buildSprite(textureName);
 
-                spriteLayer.zIndex = zIndex;
+                if (zIndex == 0)
+                    zIndex = 255;
+
+                spriteLayer.zOrder = zIndex + (this.body.ID / 100000);
 
                 spriteLayers.push(spriteLayer);
                 this.activeTextures[textureName] = spriteLayer;
@@ -201,7 +213,7 @@ export class RenderedObject {
 
             this.foreachLayer(function(layer, index) {
                 this.container.addChildAt(layer, 2);
-            });
+            }, this);
         }
     }
 
@@ -224,6 +236,7 @@ export class RenderedObject {
             layer.position.y = interpolatedPosition.Y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle));
 
             layer.rotation = angle;
+
             layer.scale.set(size * layer.baseScale, size * layer.baseScale);
         });
     }
@@ -231,7 +244,7 @@ export class RenderedObject {
     update(updateData) {
         this.body = updateData;
 
-        this.setSprite(updateData.Sprite, updateData.Mode, false, updateData.zIndex);
+        this.setSprite(updateData.Sprite, updateData.Mode, updateData.zIndex, updateData.zIndex);
     }
 
     foreachLayer(action) {

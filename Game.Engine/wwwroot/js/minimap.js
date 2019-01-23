@@ -18,6 +18,7 @@ export class Minimap {
         this.ctx = new PIXI.Graphics();
         this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
         this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
+        this.ctx.parentGroup = stage.overlayGroup;
         stage.addChild(this.ctx);
     }
     size(size) {

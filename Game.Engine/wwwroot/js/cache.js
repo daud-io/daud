@@ -103,6 +103,11 @@ export class Cache {
                 if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
                 if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
 
+                let group = false;
+                if (update.Group != 0) group = this.getGroup(update.Group);
+                update.group = group;
+                update.zIndex = group.ZIndex || 0;
+
                 if (update.renderer) update.renderer.update(update);
             }
 
@@ -133,8 +138,8 @@ export class Cache {
                 else update.renderer = new RenderedObject(this.container);
 
                 let group = false;
-                if (update.Group != 0) group = this.groups[`g-${update.Group}`];
-
+                if (update.Group != 0) group = this.getGroup(update.Group);
+                update.group = group;
                 update.zIndex = group.ZIndex || 0;
                 update.renderer.update(update);
                 Cache.count++;
