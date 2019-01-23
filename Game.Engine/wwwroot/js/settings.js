@@ -19,8 +19,6 @@ export const Settings = {
     logLength: 4,
     displayMinimap: true,
     bigKillMessage: true,
-    showPickupSprites: false,
-    showThrusterSprites: true,
     showOwnName: true,
     nameSize: 48,
     background: "on"
@@ -32,7 +30,10 @@ function save() {
 
     if (Settings.theme != document.getElementById("settingsThemeSelector").value) {
         Settings.theme = document.getElementById("settingsThemeSelector").value;
-        theme(Settings.theme);
+        if (Settings.theme == "")
+            reload = true;
+        else
+            theme(Settings.theme);
     }
     if (Settings.themeCustom != document.getElementById("settingsThemeSelectorCustom").value) {
         Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value;
@@ -50,8 +51,6 @@ function save() {
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").checked;
     Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
-    Settings.showPickupSprites = document.getElementById("settingsShowPickupSprites").checked;
-    Settings.showThrusterSprites = document.getElementById("settingsShowThrusterSprites").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
     Settings.nameSize = Number(document.getElementById("settingsNameSize").value);
     Settings.background = document.getElementById("settingsBackground").value;
@@ -90,8 +89,6 @@ function load() {
     document.getElementById("settingsLog").value = Settings.logLength;
     document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
     document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
-    document.getElementById("settingsShowPickupSprites").checked = Settings.showPickupSprites;
-    document.getElementById("settingsShowThrusterSprites").checked = Settings.showThrusterSprites;
     document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
     document.getElementById("settingsNameSize").value = Settings.nameSize;
     document.getElementById("settingsBackground").value = Settings.background;
