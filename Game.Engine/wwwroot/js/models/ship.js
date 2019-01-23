@@ -7,19 +7,21 @@ export class Ship extends RenderedObject {
     }
 
     decodeModes(mode) {
-        var modes = ['default'];
-
-        if ((mode & 1) != 0)
-            modes.push('boost');
-
-        if ((mode & 2) != 0)
-            modes.push('invulnerable');
+        var modes = [];
 
         if ((mode & 4) != 0)
             modes.push('defenseupgrade');
 
         if ((mode & 8) != 0)
             modes.push('offenseupgrade');
+
+        modes.push("default");
+
+        if ((mode & 1) != 0)
+            modes.push('boost');
+
+        if ((mode & 2) != 0)
+            modes.push('invulnerable');
 
         if ((mode & 16) != 0)
             modes.push('shield');
