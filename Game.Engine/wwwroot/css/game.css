@@ -282,11 +282,11 @@ a {
 }
 
 #shipSelectorSwitch .circle {
-    width: 8vh;
-    height: 8vh;
+    max-width: 6vh;
+    max-height: 6vh;
     margin: 0 5px 0 5px;
     cursor: pointer;
-    border-radius: 50%;
+    border-radius: 0%;
     transition: transform 0.6s;
     display: inline-block;
     transform: rotate(-90deg);
