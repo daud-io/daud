@@ -1,4 +1,4 @@
-﻿﻿/*export const BLEND_MODES = {
+﻿/*export const BLEND_MODES = {
     NORMAL:         0,
     ADD:            1,
     MULTIPLY:       2,
@@ -65,7 +65,7 @@ export const textureMap = {
         animated: true,
         loop: true,
         animationSpeed: 0.50,
-        scale: 0.4,
+        scale: 0.04,
         tileSize: 64,
         tileCount: 90
     },
@@ -106,7 +106,7 @@ export const textureMap = {
         loop: false,
         animationSpeed: 1.0,
         offset: { x: -145, y: 0 },
-        scale: 0.08,
+        scale: 0.04,
         rotate: 6,
         tileSize: 64,
         tileCount: 29

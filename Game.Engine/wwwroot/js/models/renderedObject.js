@@ -4,6 +4,7 @@ import { textureMap } from "./textureMap";
 import { spriteModeMap } from "./spriteModeMap";
 import 'pixi.js';
 import 'pixi-layers';
+import { compressionOptions } from "jszip/lib/defaults";
 
 export class RenderedObject {
     constructor(container) {
@@ -18,11 +19,6 @@ export class RenderedObject {
 
     decodeModes(mode) {
         return ["default"];
-    }
-
-    static getScalingCanvas()
-    {
-
     }
 
     static getImageFromTextureDefinition(textureDefinition) {
@@ -110,9 +106,10 @@ export class RenderedObject {
 
         pixiSprite.pivot.x = pixiSprite.width / 2;
         pixiSprite.pivot.y = pixiSprite.height / 2;
-        pixiSprite.position.x = 0;
-        pixiSprite.position.y = 0;
+        pixiSprite.x = 0;
+        pixiSprite.y = 0;
         pixiSprite.baseScale = textureDefinition.scale;
+        pixiSprite.scale = textureDefinition.scale;
         pixiSprite.baseOffset = textureDefinition.offset || { x: 0, y: 0 };
 
         if (textureDefinition.animated) pixiSprite.play();
@@ -150,10 +147,14 @@ export class RenderedObject {
 
                 let spriteLayer = false;
                 var textureName = layers[i];
+                
                 if (this.activeTextures[textureName])
                     spriteLayer = this.activeTextures[textureName];
                 else
+                {
+                    console.log('building sprite for ' + textureName);
                     spriteLayer = this.buildSprite(textureName);
+                }
 
                 if (zIndex == 0)
                     zIndex = 255;
@@ -169,6 +170,7 @@ export class RenderedObject {
                 if (layers.indexOf(key) == -1)
                 {
                     this.container.removeChild(this.activeTextures[key]);
+                    console.log(`delete sprite layer ${spriteName}:${key}`);
                     delete this.activeTextures[key];
                 }
             }
@@ -193,7 +195,7 @@ export class RenderedObject {
     }
 
     refreshSprite() {
-        this.setSprite(this.currentSpriteName, this.currentMode, true);
+        this.setSprite(this.currentSpriteName, this.currentMode, this.currentZIndex, true);
     }
 
     setSprite(spriteName, mode, zIndex, reload) {
@@ -202,8 +204,6 @@ export class RenderedObject {
             this.currentSpriteName = spriteName;
             this.currentMode = mode;
             this.currentZIndex = zIndex;
-
-            //console.log(mode);
 
             // if we have any existing sprites, destroy them
             if (reload)
@@ -244,7 +244,7 @@ export class RenderedObject {
     update(updateData) {
         this.body = updateData;
 
-        this.setSprite(updateData.Sprite, updateData.Mode, updateData.zIndex, updateData.zIndex);
+        this.setSprite(updateData.Sprite, updateData.Mode, updateData.zIndex);
     }
 
     foreachLayer(action) {
