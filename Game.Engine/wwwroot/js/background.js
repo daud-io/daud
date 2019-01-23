@@ -24,6 +24,7 @@ export class Background {
         if (textures.length > 0) {
             if (!this.backgroundSprite) {
                 this.backgroundSprite = new PIXI.extras.TilingSprite(textures[0], 200000, 200000);
+                this.backgroundSprite.parentGroup = this.container.backgroundGroup;
                 this.container.addChild(this.backgroundSprite);
                 this.backgroundSprite.tileScale.set(spriteDefinition.scaleFactor || 10, spriteDefinition.scaleFactor || 10);
                 this.backgroundSprite.position.x = -100000;

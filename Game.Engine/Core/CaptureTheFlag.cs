@@ -245,6 +245,7 @@
             private const float SPEED_SPINNING = 0.001f;
             private const float SPEED_STOPPED = 0f;
             private readonly CaptureTheFlag CaptureTheFlag = null;
+            public ActorGroup BaseGroup;
 
             public Base(CaptureTheFlag captureTheFlag, Vector2 position, Team team)
             {
@@ -254,6 +255,11 @@
                 this.AngularVelocity = SPEED_STOPPED;
                 this.Size = 200;
                 this.CaptureTheFlag = captureTheFlag;
+
+                this.BaseGroup = new ActorGroup();
+
+                BaseGroup.Init(captureTheFlag.World);
+                this.Group = BaseGroup;
             }
 
             public override void Think()
@@ -308,6 +314,12 @@
                             < (projectedBody.Size + this.Size);
                 }
                 return false;
+            }
+
+            public override void Destroy()
+            {
+                base.Destroy();
+                this.BaseGroup.Destroy();
             }
         }
 
