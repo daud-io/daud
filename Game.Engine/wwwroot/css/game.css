@@ -784,15 +784,6 @@ table {
 .hide {
     display: none;
 }
-#chat {
-    z-index: 1;
-    display: absolute;
-    top: 10px;
-    left: 10px;
-    left: 10px;
-    width: 200px;
-    height: 150px;
-}
 
 .dead #cooldown,
 .spectating #cooldown {
@@ -899,7 +890,7 @@ progress::-webkit-progress-value {
 #chat {
 	position: absolute;
 	left: 15px;
-	top: calc(100% - 400px - 30px);
+	bottom: 15px;
 	width: 200px;
 	height: 400px;
 	background-color: #333;
