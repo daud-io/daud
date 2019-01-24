@@ -38,12 +38,12 @@ function buildList(response) {
         options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
         options +=
             `<tr>` +
-            `<td><button class="button1" id="join">Join</button> (<span id="${world.world}_playercount">${world.players}</span>)</td>` +
-            `<td><b>${world.name}</b>: ${world.description}</td>` +
+            `<td><button class="button3" id="join">Join</button> (<span id="${world.world}_playercount">${world.players}</span>)</td>` +
+            `<td id="second-world-td"><b>${world.name}</b>: ${world.description}</td>` +
             `</tr>`;
 
         const img = world.image ? `<img src="${imgs[world.image]}" />` : "";
-        if (world.instructions || img) options += `<tr class="details"><td colspan="2">${img}${world.instructions || ""}</td></tr>`;
+        if (world.instructions || img) options += `<tr class="details"><td colspan="2"><div id="detail-inset">${img}${world.instructions || ""}</div></td></tr>`;
         options += `</tbody>`;
     }
 

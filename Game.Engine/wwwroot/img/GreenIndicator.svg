@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="32"
+   height="32"
+   viewBox="0 0 8.4666665 8.4666669"
+   version="1.1"
+   id="svg5460"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="GreenIndicator.svg"
+   inkscape:export-filename="/home/colek/Documents/Programming/daud/Game.Engine/wwwroot/img/GreenIndicator.png"
+   inkscape:export-xdpi="96.128197"
+   inkscape:export-ydpi="96.128197">
+  <defs
+     id="defs5454" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.35"
+     inkscape:cx="-605.42857"
+     inkscape:cy="-58.285677"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     fit-margin-top="4"
+     fit-margin-left="4"
+     fit-margin-right="4"
+     fit-margin-bottom="4"
+     inkscape:window-width="1920"
+     inkscape:window-height="993"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5457">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-112.93929,-124.94524)">
+    <g
+       transform="matrix(0.26458333,0,0,0.26458333,76.691374,32.605658)"
+       id="g6096">
+      <path
+         d="m 161.5,356.5 q 3.5,3.5 3.5,8.5 0,4.95 -3.5,8.45 l -0.05,0.05 q -3.5,3.5 -8.45,3.5 -5,0 -8.5,-3.5 -3.5,-3.5 -3.5,-8.5 0,-4.95 3.5,-8.5 3.55,-3.5 8.5,-3.5 5,0 8.5,3.5 m -1.45,1.4 q -2.9,-2.9 -7.05,-2.9 -4.15,0 -7.1,2.9 -2.9,2.95 -2.9,7.1 0,4.15 2.9,7.05 2.95,2.95 7.1,2.95 4.15,0 7.05,-2.95 2.95,-2.9 2.95,-7.05 0,-4.15 -2.95,-7.1"
+         id="path1618"
+         inkscape:connector-curvature="0"
+         style="fill:#5fb13a;stroke:none" />
+      <path
+         d="m 160.05,357.9 q 2.95,2.95 2.95,7.1 0,4.15 -2.95,7.05 -2.9,2.95 -7.05,2.95 -4.15,0 -7.1,-2.95 -2.9,-2.9 -2.9,-7.05 0,-4.15 2.9,-7.1 2.95,-2.9 7.1,-2.9 4.15,0 7.05,2.9 m -1.4,12.75 Q 161,368.3 161,365 h -16 q 0,3.3 2.35,5.65 2.35,2.35 5.65,2.35 3.3,0 5.65,-2.35"
+         id="path1620"
+         inkscape:connector-curvature="0"
+         style="fill:#88e060;stroke:none" />
+      <path
+         d="M 158.65,370.65 Q 156.3,373 153,373 q -3.3,0 -5.65,-2.35 Q 145,368.3 145,365 h 16 q 0,3.3 -2.35,5.65"
+         id="path1622"
+         inkscape:connector-curvature="0"
+         style="fill:#73cd4b;stroke:none" />
+    </g>
+  </g>
+</svg>

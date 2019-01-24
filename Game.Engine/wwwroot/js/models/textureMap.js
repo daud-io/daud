@@ -1,27 +1,3 @@
-﻿/*export const BLEND_MODES = {
-    NORMAL:         0,
-    ADD:            1,
-    MULTIPLY:       2,
-    SCREEN:         3,
-    OVERLAY:        4,
-    DARKEN:         5,
-    LIGHTEN:        6,
-    COLOR_DODGE:    7,
-    COLOR_BURN:     8,
-    HARD_LIGHT:     9,
-    SOFT_LIGHT:     10,
-    DIFFERENCE:     11,
-    EXCLUSION:      12,
-    HUE:            13,
-    SATURATION:     14,
-    COLOR:          15,
-    LUMINOSITY:     16,
-    NORMAL_NPM:     17,
-    ADD_NPM:        18,
-    SCREEN_NPM:     19,
-};
-*/
-
 export const textureMap = {
     bg: { file: "bg", scale: 4 },
     bg2:{file:"bg2",scale:5},
@@ -32,7 +8,7 @@ export const textureMap = {
     bg7:{file:"bg2",scale:10},
 
     // fish
-    fish: { file: "fish", scale: 0.03 },
+    fish: { file: "fish", scale: 0.01 },
 
     // daudelins
     ship0: { file: "ship0", scale: 0.02 },
@@ -53,53 +29,41 @@ export const textureMap = {
     ship_secret: { file: "ship_secret", scale: 0.02 },
     ship_zed: { file: "ship_base", scale: 0.0025 },
 
-    bullet: { file: "bullet", scale: 0.03 },
-    bullet_cyan: { file: "bullet_cyan", scale: 0.03 },
-    bullet_green: { file: "bullet_green", scale: 0.03 },
-    bullet_orange: { file: "bullet_orange", scale: 0.03 },
-    bullet_pink: { file: "bullet_pink", scale: 0.03 },
-    bullet_red: { file: "bullet_red", scale: 0.03 },
-    bullet_yellow: { file: "bullet_yellow", scale: 0.03 },
+    bullet: { file: "bullet", scale: 0.125 },
+    bullet_cyan: { file: "bullet_cyan", scale: 0.125 },
+    bullet_green: { file: "bullet_green", scale: 0.125 },
+    bullet_orange: { file: "bullet_orange", scale: 0.125 },
+    bullet_pink: { file: "bullet_pink", scale: 0.125 },
+    bullet_red: { file: "bullet_red", scale: 0.125 },
+    bullet_yellow: { file: "bullet_yellow", scale: 0.125 },
 
-    obstacle: { file: "obstacle", scale: 0.0028 },
+    obstacle: { file: "spaceMeteors_001", scale: 0.0049311 },
     seeker: { file: "seeker", scale: 0.02 },
     seeker_pickup: { file: "seeker_pickup", scale: 0.02 },
 
     shield: {
         file: "shield",
-        animated: true,
-        loop: true,
-        animationSpeed: 0.5,
-        scale: 0.04,
-        tileSize: 64,
-        tileCount: 90
+        animated: false,
+        scale: 0.02
     },
 
     invulnerable: {
         file: "shield",
-        animated: true,
-        loop: true,
-        animationSpeed: 0.5,
-        scale: 0.04,
-        tileSize: 64,
-        tileCount: 90
+        animated: false,
+        scale: 0.02,
     },
 
     shield_pickup: {
         file: "shield_pickup",
-        animated: true,
-        loop: true,
-        animationSpeed: 0.5,
-        scale: 0.04,
-        tileSize: 64,
-        tileCount: 30
+        animated: false,
+        scale: 0.02,
     },
 
     wormhole: {
         file: "wormhole",
         animated: true,
         loop: true,
-        animationSpeed: 0.5,
+        animationSpeed: 0.50,
         scale: 0.04,
         tileSize: 128,
         tileCount: 90
