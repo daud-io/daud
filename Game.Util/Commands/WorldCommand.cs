@@ -17,7 +17,9 @@
             protected override Task ExecuteAsync()
             {
                 var map = new TmxMap(File);
-                var tileset = map.Tilesets[0].Name.ToString();
+                var tileset = map.Tilesets[0];
+
+                
                 foreach (var set in map.Tilesets)
                 {
                     Console.WriteLine(set.Name);

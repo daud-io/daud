@@ -1717,14 +1717,14 @@ Game.Engine.Networking.FlatBuffers.NetBody.prototype.size = function() {
  * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetBody.prototype.sprite = function() {
-  return this.bb.readUint8(this.bb_pos + 19);
+  return this.bb.readUint16(this.bb_pos + 20);
 };
 
 /**
  * @returns {number}
  */
 Game.Engine.Networking.FlatBuffers.NetBody.prototype.mode = function() {
-  return this.bb.readUint8(this.bb_pos + 20);
+  return this.bb.readUint8(this.bb_pos + 22);
 };
 
 /**
@@ -1753,9 +1753,10 @@ Game.Engine.Networking.FlatBuffers.NetBody.prototype.group = function() {
 Game.Engine.Networking.FlatBuffers.NetBody.createNetBody = function(builder, id, definitionTime, originalPosition_x, originalPosition_y, velocity_x, velocity_y, originalAngle, angularVelocity, size, sprite, mode, group) {
   builder.prep(4, 28);
   builder.writeInt32(group);
-  builder.pad(3);
+  builder.pad(1);
   builder.writeInt8(mode);
-  builder.writeInt8(sprite);
+  builder.writeInt16(sprite);
+  builder.pad(1);
   builder.writeInt8(size);
   builder.writeInt8(angularVelocity);
   builder.writeInt8(originalAngle);

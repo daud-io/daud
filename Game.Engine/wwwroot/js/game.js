@@ -90,13 +90,20 @@ const bodyFromServer = (cache, body) => {
     const groupID = body.group();
     const VELOCITY_SCALE_FACTOR = 5000.0;
 
+    var spriteIndex = body.sprite();
+    var spriteName = false;
+    if (spriteIndex >= 1000)
+        spriteName = `map[${spriteIndex-1000}]`;
+    else
+        spriteName = spriteIndices[spriteIndex];
+
     const newBody = {
         ID: body.id(),
         DefinitionTime: body.definitionTime(),
         Size: body.size() * 5,
-        Sprite: spriteIndices[body.sprite()], //body.sprite(),
+        Sprite: spriteName,
         Mode: body.mode(),
-        Color: "red", //body.color(),
+        Color: "red",
         Group: groupID,
         OriginalAngle: (body.originalAngle() / 127) * Math.PI,
         AngularVelocity: body.angularVelocity() / 10000,

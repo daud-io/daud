@@ -226,5 +226,16 @@ export const textureMap = {
     ctf_score_stripes: { file: "ctf_score_stripes", scale: 1 },
     ctf_arrow_red: { file: "ctf_arrow_red", scale: 0.05 },
     ctf_arrow_blue: { file: "ctf_arrow_blue", scale: 0.05 },
-    ctf_arrow_trans_flag: { file: "ctf_arrow_trans_flag", scale: 0.1 }
+    ctf_arrow_trans_flag: { file: "ctf_arrow_trans_flag", scale: 0.1 },
+
+    map: {
+        file: "beach_tileset",
+        map: true,
+        tileHeight: 16,
+        tileWidth: 16,
+        tileCount: 936,
+        imageWidth: 576,
+        imageHeight: 416,
+        scale: 0.015
+    }
 };

@@ -58,6 +58,24 @@ export class RenderedObject {
 
                     textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), false, false, textureDefinition.rotate || 0));
                 }
+            } else if (textureDefinition.map) {
+
+                let imageWidth = textureDefinition.imageWidth;
+                let imageHeight = textureDefinition.imageHeight;
+                let tileWidth = textureDefinition.tileWidth;
+                let tileHeight = textureDefinition.tileHeight;
+    
+                tilesWide = imageWidth / tileWidth;
+                tilesHigh = imageHeight / tileHeight;
+
+                for (var row = 0; row < tilesHigh; row++)
+                    for (var col = 0; col < tilesWide; col++)
+                    {
+                        let x = col * map.TileWidth;
+                        let y = row * tileHeight;
+
+                        textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight)));
+                    }
             } else textures.push(baseTexture);
 
             textureCache[textureName] = textures;
@@ -67,10 +85,29 @@ export class RenderedObject {
     }
 
     static getTextureDefinition(textureName) {
+
+        var mapKey = this.parseMapKey(textureName);
+
+        if (mapKey)
+            textureName = mapKey.textureName;
+
         var textureDefinition = textureMap[textureName];
         if (!textureDefinition) console.log(`cannot load texture '${textureName}'`);
 
         return textureDefinition;
+    }
+
+    static parseMapKey(textureName)
+    {
+        var mapKey = textureName.match(/^(.*)\[(\d)\]/);
+
+        if (mapKey)
+            return {
+                textureName: mapKey[1],
+                mapID: mapKey[2]
+            };
+        else
+            return false;
     }
 
     buildSprite(textureName) {
@@ -83,6 +120,15 @@ export class RenderedObject {
             pixiSprite.loop = textureDefinition.loop;
             pixiSprite.animationSpeed = textureDefinition.animationSpeed;
             pixiSprite.parentGroup = this.container.bodyGroup;
+        } else if (textureDefinition.map) {
+            var mapKey = parseMapKey(textureName);
+
+            if (!mapKey)
+                console.log('non-map key used to reference map texture');
+            else {
+                pixiSprite = new PIXI.Sprite(textures[mapKey.mapID]);
+                pixiSprite.parentGroup = this.container.bodyGroup;
+            }
         } else {
             pixiSprite = new PIXI.Sprite(textures[0]);
             pixiSprite.parentGroup = this.container.bodyGroup;

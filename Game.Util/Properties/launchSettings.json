@@ -2,7 +2,8 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context daudio player robots --replicas=1 --name \"🤖 killbot\" --sprite ship_red --color red --world sumo"
+      "commandLineArgs": "world parse island.tmx",
+      "workingDirectory": "C:\\Users\\andy\\Downloads\\tiled-windows-64bit-snapshot\\examples\\rpg"
     }
   }
 }
