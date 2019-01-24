@@ -10,7 +10,7 @@
     [Subcommand("context", typeof(ContextCommand))]
     [Subcommand("server", typeof(ServerCommand))]
     [Subcommand("player", typeof(PlayerCommand))]
-    [Subcommand("world", typeof(PlayerCommand))]
+    [Subcommand("world", typeof(WorldCommand))]
     public class RootCommand : CommandBase
     {
 

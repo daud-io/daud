@@ -9,6 +9,7 @@
     <PackageReference Include="ConsoleTableExt" Version="2.0.1" />
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.4" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="TiledSharp" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Game.Engine.Networking.Client\Game.API.Client.csproj" />
