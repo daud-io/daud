@@ -35,6 +35,7 @@
             AllWorlds.Add("sumo", WorldSumo());
             AllWorlds.Add("boss", WorldBoss());
             AllWorlds.Add("wormhole", WorldWormhole());
+            AllWorlds.Add("beach", WorldBeach());
         }
 
         private static World WorldDefault()
@@ -250,6 +251,22 @@
                 AllowedColors = AllColors.Append("ship0").ToArray()
             };
         }
+
+        private static World WorldBeach()
+        {
+            var hook = Hook.Default;
+            hook.BotBase = 0;
+            hook.MapEnabled = true;
+
+            return new World
+            {
+                Hook = hook,
+                Name = "Beach World",
+                Description = "Come on in, the water's fine",
+                AllowedColors = AllColors
+            };
+        }
+
 
         public static World Find(string world = null)
         {

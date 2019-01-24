@@ -298,6 +298,7 @@
 
         public UserMethods User { get => new UserMethods(this); }
         public ServerMethods Server { get => new ServerMethods(this); }
+        public WorldMethods World { get => new WorldMethods(this); }
         public PlayerMethods Player { get => new PlayerMethods(this); }
     }
 }

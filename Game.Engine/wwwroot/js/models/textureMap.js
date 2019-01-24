@@ -228,7 +228,7 @@ export const textureMap = {
     ctf_arrow_blue: { file: "ctf_arrow_blue", scale: 0.05 },
     ctf_arrow_trans_flag: { file: "ctf_arrow_trans_flag", scale: 0.1 },
 
-    map: {
+    map_beach: {
         file: "beach_tileset",
         map: true,
         tileHeight: 16,
@@ -236,6 +236,16 @@ export const textureMap = {
         tileCount: 936,
         imageWidth: 576,
         imageHeight: 416,
-        scale: 0.015
-    }
+        scale: 0.0655
+    },
+    map: {
+        file: "buch-outdoor",
+        map: true,
+        tileHeight: 16,
+        tileWidth: 16,
+        tileCount: 288,
+        imageWidth: 384,
+        imageHeight: 192,
+        scale: 0.066
+    }    
 };
