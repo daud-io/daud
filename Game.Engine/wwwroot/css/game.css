@@ -1,5 +1,8 @@
 @import url("https://fonts.googleapis.com/css?family=Exo+2");
-
+@font-face {
+    font-family: KenneyFuture;
+    src: url("../fonts/Kenney Future.ttf");
+}
 html,
 body {
     width: 100%;
@@ -8,10 +11,11 @@ body {
     background-color: black;
     text-align: center;
     overflow: hidden;
-    font-family: "Exo 2";
+    font-family: KenneyFuture;
     color: white;
     --bg-color-1: #222;
 }
+
 
 .aspectratio {
     width: 100vw;
@@ -131,15 +135,37 @@ a {
 #twitterpated {
     left: 0;
     width: 500px;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: #aae9ff4d;
     padding: 0.5em;
-    border-radius: 5px;
+    border-radius: 6px;
     position: absolute;
     bottom: 10vh;
+    border: 2px solid #8ac2d4cc;
+    box-shadow: inset #bde7f5cc 0px 0px 0px 2px;
+    
 }
 
 #twitterpated h4 {
-    margin: 0 0 3px 3px;
+    border: 2px solid #1989b8ff;
+    border-bottom: none;
+    box-shadow: inset #35baf3ff 0px 0px 0px 2px;
+    margin: calc( -0.5em - 2px ) calc( -0.5em - 2px ) 0px calc( -0.5em - 2px );
+    border-radius: 6px 6px 0px 0px;
+    background: #1ea7e1ff;
+    padding: 0.5em;
+    font-weight: normal;
+    color:#fff;
+}
+#twitterpated table {
+    border: 2px solid #9ea4adff;
+    border-top: none;
+    box-shadow: inset #ecf2faff 0px 0px 0px 2px;
+    margin: 0px calc( -0.5em - 2px ) calc( -0.5em - 2px ) calc( -0.5em - 2px );
+    border-radius: 0px 0px 6px 6px;
+    background: #d6dde7ff;
+    padding: 0.5em;
+    font-weight: normal;
+    color:#333333;
 }
 
 #twitterpated .date {
@@ -242,21 +268,66 @@ a {
 }
 
 .button1 {
-    border: 1px solid #9d9d9d;
-    border-radius: 5px;
-    color: #9d9d9d;
-    background: none;
+
     padding: 10px;
     margin: 1vh 0.5vh;
     font-size: 0.75rem;
     color: white;
     text-transform: uppercase;
-    transition: border 1s, color 1s;
+    transition: border 1s, color 1s,background 1s;
+    
+
+   
+    background-color: #aae9ff4d;
+    border-radius: 6px;
+    border: 2px solid #8ac2d4cc;
+    box-shadow: inset #bde7f5cc 0px 0px 0px 2px;
+    font-family: KenneyFuture;
+}
+.button2 {
+    
+    padding: 10px;
+    margin: 1vh 0.5vh;
+    font-size: 0.75rem;
+    color: #333333;
+    text-transform: uppercase;
+    transition: border 1s, color 1s,background 1s;
+    background-color: #eeeeeeff;
+    border-radius: 6px;
+    border: 2px solid #d5d5d5ff;
+    box-shadow: inset #ffffffff 0px 0px 0px 2px;
+    font-family: KenneyFuture;
+}
+.button3 {
+    
+    padding: 10px;
+    margin: 1vh 0.5vh;
+    font-size: 0.75rem;
+    color: #fff;
+    text-transform: uppercase;
+    transition: border 1s, color 1s,background 1s;
+    background-color: #73cd4bff;
+    border-radius: 6px;
+    border: 2px solid #5fb13aff;
+    box-shadow: inset #88e060ff 0px 0px 0px 2px, #47832cff 0 2px;
+    transform: translateY(-2px);
+    font-family: KenneyFuture;
+    transition: all 0.5s;
+}
+.button3:hover{
+    
+    box-shadow: inset #88e060ff 0px 0px 0px 2px, #47832cff 0 3px;
+    transform: translateY(-3px);
+}
+.button3:active{
+    
+    box-shadow: inset #88e060ff 0px 0px 0px 2px, #47832cff 0 0px;
+    transform: translateY(0px);
 }
 
 .button1:hover {
     cursor: pointer;
-    border: 1px solid white;
+    background-color: #d2f3ff96;
     color: #fff;
 }
 
@@ -275,6 +346,7 @@ a {
     margin: 0 0 10px 0;
     transition: border-bottom 1s;
     width: 20rem;
+    font-family: KenneyFuture;
 }
 
 #shipSelectorSwitch {
@@ -471,10 +543,41 @@ table {
     height: 75%;
     background: rgba(0, 0, 50, 0.8);
     z-index: 3;
-    overflow-y: auto;
-    padding: 1em;
     opacity: 1;
     transition: 0.5s opacity ease-in-out;
+
+    border: 0px solid #9ea4adff;
+    box-shadow: #9ea4adff 0px 0px 0px 2px inset,inset #ecf2faff 0px 0px 0px 4px;
+    margin: 0px calc( -0.5em - 2px ) calc( -0.5em - 2px ) calc( -0.5em - 2px );
+    border-radius: 6px 6px 6px 6px;
+    background-color: #d6dde7ff;
+    background-image: url("../img/UIBolt2.png"),url("../img/UIBolt2.png"),url("../img/UIBolt2.png"),url("../img/UIBolt2.png");
+    background-position: top left,top right, bottom left, bottom right;
+    background-repeat: no-repeat;
+    padding: 1em;
+    font-weight: normal;
+    color:#333333;
+}
+#world-list-scroll{
+    overflow-y: auto;
+    height: calc( 100% - 44px );
+}
+#worlds #topbar{
+    border: 2px solid #1989b8ff;
+    border-bottom: none;
+    box-shadow: inset #35baf3ff 0px 0px 0px 2px;
+    margin: -1em -1em 0.5em -1em;
+    border-radius: 6px 6px 0px 0px;
+    background: #1ea7e1ff;
+    padding: 1em;
+    font-weight: normal;
+    color:#fff;
+    
+}
+.close-button{
+    position: absolute;
+    right: 1em;
+    top: 1em;
 }
 
 #gear .button1,
@@ -484,6 +587,9 @@ table {
 
 #worldList {
     width: 100%;
+    background:#c9d0d9ff;
+    box-shadow: #b6bec9ff inset 0 2px;
+    border-radius: 6px;
 }
 .blur {
     filter: blur(10px);
@@ -494,7 +600,8 @@ table {
     position: relative;
     display: inline-block;
     width: 60px;
-    height: 17px;
+    height: 18px;
+    
 }
 
 /* Hide default HTML checkbox */
@@ -514,30 +621,47 @@ table {
     bottom: 0;
     background-color: #ccc;
     transition: 0.4s;
+    background-color: #aae9ff4d;
+    border-radius: px;
+    border: 2px solid #8ac2d4cc;
+    box-shadow: inset #bde7f5cc 0px 0px 0px 2px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 13px;
-    width: 13px;
-    left: 4px;
+    height: 10px;
+    width: 10px;
+    left: 2px;
     bottom: 2px;
-    background-color: white;
+    background:url("../img/dotWhite.png");
+    background-size: contain;
+    background-repeat: no-repeat;
     transition: 0.4s;
 }
 
 input:checked + .slider {
-    background-color: #0066ff;
+    background-color: #48b6dbcc;
 }
 
 input:focus + .slider {
-    box-shadow: 0 0 1px #0066ff;
+    border-color:  #caf2ffef; 
 }
 
 #worldList .empty {
-    color: #eee;
     background-color: #222;
+    background: none;
+    
+}
+#second-world-td{
+    background-image: url("../img/GreenIndicator.png");
+    background-position: calc( 100% - 0.5em);
+    background-repeat: no-repeat;
+}
+.empty #second-world-td{
+    background-image: url("../img/RedIndicator.png");
+    background-position: calc( 100% - 0.5em);
+    background-repeat: no-repeat;
 }
 
 #worldList .details {
@@ -545,12 +669,21 @@ input:focus + .slider {
 }
 
 #worldList .selected .details td {
-    border: solid 1px white;
-    padding: 3px;
+    border: none;
+    padding: 0 0.5em;
+
 }
 
 #worldList .selected .details {
     display: table-row;
+    
+}
+#worldList #detail-inset {
+    background:hsla(214, 17%, 78%, 1);
+    box-shadow: #b6bec9ff inset 0 2px;
+    border-radius: 6px;
+    min-height: calc( 136px - 1em );
+    padding: 0.5em;
 }
 
 #worldList .details img {
@@ -565,7 +698,7 @@ input:focus + .slider {
     z-index: -2 !important;
 }
 input:checked + .slider:before {
-    transform: translateX(39px);
+    transform: translateX(42px);
 }
 
 /* Rounded sliders */
@@ -604,9 +737,17 @@ input:checked + .slider:before {
     transform: translateY(-100%);
     font-size: 25px;
     cursor: pointer;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+    border-top-left-radius: 12px;
+    border-top-right-radius:12px;
     transition: color 1s;
+
+    background-color: #aae9ff4d;
+    border: 2px solid #8ac2d4cc;
+    box-shadow: inset #bde7f5cc 0px 0px 0px 2px;
+    font-family: KenneyFuture;
+    border-bottom: none;
+    margin-top: 2px;
+    margin-bottom: -2px;
 }
 
 #fullPageCard #openArrow:hover i {

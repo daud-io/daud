@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="12"
+   height="12"
+   viewBox="0 0 3.1749999 3.1750001"
+   version="1.1"
+   id="svg1092"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)"
+   sodipodi:docname="UIBolt.svg"
+   inkscape:export-filename="/home/colek/Documents/Programming/daud/Game.Engine/wwwroot/img/UIBolt.png"
+   inkscape:export-xdpi="96.128197"
+   inkscape:export-ydpi="96.128197">
+  <defs
+     id="defs1086" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.6"
+     inkscape:cx="-2.661307"
+     inkscape:cy="39.412492"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="1920"
+     inkscape:window-height="993"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata1089">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-293.82498)">
+    <path
+       style="fill:#9ea4ad;stroke:none;stroke-width:0.26458332"
+       inkscape:connector-curvature="0"
+       id="path1418"
+       d="m 2.1166667,295.41248 q 0,0.22489 -0.1587501,0.37041 -0.1455208,0.15875 -0.3704167,0.15875 -0.2248957,0 -0.3836458,-0.15875 -0.1455208,-0.14552 -0.1455208,-0.37041 0,-0.2249 0.1455208,-0.38365 0.1587501,-0.14552 0.3836458,-0.14552 0.2248959,0 0.3704167,0.14552 0.1587501,0.15875 0.1587501,0.38365" />
+  </g>
+</svg>
