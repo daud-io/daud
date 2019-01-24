@@ -87,7 +87,7 @@ export const textureMap = {
         animationSpeed: 0.50,
         scale: 0.04,
         tileSize: 64,
-        tileCount: 90
+        tileCount: 30
     },
 
     wormhole: {
