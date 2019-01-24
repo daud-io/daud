@@ -22,7 +22,6 @@
 };
 */
 
-
 export const textureMap = {
     bg: { file: "bg", scale: 1 },
 
@@ -64,7 +63,7 @@ export const textureMap = {
         file: "shield",
         animated: true,
         loop: true,
-        animationSpeed: 0.50,
+        animationSpeed: 0.5,
         scale: 0.04,
         tileSize: 64,
         tileCount: 90
@@ -74,7 +73,7 @@ export const textureMap = {
         file: "shield",
         animated: true,
         loop: true,
-        animationSpeed: 0.50,
+        animationSpeed: 0.5,
         scale: 0.04,
         tileSize: 64,
         tileCount: 90
@@ -84,7 +83,7 @@ export const textureMap = {
         file: "shield_pickup",
         animated: true,
         loop: true,
-        animationSpeed: 0.50,
+        animationSpeed: 0.5,
         scale: 0.04,
         tileSize: 64,
         tileCount: 30
@@ -94,7 +93,7 @@ export const textureMap = {
         file: "wormhole",
         animated: true,
         loop: true,
-        animationSpeed: 0.50,
+        animationSpeed: 0.5,
         scale: 0.04,
         tileSize: 128,
         tileCount: 90

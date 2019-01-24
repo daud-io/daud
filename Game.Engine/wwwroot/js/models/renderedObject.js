@@ -2,8 +2,8 @@
 import { textureCache } from "./textureCache";
 import { textureMap } from "./textureMap";
 import { spriteModeMap } from "./spriteModeMap";
-import 'pixi.js';
-import 'pixi-layers';
+import "pixi.js";
+import "pixi-layers";
 import { compressionOptions } from "jszip/lib/defaults";
 
 export class RenderedObject {
@@ -14,7 +14,6 @@ export class RenderedObject {
         this.currentZIndex = 0;
 
         this.activeTextures = {};
-
     }
 
     decodeModes(mode) {
@@ -68,7 +67,6 @@ export class RenderedObject {
     }
 
     static getTextureDefinition(textureName) {
-
         var textureDefinition = textureMap[textureName];
         if (!textureDefinition) console.log(`cannot load texture '${textureName}'`);
 
@@ -76,7 +74,6 @@ export class RenderedObject {
     }
 
     buildSprite(textureName) {
-
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
         const textures = RenderedObject.loadTexture(textureDefinition, textureName);
         let pixiSprite = false;
@@ -91,19 +88,14 @@ export class RenderedObject {
             pixiSprite.parentGroup = this.container.bodyGroup;
         }
 
-        if (textureDefinition.tint)
-        {
-            if (typeof textureDefinition.tint == "string")
-                pixiSprite.tint = parseInt(textureDefinition.tint)
-            else
-                pixiSprite.tint = textureDefinition.tint;
+        if (textureDefinition.tint) {
+            if (typeof textureDefinition.tint == "string") pixiSprite.tint = parseInt(textureDefinition.tint);
+            else pixiSprite.tint = textureDefinition.tint;
         }
 
-        if (textureDefinition.blendMode)
-            pixiSprite.alpha = textureDefinition.alpha;
+        if (textureDefinition.blendMode) pixiSprite.alpha = textureDefinition.alpha;
 
-        if (textureDefinition.blendMode)
-            pixiSprite.blendMode = textureDefinition.blendMode;
+        if (textureDefinition.blendMode) pixiSprite.blendMode = textureDefinition.blendMode;
 
         pixiSprite.pivot.x = pixiSprite.width / 2;
         pixiSprite.pivot.y = pixiSprite.height / 2;
@@ -132,8 +124,7 @@ export class RenderedObject {
 
         modes.forEach(modeName => {
             var modeLayers = spriteDefinition.modes[modeName];
-            if (modeLayers)
-                modeLayers.forEach(layer => layers.push(layer));
+            if (modeLayers) modeLayers.forEach(layer => layers.push(layer));
         });
 
         return layers;
@@ -145,31 +136,25 @@ export class RenderedObject {
         if (layers) {
             const spriteLayers = [];
             for (let i = 0; i < layers.length; i++) {
-
                 let spriteLayer = false;
                 var textureName = layers[i];
-                
-                if (this.activeTextures[textureName])
-                    spriteLayer = this.activeTextures[textureName];
-                else
-                {
+
+                if (this.activeTextures[textureName]) spriteLayer = this.activeTextures[textureName];
+                else {
                     //console.log('building sprite for ' + textureName);
                     spriteLayer = this.buildSprite(textureName);
                 }
 
-                if (zIndex == 0)
-                    zIndex = 255;
+                if (zIndex == 0) zIndex = 255;
 
-                spriteLayer.zOrder = zIndex - i + (this.body.ID / 100000);
+                spriteLayer.zOrder = zIndex - i + this.body.ID / 100000;
 
                 spriteLayers.push(spriteLayer);
                 this.activeTextures[textureName] = spriteLayer;
             }
 
-            for(var key in this.activeTextures)
-            {
-                if (layers.indexOf(key) == -1)
-                {
+            for (var key in this.activeTextures) {
+                if (layers.indexOf(key) == -1) {
                     this.container.removeChild(this.activeTextures[key]);
                     //console.log(`delete sprite layer ${spriteName}:${key}`);
                     delete this.activeTextures[key];
@@ -207,9 +192,8 @@ export class RenderedObject {
             this.currentZIndex = zIndex;
 
             // if we have any existing sprites, destroy them
-            if (reload)
-                this.destroySprites();
-            
+            if (reload) this.destroySprites();
+
             this.spriteLayers = this.buildSpriteLayers(spriteName, mode, zIndex);
 
             this.foreachLayer(function(layer, index) {
