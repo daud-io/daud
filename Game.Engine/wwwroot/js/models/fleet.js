@@ -29,7 +29,7 @@ export class Fleet {
         this.ID = groupUpdate.ID;
 
         if (this.ships.length == 0) {
-            console.log('update on zero length fleet');
+            console.log("update on zero length fleet");
         }
     }
 

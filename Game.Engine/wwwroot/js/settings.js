@@ -30,10 +30,8 @@ function save() {
 
     if (Settings.theme != document.getElementById("settingsThemeSelector").value) {
         Settings.theme = document.getElementById("settingsThemeSelector").value;
-        if (Settings.theme == "")
-            reload = true;
-        else
-            theme(Settings.theme);
+        if (Settings.theme == "") reload = true;
+        else theme(Settings.theme);
     }
     if (Settings.themeCustom != document.getElementById("settingsThemeSelectorCustom").value) {
         Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value;
@@ -97,8 +95,7 @@ function load() {
 const debug = true;
 
 async function theme(v) {
-    if (v)
-        v = v.toLowerCase();
+    if (v) v = v.toLowerCase();
     const link = `https://dl.dropboxusercontent.com/s/${v}/daudmod.zip`;
     const zip = await fetch(link)
         .then(response => response.blob())
@@ -114,20 +111,15 @@ async function theme(v) {
                 for (let key in info.spriteModeMap) {
                     const modeMap = info.spriteModeMap[key];
 
-                    if (!spriteModeMap.hasOwnProperty(key))
-                    {
+                    if (!spriteModeMap.hasOwnProperty(key)) {
                         console.log(`[warning] theme attempted to define a non-existant sprite: ${key}`);
                         continue;
                     }
-                    for (const mapKey in modeMap)
-                    {
-                        if (mapKey != "modes")
-                            spriteModeMap[key][mapKey] = modeMap[mapKey];
+                    for (const mapKey in modeMap) {
+                        if (mapKey != "modes") spriteModeMap[key][mapKey] = modeMap[mapKey];
                     }
-                    
-                    if (modeMap.modes)
-                        for (const mapKey in modeMap.modes) spriteModeMap[key].modes[mapKey] = modeMap.modes[mapKey];
 
+                    if (modeMap.modes) for (const mapKey in modeMap.modes) spriteModeMap[key].modes[mapKey] = modeMap.modes[mapKey];
                 }
             }
 
@@ -137,8 +129,7 @@ async function theme(v) {
                     const map = info.textureMap[key];
 
                     for (const textureKey in map) {
-                        if (!textureMap[key])
-                        {
+                        if (!textureMap[key]) {
                             if (debug) console.log(`creating texture: ${key}`);
                             textureMap[key] = {};
                         }
@@ -157,9 +148,8 @@ async function theme(v) {
                                 const urlCreator = window.URL || window.webkitURL;
                                 const url = urlCreator.createObjectURL(blob);
 
-                                if (key == 'shield')
-                                {
-                                    console.log('breakpoint');
+                                if (key == "shield") {
+                                    console.log("breakpoint");
                                     textureMap[key].flag = true;
                                 }
 

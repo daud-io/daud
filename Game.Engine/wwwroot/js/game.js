@@ -24,7 +24,6 @@ import * as PIXI from "pixi.js";
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
 
-
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 const app = new PIXI.Application({ view: canvas, transparent: true });
 app.stage = new PIXI.display.Stage();
@@ -379,6 +378,7 @@ var updateCounter = 0;
 let lastCamera = { X: 0, Y: 0 };
 
 function doPing() {
+    hud.framesPerSecond = frameCounter;
     connection.framesPerSecond = frameCounter;
     connection.viewsPerSecond = viewCounter;
     connection.updatesPerSecond = updateCounter;
