@@ -21,8 +21,8 @@ export class Interpolator {
         const timeShift = time - object.DefinitionTime;
         object.Angle = object.OriginalAngle + timeShift * object.AngularVelocity;
         object.Position = {
-            X: object.OriginalPosition.X + timeShift * object.Momentum.X,
-            Y: object.OriginalPosition.Y + timeShift * object.Momentum.Y
+            X: Math.floor(object.OriginalPosition.X + timeShift * object.Momentum.X),
+            Y: Math.floor(object.OriginalPosition.Y + timeShift * object.Momentum.Y)
         };
 
         if (object.previous && object.previous.Position) {

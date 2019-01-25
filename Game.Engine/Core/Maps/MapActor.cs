@@ -62,7 +62,8 @@
                         Sprite = (Sprites)(ushort)(1000 + tile.TileGridID),
                         Position = tile.Position,
                         Size = tile.Size,
-                        IsDeadly = (tile.Type == "deadly")
+                        IsDeadly = (tile.Type == "deadly"),
+                        IsObstacle = (tile.Type == "obstacle"),
                     });
 
                 NewTileSet = null;

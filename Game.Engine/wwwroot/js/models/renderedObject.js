@@ -65,16 +65,21 @@ export class RenderedObject {
                 let tileWidth = textureDefinition.tileWidth;
                 let tileHeight = textureDefinition.tileHeight;
     
-                let tilesWide = imageWidth / tileWidth;
-                let tilesHigh = imageHeight / tileHeight;
+                let tilesWide = Math.floor(imageWidth / tileWidth);
+                let tilesHigh = Math.floor(imageHeight / tileHeight);
 
                 for (var row = 0; row < tilesHigh; row++)
                     for (var col = 0; col < tilesWide; col++)
                     {
-                        let x = col * tileWidth;
-                        let y = row * tileHeight;
+                        let x = Math.floor(col * tileWidth);
+                        let y = Math.floor(row * tileHeight);
 
-                        textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight)));
+                        var texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
+                        texture.row = row;
+                        texture.col = col;
+                        texture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+                        //texture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+                        textures.push(texture);
                     }
             } else textures.push(baseTexture);
 
@@ -98,7 +103,6 @@ export class RenderedObject {
 
     static parseMapKey(mapKey)
     {
-        console.log(mapKey);
         if (!mapKey)
             return false;
 
@@ -124,14 +128,7 @@ export class RenderedObject {
             pixiSprite.animationSpeed = textureDefinition.animationSpeed;
             pixiSprite.parentGroup = this.container.bodyGroup;
         } else if (textureDefinition.map) {
-            var mapKey = RenderedObject.parseMapKey(spriteName);
-
-            if (!mapKey)
-                console.log('non-map key used to reference map texture');
-            else {
-                pixiSprite = new PIXI.Sprite(textures[mapKey.mapID]);
-                pixiSprite.parentGroup = this.container.bodyGroup;
-            }
+            console.log('warning: requested tile from RenderedObject');
         } else {
             pixiSprite = new PIXI.Sprite(textures[0]);
             pixiSprite.parentGroup = this.container.bodyGroup;
@@ -272,12 +269,12 @@ export class RenderedObject {
         const angle = interpolatedPosition.Angle;
 
         this.foreachLayer(function(layer, index) {
-            layer.pivot.x = layer.texture.width / 2;
-            layer.pivot.y = layer.texture.height / 2;
+            layer.pivot.x = Math.floor(layer.texture.width / 2);
+            layer.pivot.y = Math.floor(layer.texture.height / 2);
 
-            layer.position.x = interpolatedPosition.X + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle));
+            layer.position.x = Math.floor(interpolatedPosition.X + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle)));
 
-            layer.position.y = interpolatedPosition.Y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle));
+            layer.position.y = Math.floor(interpolatedPosition.Y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle)));
 
             layer.rotation = angle;
 

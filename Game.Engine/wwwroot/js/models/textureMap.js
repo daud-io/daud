@@ -246,6 +246,8 @@ export const textureMap = {
         tileCount: 288,
         imageWidth: 384,
         imageHeight: 192,
-        scale: 0.066
+        scale: 0.0655,
+        tileSpaceHeight: 400,
+        tileSpaceWidth: 400
     }    
 };

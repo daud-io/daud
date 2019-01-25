@@ -2,6 +2,7 @@ import { Bullet } from "./models/bullet";
 import { Ship } from "./models/ship";
 import { RenderedObject } from "./models/renderedObject";
 import { Fleet } from "./models/fleet";
+import { Tile } from "./models/tile";
 
 export class Cache {
     constructor(container) {
@@ -112,36 +113,46 @@ export class Cache {
             }
 
             if (!existing) {
-                if (update.Sprite.indexOf("ship") == 0) {
-                    let fleet = false;
-                    if (update.Group != 0) {
-                        let group = this.groups[`g-${update.Group}`];
-                        if (!group) {
-                            console.log("missing group");
-                        } else {
-                            if (group.Type == 1) {
-                                fleet = group.renderer;
-
-                                if (!fleet) fleet = new Fleet(this.container, this);
-
-                                group.renderer = fleet;
-                            }
-                        }
-                    } else {
-                        //console.log("ship with no group: " + update.Sprite);
-                    }
-
-                    const ship = (update.renderer = new Ship(this.container));
-
-                    if (fleet) fleet.addShip(ship);
-                } else if (update.Sprite.indexOf("bullet")) update.renderer = new Bullet(this.container);
-                else update.renderer = new RenderedObject(this.container);
 
                 let group = false;
-                if (update.Group != 0) group = this.getGroup(update.Group);
+                if (update.Group != 0) {
+                    group = this.groups[`g-${update.Group}`];
+                    if (group) {
+                        switch(group.Type)
+                        {
+                            case 1:
+                                let ship = update.renderer;
+                                if (!ship) ship = new Ship(this.container);
+                                update.renderer = ship;
+
+                                let fleet = group.renderer;
+                                if (!fleet) fleet = new Fleet(this.container, this);
+                                group.renderer = fleet;
+                                break;
+
+                            case 3:
+                            case 4:
+                                let bullet = update.renderer;
+                                if (!bullet) bullet = new Bullet(this.container, this);
+                                update.renderer = bullet;
+                                break;
+
+                            case 6:
+                                let tile = update.renderer;
+                                if (!tile) tile = new Tile(this.container, this);
+                                update.renderer = tile;
+                                break;
+                        }
+                    }
+                }
+                else
+                    update.renderer = new RenderedObject(this.container);
                 update.group = group;
                 update.zIndex = group.ZIndex || 0;
-                update.renderer.update(update);
+
+                if (update.renderer)
+                    update.renderer.update(update);
+
                 Cache.count++;
             }
         }

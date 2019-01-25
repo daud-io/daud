@@ -42,15 +42,23 @@
 
                         var tile = tileSet.Tiles[t.Gid-1];
 
-                        return new MapTileModel
+                        var mapTileModel = new MapTileModel
                         {
                             Position = new Vector2(t.X * Size, t.Y * Size) + mapOffset,
                             Size = Size,
-                            TileGridID = t.Gid - 1,
-                            Type = tile.TerrainEdges.All(e => e.Name == "Water")
-                                ? "deadly"
-                                : null
+                            TileGridID = t.Gid - 1
                         };
+
+                        //if (tile.TerrainEdges.All(e => e.Name == "Water"))
+                          //  mapTileModel.Type = "deadly";
+
+                        if (tile.TerrainEdges.Any(e => e.Name == "Dirt"))
+                            mapTileModel.Type = "obstacle";
+                        if (tile.TerrainEdges.Any(e => e.Name == "Dark Dirt"))
+                            mapTileModel.Type = "obstacle";
+
+
+                        return mapTileModel;
                     });
 
                     await API.World.SetMapTiles(WorldKey, tileModels);

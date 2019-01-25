@@ -6,6 +6,14 @@ export class Renderer {
     draw(cache, interpolator, currentTime, fleetID) {
         const groupsUsed = [];
 
+        if (this.container.tiles.isDirty)
+        {
+            this.container.tiles.clear();
+            this.container.tiles.isRefreshing = true;
+        }
+        else
+            this.container.tiles.isRefreshing = false;
+
         cache.foreach(function(body) {
             if (body.Group) {
                 const group = cache.getGroup(body.Group);
@@ -14,6 +22,8 @@ export class Renderer {
 
             if (body.renderer) body.renderer.preRender(currentTime, interpolator, fleetID);
         }, this);
+
+        this.container.tiles.isDirty = false;
 
         let ids = [];
 

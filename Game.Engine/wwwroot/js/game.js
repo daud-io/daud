@@ -19,11 +19,14 @@ import { Settings } from "./settings";
 import { Events } from "./events";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
 import * as PIXI from "pixi.js";
+import "pixi-tilemap";
+
 // import "./hintbox";
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
 
+//PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 const app = new PIXI.Application({ view: canvas, transparent: true });
 app.stage = new PIXI.display.Stage();
@@ -32,13 +35,19 @@ const container = new PIXI.Container();
 app.stage.addChild(container);
 
 var backgroundGroup = new PIXI.display.Group(0, true);
-var bodyGroup = new PIXI.display.Group(1, true);
+var tileGroup = new PIXI.display.Group(1, true);
+var bodyGroup = new PIXI.display.Group(2, true);
 
 app.stage.addChild(new PIXI.display.Layer(backgroundGroup));
+app.stage.addChild(new PIXI.display.Layer(tileGroup));
 app.stage.addChild(new PIXI.display.Layer(bodyGroup));
 
 container.backgroundGroup = backgroundGroup;
 container.bodyGroup = bodyGroup;
+
+container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
+container.tiles.parentGroup = tileGroup;
+container.addChild(container.tiles);
 
 const renderer = new Renderer(container);
 const background = new Background(container);
@@ -366,8 +375,8 @@ const sizeCanvas = () => {
         width = (height * 16) / 9;
     }
 
-    size.width = width;
-    size.height = height;
+    size.width = Math.floor(width);
+    size.height = Math.floor(height);
     minimap.size(size);
     app.renderer.resize(width, height);
     container.scale.set(width / 5500, width / 5500);
@@ -420,16 +429,18 @@ app.ticker.add(() => {
 
     if (view) {
         position = interpolator.projectObject(view.camera, gameTime);
-        position.X = position.X * 0.2 + lastCamera.X * 0.8;
-        position.Y = position.Y * 0.2 + lastCamera.Y * 0.8;
+        position.X = Math.floor(position.X * 0.2 + lastCamera.X * 0.8);
+        position.Y = Math.floor(position.Y * 0.2 + lastCamera.Y * 0.8);
 
         lastCamera = position;
 
         camera.moveTo(position.X, position.Y);
         camera.zoomTo(5500);
     }
-    container.pivot.x = position.X - 5500 / 2;
-    container.pivot.y = position.Y - (5500 / 2) * (9 / 16);
+    container.pivot.x = Math.floor(position.X - 5500 / 2);
+    container.pivot.y = Math.floor(position.Y - (5500 / 2) * (9 / 16));
+    container.position.x = Math.floor(container.position.x);
+    container.position.y = Math.floor(container.position.y);
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
     background.draw(cache, interpolator, gameTime);
