@@ -70,13 +70,6 @@
             GameConfiguration config
         )
         {
-            app.Use(async (httpContext, next) =>
-            {
-                //httpContext.Response.Headers[HeaderNames.Pragma] = "no-cache";
-                //httpContext.Response.Headers[HeaderNames.CacheControl] = "no-cache";
-                await next();
-            });
-
             JsonConvert.DefaultSettings = () =>
             {
                 return new JsonSerializerSettings()
@@ -101,8 +94,16 @@
             app.UseStaticFiles(new StaticFileOptions
             {
                 ServeUnknownFileTypes = true,
-                DefaultContentType = "text/plain"
-            });
+                DefaultContentType = "text/plain",
+                OnPrepareResponse = context =>
+                {
+                    if (context.File.Name == "index.html")
+                    {
+                        context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
+                        context.Context.Response.Headers.Add("Expires", "-1");
+                    }
+                }
+        });
 
             app.UseWebSockets(new WebSocketOptions
             {
