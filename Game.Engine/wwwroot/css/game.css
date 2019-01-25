@@ -930,6 +930,7 @@ progress::-webkit-progress-value {
 #chatMessages .chatMessage h4,
 #chatMessages .chatMessage p {
 	margin: 0px 0px 0px 0px;
+	font-size: 12px;
 }
 
 #chatTextbox {
