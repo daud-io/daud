@@ -1,8 +1,10 @@
 @import url("https://fonts.googleapis.com/css?family=Exo+2");
+
 @font-face {
-    font-family: KenneyFuture;
-    src: url("../fonts/Kenney Future.ttf") format('truetype');
+    font-family: "KenneyFuture";
+    src: url("../fonts/KenneyFuture.ttf") format("truetype");
 }
+
 html,
 body {
     width: 100%;
@@ -11,11 +13,10 @@ body {
     background-color: black;
     text-align: center;
     overflow: hidden;
-    font-family: KenneyFuture;
+    font-family: "KenneyFuture";
     color: white;
     --bg-color-1: #222;
 }
-
 
 .aspectratio {
     width: 100vw;
@@ -142,30 +143,29 @@ a {
     bottom: 10vh;
     border: 2px solid #8ac2d4cc;
     box-shadow: inset #bde7f5cc 0px 0px 0px 2px;
-    
 }
 
 #twitterpated h4 {
     border: 2px solid #1989b8ff;
     border-bottom: none;
     box-shadow: inset #35baf3ff 0px 0px 0px 2px;
-    margin: calc( -0.5em - 2px ) calc( -0.5em - 2px ) 0px calc( -0.5em - 2px );
+    margin: calc(-0.5em - 2px) calc(-0.5em - 2px) 0px calc(-0.5em - 2px);
     border-radius: 6px 6px 0px 0px;
     background: #1ea7e1ff;
     padding: 0.5em;
     font-weight: normal;
-    color:#fff;
+    color: #fff;
 }
 #twitterpated table {
     border: 2px solid #9ea4adff;
     border-top: none;
     box-shadow: inset #ecf2faff 0px 0px 0px 2px;
-    margin: 0px calc( -0.5em - 2px ) calc( -0.5em - 2px ) calc( -0.5em - 2px );
+    margin: 0px calc(-0.5em - 2px) calc(-0.5em - 2px) calc(-0.5em - 2px);
     border-radius: 0px 0px 6px 6px;
     background: #d6dde7ff;
     padding: 0.5em;
     font-weight: normal;
-    color:#333333;
+    color: #333333;
 }
 
 #twitterpated .date {
@@ -268,59 +268,52 @@ a {
 }
 
 .button1 {
-
     padding: 10px;
     margin: 1vh 0.5vh;
     font-size: 0.75rem;
     color: white;
     text-transform: uppercase;
-    transition: border 1s, color 1s,background 1s;
-    
+    transition: border 1s, color 1s, background 1s;
 
-   
     background-color: #aae9ff4d;
     border-radius: 6px;
     border: 2px solid #8ac2d4cc;
     box-shadow: inset #bde7f5cc 0px 0px 0px 2px;
-    font-family: KenneyFuture;
+    font-family: "KenneyFuture";
 }
 .button2 {
-    
     padding: 10px;
     margin: 1vh 0.5vh;
     font-size: 0.75rem;
     color: #333333;
     text-transform: uppercase;
-    transition: border 1s, color 1s,background 1s;
+    transition: border 1s, color 1s, background 1s;
     background-color: #eeeeeeff;
     border-radius: 6px;
     border: 2px solid #d5d5d5ff;
     box-shadow: inset #ffffffff 0px 0px 0px 2px;
-    font-family: KenneyFuture;
+    font-family: "KenneyFuture";
 }
 .button3 {
-    
     padding: 10px;
     margin: 1vh 0.5vh;
     font-size: 0.75rem;
     color: #fff;
     text-transform: uppercase;
-    transition: border 1s, color 1s,background 1s;
+    transition: border 1s, color 1s, background 1s;
     background-color: #73cd4bff;
     border-radius: 6px;
     border: 2px solid #5fb13aff;
     box-shadow: inset #88e060ff 0px 0px 0px 2px, #47832cff 0 2px;
     transform: translateY(-2px);
-    font-family: KenneyFuture;
+    font-family: "KenneyFuture";
     transition: all 0.5s;
 }
-.button3:hover{
-    
+.button3:hover {
     box-shadow: inset #88e060ff 0px 0px 0px 2px, #47832cff 0 3px;
     transform: translateY(-3px);
 }
-.button3:active{
-    
+.button3:active {
     box-shadow: inset #88e060ff 0px 0px 0px 2px, #47832cff 0 0px;
     transform: translateY(0px);
 }
@@ -346,7 +339,7 @@ a {
     margin: 0 0 10px 0;
     transition: border-bottom 1s;
     width: 20rem;
-    font-family: KenneyFuture;
+    font-family: "KenneyFuture";
 }
 
 #shipSelectorSwitch {
@@ -547,22 +540,22 @@ table {
     transition: 0.5s opacity ease-in-out;
 
     border: 0px solid #9ea4adff;
-    box-shadow: #9ea4adff 0px 0px 0px 2px inset,inset #ecf2faff 0px 0px 0px 4px;
-    margin: 0px calc( -0.5em - 2px ) calc( -0.5em - 2px ) calc( -0.5em - 2px );
+    box-shadow: #9ea4adff 0px 0px 0px 2px inset, inset #ecf2faff 0px 0px 0px 4px;
+    margin: 0px calc(-0.5em - 2px) calc(-0.5em - 2px) calc(-0.5em - 2px);
     border-radius: 6px 6px 6px 6px;
     background-color: #d6dde7ff;
-    background-image: url("../img/UIBolt2.png"),url("../img/UIBolt2.png"),url("../img/UIBolt2.png"),url("../img/UIBolt2.png");
-    background-position: top left,top right, bottom left, bottom right;
+    background-image: url("../img/UIBolt2.png"), url("../img/UIBolt2.png"), url("../img/UIBolt2.png"), url("../img/UIBolt2.png");
+    background-position: top left, top right, bottom left, bottom right;
     background-repeat: no-repeat;
     padding: 1em;
     font-weight: normal;
-    color:#333333;
+    color: #333333;
 }
-#world-list-scroll{
+#world-list-scroll {
     overflow-y: auto;
-    height: calc( 100% - 44px );
+    height: calc(100% - 44px);
 }
-#worlds #topbar{
+#worlds #topbar {
     border: 2px solid #1989b8ff;
     border-bottom: none;
     box-shadow: inset #35baf3ff 0px 0px 0px 2px;
@@ -571,10 +564,9 @@ table {
     background: #1ea7e1ff;
     padding: 1em;
     font-weight: normal;
-    color:#fff;
-    
+    color: #fff;
 }
-.close-button{
+.close-button {
     position: absolute;
     right: 1em;
     top: 1em;
@@ -587,7 +579,7 @@ table {
 
 #worldList {
     width: 100%;
-    background:#c9d0d9ff;
+    background: #c9d0d9ff;
     box-shadow: #b6bec9ff inset 0 2px;
     border-radius: 6px;
 }
@@ -601,7 +593,6 @@ table {
     display: inline-block;
     width: 60px;
     height: 18px;
-    
 }
 
 /* Hide default HTML checkbox */
@@ -634,7 +625,7 @@ table {
     width: 10px;
     left: 2px;
     bottom: 2px;
-    background:url("../img/dotWhite.png");
+    background: url("../img/dotWhite.png");
     background-size: contain;
     background-repeat: no-repeat;
     transition: 0.4s;
@@ -645,22 +636,21 @@ input:checked + .slider {
 }
 
 input:focus + .slider {
-    border-color:  #caf2ffef; 
+    border-color: #caf2ffef;
 }
 
 #worldList .empty {
     background-color: #222;
     background: none;
-    
 }
-#second-world-td{
+#second-world-td {
     background-image: url("../img/GreenIndicator.png");
-    background-position: calc( 100% - 0.5em);
+    background-position: calc(100% - 0.5em);
     background-repeat: no-repeat;
 }
-.empty #second-world-td{
+.empty #second-world-td {
     background-image: url("../img/RedIndicator.png");
-    background-position: calc( 100% - 0.5em);
+    background-position: calc(100% - 0.5em);
     background-repeat: no-repeat;
 }
 
@@ -671,18 +661,16 @@ input:focus + .slider {
 #worldList .selected .details td {
     border: none;
     padding: 0 0.5em;
-
 }
 
 #worldList .selected .details {
     display: table-row;
-    
 }
 #worldList #detail-inset {
-    background:hsla(214, 17%, 78%, 1);
+    background: hsla(214, 17%, 78%, 1);
     box-shadow: #b6bec9ff inset 0 2px;
     border-radius: 6px;
-    min-height: calc( 136px - 1em );
+    min-height: calc(136px - 1em);
     padding: 0.5em;
 }
 
@@ -738,13 +726,13 @@ input:checked + .slider:before {
     font-size: 25px;
     cursor: pointer;
     border-top-left-radius: 12px;
-    border-top-right-radius:12px;
+    border-top-right-radius: 12px;
     transition: color 1s;
 
     background-color: #aae9ff4d;
     border: 2px solid #8ac2d4cc;
     box-shadow: inset #bde7f5cc 0px 0px 0px 2px;
-    font-family: KenneyFuture;
+    font-family: "KenneyFuture";
     border-bottom: none;
     margin-top: 2px;
     margin-bottom: -2px;

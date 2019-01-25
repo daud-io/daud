@@ -50,20 +50,20 @@ export const textureMap = {
     invulnerable: {
         file: "shield",
         animated: false,
-        scale: 0.02,
+        scale: 0.02
     },
 
     shield_pickup: {
         file: "shield_pickup",
         animated: false,
-        scale: 0.02,
+        scale: 0.02
     },
 
     wormhole: {
         file: "wormhole",
         animated: true,
         loop: true,
-        animationSpeed: 0.50,
+        animationSpeed: 0.5,
         scale: 0.04,
         tileSize: 128,
         tileCount: 90
