@@ -4,13 +4,15 @@ const messages = document.getElementById("chatMessages");
 const textbox = document.getElementById("chatTextbox");
 
 window.onkeypress = function(event) {
-	if (event.key.toLowerCase() === chatToggleKey.toLowerCase()) {
-		if (chat.style.display === "none") {
-			chat.style.display = "block";
-			textbox.focus();
-			return false;
-		} else if (textbox !== document.activeElement) {
-			chat.style.display ="none";
+	if (document.getElementById("nick") !== document.activeElement) {
+		if (event.key.toLowerCase() === chatToggleKey.toLowerCase()) {
+			if (chat.style.display === "none") {
+				chat.style.display = "block";
+				textbox.focus();
+				return false;
+			} else if (textbox !== document.activeElement) {
+				chat.style.display ="none";
+			}
 		}
 	}
 }
@@ -19,6 +21,7 @@ textbox.onkeypress = function(event) {
 	if (event.key === "Enter") {
 		var chat = new Chat();
 		chat.send();
+		return false;
 	}
 }
 
