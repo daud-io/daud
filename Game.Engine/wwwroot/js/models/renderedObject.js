@@ -59,18 +59,16 @@ export class RenderedObject {
                     textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), false, false, textureDefinition.rotate || 0));
                 }
             } else if (textureDefinition.map) {
-
                 let imageWidth = textureDefinition.imageWidth;
                 let imageHeight = textureDefinition.imageHeight;
                 let tileWidth = textureDefinition.tileWidth;
                 let tileHeight = textureDefinition.tileHeight;
-    
+
                 let tilesWide = Math.floor(imageWidth / tileWidth);
                 let tilesHigh = Math.floor(imageHeight / tileHeight);
 
                 for (var row = 0; row < tilesHigh; row++)
-                    for (var col = 0; col < tilesWide; col++)
-                    {
+                    for (var col = 0; col < tilesWide; col++) {
                         let x = Math.floor(col * tileWidth);
                         let y = Math.floor(row * tileHeight);
 
@@ -90,10 +88,8 @@ export class RenderedObject {
     }
 
     static getTextureDefinition(textureName) {
-
         var mapKey = this.parseMapKey(textureName);
-        if (mapKey)
-            textureName = mapKey.name;
+        if (mapKey) textureName = mapKey.name;
 
         var textureDefinition = textureMap[textureName];
         if (!textureDefinition) console.log(`cannot load texture '${textureName}'`);
@@ -101,10 +97,8 @@ export class RenderedObject {
         return textureDefinition;
     }
 
-    static parseMapKey(mapKey)
-    {
-        if (!mapKey)
-            return false;
+    static parseMapKey(mapKey) {
+        if (!mapKey) return false;
 
         var mapKeyMatches = mapKey.match(/^(.*)\[(\d*)\]/);
 
@@ -113,8 +107,7 @@ export class RenderedObject {
                 name: mapKeyMatches[1],
                 mapID: mapKeyMatches[2]
             };
-        else
-            return false;
+        else return false;
     }
 
     buildSprite(textureName, spriteName) {
@@ -128,7 +121,7 @@ export class RenderedObject {
             pixiSprite.animationSpeed = textureDefinition.animationSpeed;
             pixiSprite.parentGroup = this.container.bodyGroup;
         } else if (textureDefinition.map) {
-            console.log('warning: requested tile from RenderedObject');
+            console.log("warning: requested tile from RenderedObject");
         } else {
             pixiSprite = new PIXI.Sprite(textures[0]);
             pixiSprite.parentGroup = this.container.bodyGroup;
@@ -160,8 +153,7 @@ export class RenderedObject {
         let spriteDefinition = false;
 
         var mapKey = this.parseMapKey(spriteName);
-        if (mapKey)
-            spriteName = mapKey.name;
+        if (mapKey) spriteName = mapKey.name;
 
         if (spriteModeMap[spriteName]) spriteDefinition = spriteModeMap[spriteName];
 
@@ -173,8 +165,7 @@ export class RenderedObject {
 
         const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
 
-        if (!spriteDefinition)
-            console.log(`Cannot find sprite: ${spriteName}`);
+        if (!spriteDefinition) console.log(`Cannot find sprite: ${spriteName}`);
 
         const modes = this.decodeModes(mode);
 

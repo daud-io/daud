@@ -101,10 +101,8 @@ const bodyFromServer = (cache, body) => {
 
     var spriteIndex = body.sprite();
     var spriteName = false;
-    if (spriteIndex >= 1000)
-        spriteName = `map[${spriteIndex-1000}]`;
-    else
-        spriteName = spriteIndices[spriteIndex];
+    if (spriteIndex >= 1000) spriteName = `map[${spriteIndex - 1000}]`;
+    else spriteName = spriteIndices[spriteIndex];
 
     const newBody = {
         ID: body.id(),

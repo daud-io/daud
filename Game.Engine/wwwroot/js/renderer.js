@@ -6,13 +6,10 @@ export class Renderer {
     draw(cache, interpolator, currentTime, fleetID) {
         const groupsUsed = [];
 
-        if (this.container.tiles.isDirty)
-        {
+        if (this.container.tiles.isDirty) {
             this.container.tiles.clear();
             this.container.tiles.isRefreshing = true;
-        }
-        else
-            this.container.tiles.isRefreshing = false;
+        } else this.container.tiles.isRefreshing = false;
 
         cache.foreach(function(body) {
             if (body.Group) {

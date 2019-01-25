@@ -113,13 +113,11 @@ export class Cache {
             }
 
             if (!existing) {
-
                 let group = false;
                 if (update.Group != 0) {
                     group = this.groups[`g-${update.Group}`];
                     if (group) {
-                        switch(group.Type)
-                        {
+                        switch (group.Type) {
                             case 1:
                                 let ship = update.renderer;
                                 if (!ship) ship = new Ship(this.container);
@@ -144,14 +142,11 @@ export class Cache {
                                 break;
                         }
                     }
-                }
-                else
-                    update.renderer = new RenderedObject(this.container);
+                } else update.renderer = new RenderedObject(this.container);
                 update.group = group;
                 update.zIndex = group.ZIndex || 0;
 
-                if (update.renderer)
-                    update.renderer.update(update);
+                if (update.renderer) update.renderer.update(update);
 
                 Cache.count++;
             }
