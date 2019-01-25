@@ -71,69 +71,45 @@ export const textureMap = {
 
     thruster_cyan: {
         file: "thruster_cyan",
-        animated: true,
-        loop: false,
-        animationSpeed: 1.0,
-        offset: { x: -145, y: 0 },
-        scale: 0.04,
-        rotate: 6,
-        tileSize: 64,
-        tileCount: 29
+        animated: false,
+        offset: { x: 0, y: 0 },
+        scale: 0.02,
+        rotate: 0
     },
     thruster_green: {
         file: "thruster_green",
-        animated: true,
-        loop: false,
-        animationSpeed: 1.0,
-        offset: { x: -145, y: 0 },
-        scale: 0.04,
-        rotate: 6,
-        tileSize: 64,
-        tileCount: 29
+        animated: false,
+        offset: { x: 0, y: 0 },
+        scale: 0.02,
+        rotate: 0
     },
     thruster_orange: {
         file: "thruster_orange",
-        animated: true,
-        loop: false,
-        animationSpeed: 1.0,
-        offset: { x: -145, y: 0 },
-        scale: 0.04,
-        rotate: 6,
-        tileSize: 64,
-        tileCount: 29
+        animated: false,
+        offset: { x: 0, y: 0 },
+        scale: 0.02,
+        rotate: 0
     },
     thruster_pink: {
         file: "thruster_pink",
-        animated: true,
-        loop: false,
-        animationSpeed: 1.0,
-        offset: { x: -145, y: 0 },
-        scale: 0.04,
-        rotate: 6,
-        tileSize: 64,
-        tileCount: 29
+        animated: false,
+        offset: { x: 0, y: 0 },
+        scale: 0.02,
+        rotate: 0
     },
     thruster_red: {
         file: "thruster_red",
-        animated: true,
-        loop: false,
-        animationSpeed: 1.0,
-        offset: { x: -145, y: 0 },
-        scale: 0.04,
-        rotate: 6,
-        tileSize: 64,
-        tileCount: 29
+        animated: false,
+        offset: { x: 0, y: 0 },
+        scale: 0.02,
+        rotate: 0
     },
     thruster_yellow: {
         file: "thruster_yellow",
-        animated: true,
-        loop: false,
-        animationSpeed: 1.0,
-        offset: { x: -145, y: 0 },
-        scale: 0.04,
-        rotate: 6,
-        tileSize: 64,
-        tileCount: 29
+        animated: false,
+        offset: { x: 0, y: 0 },
+        scale: 0.02,
+        rotate: 0
     },
 
     offenseupgrade: {
