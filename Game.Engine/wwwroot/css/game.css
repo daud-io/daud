@@ -938,6 +938,6 @@ progress::-webkit-progress-value {
 	transition: border 0.6s;
 }
 
-#chatTextbox:hover {
+#chatTextbox:focus {
 	border: 1px solid #fff;
 }
