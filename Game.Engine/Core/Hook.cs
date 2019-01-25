@@ -105,7 +105,8 @@ namespace Game.Engine.Core
                     PlayerCountGracePeriodMS = 15000,
                     FleetWeaponStackDepth = 1,
 
-                    LifecycleDuration = 10000
+                    LifecycleDuration = 10000,
+                    MapEnabled = false
                 };
             }
         }
@@ -194,6 +195,8 @@ namespace Game.Engine.Core
 
         public float ShipGainBySizeM { get; set; }
         public float ShipGainBySizeB { get; set; }
+
+        public bool MapEnabled { get; set; }
 
 
         public int StepTime { get; set; }

@@ -199,7 +199,7 @@ namespace Game.Engine.Networking
                                     OriginalAngle: (sbyte)(serverBody.OriginalAngle / MathF.PI * 127),
                                     AngularVelocity: (sbyte)(serverBody.AngularVelocity * 10000),
                                     Size: (byte)(serverBody.Size / 5),
-                                    Sprite: (byte)serverBody.Sprite,
+                                    Sprite: (ushort)serverBody.Sprite,
                                     Mode: serverBody.Mode,
                                     Group: serverBody.Group?.ID ?? 0);
                             }

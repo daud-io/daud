@@ -117,7 +117,7 @@ struct NetBody
 	originalAngle:byte;
 	angularVelocity:byte;
 	size:ubyte;
-	sprite:ubyte;
+	sprite:ushort;
 	mode:ubyte;
     group:uint;
 }

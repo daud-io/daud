@@ -12,6 +12,8 @@
         // munitions
         VolleyBullet,
         VolleySeeker,
-        PickupSeeker
+        PickupSeeker,
+
+        Map
     }
 }

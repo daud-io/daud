@@ -451,16 +451,17 @@ public struct NetBody : IFlatbufferObject
   public sbyte OriginalAngle { get { return __p.bb.GetSbyte(__p.bb_pos + 16); } }
   public sbyte AngularVelocity { get { return __p.bb.GetSbyte(__p.bb_pos + 17); } }
   public byte Size { get { return __p.bb.Get(__p.bb_pos + 18); } }
-  public byte Sprite { get { return __p.bb.Get(__p.bb_pos + 19); } }
-  public byte Mode { get { return __p.bb.Get(__p.bb_pos + 20); } }
+  public ushort Sprite { get { return __p.bb.GetUshort(__p.bb_pos + 20); } }
+  public byte Mode { get { return __p.bb.Get(__p.bb_pos + 22); } }
   public uint Group { get { return __p.bb.GetUint(__p.bb_pos + 24); } }
 
-  public static Offset<NetBody> CreateNetBody(FlatBufferBuilder builder, uint Id, uint DefinitionTime, short originalPosition_X, short originalPosition_Y, short velocity_X, short velocity_Y, sbyte OriginalAngle, sbyte AngularVelocity, byte Size, byte Sprite, byte Mode, uint Group) {
+  public static Offset<NetBody> CreateNetBody(FlatBufferBuilder builder, uint Id, uint DefinitionTime, short originalPosition_X, short originalPosition_Y, short velocity_X, short velocity_Y, sbyte OriginalAngle, sbyte AngularVelocity, byte Size, ushort Sprite, byte Mode, uint Group) {
     builder.Prep(4, 28);
     builder.PutUint(Group);
-    builder.Pad(3);
+    builder.Pad(1);
     builder.PutByte(Mode);
-    builder.PutByte(Sprite);
+    builder.PutUshort(Sprite);
+    builder.Pad(1);
     builder.PutByte(Size);
     builder.PutSbyte(AngularVelocity);
     builder.PutSbyte(OriginalAngle);

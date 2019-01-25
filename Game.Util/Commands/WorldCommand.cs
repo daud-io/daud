@@ -1,7 +1,10 @@
 ﻿namespace Game.Util.Commands
 {
+    using Game.API.Common.Models;
     using McMaster.Extensions.CommandLineUtils;
     using System;
+    using System.Linq;
+    using System.Numerics;
     using System.Threading.Tasks;
     using TiledSharp;
 
@@ -12,19 +15,54 @@
         class Parse : CommandBase
         {
             [Argument(0)]
+            public string WorldKey { get; set; }
+
+            [Argument(1)]
             public string File { get; set; } = null;
 
-            protected override Task ExecuteAsync()
+            [Option]
+            public int Size { get; set; } = 100;
+
+
+            protected async override Task ExecuteAsync()
             {
                 var map = new TmxMap(File);
-                var tileset = map.Tilesets[0].Name.ToString();
-                foreach (var set in map.Tilesets)
+                var groundLayer = map.Layers.FirstOrDefault(l => l.Name == "Ground");
+
+                var mapOffset = new Vector2(-map.Width/2 * Size, -map.Height/2 * Size);
+
+                
+                if (groundLayer != null)
                 {
-                    Console.WriteLine(set.Name);
+                    var tileSet = map.Tilesets[0];
+
+
+                    var tileModels = groundLayer.Tiles.Select(t =>
+                    {
+
+                        var tile = tileSet.Tiles[t.Gid-1];
+
+                        var mapTileModel = new MapTileModel
+                        {
+                            Position = new Vector2(t.X * Size, t.Y * Size) + mapOffset,
+                            Size = Size,
+                            TileGridID = t.Gid - 1
+                        };
+
+                        if (tile.TerrainEdges.All(e => e.Name == "Water"))
+                            mapTileModel.Type = "deadly";
+
+                        if (tile.TerrainEdges.Any(e => e.Name == "Dirt"))
+                            mapTileModel.Type = "obstacle";
+                        if (tile.TerrainEdges.Any(e => e.Name == "Dark Dirt"))
+                            mapTileModel.Type = "obstacle";
+
+
+                        return mapTileModel;
+                    });
+
+                    await API.World.SetMapTiles(WorldKey, tileModels);
                 }
-
-
-                return Task.FromResult(0);
             }
         }
 

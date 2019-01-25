@@ -136,5 +136,7 @@ export const spriteModeMap = {
     ctf_base: { modes: { default: ["ctf_base"] } },
 
     ctf_flag_blue: { modes: { default: ["ctf_flag_blue"] } },
-    ctf_flag_red: { modes: { default: ["ctf_flag_red"] } }
+    ctf_flag_red: { modes: { default: ["ctf_flag_red"] } },
+
+    map: { modes: { default: ["map"] } }
 };

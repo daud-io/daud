@@ -1,6 +1,6 @@
 ﻿namespace Game.API.Common
 {
-    public enum Sprites : byte
+    public enum Sprites : ushort
     {
         None,
         ship0,

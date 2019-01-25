@@ -58,6 +58,29 @@ export class RenderedObject {
 
                     textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), false, false, textureDefinition.rotate || 0));
                 }
+            } else if (textureDefinition.map) {
+
+                let imageWidth = textureDefinition.imageWidth;
+                let imageHeight = textureDefinition.imageHeight;
+                let tileWidth = textureDefinition.tileWidth;
+                let tileHeight = textureDefinition.tileHeight;
+    
+                let tilesWide = Math.floor(imageWidth / tileWidth);
+                let tilesHigh = Math.floor(imageHeight / tileHeight);
+
+                for (var row = 0; row < tilesHigh; row++)
+                    for (var col = 0; col < tilesWide; col++)
+                    {
+                        let x = Math.floor(col * tileWidth);
+                        let y = Math.floor(row * tileHeight);
+
+                        var texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
+                        texture.row = row;
+                        texture.col = col;
+                        texture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+                        //texture.scaleMode = PIXI.SCALE_MODES.LINEAR;
+                        textures.push(texture);
+                    }
             } else textures.push(baseTexture);
 
             textureCache[textureName] = textures;
@@ -67,13 +90,34 @@ export class RenderedObject {
     }
 
     static getTextureDefinition(textureName) {
+
+        var mapKey = this.parseMapKey(textureName);
+        if (mapKey)
+            textureName = mapKey.name;
+
         var textureDefinition = textureMap[textureName];
         if (!textureDefinition) console.log(`cannot load texture '${textureName}'`);
 
         return textureDefinition;
     }
 
-    buildSprite(textureName) {
+    static parseMapKey(mapKey)
+    {
+        if (!mapKey)
+            return false;
+
+        var mapKeyMatches = mapKey.match(/^(.*)\[(\d*)\]/);
+
+        if (mapKeyMatches)
+            return {
+                name: mapKeyMatches[1],
+                mapID: mapKeyMatches[2]
+            };
+        else
+            return false;
+    }
+
+    buildSprite(textureName, spriteName) {
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
         const textures = RenderedObject.loadTexture(textureDefinition, textureName);
         let pixiSprite = false;
@@ -83,6 +127,8 @@ export class RenderedObject {
             pixiSprite.loop = textureDefinition.loop;
             pixiSprite.animationSpeed = textureDefinition.animationSpeed;
             pixiSprite.parentGroup = this.container.bodyGroup;
+        } else if (textureDefinition.map) {
+            console.log('warning: requested tile from RenderedObject');
         } else {
             pixiSprite = new PIXI.Sprite(textures[0]);
             pixiSprite.parentGroup = this.container.bodyGroup;
@@ -112,6 +158,11 @@ export class RenderedObject {
 
     static getSpriteDefinition(spriteName) {
         let spriteDefinition = false;
+
+        var mapKey = this.parseMapKey(spriteName);
+        if (mapKey)
+            spriteName = mapKey.name;
+
         if (spriteModeMap[spriteName]) spriteDefinition = spriteModeMap[spriteName];
 
         return spriteDefinition;
@@ -119,7 +170,12 @@ export class RenderedObject {
 
     getModeMap(spriteName, mode) {
         let layers = [];
+
         const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
+
+        if (!spriteDefinition)
+            console.log(`Cannot find sprite: ${spriteName}`);
+
         const modes = this.decodeModes(mode);
 
         modes.forEach(modeName => {
@@ -142,10 +198,10 @@ export class RenderedObject {
                 if (this.activeTextures[textureName]) spriteLayer = this.activeTextures[textureName];
                 else {
                     //console.log('building sprite for ' + textureName);
-                    spriteLayer = this.buildSprite(textureName);
+                    spriteLayer = this.buildSprite(textureName, spriteName);
                 }
 
-                if (zIndex == 0) zIndex = 255;
+                if (zIndex == 0) zIndex = 250;
 
                 spriteLayer.zOrder = zIndex - i + this.body.ID / 100000;
 
@@ -213,12 +269,12 @@ export class RenderedObject {
         const angle = interpolatedPosition.Angle;
 
         this.foreachLayer(function(layer, index) {
-            layer.pivot.x = layer.texture.width / 2;
-            layer.pivot.y = layer.texture.height / 2;
+            layer.pivot.x = Math.floor(layer.texture.width / 2);
+            layer.pivot.y = Math.floor(layer.texture.height / 2);
 
-            layer.position.x = interpolatedPosition.X + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle));
+            layer.position.x = Math.floor(interpolatedPosition.X + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle)));
 
-            layer.position.y = interpolatedPosition.Y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle));
+            layer.position.y = Math.floor(interpolatedPosition.Y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle)));
 
             layer.rotation = angle;
 

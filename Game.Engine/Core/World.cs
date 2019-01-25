@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.Engine.Core.Maps;
     using Game.Engine.Networking;
     using RBush;
     using System;
@@ -43,6 +44,7 @@
         public int AdvertisedPlayerCount {get;set;}
 
         public string Image { get; set; } = "default";
+        public MapActor MapActor { get; private set; } = null;
 
         public World()
         {
@@ -55,13 +57,15 @@
             SystemActor<CaptureTheFlag>();
             SystemActor<Sumo>();
 
+            SystemActor(MapActor = new MapActor());
+
             InitializeStepTimer();
         }
 
-        private void SystemActor<T>()
+        private void SystemActor<T>(T instance = null)
             where T: class, IActor, new()
         {
-            var actor = new T();
+            var actor = instance ?? new T();
             actor.Init(this);
         }
 
