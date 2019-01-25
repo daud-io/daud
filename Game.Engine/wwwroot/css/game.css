@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css?family=Exo+2");
 @font-face {
     font-family: KenneyFuture;
-    src: url("../fonts/Kenney Future.ttf");
+    src: url("../fonts/Kenney Future.ttf") format('truetype');
 }
 html,
 body {
