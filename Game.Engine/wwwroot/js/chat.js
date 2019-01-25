@@ -32,7 +32,8 @@ class Chat {
 		if (txt !== "") {
 			textbox.value = "";
 			// some code to send message to server
-			update();
+			var chat = new Chat();
+			chat.update();
 		}
 	}
 
