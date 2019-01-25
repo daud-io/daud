@@ -1,7 +1,8 @@
 export const spriteModeMap = {
     bg: {
         texture: "bg",
-        scaleFactor: 10
+        scaleFactor: 10,
+        additionalLayers:[{texture:"bg2",speed:1.25}]
     },
 
     fish: {

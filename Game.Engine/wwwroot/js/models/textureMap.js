@@ -23,7 +23,8 @@
 */
 
 export const textureMap = {
-    bg: { file: "bg", scale: 1 },
+    bg: { file: "bg", scale: 10 },
+    bg2:{file:"bg2",scale:4},
 
     // fish
     fish: { file: "ship0", scale: 0.01 },

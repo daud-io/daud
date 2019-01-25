@@ -4,38 +4,78 @@ import { RenderedObject } from "./models/renderedObject";
 export class Background {
     constructor(container) {
         this.container = container;
-
+        this.focus={x:0,y:0};
+        this.speeds=[];
         this.refreshSprite();
     }
 
     draw(cache, interpolator, currentTime) {
-        if (this.backgroundSprite) {
-            if (Settings.background == "none" && this.backgroundSprite.visible) this.backgroundSprite.visible = false;
-            if (Settings.background == "on" && !this.backgroundSprite.visible) this.backgroundSprite.visible = true;
+        if (this.backgroundSprites) {
+            for(var i=0;i<this.backgroundSprites.length;i++){
+                var backgroundSprite=this.backgroundSprites[i];
+                if(this.speeds && this.speeds.length>i){
+                    backgroundSprite.position.x=-100000-this.focus.x*(this.speeds[i]-1);
+                    backgroundSprite.position.y=-100000-this.focus.y*(this.speeds[i]-1);
+                }
+                if (Settings.background == "none" && backgroundSprite.visible) backgroundSprite.visible = false;
+                if (Settings.background == "on" && !backgroundSprite.visible) backgroundSprite.visible = true;
+            }
         }
+    }
+    updateFocus(x,y){
+        this.focus={x:x,y:y};
     }
 
     refreshSprite() {
         const spriteDefinition = RenderedObject.getSpriteDefinition("bg");
-        const textureName = spriteDefinition.texture;
-        const textureDefinition = RenderedObject.getTextureDefinition(textureName);
-        const textures = RenderedObject.loadTexture(textureDefinition, textureName);
+        
+        var additionalLayers=spriteDefinition.additionalLayers;
+        if(!additionalLayers){
+            additionalLayers=[]; 
+        }
+        var speeds=[1].concat(additionalLayers.map(x=>x.speed));
+        this.speeds=speeds;
+        var layers=[spriteDefinition].concat(additionalLayers);
+        var allLayersTextureNames=layers.map(x=>x.texture);
+        var allLayersTextures=allLayersTextureNames.map(x=>RenderedObject.getTextureDefinition(x));
+        if (!this.backgroundSprites) {
+            this.backgroundSprites=[];
+        }
+        for(var i=0;i<allLayersTextures.length;i++){
+            if(i>=this.backgroundSprites.length){
+                this.backgroundSprites.push(null);
+            }
+            var textures = RenderedObject.loadTexture(allLayersTextures[i], allLayersTextureNames[i]);
+            if (textures.length > 0) {
+                var backgroundSprite=this.backgroundSprites[i];
+            if (!backgroundSprite) {
+                backgroundSprite = new PIXI.extras.TilingSprite(textures[0], 200000, 200000);
+                backgroundSprite.parentGroup = this.container.backgroundGroup;
+                this.container.addChild(backgroundSprite);
+                console.log("BK SCALE "+i,allLayersTextures[i].scale)
+                backgroundSprite.tileScale.set(allLayersTextures[i].scale, allLayersTextures[i].scale);
+                backgroundSprite.position.x = -100000;
+                backgroundSprite.position.y = -100000;
+                this.backgroundSprites[i]=backgroundSprite;
+            } else backgroundSprite.texture = textures[0];
+            }else{
 
-        if (textures.length > 0) {
-            if (!this.backgroundSprite) {
-                this.backgroundSprite = new PIXI.extras.TilingSprite(textures[0], 200000, 200000);
-                this.backgroundSprite.parentGroup = this.container.backgroundGroup;
-                this.container.addChild(this.backgroundSprite);
-                this.backgroundSprite.tileScale.set(spriteDefinition.scaleFactor || 10, spriteDefinition.scaleFactor || 10);
-                this.backgroundSprite.position.x = -100000;
-                this.backgroundSprite.position.y = -100000;
-            } else this.backgroundSprite.texture = textures[0];
+            }
         }
     }
 
     destroy() {
-        if (this.backgroundSprite) this.container.removeChild(this.backgroundSprite);
+        if (this.backgroundSprites) {
+            for(var i=0;i<this.backgroundSprites.length;i++){
+                var backgroundSprite=this.backgroundSprites[i];
+        if (backgroundSprite) this.container.removeChild(backgroundSprite);
+            }
+        }
 
-        this.backgroundSprite = false;
+        this.backgroundSprites = [];
+    }
+    update(updateData) {
+        super.update(updateData);
+console.log(this.body);
     }
 }
