@@ -913,20 +913,31 @@ progress::-webkit-progress-value {
 }
 
 #chatMessages {
-	background-color: #333;
-	border: 1px solid #777;
+	background-color: #222;
+	/*border: 1px solid #777;*/
 	position: absolute;
 	top: 35px;
-	width: calc(100% - 1px);
-	height: calc(100% - 80px);
+	width: calc(100% - 20px);
+	height: calc(100% - 97px);
+	padding: 7px 10px 7px 10px;
+}
+
+#chatMessages .chatMessage {
+	margin: 7px 0 7px 0;
+	text-align: left;
+}
+
+#chatMessages .chatMessage h4,
+#chatMessages .chatMessage p {
+	margin: 0px 0px 0px 0px;
 }
 
 #chatTextbox {
 	-webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
-	background-color: #333;
-	border: 1px solid #777;
+	background-color: #222;
+	border: 1px solid #222;
 	resize: none;
 	position: absolute;
 	bottom: 0px;
