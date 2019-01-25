@@ -11,7 +11,7 @@ window.onkeypress = function(event) {
 				textbox.focus();
 				return false;
 			} else if (textbox !== document.activeElement) {
-				chat.style.display ="none";
+				chat.style.display = "none";
 			}
 		}
 	}
@@ -32,6 +32,7 @@ class Chat {
 		if (txt !== "") {
 			textbox.value = "";
 			// some code to send message to server
+			update();
 		}
 	}
 
