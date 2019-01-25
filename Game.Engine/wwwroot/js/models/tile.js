@@ -31,12 +31,12 @@ export class Tile extends RenderedObject {
 
                 tiles.addFrame(
                     texture,
-                    (this.body.OriginalPosition.X / textureDefinition.tileSpaceWidth) * textureDefinition.tileWidth,
-                    (this.body.OriginalPosition.Y / textureDefinition.tileSpaceHeight) * textureDefinition.tileHeight
+                    (this.body.OriginalPosition.X / (this.body.Size*2)) * textureDefinition.tileWidth - textureDefinition.tileWidth/2,
+                    (this.body.OriginalPosition.Y / (this.body.Size*2)) * textureDefinition.tileHeight - textureDefinition.tileHeight/2
                 );
 
-                tiles.scale.x = this.body.Size * textureDefinition.scale;
-                tiles.scale.y = this.body.Size * textureDefinition.scale;
+                tiles.scale.x = (this.body.Size*2) / textureDefinition.tileWidth;
+                tiles.scale.y = (this.body.Size*2) / textureDefinition.tileHeight;
             }
         }
     }

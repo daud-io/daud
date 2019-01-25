@@ -29,7 +29,7 @@
                 var map = new TmxMap(File);
                 var groundLayer = map.Layers.FirstOrDefault(l => l.Name == "Ground");
 
-                var mapOffset = new Vector2(-map.Width/2 * Size, -map.Height/2 * Size);
+                var mapOffset = new Vector2(-(map.Width * Size) / 2, -(map.Height * Size)/2);
 
                 
                 if (groundLayer != null)
@@ -39,24 +39,36 @@
 
                     var tileModels = groundLayer.Tiles.Select(t =>
                     {
+                        var gridID = t.Gid - tileSet.FirstGid;
 
-                        var tile = tileSet.Tiles[t.Gid-1];
+                        var tile = tileSet.Tiles.ContainsKey(gridID)
+                            ? tileSet.Tiles[gridID]
+                            : null;
 
                         var mapTileModel = new MapTileModel
                         {
                             Position = new Vector2(t.X * Size, t.Y * Size) + mapOffset,
-                            Size = Size,
-                            TileGridID = t.Gid - 1
+                            Size = Size/2,
+                            TileGridID = gridID
                         };
 
-                        if (tile.TerrainEdges.All(e => e.Name == "Water"))
-                            mapTileModel.Type = "deadly";
+                        Console.WriteLine($"grid: {gridID}");
 
-                        if (tile.TerrainEdges.Any(e => e.Name == "Dirt"))
-                            mapTileModel.Type = "obstacle";
-                        if (tile.TerrainEdges.Any(e => e.Name == "Dark Dirt"))
-                            mapTileModel.Type = "obstacle";
+                        if (tile != null)
+                        {
 
+                            if (tile.TerrainEdges.All(e => e?.Name == "Water"))
+                                mapTileModel.Type = "deadly";
+
+                            if (tile.TerrainEdges.Any(e => e?.Name == "Dirt"))
+                                mapTileModel.Type = "obstacle";
+                            if (tile.TerrainEdges.Any(e => e?.Name == "Dark Dirt"))
+                                mapTileModel.Type = "obstacle";
+
+                            if (tile.Properties.ContainsKey("drag"))
+                                mapTileModel.Drag = float.Parse(tile.Properties["drag"]);
+
+                        }
 
                         return mapTileModel;
                     });

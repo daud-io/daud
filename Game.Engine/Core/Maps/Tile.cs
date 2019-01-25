@@ -7,7 +7,7 @@ namespace Game.Engine.Core.Maps
     {
         public bool IsDeadly { get; set; } = false;
         public bool IsObstacle { get; set; } = false;
-        
+        public float Drag { get; set; } = 0;
         public void CollisionExecute(Body projectedBody)
         {
             if (projectedBody is Ship ship)
@@ -20,7 +20,10 @@ namespace Game.Engine.Core.Maps
                     ship.Fleet.AbandonShip(ship);
                 else if (IsObstacle)
                     Collide(this, projectedBody);
-                }
+
+                if (Drag != 0)
+                    ship.Momentum *= 1 - Drag;
+            }
         }
 
 
@@ -77,7 +80,7 @@ namespace Game.Engine.Core.Maps
 
         public bool IsCollision(Body projectedBody)
         {
-            if (!IsDeadly && !IsObstacle)
+            if (!IsDeadly && !IsObstacle && Drag == 0)
                 return false;
             else
                 return (projectedBody is Ship)

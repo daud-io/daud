@@ -64,6 +64,7 @@
                         Size = tile.Size,
                         IsDeadly = (tile.Type == "deadly"),
                         IsObstacle = (tile.Type == "obstacle"),
+                        Drag = tile.Drag
                     });
 
                 NewTileSet = null;

@@ -8,5 +8,6 @@
         public int TileGridID { get; set; }
         public int Size { get; set; }
         public string Type { get; set; }
+        public float Drag { get; set; } = 0;
     }
 }

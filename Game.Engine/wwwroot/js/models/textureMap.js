@@ -238,7 +238,7 @@ export const textureMap = {
         imageHeight: 416,
         scale: 0.0655
     },
-    map: {
+    map_wilds: {
         file: "buch-outdoor",
         map: true,
         tileHeight: 16,
@@ -246,6 +246,18 @@ export const textureMap = {
         tileCount: 288,
         imageWidth: 384,
         imageHeight: 192,
+        scale: 0.0655,
+        tileSpaceHeight: 400,
+        tileSpaceWidth: 400
+    },
+    map: {
+        file: "spritesheet",
+        map: true,
+        tileHeight: 64,
+        tileWidth: 64,
+        tileCount: 81,
+        imageWidth: 1024,
+        imageHeight: 1024,
         scale: 0.0655,
         tileSpaceHeight: 400,
         tileSpaceWidth: 400
