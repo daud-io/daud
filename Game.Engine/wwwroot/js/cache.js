@@ -126,6 +126,8 @@ export class Cache {
                                 let fleet = group.renderer;
                                 if (!fleet) fleet = new Fleet(this.container, this);
                                 group.renderer = fleet;
+
+                                if (fleet) fleet.addShip(ship);
                                 break;
 
                             case 3:
