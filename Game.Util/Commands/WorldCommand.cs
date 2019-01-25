@@ -49,8 +49,8 @@
                             TileGridID = t.Gid - 1
                         };
 
-                        //if (tile.TerrainEdges.All(e => e.Name == "Water"))
-                          //  mapTileModel.Type = "deadly";
+                        if (tile.TerrainEdges.All(e => e.Name == "Water"))
+                            mapTileModel.Type = "deadly";
 
                         if (tile.TerrainEdges.Any(e => e.Name == "Dirt"))
                             mapTileModel.Type = "obstacle";
