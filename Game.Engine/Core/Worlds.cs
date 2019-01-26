@@ -97,6 +97,8 @@
             hook.Obstacles = 0;
             hook.Fishes = 20;
             hook.PickupSeekers = 0;
+            hook.SpawnInvulnerabilityTime = 0;
+            hook.PickupShields = 0;
             hook.SpawnShipCount = 10;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
@@ -122,6 +124,7 @@
             hook.Obstacles = 3;
             hook.Fishes = 7;
             hook.PickupSeekers = 3;
+            hook.PickupShields = 0;
             hook.PointsPerKillFleet = 1;
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = -1;
