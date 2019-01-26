@@ -23,9 +23,19 @@
             [Option]
             public int Size { get; set; } = 100;
 
+            [Option]
+            public bool Clear { get; set; } = false;
+
 
             protected async override Task ExecuteAsync()
             {
+
+                if (Clear)
+                {
+                    await API.World.SetMapTiles(WorldKey, new MapTileModel[0]);
+                    return;
+                }
+
                 var map = new TmxMap(File);
                 var groundLayer = map.Layers.FirstOrDefault(l => l.Name == "Ground");
 
