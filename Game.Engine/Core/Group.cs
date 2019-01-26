@@ -9,7 +9,7 @@
         public bool Exists { get; set; }
         public bool IsDirty { get; set; } = true;
 
-        private GroupTypes _groupType;
+        private GroupTypes _groupType = GroupTypes.Obstacle;
         public virtual GroupTypes GroupType
         {
             get
