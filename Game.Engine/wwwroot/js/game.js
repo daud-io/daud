@@ -147,6 +147,7 @@ var fleetID = 0;
 let lastAliveState = false;
 let aliveSince = false;
 let joiningWorld = false;
+var countDown = 0;
 
 connection.onView = newView => {
     viewCounter++;
@@ -316,9 +317,11 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
 };
 
 function doSpawn() {
-    Events.Spawn();
-    aliveSince = gameTime;
-    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
+	if (countDown <= 0) {
+		Events.Spawn();
+		aliveSince = gameTime;
+		connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
+	}
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
@@ -441,6 +444,7 @@ app.ticker.add(() => {
     container.position.y = Math.floor(container.position.y);
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
+    background.updateFocus(position.X, position.Y);
     background.draw(cache, interpolator, gameTime);
     minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
