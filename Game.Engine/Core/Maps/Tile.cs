@@ -8,6 +8,14 @@ namespace Game.Engine.Core.Maps
         public bool IsDeadly { get; set; } = false;
         public bool IsObstacle { get; set; } = false;
         public float Drag { get; set; } = 0;
+
+
+        public Tile()
+        {
+            MaximumCleanTime = 100000;
+            IsStatic = true;
+        }
+
         public void CollisionExecute(Body projectedBody)
         {
             if (projectedBody is Ship ship)
@@ -24,6 +32,13 @@ namespace Game.Engine.Core.Maps
                 if (Drag != 0)
                     ship.Momentum *= 1 - Drag;
             }
+        }
+
+
+        public override void Think()
+        {
+
+            //base.Think();
         }
 
 

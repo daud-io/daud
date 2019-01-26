@@ -21,7 +21,9 @@
 
         private readonly List<IDisposable> Disposables = new List<IDisposable>();
 
-        private RBush<Body> RTree = new RBush<Body>();
+        private RBush<Body> RTreeDynamic = new RBush<Body>();
+        private RBush<Body> RTreeStatic = new RBush<Body>();
+
         public List<Body> Bodies = new List<Body>();
         public List<Group> Groups = new List<Group>();
         public List<IActor> Actors = new List<IActor>();
@@ -83,11 +85,10 @@
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
                 LastStepSize = Time - oldTime;
 
-                RTree.Clear();
+                RTreeDynamic.Clear();
                 foreach (var body in Bodies)
                     body.Project(Time);
-
-                RTree.BulkLoad(Bodies);
+                RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
 
                 var origActors = Actors.ToList();
                 foreach (var actor in Actors)
@@ -121,6 +122,15 @@
                     Console.WriteLine($"** 50% processing time warning: {elapsed}");
             }
             Processing = false;
+        }
+
+        public void StaticBodyAdd(Body body)
+        {
+            RTreeStatic.Insert(body);
+        }
+        public void StaticBodyRemove(Body body)
+        {
+            RTreeStatic.Delete(body);
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
@@ -257,12 +267,17 @@
             if (maximumDistance == 0)
                 return this.Bodies;
             else
-                return RTree.Search(new Envelope(
+            {
+                var searchEnvelope = new Envelope(
                     point.X - maximumDistance / 2,
                     point.Y - maximumDistance / 2,
                     point.X + maximumDistance / 2,
                     point.Y + maximumDistance / 2
-                ));
+                );
+
+                return RTreeDynamic.Search(searchEnvelope)
+                    .Union(RTreeStatic.Search(searchEnvelope));
+            }
         }
 
         public Vector2 RandomPosition()
