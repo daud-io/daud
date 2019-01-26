@@ -314,6 +314,9 @@
                         Y = y * Hook.WorldSize * 0.95f
                     };
 
+                case "Static":
+                    return Hook.SpawnLocation;
+
                 case "QuietSpot":
                     const int POINTS_TO_TEST = 10;
                     const int MAXIMUM_SEARCH_SIZE = 4000;

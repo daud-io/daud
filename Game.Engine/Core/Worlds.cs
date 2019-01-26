@@ -260,6 +260,7 @@
             var hook = Hook.Default;
             hook.BotBase = 0;
             hook.MapEnabled = true;
+            hook.SpawnLocationMode = "Static";
 
             return new World
             {

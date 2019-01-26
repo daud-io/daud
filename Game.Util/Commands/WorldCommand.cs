@@ -39,6 +39,15 @@
                 var map = new TmxMap(File);
                 var groundLayer = map.Layers.FirstOrDefault(l => l.Name == "Ground");
 
+                var spawnLocation = map.ObjectGroups.SelectMany(g => g.Objects).FirstOrDefault(o => o.Type == "SpawnPoint");
+                if (spawnLocation != null)
+                {
+                    await API.World.HookAsync(new
+                    {
+                        SpawnLocation = spawnLocation
+                    });
+                }
+
                 var mapOffset = new Vector2(-(map.Width * Size) / 2, -(map.Height * Size)/2);
 
                 

@@ -1,4 +1,5 @@
 ﻿using Game.API.Common;
+using System.Numerics;
 
 namespace Game.Engine.Core
 {
@@ -95,7 +96,8 @@ namespace Game.Engine.Core
                     SeekerRange = 2100,
                     SeekerDelay = 250,
 
-                    SpawnLocationMode = "QuietSpot", // Corners, QuietSpot
+                    SpawnLocationMode = "QuietSpot", // Corners, QuietSpot, Static
+                    SpawnLocation = Vector2.Zero,
 
                     PointsPerKillShip = 1,
                     PointsPerKillFleet = 55,
@@ -210,6 +212,7 @@ namespace Game.Engine.Core
         public int FiringSequenceDelay { get; set; }
 
         public string SpawnLocationMode { get; set; }
+        public Vector2 SpawnLocation { get; set; }
 
         public int LifecycleDuration {get;set;}
 

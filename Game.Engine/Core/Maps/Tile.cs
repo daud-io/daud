@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Game.Engine.Core.Weapons;
+using System;
 using System.Numerics;
 
 namespace Game.Engine.Core.Maps
@@ -7,6 +8,7 @@ namespace Game.Engine.Core.Maps
     {
         public bool IsDeadly { get; set; } = false;
         public bool IsObstacle { get; set; } = false;
+        public bool IsBouncy { get; set; } = false;
         public float Drag { get; set; } = 0;
 
 
@@ -26,7 +28,8 @@ namespace Game.Engine.Core.Maps
                     && ship.Fleet.BoostUntil <= World.Time - 1000
                     )
                     ship.Fleet.AbandonShip(ship);
-                else if (IsObstacle)
+
+                if (IsBouncy)
                     Collide(this, projectedBody);
 
                 if (Drag != 0)
@@ -98,8 +101,10 @@ namespace Game.Engine.Core.Maps
             if (!IsDeadly && !IsObstacle && Drag == 0)
                 return false;
             else
-                return (projectedBody is Ship)
+            {
+                return (projectedBody is Ship || projectedBody is ShipWeaponBullet)
                     && Vector2.Distance(projectedBody.Position, Position) < projectedBody.Size + Size;
+            }
         }
 
     }
