@@ -208,7 +208,7 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 
 let minimapChanged = false;
 window.addEventListener("keydown", function(e) {
-    if (e.keyCode == 77 && !minimapChanged && document.getElementsByTagName("body")[0].classList.contains("alive") || document.getElementsByTagName("body")[0].classList.contains("spectating")) {
+    if (e.keyCode == 77 && !minimapChanged && document.body.classList.contains("alive") || document.body.classList.contains("spectating")) {
         Settings.displayMinimap = !Settings.displayMinimap;
         minimapChanged = true;
     }
