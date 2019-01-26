@@ -441,6 +441,7 @@ app.ticker.add(() => {
     container.position.y = Math.floor(container.position.y);
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
+    background.updateFocus(position.X, position.Y);
     background.draw(cache, interpolator, gameTime);
     minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
