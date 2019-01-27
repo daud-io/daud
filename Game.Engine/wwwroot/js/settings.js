@@ -19,6 +19,7 @@ export const Settings = {
     logLength: 4,
     displayMinimap: true,
     bigKillMessage: true,
+	displayPingInLog: false,
     showOwnName: true,
     nameSize: 48,
     background: "on"
@@ -49,6 +50,7 @@ function save() {
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").checked;
     Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
+	Settings.displayPingInLog = document.getElementById("settingsDisplayPingInLog").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
     Settings.nameSize = Number(document.getElementById("settingsNameSize").value);
     Settings.background = document.getElementById("settingsBackground").value;
@@ -87,6 +89,7 @@ function load() {
     document.getElementById("settingsLog").value = Settings.logLength;
     document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
     document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
+	document.getElementById("settingsDisplayPingInLog").checked = Settings.displayPingInLog;
     document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
     document.getElementById("settingsNameSize").value = Settings.nameSize;
     document.getElementById("settingsBackground").value = Settings.background;

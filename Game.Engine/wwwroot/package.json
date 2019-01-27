@@ -12,7 +12,6 @@
   "author": "modderme123",
   "license": "ISC",
   "dependencies": {
-    "autoprefixer": "^9.4.6",
     "babel-polyfill": "^6.26.0",
     "dat.gui": "^0.7.5",
     "img": "^3.0.3",
@@ -25,5 +24,8 @@
     "pixi.js": "^4.8.5",
     "prettier": "^1.16.1",
     "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.4.6"
   }
 }
