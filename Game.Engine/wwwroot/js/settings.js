@@ -106,6 +106,16 @@ async function theme(v) {
             const info = JSON.parse(text);
 
             const version = info.version || 1;
+            var changesBk = false;
+            if (info.spriteModeMap) {
+                changesBk = changesBk || info.spriteModeMap.hasOwnProperty("bg");
+            }
+            if (info.textureMap) {
+                changesBk = changesBk || info.textureMap.hasOwnProperty("bg");
+            }
+            if (changesBk) {
+                spriteModeMap["bg"].additionalLayers = [];
+            }
 
             if (info.spriteModeMap) {
                 for (let key in info.spriteModeMap) {
@@ -207,13 +217,13 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 let minimapChanged = false;
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     if (e.keyCode == 77 && !minimapChanged) {
         Settings.displayMinimap = !Settings.displayMinimap;
         minimapChanged = true;
     }
 });
 
-window.addEventListener("keyup", function(e) {
+window.addEventListener("keyup", function (e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
