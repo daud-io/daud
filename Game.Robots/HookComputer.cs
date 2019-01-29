@@ -31,6 +31,9 @@
 
         private T Get<T>(string key, T defaultValue = default(T))
         {
+            if (Hook == null)
+                return defaultValue;
+
             if (Hook.ContainsKey(key))
                 return (T)System.Convert.ChangeType(Hook[key], typeof(T));
             else

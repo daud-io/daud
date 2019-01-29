@@ -73,7 +73,7 @@
             await this.OnNewLeaderboardAsync();
         }
 
-        private async Task OnView()
+        protected virtual async Task OnView()
         {
             this.HookComputer.Hook = Connection.Hook;
 
@@ -156,12 +156,15 @@
             await DeadAsync();
 
             if (AutoSpawn)
-            {
                 if (DeathTime + RESPAWN_FALLOFF < GameTime)
                 {
-                    await Connection.SpawnAsync(Name, Sprite, Color);
+                    await SpawnAsync();
                 }
-            }
+        }
+
+        protected async Task SpawnAsync()
+        {
+            await Connection.SpawnAsync(Name, Sprite, Color);
         }
 
         public void ShootAt(Vector2 target)

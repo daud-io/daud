@@ -79,7 +79,7 @@
                 var cyan = EvaluateTeam(SensorTeam.Teams.Cyan);
                 var red = EvaluateTeam(SensorTeam.Teams.Red);
 
-                if (this.Robot.SensorTeam.Team == SensorTeam.Teams.Cyan)
+                if (this.Robot.SensorTeam.MyTeam == SensorTeam.Teams.Cyan)
                 {
                     OurTeam = cyan;
                     TheirTeam = red;
