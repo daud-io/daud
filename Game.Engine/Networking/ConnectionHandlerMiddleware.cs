@@ -23,8 +23,6 @@
             {
                 if (context.WebSockets.IsWebSocketRequest)
                 {
-                    Console.WriteLine(JsonConvert.SerializeObject(context.Request.Headers));
-
                     using (var scope = ServiceProvider.CreateScope())
                     using (var connection = scope.ServiceProvider.GetService<Connection>())
                     using (var webSocket = await context.WebSockets.AcceptWebSocketAsync())

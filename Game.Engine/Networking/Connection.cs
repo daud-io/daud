@@ -449,6 +449,8 @@ namespace Game.Engine.Networking
 
                     Sprites shipSprite = Sprites.ship_red;
 
+                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score}");
+
                     switch (spawn.Ship)
                     {
                         case "ship0":
@@ -545,6 +547,8 @@ namespace Game.Engine.Networking
             Socket = socket;
 
             var worldRequest = httpContext.Request.Query["world"].FirstOrDefault();
+
+            this.Logger.LogInformation($"New Connection: {worldRequest}");
 
             world = Worlds.Find(worldRequest);
 
