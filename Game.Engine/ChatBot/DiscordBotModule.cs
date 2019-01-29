@@ -18,7 +18,7 @@ namespace Game.Engine.ChatBot
         [Command("ping")]
         [Alias("pong", "hello")]
         public Task PingAsync()
-            => ReplyAsync("pong!");
+            => ReplyAsync("stop it!");
 
         // Get info on a user, or the user who invoked the command if one is not specified
         [Command("userinfo")]
