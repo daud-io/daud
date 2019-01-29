@@ -64,6 +64,8 @@
                         Size = tile.Size,
                         IsDeadly = (tile.Type == "deadly"),
                         IsObstacle = (tile.Type == "obstacle"),
+                        IsBouncy = (tile.Type == "bouncy"),
+                        IsTurret = (tile.Type == "turret"),
                         Drag = tile.Drag
                     });
 

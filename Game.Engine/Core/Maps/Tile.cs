@@ -1,5 +1,7 @@
 ﻿using Game.Engine.Core.Weapons;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 
 namespace Game.Engine.Core.Maps
@@ -10,13 +12,33 @@ namespace Game.Engine.Core.Maps
         public bool IsObstacle { get; set; } = false;
         public bool IsBouncy { get; set; } = false;
         public float Drag { get; set; } = 0;
+        public bool IsTurret { get; set; } = false;
+        private long ShotCooldown = 0;
 
+        private List<ShipWeaponBullet> NewBullets = new List<ShipWeaponBullet>();
 
         public Tile()
         {
             MaximumCleanTime = 100000;
             IsStatic = true;
         }
+
+        public bool IsCollision(Body projectedBody)
+        {
+            if (!IsDeadly && !IsObstacle && Drag == 0)
+                return false;
+            else
+            {
+                if ((IsObstacle && projectedBody is ShipWeaponBullet)
+                    || ((IsDeadly || Drag != 0) && projectedBody is Ship))
+                {
+                    return Vector2.Distance(projectedBody.Position, Position) < projectedBody.Size + Size;
+                }
+                else
+                    return false;
+            }
+        }
+
 
         public void CollisionExecute(Body projectedBody)
         {
@@ -40,10 +62,37 @@ namespace Game.Engine.Core.Maps
 
         public override void Think()
         {
-
             //base.Think();
+
+            if (IsTurret && ShotCooldown < World.Time)
+            {
+                var target = World.BodiesNear(this.Position, 2500)
+                    .OfType<Ship>()
+                    .Where(s => s.Sprite != API.Common.Sprites.fish)
+                    .FirstOrDefault();
+
+                if (target != null)
+                {
+                    var bullet = new ShipWeaponBullet();
+                    var toTarget = target.Position - Position;
+                    bullet.FireFrom(this, MathF.Atan2(toTarget.Y, toTarget.X));
+
+                    NewBullets.Add(bullet);
+
+                    ShotCooldown = World.Time + 300;
+                }
+            }
         }
 
+        public override void CreateDestroy()
+        {
+            base.CreateDestroy();
+
+            foreach (var bullet in NewBullets)
+                bullet.Init(World);
+
+            NewBullets.Clear();
+        }
 
         public void Collide(Body bthis, Body ball)
         {
@@ -93,18 +142,6 @@ namespace Game.Engine.Core.Maps
             // change in momentum
             //bthis.Momentum = bthis.Momentum + (impulse * im1);
             ball.Momentum = ball.Momentum - (impulse * im2);
-        }
-
-
-        public bool IsCollision(Body projectedBody)
-        {
-            if (!IsDeadly && !IsObstacle && Drag == 0)
-                return false;
-            else
-            {
-                return (projectedBody is Ship || projectedBody is ShipWeaponBullet)
-                    && Vector2.Distance(projectedBody.Position, Position) < projectedBody.Size + Size;
-            }
         }
 
     }

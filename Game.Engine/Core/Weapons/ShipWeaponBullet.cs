@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core.Weapons
 {
+    using Game.Engine.Core.Maps;
     using System;
     using System.Linq;
     using System.Numerics;
@@ -53,6 +54,20 @@
             this.ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB;
             this.TimeBirth = World.Time;
             this.Group = group;
+        }
+
+        public virtual void FireFrom(Tile tile, float angle)
+        {
+            World = tile.World;
+
+            this.TimeDeath = World.Time + (long)(World.Hook.BulletLife);
+            this.Position = tile.Position;
+            this.Angle = angle;
+            this.Sprite = API.Common.Sprites.bullet;
+            this.Size = 20;
+            this.Color = "green";
+            this.ThrustAmount = 1 * World.Hook.ShotThrustM + World.Hook.ShotThrustB;
+            this.TimeBirth = World.Time;
         }
 
         public bool Active => this.Exists;
