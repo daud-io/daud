@@ -6,6 +6,7 @@ const worlds = document.getElementById("worlds");
 const worldList = document.getElementById("worldList");
 
 let allWorlds = false;
+let lastKeys = false;
 
 function selectRow(selectedWorld) {
     for (const world in allWorlds) {
@@ -16,7 +17,17 @@ function selectRow(selectedWorld) {
 }
 const imgs = require(`../img/worlds/*.png`);
 function buildList(response) {
-    if (allWorlds != false) return updateList(response);
+
+    if (allWorlds != false) {
+        let keys = "";
+        response.forEach(w => keys += ":" + (w.world));
+
+        if (lastKeys == keys)
+            return updateList(response);
+
+        else
+            lastKeys = keys;
+    }
 
     allWorlds = {};
 
@@ -78,7 +89,7 @@ function refreshList(autoJoinWorld) {
     const autoJoin = firstLoad || autoJoinWorld;
     firstLoad = false;
 
-    fetch("/api/v1/server/worlds", {
+    fetch("/api/v1/world/all", {
         method: "GET",
         headers: {
             "Content-Type": "application/json; charset=utf-8"

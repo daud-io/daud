@@ -2,8 +2,8 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context local world parse beach orthogonal-outside.tmx",
-      "workingDirectory": "C:\\Users\\andy\\Downloads\\tiled-windows-64bit-snapshot\\examples"
+      "commandLineArgs": "--context daudio player robots --type-name Game.Robots.CTFBot,Game.Robots --name ctf-test --world ctf --replicas 2 --color cyan --sprite ship_cyan",
+      "workingDirectory": "c:\\code\\mods\\maps"
     }
   }
 }
