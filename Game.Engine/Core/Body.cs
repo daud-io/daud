@@ -179,7 +179,7 @@
 
         public void Project(uint time)
         {
-            if (Momentum == Vector2.Zero && AngularVelocity == 0)
+            if (IsStatic)
             {
                 if (!ProjectedOnce)
                 {
