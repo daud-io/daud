@@ -1,8 +1,8 @@
-﻿using Game.API.Common;
-using System.Numerics;
-
-namespace Game.Engine.Core
+﻿namespace Game.Engine.Core
 {
+    using Game.API.Common;
+    using System.Numerics;
+
     public class Hook
     {
         public static Hook Default
