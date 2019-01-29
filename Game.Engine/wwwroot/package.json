@@ -12,7 +12,7 @@
   "author": "modderme123",
   "license": "ISC",
   "dependencies": {
-    "autoprefixer": "^9.4.6",
+    "autoprefixer": "^9.4.7",
     "babel-polyfill": "^6.26.0",
     "dat.gui": "^0.7.5",
     "img": "^3.0.3",
