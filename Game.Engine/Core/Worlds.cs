@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -25,18 +26,45 @@
         static Worlds()
         {
             Default = WorldDefault();
-            AllWorlds.Add("default", Default);
+            AddWorld("default", Default);
 
-            AllWorlds.Add("other", WorldOther());
-            AllWorlds.Add("duel", WorldDuel());
-            AllWorlds.Add("team", WorldTeam());
-            AllWorlds.Add("ctf", WorldCTF());
-            AllWorlds.Add("sharks", WorldSharks());
-            AllWorlds.Add("sumo", WorldSumo());
-            AllWorlds.Add("boss", WorldBoss());
-            AllWorlds.Add("wormhole", WorldWormhole());
-            AllWorlds.Add("beach", WorldBeach());
+            AddWorld("other", WorldOther());
+            AddWorld("duel", WorldDuel());
+            AddWorld("team", WorldTeam());
+            AddWorld("ctf", WorldCTF());
+            AddWorld("sharks", WorldSharks());
+            AddWorld("sumo", WorldSumo());
+            AddWorld("boss", WorldBoss());
+            AddWorld("wormhole", WorldWormhole());
+            AddWorld("beach", WorldBeach());
         }
+
+        public static void Destroy(World world)
+        {
+            try
+            {
+                if (AllWorlds.ContainsKey(world.WorldKey))
+                    AllWorlds.Remove(world.WorldKey);
+            }
+            catch (Exception) { }
+            try
+            {
+                ((IDisposable)world).Dispose();
+            }
+            catch (Exception) { }
+        }
+
+        public static void AddWorld(World world)
+        {
+            AllWorlds.Add(world.WorldKey, world);
+        }
+
+        public static void AddWorld(string worldKey, World world)
+        {
+            world.WorldKey = worldKey;
+            AllWorlds.Add(world.WorldKey, world);
+        }
+
 
         private static World WorldDefault()
         {
@@ -270,7 +298,6 @@
                 AllowedColors = AllColors
             };
         }
-
 
         public static World Find(string world = null)
         {

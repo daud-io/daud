@@ -1,6 +1,7 @@
 ﻿namespace Game.API.Client
 {
     using Game.API.Common.Models;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
@@ -13,6 +14,23 @@
         public WorldMethods(APIClient apiClient)
         {
             this.APIClient = apiClient;
+        }
+
+        public async Task<string> PostHookAsync(object hook, string worldName = null)
+        {
+            return await APIClient.APICallAsync<string>(
+                HttpMethod.Post, APIEndpoint.WorldHook, queryStringContent: new { worldName }, bodyContent: hook);
+        }
+
+        public async Task<string> PutWorldAsync(string worldKey, string worldName, object hook)
+        {
+            return await APIClient.APICallAsync<string>(
+                HttpMethod.Put, APIEndpoint.World, 
+                queryStringContent: new {
+                    worldKey,
+                    worldName,
+                    hookJson = JsonConvert.SerializeObject(hook)
+                });
         }
 
         public async Task<bool> SetMapTiles(string worldKey, IEnumerable<MapTileModel> tiles, CancellationToken cancellationToken = default(CancellationToken))
@@ -54,12 +72,6 @@
                 HttpMethod.Get, APIEndpoint.ServerPlayers,
                 queryStringContent: new { worldName }
             );
-        }
-
-        public async Task<string> HookAsync(object hook, string worldName = null)
-        {
-            return await APIClient.APICallAsync<string>(
-                HttpMethod.Post, APIEndpoint.ServerHook, queryStringContent: new { worldName }, bodyContent: hook);
         }
     }
 }

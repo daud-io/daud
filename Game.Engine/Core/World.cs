@@ -44,6 +44,7 @@
         public string[] AllowedColors {get;set;}
 
         public int AdvertisedPlayerCount {get;set;}
+        public string WorldKey { get; set; }
 
         public string Image { get; set; } = "default";
         public MapActor MapActor { get; private set; } = null;
@@ -350,8 +351,22 @@
         {
             if (!disposedValue)
                 if (disposing)
+                {
+
+                    foreach (var player in Player.GetWorldPlayers(this))
+                        try
+                        {
+                            player.Destroy();
+                        }
+                        catch (Exception) { }
+
                     foreach (var d in Disposables)
-                        d.Dispose();
+                        try
+                        {
+                            d.Dispose();
+                        }
+                        catch (Exception) { }
+                }
             disposedValue = true;
         }
         void IDisposable.Dispose()
