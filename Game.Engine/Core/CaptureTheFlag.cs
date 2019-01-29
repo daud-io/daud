@@ -224,7 +224,7 @@
                 GameEmptySince = 0;
         }
 
-        private class Team
+        public class Team
         {
             public string ColorName { get; set; }
             public Vector2 BaseLocation { get; set; }
@@ -238,7 +238,7 @@
             }
         }
 
-        private class Base : ActorBody, ICollide
+        public class Base : ActorBody, ICollide
         {
             private readonly Team Team;
             public Flag Flag { get; set; }
@@ -323,7 +323,7 @@
             }
         }
 
-        private class Flag : ActorBody, ICollide
+        public class Flag : ActorBody, ICollide
         {
             public readonly Team Team;
             private readonly Base Base;
@@ -429,10 +429,11 @@
             {
                 if (projectedBody is Ship ship)
                 {
-                    if (ship.Abandoned)
-                    {
+                    if (ship is Fish)
                         return false;
-                    }
+
+                    if (ship.Abandoned)
+                        return false;
 
                     return Vector2.Distance(projectedBody.Position, this.Position)
                             < (projectedBody.Size + this.Size);
