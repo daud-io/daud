@@ -22,14 +22,24 @@
                 HttpMethod.Post, APIEndpoint.WorldHook, queryStringContent: new { worldName }, bodyContent: hook);
         }
 
-        public async Task<string> PutWorldAsync(string worldKey, string worldName, object hook)
+        public async Task<string> PutWorldAsync(string worldKey, object hook)
         {
             return await APIClient.APICallAsync<string>(
-                HttpMethod.Put, APIEndpoint.World, 
-                queryStringContent: new {
+                HttpMethod.Put, APIEndpoint.World,
+                queryStringContent: new
+                {
                     worldKey,
-                    worldName,
                     hookJson = JsonConvert.SerializeObject(hook)
+                });
+        }
+
+        public async Task<string> DeleteWorldAsync(string worldKey)
+        {
+            return await APIClient.APICallAsync<string>(
+                HttpMethod.Delete, APIEndpoint.World,
+                queryStringContent: new
+                {
+                    worldKey
                 });
         }
 

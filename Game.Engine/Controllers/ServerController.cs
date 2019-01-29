@@ -89,19 +89,5 @@
                     Latency = p.Connection?.Latency ?? 0
                 });
         }
-
-        [AllowAnonymous, HttpGet, Route("worlds"),EnableCors("AllowAllOrigins")]
-        public IEnumerable<object> GetWorlds(string worldName = null)
-        {
-            return Worlds.AllWorlds.Select(w => new {
-                world = w.Key,
-                players = w.Value.AdvertisedPlayerCount,
-                name = w.Value.Name,
-                description = w.Value.Description,
-                allowedColors = w.Value.AllowedColors,
-                image = w.Value.Image,
-                instructions = w.Value.Instructions
-            });
-        }
     }
 }

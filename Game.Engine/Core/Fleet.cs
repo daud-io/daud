@@ -329,7 +329,7 @@
 
             if (MathF.Abs(FleetCenter.X) >  World.Hook.WorldSize &&
                 FleetCenter.X<0!=LastTouchedLeft &&
-                World.Name == "Sharks and Minnows" &&
+                World.Hook.Name == "Sharks and Minnows" &&
                 !Owner.IsInvulnerable &&
                 !Shark)
             {

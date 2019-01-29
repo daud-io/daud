@@ -10,19 +10,6 @@
 
         private static readonly World Default;
 
-        private static readonly string[] AllColors = new[] {
-            "ship_pink",
-            "ship_red",
-            "ship_orange",
-            "ship_yellow",
-            "ship_green",
-            "ship_cyan"
-        };
-        private static readonly string[] TeamColors = new[] {
-            "ship_red",
-            "ship_cyan"
-        };
-
         static Worlds()
         {
             Default = WorldDefault();
@@ -37,6 +24,14 @@
             AddWorld("boss", WorldBoss());
             AddWorld("wormhole", WorldWormhole());
             AddWorld("beach", WorldBeach());
+        }
+
+        public static void Destroy(string worldKey)
+        {
+            var world = Find(worldKey);
+
+            if (world != null && world.WorldKey == worldKey)
+                Destroy(world);
         }
 
         public static void Destroy(World world)
@@ -69,15 +64,11 @@
         private static World WorldDefault()
         {
             var hook = Hook.Default;
+            hook.Name = "FFA";
+            hook.Description = "FFA Arena";
+            hook.Instructions = "Mouse to aim, click to shoot. Press 's' to boost.";
 
-            return new World
-            {
-                Hook = hook,
-                Name = "FFA",
-                Description = "FFA Arena",
-                AllowedColors = AllColors,
-                Instructions = "Mouse to aim, click to shoot. Press 's' to boost."
-            };
+            return new World(hook);
         }
 
         private static World WorldOther()
@@ -87,13 +78,11 @@
             hook.BotRespawnDelay = 0;
             hook.PickupShields = 10;
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Planet Daud",
-                Description = "AAAAAHHH! Run!",
-                AllowedColors = AllColors.Append("ship0").ToArray()
-            };
+            hook.Name = "Planet Daud";
+            hook.Description = "AAAAAHHH! Run!";
+            hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
+
+            return new World(hook);
         }
 
         private static World WorldSnake()
@@ -108,13 +97,11 @@
             hook.FollowFirstShip = true;
             hook.FiringSequenceDelay = 250;
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Snake World",
-                Description = "Hisssssss...",
-                AllowedColors = AllColors.Append("ship0").ToArray()
-            };
+            hook.Name = "Snake World";
+            hook.Description = "Hisssssss...";
+            hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
+
+            return new World(hook);
         }
 
         private static World WorldSumo()
@@ -135,13 +122,11 @@
             hook.SumoMode = true;
             hook.SumoRingSize = 1000;
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Sumo World",
-                Description = "Bigger Better...",
-                AllowedColors = AllColors.Append("ship0").ToArray()
-            };
+
+            hook.Name = "Sumo World";
+            hook.Description = "Bigger Better...";
+
+            return new World(hook);
         }
 
         private static World WorldDuel()
@@ -158,13 +143,10 @@
             hook.PointsPerUniverseDeath = -1;
             hook.PointsMultiplierDeath = 1.0f;
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Dueling Room",
-                Description = "1 vs. 1",
-                AllowedColors = AllColors
-            };
+            hook.Name = "Dueling Room";
+            hook.Description = "1 vs. 1";
+
+            return new World(hook);
         }
 
         private static World WorldTeam()
@@ -174,13 +156,11 @@
             hook.Obstacles = 3;
             hook.TeamMode = true;
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Team",
-                Description = "Cyan vs. Red",
-                AllowedColors = TeamColors
-            };
+            hook.Name = "Team";
+            hook.Description = "Cyan vs. Red";
+            hook.AllowedColors = Hook.TeamColors;
+
+            return new World(hook);
         }
 
         private static World WorldCTF()
@@ -194,12 +174,9 @@
             hook.PointsPerUniverseDeath = -1;
             hook.PointsMultiplierDeath = 1.0f;
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Capture the Flag",
-                Description = "Cyan vs. Red - Capture the Flag. First to 5 wins!",
-                Instructions = @"<p>features two teams,cyan and red, 
+            hook.Name = "Capture the Flag";
+            hook.Description = "Cyan vs. Red - Capture the Flag. First to 5 wins!";
+            hook.Instructions = @"<p>features two teams,cyan and red, 
                     who each try to steal the other team's
                     flag and bring it back to their own 
                     base to 'capture'.</p>
@@ -208,10 +185,11 @@
                     the other team from running off with your flag.</p>
                     <p>If someone makes off with your flag, frag them and they'll drop your flag -- 
                     touch the flag and it will be returned
-                    to your base.</p>",
-                Image = "ctf",
-                AllowedColors = TeamColors
-            };
+                    to your base.</p>";
+
+            hook.AllowedColors = Hook.TeamColors;
+
+            return new World(hook);
         }
 
         private static World WorldSharks()
@@ -225,15 +203,17 @@
             hook.PointsMultiplierDeath = 1.0f;
             hook.WorldSize /= 2;
 
+            hook.Name = "Sharks and Minnows";
+            hook.Description = "Sharks and Minnows";
+            hook.Instructions = "how to score:<br><br>"
+                    + " - Sharks (red) hunt<br>"
+                    + " - Minnows (blue) run towards borders (left & right)";
+
+            hook.AllowedColors = Hook.TeamColors;
+
             return new World
             {
                 Hook = hook,
-                Name = "Sharks and Minnows",
-                Description = "Sharks and Minnows",
-                Instructions = "how to score:<br><br>"
-                    + " - Sharks (red) hunt<br>"
-                    + " - Minnows (blue) run towards borders (left & right)",
-                AllowedColors = TeamColors,
                 NewFleetGenerator = delegate (Player p, string Color)
                 {
                     return new Fleet
@@ -255,14 +235,11 @@
             hook.Obstacles = 0;
             hook.Wormholes = 1;
             hook.WormholesDestination = "duel";
+            hook.Name = "Wormhole test";
+            hook.Description = "Wormhole test";
+            hook.AllowedColors = Hook.TeamColors;
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Wormhole test",
-                Description = "Wormhole test",
-                AllowedColors = TeamColors
-            };
+            return new World(hook);
         }
 
         private static World WorldBoss()
@@ -273,14 +250,11 @@
             hook.BossModeSprites = new API.Common.Sprites[] { API.Common.Sprites.ship0 };
             hook.ShotCooldownTimeBotB = 200;
             hook.SpawnShipCount = 3;
+            hook.Name = "Boss Mode";
+            hook.Description = "So many Circles! Much wow!";
+            hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Boss Mode",
-                Description = "So many Circles! Much wow!",
-                AllowedColors = AllColors.Append("ship0").ToArray()
-            };
+            return new World(hook);
         }
 
         private static World WorldBeach()
@@ -289,14 +263,10 @@
             hook.BotBase = 0;
             hook.MapEnabled = true;
             hook.SpawnLocationMode = "Static";
+            hook.Name = "Beach World";
+            hook.Description = "Come on in, the water's fine";
 
-            return new World
-            {
-                Hook = hook,
-                Name = "Beach World",
-                Description = "Come on in, the water's fine",
-                AllowedColors = AllColors
-            };
+            return new World(hook);
         }
 
         public static World Find(string world = null)

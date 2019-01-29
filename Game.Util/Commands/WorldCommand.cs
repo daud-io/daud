@@ -12,25 +12,34 @@
     [Subcommand("shrink", typeof(Shrink))]
     [Subcommand("create", typeof(Create))]
     [Subcommand("parse", typeof(Parse))]
+    [Subcommand("delete", typeof(Delete))]
     class WorldCommand : CommandBase
     {
-        class Create: CommandBase
+        class Create : CommandBase
         {
             [Argument(0)]
             public string WorldKey { get; set; }
 
             [Argument(1)]
-            public string Name { get; set; }
-
-            [Argument(2)]
             public string HookJSON { get; set; } = null;
 
             protected async override Task ExecuteAsync()
             {
                 var hook = JsonConvert.DeserializeObject(HookJSON);
-                hook = await API.World.PutWorldAsync(WorldKey, Name, hook);
+                hook = await API.World.PutWorldAsync(WorldKey, hook);
 
                 Console.WriteLine(hook);
+            }
+        }
+
+        class Delete : CommandBase
+        {
+            [Argument(0)]
+            public string WorldKey { get; set; }
+
+            protected async override Task ExecuteAsync()
+            {
+                await API.World.DeleteWorldAsync(WorldKey);
             }
         }
 

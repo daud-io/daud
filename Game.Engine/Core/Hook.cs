@@ -108,7 +108,10 @@
                     FleetWeaponStackDepth = 1,
 
                     LifecycleDuration = 10000,
-                    MapEnabled = false
+                    MapEnabled = false,
+
+                    AllowedColors = AllColors,
+                    Name = "FFA"
                 };
             }
         }
@@ -219,6 +222,30 @@
         public int PlayerCountGracePeriodMS { get; set; }
         public int FleetWeaponStackDepth { get; set; }
         public int SpawnInvulnerabilityTime { get; set; }
+
+
+        public static readonly string[] AllColors = new[] {
+            "ship_pink",
+            "ship_red",
+            "ship_orange",
+            "ship_yellow",
+            "ship_green",
+            "ship_cyan"
+        };
+        public static readonly string[] TeamColors = new[] {
+            "ship_red",
+            "ship_cyan"
+        };
+
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Instructions { get; set; }
+
+        public bool Hidden { get; set; }
+        public string[] AllowedColors { get; set; }
+
+        public int Weight { get; set; }
+
 
         public Hook Clone()
         {
