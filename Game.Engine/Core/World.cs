@@ -37,21 +37,17 @@
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
 
-        public string Name {get;set;}
-        public string Description {get;set;}
-        public string Instructions { get; set; }
-
-        public string[] AllowedColors {get;set;}
 
         public int AdvertisedPlayerCount {get;set;}
+        public string WorldKey { get; set; }
 
         public string Image { get; set; } = "default";
         public MapActor MapActor { get; private set; } = null;
 
-        public World()
+        public World(Hook hook = null)
         {
             OffsetTicks = DateTime.Now.Ticks;
-            Hook = Hook.Default;
+            Hook = hook ?? Hook.Default;
 
             SystemActor<Advertisement>();
             SystemActor<RobotTender>();
@@ -350,8 +346,22 @@
         {
             if (!disposedValue)
                 if (disposing)
+                {
+
+                    foreach (var player in Player.GetWorldPlayers(this))
+                        try
+                        {
+                            player.Destroy();
+                        }
+                        catch (Exception) { }
+
                     foreach (var d in Disposables)
-                        d.Dispose();
+                        try
+                        {
+                            d.Dispose();
+                        }
+                        catch (Exception) { }
+                }
             disposedValue = true;
         }
         void IDisposable.Dispose()

@@ -2,6 +2,7 @@
 {
     using Game.API.Common.Models;
     using McMaster.Extensions.CommandLineUtils;
+    using Newtonsoft.Json;
     using System;
     using System.Linq;
     using System.Numerics;
@@ -9,9 +10,57 @@
     using TiledSharp;
 
     [Subcommand("shrink", typeof(Shrink))]
+    [Subcommand("create", typeof(Create))]
     [Subcommand("parse", typeof(Parse))]
+    [Subcommand("delete", typeof(Delete))]
     class WorldCommand : CommandBase
     {
+        class Create : CommandBase
+        {
+            [Argument(0)]
+            public string WorldKey { get; set; }
+
+            [Argument(1)]
+            public string HookJSON { get; set; } = null;
+
+            protected async override Task ExecuteAsync()
+            {
+                var hook = JsonConvert.DeserializeObject(HookJSON);
+                hook = await API.World.PutWorldAsync(WorldKey, hook);
+
+                Console.WriteLine(hook);
+            }
+        }
+
+        class Delete : CommandBase
+        {
+            [Argument(0)]
+            public string WorldKey { get; set; }
+
+            protected async override Task ExecuteAsync()
+            {
+                await API.World.DeleteWorldAsync(WorldKey);
+            }
+        }
+
+        class Hook : CommandBase
+        {
+            [Option]
+            public string World { get; set; } = null;
+
+            [Argument(0)]
+            public string HookJSON { get; set; } = null;
+
+            protected async override Task ExecuteAsync()
+            {
+                var hook = JsonConvert.DeserializeObject(HookJSON);
+                hook = await API.World.PostHookAsync(hook, World);
+
+                Console.WriteLine(hook);
+            }
+        }
+
+
         class Parse : CommandBase
         {
             [Argument(0)]
@@ -39,18 +88,21 @@
                 var map = new TmxMap(File);
                 var groundLayer = map.Layers.FirstOrDefault(l => l.Name == "Ground");
 
-                var spawnLocation = map.ObjectGroups.SelectMany(g => g.Objects).FirstOrDefault(o => o.Type == "SpawnPoint");
-                if (spawnLocation != null)
-                {
-                    await API.World.HookAsync(new
-                    {
-                        SpawnLocation = spawnLocation
-                    });
-                }
+                var spawnLocation =
+                    map.ObjectGroups.SelectMany(g => g.Objects)
+                        .Where(o => o.Type == "SpawnPoint")
+                        .Select(p => new Vector2((float)p.X, (float)p.Y))
+                        .FirstOrDefault();
 
                 var mapOffset = new Vector2(-(map.Width * Size) / 2, -(map.Height * Size)/2);
 
-                
+
+                if (spawnLocation != null)
+                    await API.World.PostHookAsync(new
+                    {
+                        SpawnLocation = spawnLocation/map.TileWidth * Size + mapOffset
+                    }, WorldKey);
+
                 if (groundLayer != null)
                 {
                     var tileSet = map.Tilesets[0];
@@ -77,12 +129,15 @@
                         {
 
                             if (tile.TerrainEdges.All(e => e?.Name == "Water"))
-                                mapTileModel.Type = "deadly";
+                            {
+                                mapTileModel.Type = "turret";
+                            }
 
-                            if (tile.TerrainEdges.Any(e => e?.Name == "Dirt"))
+                            if (tile.TerrainEdges.All(e => e?.Name == "Obstacle"))
                                 mapTileModel.Type = "obstacle";
-                            if (tile.TerrainEdges.Any(e => e?.Name == "Dark Dirt"))
-                                mapTileModel.Type = "obstacle";
+
+                            if (tile.TerrainEdges.Any(e => e?.Name == "Bouncy"))
+                                mapTileModel.Type = "bouncy";
 
                             if (tile.Properties.ContainsKey("drag"))
                                 mapTileModel.Drag = float.Parse(tile.Properties["drag"]);
