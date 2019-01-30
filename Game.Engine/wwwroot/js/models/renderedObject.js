@@ -1,4 +1,5 @@
 ﻿import images from "../../img/*.png";
+import { Settings } from "../settings";
 import { textureCache } from "./textureCache";
 import { textureMap } from "./textureMap";
 import { spriteModeMap } from "./spriteModeMap";
@@ -45,6 +46,8 @@ export class RenderedObject {
             const img = RenderedObject.getImageFromTextureDefinition(textureDefinition);
 
             const baseTexture = new PIXI.Texture.fromLoader(img);
+
+            baseTexture.baseTexture.mipmap = Settings.mipmapping;
 
             if (textureDefinition.animated) {
                 const tileSize = textureDefinition.tileSize || 32;
