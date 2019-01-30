@@ -22,7 +22,7 @@
                 FiredFrom = fleet,
                 GroupType = GroupTypes.VolleyBullet,
                 OwnerID = fleet.ID,
-                ZIndex = 50,
+                ZIndex = 150,
                 Color = fleet.Color
             };
 
