@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.API.Common", "Game.API
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Robots", "Game.Robots\Game.Robots.csproj", "{D0600DFB-F0A1-456E-A386-F916210B66EE}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Registry", "Game.Registry\Game.Registry.csproj", "{BD231600-BDBE-48AE-89A8-366E22DF86D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{D0600DFB-F0A1-456E-A386-F916210B66EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0600DFB-F0A1-456E-A386-F916210B66EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0600DFB-F0A1-456E-A386-F916210B66EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD231600-BDBE-48AE-89A8-366E22DF86D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD231600-BDBE-48AE-89A8-366E22DF86D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD231600-BDBE-48AE-89A8-366E22DF86D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD231600-BDBE-48AE-89A8-366E22DF86D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
