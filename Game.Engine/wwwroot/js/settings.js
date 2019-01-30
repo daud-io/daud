@@ -21,7 +21,8 @@ export const Settings = {
     bigKillMessage: true,
     showOwnName: true,
     nameSize: 48,
-    background: "on"
+    background: "on",
+    mipmapping: true
 };
 
 function save() {
@@ -38,6 +39,11 @@ function save() {
         theme(Settings.themeCustom);
     }
 
+    if (Settings.mipmapping != document.getElementById("settingsMipMapping").checked) {
+        Settings.mipmapping = document.getElementById("settingsMipMapping").checked;
+        reload = true;
+    }
+
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
     Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
@@ -48,6 +54,7 @@ function save() {
     Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").checked;
+    Settings.mipmapping = document.getElementById("settingsMipMapping").checked;
     Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
     Settings.nameSize = Number(document.getElementById("settingsNameSize").value);
@@ -80,6 +87,7 @@ function load() {
     document.getElementById("settingsFont").value = Settings.font;
     document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
     document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
+    document.getElementById("settingsMipMapping").checked = Settings.mipmapping;
     document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
     document.getElementById("settingsBandwidth").value = Settings.bandwidth;
     document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
