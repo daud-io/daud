@@ -85,6 +85,8 @@ LobbyCallbacks.joinWorld = function(worldKey) {
 
 function refreshList(autoJoinWorld) {
     if (!showing && !firstLoad && !autoJoinWorld) return;
+    console.log("firstLoad = ", firstLoad);
+    console.log("autoJoinWorld = ", autoJoinWorld);
 
     const autoJoin = firstLoad || autoJoinWorld;
     firstLoad = false;

@@ -39,6 +39,7 @@ export class Connection {
         }, 1000);
     }
     disconnect() {
+        console.log("socket = ", this.socket);
         if (this.socket) this.socket.close();
     }
     connect(world) {

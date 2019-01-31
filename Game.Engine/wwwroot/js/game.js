@@ -308,6 +308,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
         spawnOnView = true;
     }
 
+    console.log("world = ", world);
     currentWorld = world;
     connection.disconnect();
     cache.empty();
