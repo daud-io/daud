@@ -18,6 +18,7 @@
         public static APIEndpoint World { get => new APIEndpoint("/api/v1/world"); }
         public static APIEndpoint WorldHook { get => new APIEndpoint("/api/v1/world/hook"); }
         public static APIEndpoint WorldMap { get => new APIEndpoint("/api/v1/world/map"); }
+        public static APIEndpoint Registry { get => new APIEndpoint("/api/v1/registry"); }
 
         public static APIEndpoint PlayerConnect(string worldName = null) {
             return new APIEndpoint($"/api/v1/connect?world={worldName}");
