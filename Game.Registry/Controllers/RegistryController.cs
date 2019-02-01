@@ -7,6 +7,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
+    using System.Threading.Tasks;
 
     public class RegistryController : APIControllerBase
     {
@@ -52,6 +54,20 @@
                 return Reports.Values
                     .ToList();
             }
+        }
+
+        [
+            AllowAnonymous,
+            HttpGet,
+            Route("suggestion")
+        ]
+        public async Task<string> SuggestDomainsAsync()
+        {
+            var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.ToString();
+
+            var entry = await Dns.GetHostEntryAsync(ipAddress);
+
+            return entry?.HostName ?? ipAddress;
         }
 
         [

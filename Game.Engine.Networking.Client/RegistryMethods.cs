@@ -2,6 +2,7 @@
 {
     using Game.API.Common.Models;
     using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class RegistryMethods
@@ -15,6 +16,11 @@
         public async Task<bool> ListAsync()
         {
             return await RegistryClient.APICallAsync<bool>(HttpMethod.Get, APIEndpoint.Registry);
+        }
+
+        public async Task<string> SuggestAsync(CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return await RegistryClient.APICallAsync<string>(HttpMethod.Get, APIEndpoint.RegistrySuggestion, cancellationToken: cancellationToken);
         }
 
         public async Task<bool> PostReportAsync(RegistryReport registryReport)

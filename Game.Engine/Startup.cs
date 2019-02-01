@@ -12,6 +12,7 @@
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;
@@ -113,6 +114,7 @@
                     }
                 }
             });
+            app.UseAcmeChallengeHandler();
 
             app.UseWebSockets(new WebSocketOptions
             {
@@ -124,6 +126,7 @@
 
             if (config.RegistryEnabled)
             {
+                Console.WriteLine("Registry reporting is enabled");
                 provider.GetService<RegistryHandling>();
             }
         }
