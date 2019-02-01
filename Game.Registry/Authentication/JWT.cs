@@ -2,7 +2,6 @@
 {
     using Game.API.Common.Models;
     using Game.API.Common.Security;
-    using Game.Engine;
     using Microsoft.IdentityModel.Tokens;
     using System;
     using System.Collections.Generic;

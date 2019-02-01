@@ -1,6 +1,5 @@
 ﻿namespace Game.Registry.API.Authentication
 {
-    using Game.Engine;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.IdentityModel.Tokens;

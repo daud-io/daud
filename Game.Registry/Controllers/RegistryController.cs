@@ -4,12 +4,17 @@
     using Game.API.Common.Security;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Newtonsoft.Json;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class RegistryController : APIControllerBase
     {
         private readonly GameConfiguration Config;
+
+        private static Dictionary<string, RegistryReport> Reports = new Dictionary<string, RegistryReport>();
+        private DateTime LastCleaning = DateTime.MinValue;
+        private const int MAX_AGE = 10000;
 
         public RegistryController(
             ISecurityContext securityContext,
@@ -23,9 +28,30 @@
             AllowAnonymous,
             HttpGet
         ]
-        public bool GetList()
+        public List<RegistryReport> GetList()
         {
-            return true;
+            lock (Reports)
+            {
+                if (DateTime.Now.Subtract(LastCleaning).TotalMilliseconds > 2000)
+                {
+                    LastCleaning = DateTime.Now;
+
+                    var stale = new List<string>();
+
+                    foreach (var key in Reports.Keys)
+                    {
+                        var report = Reports[key];
+                        if (DateTime.Now.Subtract(report.Received).TotalMilliseconds > MAX_AGE)
+                            stale.Add(key);
+                    }
+
+                    foreach (var key in stale)
+                        Reports.Remove(key);
+                }
+
+                return Reports.Values
+                    .ToList();
+            }
         }
 
         [
@@ -35,9 +61,22 @@
         ]
         public bool PostReportAsync([FromBody]RegistryReport registryReport)
         {
+            if (registryReport != null)
+            {
+                lock (Reports)
+                {
+                    registryReport.Received = DateTime.Now;
+                    var url = registryReport.URL;
+                    if (Reports.ContainsKey(url))
+                        Reports[url] = registryReport;
+                    else
+                        Reports.Add(url, registryReport);
 
-            Console.WriteLine(JsonConvert.SerializeObject(registryReport));
-            return true;
+                    return true;
+                }
+            }
+            else
+                return false;
         }
     }
 }
