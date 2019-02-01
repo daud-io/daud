@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Game.API.Models\Game.API.Common.csproj" />
+    <ProjectReference Include="..\Game.Engine.Networking.Client\Game.API.Client.csproj" />
     <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
   </ItemGroup>
 

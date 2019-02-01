@@ -1,8 +1,11 @@
 ﻿namespace Game.Registry.Controllers
 {
+    using Game.API.Common.Models;
     using Game.API.Common.Security;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Newtonsoft.Json;
+    using System;
 
     public class RegistryController : APIControllerBase
     {
@@ -22,6 +25,18 @@
         ]
         public bool GetList()
         {
+            return true;
+        }
+
+        [
+            AllowAnonymous,
+            HttpPost,
+            Route("report")
+        ]
+        public bool PostReportAsync([FromBody]RegistryReport registryReport)
+        {
+
+            Console.WriteLine(JsonConvert.SerializeObject(registryReport));
             return true;
         }
     }

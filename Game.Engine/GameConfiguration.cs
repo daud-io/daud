@@ -13,5 +13,12 @@
         public bool ForceHTTPS { get; set; } = false;
 
         public bool AllowCORS {get; set;} = true;
+
+        public bool RegistryEnabled { get; set; }
+        public string RegistryUri { get; set; }
+        public string RegistryUserKey { get; set; }
+        public string RegistryPassword { get; set; }
+
+        public string PublicURL { get; set; }
     }
 }

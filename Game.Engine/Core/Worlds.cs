@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common.Models;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -8,9 +9,9 @@
     {
         public static readonly Dictionary<string, World> AllWorlds = new Dictionary<string, World>();
 
-        private static readonly World Default;
+        private static World Default;
 
-        static Worlds()
+        public static void Initialize()
         {
             Default = WorldDefault();
             AddWorld("default", Default);
