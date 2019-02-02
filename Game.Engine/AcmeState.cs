@@ -13,6 +13,7 @@ namespace Game.Engine
 
         public const string PendingStatus = "pending";
         public const string ValidStatus = "valid";
+        public const string ReadyStatus = "ready";
         public const string InvalidStatus = "invalid";
 
         public const string Http01ChallengeType = "http-01";

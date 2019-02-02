@@ -3,6 +3,9 @@
     "EndPoints": {
       "Http": {
         "Url": "http://*:80"
+      },
+      "Https": {
+        "Url": "https://*:443"
       }
     }
   }

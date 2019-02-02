@@ -63,11 +63,12 @@
         ]
         public async Task<string> SuggestDomainsAsync()
         {
-            var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.ToString();
+            var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
 
             var entry = await Dns.GetHostEntryAsync(ipAddress);
 
-            return entry?.HostName ?? ipAddress;
+            return $"ip-{ipAddress.Replace(".", "-")}.sslip.io";
+            //return $"{ipAddress}.xip.io";
         }
 
         [

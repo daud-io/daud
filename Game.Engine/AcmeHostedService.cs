@@ -75,10 +75,10 @@ namespace Game.Engine
                 _state.Certificate = new X509Certificate2(certRaw);
 
             _logger.LogInformation("Preparing to launch background task...");
+            
             // We delay for 5 seconds just to give other parts of
             // the service (like request handling) to get in place
-            await Task.Delay(60 * 1000);
-            _timer = new Timer(DoTheWork, null, TimeSpan.Zero, TimeSpan.FromSeconds(300));
+            _timer = new Timer(DoTheWork, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(60));
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -116,7 +116,7 @@ namespace Game.Engine
             if (_state.Certificate != null)
             {
                 var now = DateTime.Now;
-                if (_state.Certificate.NotBefore > now && _state.Certificate.NotAfter < now)
+                if (_state.Certificate.NotAfter < now)
                 {
                     _logger.LogInformation("Existing certificate is Good!");
                     return;
@@ -290,6 +290,8 @@ namespace Game.Engine
             if (AcmeState.InvalidStatus == _state.Order?.Payload?.Status)
             {
                 _logger.LogError("Current Order is INVALID; aborting");
+                _logger.LogInformation(JsonConvert.SerializeObject(_state.Order, Formatting.Indented));
+
                 return false;
             }
 
@@ -368,7 +370,8 @@ namespace Game.Engine
             _state.Order = await acme.GetOrderDetailsAsync(_state.Order.OrderUrl, _state.Order);
             Save(_state.OrderFile, _state.Order);
 
-            if (AcmeState.PendingStatus == _state.Order.Payload.Status)
+            if (AcmeState.PendingStatus == _state.Order.Payload.Status
+                || AcmeState.ReadyStatus == _state.Order.Payload.Status)
             {
                 _logger.LogInformation("Generating CSR");
                 byte[] csr;
@@ -405,6 +408,7 @@ namespace Game.Engine
             if (AcmeState.ValidStatus != _state.Order.Payload.Status)
             {
                 _logger.LogWarning("Order is NOT VALID");
+                _logger.LogInformation(JsonConvert.SerializeObject(_state.Order, Formatting.Indented));
                 return false;
             }
 
@@ -449,13 +453,19 @@ namespace Game.Engine
                 _logger.LogInformation("Reading in Certificate chain (PEM)");
                 var cert = CertHelper.ImportCertificate(EncodingFormat.PEM, crtStream);
                 _logger.LogInformation("Writing out Certificate archive (PKCS12)");
-                CertHelper.ExportArchive(key, new[] { cert }, ArchiveFormat.PKCS12, pfxStream);
+                CertHelper.ExportArchive(key, new[] { cert }, ArchiveFormat.PKCS12, pfxStream, "AHHH!Dauds!");
                 pfxStream.Position = 0L;
                 Save(_state.CertificateFile, pfxStream);
             }
 
             _logger.LogInformation("Loading PKCS12 archive as active certificate");
-            _state.Certificate = new X509Certificate2(Load<byte[]>(_state.CertificateFile).value);
+            _logger.LogInformation(JsonConvert.SerializeObject(_state, Formatting.Indented));
+
+            (var exists, var value) = Load<byte[]>(_state.CertificateFile);
+
+            _logger.LogInformation($"Loading cert: exists: {exists} value[{value.Length}]");
+
+            _state.Certificate = new X509Certificate2(value, "AHHH!Dauds!");
 
             return true;
        }
@@ -463,7 +473,10 @@ namespace Game.Engine
         protected (bool exists, T value) Load<T>(string path, T def = default(T))
         {
             if (!File.Exists(path))
+            {
+                _logger.LogWarning($"Load: file {path} doesn't exist");
                 return (false, def);
+            }
 
             if (typeof(T) == typeof(Stream))
             {

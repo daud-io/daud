@@ -40,9 +40,9 @@
 
             var port = System.Environment.GetEnvironmentVariable("PORT");
             if (!string.IsNullOrEmpty(port)) 
-                builder = builder.UseUrls($"http://*:{port}");
+                builder.UseUrls($"http://*:{port}");
             else
-                builder = builder.UseConfiguration(new ConfigurationBuilder()
+                builder.UseConfiguration(new ConfigurationBuilder()
                     .AddJsonFile("hosting.json", optional: true)
                     .Build()
                 );

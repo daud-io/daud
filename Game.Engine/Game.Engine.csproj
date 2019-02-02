@@ -9,7 +9,6 @@
     <PackageReference Include="ACMESharpCore" Version="2.0.0.49-beta1" />
     <PackageReference Include="KdSoft.FlatBuffers" Version="1.9.3" />
     <PackageReference Include="Nito.AsyncEx" Version="5.0.0-pre-05" />
-    <PackageReference Include="PKISharp.SimplePKI" Version="1.0.0.49-beta1" />
     <PackageReference Include="RBush" Version="2.0.31" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
@@ -22,6 +21,7 @@
     <ProjectReference Include="..\Game.API.Models\Game.API.Common.csproj" />
     <ProjectReference Include="..\Game.Engine.Networking.Client\Game.API.Client.csproj" />
     <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
+    <ProjectReference Include="..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

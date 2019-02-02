@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Robots", "Game.Robots\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Registry", "Game.Registry\Game.Registry.csproj", "{BD231600-BDBE-48AE-89A8-366E22DF86D0}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PKISharp.SimplePKI", "PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{6EFC6827-A34A-4908-B413-A0286DDB83E3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{BD231600-BDBE-48AE-89A8-366E22DF86D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD231600-BDBE-48AE-89A8-366E22DF86D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD231600-BDBE-48AE-89A8-366E22DF86D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EFC6827-A34A-4908-B413-A0286DDB83E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EFC6827-A34A-4908-B413-A0286DDB83E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EFC6827-A34A-4908-B413-A0286DDB83E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EFC6827-A34A-4908-B413-A0286DDB83E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

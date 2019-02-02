@@ -65,7 +65,7 @@ namespace Game.Engine.Common.PKI
 
             if (_jwk == null)
             {
-                //_jwk = _keys.ExportJwk();
+                _jwk = _keys.ExportJwk();
 
             }
 
@@ -74,14 +74,12 @@ namespace Game.Engine.Common.PKI
 
         public byte[] Sign(byte[] raw)
         {
-            return raw;
-            //return _keys.Sign(raw);
+            return _keys.Sign(raw);
         }
 
         public bool Verify(byte[] raw, byte[] sig)
         {
-            return true;
-            //return _keys.Verify(raw, sig);
+            return _keys.Verify(raw, sig);
         }
     }
 }
