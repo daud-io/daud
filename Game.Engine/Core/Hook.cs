@@ -100,9 +100,12 @@
                     SpawnLocation = Vector2.Zero,
 
                     PointsPerKillShip = 1,
-                    PointsPerKillFleet = 55,
                     PointsPerUniverseDeath = -1,
                     PointsMultiplierDeath = 0.5f,
+					PointsPerKillFleet = 55, // to resolve some problems in Worlds.cs
+					PointsPerKillFleetMax = 55,
+					PointsPerKillFleetStep = 5,
+					PointsPerKillFleetPerStep = 50,
 
                     PlayerCountGracePeriodMS = 15000,
                     FleetWeaponStackDepth = 1,
@@ -133,9 +136,12 @@
         public float Drag { get; set; }
 
         public int PointsPerKillShip { get; set; }
-        public int PointsPerKillFleet { get; set; }
         public int PointsPerUniverseDeath { get; set; }
         public float PointsMultiplierDeath { get; set; }
+		public int PointsPerKillFleet { get; set; }
+		public int PointsPerKillFleetMax { get; set; }
+		public int PointsPerKillFleetStep { get; set; }
+		public decimal PointsPerKillFleetPerStep { get; set; }
 
         public int HealthHitCost { get; set; }
         public float HealthRegenerationPerFrame { get; set; }
