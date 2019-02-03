@@ -96,6 +96,7 @@
 				{
 					player.Fleet.ComboCounter += 1;
 					combo = $" - x{player.Fleet.ComboCounter} combo!";
+					player.Score += (player.Fleet.ComboCounter - 1) * World.Hook.ComboPointsStep;
 				}
 				else
 				{

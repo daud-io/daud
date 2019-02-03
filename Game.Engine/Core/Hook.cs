@@ -107,6 +107,7 @@
 					PointsPerKillFleetStep = 5,
 					PointsPerKillFleetPerStep = 50,
 					ComboDelay = 2000,
+					ComboPointsStep = 5,
 
                     PlayerCountGracePeriodMS = 15000,
                     FleetWeaponStackDepth = 1,
@@ -144,6 +145,7 @@
 		public int PointsPerKillFleetStep { get; set; }
 		public decimal PointsPerKillFleetPerStep { get; set; }
 		public int ComboDelay { get; set; }
+		public int ComboPointsStep { get; set; }
 
         public int HealthHitCost { get; set; }
         public float HealthRegenerationPerFrame { get; set; }
