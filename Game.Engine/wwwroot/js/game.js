@@ -401,7 +401,7 @@ function doPing() {
     hud.latency = connection.latency;
 
     if (frameCounter === 0) {
-        console.log("backgrounded");
+        //console.log("backgrounded");
         Game.isBackgrounded = true;
     } else Game.isBackgrounded = false;
     frameCounter = 0;
