@@ -5,11 +5,12 @@ namespace Game.Engine
     using ACMESharp.Protocol.Resources;
     using Game.Engine.Common.PKI;
     using System.Collections.Generic;
+    using System.IO;
     using System.Security.Cryptography.X509Certificates;
 
     public class AcmeState
     {
-        public static AcmeState Instance { get; } = new AcmeState();
+        public static AcmeState Instance { get; private set; } = new AcmeState();
 
         public const string PendingStatus = "pending";
         public const string ValidStatus = "valid";
@@ -55,5 +56,6 @@ namespace Game.Engine
 
         public IDictionary<string, Http01ChallengeValidationDetails> Http01Responses { get; set; }
                 = new Dictionary<string, Http01ChallengeValidationDetails>();
+
     }
 }

@@ -47,8 +47,19 @@ namespace Game.Engine
             if (!_gameConfiguration.RegistryEnabled || !_gameConfiguration.LetsEncryptEnabled)
                 return Task.FromResult(0);
 
-            _logger.LogInformation("ACME Hosted Service is staring");
+            _logger.LogInformation("Preparing to launch background task...");
             
+            // We delay for 5 seconds just to give other parts of
+            // the service (like request handling) to get in place
+            _timer = new Timer(DoTheWork, null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(300));
+
+            return Task.FromResult(0);
+        }
+
+        private void Reinitialize()
+        {
+            _logger.LogInformation("ACME Hosted Service is staring");
+
             _state.RootDir = Path.Combine(Directory.GetCurrentDirectory(),
                     _options.AcmeRootDir ?? ".");
             _state.ServiceDirectoryFile = Path.Combine(_state.RootDir, "00-ServiceDirectory.json");
@@ -75,13 +86,6 @@ namespace Game.Engine
             if (certRaw?.Length > 0)
                 _state.Certificate = new X509Certificate2(certRaw);
 
-            _logger.LogInformation("Preparing to launch background task...");
-            
-            // We delay for 5 seconds just to give other parts of
-            // the service (like request handling) to get in place
-            _timer = new Timer(DoTheWork, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(60));
-
-            return Task.FromResult(0);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -113,7 +117,7 @@ namespace Game.Engine
                 _logger.LogError("** failed to get suggestion from registry: " + e);
             }
 
-            _logger.LogInformation("** DOING WORKING *****************************************");
+            _logger.LogInformation("** Checking LetsEncrypt status *****************************************");
             _logger.LogInformation($"DNS Names:  {string.Join(",", _options.DnsNames)}");
 
             if (_state.Certificate != null)
@@ -133,10 +137,18 @@ namespace Game.Engine
                 _logger.LogWarning("Missing Certificate");
             }
 
+            try
+            {
+                Directory.Delete(_state.RootDir, true);
+            }
+            catch (Exception) { }
+            Reinitialize();
+
             var acmeUrl = new Uri(_options.CaUrl);
             using (var acme = new AcmeProtocolClient(acmeUrl))
             {
                 _state.ServiceDirectory = await acme.GetDirectoryAsync();
+                
                 Save(_state.ServiceDirectoryFile, _state.ServiceDirectory);
                 acme.Directory = _state.ServiceDirectory;
 
