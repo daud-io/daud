@@ -61,14 +61,18 @@
             HttpGet,
             Route("suggestion")
         ]
-        public async Task<string> SuggestDomainsAsync()
+        public Task<string> SuggestDomainsAsync()
         {
-            var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+            return RecommendHostName();
+        }
 
+        private async Task<string> RecommendHostName()
+        {
+            // I should probably support some kind of x-forwarded for headers etc.
+            var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             var entry = await Dns.GetHostEntryAsync(ipAddress);
 
             return $"ip-{ipAddress.Replace(".", "-")}.sslip.io";
-            //return $"{ipAddress}.xip.io";
         }
 
         [
@@ -76,14 +80,17 @@
             HttpPost,
             Route("report")
         ]
-        public bool PostReportAsync([FromBody]RegistryReport registryReport)
+        public async Task<bool> PostReportAsync([FromBody]RegistryReport registryReport)
         {
             if (registryReport != null)
             {
+                if (registryReport.URL == null)
+                    registryReport.URL = await RecommendHostName();
+
+                var url = registryReport.URL;
                 lock (Reports)
                 {
                     registryReport.Received = DateTime.Now;
-                    var url = registryReport.URL;
                     if (Reports.ContainsKey(url))
                         Reports[url] = registryReport;
                     else

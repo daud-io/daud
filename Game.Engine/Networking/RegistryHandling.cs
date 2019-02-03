@@ -35,9 +35,14 @@
             {
                 Processing = true;
 
+                var herokuAppName = Environment.GetEnvironmentVariable("HEROKU_APP_NAME");
+
+                if (herokuAppName != null)
+                    herokuAppName = $"{herokuAppName}.herokuapp.com";
+
                 var report = new RegistryReport
                 {
-                    URL = GameConfiguration.PublicURL,
+                    URL = GameConfiguration.PublicURL ?? herokuAppName,
                     Worlds = Worlds.AllWorlds.Select(w => new RegistryReport.World
                     {
                         AdvertisedPlayers = w.Value.AdvertisedPlayerCount,
