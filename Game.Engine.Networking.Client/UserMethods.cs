@@ -7,8 +7,8 @@
 
     public class UserMethods
     {
-        protected readonly APIClient APIClient;
-        public UserMethods(APIClient apiClient)
+        protected readonly APIClientBase APIClient;
+        public UserMethods(APIClientBase apiClient)
         {
             this.APIClient = apiClient;
         }
