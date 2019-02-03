@@ -32,13 +32,14 @@
         {
             var builder = WebHost.CreateDefaultBuilder(args);
 
-            bool isHeroku = false;
+            var config = new GameConfiguration();
+            Configuration<GameConfiguration>.Load("config", instance: config);
+
             var port = System.Environment.GetEnvironmentVariable("PORT");
 
             if (!string.IsNullOrEmpty(port))
             {
                 builder.UseUrls($"http://*:{port}");
-                isHeroku = true;
             }
             else
                 builder.UseConfiguration(new ConfigurationBuilder()
@@ -51,7 +52,7 @@
                 .UseStartup<Startup>();
 
 
-            if (!isHeroku)
+            if (config.LetsEncryptEnabled)
                 // Full Form with access to All Options:
                 builder.AddAcmeServices(new AcmeOptions
                 {
