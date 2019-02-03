@@ -29,6 +29,7 @@
         public bool ShootRequested { get; set; }
 
 		public long LastKillTime { get; set; } = 0;
+		public int ComboCounter { get; set; } = 0;
         public long ShootCooldownTimeStart { get; set; } = 0;
         public long ShootCooldownTime { get; set; } = 0;
         public float ShootCooldownStatus { get; set; } = 0;
@@ -93,7 +94,12 @@
 				var combo = "";
 				if (World.Time - player.Fleet.LastKillTime < 2000)
 				{
-					combo = "combo!";
+					player.Fleet.ComboCounter += 1;
+					combo = $" - x{player.Fleet.ComboCounter} combo!";
+				}
+				else
+				{
+					player.Fleet.ComboCounter = 1;
 				}
 
 				var PreviousKillTime = player.Fleet.LastKillTime;
@@ -103,7 +109,7 @@
 				plusScore = (plusScore < World.Hook.PointsPerKillFleetMax) ? plusScore : World.Hook.PointsPerKillFleetMax;
                 player.Score += plusScore;
 
-                player.SendMessage($"You Killed {this.Owner.Name}! - +{plusScore} - {PreviousKillTime}, {World.Time} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");
+                player.SendMessage($"You Killed {this.Owner.Name}! - +{plusScore}{combo} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");
                 if (this.Owner.Connection != null)
                     this.Owner.Connection.SpectatingFleet = player.Fleet;
                 this.Owner.SendMessage($"Killed by {player.Name} - ping (you: {this.Owner?.Connection?.Latency ?? 0} them:{player?.Connection?.Latency ?? 0})");
