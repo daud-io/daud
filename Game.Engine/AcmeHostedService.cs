@@ -1,3 +1,12 @@
+using ACMESharp.Authorizations;
+using ACMESharp.Protocol;
+using ACMESharp.Protocol.Resources;
+using Game.API.Client;
+using Game.Engine.Common.PKI;
+using Game.Engine.Crypto;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -5,18 +14,6 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-using ACMESharp.Authorizations;
-using ACMESharp.Crypto;
-using ACMESharp.Crypto.JOSE;
-using ACMESharp.Protocol;
-using ACMESharp.Protocol.Resources;
-using Game.API.Client;
-using Game.Engine.Common.PKI;
-using Game.Engine.Crypto;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace Game.Engine
 {
@@ -44,8 +41,12 @@ namespace Game.Engine
             _gameConfiguration = gameConfiguration;
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
+
+            if (!_gameConfiguration.RegistryEnabled || !_gameConfiguration.LetsEncryptEnabled)
+                return Task.FromResult(0);
+
             _logger.LogInformation("ACME Hosted Service is staring");
             
             _state.RootDir = Path.Combine(Directory.GetCurrentDirectory(),
@@ -79,6 +80,8 @@ namespace Game.Engine
             // We delay for 5 seconds just to give other parts of
             // the service (like request handling) to get in place
             _timer = new Timer(DoTheWork, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(60));
+
+            return Task.FromResult(0);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
@@ -122,7 +125,7 @@ namespace Game.Engine
                     return;
                 }
                 {
-                    _logger.LogWarning("Existing Certificate is Expired!");
+                    _logger.LogWarning($"Existing Certificate is Expired! {_state.Certificate.NotAfter} >= {now}");
                 }
             }
             else
