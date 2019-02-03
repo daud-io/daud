@@ -72,7 +72,7 @@
             var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             var entry = await Dns.GetHostEntryAsync(ipAddress);
 
-            return $"ip-{ipAddress.Replace(".", "-")}.sslip.io";
+            return $"daud-{ipAddress.Replace(".", "-")}.sslip.io";
         }
 
         [
