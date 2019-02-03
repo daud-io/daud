@@ -19,6 +19,8 @@
         public string RegistryUserKey { get; set; }
         public string RegistryPassword { get; set; }
 
+        public bool LetsEncryptEnabled { get; set; }
+
         public string PublicURL { get; set; }
     }
 }
