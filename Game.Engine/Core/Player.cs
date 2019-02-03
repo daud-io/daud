@@ -261,12 +261,14 @@
             }
         }
 
-        public void SendMessage(string message, string type = "message")
+        public void SendMessage(string message, string type = "message", int pointsDelta = 0, object extraData = null)
         {
             this.Messages.Add(new PlayerMessage
             {
                 Type = type,
-                Message = message
+                Message = message,
+                ExtraData = extraData,
+                PointsDelta = pointsDelta
             });
         }
 

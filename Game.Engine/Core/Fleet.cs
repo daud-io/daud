@@ -91,16 +91,38 @@
             {
                 player.Score += World.Hook.PointsPerKillFleet;
 
-                player.SendMessage($"You Killed {this.Owner.Name} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");
+                player.SendMessage($"You Killed {this.Owner.Name}", "kill",
+                    World.Hook.PointsPerKillFleet,
+                    new
+                    {
+                        ping = new
+                        {
+                            you = player?.Connection?.Latency ?? 0,
+                            them = this.Owner?.Connection?.Latency ?? 0
+                        }
+                    }
+                );
+
                 if (this.Owner.Connection != null)
                     this.Owner.Connection.SpectatingFleet = player.Fleet;
-                this.Owner.SendMessage($"Killed by {player.Name} - ping (you: {this.Owner?.Connection?.Latency ?? 0} them:{player?.Connection?.Latency ?? 0})");
+
+                this.Owner.SendMessage($"Killed by {player.Name}", "killed",
+                    (int)MathF.Ceiling(this.Owner.Score / 2),
+                    new
+                    {
+                        ping = new
+                        {
+                            you = this.Owner?.Connection?.Latency ?? 0,
+                            them = player?.Connection?.Latency ?? 0
+                        }
+                    }
+                );
             }
             else
             {
                 if (this.Owner != null)
                 {
-                    this.Owner.SendMessage($"Killed by the universe");
+                    this.Owner.SendMessage($"Killed by the universe", pointsDelta: World.Hook.PointsPerUniverseDeath);
                     this.Owner.Score += World.Hook.PointsPerUniverseDeath;
                 }
             }

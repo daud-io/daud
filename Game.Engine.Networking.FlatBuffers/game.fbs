@@ -126,6 +126,8 @@ table NetAnnouncement
 {
 	text:string;
     type:string;
+    pointsDelta:int;
+    extraData:string;
 }
 
 table NetQuantum

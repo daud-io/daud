@@ -218,9 +218,6 @@ connection.onView = newView => {
     for (let u = 0; u < announcementsLength; u++) {
         const announcement = newView.announcements(u);
         switch (announcement.type()) {
-            case "message":
-                log.addEntry(announcement.text());
-                break;
             case "join":
                 let worldKey = announcement.text();
 
@@ -229,6 +226,19 @@ connection.onView = newView => {
                     console.log("received join: " + worldKey);
                     LobbyCallbacks.joinWorld(worldKey);
                 }
+                break;
+            default:
+                let extra = announcement.extraData();
+
+                if (extra)
+                    extra = JSON.parse(extra);
+
+                log.addEntry({
+                    type: announcement.type(),
+                    text: announcement.text(),
+                    pointsDelta: announcement.pointsDelta(),
+                    extraData: extra,
+                });
                 break;
         }
     }

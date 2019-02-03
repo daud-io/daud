@@ -10,6 +10,7 @@ export class Log {
     }
 
     addEntry(entry) {
+
         this.data.push({ time: new Date(), entry });
         while (this.data.length > Settings.logLength) this.data.shift();
 
@@ -18,17 +19,22 @@ export class Log {
         let out = "";
 
         for (const slot of this.data) {
-            out += `<span><b style="color:gray">${slot.time.toLocaleTimeString()}</b> ${slot.entry}</span><br>`;
+            if (slot.entry.extraData)
+                console.log(slot.entry.extraData);
+            if (slot.entry.pointsDelta)
+                console.log(slot.entry.pointsDelta);
+
+            out += `<span><b style="color:gray">${slot.time.toLocaleTimeString()}</b> ${slot.entry.text}</span><br>`;
         }
 
         log.innerHTML = out;
 
         if (Settings.bigKillMessage) {
-            let lastData = this.data[this.data.length - 1]["entry"];
-            if (lastData.toLowerCase().indexOf("you killed") === 0) {
-                lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData + "<span style='color:#00ff00'>&nbsp;]</span>";
-            } else if (lastData.toLowerCase().indexOf("killed by") === 0) {
-                lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData + "<span style='color:#ff0000'>&nbsp;]</span>";
+            let lastData = this.data[this.data.length - 1].entry;
+            if (lastData.type == "kill") {
+                lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData.text + "<span style='color:#00ff00'>&nbsp;]</span>";
+            } else if (lastData.type == "killed") {
+                lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData.text + "<span style='color:#ff0000'>&nbsp;]</span>";
             } else {
                 return;
             }
