@@ -1,3 +1,4 @@
+rmdir /s /q _IGNORE
 pushd wwwroot
 rmdir /s /q dist
 call npm run build
