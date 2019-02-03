@@ -11,12 +11,6 @@
     public class Program
     {
         private static CancellationTokenSource cts = new CancellationTokenSource();
-        static readonly IEnumerable<string> DefaultDnsNames = new[] {
-            "27.109.229.35.bc.googleusercontent.com",
-            "test-alt1.example.com",
-            "test-alt21.example.com"
-        };
-
         static IEnumerable<string> DnsNames { get; set; }
 
         public static void Abort()
@@ -38,9 +32,14 @@
         {
             var builder = WebHost.CreateDefaultBuilder(args);
 
+            bool isHeroku = false;
             var port = System.Environment.GetEnvironmentVariable("PORT");
-            if (!string.IsNullOrEmpty(port)) 
+
+            if (!string.IsNullOrEmpty(port))
+            {
                 builder.UseUrls($"http://*:{port}");
+                isHeroku = true;
+            }
             else
                 builder.UseConfiguration(new ConfigurationBuilder()
                     .AddJsonFile("hosting.json", optional: true)
@@ -52,15 +51,15 @@
                 .UseStartup<Startup>();
 
 
-            // Full Form with access to All Options:
-            builder.AddAcmeServices(new AcmeOptions
-            {
-                AcmeRootDir = "_IGNORE/_acmesharp",
-                DnsNames = Program.DnsNames ?? DefaultDnsNames,
-                AccountContactEmails = new[] { "game@violetdata.com" },
-                AcceptTermsOfService = true,
-                CertificateKeyAlgor = "rsa",
-            });
+            if (!isHeroku)
+                // Full Form with access to All Options:
+                builder.AddAcmeServices(new AcmeOptions
+                {
+                    AcmeRootDir = "_IGNORE/_acmesharp",
+                    AccountContactEmails = new[] { "info@daud.io" },
+                    AcceptTermsOfService = true,
+                    CertificateKeyAlgor = "rsa",
+                });
 
             return builder;
         }
