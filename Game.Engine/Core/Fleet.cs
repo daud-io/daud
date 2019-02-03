@@ -92,7 +92,7 @@
             if (player != null)
             {
 				var combo = "";
-				if (World.Time - player.Fleet.LastKillTime < 2000)
+				if (World.Time - player.Fleet.LastKillTime < World.Hook.ComboDelay)
 				{
 					player.Fleet.ComboCounter += 1;
 					combo = $" - x{player.Fleet.ComboCounter} combo!";
