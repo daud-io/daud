@@ -110,7 +110,7 @@ namespace Game.Engine
             cts.CancelAfter(15000);
             try
             {
-                _options.DnsNames = new[] { await _registryClient.Registry.SuggestAsync(cts.Token) };
+                _options.DnsNames = new[] { await _registryClient.Registry.SuggestAsync(_gameConfiguration.PublicURL, cts.Token) };
             }
             catch (Exception e)
             {

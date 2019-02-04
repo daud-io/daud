@@ -61,9 +61,12 @@
             HttpGet,
             Route("suggestion")
         ]
-        public Task<string> SuggestDomainsAsync()
+        public async Task<string> SuggestDomainsAsync(string configuredName = null)
         {
-            return RecommendHostName();
+            if (configuredName != null)
+                return configuredName;
+            else
+                return await RecommendHostName();
         }
 
         private async Task<string> RecommendHostName()

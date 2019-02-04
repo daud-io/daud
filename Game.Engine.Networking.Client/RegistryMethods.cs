@@ -18,9 +18,9 @@
             return await RegistryClient.APICallAsync<bool>(HttpMethod.Get, APIEndpoint.Registry);
         }
 
-        public async Task<string> SuggestAsync(CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<string> SuggestAsync(string configuredName, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return await RegistryClient.APICallAsync<string>(HttpMethod.Get, APIEndpoint.RegistrySuggestion, cancellationToken: cancellationToken);
+            return await RegistryClient.APICallAsync<string>(HttpMethod.Get, APIEndpoint.RegistrySuggestion, queryStringContent: new { configuredName }, cancellationToken: cancellationToken);
         }
 
         public async Task<bool> PostReportAsync(RegistryReport registryReport)
