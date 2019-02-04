@@ -25,6 +25,8 @@
         protected bool IsOOB = false;
         private long TimeDeath = 0;
 
+        public int ShieldStrength { get; set; }
+
         public override void Init(World world)
         {
             base.Init(world);
@@ -71,7 +73,21 @@
             var player = fleet?.Owner;
             bullet.Consumed = true;
 
-            if (!this.Fleet?.Owner?.IsInvulnerable ?? true)
+            var takesDamage = true;
+            if (this.Fleet?.Owner?.IsShielded ?? false)
+            {
+                if (this.ShieldStrength == 0)
+                    takesDamage = true;
+                else
+                {
+                    this.ShieldStrength--;
+                    takesDamage = false;
+                }
+            }
+            else
+                takesDamage = !this.Fleet?.Owner?.IsInvulnerable ?? true;
+
+            if (takesDamage)
             {
                 Health -= HealthHitCost;
 

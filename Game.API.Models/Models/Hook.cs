@@ -89,6 +89,7 @@
 
                     PickupSeekers = 6,
                     PickupShields = 4,
+                    ShieldStrength = 2,
 
                     Fishes = 60,
                     FishThrust = 0.04f,
@@ -210,6 +211,7 @@
         public float OutOfBoundsDecayDistance { get; set; } = 900;
         public int BotRespawnDelay { get; set; }
         public int PickupShields { get; set; }
+        public int ShieldStrength { get; set; }
 
         public bool FollowFirstShip { get; set; }
         public int FiringSequenceDelay { get; set; }
