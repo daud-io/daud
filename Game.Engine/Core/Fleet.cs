@@ -91,12 +91,14 @@
         {
             if (player != null)
             {
-				var combo = "";
+				var comboTxt = "";
+				var comboPlusScore = 0;
 				if (World.Time - player.Fleet.LastKillTime < World.Hook.ComboDelay)
 				{
 					player.Fleet.ComboCounter += 1;
-					combo = $" - x{player.Fleet.ComboCounter} combo!";
-					player.Score += (player.Fleet.ComboCounter - 1) * World.Hook.ComboPointsStep;
+					comboTxt = $"x{player.Fleet.ComboCounter} combo!";
+					comboPlusScore = (player.Fleet.ComboCounter - 1) * World.Hook.ComboPointsStep;
+					player.Score += comboPlusScore;
 				}
 				else
 				{
@@ -111,14 +113,19 @@
                 player.Score += plusScore;
 
 				player.SendMessage($"You Killed {this.Owner.Name}", "kill",
-                    World.Hook.PointsPerKillFleet,
+                    plusScore,
                     new
                     {
                         ping = new
                         {
                             you = player?.Connection?.Latency ?? 0,
                             them = this.Owner?.Connection?.Latency ?? 0
-                        }
+                        },
+						combo = new
+						{
+							text = comboTxt,
+							score = comboPlusScore
+						}							
                     }
                 );
                 //player.SendMessage($"You Killed {this.Owner.Name}! - +{plusScore}{combo} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");

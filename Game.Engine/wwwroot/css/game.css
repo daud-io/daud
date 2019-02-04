@@ -908,3 +908,13 @@ progress::-webkit-progress-value {
 	50%  {opacity:1}
 	100% {opacity:0;transform:translate(-100%, calc(-75%-200px))}
 }
+
+#comboMessage {
+	color: #ff5555;
+	position: absolute;
+    top: 4.5em;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    font-weight: bold;
+}
