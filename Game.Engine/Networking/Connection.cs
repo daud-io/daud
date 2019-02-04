@@ -223,10 +223,16 @@ namespace Game.Engine.Networking
                                 {
                                     var stringType = builder.CreateString(e.Type);
                                     var stringMessage = builder.CreateString(e.Message);
+                                    var stringExtraData = e.ExtraData != null
+                                        ? builder.CreateString(JsonConvert.SerializeObject(e.ExtraData))
+                                        : new StringOffset();
 
                                     NetAnnouncement.StartNetAnnouncement(builder);
                                     NetAnnouncement.AddType(builder, stringType);
                                     NetAnnouncement.AddText(builder, stringMessage);
+                                    if (e.ExtraData != null)
+                                        NetAnnouncement.AddExtraData(builder, stringExtraData);
+                                    NetAnnouncement.AddPointsDelta(builder, e.PointsDelta);
 
                                     return NetAnnouncement.EndNetAnnouncement(builder);
                                 }).ToArray());

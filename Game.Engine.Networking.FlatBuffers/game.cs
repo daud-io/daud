@@ -490,19 +490,28 @@ public struct NetAnnouncement : IFlatbufferObject
   public ArraySegment<byte>? GetTextBytes() { return __p.__vector_as_arraysegment(4); }
   public string Type { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
   public ArraySegment<byte>? GetTypeBytes() { return __p.__vector_as_arraysegment(6); }
+  public int PointsDelta { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public string ExtraData { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public ArraySegment<byte>? GetExtraDataBytes() { return __p.__vector_as_arraysegment(10); }
 
   public static Offset<NetAnnouncement> CreateNetAnnouncement(FlatBufferBuilder builder,
       StringOffset textOffset = default(StringOffset),
-      StringOffset typeOffset = default(StringOffset)) {
-    builder.StartObject(2);
+      StringOffset typeOffset = default(StringOffset),
+      int pointsDelta = 0,
+      StringOffset extraDataOffset = default(StringOffset)) {
+    builder.StartObject(4);
+    NetAnnouncement.AddExtraData(builder, extraDataOffset);
+    NetAnnouncement.AddPointsDelta(builder, pointsDelta);
     NetAnnouncement.AddType(builder, typeOffset);
     NetAnnouncement.AddText(builder, textOffset);
     return NetAnnouncement.EndNetAnnouncement(builder);
   }
 
-  public static void StartNetAnnouncement(FlatBufferBuilder builder) { builder.StartObject(2); }
+  public static void StartNetAnnouncement(FlatBufferBuilder builder) { builder.StartObject(4); }
   public static void AddText(FlatBufferBuilder builder, StringOffset textOffset) { builder.AddOffset(0, textOffset.Value, 0); }
   public static void AddType(FlatBufferBuilder builder, StringOffset typeOffset) { builder.AddOffset(1, typeOffset.Value, 0); }
+  public static void AddPointsDelta(FlatBufferBuilder builder, int pointsDelta) { builder.AddInt(2, pointsDelta, 0); }
+  public static void AddExtraData(FlatBufferBuilder builder, StringOffset extraDataOffset) { builder.AddOffset(3, extraDataOffset.Value, 0); }
   public static Offset<NetAnnouncement> EndNetAnnouncement(FlatBufferBuilder builder) {
     int o = builder.EndObject();
     return new Offset<NetAnnouncement>(o);

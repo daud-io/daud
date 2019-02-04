@@ -1825,10 +1825,27 @@ Game.Engine.Networking.FlatBuffers.NetAnnouncement.prototype.type = function(opt
 };
 
 /**
+ * @returns {number}
+ */
+Game.Engine.Networking.FlatBuffers.NetAnnouncement.prototype.pointsDelta = function() {
+  var offset = this.bb.__offset(this.bb_pos, 8);
+  return offset ? this.bb.readInt32(this.bb_pos + offset) : 0;
+};
+
+/**
+ * @param {flatbuffers.Encoding=} optionalEncoding
+ * @returns {string|Uint8Array|null}
+ */
+Game.Engine.Networking.FlatBuffers.NetAnnouncement.prototype.extraData = function(optionalEncoding) {
+  var offset = this.bb.__offset(this.bb_pos, 10);
+  return offset ? this.bb.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
  * @param {flatbuffers.Builder} builder
  */
 Game.Engine.Networking.FlatBuffers.NetAnnouncement.startNetAnnouncement = function(builder) {
-  builder.startObject(2);
+  builder.startObject(4);
 };
 
 /**
@@ -1845,6 +1862,22 @@ Game.Engine.Networking.FlatBuffers.NetAnnouncement.addText = function(builder, t
  */
 Game.Engine.Networking.FlatBuffers.NetAnnouncement.addType = function(builder, typeOffset) {
   builder.addFieldOffset(1, typeOffset, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {number} pointsDelta
+ */
+Game.Engine.Networking.FlatBuffers.NetAnnouncement.addPointsDelta = function(builder, pointsDelta) {
+  builder.addFieldInt32(2, pointsDelta, 0);
+};
+
+/**
+ * @param {flatbuffers.Builder} builder
+ * @param {flatbuffers.Offset} extraDataOffset
+ */
+Game.Engine.Networking.FlatBuffers.NetAnnouncement.addExtraData = function(builder, extraDataOffset) {
+  builder.addFieldOffset(3, extraDataOffset, 0);
 };
 
 /**

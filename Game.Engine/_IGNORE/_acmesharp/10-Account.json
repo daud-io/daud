@@ -1,0 +1,19 @@
+{
+  "Payload": {
+    "Id": "50855327",
+    "Key": {
+      "kty": "EC",
+      "crv": "P-256",
+      "x": "DXkQf09NWiDa6LpxqiMV8OcuXLcIeWif7NWJCcnV-PE",
+      "y": "2qen-XExY4Oie73L-J-JM4fzLcdB5nOG0cqTeEf0pkg"
+    },
+    "contact": [
+      "mailto:info@daud.io"
+    ],
+    "Status": "valid",
+    "InitialIp": "185.81.58.45",
+    "CreatedAt": "2019-02-04T15:28:27.487276101Z"
+  },
+  "Kid": "https://acme-v02.api.letsencrypt.org/acme/acct/50855327",
+  "TosLink": "https://letsencrypt.org/documents/LE-SA-v1.2-November-15-2017.pdf"
+}
