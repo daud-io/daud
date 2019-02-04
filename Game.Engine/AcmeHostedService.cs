@@ -123,13 +123,14 @@ namespace Game.Engine
             if (_state.Certificate != null)
             {
                 var now = DateTime.Now;
-                if (_state.Certificate.NotAfter < now)
+                if (_state.Certificate.NotAfter > now)
                 {
                     _logger.LogInformation("Existing certificate is Good!");
                     return;
                 }
+                else
                 {
-                    _logger.LogWarning($"Existing Certificate is Expired! {_state.Certificate.NotAfter} >= {now}");
+                    _logger.LogWarning($"Existing Certificate is Expired! {_state.Certificate.NotAfter} > {now}");
                 }
             }
             else
@@ -144,33 +145,41 @@ namespace Game.Engine
             catch (Exception) { }
             Reinitialize();
 
-            var acmeUrl = new Uri(_options.CaUrl);
-            using (var acme = new AcmeProtocolClient(acmeUrl))
+
+            try
             {
-                _state.ServiceDirectory = await acme.GetDirectoryAsync();
-                
-                Save(_state.ServiceDirectoryFile, _state.ServiceDirectory);
-                acme.Directory = _state.ServiceDirectory;
+                var acmeUrl = new Uri(_options.CaUrl);
+                using (var acme = new AcmeProtocolClient(acmeUrl))
+                {
+                    _state.ServiceDirectory = await acme.GetDirectoryAsync();
 
-                Save(_state.TermsOfServiceFile,
-                        await acme.GetTermsOfServiceAsync());
+                    Save(_state.ServiceDirectoryFile, _state.ServiceDirectory);
+                    acme.Directory = _state.ServiceDirectory;
 
-                await acme.GetNonceAsync();
+                    Save(_state.TermsOfServiceFile,
+                            await acme.GetTermsOfServiceAsync());
 
-                if (!await ResolveAccount(acme))
-                    return;
+                    await acme.GetNonceAsync();
 
-                if (!await ResolveOrder(acme))
-                    return;
+                    if (!await ResolveAccount(acme))
+                        return;
 
-                if (!await ResolveChallenges(acme))
-                    return;
-                
-                if (!await ResolveAuthorizations(acme))
-                    return;
-                
-                if (!await ResolveCertificate(acme))
-                    return;
+                    if (!await ResolveOrder(acme))
+                        return;
+
+                    if (!await ResolveChallenges(acme))
+                        return;
+
+                    if (!await ResolveAuthorizations(acme))
+                        return;
+
+                    if (!await ResolveCertificate(acme))
+                        return;
+                }
+            }
+            catch(Exception e)
+            {
+                _logger.LogWarning($"Exception while getting SSL Certificate: {e}");
             }
         }
 
