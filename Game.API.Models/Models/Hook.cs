@@ -15,28 +15,28 @@
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
-                    BaseThrustM = -0.003f,
-                    BaseThrustB = 0.13f,
+                    BaseThrustM = -0.0035f,
+                    BaseThrustB = 0.155f,
 
                     Drag = 0.92f,
 
                     BoostThrust = 0.15f,
 
-                    BoostCooldownTimeM = 4.0f,
-                    BoostCooldownTimeB = 1096.0f,
+                    BoostCooldownTimeM = 14.0f,
+                    BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 1f,
                     BoostDuration = 420,
 
                     ShotCooldownTimeM = 20,
-                    ShotCooldownTimeB = 500,
+                    ShotCooldownTimeB = 550,
 
-                    ShotCooldownTimeBotM = 20,
-                    ShotCooldownTimeBotB = 700,
+                    ShotCooldownTimeBotM = 21,
+                    ShotCooldownTimeBotB = 550,
 
-                    ShotThrustM = -0.0035f,
-                    ShotThrustB = 0.21f,
+                    ShotThrustM = -0.004f,
+                    ShotThrustB = 0.2f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -82,7 +82,7 @@
                     SnakeWeight = 0f,
                     BossMode = false,
 
-                    ShipGainBySizeM = -0.03f,
+                    ShipGainBySizeM = -0.034f,
                     ShipGainBySizeB = 1.03f,
 
                     FlockSpeed = 0,
