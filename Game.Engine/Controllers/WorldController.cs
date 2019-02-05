@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Controllers
 {
+    using Game.API.Client;
     using Game.API.Common.Models;
     using Game.API.Common.Security;
     using Game.Engine.Core;
@@ -15,8 +16,12 @@
 
     public class WorldController : APIControllerBase
     {
-        public WorldController(ISecurityContext securityContext) : base(securityContext)
+        private readonly RegistryClient RegistryClient;
+
+        public WorldController(ISecurityContext securityContext,
+            RegistryClient registryClient) : base(securityContext)
         {
+            this.RegistryClient = registryClient;
         }
 
         [HttpPost, Route("map")]
@@ -82,20 +87,24 @@
         }
 
         [AllowAnonymous, HttpGet, Route("all"), EnableCors("AllowAllOrigins")]
-        public IEnumerable<object> GetWorlds(string worldName = null, bool allWorlds = false)
+        public async Task<IEnumerable<object>> GetWorlds(string worldName = null, bool allWorlds = false)
         {
-            return Worlds.AllWorlds
-                .Where(w => allWorlds || !w.Value.Hook.Hidden)
-                .OrderBy(w => w.Value.Hook.Weight)
-                .Select(w => new
+            var serverWorlds = await RegistryClient.Registry.ListAsync();
+
+            return serverWorlds
+                .Where(s => new[] { "daud.io", "de.daud.io", "ca.daud.io" }.Contains(s.URL))
+                .SelectMany(server => server.Worlds.Select(world => new { server, world }))
+                .Where(s => allWorlds || !s.world.Hook.Hidden)
+                .Where(s => s.server.URL == "daud.io" || (s.server.URL == "de.daud.io" && s.world.WorldKey == "ffa"))
+                .OrderBy(s => s.world.Hook.Weight)
+                .Select(s => new
                 {
-                    world = w.Key,
-                    players = w.Value.AdvertisedPlayerCount,
-                    name = w.Value.Hook.Name,
-                    description = w.Value.Hook.Description,
-                    allowedColors = w.Value.Hook.AllowedColors,
-                    image = w.Value.Image,
-                    instructions = w.Value.Hook.Instructions
+                    world = $"{s.server.URL}/{s.world.WorldKey}",
+                    players = s.world.AdvertisedPlayers,
+                    name = s.world.Hook.Name,
+                    description = s.world.Hook.Description,
+                    allowedColors = s.world.Hook.AllowedColors,
+                    instructions = s.world.Hook.Instructions
                 });
         }
 

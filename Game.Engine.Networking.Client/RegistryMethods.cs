@@ -1,6 +1,7 @@
 ﻿namespace Game.API.Client
 {
     using Game.API.Common.Models;
+    using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -13,9 +14,9 @@
             this.RegistryClient = registryClient;
         }
 
-        public async Task<bool> ListAsync()
+        public async Task<IEnumerable<RegistryReport>> ListAsync()
         {
-            return await RegistryClient.APICallAsync<bool>(HttpMethod.Get, APIEndpoint.Registry);
+            return await RegistryClient.APICallAsync<IEnumerable<RegistryReport>>(HttpMethod.Get, APIEndpoint.Registry);
         }
 
         public async Task<string> SuggestAsync(string configuredName, CancellationToken cancellationToken = default(CancellationToken))
