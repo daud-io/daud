@@ -143,8 +143,8 @@
             IsInvulnerable = true;
             IsShielded = isShield;
 
-            if (isShield)
-                foreach (var ship in Fleet?.Ships)
+            if (isShield && Fleet != null)
+                foreach (var ship in Fleet.Ships)
                     ship.ShieldStrength = World.Hook.ShieldStrength;
         }
 
