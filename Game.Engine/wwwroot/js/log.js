@@ -24,13 +24,16 @@ export class Log {
             if (slot.entry.pointsDelta)
                 console.log(slot.entry.pointsDelta);
 
+			slot.entry.text = slot.entry.text.replace(/</g, "&lt;").replace(/&/g, "&amp;"); // fix XSS vulnerability
+			
             out += `<span><b style="color:gray">${slot.time.toLocaleTimeString()}</b> ${slot.entry.text}</span><br>`;
         }
 
         log.innerHTML = out;
 
         if (Settings.bigKillMessage) {
-            let lastData = this.data[this.data.length - 1].entry;
+            var lastData = this.data[this.data.length - 1].entry;
+			lastData.text = lastData.text.replace(/</g, "&lt;"); // fix XSS vulnerability
             if (lastData.type == "kill") {
                 lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData.text + "<span style='color:#00ff00'>&nbsp;]</span>";
             } else if (lastData.type == "killed") {
