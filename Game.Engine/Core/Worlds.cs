@@ -23,8 +23,8 @@
             AddWorld("sharks", WorldSharks());
             AddWorld("sumo", WorldSumo());
             AddWorld("boss", WorldBoss());
-            AddWorld("wormhole", WorldWormhole());
-            AddWorld("beach", WorldBeach());
+            //AddWorld("wormhole", WorldWormhole());
+            //AddWorld("beach", WorldBeach());
         }
 
         public static void Destroy(string worldKey)
@@ -68,6 +68,7 @@
             hook.Name = "FFA";
             hook.Description = "FFA Arena";
             hook.Instructions = "Mouse to aim, click to shoot. Press 's' to boost.";
+            hook.Weight = 10;
 
             return new World(hook);
         }
@@ -82,6 +83,7 @@
             hook.Name = "Planet Daud";
             hook.Description = "AAAAAHHH! Run!";
             hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
+            hook.Weight = 100;
 
             return new World(hook);
         }
@@ -122,6 +124,7 @@
             hook.PointsMultiplierDeath = 1.0f;
             hook.SumoMode = true;
             hook.SumoRingSize = 1000;
+            hook.Weight = 100;
 
 
             hook.Name = "Sumo World";
@@ -143,6 +146,7 @@
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = -1;
             hook.PointsMultiplierDeath = 1.0f;
+            hook.Weight = 20;
 
             hook.Name = "Dueling Room";
             hook.Description = "1 vs. 1";
@@ -156,6 +160,7 @@
             hook.BotBase = 0;
             hook.Obstacles = 3;
             hook.TeamMode = true;
+            hook.Weight = 20;
 
             hook.Name = "Team";
             hook.Description = "Cyan vs. Red";
@@ -174,6 +179,7 @@
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = -1;
             hook.PointsMultiplierDeath = 1.0f;
+            hook.Weight = 20;
 
             hook.Name = "Capture the Flag";
             hook.Description = "Cyan vs. Red - Capture the Flag. First to 5 wins!";
@@ -203,6 +209,7 @@
             hook.PointsPerKillShip = 0;
             hook.PointsMultiplierDeath = 1.0f;
             hook.WorldSize /= 2;
+            hook.Weight = 100;
 
             hook.Name = "Sharks and Minnows";
             hook.Description = "Sharks and Minnows";
@@ -239,6 +246,7 @@
             hook.Name = "Wormhole test";
             hook.Description = "Wormhole test";
             hook.AllowedColors = Hook.TeamColors;
+            hook.Weight = 1000;
 
             return new World(hook);
         }
@@ -254,6 +262,7 @@
             hook.Name = "Boss Mode";
             hook.Description = "So many Circles! Much wow!";
             hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
+            hook.Weight = 100;
 
             return new World(hook);
         }
@@ -266,6 +275,7 @@
             hook.SpawnLocationMode = "Static";
             hook.Name = "Beach World";
             hook.Description = "Come on in, the water's fine";
+            hook.Weight = 1000;
 
             return new World(hook);
         }

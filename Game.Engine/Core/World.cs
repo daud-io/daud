@@ -113,8 +113,7 @@
                 ProcessLeaderboard();
 
 
-
-                if (Time > 5000) // lets not get too excited if things slow down when initialized
+                if (Time > 10000) // lets not get too excited if things slow down when initialized
                 {
                     var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
                     if (elapsed > Hook.StepTime)
