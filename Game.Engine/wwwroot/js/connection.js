@@ -55,6 +55,13 @@ export class Connection {
             hostname = "daud.io";
         }
 
+        var worldKeyParse = world.match(/^(.*?)\/(.*)$/);
+        if (worldKeyParse)
+        {
+            hostname = worldKeyParse[1];
+            world = worldKeyParse[2];
+        }
+
         url += `//${hostname}`;
         url += "/api/v1/connect?";
 

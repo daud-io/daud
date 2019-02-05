@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Controllers
 {
+    using Game.API.Client;
     using Game.API.Common.Models;
     using Game.API.Common.Security;
     using Game.Engine.Core;
@@ -15,8 +16,12 @@
 
     public class WorldController : APIControllerBase
     {
-        public WorldController(ISecurityContext securityContext) : base(securityContext)
+        private readonly RegistryClient RegistryClient;
+
+        public WorldController(ISecurityContext securityContext,
+            RegistryClient registryClient) : base(securityContext)
         {
+            this.RegistryClient = registryClient;
         }
 
         [HttpPost, Route("map")]
@@ -82,20 +87,36 @@
         }
 
         [AllowAnonymous, HttpGet, Route("all"), EnableCors("AllowAllOrigins")]
-        public IEnumerable<object> GetWorlds(string worldName = null, bool allWorlds = false)
+        public async Task<IEnumerable<object>> GetWorlds(string worldName = null, bool allWorlds = false)
         {
-            return Worlds.AllWorlds
-                .Where(w => allWorlds || !w.Value.Hook.Hidden)
-                .OrderBy(w => w.Value.Hook.Weight)
-                .Select(w => new
-                {
-                    world = w.Key,
-                    players = w.Value.AdvertisedPlayerCount,
-                    name = w.Value.Hook.Name,
-                    description = w.Value.Hook.Description,
-                    allowedColors = w.Value.Hook.AllowedColors,
-                    image = w.Value.Image,
-                    instructions = w.Value.Hook.Instructions
+            var serverWorlds = await RegistryClient.Registry.ListAsync();
+
+            return serverWorlds
+                .Where(s => new[] { "de.daud.io", "ca.daud.io" }.Contains(s.URL))
+                .SelectMany(server => server.Worlds.Select(world => new { server, world }))
+                .Where(s => allWorlds || !s.world.Hook.Hidden)
+                .Where(s => s.server.URL == "ca.daud.io" || (s.server.URL == "de.daud.io" && s.world.WorldKey == "default"))
+                .OrderBy(s => s.world.Hook.Weight)
+                .Select(s => {
+                    var name = s.world.Hook.Name;
+                    var description = s.world.Hook.Description;
+
+                    if (name == "FFA" && s.server.URL == "de.daud.io")
+                    {
+                        name = "FFA - Europe";
+                        description = "Like regular FFA but with different ping times and metric-sized cup holders";
+                    }
+                    return
+                        new
+                        {
+                            world = $"{s.server.URL}/{s.world.WorldKey}",
+                            server = s.server.URL,
+                            players = s.world.AdvertisedPlayers,
+                            name,
+                            description,
+                            allowedColors = s.world.Hook.AllowedColors,
+                            instructions = s.world.Hook.Instructions
+                        };
                 });
         }
 

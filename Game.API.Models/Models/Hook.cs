@@ -89,7 +89,7 @@
 
                     PickupSeekers = 6,
                     PickupShields = 4,
-                    ShieldStrength = 2,
+                    ShieldStrength = 3,
 
                     Fishes = 60,
                     FishThrust = 0.04f,

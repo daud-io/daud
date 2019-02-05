@@ -27,6 +27,8 @@ namespace Game.Engine
         private readonly GameConfiguration _gameConfiguration;
         private Timer _timer;
 
+        private readonly static string CERT_PASSWORD = "AHHH!Dauds!";
+
         public AcmeHostedService(ILogger<AcmeHostedService> logger,
             IServiceProvider services,
             AcmeOptions options, AcmeState state,
@@ -47,11 +49,13 @@ namespace Game.Engine
             if (!_gameConfiguration.RegistryEnabled || !_gameConfiguration.LetsEncryptEnabled)
                 return Task.FromResult(0);
 
+            Reinitialize();
+
             _logger.LogInformation("Preparing to launch background task...");
             
             // We delay for 5 seconds just to give other parts of
             // the service (like request handling) to get in place
-            _timer = new Timer(DoTheWork, null, TimeSpan.FromSeconds(60), TimeSpan.FromSeconds(300));
+            _timer = new Timer(DoTheWork, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(300));
 
             return Task.FromResult(0);
         }
@@ -60,8 +64,10 @@ namespace Game.Engine
         {
             _logger.LogInformation("ACME Hosted Service is staring");
 
-            _state.RootDir = Path.Combine(Directory.GetCurrentDirectory(),
-                    _options.AcmeRootDir ?? ".");
+            _state.RootDir = _gameConfiguration.ACMEStateDirectory;
+            if (_state.RootDir == null)
+                _state.RootDir = Path.Combine(Directory.GetCurrentDirectory(), _options.AcmeRootDir ?? ".");
+
             _state.ServiceDirectoryFile = Path.Combine(_state.RootDir, "00-ServiceDirectory.json");
             _state.TermsOfServiceFile = Path.Combine(_state.RootDir, "05-TermsOfService");
             _state.AccountFile = Path.Combine(_state.RootDir, "10-Account.json");
@@ -84,7 +90,7 @@ namespace Game.Engine
                     _state.AuthorizationsFile);
             (_, var certRaw) = Load<byte[]>(_state.CertificateFile);
             if (certRaw?.Length > 0)
-                _state.Certificate = new X509Certificate2(certRaw);
+                _state.Certificate = new X509Certificate2(certRaw, CERT_PASSWORD);
 
         }
 
@@ -116,6 +122,9 @@ namespace Game.Engine
             {
                 _logger.LogError("** failed to get suggestion from registry: " + e);
             }
+
+            if (_options.DnsNames == null)
+                return;
 
             _logger.LogInformation("** Checking LetsEncrypt status *****************************************");
             _logger.LogInformation($"DNS Names:  {string.Join(",", _options.DnsNames)}");
@@ -477,7 +486,7 @@ namespace Game.Engine
                 _logger.LogInformation("Reading in Certificate chain (PEM)");
                 var cert = CertHelper.ImportCertificate(EncodingFormat.PEM, crtStream);
                 _logger.LogInformation("Writing out Certificate archive (PKCS12)");
-                CertHelper.ExportArchive(key, new[] { cert }, ArchiveFormat.PKCS12, pfxStream, "AHHH!Dauds!");
+                CertHelper.ExportArchive(key, new[] { cert }, ArchiveFormat.PKCS12, pfxStream, CERT_PASSWORD);
                 pfxStream.Position = 0L;
                 Save(_state.CertificateFile, pfxStream);
             }
@@ -489,7 +498,7 @@ namespace Game.Engine
 
             _logger.LogInformation($"Loading cert: exists: {exists} value[{value.Length}]");
 
-            _state.Certificate = new X509Certificate2(value, "AHHH!Dauds!");
+            _state.Certificate = new X509Certificate2(value, CERT_PASSWORD);
 
             return true;
        }
