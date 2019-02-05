@@ -106,7 +106,7 @@
 					PointsPerKillFleetMax = 55,
 					PointsPerKillFleetStep = 5,
 					PointsPerKillFleetPerStep = 50,
-					ComboDelay = 2000,
+					ComboDelay = 3000,
 					ComboPointsStep = 5,
 
                     PlayerCountGracePeriodMS = 15000,
