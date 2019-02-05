@@ -140,10 +140,14 @@
             if (queryString != null)
             {
                 var keyValueContent = ToKeyValue(queryString);
-                var formUrlEncodedContent = new FormUrlEncodedContent(keyValueContent);
-                var urlEncodedString = await formUrlEncodedContent.ReadAsStringAsync();
 
-                uri += "?" + urlEncodedString;
+                if (keyValueContent != null)
+                {
+                    var formUrlEncodedContent = new FormUrlEncodedContent(keyValueContent);
+                    var urlEncodedString = await formUrlEncodedContent.ReadAsStringAsync();
+
+                    uri += "?" + urlEncodedString;
+                }
             }
 
             return new Uri(

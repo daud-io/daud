@@ -123,6 +123,9 @@ namespace Game.Engine
                 _logger.LogError("** failed to get suggestion from registry: " + e);
             }
 
+            if (_options.DnsNames == null)
+                return;
+
             _logger.LogInformation("** Checking LetsEncrypt status *****************************************");
             _logger.LogInformation($"DNS Names:  {string.Join(",", _options.DnsNames)}");
 
