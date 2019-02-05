@@ -47,6 +47,8 @@ namespace Game.Engine
             if (!_gameConfiguration.RegistryEnabled || !_gameConfiguration.LetsEncryptEnabled)
                 return Task.FromResult(0);
 
+            Reinitialize();
+
             _logger.LogInformation("Preparing to launch background task...");
             
             // We delay for 5 seconds just to give other parts of
@@ -60,8 +62,10 @@ namespace Game.Engine
         {
             _logger.LogInformation("ACME Hosted Service is staring");
 
-            _state.RootDir = Path.Combine(Directory.GetCurrentDirectory(),
-                    _options.AcmeRootDir ?? ".");
+            _state.RootDir = _gameConfiguration.ACMEStateDirectory;
+            if (_state.RootDir == null)
+                _state.RootDir = Path.Combine(Directory.GetCurrentDirectory(), _options.AcmeRootDir ?? ".");
+
             _state.ServiceDirectoryFile = Path.Combine(_state.RootDir, "00-ServiceDirectory.json");
             _state.TermsOfServiceFile = Path.Combine(_state.RootDir, "05-TermsOfService");
             _state.AccountFile = Path.Combine(_state.RootDir, "10-Account.json");
