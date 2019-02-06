@@ -32,6 +32,8 @@
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
 
+        private int SearchMargin = 150;
+
         private bool Processing = false;
 
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
@@ -101,6 +103,8 @@
                 foreach (var actor in Actors.ToList())
                     actor.CreateDestroy();
 
+                var unindexed = 0;
+                var indexed = 0;
                 foreach (var body in Bodies)
                 {
                     if (body.IsDirty)
@@ -109,12 +113,19 @@
                         body.OriginalPosition = body.Position;
                         body.OriginalAngle = body.Angle;
                         body.IsDirty = false;
-                        if (!body.IsNew)
+                        if (Vector2.Distance(body.IndexedPosition, body.Position) > SearchMargin)
+                        {
                             BodyCleaned(body);
+                            body.IndexedPosition = body.Position;
+                            indexed++;
+                        }
+                        else
+                            unindexed++;
                     }
-
-                    body.IsNew = false;
                 }
+
+                if (false && unindexed + indexed > 0)
+                    Console.WriteLine($"{1f * indexed/(unindexed+indexed)}\t");
 
                 ProcessLeaderboard();
 
@@ -302,10 +313,10 @@
             else
             {
                 var searchEnvelope = new Envelope(
-                    point.X - maximumDistance / 2,
-                    point.Y - maximumDistance / 2,
-                    point.X + maximumDistance / 2,
-                    point.Y + maximumDistance / 2
+                    point.X - maximumDistance / 2 - SearchMargin,
+                    point.Y - maximumDistance / 2 - SearchMargin,
+                    point.X + maximumDistance / 2 + SearchMargin,
+                    point.Y + maximumDistance / 2 + SearchMargin
                 );
 
                 return RTreeDynamic.Search(searchEnvelope)

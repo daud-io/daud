@@ -20,7 +20,8 @@
 
         public bool Exists { get; set; }
         public bool IsDirty { get; set; } = true;
-        public bool IsNew { get; set; } = true;
+
+        public Vector2 IndexedPosition { get; set; }
 
         public bool IsStatic { get; set; } = false;
 
