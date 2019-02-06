@@ -33,15 +33,16 @@ export class Log {
 
         if (Settings.bigKillMessage) {
             var lastData = this.data[this.data.length - 1].entry;
-			lastData.text = lastData.text.replace(/</g, "&lt;"); // fix XSS vulnerability
+			var lastData2;
             if (lastData.type == "kill") {
-                lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData.text + "<span style='color:#00ff00'>&nbsp;]</span>";
+                lastData2 = "<span style='color:#00ff00'>[&nbsp;</span><span style='color:#00ff00'>&nbsp;]</span>";
             } else if (lastData.type == "killed") {
-                lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData.text + "<span style='color:#ff0000'>&nbsp;]</span>";
+                lastData2 = "<span style='color:#ff0000'>[&nbsp;</span><span style='color:#ff0000'>&nbsp;]</span>";
             } else {
                 return;
             }
-            bigLog.innerHTML = lastData;
+            bigLog.innerHTML = lastData2;
+			bigLog.querySelector("span:first-child").setAttribute("data-value", lastData.text);
         }
     }
 

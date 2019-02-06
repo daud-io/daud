@@ -868,6 +868,11 @@ progress::-webkit-progress-value {
     font-weight: bold;
 }
 
+#bigLog span:after {
+	content: attr(data-value);
+	color: white;
+}
+
 #settingsTable {
     margin: 10px auto 10px auto;
 }
