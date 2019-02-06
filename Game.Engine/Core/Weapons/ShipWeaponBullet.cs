@@ -17,6 +17,11 @@
 
         public bool Consumed { get; set; }
 
+        public ShipWeaponBullet()
+        {
+            CausesCollisions = true;
+        }
+
         public override void Think()
         {
             base.Think();

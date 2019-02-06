@@ -7,6 +7,7 @@
         public World World = null;
 
         public bool PendingDestruction { get; set; } = false;
+        protected bool CausesCollisions { get; set; } = false;
 
         public virtual void Destroy()
         {
@@ -36,18 +37,23 @@
 
         public virtual void Think()
         {
-            var collisionSet =
-                World.BodiesNear(this.Position, this.Size, offsetSize: true)
-                .Where(b => b != this);
-
-            if (collisionSet.Any())
+            if (CausesCollisions)
             {
-                foreach (var hit in collisionSet.OfType<ICollide>()
-                    .Where(c => c.IsCollision(this))
-                    .ToList())
+                var collisionSet =
+                    World.BodiesNear(this.Position, this.Size, offsetSize: true)
+                    .Where(b => b != this);
+
+                if (collisionSet.Any())
                 {
-                    hit.CollisionExecute(this);
-                    Collided(hit);
+                    foreach (var hit in collisionSet.OfType<ICollide>()
+                        .ToList())
+                    {
+                        if (hit.IsCollision(this))
+                        {
+                            hit.CollisionExecute(this);
+                            Collided(hit);
+                        }
+                    }
                 }
             }
         }
