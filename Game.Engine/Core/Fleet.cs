@@ -29,6 +29,7 @@
         public bool ShootRequested { get; set; }
 
 		public long LastKillTime { get; set; } = 0;
+		public int KillCounter { get; set; } = 0;
 		public int ComboCounter { get; set; } = 0;
         public long ShootCooldownTimeStart { get; set; } = 0;
         public long ShootCooldownTime { get; set; } = 0;
@@ -95,6 +96,7 @@
 				var comboPlusScore = 0;
 				if (player.IsAlive)
                 {
+					player.Fleet.KillCounter += 1;
                     if (World.Time - player.Fleet.LastKillTime < World.Hook.ComboDelay)
                     {
                         player.Fleet.ComboCounter += 1;
@@ -139,6 +141,8 @@
 						(int)MathF.Ceiling(this.Owner.Score / 2),
 						new
 						{
+							score = this.Owner.Score,
+							kills = player.Fleet.KillCounter,
 							ping = new
 							{
 								you = this.Owner?.Connection?.Latency ?? 0,
@@ -146,6 +150,7 @@
 							}
 						}
 					);
+					player.Fleet.KillCounter = 0;
             }
             else
             {

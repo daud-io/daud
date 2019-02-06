@@ -1,57 +1,29 @@
 {
-  "https://acme-v02.api.letsencrypt.org/acme/authz/vG2OXNJ69sDm8kSlFN4UpZ4NlekeeUvFibmY-vdWtdA": {
+  "https://acme-v02.api.letsencrypt.org/acme/authz/ilLXQsNVV1j01lMpzLwCEe03haVRp2x_7-fKKi0azxc": {
     "identifier": {
       "type": "dns",
       "value": "daud-185-81-58-45.sslip.io"
     },
     "status": "pending",
-    "expires": "2019-02-11T15:28:27Z",
+    "expires": "2019-02-13T13:22:58Z",
     "challenges": [
-      {
-        "type": "http-01",
-        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/vG2OXNJ69sDm8kSlFN4UpZ4NlekeeUvFibmY-vdWtdA/12238172958",
-        "status": "pending",
-        "token": "tMnHZy65XNo_6CxIQP7U_SVbc2sRhdwPpfthI60BLHk"
-      },
-      {
-        "type": "dns-01",
-        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/vG2OXNJ69sDm8kSlFN4UpZ4NlekeeUvFibmY-vdWtdA/12238172960",
-        "status": "pending",
-        "token": "_xelFEWsI0oblTkIWF-4bjsYqwEyKBrC90JCau5QEQI"
-      },
       {
         "type": "tls-alpn-01",
-        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/vG2OXNJ69sDm8kSlFN4UpZ4NlekeeUvFibmY-vdWtdA/12238172962",
+        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/ilLXQsNVV1j01lMpzLwCEe03haVRp2x_7-fKKi0azxc/12307224018",
         "status": "pending",
-        "token": "ydilLxFNVcDgZPDRLDXRrPoBE7EnU_8VO6Zt89c4jxs"
-      }
-    ]
-  },
-  "https://acme-v02.api.letsencrypt.org/acme/authz/ES7WSPcwDSZEFH4HPYA3bjKzztCa_SGegR2uD25hcgw": {
-    "identifier": {
-      "type": "dns",
-      "value": "daud-185-81-58-45.sslip.io"
-    },
-    "status": "pending",
-    "expires": "2019-02-11T15:32:10Z",
-    "challenges": [
-      {
-        "type": "dns-01",
-        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/ES7WSPcwDSZEFH4HPYA3bjKzztCa_SGegR2uD25hcgw/12238252074",
-        "status": "pending",
-        "token": "sc59CWMjqitKEncMgZ1mfTHZXjVFg27GKH5yS26sdis"
+        "token": "H0QkNasqMxT_axF8UxgYBCU6L_yLemHdIQWRv1yeXbo"
       },
       {
         "type": "http-01",
-        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/ES7WSPcwDSZEFH4HPYA3bjKzztCa_SGegR2uD25hcgw/12238252075",
+        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/ilLXQsNVV1j01lMpzLwCEe03haVRp2x_7-fKKi0azxc/12307224019",
         "status": "pending",
-        "token": "3PdLK33qcUOplbJOK8t-U_SUb-U-0WotxYnRk4dOT2I"
+        "token": "oKL7h690KqvjeFJzdAeTeyBilCZu-mvNDbXYvDUGGks"
       },
       {
-        "type": "tls-alpn-01",
-        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/ES7WSPcwDSZEFH4HPYA3bjKzztCa_SGegR2uD25hcgw/12238252076",
+        "type": "dns-01",
+        "url": "https://acme-v02.api.letsencrypt.org/acme/challenge/ilLXQsNVV1j01lMpzLwCEe03haVRp2x_7-fKKi0azxc/12307224020",
         "status": "pending",
-        "token": "njYABtEB_w7rT46vL5jVkvV-07ZWrtPRfqJGp6ABTK0"
+        "token": "LecxQvGRNlgatI_G457H89eYDmjoQhHFIq3viK_O5KE"
       }
     ]
   }
