@@ -13,9 +13,7 @@
             if (this.Exists)
             {
                 World.Actors.Remove(this);
-                World.Bodies.Remove(this);
-                if (this.IsStatic)
-                    World.StaticBodyRemove(this);
+                World.BodyRemove(this);
                 this.Exists = false;
             }
         }
@@ -24,11 +22,9 @@
         {
             World = world;
             this.ID = world.NextID();
+            
             world.Actors.Add(this);
-            world.Bodies.Add(this);
-
-            if (this.IsStatic)
-                world.StaticBodyAdd(this);
+            World.BodyAdd(this);
 
             this.OriginalPosition = this.Position;
             this.OriginalAngle = this.Angle;

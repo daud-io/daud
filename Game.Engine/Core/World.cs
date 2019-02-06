@@ -84,10 +84,10 @@
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
                 LastStepSize = Time - oldTime;
 
-                RTreeDynamic.Clear();
+                //RTreeDynamic.Clear();
                 foreach (var body in Bodies)
                     body.Project(Time);
-                RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
+                //RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
 
                 var origActors = Actors.ToList();
                 foreach (var actor in Actors)
@@ -102,13 +102,19 @@
                     actor.CreateDestroy();
 
                 foreach (var body in Bodies)
+                {
                     if (body.IsDirty)
                     {
                         body.DefinitionTime = this.Time;
                         body.OriginalPosition = body.Position;
                         body.OriginalAngle = body.Angle;
                         body.IsDirty = false;
+                        if (!body.IsNew)
+                            BodyCleaned(body);
                     }
+
+                    body.IsNew = false;
+                }
 
                 ProcessLeaderboard();
 
@@ -127,13 +133,37 @@
             Processing = false;
         }
 
-        public void StaticBodyAdd(Body body)
+        public void BodyCleaned(Body body)
         {
-            RTreeStatic.Insert(body);
+            if (body.IsStatic)
+            {
+                RTreeStatic.Delete(body);
+                RTreeStatic.Insert(body);
+            }
+            else
+            {
+                RTreeDynamic.Delete(body);
+                RTreeDynamic.Insert(body);
+            }
         }
-        public void StaticBodyRemove(Body body)
+
+
+        public void BodyAdd(Body body)
         {
-            RTreeStatic.Delete(body);
+            Bodies.Add(body);
+            if (body.IsStatic)
+                RTreeStatic.Insert(body);
+            else
+                RTreeDynamic.Insert(body);
+        }
+
+        public void BodyRemove(Body body)
+        {
+            Bodies.Remove(body);
+            if (body.IsStatic)
+                RTreeStatic.Delete(body);
+            else
+                RTreeDynamic.Delete(body);
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
