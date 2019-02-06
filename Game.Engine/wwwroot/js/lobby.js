@@ -106,7 +106,7 @@ function refreshList(autoJoinWorld) {
 
                 buildList(response);
 
-                if (autoJoin) joinWorld(autoJoinWorld || "ca.daud.io/default");
+                if (autoJoin) joinWorld(autoJoinWorld || "us.daud.io/default");
             }
         });
 }

@@ -99,10 +99,10 @@
                 var serverWorlds = await RegistryClient.Registry.ListAsync();
                 worlds.AddRange(
                     serverWorlds
-                        .Where(s => new[] { "de.daud.io", "ca.daud.io" }.Contains(s.URL))
+                        .Where(s => new[] { "de.daud.io", "us.daud.io" }.Contains(s.URL))
                         .SelectMany(server => server.Worlds.Select(world => new { server, world }))
                         .Where(s => allWorlds || !s.world.Hook.Hidden)
-                        .Where(s => s.server.URL == "ca.daud.io" || (s.server.URL == "de.daud.io" && s.world.WorldKey == "default"))
+                        .Where(s => s.server.URL == "us.daud.io" || (s.server.URL == "de.daud.io" && s.world.WorldKey == "default"))
                         .OrderBy(s => s.world.Hook.Weight)
                         .Select(s =>
                         {
