@@ -116,7 +116,15 @@ namespace Game.Engine
             cts.CancelAfter(15000);
             try
             {
-                _options.DnsNames = new[] { await _registryClient.Registry.SuggestAsync(_gameConfiguration.PublicURL, cts.Token) };
+                var suggestion = await _registryClient.Registry.SuggestAsync(_gameConfiguration.PublicURL, cts.Token);
+
+                if (suggestion != "localhost")
+                    _options.DnsNames = new[] { suggestion };
+                else
+                {
+                    _logger.LogError("registry reports we are not accessible on http TCP/80 on our public IP. If you're in development mode, this is fine.");
+                    return;
+                }
             }
             catch (Exception e)
             {

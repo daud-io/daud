@@ -19,6 +19,7 @@ export const Settings = {
     logLength: 4,
     displayMinimap: true,
     bigKillMessage: true,
+	showKeyboardHints: true,
     showOwnName: true,
     nameSize: 48,
     background: "on",
@@ -56,11 +57,14 @@ function save() {
     Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").checked;
     Settings.mipmapping = document.getElementById("settingsMipMapping").checked;
     Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
+	Settings.showKeyboardHints = document.getElementById("settingsShowKeyboardHints").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
     Settings.nameSize = Number(document.getElementById("settingsNameSize").value);
     Settings.background = document.getElementById("settingsBackground").value;
 
     Cookies.set("settings", Settings, cookieOptions);
+	
+	keyboardHints();
 
     if (reload) window.location.reload();
 }
@@ -95,6 +99,7 @@ function load() {
     document.getElementById("settingsLog").value = Settings.logLength;
     document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
     document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
+	document.getElementById("settingsShowKeyboardHints").checked = Settings.showKeyboardHints;
     document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
     document.getElementById("settingsNameSize").value = Settings.nameSize;
     document.getElementById("settingsBackground").value = Settings.background;
@@ -225,3 +230,15 @@ window.addEventListener("keydown", function(e) {
 window.addEventListener("keyup", function(e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
+
+keyboardHints();
+
+function keyboardHints() {
+	if (Settings.showKeyboardHints) {
+		document.getElementById("minimapTip").style.display = "block";
+		document.getElementById("autofireContainer").style.display = "block";
+	} else {
+		document.getElementById("minimapTip").style.display = "none";
+		document.getElementById("autofireContainer").style.display = "none";
+	}
+}

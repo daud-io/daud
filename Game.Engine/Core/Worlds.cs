@@ -79,6 +79,7 @@
             hook.BotBase = 10;
             hook.BotRespawnDelay = 0;
             hook.PickupShields = 10;
+			hook.ComboDelay = 2000;
 
             hook.Name = "Planet Daud";
             hook.Description = "AAAAAHHH! Run!";

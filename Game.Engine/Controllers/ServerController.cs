@@ -28,7 +28,7 @@
             return new Server
             {
                 PlayerCount = Player.GetWorldPlayers(world).Count,
-                WorldCount = 1
+                WorldCount = Worlds.AllWorlds.Count
             };
         }
 

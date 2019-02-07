@@ -28,6 +28,9 @@
         public bool BoostRequested { get; set; }
         public bool ShootRequested { get; set; }
 
+		public long LastKillTime { get; set; } = 0;
+		public int KillCounter { get; set; } = 0;
+		public int ComboCounter { get; set; } = 0;
         public long ShootCooldownTimeStart { get; set; } = 0;
         public long ShootCooldownTime { get; set; } = 0;
         public float ShootCooldownStatus { get; set; } = 0;
@@ -89,34 +92,65 @@
         {
             if (player != null)
             {
-                player.Score += World.Hook.PointsPerKillFleet;
-
-                player.SendMessage($"You Killed {this.Owner.Name}", "kill",
-                    World.Hook.PointsPerKillFleet,
-                    new
+				var comboTxt = "";
+				var comboPlusScore = 0;
+				if (player.IsAlive)
+                {
+					player.Fleet.KillCounter += 1;
+                    if (World.Time - player.Fleet.LastKillTime < World.Hook.ComboDelay)
                     {
-                        ping = new
-                        {
-                            you = player?.Connection?.Latency ?? 0,
-                            them = this.Owner?.Connection?.Latency ?? 0
-                        }
+                        player.Fleet.ComboCounter += 1;
+                        comboTxt = $"x{player.Fleet.ComboCounter} combo!";
+                        comboPlusScore = (player.Fleet.ComboCounter - 1) * World.Hook.ComboPointsStep;
+                        player.Score += comboPlusScore;
                     }
-                );
+                    else
+                    {
+                        player.Fleet.ComboCounter = 1;
+                    }
 
+                    var PreviousKillTime = player.Fleet.LastKillTime;
+                    player.Fleet.LastKillTime = World.Time;
+
+                    int plusScore = Convert.ToInt32(World.Hook.PointsPerKillFleetStep * (Math.Floor((decimal)this.Owner.Score / (decimal)World.Hook.PointsPerKillFleetPerStep) + 1));
+                    plusScore = (plusScore < World.Hook.PointsPerKillFleetMax) ? plusScore : World.Hook.PointsPerKillFleetMax;
+                    player.Score += plusScore;
+
+                    player.SendMessage($"You Killed {this.Owner.Name}", "kill",
+                        plusScore,
+                        new
+                        {
+                            ping = new
+                            {
+                                you = player?.Connection?.Latency ?? 0,
+                                them = this.Owner?.Connection?.Latency ?? 0
+                            },
+                            combo = new
+                            {
+                                text = comboTxt,
+                                score = comboPlusScore
+                            }
+                        }
+                    );
+                }
+                //player.SendMessage($"You Killed {this.Owner.Name}! - +{plusScore}{combo} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");
                 if (this.Owner.Connection != null)
                     this.Owner.Connection.SpectatingFleet = player.Fleet;
-
-                this.Owner.SendMessage($"Killed by {player.Name}", "killed",
-                    (int)MathF.Ceiling(this.Owner.Score / 2),
-                    new
-                    {
-                        ping = new
-                        {
-                            you = this.Owner?.Connection?.Latency ?? 0,
-                            them = player?.Connection?.Latency ?? 0
-                        }
-                    }
-                );
+					//this.Owner.SendMessage($"Killed by {player.Name} - ping (you: {this.Owner?.Connection?.Latency ?? 0} them:{player?.Connection?.Latency ?? 0})");
+					this.Owner.SendMessage($"Killed by {player.Name}", "killed",
+						(int)MathF.Ceiling(this.Owner.Score / 2),
+						new
+						{
+							score = this.Owner.Score,
+							kills = player.Fleet.KillCounter,
+							ping = new
+							{
+								you = this.Owner?.Connection?.Latency ?? 0,
+								them = player?.Connection?.Latency ?? 0
+							}
+						}
+					);
+					player.Fleet.KillCounter = 0;
             }
             else
             {

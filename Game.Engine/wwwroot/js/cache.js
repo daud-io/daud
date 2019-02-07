@@ -145,9 +145,8 @@ export class Cache {
                         }
                     }
                 }
-                if (!update.renderer)
-                    update.renderer = new RenderedObject(this.container);
-                    
+                if (!update.renderer) update.renderer = new RenderedObject(this.container);
+
                 update.group = group;
                 update.zIndex = group.ZIndex || 0;
 

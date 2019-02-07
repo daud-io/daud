@@ -887,3 +887,41 @@ progress::-webkit-progress-value {
     right: 15px;
     color: #777;
 }
+
+#autofireContainer {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	color: #ccc;
+}
+
+#plusScoreContainer {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}
+
+.plusScore {
+	font-size: 40px;
+	opacity: 0;
+	animation: plusScore 2.5s;
+	-webkit-animation: plusScore 2.5s;
+	position: absolute;
+}
+
+@keyframes plusScore {
+	0%   {opacity:0;transform:translate(-100%, -75%))}
+	25%  {opacity:1}
+	50%  {opacity:1}
+	100% {opacity:0;transform:translate(-100%, calc(-75%-200px))}
+}
+
+#comboMessage {
+	color: #ff5555;
+	position: absolute;
+    top: 4.5em;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    font-weight: bold;
+}

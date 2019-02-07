@@ -1,5 +1,6 @@
 ﻿namespace Game.Registry.Controllers
 {
+    using Game.API.Client;
     using Game.API.Common.Models;
     using Game.API.Common.Security;
     using Microsoft.AspNetCore.Authorization;
@@ -8,6 +9,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
+    using System.Net.Http;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class RegistryController : APIControllerBase
@@ -66,16 +69,37 @@
             if (configuredName != null)
                 return configuredName;
             else
-                return await RecommendHostName();
+                return await RecommendHostNameAsync();
         }
 
-        private async Task<string> RecommendHostName()
+        private async Task<string> RecommendHostNameAsync()
         {
             // I should probably support some kind of x-forwarded for headers etc.
             var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
             var entry = await Dns.GetHostEntryAsync(ipAddress);
 
-            return $"daud-{ipAddress.Replace(".", "-")}.sslip.io";
+            var apiClient = new APIClient(new Uri($"http://{ipAddress}"));
+            try
+            {
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(2000);
+                var server = await apiClient.Server.ServerGetAsync(cts.Token);
+                if (server == null)
+                {
+                    Console.WriteLine($"Suggesting localhost to {ipAddress}");
+                    return "localhost";
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine($"Suggesting localhost to {ipAddress}");
+                return "localhost";
+            }
+
+            var address = $"daud-{ipAddress.Replace(".", "-")}.sslip.io";
+            Console.WriteLine($"Suggesting {address} to {ipAddress}");
+
+            return address;
         }
 
         [
@@ -88,7 +112,7 @@
             if (registryReport != null)
             {
                 if (registryReport.URL == null)
-                    registryReport.URL = await RecommendHostName();
+                    registryReport.URL = await RecommendHostNameAsync();
 
                 var url = registryReport.URL;
                 lock (Reports)

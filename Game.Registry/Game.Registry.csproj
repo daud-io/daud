@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Game.API.Models\Game.API.Common.csproj" />
+    <ProjectReference Include="..\Game.Engine.Networking.Client\Game.API.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
