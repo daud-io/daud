@@ -124,7 +124,9 @@ export var Controls = {
                                 Controls.boost = false;
                             }, 100);
                         }
-                    } else Controls.shoot = false;
+                    } else if (!Controls.autofire) {
+						Controls.shoot = false;
+					}
                 }
             });
             document.getElementById("gameArea").addEventListener("contextmenu", e => {
@@ -216,8 +218,10 @@ window.addEventListener(
                 Controls.boost = false;
                 break;
             case 32: // space
-                Controls.shoot = false;
-                break;
+				if (!Controls.autofire) {
+					Controls.shoot = false;
+				}
+				break;
         }
     },
     false
