@@ -30,10 +30,14 @@
 
         <div id="gameArea" class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
+			
+			<div id="plusScoreContainer">
+			</div>
 
             <small id="minimapTip">Press M to toggle the minimap</small>
 
             <div id="bigLog"></div>
+			<div id="comboMessage"></div>
 
             <div id="ctf_arena" class="hide">
                 <span id="ctf_cyan">
@@ -53,6 +57,10 @@
             <div id="stop_spectating_container">
                 <input type="button" id="stop_spectating" class="button1" value="Menu" />
                 <input type="button" id="spawnSpectate" class="button1" value="Launch as guest!">
+				<div id="deathScreen">
+					Your score: <span id="deathScreenScore"></span><br />
+					<span hidden>Kills: <span id="deathScreenKills"></span></span>
+				</div>
             </div>
             <table id="leaderboard" cellspacing="0"></table>
             <table id="leaderboard-left" cellspacing="0"></table>

@@ -17,16 +17,12 @@ function selectRow(selectedWorld) {
 }
 const imgs = require(`../img/worlds/*.png`);
 function buildList(response) {
-
     if (allWorlds != false) {
         let keys = "";
-        response.forEach(w => keys += ":" + (w.world));
+        response.forEach(w => (keys += ":" + w.world));
 
-        if (lastKeys == keys)
-            return updateList(response);
-
-        else
-            lastKeys = keys;
+        if (lastKeys == keys) return updateList(response);
+        else lastKeys = keys;
     }
 
     allWorlds = {};
