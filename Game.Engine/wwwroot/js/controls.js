@@ -186,7 +186,9 @@ window.addEventListener(
                 break;
 			case 69: // e
 				// Autofire
-				if (!Controls.autofire) {
+				if (!document.body.classList.contains("alive")) {
+					break;
+				} else if (!Controls.autofire) {
 					Controls.autofire = true;
 					Controls.shoot = true;
 					autofTgg.innerHTML = "ON";
