@@ -887,3 +887,10 @@ progress::-webkit-progress-value {
     right: 15px;
     color: #777;
 }
+
+#autofireContainer {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	color: #ccc;
+}

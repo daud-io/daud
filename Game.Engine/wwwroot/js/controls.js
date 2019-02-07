@@ -4,6 +4,9 @@ import { setInterval, setTimeout } from "timers";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
 
+const autofCon = document.getElementById("autofireContainer");
+const autofTgg = document.getElementById("autofireToggle");
+
 export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
     resetJoystick: false
@@ -186,10 +189,14 @@ window.addEventListener(
 				if (!Controls.autofire) {
 					Controls.autofire = true;
 					Controls.shoot = true;
+					autofTgg.innerHTML = "ON";
+					autofCon.style.color = "#fff";
 					console.log("Autofire enabled!");
 				} else {
 					Controls.autofire = false;
 					Controls.shoot = false;
+					autofTgg.innerHTML = "OFF";
+					autofCon.style.color = "";
 					console.log("Autofire disabled!");
 				}
 				break;
