@@ -3,6 +3,7 @@
     using Game.API.Common.Models;
     using Game.Engine.Core.Maps;
     using Game.Engine.Networking;
+    using Newtonsoft.Json;
     using RBush;
     using System;
     using System.Collections.Generic;
@@ -81,15 +82,13 @@
             lock (this.Bodies)
             {
                 var start = DateTime.Now;
-                
+
                 var oldTime = Time;
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
                 LastStepSize = Time - oldTime;
 
-                //RTreeDynamic.Clear();
                 foreach (var body in Bodies)
                     body.Project(Time);
-                //RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
 
                 var origActors = Actors.ToList();
                 foreach (var actor in Actors)
@@ -107,7 +106,7 @@
                 var indexed = 0;
                 foreach (var body in Bodies)
                 {
-                    if (body.IsDirty)
+                    if (body.IsDirty || !body.Indexed)
                     {
                         body.DefinitionTime = this.Time;
                         body.OriginalPosition = body.Position;
@@ -116,7 +115,6 @@
                         if (Vector2.Distance(body.IndexedPosition, body.Position) > SearchMargin)
                         {
                             BodyCleaned(body);
-                            body.IndexedPosition = body.Position;
                             indexed++;
                         }
                         else
@@ -125,9 +123,30 @@
                 }
 
                 if (false && unindexed + indexed > 0)
-                    Console.WriteLine($"{1f * indexed/(unindexed+indexed)}\t");
+                    Console.WriteLine($"{1f * indexed / (unindexed + indexed)}\t");
 
                 ProcessLeaderboard();
+
+                if (Time % 1000 < LastStepSize)
+                {
+                    var all = RTreeDynamic.Search()
+                        .ToList();
+
+                    all = all
+                        .Where(b => !Bodies.Contains(b))
+                        .ToList();
+
+                    if (all.Any())
+                    {
+                        Console.WriteLine("Leak of RTree nodes!");
+
+                        Console.WriteLine(JsonConvert.SerializeObject(
+                            all.GroupBy(b => b.GetType().ToString())
+                                .Select(b => new { b.Key, Count = b.Count() }),
+                            Formatting.Indented));
+                    }
+                        
+                }
 
 
                 if (Time > 10000) // lets not get too excited if things slow down when initialized
@@ -147,34 +166,43 @@
         public void BodyCleaned(Body body)
         {
             if (body.IsStatic)
-            {
                 RTreeStatic.Delete(body);
-                RTreeStatic.Insert(body);
-            }
             else
-            {
                 RTreeDynamic.Delete(body);
-                RTreeDynamic.Insert(body);
-            }
-        }
 
+            if (!body.Exists)
+                return;
 
-        public void BodyAdd(Body body)
-        {
-            Bodies.Add(body);
+            body.Envelope = new Envelope(
+                body.Position.X - body.Size, 
+                body.Position.Y - body.Size, 
+                body.Position.X + body.Size, 
+                body.Position.Y + body.Size);
+
+            body.IndexedPosition = body.Position;
+            body.Indexed = true;
+            body.Updated = true;
+
             if (body.IsStatic)
                 RTreeStatic.Insert(body);
             else
                 RTreeDynamic.Insert(body);
+        }
+
+        public void BodyAdd(Body body)
+        {
+            Bodies.Add(body);
         }
 
         public void BodyRemove(Body body)
         {
             Bodies.Remove(body);
+
             if (body.IsStatic)
                 RTreeStatic.Delete(body);
             else
                 RTreeDynamic.Delete(body);
+            body.Removed = true;
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
@@ -306,7 +334,7 @@
                 return _id++;
         }
 
-        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)
+        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0)
         {
             if (maximumDistance == 0)
                 return this.Bodies;

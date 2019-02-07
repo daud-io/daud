@@ -39,8 +39,9 @@
         {
             if (CausesCollisions)
             {
+
                 var collisionSet =
-                    World.BodiesNear(this.Position, this.Size, offsetSize: true)
+                    World.BodiesNear(this.Position, this.Size)
                     .Where(b => b != this);
 
                 if (collisionSet.Any())
