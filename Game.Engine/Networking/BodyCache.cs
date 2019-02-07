@@ -11,20 +11,13 @@
         private readonly Dictionary<long, BucketBody> Bodies = new Dictionary<long, BucketBody>();
         private readonly Dictionary<long, BucketGroup> Groups = new Dictionary<long, BucketGroup>();
 
-        public void Update(IEnumerable<Body> bodies, IEnumerable<Group> groups, uint time, Vector2 windowTopLeft, Vector2 windowBottomRight)
+        public void Update(IEnumerable<Body> bodies, uint time)
         {
-            // this should be some more efficient query r-trees or something
-            var filtered = bodies.Where(b =>
-                b.Position.X >= windowTopLeft.X
-                && b.Position.Y >= windowTopLeft.Y
-                && b.Position.X <= windowBottomRight.X
-                && b.Position.Y <= windowBottomRight.Y
-            ).ToList();
-
+            
             // update cache items and flag missing ones as stale
-            UpdateLocalBodies(filtered);
+            UpdateLocalBodies(bodies);
 
-            UpdateLocalGroups(filtered.Where(f => f.Group != null).Select(f => f.Group).Distinct());
+            UpdateLocalGroups(bodies.Where(f => f.Group != null).Select(f => f.Group).Distinct());
 
             // project the current bodies and calculate errors
             foreach (var bucket in Bodies.Values)
