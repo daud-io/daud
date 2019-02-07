@@ -2,6 +2,8 @@
 
 const log = document.getElementById("log");
 const bigLog = document.getElementById("bigLog");
+const scoreCon = document.getElementById("plusScoreContainer");
+const comboMsg = document.getElementById("comboMessage");
 
 export class Log {
     constructor() {
@@ -29,17 +31,38 @@ export class Log {
 
         log.innerHTML = out;
 
+        let lastData = this.data[this.data.length - 1].entry;
+		/*
+        var lastDataArr = lastData.split(" - ");
+
+        var score = lastDataArr[1];
+        lastData = lastDataArr.join(" - ");
+        if (score[0] === "+") {
+            scoreCon.insertAdjacentHTML("beforeend", "<div class='plusScore'>" + score + "</div>");
+        }*/
+		
+		var lastMsg;
         if (Settings.bigKillMessage) {
-            let lastData = this.data[this.data.length - 1].entry;
             if (lastData.type == "kill") {
-                lastData = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData.text + "<span style='color:#00ff00'>&nbsp;]</span>";
+                lastMsg = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData.text + "<span style='color:#00ff00'>&nbsp;]</span>";
+				scoreCon.insertAdjacentHTML("beforeend", "<div class='plusScore'>+" + lastData.pointsDelta + "</div>");
             } else if (lastData.type == "killed") {
-                lastData = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData.text + "<span style='color:#ff0000'>&nbsp;]</span>";
+                lastMsg = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData.text + "<span style='color:#ff0000'>&nbsp;]</span>";
+				document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
+				document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
             } else {
                 return;
             }
-            bigLog.innerHTML = lastData;
+            bigLog.innerHTML = lastMsg;
         }
+		
+		if (lastData.extraData.combo !== undefined && lastData.extraData.combo.text !== "") {
+			comboMsg.innerHTML = lastData.extraData.combo.text + " +" + lastData.extraData.combo.score;
+		}
+		
+		/*
+		scoreCon.insertAdjacentHTML("beforeend", "<div class='plusScore'>" + lastData.pointsDelta + "</div>");
+		comboMsg.innerHTML = lastData.extraData.combo;*/
     }
 
     check() {
@@ -48,9 +71,12 @@ export class Log {
             log.innerHTML = "";
         }
 
-        const time2 = performance.now() - this.lastDisplay;
         if (time > 3000) {
             bigLog.innerHTML = "";
+        }
+		
+		if (time > 2000) {
+            comboMsg.innerHTML = "";
         }
     }
 }
