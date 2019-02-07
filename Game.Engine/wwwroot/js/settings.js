@@ -64,13 +64,7 @@ function save() {
 
     Cookies.set("settings", Settings, cookieOptions);
 	
-	if (Settings.showKeyboardHints) {
-		document.getElementById("minimapTip").style.display = "block";
-		document.getElementById("autofireContainer").style.display = "block";
-	} else {
-		document.getElementById("minimapTip").style.display = "none";
-		document.getElementById("autofireContainer").style.display = "none";
-	}
+	keyboardHints();
 
     if (reload) window.location.reload();
 }
@@ -236,3 +230,15 @@ window.addEventListener("keydown", function(e) {
 window.addEventListener("keyup", function(e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
+
+keyboardHints();
+
+function keyboardHints() {
+	if (Settings.showKeyboardHints) {
+		document.getElementById("minimapTip").style.display = "block";
+		document.getElementById("autofireContainer").style.display = "block";
+	} else {
+		document.getElementById("minimapTip").style.display = "none";
+		document.getElementById("autofireContainer").style.display = "none";
+	}
+}
