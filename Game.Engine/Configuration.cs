@@ -21,8 +21,6 @@
                 .SetBasePath(basePath ?? Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
 
-            Console.WriteLine("basePath: " + basePath);
-
             var configPath = System.Environment.GetEnvironmentVariable("GAME_CONFIG_PATH");
             if (configPath != null)
             {

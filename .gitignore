@@ -311,3 +311,5 @@ dist/
 .cache/
 package-lock.json
 Game.Util/Properties/launchSettings.json
+
+_IGNORE/

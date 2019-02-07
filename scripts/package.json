@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "connections": "game server connections",
-    "weather-fast": "game server hook --world default {Obstacles:0,ObstacleMaxMomentum:1} && game server hook --world default {Obstacles:15}",
-    "weather-default": "game server hook --world default {Obstacles:0,ObstacleMaxMomentum:0.1} && game server hook --world default {Obstacles:15}",
+    "weather-fast": "game server hook --world team {Obstacles:0,ObstacleMaxMomentum:1} && game server hook --world team {Obstacles:15}",
+    "weather-team": "game server hook --world team {Obstacles:0,ObstacleMaxMomentum:0.1} && game server hook --world team {Obstacles:15}",
     "ctf-cyan": "game player robots --type-name Game.Robots.CTFBot,Game.Robots --name ctf-bot --world ctf --sprite ship_cyan --color cyan --replicas 2",
     "ctf-red": "game player robots --type-name Game.Robots.CTFBot,Game.Robots --name ctf-bot --world ctf --sprite ship_red --color red --replicas 2"
   },

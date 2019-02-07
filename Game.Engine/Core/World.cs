@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common.Models;
     using Game.Engine.Core.Maps;
     using Game.Engine.Networking;
     using RBush;
@@ -57,6 +58,8 @@
 
             SystemActor(MapActor = new MapActor());
 
+            Console.WriteLine($"Initializing World: {this.Hook.Name}");
+
             InitializeStepTimer();
         }
 
@@ -109,13 +112,17 @@
 
                 ProcessLeaderboard();
 
-                var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
-                if (elapsed > Hook.StepTime)
-                    Console.WriteLine($"**** 100% processing time warning: {elapsed}");
-                else if (elapsed > Hook.StepTime * 0.8f)
-                    Console.WriteLine($"*** 80% processing time warning: {elapsed}");
-                else if (elapsed > Hook.StepTime * 0.5f)
-                    Console.WriteLine($"** 50% processing time warning: {elapsed}");
+
+                if (Time > 10000) // lets not get too excited if things slow down when initialized
+                {
+                    var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
+                    if (elapsed > Hook.StepTime)
+                        Console.WriteLine($"**** 100% processing time warning: {elapsed}");
+                    else if (elapsed > Hook.StepTime * 0.8f)
+                        Console.WriteLine($"*** 80% processing time warning: {elapsed}");
+                    else if (elapsed > Hook.StepTime * 0.5f)
+                        Console.WriteLine($"** 50% processing time warning: {elapsed}");
+                }
             }
             Processing = false;
         }

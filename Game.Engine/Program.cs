@@ -4,12 +4,14 @@
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Configuration;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
 
     public class Program
     {
         private static CancellationTokenSource cts = new CancellationTokenSource();
+        static IEnumerable<string> DnsNames { get; set; }
 
         public static void Abort()
         {
@@ -30,18 +32,37 @@
         {
             var builder = WebHost.CreateDefaultBuilder(args);
 
+            var config = new GameConfiguration();
+            Configuration<GameConfiguration>.Load("config", instance: config);
+
             var port = System.Environment.GetEnvironmentVariable("PORT");
-            if (!string.IsNullOrEmpty(port)) 
-                builder = builder.UseUrls($"http://*:{port}");
+
+            if (!string.IsNullOrEmpty(port))
+            {
+                builder.UseUrls($"http://*:{port}");
+            }
             else
-                builder = builder.UseConfiguration(new ConfigurationBuilder()
+                builder.UseConfiguration(new ConfigurationBuilder()
                     .AddJsonFile("hosting.json", optional: true)
                     .Build()
                 );
 
-            return builder
+            builder
                 .UseWebRoot("wwwroot/dist")
                 .UseStartup<Startup>();
+
+
+            if (config.LetsEncryptEnabled)
+                // Full Form with access to All Options:
+                builder.AddAcmeServices(new AcmeOptions
+                {
+                    AcmeRootDir = "_IGNORE/_acmesharp",
+                    AccountContactEmails = new[] { "info@daud.io" },
+                    AcceptTermsOfService = true,
+                    CertificateKeyAlgor = "rsa",
+                });
+
+            return builder;
         }
     }
 }

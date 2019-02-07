@@ -142,6 +142,10 @@
             InvulnerableUntil = World.Time + duration;
             IsInvulnerable = true;
             IsShielded = isShield;
+
+            if (isShield && Fleet != null)
+                foreach (var ship in Fleet.Ships)
+                    ship.ShieldStrength = World.Hook.ShieldStrength;
         }
 
         public virtual void Think()
@@ -175,7 +179,12 @@
                     IsInvulnerable = false;
 
                 if (!IsInvulnerable)
+                {
                     IsShielded = false;
+
+                    foreach (var ship in Fleet?.Ships)
+                        ship.ShieldStrength = 0;
+                }
             }
         }
 

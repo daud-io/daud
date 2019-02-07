@@ -12,6 +12,7 @@ export class Log {
     }
 
     addEntry(entry) {
+
         this.data.push({ time: new Date(), entry });
         while (this.data.length > Settings.logLength) this.data.shift();
 
