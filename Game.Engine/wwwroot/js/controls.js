@@ -46,6 +46,7 @@ export var Controls = {
     down: false,
     boost: false,
     shoot: false,
+	autofire: false,
     downSince: false,
     registerCanvas(canvas) {
         const getMousePos = (canvas, { clientX, clientY }) => {
@@ -67,7 +68,9 @@ export var Controls = {
                 Controls.shoot = true;
             });
             document.getElementById("shoot").addEventListener("touchend", e => {
-                Controls.shoot = false;
+				if (!Controls.autofire) {
+					Controls.shoot = false;
+				}
             });
             document.getElementById("boost").addEventListener("touchstart", e => {
                 Controls.boost = true;
@@ -111,7 +114,9 @@ export var Controls = {
                         if (timeDelta < Settings.mouseOneButton) {
                             Controls.shoot = true;
                             setTimeout(function() {
-                                Controls.shoot = false;
+								if (!Controls.autofire) {
+									Controls.shoot = false;
+								}
                             }, 100);
                         } else {
                             Controls.boost = true;
@@ -174,6 +179,18 @@ window.addEventListener(
             case 32: // space
                 Controls.shoot = true;
                 break;
+			case 69: // e
+				// Autofire
+				if (!Controls.autofire) {
+					Controls.autofire = true;
+					Controls.shoot = true;
+					console.log("Autofire enabled!");
+				} else {
+					Controls.autofire = false;
+					Controls.shoot = false;
+					console.log("Autofire disabled!");
+				}
+				break;
         }
     },
     false
