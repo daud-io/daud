@@ -63,7 +63,8 @@
         {
             Task.Run(async () =>
             {
-                await this.SendPingAsync();
+                if (this.Socket != null && this.Socket.State == WebSocketState.Open)
+                    await this.SendPingAsync();
             }).Wait();
         }
 
