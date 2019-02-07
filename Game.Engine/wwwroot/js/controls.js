@@ -4,6 +4,9 @@ import { setInterval, setTimeout } from "timers";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
 
+const autofCon = document.getElementById("autofireContainer");
+const autofTgg = document.getElementById("autofireToggle");
+
 export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
     resetJoystick: false
@@ -46,6 +49,7 @@ export var Controls = {
     down: false,
     boost: false,
     shoot: false,
+	autofire: false,
     downSince: false,
     registerCanvas(canvas) {
         const getMousePos = (canvas, { clientX, clientY }) => {
@@ -67,7 +71,9 @@ export var Controls = {
                 Controls.shoot = true;
             });
             document.getElementById("shoot").addEventListener("touchend", e => {
-                Controls.shoot = false;
+				if (!Controls.autofire) {
+					Controls.shoot = false;
+				}
             });
             document.getElementById("boost").addEventListener("touchstart", e => {
                 Controls.boost = true;
@@ -111,7 +117,9 @@ export var Controls = {
                         if (timeDelta < Settings.mouseOneButton) {
                             Controls.shoot = true;
                             setTimeout(function() {
-                                Controls.shoot = false;
+								if (!Controls.autofire) {
+									Controls.shoot = false;
+								}
                             }, 100);
                         } else {
                             Controls.boost = true;
@@ -119,7 +127,9 @@ export var Controls = {
                                 Controls.boost = false;
                             }, 100);
                         }
-                    } else Controls.shoot = false;
+                    } else if (!Controls.autofire) {
+						Controls.shoot = false;
+					}
                 }
             });
             document.getElementById("gameArea").addEventListener("contextmenu", e => {
@@ -174,6 +184,24 @@ window.addEventListener(
             case 32: // space
                 Controls.shoot = true;
                 break;
+			case 69: // e
+				// Autofire
+				if (!document.body.classList.contains("alive")) {
+					break;
+				} else if (!Controls.autofire) {
+					Controls.autofire = true;
+					Controls.shoot = true;
+					autofTgg.innerHTML = "ON";
+					autofCon.style.color = "#fff";
+					console.log("Autofire enabled!");
+				} else {
+					Controls.autofire = false;
+					Controls.shoot = false;
+					autofTgg.innerHTML = "OFF";
+					autofCon.style.color = "";
+					console.log("Autofire disabled!");
+				}
+				break;
         }
     },
     false
@@ -199,8 +227,10 @@ window.addEventListener(
                 Controls.boost = false;
                 break;
             case 32: // space
-                Controls.shoot = false;
-                break;
+				if (!Controls.autofire) {
+					Controls.shoot = false;
+				}
+				break;
         }
     },
     false

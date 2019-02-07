@@ -888,6 +888,13 @@ progress::-webkit-progress-value {
     color: #777;
 }
 
+#autofireContainer {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	color: #ccc;
+}
+
 #plusScoreContainer {
 	position: absolute;
 	top: 50%;

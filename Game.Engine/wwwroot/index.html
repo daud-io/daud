@@ -34,6 +34,7 @@
 			<div id="plusScoreContainer">
 			</div>
 
+			<div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
             <small id="minimapTip">Press M to toggle the minimap</small>
 
             <div id="bigLog"></div>
@@ -209,7 +210,16 @@
                                 </label>
                             </td>
                         </tr>
-
+						<tr>
+                            <td>Show Keyboard Hints</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsShowKeyboardHints">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
+						
                         <!-- hidden... this isn't doing anything -->
                         <tr style="display: none;">
                             <td>Show Leaderboard</td>
