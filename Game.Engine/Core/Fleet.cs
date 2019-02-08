@@ -113,7 +113,6 @@
                     int plusScore = Convert.ToInt32(World.Hook.PointsPerKillFleetStep * (Math.Floor((decimal)this.Owner.Score / (decimal)World.Hook.PointsPerKillFleetPerStep) + 1));
                     plusScore = (plusScore < World.Hook.PointsPerKillFleetMax) ? plusScore : World.Hook.PointsPerKillFleetMax;
                     player.Score += plusScore;
-					this.Owner.KillCounter += 1;
 
                     player.SendMessage($"You Killed {this.Owner.Name}", "kill",
                         plusScore,
@@ -131,8 +130,8 @@
                             }
                         }
                     );
+					this.Owner.KillCounter += 1;
                 }
-                //player.SendMessage($"You Killed {this.Owner.Name}! - +{plusScore}{combo} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");
                 if (this.Owner.Connection != null)
                     this.Owner.Connection.SpectatingFleet = player.Fleet;
 					//this.Owner.SendMessage($"Killed by {player.Name} - ping (you: {this.Owner?.Connection?.Latency ?? 0} them:{player?.Connection?.Latency ?? 0})");
