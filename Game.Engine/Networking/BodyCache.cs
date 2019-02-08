@@ -11,20 +11,11 @@
         private readonly Dictionary<long, BucketBody> Bodies = new Dictionary<long, BucketBody>();
         private readonly Dictionary<long, BucketGroup> Groups = new Dictionary<long, BucketGroup>();
 
-        public void Update(IEnumerable<Body> bodies, IEnumerable<Group> groups, uint time, Vector2 windowTopLeft, Vector2 windowBottomRight)
+        public void Update(IEnumerable<Body> bodies, uint time)
         {
-            // this should be some more efficient query r-trees or something
-            var filtered = bodies.Where(b =>
-                b.Position.X >= windowTopLeft.X
-                && b.Position.Y >= windowTopLeft.Y
-                && b.Position.X <= windowBottomRight.X
-                && b.Position.Y <= windowBottomRight.Y
-            ).ToList();
-
+            
             // update cache items and flag missing ones as stale
-            UpdateLocalBodies(filtered);
-
-            UpdateLocalGroups(filtered.Where(f => f.Group != null).Select(f => f.Group).Distinct());
+            UpdateLocalBodies(bodies);
 
             // project the current bodies and calculate errors
             foreach (var bucket in Bodies.Values)
@@ -80,13 +71,14 @@
 
         private void UpdateLocalBodies(IEnumerable<Body> bodies)
         {
+            foreach (var bucket in Groups.Values)
+                bucket.Stale = true;
+
             foreach (var bucket in Bodies.Values)
                 bucket.Stale = true;
 
             foreach (var obj in bodies)
             {
-                BucketBody bucket = null;
-
                 if (Bodies.ContainsKey(obj.ID))
                 {
                     Bodies[obj.ID].Stale = false;
@@ -94,12 +86,25 @@
                 }
                 else
                 {
-                    bucket = new BucketBody
+                    var bucket = new BucketBody
                     {
                         BodyUpdated = obj,
                         Stale = false
                     };
                     Bodies.Add(obj.ID, bucket);
+                }
+
+                if (obj.Group != null)
+                if (Groups.ContainsKey(obj.Group.ID))
+                    Groups[obj.Group.ID].Stale = false;
+                else
+                {
+                    var bucket = new BucketGroup
+                    {
+                        GroupUpdated = obj.Group,
+                        Stale = false
+                    };
+                    Groups.Add(obj.Group.ID, bucket);
                 }
             }
         }

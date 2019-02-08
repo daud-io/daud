@@ -3,6 +3,7 @@
     using Game.API.Common.Models;
     using Game.Engine.Core.Maps;
     using Game.Engine.Networking;
+    using Newtonsoft.Json;
     using RBush;
     using System;
     using System.Collections.Generic;
@@ -31,6 +32,8 @@
 
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
+
+        private int SearchMargin = 0;
 
         private bool Processing = false;
 
@@ -79,14 +82,22 @@
             lock (this.Bodies)
             {
                 var start = DateTime.Now;
-                
+
                 var oldTime = Time;
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
                 LastStepSize = Time - oldTime;
 
                 RTreeDynamic.Clear();
                 foreach (var body in Bodies)
+                {
                     body.Project(Time);
+                    body.Envelope = new Envelope(
+                        body.Position.X - body.Size,
+                        body.Position.Y - body.Size,
+                        body.Position.X + body.Size,
+                        body.Position.Y + body.Size);
+                }
+
                 RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
 
                 var origActors = Actors.ToList();
@@ -101,17 +112,31 @@
                 foreach (var actor in Actors.ToList())
                     actor.CreateDestroy();
 
+                var unindexed = 0;
+                var indexed = 0;
                 foreach (var body in Bodies)
-                    if (body.IsDirty)
+                {
+                    if (body.IsDirty || !body.Indexed)
                     {
                         body.DefinitionTime = this.Time;
                         body.OriginalPosition = body.Position;
                         body.OriginalAngle = body.Angle;
                         body.IsDirty = false;
+
+                        /*if (Vector2.Distance(body.IndexedPosition, body.Position) > SearchMargin)
+                        {
+                            BodyCleaned(body);
+                            indexed++;
+                        }
+                        else
+                            unindexed++;*/
                     }
+                }
+
+                if (false && unindexed + indexed > 0)
+                    Console.WriteLine($"{1f * indexed / (unindexed + indexed)}\t");
 
                 ProcessLeaderboard();
-
 
                 if (Time > 10000) // lets not get too excited if things slow down when initialized
                 {
@@ -127,13 +152,47 @@
             Processing = false;
         }
 
-        public void StaticBodyAdd(Body body)
+        public void BodyCleaned(Body body)
         {
-            RTreeStatic.Insert(body);
+            if (body.IsStatic)
+                RTreeStatic.Delete(body);
+            else
+                RTreeDynamic.Delete(body);
+
+            if (!body.Exists)
+                return;
+
+            body.Envelope = new Envelope(
+                body.Position.X - body.Size, 
+                body.Position.Y - body.Size, 
+                body.Position.X + body.Size, 
+                body.Position.Y + body.Size);
+
+            body.IndexedPosition = body.Position;
+            body.Indexed = true;
+            body.Updated = true;
+
+            if (body.IsStatic)
+                RTreeStatic.Insert(body);
+            else
+                RTreeDynamic.Insert(body);
         }
-        public void StaticBodyRemove(Body body)
+
+        public void BodyAdd(Body body)
         {
-            RTreeStatic.Delete(body);
+            Bodies.Add(body);
+        }
+
+        public void BodyRemove(Body body)
+        {
+            Bodies.Remove(body);
+            return;
+
+            if (body.IsStatic)
+                RTreeStatic.Delete(body);
+            else
+                RTreeDynamic.Delete(body);
+            body.Removed = true;
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
@@ -265,17 +324,17 @@
                 return _id++;
         }
 
-        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)
+        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0)
         {
             if (maximumDistance == 0)
                 return this.Bodies;
             else
             {
                 var searchEnvelope = new Envelope(
-                    point.X - maximumDistance / 2,
-                    point.Y - maximumDistance / 2,
-                    point.X + maximumDistance / 2,
-                    point.Y + maximumDistance / 2
+                    point.X - maximumDistance / 2 - SearchMargin,
+                    point.Y - maximumDistance / 2 - SearchMargin,
+                    point.X + maximumDistance / 2 + SearchMargin,
+                    point.Y + maximumDistance / 2 + SearchMargin
                 );
 
                 return RTreeDynamic.Search(searchEnvelope)

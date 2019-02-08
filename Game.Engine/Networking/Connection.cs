@@ -136,14 +136,9 @@ namespace Game.Engine.Networking
 
                         if (followBody != null)
                         {
-                            var halfViewport = new Vector2(3300, 3300);
-
                             BodyCache.Update(
-                                world.Bodies,
-                                world.Groups,
-                                world.Time,
-                                Vector2.Subtract(followBody.Position, halfViewport),
-                                Vector2.Add(followBody.Position, halfViewport)
+                                world.BodiesNear(followBody.Position, 6000).ToList(),
+                                world.Time
                             );
 
                             var updates = BodyCache.BodiesByError();

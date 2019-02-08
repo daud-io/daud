@@ -7,15 +7,14 @@
         public World World = null;
 
         public bool PendingDestruction { get; set; } = false;
+        protected bool CausesCollisions { get; set; } = false;
 
         public virtual void Destroy()
         {
             if (this.Exists)
             {
                 World.Actors.Remove(this);
-                World.Bodies.Remove(this);
-                if (this.IsStatic)
-                    World.StaticBodyRemove(this);
+                World.BodyRemove(this);
                 this.Exists = false;
             }
         }
@@ -24,11 +23,9 @@
         {
             World = world;
             this.ID = world.NextID();
+            
             world.Actors.Add(this);
-            world.Bodies.Add(this);
-
-            if (this.IsStatic)
-                world.StaticBodyAdd(this);
+            World.BodyAdd(this);
 
             this.OriginalPosition = this.Position;
             this.OriginalAngle = this.Angle;
@@ -40,18 +37,24 @@
 
         public virtual void Think()
         {
-            var collisionSet =
-                World.BodiesNear(this.Position, this.Size, offsetSize: true)
-                .Where(b => b != this);
-
-            if (collisionSet.Any())
+            if (CausesCollisions)
             {
-                foreach (var hit in collisionSet.OfType<ICollide>()
-                    .Where(c => c.IsCollision(this))
-                    .ToList())
+
+                var collisionSet =
+                    World.BodiesNear(this.Position, this.Size)
+                    .Where(b => b != this);
+
+                if (collisionSet.Any())
                 {
-                    hit.CollisionExecute(this);
-                    Collided(hit);
+                    foreach (var hit in collisionSet.OfType<ICollide>()
+                        .ToList())
+                    {
+                        if (hit.IsCollision(this))
+                        {
+                            hit.CollisionExecute(this);
+                            Collided(hit);
+                        }
+                    }
                 }
             }
         }
