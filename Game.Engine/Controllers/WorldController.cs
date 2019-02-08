@@ -129,7 +129,8 @@
                 );
             }
 
-            if (Request.HttpContext.Connection.LocalIpAddress.Equals(Request.HttpContext.Connection.RemoteIpAddress))
+            if (Request.HttpContext.Connection.LocalIpAddress.Equals(Request.HttpContext.Connection.RemoteIpAddress)
+                || !GameConfiguration.RegistryEnabled)
             {
                 worlds.AddRange(Worlds.AllWorlds
                         .OrderBy(w => w.Value.Hook.Weight)
