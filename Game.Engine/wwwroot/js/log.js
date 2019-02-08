@@ -51,6 +51,10 @@ export class Log {
 				document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
 				document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
             } else {
+				if (lastData.type === "universeDeath") {
+					document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
+					document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
+				}
                 return;
             }
             bigLog.innerHTML = lastMsg;

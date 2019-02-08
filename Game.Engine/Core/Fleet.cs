@@ -156,7 +156,13 @@
             {
                 if (this.Owner != null)
                 {
-                    this.Owner.SendMessage($"Killed by the universe", pointsDelta: World.Hook.PointsPerUniverseDeath);
+                    this.Owner.SendMessage($"Killed by the universe", "universeDeath", World.Hook.PointsPerUniverseDeath,
+						new
+						{
+							score = this.Owner.Score,
+							kills = player?.Fleet.KillCounter
+						}
+					);
                     this.Owner.Score += World.Hook.PointsPerUniverseDeath;
                 }
             }
