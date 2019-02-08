@@ -30,6 +30,8 @@
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
+            ThreadPool.SetMinThreads(50, 50);
+
             var builder = WebHost.CreateDefaultBuilder(args);
 
             var config = new GameConfiguration();

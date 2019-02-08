@@ -33,7 +33,7 @@
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
 
-        private int SearchMargin = 150;
+        private int SearchMargin = 0;
 
         private bool Processing = false;
 
@@ -87,8 +87,18 @@
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
                 LastStepSize = Time - oldTime;
 
+                RTreeDynamic.Clear();
                 foreach (var body in Bodies)
+                {
                     body.Project(Time);
+                    body.Envelope = new Envelope(
+                        body.Position.X - body.Size,
+                        body.Position.Y - body.Size,
+                        body.Position.X + body.Size,
+                        body.Position.Y + body.Size);
+                }
+
+                RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
 
                 var origActors = Actors.ToList();
                 foreach (var actor in Actors)
@@ -112,13 +122,14 @@
                         body.OriginalPosition = body.Position;
                         body.OriginalAngle = body.Angle;
                         body.IsDirty = false;
-                        if (Vector2.Distance(body.IndexedPosition, body.Position) > SearchMargin)
+
+                        /*if (Vector2.Distance(body.IndexedPosition, body.Position) > SearchMargin)
                         {
                             BodyCleaned(body);
                             indexed++;
                         }
                         else
-                            unindexed++;
+                            unindexed++;*/
                     }
                 }
 
@@ -126,28 +137,6 @@
                     Console.WriteLine($"{1f * indexed / (unindexed + indexed)}\t");
 
                 ProcessLeaderboard();
-
-                if (Time % 1000 < LastStepSize)
-                {
-                    var all = RTreeDynamic.Search()
-                        .ToList();
-
-                    all = all
-                        .Where(b => !Bodies.Contains(b))
-                        .ToList();
-
-                    if (all.Any())
-                    {
-                        Console.WriteLine("Leak of RTree nodes!");
-
-                        Console.WriteLine(JsonConvert.SerializeObject(
-                            all.GroupBy(b => b.GetType().ToString())
-                                .Select(b => new { b.Key, Count = b.Count() }),
-                            Formatting.Indented));
-                    }
-                        
-                }
-
 
                 if (Time > 10000) // lets not get too excited if things slow down when initialized
                 {
@@ -197,6 +186,7 @@
         public void BodyRemove(Body body)
         {
             Bodies.Remove(body);
+            return;
 
             if (body.IsStatic)
                 RTreeStatic.Delete(body);

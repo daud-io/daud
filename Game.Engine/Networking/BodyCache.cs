@@ -17,8 +17,6 @@
             // update cache items and flag missing ones as stale
             UpdateLocalBodies(bodies);
 
-            UpdateLocalGroups(bodies.Where(f => f.Group != null).Select(f => f.Group).Distinct());
-
             // project the current bodies and calculate errors
             foreach (var bucket in Bodies.Values)
                 bucket.Project(time);
@@ -73,13 +71,14 @@
 
         private void UpdateLocalBodies(IEnumerable<Body> bodies)
         {
+            foreach (var bucket in Groups.Values)
+                bucket.Stale = true;
+
             foreach (var bucket in Bodies.Values)
                 bucket.Stale = true;
 
             foreach (var obj in bodies)
             {
-                BucketBody bucket = null;
-
                 if (Bodies.ContainsKey(obj.ID))
                 {
                     Bodies[obj.ID].Stale = false;
@@ -87,12 +86,25 @@
                 }
                 else
                 {
-                    bucket = new BucketBody
+                    var bucket = new BucketBody
                     {
                         BodyUpdated = obj,
                         Stale = false
                     };
                     Bodies.Add(obj.ID, bucket);
+                }
+
+                if (obj.Group != null)
+                if (Groups.ContainsKey(obj.Group.ID))
+                    Groups[obj.Group.ID].Stale = false;
+                else
+                {
+                    var bucket = new BucketGroup
+                    {
+                        GroupUpdated = obj.Group,
+                        Stale = false
+                    };
+                    Groups.Add(obj.Group.ID, bucket);
                 }
             }
         }

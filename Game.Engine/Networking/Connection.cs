@@ -137,7 +137,7 @@ namespace Game.Engine.Networking
                         if (followBody != null)
                         {
                             BodyCache.Update(
-                                world.BodiesNear(followBody.Position, 3300).ToList(),
+                                world.BodiesNear(followBody.Position, 6000).ToList(),
                                 world.Time
                             );
 
