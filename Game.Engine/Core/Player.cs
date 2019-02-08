@@ -19,6 +19,7 @@
         public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
 
         public int Score { get; set; }
+		public int KillCounter { get; set; }
 
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
