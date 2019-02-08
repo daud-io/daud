@@ -273,7 +273,7 @@
                             Time = this.Time,
                             ArenaRecord = Leaderboard?.ArenaRecord
                                 ?? new Leaderboard.Entry(),
-							(int)Hook.WorldSize = Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer
+							Hook.WorldSize = Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer
                         };
 
                         var firstPlace = Leaderboard.Entries.FirstOrDefault();
