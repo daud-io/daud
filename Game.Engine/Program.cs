@@ -52,7 +52,7 @@
                 .UseStartup<Startup>();
 
 
-            if (config.LetsEncryptEnabled)
+            if (config.LetsEncryptEnabled && config.RegistryEnabled)
                 // Full Form with access to All Options:
                 builder.AddAcmeServices(new AcmeOptions
                 {

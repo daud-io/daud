@@ -56,12 +56,10 @@
                 .AddSingleton<HttpClient>()
                 .AddSingleton<DiscordBot>();
 
-            if (config.RegistryEnabled)
-            {
-                services.AddSingleton(new RegistryClient(new Uri(config.RegistryUri)));
-                services.AddSingleton<RegistryHandling>();
-            }
 
+            services.AddSingleton(new RegistryClient(new Uri(config.RegistryUri)));
+            if (config.RegistryEnabled)
+                services.AddSingleton<RegistryHandling>();
         }
 
         private GameConfiguration LoadConfiguration(IServiceCollection services)
