@@ -12,6 +12,9 @@
                 return new Hook
                 {
                     WorldSize = 8000,
+					WorldSizeBasic = 8000,
+					WorldAreaDeltaPerPlayer = 100,
+					
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
@@ -124,6 +127,8 @@
 
 
         public int WorldSize { get; set; }
+		public int WorldSizeBasic { get; set; }
+		public int WorldAreaDeltaPerPlayer { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
