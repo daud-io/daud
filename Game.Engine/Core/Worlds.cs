@@ -15,16 +15,18 @@
         {
             Default = WorldDefault();
             AddWorld("default", Default);
-
-            AddWorld("other", WorldOther());
             AddWorld("duel", WorldDuel());
             AddWorld("team", WorldTeam());
             AddWorld("ctf", WorldCTF());
+            /*
+            AddWorld("other", WorldOther());
             AddWorld("sharks", WorldSharks());
             AddWorld("sumo", WorldSumo());
             AddWorld("boss", WorldBoss());
+            */
             //AddWorld("wormhole", WorldWormhole());
             //AddWorld("beach", WorldBeach());
+
         }
 
         public static void Destroy(string worldKey)
