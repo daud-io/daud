@@ -388,7 +388,7 @@
             }
             catch (Exception)
             {
-                return false;
+                throw;
             }
         }
 
