@@ -72,15 +72,13 @@
 
             var connection = new APIClient(serverUri);
 
-            if (context.UserKey == null)
-                throw new Exception("Config missing UserKey");
-            if (context.Password == null)
-                throw new Exception("Config missing Password");
-
-            await connection.User.AuthenticateAsync(new UserIdentifier
+            if (context.UserKey != null)
             {
-                UserKey = UserKey ?? context.UserKey
-            }, Password ?? context.Password);
+                await connection.User.AuthenticateAsync(new UserIdentifier
+                {
+                    UserKey = UserKey ?? context.UserKey
+                }, Password ?? context.Password);
+            }
 
             return connection;
         }
