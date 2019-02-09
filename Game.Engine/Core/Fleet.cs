@@ -57,8 +57,6 @@
         public bool LastTouchedLeft { get; set; } = false;
         public bool FiringWeapon { get; private set; } = false;
 
-        public string CustomData { get; set; }
-
         [Flags]
         public enum ShipModeEnum
         {

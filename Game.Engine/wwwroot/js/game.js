@@ -87,6 +87,7 @@ else connection.connect();*/
 window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 window.Game.cache = cache;
+window.Game.controls = Controls;
 
 window.Game.reinitializeWorld = function() {
     if (currentWorld) Controls.initializeWorld(currentWorld);
@@ -293,20 +294,41 @@ connection.onView = newView => {
 let lastControl = {};
 
 setInterval(() => {
-    if (angle !== lastControl.angle || aimTarget.X !== aimTarget.X || aimTarget.Y !== aimTarget.Y || Controls.boost !== lastControl.boost || Controls.shoot !== lastControl.shoot) {
+    if (
+        angle !== lastControl.angle 
+        || aimTarget.X !== aimTarget.X 
+        || aimTarget.Y !== aimTarget.Y 
+        || Controls.boost !== lastControl.boost 
+        || Controls.shoot !== lastControl.shoot
+        || Controls.chat !== lastControl.chat
+    ) {
         let spectateControl = false;
         if (isSpectating) {
             if (Controls.shoot) spectateControl = "action:next";
             else spectateControl = "spectating";
         }
 
-        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl);
+        var customData = false;
+
+        if (Controls.chat)
+            customData = JSON.stringify({chat: Controls.chat});
+
+        connection.sendControl(
+            angle, 
+            Controls.boost, 
+            Controls.shoot, 
+            aimTarget.X, 
+            aimTarget.Y, 
+            spectateControl, 
+            customData
+        );
 
         lastControl = {
             angle,
             aimTarget,
             boost: Controls.boost,
-            shoot: Controls.shoot
+            shoot: Controls.shoot,
+            chat: Controls.chat
         };
     }
 }, 10);

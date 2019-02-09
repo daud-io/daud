@@ -51,6 +51,7 @@ export var Controls = {
     shoot: false,
 	autofire: false,
     downSince: false,
+    customData: false,
     registerCanvas(canvas) {
         const getMousePos = (canvas, { clientX, clientY }) => {
             const rect = canvas.getBoundingClientRect();
