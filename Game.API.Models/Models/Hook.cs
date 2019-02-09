@@ -13,7 +13,7 @@
                 {
                     WorldSize = 8000,
 					WorldResizeEnabled = true,
-					WorldSizeBasic = 4000,
+					WorldSizeBasic = 5600,
 					WorldSizeDeltaPerPlayer = 400,
 					WorldResizeSpeed = 5,
 					WorldMinPlayersToResize = 2,
@@ -21,7 +21,7 @@
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
-                    BaseThrustM = -0.0035f,
+                    BaseThrustM = -0.0043f,
                     BaseThrustB = 0.155f,
 
                     Drag = 0.92f,
@@ -41,8 +41,8 @@
                     ShotCooldownTimeBotM = 21,
                     ShotCooldownTimeBotB = 550,
 
-                    ShotThrustM = -0.004f,
-                    ShotThrustB = 0.2f,
+                    ShotThrustM = -0.0073f,
+                    ShotThrustB = 0.25f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -62,7 +62,7 @@
                     WormholesDestination = null,
 
                     Obstacles = 10,
-					ObstaclesMultiplier = 0.0005,
+					ObstaclesMultiplier = 0.00075,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
                     ObstacleMinSize = 300,
@@ -89,15 +89,15 @@
                     SnakeWeight = 0f,
                     BossMode = false,
 
-                    ShipGainBySizeM = -0.034f,
+                    ShipGainBySizeM = -0.03f,
                     ShipGainBySizeB = 1.03f,
 
                     FlockSpeed = 0,
 
                     PickupSeekers = 6,
-					PickupSeekersMultiplier = 0.0006,
+					PickupSeekersMultiplier = 0.001,
                     PickupShields = 4,
-					PickupShieldsMultiplier = 0.0004,
+					PickupShieldsMultiplier = 0.00067,
                     ShieldStrength = 3,
 
                     Fishes = 60,
