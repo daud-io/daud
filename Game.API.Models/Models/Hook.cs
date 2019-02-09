@@ -12,8 +12,8 @@
                 return new Hook
                 {
                     WorldSize = 8000,
-					WorldSizeBasic = 8000,
-					WorldAreaDeltaPerPlayer = 100,
+					WorldSizeBasic = 500,
+					WorldAreaDeltaPerPlayer = 300,
 					
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
