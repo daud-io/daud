@@ -12,6 +12,12 @@
                 return new Hook
                 {
                     WorldSize = 8000,
+					WorldResizeEnabled = true,
+					WorldSizeBasic = 4000,
+					WorldSizeDeltaPerPlayer = 400,
+					WorldResizeSpeed = 5,
+					WorldMinPlayersToResize = 2,
+					
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
@@ -56,6 +62,7 @@
                     WormholesDestination = null,
 
                     Obstacles = 10,
+					ObstaclesMultiplier = 0.0005,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
                     ObstacleMinSize = 300,
@@ -88,10 +95,13 @@
                     FlockSpeed = 0,
 
                     PickupSeekers = 6,
+					PickupSeekersMultiplier = 0.0006,
                     PickupShields = 4,
+					PickupShieldsMultiplier = 0.0004,
                     ShieldStrength = 3,
 
                     Fishes = 60,
+					FishesMultiplier = 0.01,
                     FishThrust = 0.04f,
 
                     SeekerRange = 2100,
@@ -124,6 +134,11 @@
 
 
         public int WorldSize { get; set; }
+		public bool WorldResizeEnabled { get; set; }
+		public int WorldResizeSpeed { get; set; }
+		public int WorldSizeBasic { get; set; }
+		public int WorldSizeDeltaPerPlayer { get; set; }
+		public int WorldMinPlayersToResize { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
@@ -176,9 +191,13 @@
 
         public int Obstacles { get; set; }
         public int PickupSeekers { get; set; } = 0;
+		public double PickupSeekersMultiplier { get; set; }
+		public double PickupShieldsMultiplier { get; set; }
         public int Fishes { get; set; } = 0;
+		public double FishesMultiplier { get; set; }
         public float FishThrust { get; set; } = 0;
 
+		public double ObstaclesMultiplier { get; set; }
         public float ObstacleMaxMomentum { get; set; }
         public int ObstacleMinSize { get; set; }
         public int ObstacleMaxSize { get; set; }
