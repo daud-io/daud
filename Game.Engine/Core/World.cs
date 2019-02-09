@@ -41,8 +41,9 @@
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
 
-
-        public int AdvertisedPlayerCount {get;set;}
+		//public int StepCounter { get; set; }
+		
+        public int AdvertisedPlayerCount { get; set; }
         public string WorldKey { get; set; }
 
         public string Image { get; set; } = "default";
@@ -153,7 +154,7 @@
 			
 			if (Hook.WorldResizeEnabled) {
 				int resizeCount = (this.AdvertisedPlayerCount < Hook.WorldMinPlayersToResize) ? 0 : this.AdvertisedPlayerCount - Hook.WorldMinPlayersToResize + 1;
-				int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldAreaDeltaPerPlayer;
+				int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldSizeDeltaPerPlayer;
 				if (Hook.WorldSize < newSize) {
 					Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
 				} else if (Hook.WorldSize > newSize && Hook.WorldSize - newSize > Hook.WorldResizeSpeed) {

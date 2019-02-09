@@ -14,7 +14,7 @@
                     WorldSize = 8000,
 					WorldResizeEnabled = true,
 					WorldSizeBasic = 4000,
-					WorldAreaDeltaPerPlayer = 400,
+					WorldSizeDeltaPerPlayer = 400,
 					WorldResizeSpeed = 5,
 					WorldMinPlayersToResize = 2,
 					
