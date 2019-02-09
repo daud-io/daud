@@ -272,9 +272,9 @@
                             Type = "FFA",
                             Time = this.Time,
                             ArenaRecord = Leaderboard?.ArenaRecord
-                                ?? new Leaderboard.Entry(),
-							Hook.WorldSize = Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer
+                                ?? new Leaderboard.Entry()
                         };
+						Hook.WorldSize = Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer;
 
                         var firstPlace = Leaderboard.Entries.FirstOrDefault();
                         if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
