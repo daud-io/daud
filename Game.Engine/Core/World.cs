@@ -161,6 +161,8 @@
 				}
 				Hook.Obstacles = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.ObstaclesMultiplier));
 				Hook.Fishes = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.FishesMultiplier));
+				Hook.PickupSeekers = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupSeekersMultiplier));
+				Hook.PickupShields = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupShieldsMultiplier));
 			}
         }
 

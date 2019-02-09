@@ -13,9 +13,9 @@
                 {
                     WorldSize = 8000,
 					WorldResizeEnabled = true,
-					WorldSizeBasic = 2000,
+					WorldSizeBasic = 4000,
 					WorldAreaDeltaPerPlayer = 400,
-					WorldResizeSpeed = 10,
+					WorldResizeSpeed = 5,
 					WorldMinPlayersToResize = 2,
 					
                     FollowFirstShip = false,
@@ -95,11 +95,13 @@
                     FlockSpeed = 0,
 
                     PickupSeekers = 6,
+					PickupSeekersMultiplier = 0.0006,
                     PickupShields = 4,
+					PickupShieldsMultiplier = 0.0004,
                     ShieldStrength = 3,
 
                     Fishes = 60,
-					FishesMultiplier = 0.015,
+					FishesMultiplier = 0.01,
                     FishThrust = 0.04f,
 
                     SeekerRange = 2100,
@@ -189,6 +191,8 @@
 
         public int Obstacles { get; set; }
         public int PickupSeekers { get; set; } = 0;
+		public double PickupSeekersMultiplier { get; set; }
+		public double PickupShieldsMultiplier { get; set; }
         public int Fishes { get; set; } = 0;
 		public double FishesMultiplier { get; set; }
         public float FishThrust { get; set; } = 0;
