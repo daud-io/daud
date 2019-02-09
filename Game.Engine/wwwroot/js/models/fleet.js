@@ -7,7 +7,7 @@ export class Fleet {
         this.ships = [];
         this.ID = false;
 
-        this.text = new PIXI.Text("", { fontFamily: Settings.font, fontSize: Settings.nameSize, fill: 0xffffff });
+        this.text = new PIXI.Text("", { fontFamily: [Settings.font, "NotoColorEmoji"], fontSize: Settings.nameSize, fill: 0xffffff });
         this.text.anchor.set(0.5, 0.5);
         this.text.position.x = 0;
         this.text.position.y = 0;
