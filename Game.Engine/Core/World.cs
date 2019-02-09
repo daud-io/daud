@@ -150,6 +150,12 @@
                 }
             }
             Processing = false;
+			
+			if (Hook.WorldSize < Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer) {
+				Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
+			} else if (Hook.WorldSize > Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer) {
+				Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
+			}
         }
 
         public void BodyCleaned(Body body)
@@ -274,7 +280,6 @@
                             ArenaRecord = Leaderboard?.ArenaRecord
                                 ?? new Leaderboard.Entry()
                         };
-						Hook.WorldSize = Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer;
 
                         var firstPlace = Leaderboard.Entries.FirstOrDefault();
                         if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
