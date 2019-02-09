@@ -925,3 +925,7 @@ progress::-webkit-progress-value {
     font-size: 40px;
     font-weight: bold;
 }
+#emoji-container {
+    width: 400px;
+    height: 300px;
+}
