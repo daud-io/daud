@@ -48,10 +48,19 @@
                 new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) 
                 * Vector2.Distance(ship.Momentum, Vector2.Zero);
 
+
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife);
             this.Momentum = momentum;
             this.Position = bulletOrigin;
-            this.Angle = ship.Angle;
+
+            if (World.Hook.PrecisionBullets && ship.Fleet != null)
+            {
+                var toTarget = (ship.Fleet.FleetCenter + ship.Fleet.AimTarget) - ship.Position;
+                this.Angle = MathF.Atan2(toTarget.Y, toTarget.X);
+            }
+            else
+                this.Angle = ship.Angle;
+
             this.OwnedByFleet = ship.Fleet;
             this.Sprite = ship.Fleet.BulletSprite;
             this.Size = 20;
