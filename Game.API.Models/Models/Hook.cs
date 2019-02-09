@@ -89,7 +89,7 @@
                     SnakeWeight = 0f,
                     BossMode = false,
 
-                    ShipGainBySizeM = -0.03f,
+                    ShipGainBySizeM = -0.035f,
                     ShipGainBySizeB = 1.03f,
 
                     FlockSpeed = 0,
