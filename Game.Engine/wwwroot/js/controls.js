@@ -12,7 +12,7 @@ new EmojiPanel(document.getElementById('emoji-container'),{
     onClick: e => {
         Cookies.set("emoji", e.index)
         Cookies.set("emoji2", e.unified)
-        var x= getUnicodeCharacter(parseInt(e.unified,16));
+        var x= unicode(e.unified);
         emojiTrigger.firstChild.setAttribute("data-index", e.index);
 
         Controls.emoji = x;
@@ -60,7 +60,9 @@ nick.addEventListener("change", e => {
     save();
 });
 
-
+function unicode(e) {
+    return e.split("-").reduce((total,x)=>total+getUnicodeCharacter(parseInt(x,16)),"");
+}
 function getUnicodeCharacter(cp) {
 
     if (cp >= 0 && cp <= 0xD7FF || cp >= 0xE000 && cp <= 0xFFFF) {
@@ -300,6 +302,6 @@ if (savedColor !== undefined) {
 }
 
 if (savedEmoji !== undefined) {
-    Controls.emoji = getUnicodeCharacter(parseInt(savedEmoji2,16));
+    Controls.emoji = unicode(savedEmoji2);
     emojiTrigger.firstChild.setAttribute("data-index", savedEmoji);
 }
