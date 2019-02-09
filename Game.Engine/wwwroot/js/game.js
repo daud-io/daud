@@ -330,7 +330,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
 function doSpawn() {
     Events.Spawn();
     aliveSince = gameTime;
-    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
+    connection.sendSpawn(Controls.emoji+Controls.nick, Controls.color, Controls.ship, getToken());
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
