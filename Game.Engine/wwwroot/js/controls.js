@@ -10,7 +10,13 @@ const autofTgg = document.getElementById("autofireToggle");
 const emojiTrigger = document.getElementById('emoji-trigger');
 new EmojiPanel(document.getElementById('emoji-container'),{
     onClick: e => {
-        Controls.setEmoji(e);
+        Cookies.set("emoji", e.index)
+        Cookies.set("emoji2", e.unified)
+        var x= getUnicodeCharacter(parseInt(e.unified,16));
+        emojiTrigger.firstChild.setAttribute("data-index", e.index);
+
+        Controls.emoji = x;
+        console.log(Controls.emoji);
         document.getElementById('emoji-container').classList.remove('open');
     }
   });
@@ -193,15 +199,6 @@ export var Controls = {
         Controls.ship = colors[shipIndex];
         refreshSelectedStyle();
     },
-    setEmoji: (e) => {
-        Cookies.set("emoji", e.index)
-        Cookies.set("emoji2", e.unified)
-        var x= getUnicodeCharacter(parseInt(e.unified,16));
-        emojiTrigger.firstChild.setAttribute("data-index", e.index);
-
-        Controls.emoji = x;
-        console.log(Controls.emoji)
-    },
     ship: "ship_green"
 };
 
@@ -303,6 +300,5 @@ if (savedColor !== undefined) {
 
 if (savedEmoji !== undefined) {
     Controls.emoji = getUnicodeCharacter(parseInt(savedEmoji2,16));
-    document.getElementById('emoji-trigger').firstChild.setAttribute("data-index", savedEmoji);
+    emojiTrigger.firstChild.setAttribute("data-index", savedEmoji);
 }
-document.getElementById('emoji-trigger')
