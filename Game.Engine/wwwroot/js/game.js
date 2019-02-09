@@ -322,6 +322,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
     connection.disconnect();
     cache.empty();
     connection.connect(worldKey);
+    serverTimeOffset = false;
 
     Controls.initializeWorld(world);
 };
