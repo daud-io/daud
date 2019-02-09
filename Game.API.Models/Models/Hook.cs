@@ -12,12 +12,12 @@
                 return new Hook
                 {
                     WorldSize = 8000,
-					WorldResizeEnabled = true,
-					WorldSizeBasic = 4000,
-					WorldSizeDeltaPerPlayer = 400,
-					WorldResizeSpeed = 5,
-					WorldMinPlayersToResize = 2,
-					
+                    WorldResizeEnabled = true,
+                    WorldSizeBasic = 4000,
+                    WorldSizeDeltaPerPlayer = 400,
+                    WorldResizeSpeed = 5,
+                    WorldMinPlayersToResize = 2,
+
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
@@ -52,6 +52,7 @@
                     MaxHealth = 100,
 
                     MaxHealthBot = 50,
+                    PrecisionBullets = false,
                     BulletLife = 1890,
                     BotPerXPoints = 500,
                     BotBase = 1,
@@ -181,6 +182,7 @@
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }
         public float SeekerThrustMultiplier { get; set; }
+        public bool PrecisionBullets { get; set; }
         public int BulletLife { get; set; }
         public float SeekerLifeMultiplier { get; set; }
         public int BotBase { get; set; }
