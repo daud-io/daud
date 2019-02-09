@@ -83,6 +83,7 @@ function getUnicodeCharacter(cp) {
     }
 }
 export var Controls = {
+    emoji: "👋",
     left: false,
     up: false,
     right: false,
