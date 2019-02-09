@@ -137,6 +137,9 @@ const groupFromServer = (cache, group) => {
         CustomData: group.customData()
     };
 
+    if (newGroup.CustomData)
+        newGroup.CustomData = JSON.parse(newGroup.CustomData);
+
     return newGroup;
 };
 

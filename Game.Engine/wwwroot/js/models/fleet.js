@@ -8,6 +8,8 @@ export class Fleet {
         this.ID = false;
 
         this.text = new PIXI.Text("", { fontFamily: Settings.font, fontSize: Settings.nameSize, fill: 0xffffff });
+        this.textChat = new PIXI.Text("", { fontFamily: "Font Awesome 5 Free", fontStyle: "normal", fontSize: Settings.nameSize, fill: 0xffffff });
+        this.chat = false;
         this.text.anchor.set(0.5, 0.5);
         this.text.position.x = 0;
         this.text.position.y = 0;
@@ -27,6 +29,11 @@ export class Fleet {
     update(groupUpdate) {
         this.caption = groupUpdate.Caption;
         this.ID = groupUpdate.ID;
+
+        if (groupUpdate.CustomData && groupUpdate.CustomData.chat)
+            this.chat = groupUpdate.CustomData.chat;
+        else
+            this.chat = false;
     }
 
     preRender(time, interpolator, myfleetID) {
@@ -37,6 +44,10 @@ export class Fleet {
             if (Settings.nameSize) {
                 if (this.caption) this.text.text = this.caption;
                 else this.text.text = "";
+
+                if (this.chat) this.textChat.text = this.chat;
+                else this.textChat.text = "";
+
 
                 //this.text.text += " " + this.ships.length;
                 let accX = 0,
