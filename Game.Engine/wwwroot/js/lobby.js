@@ -1,10 +1,7 @@
 ﻿import { fetch } from "whatwg-fetch";
 import { Controls } from "./controls";
 import { __esModule } from "pixi.js/lib/core";
-import EmojiPanel from 'emoji-panel';
-
-new EmojiPanel(document.getElementById('emoji-container'));
-
+  
 const worlds = document.getElementById("worlds");
 const worldList = document.getElementById("worldList");
 

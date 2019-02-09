@@ -928,4 +928,17 @@ progress::-webkit-progress-value {
 #emoji-container {
     width: 400px;
     height: 300px;
+    visibility: hidden;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+#emoji-container.open {
+    visibility: visible;
+}
+#emoji-trigger {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    vertical-align: bottom;
 }

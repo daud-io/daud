@@ -3,9 +3,21 @@ import nipplejs from "nipplejs";
 import { setInterval, setTimeout } from "timers";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
+import EmojiPanel from 'emoji-panel';
 
 const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
+const emojiTrigger = document.getElementById('emoji-trigger');
+new EmojiPanel(document.getElementById('emoji-container'),{
+    onClick: e => {
+        Controls.setEmoji(e);
+        document.getElementById('emoji-container').classList.remove('open');
+    }
+  });
+
+emojiTrigger.addEventListener('click', () => {
+    document.getElementById('emoji-container').classList.toggle('open');
+});
 
 export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
@@ -42,6 +54,28 @@ nick.addEventListener("change", e => {
     save();
 });
 
+
+function getUnicodeCharacter(cp) {
+
+    if (cp >= 0 && cp <= 0xD7FF || cp >= 0xE000 && cp <= 0xFFFF) {
+        return String.fromCharCode(cp);
+    } else if (cp >= 0x10000 && cp <= 0x10FFFF) {
+
+        // we substract 0x10000 from cp to get a 20-bits number
+        // in the range 0..0xFFFF
+        cp -= 0x10000;
+
+        // we add 0xD800 to the number formed by the first 10 bits
+        // to give the first byte
+        var first = ((0xffc00 & cp) >> 10) + 0xD800
+
+        // we add 0xDC00 to the number formed by the low 10 bits
+        // to give the second byte
+        var second = (0x3ff & cp) + 0xDC00;
+
+        return String.fromCharCode(first) + String.fromCharCode(second);
+    }
+}
 export var Controls = {
     left: false,
     up: false,
@@ -159,6 +193,15 @@ export var Controls = {
         Controls.ship = colors[shipIndex];
         refreshSelectedStyle();
     },
+    setEmoji: (e) => {
+        Cookies.set("emoji", e.index)
+        Cookies.set("emoji2", e.unified)
+        var x= getUnicodeCharacter(parseInt(e.unified,16));
+        emojiTrigger.firstChild.setAttribute("data-index", e.index);
+
+        Controls.emoji = x;
+        console.log(Controls.emoji)
+    },
     ship: "ship_green"
 };
 
@@ -245,6 +288,8 @@ function save() {
 
 const savedNick = Cookies.get("nick");
 const savedColor = Cookies.get("color");
+const savedEmoji = Cookies.get("emoji");
+const savedEmoji2 = Cookies.get("emoji2");
 
 if (savedNick !== undefined) {
     Controls.nick = savedNick;
@@ -255,3 +300,9 @@ if (savedColor !== undefined) {
     Controls.color = savedColor;
     refreshSelectedStyle();
 }
+
+if (savedEmoji !== undefined) {
+    Controls.emoji = getUnicodeCharacter(parseInt(savedEmoji2,16));
+    document.getElementById('emoji-trigger').firstChild.setAttribute("data-index", savedEmoji);
+}
+document.getElementById('emoji-trigger')
