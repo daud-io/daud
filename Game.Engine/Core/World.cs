@@ -151,10 +151,16 @@
             }
             Processing = false;
 			
-			if (Hook.WorldSize < Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer) {
-				Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
-			} else if (Hook.WorldSize > Hook.WorldSizeBasic + this.AdvertisedPlayerCount * Hook.WorldAreaDeltaPerPlayer) {
-				Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
+			if (Hook.WorldResizeEnabled) {
+				int resizeCount = (this.AdvertisedPlayerCount < Hook.WorldMinPlayersToResize) ? 0 : this.AdvertisedPlayerCount - Hook.WorldMinPlayersToResize + 1;
+				int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldAreaDeltaPerPlayer;
+				if (Hook.WorldSize < newSize) {
+					Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
+				} else if (Hook.WorldSize > newSize && Hook.WorldSize - newSize > Hook.WorldResizeSpeed) {
+					Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
+				}
+				Hook.Obstacles = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.ObstaclesMultiplier));
+				Hook.Fishes = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.FishesMultiplier));
 			}
         }
 
