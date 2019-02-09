@@ -21,6 +21,12 @@
         public bool Exists { get; set; }
         public bool IsDirty { get; set; } = true;
 
+        public bool Indexed { get; set; } = false;
+        public bool Removed { get; set; } = false;
+        public bool Updated { get; set; } = false;
+
+        public Vector2 IndexedPosition { get; set; }
+
         public bool IsStatic { get; set; } = false;
 
         private int _size { get; set; }
@@ -203,8 +209,6 @@
 
                 if (time - this.DefinitionTime > MaximumCleanTime)
                     this.IsDirty = true;
-
-                Envelope = new Envelope(_position.X - Size, _position.Y - Size, _position.X + Size, _position.Y + Size);
             }
         }
 
@@ -212,5 +216,6 @@
         {
             return this.MemberwiseClone() as Body;
         }
+
     }
 }

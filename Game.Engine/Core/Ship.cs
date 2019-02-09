@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.Engine.Core.Pickups;
     using Game.Engine.Core.Weapons;
     using System;
     using System.Linq;
@@ -68,31 +69,33 @@
 
         public virtual void CollisionExecute(Body projectedBody)
         {
-            var bullet = projectedBody as ShipWeaponBullet;
-            var fleet = bullet?.OwnedByFleet;
-            var player = fleet?.Owner;
-            bullet.Consumed = true;
-
-            var takesDamage = true;
-            if (this.Fleet?.Owner?.IsShielded ?? false)
+            if (projectedBody is ShipWeaponBullet bullet)
             {
-                if (this.ShieldStrength == 0)
-                    takesDamage = true;
-                else
+                var fleet = bullet?.OwnedByFleet;
+                var player = fleet?.Owner;
+                bullet.Consumed = true;
+
+                var takesDamage = true;
+                if (this.Fleet?.Owner?.IsShielded ?? false)
                 {
-                    this.ShieldStrength--;
-                    takesDamage = false;
+                    if (this.ShieldStrength == 0)
+                        takesDamage = true;
+                    else
+                    {
+                        this.ShieldStrength--;
+                        takesDamage = false;
+                    }
                 }
-            }
-            else
-                takesDamage = !this.Fleet?.Owner?.IsInvulnerable ?? true;
+                else
+                    takesDamage = !this.Fleet?.Owner?.IsInvulnerable ?? true;
 
-            if (takesDamage)
-            {
-                Health -= HealthHitCost;
+                if (takesDamage)
+                {
+                    Health -= HealthHitCost;
 
-                if (Health <= 0)
-                    Die(player, fleet, bullet);
+                    if (Health <= 0)
+                        Die(player, fleet, bullet);
+                }
             }
         }
 
@@ -119,6 +122,15 @@
                 if ((Vector2.Distance(projectedBody.Position, this.Position)
                         <= this.Size + projectedBody.Size))
                     return true;
+            }
+
+            if (!this.Abandoned)
+            {
+                if (projectedBody is PickupBase
+                    || projectedBody is CaptureTheFlag.Base
+                    || projectedBody is CaptureTheFlag.Flag)
+                    return ((Vector2.Distance(projectedBody.Position, this.Position)
+                            <= this.Size + projectedBody.Size));
             }
 
             return false;
@@ -155,7 +167,10 @@
                 this.Momentum *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
 
             if (oob > World.Hook.OutOfBoundsDeathLine)
+            {
+                //Console.WriteLine("ship dying oob");
                 Die(null, null, null);
+            }
         }
     }
 }

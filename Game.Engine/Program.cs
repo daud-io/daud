@@ -30,6 +30,8 @@
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
+            ThreadPool.SetMinThreads(50, 50);
+
             var builder = WebHost.CreateDefaultBuilder(args);
 
             var config = new GameConfiguration();
@@ -52,7 +54,7 @@
                 .UseStartup<Startup>();
 
 
-            if (config.LetsEncryptEnabled)
+            if (config.LetsEncryptEnabled && config.RegistryEnabled)
                 // Full Form with access to All Options:
                 builder.AddAcmeServices(new AcmeOptions
                 {

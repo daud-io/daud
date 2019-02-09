@@ -216,7 +216,7 @@
             {
                 if (GameEmptySince == 0)
                     GameEmptySince = World.Time;
-                else if (World.Time - GameEmptySince > 10000)
+                else if (Teams.Any(t => t.Score > 0) && World.Time - GameEmptySince > 10000)
                     GameRestartTime = World.Time;
             }
 
@@ -255,6 +255,7 @@
                 this.AngularVelocity = SPEED_STOPPED;
                 this.Size = 200;
                 this.CaptureTheFlag = captureTheFlag;
+                CausesCollisions = true;
 
                 this.BaseGroup = new ActorGroup();
 
@@ -323,7 +324,7 @@
             }
         }
 
-        public class Flag : ActorBody, ICollide
+        public class Flag : ActorBody
         {
             public readonly Team Team;
             private readonly Base Base;
@@ -333,11 +334,11 @@
 
             public Flag(Sprites flagSprite, Team team, Base b)
             {
-
                 Size = 200;
                 Team = team;
                 Base = b;
                 Sprite = flagSprite;
+                CausesCollisions = true;
             }
 
             public override void Init(World world)
@@ -396,13 +397,13 @@
                 this.CarriedBy = null;
             }
 
-            void ICollide.CollisionExecute(Body projectedBody)
+            protected override void Collided(ICollide otherObject)
             {
-                if (projectedBody is Ship ship)
+                if (otherObject is Ship ship)
                 {
                     var fleet = ship.Fleet;
 
-                    if (fleet != null && CarriedBy == null && !(fleet.Owner is Robot))
+                    if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
                     {
                         if (fleet.Owner.Color == Team.ColorName)
                         {
@@ -419,33 +420,8 @@
                         }
                     }
                 }
-                if (projectedBody is Obstacle obstacle)
-                {
-                    CarriedBy = null;
-                }
-            }
 
-            bool ICollide.IsCollision(Body projectedBody)
-            {
-                if (projectedBody is Ship ship)
-                {
-                    if (ship is Fish)
-                        return false;
-
-                    if (ship.Abandoned)
-                        return false;
-
-                    return Vector2.Distance(projectedBody.Position, this.Position)
-                            < (projectedBody.Size + this.Size);
-                }
-
-                // consider dropping flags... drop is not working out well though
-                /*if (projectedBody is Obstacle obstacle && CarriedBy != null)
-                {
-                    return Vector2.Distance(projectedBody.Position, this.Position)
-                        < (projectedBody.Size + this.Size);
-                }*/
-                return false;
+                base.Collided(otherObject);
             }
         }
     }

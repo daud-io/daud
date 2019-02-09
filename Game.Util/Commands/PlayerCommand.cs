@@ -66,6 +66,12 @@
                 };
 
                 await Task.WhenAll(tasks);
+
+                foreach (var task in tasks)
+                {
+                    if(task.IsFaulted)
+                        Console.WriteLine($"Robot Crashed: {task.Exception}");
+                }
             }
         }
     }
