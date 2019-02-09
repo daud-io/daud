@@ -137,7 +137,7 @@
 		public bool WorldResizeEnabled { get; set; }
 		public int WorldResizeSpeed { get; set; }
 		public int WorldSizeBasic { get; set; }
-		public int WorldAreaDeltaPerPlayer { get; set; }
+		public int WorldSizeDeltaPerPlayer { get; set; }
 		public int WorldMinPlayersToResize { get; set; }
 
         public float BaseThrustM { get; set; }
