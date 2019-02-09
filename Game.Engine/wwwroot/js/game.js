@@ -133,7 +133,8 @@ const groupFromServer = (cache, group) => {
         ID: group.group(),
         Caption: group.caption(),
         Type: group.type(),
-        ZIndex: group.zindex()
+        ZIndex: group.zindex(),
+        CustomData: group.customData()
     };
 
     return newGroup;

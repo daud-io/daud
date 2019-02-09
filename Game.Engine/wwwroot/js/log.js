@@ -21,11 +21,6 @@ export class Log {
         let out = "";
 
         for (const slot of this.data) {
-            if (slot.entry.extraData)
-                console.log(slot.entry.extraData);
-            if (slot.entry.pointsDelta)
-                console.log(slot.entry.pointsDelta);
-
             out += `<span><b style="color:gray">${slot.time.toLocaleTimeString()}</b> ${slot.entry.text}</span><br>`;
         }
 
