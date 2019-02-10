@@ -309,7 +309,7 @@ setInterval(() => {
 
         var customData = false;
 
-        if (message.txt) customData = JSON.stringify({ chat: message.txt });
+        if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
 
         connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl, customData);
 
