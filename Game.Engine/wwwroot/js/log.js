@@ -1,5 +1,5 @@
 ﻿import { Settings } from "./settings";
-
+import { escapeHtml } from "./leaderboard";
 const log = document.getElementById("log");
 const bigLog = document.getElementById("bigLog");
 const scoreCon = document.getElementById("plusScoreContainer");
@@ -41,10 +41,10 @@ export class Log {
         var lastMsg;
         if (Settings.bigKillMessage) {
             if (lastData.type == "kill") {
-                lastMsg = "<span style='color:#00ff00'>[&nbsp;</span>" + lastData.text + "<span style='color:#00ff00'>&nbsp;]</span>";
+                lastMsg = "<span style='color:#00ff00'>[&nbsp;</span>" + escapeHtml(lastData.text) + "<span style='color:#00ff00'>&nbsp;]</span>";
                 scoreCon.insertAdjacentHTML("beforeend", "<div class='plusScore'>+" + lastData.pointsDelta + "</div>");
             } else if (lastData.type == "killed") {
-                lastMsg = "<span style='color:#ff0000'>[&nbsp;</span>" + lastData.text + "<span style='color:#ff0000'>&nbsp;]</span>";
+                lastMsg = "<span style='color:#ff0000'>[&nbsp;</span>" + escapeHtml(lastData.text) + "<span style='color:#ff0000'>&nbsp;]</span>";
                 document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
                 document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
             } else {
