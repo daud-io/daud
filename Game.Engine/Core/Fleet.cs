@@ -143,7 +143,7 @@
 							score = this.Owner.Score,
 							kills = this.Owner.KillCounter,
 							gameTime = World.Time - this.Owner.AliveSince,
-							maxCombo = player.MaxCombo,
+							maxCombo = this.Owner.MaxCombo,
 							ping = new
 							{
 								you = this.Owner?.Connection?.Latency ?? 0,

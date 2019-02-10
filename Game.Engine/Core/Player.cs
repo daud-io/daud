@@ -20,7 +20,7 @@
 
         public int Score { get; set; }
 		public int KillCounter { get; set; } = 0;
-		public int MaxCombo { get; set; } = 0;
+		public int MaxCombo { get; set; }
 
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
