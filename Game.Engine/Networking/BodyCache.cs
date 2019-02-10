@@ -137,7 +137,13 @@
 
             public void CalculateError()
             {
-                if (GroupClient == null)
+                if (GroupClient == null
+                    || GroupClient.CustomData != GroupUpdated.CustomData
+                    || GroupClient.Color != GroupUpdated.Color
+                    || GroupClient.GroupType != GroupClient.GroupType
+                    || GroupClient.Caption != GroupClient.Caption
+                    )
+
                     Error = 1;
                 else
                     Error = 0;
