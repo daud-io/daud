@@ -230,14 +230,13 @@ connection.onView = newView => {
             default:
                 let extra = announcement.extraData();
 
-                if (extra)
-                    extra = JSON.parse(extra);
+                if (extra) extra = JSON.parse(extra);
 
                 log.addEntry({
                     type: announcement.type(),
                     text: announcement.text(),
                     pointsDelta: announcement.pointsDelta(),
-                    extraData: extra,
+                    extraData: extra
                 });
                 break;
         }
@@ -330,7 +329,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
 function doSpawn() {
     Events.Spawn();
     aliveSince = gameTime;
-    connection.sendSpawn(Controls.emoji+Controls.nick, Controls.color, Controls.ship, getToken());
+    connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);

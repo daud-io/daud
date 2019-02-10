@@ -3,26 +3,26 @@ import nipplejs from "nipplejs";
 import { setInterval, setTimeout } from "timers";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
-import EmojiPanel from 'emoji-panel';
+import EmojiPanel from "emoji-panel";
 
 const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
-const emojiTrigger = document.getElementById('emoji-trigger');
-new EmojiPanel(document.getElementById('emoji-container'),{
+const emojiTrigger = document.getElementById("emoji-trigger");
+new EmojiPanel(document.getElementById("emoji-container"), {
     onClick: e => {
-        Cookies.set("emoji", e.index)
-        Cookies.set("emoji2", e.unified)
-        var x= unicode(e.unified);
+        Cookies.set("emoji", e.index);
+        Cookies.set("emoji2", e.unified);
+        var x = unicode(e.unified);
         emojiTrigger.firstChild.setAttribute("data-index", e.index);
 
         Controls.emoji = x;
         console.log(Controls.emoji);
-        document.getElementById('emoji-container').classList.remove('open');
+        document.getElementById("emoji-container").classList.remove("open");
     }
-  });
+});
 
-emojiTrigger.addEventListener('click', () => {
-    document.getElementById('emoji-container').classList.toggle('open');
+emojiTrigger.addEventListener("click", () => {
+    document.getElementById("emoji-container").classList.toggle("open");
 });
 
 export const nipple = nipplejs.create({
@@ -61,25 +61,23 @@ nick.addEventListener("change", e => {
 });
 
 function unicode(e) {
-    return e.split("-").reduce((total,x)=>total+getUnicodeCharacter(parseInt(x,16)),"");
+    return e.split("-").reduce((total, x) => total + getUnicodeCharacter(parseInt(x, 16)), "");
 }
 function getUnicodeCharacter(cp) {
-
-    if (cp >= 0 && cp <= 0xD7FF || cp >= 0xE000 && cp <= 0xFFFF) {
+    if ((cp >= 0 && cp <= 0xd7ff) || (cp >= 0xe000 && cp <= 0xffff)) {
         return String.fromCharCode(cp);
-    } else if (cp >= 0x10000 && cp <= 0x10FFFF) {
-
+    } else if (cp >= 0x10000 && cp <= 0x10ffff) {
         // we substract 0x10000 from cp to get a 20-bits number
         // in the range 0..0xFFFF
         cp -= 0x10000;
 
         // we add 0xD800 to the number formed by the first 10 bits
         // to give the first byte
-        var first = ((0xffc00 & cp) >> 10) + 0xD800
+        var first = ((0xffc00 & cp) >> 10) + 0xd800;
 
         // we add 0xDC00 to the number formed by the low 10 bits
         // to give the second byte
-        var second = (0x3ff & cp) + 0xDC00;
+        var second = (0x3ff & cp) + 0xdc00;
 
         return String.fromCharCode(first) + String.fromCharCode(second);
     }
@@ -92,7 +90,7 @@ export var Controls = {
     down: false,
     boost: false,
     shoot: false,
-	autofire: false,
+    autofire: false,
     downSince: false,
     registerCanvas(canvas) {
         const getMousePos = (canvas, { clientX, clientY }) => {
@@ -114,9 +112,9 @@ export var Controls = {
                 Controls.shoot = true;
             });
             document.getElementById("shoot").addEventListener("touchend", e => {
-				if (!Controls.autofire) {
-					Controls.shoot = false;
-				}
+                if (!Controls.autofire) {
+                    Controls.shoot = false;
+                }
             });
             document.getElementById("boost").addEventListener("touchstart", e => {
                 Controls.boost = true;
@@ -160,9 +158,9 @@ export var Controls = {
                         if (timeDelta < Settings.mouseOneButton) {
                             Controls.shoot = true;
                             setTimeout(function() {
-								if (!Controls.autofire) {
-									Controls.shoot = false;
-								}
+                                if (!Controls.autofire) {
+                                    Controls.shoot = false;
+                                }
                             }, 100);
                         } else {
                             Controls.boost = true;
@@ -171,8 +169,8 @@ export var Controls = {
                             }, 100);
                         }
                     } else if (!Controls.autofire) {
-						Controls.shoot = false;
-					}
+                        Controls.shoot = false;
+                    }
                 }
             });
             document.getElementById("gameArea").addEventListener("contextmenu", e => {
@@ -227,24 +225,24 @@ window.addEventListener(
             case 32: // space
                 Controls.shoot = true;
                 break;
-			case 69: // e
-				// Autofire
-				if (!document.body.classList.contains("alive")) {
-					break;
-				} else if (!Controls.autofire) {
-					Controls.autofire = true;
-					Controls.shoot = true;
-					autofTgg.innerHTML = "ON";
-					autofCon.style.color = "#fff";
-					console.log("Autofire enabled!");
-				} else {
-					Controls.autofire = false;
-					Controls.shoot = false;
-					autofTgg.innerHTML = "OFF";
-					autofCon.style.color = "";
-					console.log("Autofire disabled!");
-				}
-				break;
+            case 69: // e
+                // Autofire
+                if (!document.body.classList.contains("alive")) {
+                    break;
+                } else if (!Controls.autofire) {
+                    Controls.autofire = true;
+                    Controls.shoot = true;
+                    autofTgg.innerHTML = "ON";
+                    autofCon.style.color = "#fff";
+                    console.log("Autofire enabled!");
+                } else {
+                    Controls.autofire = false;
+                    Controls.shoot = false;
+                    autofTgg.innerHTML = "OFF";
+                    autofCon.style.color = "";
+                    console.log("Autofire disabled!");
+                }
+                break;
         }
     },
     false
@@ -270,10 +268,10 @@ window.addEventListener(
                 Controls.boost = false;
                 break;
             case 32: // space
-				if (!Controls.autofire) {
-					Controls.shoot = false;
-				}
-				break;
+                if (!Controls.autofire) {
+                    Controls.shoot = false;
+                }
+                break;
         }
     },
     false

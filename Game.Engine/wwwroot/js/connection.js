@@ -55,11 +55,9 @@ export class Connection {
             hostname = "daud.io";
         }
 
-        if (world)
-        {
+        if (world) {
             var worldKeyParse = world.match(/^(.*?)\/(.*)$/);
-            if (worldKeyParse)
-            {
+            if (worldKeyParse) {
                 hostname = worldKeyParse[1];
                 world = worldKeyParse[2];
             }
