@@ -336,10 +336,9 @@
             var moment = new Vector2();
             foreach (var ship in Ships)
             {
-				var centerTargetVector = FleetCenter + AimTarget;
                 var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
-                ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X) * (1 - World.Hook.ShipDirection) + MathF.Atan2(centerTargetVector.Y, centerTargetVector.X) * World.Hook.ShipDirection;
+                ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X) * (1 - World.Hook.ShipDirection) + MathF.Atan2(AimTarget.Y, AimTarget.X) * World.Hook.ShipDirection;
 
                 if(Ships.IndexOf(ship)<5){
                     summation+=ship.Position;
