@@ -12,6 +12,7 @@
         
 
         public string DiscordToken {get; set;} = null;
+        public ulong? DiscordGuildID { get; set; } = null;
 
         public bool ForceHTTPS { get; set; } = false;
 

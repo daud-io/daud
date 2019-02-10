@@ -27,40 +27,45 @@
 
         public void Think()
         {
-            foreach (var player in Player.GetWorldPlayers(this.World)
-                .Where(p => !string.IsNullOrEmpty(p.Token) && !p.AuthenticationStarted))
+            if (World.GameConfiguration.DiscordGuildID != null && World.GameConfiguration.DiscordToken != null)
             {
-                player.AuthenticationStarted = true;
-                Task.Run(async () =>
+                foreach (var player in Player.GetWorldPlayers(this.World)
+                    .Where(p => !string.IsNullOrEmpty(p.Token) && !p.AuthenticationStarted))
                 {
-                    using (var drc = new DiscordRestClient())
+                    player.AuthenticationStarted = true;
+                    Task.Run(async () =>
                     {
-                        try
+                        using (var drc = new DiscordRestClient())
                         {
-                            await drc.LoginAsync(Discord.TokenType.Bearer, player.Token);
-                            if (drc.CurrentUser != null)
+                            try
                             {
-                                var playerRoles = new List<string>();
-
-                                var userId = drc.CurrentUser.Id;
-
-                                await drc.LoginAsync(Discord.TokenType.Bot, World.GameConfiguration.DiscordToken);
-
-                                var user = await drc.GetGuildUserAsync(472025150959648791, userId);
-                                var guild = await drc.GetGuildAsync(472025150959648791);
-                                foreach (var roleID in user.RoleIds)
+                                await drc.LoginAsync(Discord.TokenType.Bearer, player.Token);
+                                if (drc.CurrentUser != null)
                                 {
-                                    var role = guild.Roles.FirstOrDefault(r => r.Id == roleID);
-                                    if (role != null)
-                                        playerRoles.Add(role.Name);
-                                }
+                                    var playerRoles = new List<string>();
 
-                                player.Roles = playerRoles;
+                                    var userId = drc.CurrentUser.Id;
+
+                                    await drc.LoginAsync(Discord.TokenType.Bot, World.GameConfiguration.DiscordToken);
+
+                                    var user = await drc.GetGuildUserAsync(World.GameConfiguration.DiscordGuildID.Value, userId);
+                                    var guild = await drc.GetGuildAsync(World.GameConfiguration.DiscordGuildID.Value);
+                                    foreach (var roleID in user.RoleIds)
+                                    {
+                                        var role = guild.Roles.FirstOrDefault(r => r.Id == roleID);
+                                        if (role != null)
+                                            playerRoles.Add(role.Name);
+                                    }
+
+                                    player.LoginName = user.Nickname;
+                                    player.Roles = playerRoles;
+                                    player.OnAuthenticated();
+                                }
                             }
+                            catch (Exception) { }
                         }
-                        catch (Exception) { }
-                    }
-                });
+                    });
+                }
             }
         }
     }

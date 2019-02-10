@@ -2,6 +2,7 @@
 {
     using Game.API.Common;
     using Game.Engine.Networking;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -42,6 +43,7 @@
 
         public bool AuthenticationStarted { get; set; }
         public List<string> Roles { get; set; } = null;
+        public string LoginName { get; set; }
 
         public bool PendingDestruction { get; set; } = false;
         private bool IsSpawning = false;
@@ -222,6 +224,22 @@
             Token = token;
 
             IsSpawning = true;
+        }
+
+        public void OnAuthenticated()
+        {
+            if (this.Connection != null)
+            {
+                this.Connection.Events.Enqueue(new BroadcastEvent
+                {
+                    EventType = "authenticated",
+                    Data = JsonConvert.SerializeObject(new
+                    {
+                        roles = this.Roles,
+                        loginName = this.LoginName
+                    })
+                });
+            }
         }
 
         protected virtual void OnDeath(Player player = null)

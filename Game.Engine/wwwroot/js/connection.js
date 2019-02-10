@@ -251,6 +251,17 @@ export class Connection {
                 }
 
                 break;
+            case this.fb.AllMessages.NetEvent:
+                message = quantum.message(new this.fb.NetEvent());
+
+                var event = {
+                    type: message.type(),
+                    data: JSON.parse(message.data())
+                };
+
+                console.log(event);
+
+                break;
             case this.fb.AllMessages.NetLeaderboard:
                 message = quantum.message(new this.fb.NetLeaderboard());
 
