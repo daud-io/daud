@@ -84,6 +84,7 @@ function getUnicodeCharacter(cp) {
 }
 export var Controls = {
     emoji: "👋",
+    nick: "",
     left: false,
     up: false,
     right: false,
@@ -290,17 +291,17 @@ const savedColor = Cookies.get("color");
 const savedEmoji = Cookies.get("emoji");
 const savedEmoji2 = Cookies.get("emoji2");
 
-if (savedNick !== undefined) {
+if (savedNick != undefined) {
     Controls.nick = savedNick;
     nick.value = savedNick;
 }
 
-if (savedColor !== undefined) {
+if (savedColor != undefined) {
     Controls.color = savedColor;
     refreshSelectedStyle();
 }
 
-if (savedEmoji !== undefined) {
+if (savedEmoji != undefined) {
     Controls.emoji = unicode(savedEmoji2);
     emojiTrigger.firstChild.setAttribute("data-index", savedEmoji);
 }
