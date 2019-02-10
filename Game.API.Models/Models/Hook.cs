@@ -11,6 +11,8 @@
             {
                 return new Hook
                 {
+					ShipDirection = 1,
+					
                     WorldSize = 8000,
                     WorldResizeEnabled = true,
                     WorldSizeBasic = 4000,
@@ -133,7 +135,8 @@
             }
         }
 
-
+		public int ShipDirection { get; set; }
+		
         public int WorldSize { get; set; }
 		public bool WorldResizeEnabled { get; set; }
 		public int WorldResizeSpeed { get; set; }
