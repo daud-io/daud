@@ -94,4 +94,5 @@ function deathStats(lastData) {
 	} else {
 		document.getElementById("deathScreenGameTime").innerHTML = gameTimeMinutes + "min " + gameTimeSeconds + "sec";
 	}
+	document.getElementById("deathScreenMaxKillStreak").innerHTML = lastData.extraData.maxCombo;
 }

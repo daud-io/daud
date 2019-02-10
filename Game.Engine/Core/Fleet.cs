@@ -106,6 +106,7 @@
                     {
                         player.Fleet.ComboCounter = 1;
                     }
+					player.MaxCombo = (player.MaxCombo < player.Fleet.ComboCounter) ? player.Fleet.ComboCounter : player.MaxCombo;
 
                     var PreviousKillTime = player.Fleet.LastKillTime;
                     player.Fleet.LastKillTime = World.Time;
@@ -142,6 +143,7 @@
 							score = this.Owner.Score,
 							kills = this.Owner.KillCounter,
 							gameTime = World.Time - this.Owner.AliveSince,
+							maxCombo = player.MaxCombo,
 							ping = new
 							{
 								you = this.Owner?.Connection?.Latency ?? 0,
@@ -150,6 +152,7 @@
 						}
 					);
 					this.Owner.KillCounter = 0;
+					this.Owner.MaxCombo = 0;
             }
             else
             {
@@ -160,11 +163,13 @@
 						{
 							score = this.Owner.Score,
 							kills = this.Owner.KillCounter,
-							gameTime = World.Time - this.Owner.AliveSince
+							gameTime = World.Time - this.Owner.AliveSince,
+							maxCombo = this.Owner.MaxCombo
 						}
 					);
                     this.Owner.Score += World.Hook.PointsPerUniverseDeath;
 					this.Owner.KillCounter = 0;
+					this.Owner.MaxCombo = 0;
                 }
             }
 
