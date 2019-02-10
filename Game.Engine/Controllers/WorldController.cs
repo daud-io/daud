@@ -44,7 +44,7 @@
         public string Create(string worldKey, string hookJson)
         {
 
-            var hook = Hook.Default;
+            var hook = Game.API.Common.Models.Hook.Default;
 
             PatchJSONIntoHook(hook, hookJson);
 
@@ -72,7 +72,7 @@
         }
 
         [HttpPost, Route("hook")]
-        public async Task<string> PostHook(string worldName = null)
+        public async Task<Hook> Hook(string worldName = null)
         {
             string json = null;
 
@@ -81,12 +81,12 @@
 
             var world = Worlds.Find(worldName);
 
-            PatchJSONIntoHook(world.Hook, json);
+            JsonConvert.PopulateObject(json, world.Hook);
 
             // connection is using getHashCode for change detection
             world.Hook = world.Hook.Clone();
 
-            return JsonConvert.SerializeObject(world.Hook, Formatting.Indented);
+            return world.Hook;
         }
 
         [AllowAnonymous, HttpGet, Route("all"), EnableCors("AllowAllOrigins")]

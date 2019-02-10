@@ -18,8 +18,10 @@
 
         public async Task<string> PostHookAsync(object hook, string worldName = null)
         {
-            return await APIClient.APICallAsync<string>(
+            var response = await APIClient.APICallAsync<object>(
                 HttpMethod.Post, APIEndpoint.WorldHook, queryStringContent: new { worldName }, bodyContent: hook);
+
+            return JsonConvert.SerializeObject(response, Formatting.Indented);
         }
 
         public async Task<string> PutWorldAsync(string worldKey, object hook)

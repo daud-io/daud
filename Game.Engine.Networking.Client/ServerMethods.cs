@@ -54,11 +54,5 @@
                 queryStringContent: new { worldName }
             );
         }
-
-        public async Task<string> HookAsync(object hook, string worldName = null)
-        {
-            return await APIClient.APICallAsync<string>(
-                HttpMethod.Post, APIEndpoint.ServerHook, queryStringContent: new { worldName }, bodyContent: hook);
-        }
     }
 }

@@ -10,6 +10,7 @@
     using TiledSharp;
 
     [Subcommand("shrink", typeof(Shrink))]
+    [Subcommand("hook", typeof(Hook))]
     [Subcommand("create", typeof(Create))]
     [Subcommand("parse", typeof(Parse))]
     [Subcommand("delete", typeof(Delete))]
@@ -162,7 +163,7 @@
             {
                 for (int i = 4200; i > 0; i -= 10)
                 {
-                    await API.Server.HookAsync(new { WorldSize = i }, World);
+                    await API.World.PostHookAsync(new { WorldSize = i }, World);
                     await Task.Delay(100);
                 }
             }
