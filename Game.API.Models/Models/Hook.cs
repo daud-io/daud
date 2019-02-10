@@ -11,7 +11,7 @@
             {
                 return new Hook
                 {
-					ShipDirection = 1,
+					ShipDirection = (float)0.2, // 0 - normal daud fleet, 1 - space1 fleet
 					
                     WorldSize = 8000,
                     WorldResizeEnabled = true,
@@ -135,7 +135,7 @@
             }
         }
 
-		public int ShipDirection { get; set; }
+		public float ShipDirection { get; set; }
 		
         public int WorldSize { get; set; }
 		public bool WorldResizeEnabled { get; set; }
