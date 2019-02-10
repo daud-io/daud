@@ -91,6 +91,9 @@
         {
             if (player != null)
             {
+				try
+				
+				{
 				var comboTxt = "";
 				var comboPlusScore = 0;
 				if (player.IsAlive)
@@ -153,6 +156,11 @@
 					);
 					this.Owner.KillCounter = 0;
 					this.Owner.MaxCombo = 0;
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine($"Exception while scoring and sending messages: {e}");
+				}
             }
             else
             {
