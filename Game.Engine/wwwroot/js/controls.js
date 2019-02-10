@@ -84,7 +84,7 @@ function getUnicodeCharacter(cp) {
 }
 export var Controls = {
     emoji: "👋",
-    nick: "",
+    nick: "unknown",
     left: false,
     up: false,
     right: false,
