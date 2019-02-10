@@ -52,7 +52,7 @@
                     MaxHealth = 100,
 
                     MaxHealthBot = 50,
-                    PrecisionBullets = true,
+                    PrecisionBullets = false,
                     BulletLife = 1890,
                     BotPerXPoints = 500,
                     BotBase = 1,
