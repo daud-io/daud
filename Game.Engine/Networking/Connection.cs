@@ -156,6 +156,7 @@ namespace Game.Engine.Networking
 
                                     var caption = builder.CreateString(serverGroup.Caption ?? " ");
                                     var color = builder.CreateString(serverGroup.Color ?? "");
+                                    var customData = builder.CreateString(serverGroup.CustomData ?? "");
 
                                     var group = NetGroup.CreateNetGroup(builder,
                                         group: serverGroup.ID,
@@ -163,7 +164,8 @@ namespace Game.Engine.Networking
                                         captionOffset: caption,
                                         zindex: serverGroup.ZIndex,
                                         owner: serverGroup.OwnerID,
-                                        colorOffset: color
+                                        colorOffset: color,
+                                        customDataOffset: customData
                                     );
                                     return group;
                                 }).ToArray());

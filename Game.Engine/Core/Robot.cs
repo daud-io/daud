@@ -53,7 +53,7 @@
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
                     .Where(p => p.IsAlive)
                     .Where(p => (p.Fleet?.Ships?.Count() ?? 0) > 0)
-                    .Where(p => !p.Name?.StartsWith("Daud") ?? true)
+                    .Where(p => !p.Name?.StartsWith("🤖") ?? true)
                     .OrderBy(p => Vector2.Distance(p.Fleet.FleetCenter, this.Fleet.FleetCenter))
                     .FirstOrDefault();
             var vel = Vector2.Zero;

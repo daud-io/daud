@@ -51,6 +51,20 @@
             }
         }
 
+        private string _customData;
+        public virtual string CustomData
+        {
+            get
+            {
+                return _customData;
+            }
+            set
+            {
+                IsDirty = IsDirty || _customData != value;
+                _customData = value;
+            }
+        }
+
         private uint _zIndex;
         public virtual uint ZIndex
         {

@@ -87,6 +87,7 @@ else connection.connect();*/
 window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 window.Game.cache = cache;
+window.Game.controls = Controls;
 
 window.Game.reinitializeWorld = function() {
     if (currentWorld) Controls.initializeWorld(currentWorld);
@@ -133,8 +134,11 @@ const groupFromServer = (cache, group) => {
         ID: group.group(),
         Caption: group.caption(),
         Type: group.type(),
-        ZIndex: group.zindex()
+        ZIndex: group.zindex(),
+        CustomData: group.customData()
     };
+
+    if (newGroup.CustomData) newGroup.CustomData = JSON.parse(newGroup.CustomData);
 
     return newGroup;
 };
@@ -230,14 +234,13 @@ connection.onView = newView => {
             default:
                 let extra = announcement.extraData();
 
-                if (extra)
-                    extra = JSON.parse(extra);
+                if (extra) extra = JSON.parse(extra);
 
                 log.addEntry({
                     type: announcement.type(),
                     text: announcement.text(),
                     pointsDelta: announcement.pointsDelta(),
-                    extraData: extra,
+                    extraData: extra
                 });
                 break;
         }
@@ -289,20 +292,32 @@ connection.onView = newView => {
 let lastControl = {};
 
 setInterval(() => {
-    if (angle !== lastControl.angle || aimTarget.X !== aimTarget.X || aimTarget.Y !== aimTarget.Y || Controls.boost !== lastControl.boost || Controls.shoot !== lastControl.shoot) {
+    if (
+        angle !== lastControl.angle ||
+        aimTarget.X !== aimTarget.X ||
+        aimTarget.Y !== aimTarget.Y ||
+        Controls.boost !== lastControl.boost ||
+        Controls.shoot !== lastControl.shoot ||
+        Controls.chat !== lastControl.chat
+    ) {
         let spectateControl = false;
         if (isSpectating) {
             if (Controls.shoot) spectateControl = "action:next";
             else spectateControl = "spectating";
         }
 
-        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl);
+        var customData = false;
+
+        if (Controls.chat) customData = JSON.stringify({ chat: Controls.chat });
+
+        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl, customData);
 
         lastControl = {
             angle,
             aimTarget,
             boost: Controls.boost,
-            shoot: Controls.shoot
+            shoot: Controls.shoot,
+            chat: Controls.chat
         };
     }
 }, 10);
@@ -322,6 +337,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
     connection.disconnect();
     cache.empty();
     connection.connect(worldKey);
+    serverTimeOffset = false;
 
     Controls.initializeWorld(world);
 };
@@ -329,7 +345,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
 function doSpawn() {
     Events.Spawn();
     aliveSince = gameTime;
-    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
+    connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);

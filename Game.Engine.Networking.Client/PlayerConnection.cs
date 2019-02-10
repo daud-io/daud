@@ -217,7 +217,8 @@
                         Type = (GroupTypes)group.Type,
                         ZIndex = group.Zindex,
                         Owner = group.Owner,
-                        Color = group.Color
+                        Color = group.Color,
+                        CustomData = group.CustomData
                     });
                 }
             }

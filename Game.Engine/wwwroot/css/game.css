@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css?family=Exo+2");
-
+@font-face {
+    font-family: NotoColorEmoji;
+    src: url("../font/NotoColorEmoji.ttf");
+  
+}
 html,
 body {
     width: 100%;
@@ -8,7 +12,7 @@ body {
     background-color: black;
     text-align: center;
     overflow: hidden;
-    font-family: "Exo 2";
+    font-family: var(--font);
     color: white;
     --bg-color-1: #222;
 }
@@ -275,6 +279,7 @@ a {
     margin: 0 0 10px 0;
     transition: border-bottom 1s;
     width: 20rem;
+    font-family: var(--font);
 }
 
 #shipSelectorSwitch {
@@ -666,7 +671,7 @@ input:checked + .slider:before {
 }
 
 #hud {
-    font-family: sans-serif;
+    font-family: var(--font);
     font-size: 8pt;
     position: absolute;
     bottom: 30px;
@@ -674,7 +679,7 @@ input:checked + .slider:before {
 }
 
 #record {
-    font-family: sans-serif;
+    font-family: var(--font);
     font-size: 8pt;
     position: absolute;
     bottom: 15px;
@@ -683,6 +688,7 @@ input:checked + .slider:before {
 
 :root {
     --leaderboard-width: 250px;
+    --font: "Exo 2", NotoColorEmoji, sans-serif, system-ui;
 }
 
 #leaderboard {
@@ -924,4 +930,21 @@ progress::-webkit-progress-value {
     transform: translate(-50%, -50%);
     font-size: 40px;
     font-weight: bold;
+}
+#emoji-container {
+    width: 400px;
+    height: 300px;
+    visibility: hidden;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+}
+#emoji-container.open {
+    visibility: visible;
+}
+#emoji-trigger {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    vertical-align: bottom;
 }

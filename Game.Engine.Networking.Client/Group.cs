@@ -10,5 +10,6 @@
         public uint ZIndex { get; set; }
         public uint Owner { get; set; }
         public string Color { get; set; }
+        public string CustomData { get; set; }
     }
 }

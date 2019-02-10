@@ -17,6 +17,7 @@
     <!-- Font Awesome 5 & 4 icons libraries -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="lib/emoji-panel-google-32.min.css">
 </head>
 
 <body class="loading dead">
@@ -30,15 +31,15 @@
 
         <div id="gameArea" class="noselect aspectratio">
             <canvas id="gameCanvas" width="1000" height="500"></canvas>
-			
-			<div id="plusScoreContainer">
-			</div>
 
-			<div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
+            <div id="plusScoreContainer">
+            </div>
+
+            <div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
             <small id="minimapTip">Press M to toggle the minimap</small>
 
             <div id="bigLog"></div>
-			<div id="comboMessage"></div>
+            <div id="comboMessage"></div>
 
             <div id="ctf_arena" class="hide">
                 <span id="ctf_cyan">
@@ -119,9 +120,9 @@
 
                     <div id="shipSelectorSwitch">
                     </div>
-
+                    <div id="emoji-trigger" class=" button1"><span class="ep-e" data-index="517" style="position: absolute;margin-left: -16px;"></span></div>
                     <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
-
+                    <div id="emoji-container"></div>
                     <div>
                         <input type="button" id="spawn" class="button1" value="Launch as guest!">
                         <input type="button" id="dauth" class="button1" value="Login with Discord">
@@ -240,7 +241,7 @@
                                 </label>
                             </td>
                         </tr>
-						<tr>
+                        <tr>
                             <td>Show Keyboard Hints</td>
                             <td>
                                 <label class="switch">
@@ -249,7 +250,7 @@
                                 </label>
                             </td>
                         </tr>
-						
+
                         <!-- hidden... this isn't doing anything -->
                         <tr style="display: none;">
                             <td>Show Leaderboard</td>
@@ -430,8 +431,8 @@
             </div>
         </div>
     </div>
-	
-	<img src="https://dezov.s3.amazonaws.com/media/crown-pngc7b-43cc-b490-18fccb3229df.png" id="minimapCrownImage" style="display:none" />
+
+    <img src="https://dezov.s3.amazonaws.com/media/crown-pngc7b-43cc-b490-18fccb3229df.png" id="minimapCrownImage" style="display:none" />
 
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/flatbuffers.js"></script>

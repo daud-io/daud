@@ -75,6 +75,7 @@ export class Cache {
                 existing.Caption = group.Caption;
                 existing.Type = group.Type;
                 existing.ZIndex = group.ZIndex;
+                existing.CustomData = group.CustomData;
             }
 
             if (existing.renderer) existing.renderer.update(existing);
