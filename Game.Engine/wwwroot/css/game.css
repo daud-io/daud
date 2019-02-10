@@ -380,7 +380,7 @@ select {
     width: 100% !important;
 }
 
-table {
+#settingsTable {
     text-align: left;
 }
 
@@ -947,4 +947,27 @@ progress::-webkit-progress-value {
     width: 32px;
     height: 32px;
     vertical-align: bottom;
+}
+#chat {
+    position: absolute;
+    left:0;
+    top: 50%;
+    transform: translate(0,-50%);
+}
+#chat th {
+    text-align: center;
+}
+#chat td {
+    padding: 10px;
+    border: 1px solid white;
+    border-radius: 50px;
+}
+#chat td:first-child {
+    background: rgba(0, 0, 255, 0.3);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+#chat td:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
