@@ -48,9 +48,8 @@
 
             PatchJSONIntoHook(hook, hookJson);
 
-            var world = new World
+            var world = new World(hook, GameConfiguration)
             {
-                Hook = hook,
                 WorldKey = worldKey
             };
 

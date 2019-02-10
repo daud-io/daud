@@ -120,7 +120,7 @@
             });
             app.UseGameWebsocketHandler();
 
-            Worlds.Initialize();
+            Worlds.Initialize(config);
 
             if (config.RegistryEnabled)
             {

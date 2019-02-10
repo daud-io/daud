@@ -2,6 +2,9 @@
   "profiles": {
     "Game.Engine": {
       "commandName": "Project",
+      "environmentVariables": {
+        "config:DiscordToken": "NTI0Mjg1NDY1NzkzMzk2NzQx.Dvl2zw.NR24PeW55yCgWBzn_9g8OoNopsU"
+      },
       "applicationUrl": "http://localhost:5000"
     }
   }

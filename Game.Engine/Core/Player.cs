@@ -39,6 +39,10 @@
         public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
         public string Token { get; set; }
+
+        public bool AuthenticationStarted { get; set; }
+        public List<string> Roles { get; set; } = null;
+
         public bool PendingDestruction { get; set; } = false;
         private bool IsSpawning = false;
 
@@ -208,17 +212,16 @@
                 && name.Length > 15)
                 name = name.Substring(0, 15);
 
+            CummulativeBoostRequested = false;
+            CummulativeShootRequested = false;
+
             Name = name;
 
-
             ShipSprite = sprite;
-
             Color = color;
-
             Token = token;
 
             IsSpawning = true;
-
         }
 
         protected virtual void OnDeath(Player player = null)

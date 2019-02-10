@@ -49,8 +49,11 @@
         public string Image { get; set; } = "default";
         public MapActor MapActor { get; private set; } = null;
 
-        public World(Hook hook = null)
+        public GameConfiguration GameConfiguration { get; set; }
+
+        public World(Hook hook, GameConfiguration gameConfiguration)
         {
+            this.GameConfiguration = gameConfiguration;
             OffsetTicks = DateTime.Now.Ticks;
             Hook = hook ?? Hook.Default;
 
@@ -59,6 +62,7 @@
             SystemActor<ObstacleTender>();
             SystemActor<CaptureTheFlag>();
             SystemActor<Sumo>();
+            SystemActor<Authenticator>();
 
             SystemActor(MapActor = new MapActor());
 

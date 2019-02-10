@@ -14,6 +14,12 @@ namespace Game.Engine.ChatBot
     {
         private static Dictionary<string, RestSelfUser> TokenUserMap = new Dictionary<string, RestSelfUser>();
         private static Dictionary<ulong, RestSelfUser> IDUserMap = new Dictionary<ulong, RestSelfUser>();
+        private readonly GameConfiguration GameConfiguration;
+
+        public DiscordBotModule(GameConfiguration gameConfiguration)
+        {
+            GameConfiguration = gameConfiguration;
+        }
 
         [Command("ping")]
         [Alias("pong", "hello")]
@@ -40,7 +46,7 @@ namespace Game.Engine.ChatBot
         [Command("worlds")]
         public async Task WorldsAsync()
         {
-            var response = "*worlds report*\n";
+            var response = $"*worlds report ({GameConfiguration.PublicURL})*\n";
             using (var drc = new DiscordRestClient())
             {
 
