@@ -28,6 +28,7 @@
 
         public bool IsAlive { get; set; } = false;
         public bool IsStillPlaying {get;set;} = false;
+		public long AliveSince { get; set; } = 0;
         public long DeadSince { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
@@ -217,6 +218,8 @@
             Color = color;
 
             Token = token;
+			
+			AliveSince = World.Time;
 
             IsSpawning = true;
 

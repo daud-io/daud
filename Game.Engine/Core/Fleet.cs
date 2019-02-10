@@ -130,7 +130,7 @@
                             }
                         }
                     );
-					this.Owner.KillCounter += 1;
+					player.KillCounter += 1;
                 }
                 if (this.Owner.Connection != null)
                     this.Owner.Connection.SpectatingFleet = player.Fleet;
@@ -141,6 +141,7 @@
 						{
 							score = this.Owner.Score,
 							kills = this.Owner.KillCounter,
+							gameTime = World.Time - this.Owner.AliveSince,
 							ping = new
 							{
 								you = this.Owner?.Connection?.Latency ?? 0,
@@ -158,7 +159,8 @@
 						new
 						{
 							score = this.Owner.Score,
-							kills = this.Owner.KillCounter
+							kills = this.Owner.KillCounter,
+							gameTime = World.Time - this.Owner.AliveSince
 						}
 					);
                     this.Owner.Score += World.Hook.PointsPerUniverseDeath;
