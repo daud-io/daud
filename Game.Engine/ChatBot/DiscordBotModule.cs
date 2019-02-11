@@ -1,5 +1,6 @@
 namespace Game.Engine.ChatBot
 {
+    using Docker.DotNet;
     using Discord;
     using Discord.Commands;
     using Discord.Rest;
@@ -8,12 +9,20 @@ namespace Game.Engine.ChatBot
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Docker.DotNet.Models;
 
     // Modules must be public and inherit from an IModuleBase
     public class DiscordBotModule : ModuleBase<SocketCommandContext>
     {
+
         private static Dictionary<string, RestSelfUser> TokenUserMap = new Dictionary<string, RestSelfUser>();
         private static Dictionary<ulong, RestSelfUser> IDUserMap = new Dictionary<ulong, RestSelfUser>();
+        private readonly GameConfiguration GameConfiguration;
+
+        public DiscordBotModule(GameConfiguration gameConfiguration)
+        {
+            GameConfiguration = gameConfiguration;
+        }
 
         [Command("ping")]
         [Alias("pong", "hello")]
@@ -36,6 +45,35 @@ namespace Game.Engine.ChatBot
             Program.Abort();
             await ReplyAsync("woah... room spinning. so... cold...");
         }
+
+        [Command("deploy"), RequireUserPermission(GuildPermission.ManageChannels)]
+        public async Task DeployAsync(string url, string tag)
+        {
+            if (url == GameConfiguration.PublicURL)
+            {
+                DockerClient client = new DockerClientConfiguration(
+                    new Uri("unix:///var/run/docker.sock"))
+                     .CreateClient();
+
+                var container = await client.Containers.InspectContainerAsync(Environment.MachineName);
+
+                var config = container.Config;
+                var oldImage = config.Image;
+                config.Image = $"iodaud/daud:{tag}";
+
+                var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters(config));
+                if (response.Warnings.Count == 0)
+                    await client.Containers.RemoveContainerAsync(Environment.MachineName, new ContainerRemoveParameters
+                    {
+                        Force = true
+                    });
+
+                await ReplyAsync($"{GameConfiguration.PublicURL} {oldImage}->{config.Image}");
+
+                Program.Abort();
+            }
+        }
+
 
         [Command("worlds")]
         public async Task WorldsAsync()
