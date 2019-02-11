@@ -60,15 +60,26 @@ namespace Game.Engine.ChatBot
                 var config = container.Config;
                 var oldImage = config.Image;
                 config.Image = $"iodaud/daud:{tag}";
+                config.WorkingDir = null;
+
+
+                await ReplyAsync($"{GameConfiguration.PublicURL} pulling image {config.Image}");
+                await client.Images.CreateImageAsync(new ImagesCreateParameters
+                {
+                    FromImage = "iodaud/daud",
+                    Tag = tag
+                }, null, new Progress<JSONMessage>());
 
                 var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters(config));
-                if (response.Warnings.Count == 0)
+                await client.Containers.StartContainerAsync(response.ID, new ContainerStartParameters());
+
+                await ReplyAsync($"{GameConfiguration.PublicURL} {oldImage}->{config.Image}");
+
+                if ((response.Warnings?.Count ?? 0) == 0)
                     await client.Containers.RemoveContainerAsync(Environment.MachineName, new ContainerRemoveParameters
                     {
                         Force = true
                     });
-
-                await ReplyAsync($"{GameConfiguration.PublicURL} {oldImage}->{config.Image}");
 
                 Program.Abort();
             }
