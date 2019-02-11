@@ -9,6 +9,10 @@
     {
         public static async Task UpgradeAsync(GameConfiguration gameConfiguration, string tag, Func<string, Task> status)
         {
+            // for this to work, the container must be launched with 
+            // a mount for the docker socket
+            //   -v /var/run/docker.sock:/var/run/docker.sock
+
             using (DockerClient client = new DockerClientConfiguration(
                 new Uri("unix:///var/run/docker.sock"))
                  .CreateClient())
@@ -18,22 +22,38 @@
 
                 var config = container.Config;
                 var oldImage = config.Image;
-                config.Image = $"iodaud/daud:{tag}";
+
+                await status($"{gameConfiguration.PublicURL} pulling image");
+
+                ImagesCreateParameters imagesCreateParameters = new ImagesCreateParameters();
+
+                if (tag.IndexOf(':') == 0)
+                {
+                    imagesCreateParameters.FromImage = "iodaud/daud";
+                    imagesCreateParameters.Tag = tag;
+                }
+                else
+                {
+                    var parts = tag.Split(':');
+                    imagesCreateParameters.FromImage = parts[0];
+                    imagesCreateParameters.Tag = parts[1];
+
+                }
+
+                await client.Images.CreateImageAsync(imagesCreateParameters, null, new Progress<JSONMessage>());
+
+                config.Image = $"{imagesCreateParameters.FromImage}:{imagesCreateParameters.Tag}";
                 config.WorkingDir = null;
 
-                await status($"{gameConfiguration.PublicURL} pulling image {config.Image}");
-                await client.Images.CreateImageAsync(new ImagesCreateParameters
+                var createContainerParameters = new CreateContainerParameters(config)
                 {
-                    FromImage = "iodaud/daud",
-                    Tag = tag
-                }, null, new Progress<JSONMessage>());
+                    HostConfig = container.HostConfig
+                };
 
-                var createContainerParameters = new CreateContainerParameters(config);
-                createContainerParameters.HostConfig = container.HostConfig;
-
+                createContainerParameters.Hostname = null;
                 var response = await client.Containers.CreateContainerAsync(createContainerParameters);
 
-                await status($"{gameConfiguration.PublicURL} {container.Image}->{config.Image}");
+                await status($"{gameConfiguration.PublicURL} {oldImage}->{config.Image}");
 
 
                 var newID = response.ID;
@@ -49,6 +69,9 @@
                 createContainerParameters.Env.Add("GAME_DOCKER_UPGRADE=1");
                 createContainerParameters.Env.Add("GAME_DOCKER_UPGRADE_OLD=" + oldID);
                 createContainerParameters.Env.Add("GAME_DOCKER_UPGRADE_NEW=" + newID);
+                createContainerParameters.HostConfig.AutoRemove = true;
+                createContainerParameters.HostConfig.RestartPolicy = null;
+
                 response = await client.Containers.CreateContainerAsync(createContainerParameters);
 
                 await client.Containers.StartContainerAsync(response.ID, new ContainerStartParameters { });
@@ -72,11 +95,6 @@
                     await client.Containers.StartContainerAsync(newID, new ContainerStartParameters { });
                     // delete old container
                     await client.Containers.RemoveContainerAsync(oldID, new ContainerRemoveParameters
-                    {
-                        Force = true
-                    });
-                    // delete this container
-                    await client.Containers.RemoveContainerAsync(Environment.MachineName, new ContainerRemoveParameters
                     {
                         Force = true
                     });
