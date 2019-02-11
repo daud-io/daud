@@ -10,6 +10,7 @@ namespace Game.Engine.ChatBot
     using System.Linq;
     using System.Threading.Tasks;
     using Docker.DotNet.Models;
+    using Game.Engine.Hosting;
 
     // Modules must be public and inherit from an IModuleBase
     public class DiscordBotModule : ModuleBase<SocketCommandContext>
@@ -51,39 +52,10 @@ namespace Game.Engine.ChatBot
         {
             if (url == GameConfiguration.PublicURL)
             {
-                DockerClient client = new DockerClientConfiguration(
-                    new Uri("unix:///var/run/docker.sock"))
-                     .CreateClient();
-
-                var container = await client.Containers.InspectContainerAsync(Environment.MachineName);
-
-                var config = container.Config;
-                var oldImage = config.Image;
-                config.Image = $"iodaud/daud:{tag}";
-                config.WorkingDir = null;
-
-                await ReplyAsync($"{GameConfiguration.PublicURL} pulling image {config.Image}");
-                await client.Images.CreateImageAsync(new ImagesCreateParameters
+                await DockerUpgrade.UpgradeAsync(GameConfiguration, tag, async (message) =>
                 {
-                    FromImage = "iodaud/daud",
-                    Tag = tag
-                }, null, new Progress<JSONMessage>());
-
-                var createContainerParameters = new CreateContainerParameters(config);
-                createContainerParameters.HostConfig = container.HostConfig;
-
-                var response = await client.Containers.CreateContainerAsync(createContainerParameters);
-                await client.Containers.StartContainerAsync(response.ID, new ContainerStartParameters());
-
-                await ReplyAsync($"{GameConfiguration.PublicURL} {oldImage}->{config.Image}");
-
-                if ((response.Warnings?.Count ?? 0) == 0)
-                    await client.Containers.RemoveContainerAsync(Environment.MachineName, new ContainerRemoveParameters
-                    {
-                        Force = true
-                    });
-
-                Program.Abort();
+                    await ReplyAsync(message);
+                });
             }
         }
 
