@@ -59,10 +59,40 @@
             <div id="stop_spectating_container">
                 <input type="button" id="stop_spectating" class="button1" value="Menu" />
                 <input type="button" id="spawnSpectate" class="button1" value="Launch as guest!">
-                <div id="deathScreen">
-                    Your score: <span id="deathScreenScore"></span><br />
-                    <span hidden>Kills: <span id="deathScreenKills"></span></span>
-                </div>
+				<div id="deathScreen" style="display:none">
+					<table style="display:block;position:absolute;left:50%;transform:translateX(-50%)">
+						<tr>
+							<td>Your score:&nbsp;&nbsp;</td>
+							<td id="deathScreenScore">
+								<span style="color:red">ERROR</span>
+							</td>
+						</tr>
+						<tr>
+							<td>Game time:&nbsp;&nbsp;</td>
+							<td id="deathScreenGameTime">
+								<span style="color:red">ERROR</span>
+							</td>
+						</tr>
+						<tr>
+							<td>Kills:&nbsp;&nbsp;</td>
+							<td id="deathScreenKills">
+								<span style="color:red">ERROR</span>
+							</td>
+						</tr>
+						<tr>
+							<td>Max kill streak:&nbsp;&nbsp;</td>
+							<td id="deathScreenMaxKillStreak">
+								<span style="color:red">ERROR</span>
+							</td>
+						</tr>
+					</table>
+					<!--
+					Your score: <span id="deathScreenScore"><span style="color:red">ERROR</span></span><br />
+					Kills: <span id="deathScreenKills"><span style="color:red">ERROR</span></span><br />
+					Game time: <span id="deathScreenGameTime"><span style="color:red">ERROR</span></span><br />
+					Max kill streak: <span id="deathScreenMaxKillStreak"><span style="color:red">ERROR</span></span>
+					-->
+				</div>
             </div>
             <table id="leaderboard" cellspacing="0"></table>
             <table id="leaderboard-left" cellspacing="0"></table>

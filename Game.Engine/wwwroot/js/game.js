@@ -373,6 +373,7 @@ function stopSpectate() {
 
 document.getElementById("stop_spectating").addEventListener("click", () => {
     stopSpectate();
+	document.getElementById("deathScreen").style.display = "none";
 });
 
 document.addEventListener("keydown", ({ keyCode, which }) => {
