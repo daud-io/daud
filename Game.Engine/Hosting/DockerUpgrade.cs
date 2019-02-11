@@ -27,7 +27,7 @@
 
                 ImagesCreateParameters imagesCreateParameters = new ImagesCreateParameters();
 
-                if (tag.IndexOf(':') == 0)
+                if (tag.IndexOf(':') == -1)
                 {
                     imagesCreateParameters.FromImage = "iodaud/daud";
                     imagesCreateParameters.Tag = tag;

@@ -50,7 +50,7 @@ namespace Game.Engine.ChatBot
         [Command("deploy"), RequireUserPermission(GuildPermission.ManageChannels)]
         public async Task DeployAsync(string url, string tag)
         {
-            if (url == GameConfiguration.PublicURL)
+            if (url == GameConfiguration.PublicURL || url == "*")
             {
                 await DockerUpgrade.UpgradeAsync(GameConfiguration, tag, async (message) =>
                 {
