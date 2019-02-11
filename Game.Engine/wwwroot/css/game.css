@@ -2,7 +2,6 @@
 @font-face {
     font-family: NotoColorEmoji;
     src: url("../font/NotoColorEmoji.ttf");
-  
 }
 html,
 body {
@@ -790,15 +789,6 @@ table {
 .hide {
     display: none;
 }
-#chat {
-    z-index: 1;
-    display: absolute;
-    top: 10px;
-    left: 10px;
-    left: 10px;
-    width: 200px;
-    height: 150px;
-}
 
 .dead #cooldown,
 .spectating #cooldown {
@@ -895,36 +885,46 @@ progress::-webkit-progress-value {
 }
 
 #autofireContainer {
-	position: absolute;
-	top: 10px;
-	left: 10px;
-	color: #ccc;
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    color: #ccc;
 }
 
 #plusScoreContainer {
-	position: absolute;
-	top: 50%;
-	left: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
 }
 
 .plusScore {
-	font-size: 40px;
-	opacity: 0;
-	animation: plusScore 2.5s;
-	-webkit-animation: plusScore 2.5s;
-	position: absolute;
+    font-size: 40px;
+    opacity: 0;
+    animation: plusScore 2.5s;
+    -webkit-animation: plusScore 2.5s;
+    position: absolute;
 }
 
 @keyframes plusScore {
-	0%   {opacity:0;transform:translate(-100%, -75%))}
-	25%  {opacity:1}
-	50%  {opacity:1}
-	100% {opacity:0;transform:translate(-100%, calc(-75%-200px))}
+    0% {
+        opacity: 0;
+        transform: translate(-100%, -75%);
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-100%, calc(-75%-200px));
+    }
 }
 
 #comboMessage {
-	color: #ff5555;
-	position: absolute;
+    color: #ff5555;
+    position: absolute;
     top: 4.5em;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -947,4 +947,32 @@ progress::-webkit-progress-value {
     width: 32px;
     height: 32px;
     vertical-align: bottom;
+}
+#chat {
+    position: absolute;
+    left: 0;
+    top: calc(50% - 10px);
+    transform: translate(0, -50%);
+    opacity: 0;
+    transition: opacity 1s;
+}
+#chat.open {
+    opacity: 1;
+}
+#chat th {
+    text-align: center;
+}
+#chat td {
+    padding: 8px;
+    border: 1px solid white;
+    border-radius: 50px;
+}
+#chat td:first-child {
+    background: rgba(0, 0, 255, 0.3);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+#chat td:last-child {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }

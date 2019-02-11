@@ -13,6 +13,7 @@ import { HUD } from "./hud";
 import { Log } from "./log";
 import { Cooldown } from "./cooldown";
 import { Controls } from "./controls";
+import { message } from "./chat";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { Settings } from "./settings";
@@ -298,7 +299,7 @@ setInterval(() => {
         aimTarget.Y !== aimTarget.Y ||
         Controls.boost !== lastControl.boost ||
         Controls.shoot !== lastControl.shoot ||
-        Controls.chat !== lastControl.chat
+        message.txt !== lastControl.chat
     ) {
         let spectateControl = false;
         if (isSpectating) {
@@ -308,7 +309,7 @@ setInterval(() => {
 
         var customData = false;
 
-        if (Controls.chat) customData = JSON.stringify({ chat: Controls.chat });
+        if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
 
         connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl, customData);
 
@@ -317,7 +318,7 @@ setInterval(() => {
             aimTarget,
             boost: Controls.boost,
             shoot: Controls.shoot,
-            chat: Controls.chat
+            chat: message.txt
         };
     }
 }, 10);
