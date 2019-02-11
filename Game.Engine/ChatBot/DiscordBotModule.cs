@@ -62,7 +62,6 @@ namespace Game.Engine.ChatBot
                 config.Image = $"iodaud/daud:{tag}";
                 config.WorkingDir = null;
 
-
                 await ReplyAsync($"{GameConfiguration.PublicURL} pulling image {config.Image}");
                 await client.Images.CreateImageAsync(new ImagesCreateParameters
                 {
@@ -70,7 +69,10 @@ namespace Game.Engine.ChatBot
                     Tag = tag
                 }, null, new Progress<JSONMessage>());
 
-                var response = await client.Containers.CreateContainerAsync(new CreateContainerParameters(config));
+                var createContainerParameters = new CreateContainerParameters(config);
+                createContainerParameters.HostConfig = container.HostConfig;
+
+                var response = await client.Containers.CreateContainerAsync(createContainerParameters);
                 await client.Containers.StartContainerAsync(response.ID, new ContainerStartParameters());
 
                 await ReplyAsync($"{GameConfiguration.PublicURL} {oldImage}->{config.Image}");
