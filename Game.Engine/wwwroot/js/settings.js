@@ -120,6 +120,16 @@ async function theme(v) {
             const info = JSON.parse(text);
 
             const version = info.version || 1;
+            var changesBk = false;
+            if (info.spriteModeMap) {
+                changesBk = changesBk || info.spriteModeMap.hasOwnProperty("bg");
+            }
+            if (info.textureMap) {
+                changesBk = changesBk || info.textureMap.hasOwnProperty("bg");
+            }
+            if (changesBk) {
+                spriteModeMap["bg"].additionalLayers = [];
+            }
 
             if (info.spriteModeMap) {
                 for (let key in info.spriteModeMap) {
