@@ -125,6 +125,7 @@ export var Controls = {
                 Controls.boost = false;
             });
         } else {
+			/*
             window.addEventListener("mousemove", e => {
                 const pos = getMousePos(canvas, e);
                 Controls.mouseX = pos.x;
@@ -135,7 +136,7 @@ export var Controls = {
                 const dx = pos.x - cx;
 
                 Controls.angle = Math.atan2(dy, dx);
-            });
+            });*/
             window.addEventListener("mousedown", ({ button }) => {
                 if (button == 2)
                     //right click

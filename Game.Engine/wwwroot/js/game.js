@@ -18,6 +18,7 @@ import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
+import { Comradebot } from "./comradebot";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
 import * as PIXI from "pixi.js";
 import "pixi-tilemap";
