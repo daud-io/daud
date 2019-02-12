@@ -113,29 +113,16 @@
                 foreach (var actor in Actors.ToList())
                     actor.CreateDestroy();
 
-                var unindexed = 0;
-                var indexed = 0;
                 foreach (var body in Bodies)
                 {
-                    if (body.IsDirty || !body.Indexed)
+                    if (body.IsDirty)
                     {
                         body.DefinitionTime = this.Time;
                         body.OriginalPosition = body.Position;
                         body.OriginalAngle = body.Angle;
                         body.IsDirty = false;
-
-                        /*if (Vector2.Distance(body.IndexedPosition, body.Position) > SearchMargin)
-                        {
-                            BodyCleaned(body);
-                            indexed++;
-                        }
-                        else
-                            unindexed++;*/
                     }
                 }
-
-                if (false && unindexed + indexed > 0)
-                    Console.WriteLine($"{1f * indexed / (unindexed + indexed)}\t");
 
                 ProcessLeaderboard();
 
@@ -167,47 +154,18 @@
 			}
         }
 
-        public void BodyCleaned(Body body)
-        {
-            if (body.IsStatic)
-                RTreeStatic.Delete(body);
-            else
-                RTreeDynamic.Delete(body);
-
-            if (!body.Exists)
-                return;
-
-            body.Envelope = new Envelope(
-                body.Position.X - body.Size, 
-                body.Position.Y - body.Size, 
-                body.Position.X + body.Size, 
-                body.Position.Y + body.Size);
-
-            body.IndexedPosition = body.Position;
-            body.Indexed = true;
-            body.Updated = true;
-
-            if (body.IsStatic)
-                RTreeStatic.Insert(body);
-            else
-                RTreeDynamic.Insert(body);
-        }
-
         public void BodyAdd(Body body)
         {
             Bodies.Add(body);
+            if (body.IsStatic)
+                RTreeStatic.Insert(body);
         }
 
         public void BodyRemove(Body body)
         {
             Bodies.Remove(body);
-            return;
-
             if (body.IsStatic)
                 RTreeStatic.Delete(body);
-            else
-                RTreeDynamic.Delete(body);
-            body.Removed = true;
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)

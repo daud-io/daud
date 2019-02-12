@@ -70,7 +70,7 @@
             this.Group = group;
         }
 
-        public virtual void FireFrom(Tile tile, float angle)
+        public virtual void FireFrom(TileBase tile, float angle)
         {
             World = tile.World;
 

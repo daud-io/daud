@@ -57,17 +57,26 @@
             {
                 Map.DestroyTiles();
                 foreach (var tile in tiles)
+                {
+                    TileBase tileObject;
+                    if (tile.Type == "turret")
+                        tileObject = new TileTurret();
+                    else
+                        tileObject = new TileBase();
+
+                    tileObject.Sprite = (Sprites)(ushort)(1000 + tile.TileGridID);
+                    tileObject.Position = tile.Position;
+                    tileObject.Size = tile.Size;
+
                     Map.AddTile(new Tile
                     {
-                        Sprite = (Sprites)(ushort)(1000 + tile.TileGridID),
-                        Position = tile.Position,
-                        Size = tile.Size,
                         IsDeadly = (tile.Type == "deadly"),
                         IsObstacle = (tile.Type == "obstacle"),
                         IsBouncy = (tile.Type == "bouncy"),
                         IsTurret = (tile.Type == "turret"),
                         Drag = tile.Drag
                     });
+                }
 
                 NewTileSet = null;
             }

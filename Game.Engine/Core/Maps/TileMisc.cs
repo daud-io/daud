@@ -1,12 +1,12 @@
-﻿namespace Game.Engine.Core.Maps
-{
-    using Game.Engine.Core.Weapons;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Numerics;
+﻿using Game.Engine.Core.Weapons;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 
-    public class Tile : ActorBody, ICollide
+namespace Game.Engine.Core.Maps
+{
+    public class TileMisc : ActorBody, ICollide
     {
         public bool IsDeadly { get; set; } = false;
         public bool IsObstacle { get; set; } = false;
@@ -17,7 +17,7 @@
 
         private List<ShipWeaponBullet> NewBullets = new List<ShipWeaponBullet>();
 
-        public Tile()
+        public TileMisc()
         {
             MaximumCleanTime = 100000;
             IsStatic = true;
