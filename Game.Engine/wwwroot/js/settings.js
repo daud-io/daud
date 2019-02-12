@@ -108,6 +108,7 @@ function load() {
 const debug = true;
 
 async function theme(v) {
+    document.getElementById("theme-styles").innerHTML = "";
     if (v) v = v.toLowerCase();
     const link = `https://dl.dropboxusercontent.com/s/${v}/daudmod.zip`;
     const zip = await fetch(link)
@@ -171,6 +172,68 @@ async function theme(v) {
                             })
                     );
                 }
+                if (info.styles) {
+                    for (var i = 0; i < info.styles.length; i++) {
+                        const css = info.styles[i];
+
+                        promises.push(
+                            zip
+                                .file(`daudmod/${css}`)
+                                .async("string")
+                                .then(ab => {
+                                    var imagePromises = [];
+                                    var cleansed = ab;
+                                    var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
+                                    var fixed = [];
+                                    var fixedMap = [];
+                                    var replacePairs = [];
+                                    for (var imagen = 0; imagen < images.length; imagen++) {
+                                        var imocc = images[imagen];
+                                        var m = (/url\("\.\/?(.*?\.png)"\)/g).exec(imocc);
+                                        var imgurl = m[1] + "";
+                                        if (debug) console.log(`theme css imagesss ${imgurl}`);
+                                        if (fixed.indexOf(imgurl) > 0) {
+                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                        } else {
+                                            fixed.push(imgurl);
+                                            fixedMap.push("");
+                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                            imagePromises.push(
+                                                (function (loo) {
+                                                    return zip
+                                                        .file(`daudmod/${imgurl}`)
+                                                        .async("arraybuffer")
+                                                        .then(ab => {
+                                                            const arrayBufferView = new Uint8Array(ab);
+                                                            const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                            const urlCreator = window.URL || window.webkitURL;
+                                                            const url = urlCreator.createObjectURL(blob);
+                                                            fixedMap[fixed.indexOf(loo)] = url;
+
+                                                            if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
+                                                        })
+                                                })(imgurl)
+                                            );
+                                        }
+                                    }
+                                    Promise.all(imagePromises).then(() => {
+                                        for (var k = 0; k < replacePairs.length; k++) {
+                                            cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
+                                        }
+                                        const blob = new Blob([cleansed], { type: "text/css" });
+                                        const urlCreator = window.URL || window.webkitURL;
+                                        const url = urlCreator.createObjectURL(blob);
+
+                                        var link = document.createElement('link');
+                                        link.setAttribute('rel', 'stylesheet');
+                                        link.setAttribute('type', 'text/css');
+                                        link.setAttribute('href', url);
+                                        document.getElementById("theme-styles").appendChild(link);
+                                    });
+                                })
+                        );
+                    }
+                }
                 Promise.all(promises).then(() => {
                     if (window.Game && window.Game.cache) {
                         if (debug) console.log(`theme loading complete`);
@@ -181,6 +244,7 @@ async function theme(v) {
                 });
             }
         });
+
 }
 
 load();
@@ -220,14 +284,14 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 let minimapChanged = false;
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     if (e.keyCode == 77 && !minimapChanged) {
         Settings.displayMinimap = !Settings.displayMinimap;
         minimapChanged = true;
     }
 });
 
-window.addEventListener("keyup", function(e) {
+window.addEventListener("keyup", function (e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
 
