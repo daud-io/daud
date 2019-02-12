@@ -12,7 +12,6 @@
     <PackageReference Include="TiledSharp" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Game.Engine.Networking.Client\Game.API.Client.csproj" />
     <ProjectReference Include="..\Game.Robots\Game.Robots.csproj" />
   </ItemGroup>
   <ItemGroup>
