@@ -13,8 +13,8 @@
 
         public string Target { get; set; } = "";
         public string Name { get; set; } = "Robot";
-        public string Sprite { get; set; } = "ship0";
-        public string Color { get; set; } = "ship0";
+        public string Sprite { get; set; } = "ship_cyan";
+        public string Color { get; set; } = "cyan";
 
         private bool IsAlive = false;
         public bool AutoSpawn { get; set; } = true;
@@ -60,9 +60,16 @@
             this.HookComputer = new HookComputer();
         }
 
-        public async Task Start(Connection connection)
+        public Task StartAsync(string server, string room)
+            => StartAsync(new Connection(server, room));
+
+        public async Task StartAsync(Connection connection)
         {
             this.Connection = connection;
+
+            if (!this.Connection.IsConnected)
+                await this.Connection.ConnectAsync();
+
             this.Connection.OnView = OnView;
             this.Connection.OnLeaderboard = OnLeaderboard;
             await this.Connection.ListenAsync();

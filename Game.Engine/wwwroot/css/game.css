@@ -475,10 +475,38 @@ table {
     height: 75%;
     background: rgba(0, 0, 50, 0.8);
     z-index: 3;
-    overflow-y: auto;
+    overflow-y: hidden;
     padding: 1em;
     opacity: 1;
     transition: 0.5s opacity ease-in-out;
+}
+#world-list-scroll {
+    overflow-y: auto;
+    height: calc(100% - 44px);
+}
+#worlds #topbar {
+    
+    margin: -1em -1em 0.5em -1em;
+    border-radius: 6px 6px 0px 0px;
+    background: transparent;
+    padding: 1em;
+    font-weight: normal;
+    color: #fff;
+}
+.close-button {
+    position: absolute;
+    right: 1em;
+    top: 1em;
+}
+
+#gear .button1,
+#worlds .button1 {
+    margin: 2px;
+}
+
+#worldList {
+    width: 100%;
+    background: none;
 }
 
 #gear .button1,

@@ -46,11 +46,17 @@
         public Func<Task> OnView { get; set; } = null;
         public Func<Task> OnConnected { get; set; } = null;
 
+        public bool IsConnected { get; private set; } = false;
+
         public uint FleetID { get; set; } = 0;
 
         public Leaderboard Leaderboard {get; private set;} = null;
 
         public Dictionary<string, object> Hook { get; set; }
+
+        public Connection(string server, string worldName = null)
+            : this(new APIClient(new Uri(server)), worldName)
+        {}
 
         public Connection(APIClient apiClient, string worldName = null)
         {
@@ -63,8 +69,13 @@
         {
             Task.Run(async () =>
             {
-                if (this.Socket != null && this.Socket.State == WebSocketState.Open)
-                    await this.SendPingAsync();
+                try
+                {
+                    if (this.Socket != null && this.Socket.State == WebSocketState.Open)
+                        await this.SendPingAsync();
+                }
+                catch (Exception)
+                { }
             }).Wait();
         }
 
@@ -304,6 +315,8 @@
             Socket = await APIClient.ConnectWebSocket(
                 APIEndpoint.PlayerConnect(WorldName), cancellationToken: cancellationToken
             );
+
+            IsConnected = true;
 
             if (OnConnected != null)
                 await OnConnected();
