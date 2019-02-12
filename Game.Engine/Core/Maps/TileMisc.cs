@@ -6,18 +6,14 @@ using System.Numerics;
 
 namespace Game.Engine.Core.Maps
 {
-    public class Tile : ActorBody, ICollide
+    public class TileMisc : TileBase, ICollide
     {
         public bool IsDeadly { get; set; } = false;
         public bool IsObstacle { get; set; } = false;
         public bool IsBouncy { get; set; } = false;
         public float Drag { get; set; } = 0;
-        public bool IsTurret { get; set; } = false;
-        private long ShotCooldown = 0;
 
-        private List<ShipWeaponBullet> NewBullets = new List<ShipWeaponBullet>();
-
-        public Tile()
+        public TileMisc()
         {
             MaximumCleanTime = 100000;
             IsStatic = true;
@@ -60,38 +56,9 @@ namespace Game.Engine.Core.Maps
         }
 
 
-        public override void Think()
-        {
-            //base.Think();
-
-            if (IsTurret && ShotCooldown < World.Time)
-            {
-                var target = World.BodiesNear(this.Position, 2500)
-                    .OfType<Ship>()
-                    .Where(s => s.Sprite != API.Common.Sprites.fish)
-                    .FirstOrDefault();
-
-                if (target != null)
-                {
-                    var bullet = new ShipWeaponBullet();
-                    var toTarget = target.Position - Position;
-                    bullet.FireFrom(this, MathF.Atan2(toTarget.Y, toTarget.X));
-
-                    NewBullets.Add(bullet);
-
-                    ShotCooldown = World.Time + 300;
-                }
-            }
-        }
-
         public override void CreateDestroy()
         {
             base.CreateDestroy();
-
-            foreach (var bullet in NewBullets)
-                bullet.Init(World);
-
-            NewBullets.Clear();
         }
 
         public void Collide(Body bthis, Body ball)

@@ -70,7 +70,7 @@
             this.Group = group;
         }
 
-        public virtual void FireFrom(Tile tile, float angle)
+        public virtual void FireFrom(TileBase tile, float angle)
         {
             World = tile.World;
 
@@ -82,6 +82,7 @@
             this.Color = "green";
             this.ThrustAmount = 1 * World.Hook.ShotThrustM + World.Hook.ShotThrustB;
             this.TimeBirth = World.Time;
+            this.Group = tile.WorldMap.WeaponGroup;
         }
 
         public bool Active => this.Exists;
