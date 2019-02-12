@@ -61,7 +61,7 @@
                     robot.Name = Name;
                     robot.Target = Target;
                     robot.Sprite = Sprite;
-                    tasks.Add(robot.Start(connection));
+                    tasks.Add(robot.StartAsync(connection));
 
                 };
 
