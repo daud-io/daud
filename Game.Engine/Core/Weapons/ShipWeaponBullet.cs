@@ -82,6 +82,7 @@
             this.Color = "green";
             this.ThrustAmount = 1 * World.Hook.ShotThrustM + World.Hook.ShotThrustB;
             this.TimeBirth = World.Time;
+            this.Group = tile.WorldMap.WeaponGroup;
         }
 
         public bool Active => this.Exists;

@@ -45,7 +45,7 @@
                 });
         }
 
-        public async Task<bool> SetMapTiles(string worldKey, IEnumerable<MapTileModel> tiles, CancellationToken cancellationToken = default(CancellationToken))
+        public async Task<bool> SetMap(string worldKey, MapModel mapModel, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await APIClient.APICallAsync<bool>(
                 HttpMethod.Post, 
@@ -54,7 +54,7 @@
                 {
                     worldKey
                 },
-                bodyContent: tiles,
+                bodyContent: mapModel,
                 cancellationToken: cancellationToken
             );
         }

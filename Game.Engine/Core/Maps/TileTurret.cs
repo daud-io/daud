@@ -13,14 +13,18 @@
 
         public bool IsCollision(Body projectedBody)
         {
-            return Vector2.Distance(projectedBody.Position, Position) < projectedBody.Size + Size;
+            if (projectedBody is ShipWeaponBullet bullet)
+                if (bullet.Group != WorldMap.WeaponGroup)
+                    return Vector2.Distance(projectedBody.Position, Position) < projectedBody.Size + Size;
+
+            return false;
         }
 
         public void CollisionExecute(Body projectedBody)
         {
             if (projectedBody is ShipWeaponBullet bullet)
             {
-                // hitpoints?
+                this.Sprite += 1;
             }
         }
 
