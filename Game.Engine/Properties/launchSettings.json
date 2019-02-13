@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Engine": {
       "commandName": "Project",
-      "applicationUrl": "http://localhost:5000"
+      "applicationUrl": "http://v-work-acl01:5000"
     }
   }
 }

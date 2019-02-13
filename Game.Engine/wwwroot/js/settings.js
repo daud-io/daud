@@ -9,7 +9,7 @@ export const Settings = {
     theme: false,
     themeCustom: false,
     mouseScale: 1.0,
-    font: "sans-serif",
+    font: "Exo 2",
     leaderboardEnabled: true,
     displayMinimap: "always",
     hudEnabled: true,
@@ -21,9 +21,11 @@ export const Settings = {
     bigKillMessage: true,
     showKeyboardHints: true,
     showOwnName: true,
+    showHints: true,
     nameSize: 48,
     background: "on",
-    mipmapping: true
+    mipmapping: true,
+    updatesVersion: 0
 };
 
 function save() {
@@ -45,10 +47,10 @@ function save() {
         reload = true;
     }
 
+    Settings.font = "Exo 2";
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
-    Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
-    Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").value;
+    Settings.showHints = document.getElementById("settingsShowHints").checked;
     Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
@@ -88,9 +90,8 @@ function load() {
     document.getElementById("settingsThemeSelectorCustom").value = Settings.themeCustom || "";
 
     document.getElementById("settingsMouseScale").value = Settings.mouseScale;
-    document.getElementById("settingsFont").value = Settings.font;
     document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
-    document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
+    document.getElementById("settingsShowHints").checked = Settings.showHints;
     document.getElementById("settingsMipMapping").checked = Settings.mipmapping;
     document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
     document.getElementById("settingsBandwidth").value = Settings.bandwidth;
