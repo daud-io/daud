@@ -65,5 +65,25 @@
 
             return aimSpot;
         }
+        public static Vector2 DropToLine(Vector2 curPos,Vector2 curVel, Vector2 myP)
+        {
+            var deltaM=myP-curPos;
+            var dotM=Vector2.Dot(deltaM,curVel)/curVel.LengthSquared();
+            return curPos+dotM*curVel;
+            
+        }
+        public static Vector2 ProjectClosest(HookComputer hook,Vector2 fromPosition, Vector2 targetPosition, float maxTime,int fleetSize)
+        {
+            var boostSpeed=hook.ShipThrust(1)*4;
+             var bulletSpeed = hook.ShotThrust(fleetSize) * 10;
+            var path=targetPosition-fromPosition;
+            var pLen=path.Length();
+            var maxD=bulletSpeed*maxTime+boostSpeed*1000.0f;
+            // if(maxD>pLen){
+            //     Console.Write("Switch");
+            // }
+            return fromPosition+path*(1.0f/pLen)*MathF.Min(pLen-1.0f,maxD);
+            
+        }
     }
 }
