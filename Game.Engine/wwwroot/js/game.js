@@ -321,6 +321,8 @@ setInterval(() => {
             shoot: Controls.shoot,
             chat: message.txt
         };
+		
+		Comradebot.cycle(lastPosition);
     }
 }, 10);
 
