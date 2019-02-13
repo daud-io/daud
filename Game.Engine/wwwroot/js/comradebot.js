@@ -1,11 +1,42 @@
 import { Controls } from "./controls";
+import { Connection } from "./connection";
 
 const canvas = document.getElementById("gameCanvas");
 
-var a = 0;
-var k = 0;
-var i = 0
-var dance1 = setInterval(danceFunction, 150);
+var data,
+	groups,
+	body,
+	d,
+	a = 0,
+	k = 0,
+	i = 0,
+	// dance1 = setInterval(danceFunction, 150), - for dance bot
+	cycleDuration = 40;
+
+	
+
+// cycle
+setInterval(function() {
+	data = window.Game.cache.bodies;
+	groups = window.Game.cache.groups;
+	for (var key in data) {
+		if (data.hasOwnProperty(key)) {
+			body = data[key];
+			d = sqrt(Math.pow(body.Position.X, 2) + Math.pow(body.Position.Y, 2));
+			/*
+			body.Sprite
+			body.Position.X
+			body.Position.Y
+			body.Angle
+			body.group.ID
+			*/
+		}
+	}
+}, cycleDuration);
+
+function merger() {
+	
+}
 
 function danceFunction() {
 	setAngle(45 + k * 90, 10000);
@@ -33,25 +64,7 @@ function danceFunction() {
 							if (i == 100) {
 								i = 0;
 								clearInterval(dance4);
-								var dance5 = setInterval(function(){
-									setAngle(0, k * 10000);
-									k = (k == 1) ? 0 : 1;
-									i++;
-									if (i == 100) {
-										i = 0;
-										clearInterval(dance5);
-										var dance6 = setInterval(function(){
-											setAngle(180, k * 10000);
-											k = (k == 1) ? 0 : 1;
-											i++;
-											if (i == 100) {
-												i = 0;
-												clearInterval(dance6);
-												dance1 = setInterval(danceFunction, 150);
-											}
-										}, 200);
-									}
-								}, 200);
+								dance1 = setInterval(danceFunction, 150);
 							}
 						}, 40);
 					}
