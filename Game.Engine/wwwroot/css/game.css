@@ -95,7 +95,8 @@ body {
 }
 
 #logo {
-    width: 40vmin;
+    height: 25vw;
+    image-rendering: pixelated;
 }
 
 #hintbox {
@@ -174,9 +175,8 @@ a {
 
 #controls_instructions {
     width: 240px;
-    display: block;
-    margin-left: 2em;
-    margin-top: 4em;
+    position: absolute; 
+    left: 0;
 }
 
 .spawnscreen .social {
@@ -242,6 +242,7 @@ a {
     position: absolute;
     right: 0;
     bottom: 3vh;
+    z-index: 2;
 }
 
 #spectatecontrols {
