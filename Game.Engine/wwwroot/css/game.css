@@ -958,3 +958,58 @@ progress::-webkit-progress-value {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
+
+#links {
+	position: absolute;
+	right: 0;
+	top: 60%;
+	transform: translateY(-50%);
+	z-index: 10;
+}
+
+#links .link {
+	width: 130px;
+	height: 40px;
+	border: 2px solid white;
+	border-right: none;
+	border-top-left-radius: 24px;
+	border-bottom-left-radius: 24px;
+	padding: 2px 2px 2px 2px;
+	position: relative;
+	margin: 1px 0 1px 0;
+	opacity: 0.8;
+	transition: opacity 0.6s;
+}
+
+#links .link:hover {
+	opacity: 1;
+}
+
+#links .linkLogo {
+	background-color: white;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	position: relative;
+	transition: transform 0.6s;
+}
+
+#links .link:hover .linkLogo {
+	transform: rotate(360deg);
+}
+
+#links .linkLogo img {
+	position: absolute;
+	width: 30px;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+#links .linkText {
+	position: absolute;
+	top: 50%;
+	right: 10px;
+	transform: translateY(-50%);
+	text-transform: uppercase;
+}
