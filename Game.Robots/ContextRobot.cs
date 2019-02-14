@@ -3,15 +3,17 @@
     using Game.Robots.Behaviors;
     using Game.Robots.Behaviors.Blending;
     using Game.Robots.Senses;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class ContextRobot : Robot
     {
         protected readonly List<ISense> Sensors = new List<ISense>();
-        protected readonly List<IBehaviors> Behaviors = new List<IBehaviors>();
+        protected List<ContextBehavior> Behaviors = new List<ContextBehavior>();
         public readonly SensorBullets SensorBullets;
         public readonly SensorFleets SensorFleets;
         public readonly SensorTeam SensorTeam;
@@ -48,6 +50,22 @@
 
             SteerAngle(angle);
         }
+
+        public void SetBehaviors(IEnumerable<BehaviorDescriptor> behaviors)
+        {
+            this.Behaviors = behaviors.Select(descriptor =>
+            {
+                var type = Type.GetType(descriptor.BehaviorTypeName);
+                var behavior = Activator.CreateInstance(type, this) as ContextBehavior;
+
+                behavior.BehaviorWeight = descriptor.BehaviorWeight;
+                behavior.Cycle = descriptor.Cycle;
+                behavior.LookAheadMS = descriptor.LookAheadMS;
+
+                return behavior;
+            }).ToList();
+        }
+
 
         protected virtual Task OnSensors()
         {

@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace Game.Robots.Behaviors
 {
-    public class ContextBehavior : IBehaviors
+    public class ContextBehavior : IBehavior
     {
         public virtual float BehaviorWeight { get; set; } = 1f;
         protected readonly ContextRobot Robot;
