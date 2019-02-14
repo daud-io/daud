@@ -49,7 +49,7 @@
                     .Select(f => new { Fleet = f, Distance = Vector2.Distance(this.Position, f.Center) })
                     .Where(p => MathF.Abs(p.Fleet.Center.X - this.Position.X) <= ViewportCrop.X
                         && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
-                    .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
+                    .Where(p => !HookComputer.Hook.TeamMode || p.Fleet.Color != this.Color)
                     .OrderBy(p => p.Distance)
                     .FirstOrDefault()
                     ?.Fleet;

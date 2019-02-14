@@ -1,6 +1,7 @@
 ﻿namespace Game.API.Client
 {
     using Game.API.Common;
+    using Game.API.Common.Models;
     using Game.Engine.Networking.Client;
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
@@ -52,7 +53,7 @@
 
         public Leaderboard Leaderboard {get; private set;} = null;
 
-        public Dictionary<string, object> Hook { get; set; }
+        public Hook Hook { get; set; }
 
         public Connection(string server, string worldName = null)
             : this(new APIClient(new Uri(server)), worldName)
@@ -90,7 +91,7 @@
             switch(netEvent.Type)
             {
                 case "hook":
-                    this.Hook = JsonConvert.DeserializeObject<Dictionary<string, object>>(netEvent.Data);
+                    this.Hook = JsonConvert.DeserializeObject<Hook>(netEvent.Data);
                     break;
             }
             return Task.FromResult(true);

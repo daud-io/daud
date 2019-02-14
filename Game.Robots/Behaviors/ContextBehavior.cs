@@ -7,6 +7,9 @@ namespace Game.Robots.Behaviors
         public virtual float BehaviorWeight { get; set; } = 1f;
         protected readonly ContextRobot Robot;
         public int LookAheadMS { get; set; } = 100;
+        private long SleepUntil = 0;
+        private ContextRing LastRing = null;
+        public int Cycle = 0;
 
         public ContextBehavior(ContextRobot robot)
         {
@@ -15,31 +18,47 @@ namespace Game.Robots.Behaviors
 
         public ContextRing Behave(int steps)
         {
-            var ring = new ContextRing(steps);
-            this.PreSweep(ring);
-
-            if (Robot?.SensorFleets?.MyFleet?.Ships != null)
+            if (this.Robot.GameTime > SleepUntil)
             {
-                for (var i = 0; i < steps; i++)
+                var ring = new ContextRing(steps);
+                this.PreSweep(ring);
+
+                if (Robot?.SensorFleets?.MyFleet?.Ships != null)
                 {
-                    var position = RoboMath.ShipThrustProjection(Robot.HookComputer,
-                        Robot.Position,
-                        Robot.SensorFleets.MyFleet.Momentum,
-                        Robot.SensorFleets.MyFleet.Ships.Count,
-                        ring.Angle(i),
-                        LookAheadMS
-                    );
+                    for (var i = 0; i < steps; i++)
+                    {
+                        var momentum = Robot.SensorFleets.MyFleet.Momentum;
+                        var position = RoboMath.ShipThrustProjection(Robot.HookComputer,
+                            Robot.Position,
+                            ref momentum,
+                            Robot.SensorFleets.MyFleet.Ships.Count,
+                            ring.Angle(i),
+                            LookAheadMS
+                        );
 
-                    ring.Weights[i] = ScoreAngle(ring.Angle(i), position);
+                        ring.Weights[i] = ScoreAngle(ring.Angle(i), position, momentum);
+                    }
                 }
+
+                ring.RingWeight = BehaviorWeight;
+
+                this.PostSweep(ring);
+
+                ring.Name = this.GetType().Name;
+                LastRing = ring;
+
+                if (Cycle > 0)
+                    Sleep(Cycle);
+
+                return ring;
             }
+            else
+                return LastRing;
+        }
 
-            ring.RingWeight = BehaviorWeight;
-
-            this.PostSweep(ring);
-
-            ring.Name = this.GetType().Name;
-            return ring;
+        protected void Sleep(int ms)
+        {
+            SleepUntil = this.Robot.GameTime + ms;
         }
 
         public virtual void Reset()
@@ -54,6 +73,6 @@ namespace Game.Robots.Behaviors
         {
         }
 
-        protected virtual float ScoreAngle(float angle, Vector2 position) => 0f;
+        protected virtual float ScoreAngle(float angle, Vector2 position, Vector2 momentum) => 0f;
     }
 }

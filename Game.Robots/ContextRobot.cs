@@ -15,6 +15,8 @@
         public readonly SensorBullets SensorBullets;
         public readonly SensorFleets SensorFleets;
         public readonly SensorTeam SensorTeam;
+        public readonly SensorFish SensorFish;
+        public readonly SensorAbandoned SensorAbandoned;
 
         protected IContextRingBlending ContextRingBlending { get; set; }
 
@@ -26,6 +28,8 @@
             Sensors.Add(SensorBullets = new SensorBullets(this));
             Sensors.Add(SensorFleets = new SensorFleets(this));
             Sensors.Add(SensorTeam = new SensorTeam(this));
+            Sensors.Add(SensorFish = new SensorFish(this));
+            Sensors.Add(SensorAbandoned = new SensorAbandoned(this));
 
             ContextRingBlending = new ContextRingBlendingWeighted(this);
         }

@@ -19,7 +19,7 @@
 
         protected override void PreSweep(ContextRing ring)
         {
-            var teamMode = Robot.HookComputer.TeamMode;
+            var teamMode = Robot.HookComputer.Hook.TeamMode;
 
             DangerousBullets = Robot.SensorBullets.VisibleBullets
                 .Where(b => b.Group.Owner != Robot.FleetID)
@@ -30,7 +30,7 @@
             ConsideredPoints = new List<Vector2>();
         }
 
-        protected override float ScoreAngle(float angle, Vector2 position)
+        protected override float ScoreAngle(float angle, Vector2 position, Vector2 momentum)
         {
             float accumulator = 0f;
 
