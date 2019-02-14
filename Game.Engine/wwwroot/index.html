@@ -54,43 +54,41 @@
                 </span>
             </div>
 
-            <div id="stop_spectating_container">
-                <input type="button" id="stop_spectating" class="button1" value="Menu" />
-                <input type="button" id="spawnSpectate" class="button1" value="Launch as guest!">
-				<div id="deathScreen" style="display:none">
-					<table style="display:block;position:absolute;left:50%;transform:translateX(-50%)">
+            <div id="spectatecontrols">
+				<div id="deathScreen">
+					<table>
 						<tr>
-							<td>Your score:&nbsp;&nbsp;</td>
+							<td>High score:</td>
 							<td id="deathScreenScore">
 								<span style="color:red">ERROR</span>
 							</td>
 						</tr>
 						<tr>
-							<td>Game time:&nbsp;&nbsp;</td>
+							<td>Game time:</td>
 							<td id="deathScreenGameTime">
 								<span style="color:red">ERROR</span>
 							</td>
 						</tr>
 						<tr>
-							<td>Kills:&nbsp;&nbsp;</td>
+							<td>Kills:</td>
 							<td id="deathScreenKills">
 								<span style="color:red">ERROR</span>
 							</td>
 						</tr>
 						<tr>
-							<td>Max kill streak:&nbsp;&nbsp;</td>
+							<td>Max combo kill:</td>
 							<td id="deathScreenMaxKillStreak">
 								<span style="color:red">ERROR</span>
 							</td>
 						</tr>
 					</table>
-					<!--
-					Your score: <span id="deathScreenScore"><span style="color:red">ERROR</span></span><br />
-					Kills: <span id="deathScreenKills"><span style="color:red">ERROR</span></span><br />
-					Game time: <span id="deathScreenGameTime"><span style="color:red">ERROR</span></span><br />
-					Max kill streak: <span id="deathScreenMaxKillStreak"><span style="color:red">ERROR</span></span>
-					-->
 				</div>
+
+                <input type="button" id="stop_spectating" class="button1" value="Menu" />
+                <input type="button" id="spawnSpectate" class="button1" value="Launch">
+
+                <div id="hintbox"></div>
+
             </div>
             <table id="leaderboard" cellspacing="0"></table>
             <table id="leaderboard-left" cellspacing="0"></table>
@@ -114,7 +112,6 @@
                     <div id="boost"></div>
                 </div>
             </div>
-            <div class='ansible'></div>
         </div>
         <div class="spawnscreen">
             <div class="controls">
@@ -128,11 +125,11 @@
                     <div id="emoji-trigger" class=" button1"><span class="ep-e" data-index="517" style="position: absolute;margin-left: -16px;"></span></div>
                     <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
                     <div id="emoji-container"></div>
-                    <div>
+                    <div id="launch-container">
                         <input type="button" id="spawn" class="button1" value="Launch as guest!">
                         <input type="button" id="dauth" class="button1" value="Login with Discord">
                     </div>
-                    <input type="button" id="arenas" class="button1" value="Arenas" />
+                    <input type="button" id="arenas" class="button1" value="Game Modes" />
                 </div>
             </div>
             <div id="worlds" class="closed">
@@ -147,77 +144,75 @@
                 <div id="settingsContainer">
                     <h1>Settings</h1>
 
-                    <label for="settingsThemeSelector">Theme Selection</label>
-                    <select id="settingsThemeSelector" class="button1">
-                        <option value="">default</option>
-                        <option value="gddlfhf0qkm8je7">Bright</option>
-                        <option value="3ryhaa6boenvv2k">Bitty</option>
-                        <option value="516mkwof6m4d4tg">Retro</option>
-                        <option value="c4yh49qs8uvms87">Universe</option>
-                    </select>
-                    <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" class="button1" value="">
-                    <br>
-                    <label for="settingsNameSize">Name Size</label>
-                    <select id="settingsNameSize" class="button1">
-                        <option value="20">tiny</option>
-                        <option value="32">smaller</option>
-                        <option value="48">small</option>
-                        <option value="64">medium</option>
-                        <option value="72">big</option>
-                        <option value="96">woah</option>
-                    </select>
-                    <label for="settingsMouseScale">Mouse Sensitivity</label>
-                    <select id="settingsMouseScale" class="button1">
-                        <option value="1">sensitive</option>
-                        <option value="4">medium</option>
-                        <option value="10">straight-shooter</option>
-                    </select>
+                    <table>
+                        <tr>
+                            <td>
+                                <h4>Display</h4> 
+                                <label for="settingsThemeSelector">Theme Selection</label>
+                                <select id="settingsThemeSelector" class="button1">
+                                    <option value="">default</option>
+                                    <option value="gddlfhf0qkm8je7">Bright</option>
+                                    <option value="3ryhaa6boenvv2k">Bitty</option>
+                                    <option value="516mkwof6m4d4tg">Retro</option>
+                                    <option value="c4yh49qs8uvms87">Universe</option>
+                                </select>
+                                <input placeholder="custom hash" type="text" id="settingsThemeSelectorCustom" class="button1" value="">
+                                <br />
 
-                    <br />
+                                <label for="settingsBackground">Background</label>
+                                <select id="settingsBackground" class="button1">
+                                    <option value="none">none</option>
+                                    <option value="on">enabled</option>
+                                </select>
+                                <br />
 
-                    <label for="settingsBackground">Background</label>
-                    <select id="settingsBackground" class="button1">
-                        <option value="none">none</option>
-                        <option value="on">enabled</option>
-                    </select>
+                                <label for="settingsNameSize">Name Size</label>
+                                <select id="settingsNameSize" class="button1">
+                                    <option value="20">tiny</option>
+                                    <option value="32">smaller</option>
+                                    <option value="48">small</option>
+                                    <option value="64">medium</option>
+                                    <option value="72">big</option>
+                                    <option value="96">woah</option>
+                                </select>                                
+                                <br />
 
-                    <!-- hidden... this isn't doing anything -->
-                    <div style="display: none;">
-                        <label for="settingsDisplayMinimap">Display Minimap</label>
-                        <select id="settingsDisplayMinimap" class="button1">
-                            <option value="always">always</option>
-                            <option value="onkeypress">onkeypress</option>
-                            <option value="never">never</option>
-                        </select>
-                    </div>
+                                <label for="settingsLog">Log Length</label>
+                                <select id="settingsLog" class="button1">
+                                    <option value="0">none</option>
+                                    <option value="1">1 line</option>
+                                    <option value="2">2 lines</option>
+                                    <option value="3">3 lines</option>
+                                    <option value="4">4 lines</option>
+                                    <option value="10">historian</option>
+                                </select>
+                                <br />
+            
+            
+                            </td>
+                            <td>
+                                <h4>Controls</h4> 
 
-                    <br />
+                                <label for="settingsMouseScale">Mouse Sensitivity</label>
+                                <select id="settingsMouseScale" class="button1">
+                                    <option value="1">sensitive</option>
+                                    <option value="4">medium</option>
+                                    <option value="10">straight-shooter</option>
+                                </select>
+            
+                                <br />
+            
+                                <label for="settingsBandwidth">Bandwidth</label>
+                                <select id="settingsBandwidth" class="button1">
+                                    <option value="100">high</option>
+                                    <option value="50">medium</option>
+                                    <option value="25">low</option>
+                                </select>
+                                <br />
+                            </td>
+                        </tr>
+                    </table>
 
-                    <label for="settingsLog">Log Length</label>
-                    <select id="settingsLog" class="button1">
-                        <option value="0">none</option>
-                        <option value="1">1 line</option>
-                        <option value="2">2 lines</option>
-                        <option value="3">3 lines</option>
-                        <option value="4">4 lines</option>
-                        <option value="10">historian</option>
-                    </select>
-                    <br />
-
-                    <label for="settingsBandwidth">Bandwidth</label>
-                    <select id="settingsBandwidth" class="button1">
-                        <option value="100">high</option>
-                        <option value="50">medium</option>
-                        <option value="25">low</option>
-                    </select>
-                    <br />
-
-                    <label for="settingsFont">Font</label>
-                    <select id="settingsFont" class="button1">
-                        <option value="sans-serif">default</option>
-                        <option value="&quot;Exo 2&quot;">experimental</option>
-                    </select>
-                    <br>
 
                     <table id="settingsTable">
                         <!-- hidden... this isn't doing anything -->
@@ -226,15 +221,6 @@
                             <td>
                                 <label class="switch">
                                     <input type="checkbox" id="settingsDisplayMinimap">
-                                    <span class="slider round"></span>
-                                </label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Rendering Tweak (MipMapping)</td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" id="settingsMipMapping">
                                     <span class="slider round"></span>
                                 </label>
                             </td>
@@ -258,8 +244,7 @@
                             </td>
                         </tr>
 
-                        <!-- hidden... this isn't doing anything -->
-                        <tr style="display: none;">
+                        <tr>
                             <td>Show Leaderboard</td>
                             <td>
                                 <label class="switch">
@@ -269,8 +254,7 @@
                             </td>
                         </tr>
 
-                        <!-- hidden... this isn't doing anything -->
-                        <tr style="display: none;">
+                        <tr>
                             <td>Show Stats</td>
                             <td>
                                 <label class="switch">
@@ -300,8 +284,18 @@
                             </td>
                         </tr>
 
-                        <!-- hidden... this isn't doing anything -->
-                        <tr style="display: none;">
+
+                        <tr>
+                            <td>Rendering Tweak (MipMapping)</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsMipMapping">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
+
+                        <tr>
                             <td>Show Cooldown Timer</td>
                             <td>
                                 <label class="switch">
@@ -310,58 +304,67 @@
                                 </label>
                             </td>
                         </tr>
+                        <tr>
+                            <td>Show Hints</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" id="settingsShowHints">
+                                    <span class="slider round"></span>
+                                </label>
+                            </td>
+                        </tr>
                     </table>
 
-                    <input type="button" id="settingsSave" class="button1" value="Save settings" />
-                    <input type="button" id="settingsCancel" class="button1" value="Cancel (no changes)" />
+                    <button id="settingsSave" class="button1">
+                            <i class="fas fa-save"> Save</i>                        
+                        </button>   
+
+                        <button id="settingsCancel" class="button1">
+                            <i class="fas fa-ban"> Cancel</i>                        
+                        </button>   
                     <br>
-                    <input type="button" id="settingsReset" class="button1" value="Reset to default (reloads the page)" />
+                    <button id="settingsReset" class="button1">
+                        <i class="fas fa-undo"> Reset Defaults</i>                        
+                    </button>   
                 </div>
             </div>
-            <div class="social">
 
-                <div id="twitterpated">
+            <img id="controls_instructions" src="img/controls.png">
+            
+            <div class="social">
+                <div id="changelog" data-version='1'>
                     <h4>Changelog</h4>
                     <table>
                         <tr>
-                            <td>
-                                <bold>1/17/2019</bold>
+                            <td class="date">
+                                1/17/2019
                             </td>
-                            <td>integrated pixi.js renderer. mini map and new Arena: Sumo world.</td>
+                            <td>integrated pixi.js renderer. mini map.</td>
                         </tr>
                         <tr>
-                            <td>
-                                <bold>12/05/2018</bold>
+                            <td class="date">
+                                12/05/2018
                             </td>
                             <td>Physics and rockets updates, see discord for details.</td>
                         </tr>
                         <tr>
-                            <td>
-                                <bold>12/04/2018</bold>
+                            <td class="date">
+                                12/04/2018
                             </td>
                             <td>Lots of new user settings</td>
                         </tr>
-                        <!--
-                            <tr>
-                                <td>
-                                    <bold>11/15/2018</bold>
-                                </td>
-                                <td>R.I.P. Space1: <a href="https://redd.it/9xchcj">https://redd.it/9xchcj</a></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <bold>8/30/2018</bold>
-                                </td>
-                                <td><a href="http://daud.io">http://daud.io</a> launches beta</td>
-                            </tr>
-                        -->
+
                     </table>
                 </div>
 
                 <div id="spectate_container">
-                    <input type="button" id="settings" class="button1" value="Settings">
+                    <button id="settings" class="button1">
+                        <i class="fas fa-cog"> Settings</i>                        
+                    </button>
                     <br>
-                    <input type="button" id="spectate" class="button1" value="Spectate">
+                    <button id="spectate" class="button1">
+                        <i class="fas fa-eye"> Watch</i>                        
+                    </button>
                 </div>
 
                 <div id="socialMediaContainer">
@@ -370,74 +373,11 @@
                     <a href="https://iogames.space" target="_blank"><img id="iogamesspace" src="img/linkback.iogames.space.png" /></a>
                     <a href="https://titotu.io" target="_blank"><img id="titotu" src="img/linkback.titotu.io.png" /></a>
                 </div>
-
-                <img id="controls_instructions" src="img/controls.png">
-
-            </div>
-
-            <div id="titan" style="display: none;">
-                <iframe id="titan-frame" src="about:blank" style="width:100%; height:100%;" frameborder="0"></iframe>
-            </div>
-
-        </div>
-    </div>
-
-    <div id="fullPageCard" class="hidden" hidden>
-        <div id="openArrow">
-            <i class="fas fa-angle-up"></i> about
-        </div>
-        <div id="close">
-            <i class="fa fa-times"></i>
-        </div>
-        <h1>About daud.io</h1>
-        <hr>
-        <div id="fullPageCardOuterContainer">
-            <div id="fullPageCardInnerContainer">
-                <section>
-                    <h2>What is daud.io?</h2>
-                    <p>Daud.io is a fleet-based space combat game, where players are pitted against each other in a free for all arena. The game’s skill-based combat system involves accumulating a fleet over time by attacking enemies, then leveraging the individual directionality of your fleets bullets to outmaneuver your enemies and destroy them. Each player begins the game with a small fleet of basic ships, each controlled independently by your mouse pointer. By destroying enemy fleets and collecting special power ups, your fleet grows in power, allowing you to take on the most difficult foes. Size isn’t everything, however, and through our unique combat system, a small fleet in the hands of a skilled player can easily overpower the largest armada.</p>
-                    <p>To begin your journey in the daud.io arena, start by focusing your efforts on the smaller ships flying around the arena. Use these to grow your fleet. Be wary of other players while your fleet is too small, as they can easily take advantage of your small numbers to destroy you. As you grow your fleet, leverage the power ups scattered around the map to gain an advantage over your foes. Each ship in your fleet moves individually towards your mouse, so to best stronger players you will need to utilize different bullet spreads to both weaken their numbers with larger volleys, then finishing them off with concentrated bursts.</p>
-                    <p>If you have any questions or feedback, feel free to head over to our discord server or subreddit. Links to both can be found on the intro screen of our game.</p>
-                    <p>Now, we would like to take a minute to thank our sponsors, of which we have none. If you enjoyed this game, please tell all your friends, and take a minute to reflect on the availability of Indian Ocean based web entertainment. We hope you enjoy this artisanal electronic gaming experience if you decide to partake in our creation. We hope you have a wonderful day, and please enjoy your flight.</p>
-                </section>
-
-                <section>
-                    <h2>How to play:</h2>
-                    <ul>
-                        <li>Your ships go towards your mouse - move your mouse across the screen to control them.</li>
-                        <li>Press space or click the mouse to shoot</li>
-                        <li>Press S for a speed boost - but beware! You lose half your fleet doing this!</li>
-                        <li>Bullets that hit other players give you more ships!</li>
-                        <li>Kill other players to gain points</li>
-                        <li>Missile power ups make you shoot homing missile - use them wisely</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2>Advanced gameplay:</h2>
-                    <ul>
-                        <li>Fleet speed depends on number of ships - smaller fleets are faster</li>
-                        <li>Bullet speed is also modified by ship size</li>
-                        <li>Circular barriers destroy bullets, use them for cover</li>
-                        <li>Red arena borders slow down your ship - be careful of them</li>
-                        <li>Use splitting to flank your opponents</li>
-                        <li>Position yourself wisely to trap your opponents between other players</li>
-                        <li>Homing missiles can be shot down by normal bullets</li>
-                        <li>Spread your bullets in an arc to hit more enemies, or concentrate your bullets to deal more damage in a smaller area.</li>
-                    </ul>
-                </section>
-
-                <!-- suppressing iframe to youtube... doing creepy stuff in background
-                    <section>
-                        <h2>More good stuff</h2>
-                        <iframe width="280" height="157" src="https://www.youtube.com/embed/SpBXw-fv0oc" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe><br /><br />
-                    </section>
-                -->
-
-                <!--<p>Also visit daud.io game official webpage: <a href="https://daudnetwork.com" target="_blank">daudnetwork.com</a></p>-->
             </div>
         </div>
     </div>
+
+
     <div id="theme-styles" style="display:none;"></div>
     <img src="https://dezov.s3.amazonaws.com/media/crown-pngc7b-43cc-b490-18fccb3229df.png" id="minimapCrownImage" style="display:none" />
 
@@ -446,8 +386,6 @@
     <script type="text/javascript" src="js/game_generated.js"></script>
 
     <script type="text/javascript" src="js/game.js"></script>
-    <script type="text/javascript" src="js/panel.js"></script>
-    <script type="text/javascript" src="js/aboutCard.js"></script>
 
 </body>
 

@@ -21,8 +21,10 @@ import { Events } from "./events";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
 import * as PIXI from "pixi.js";
 import "pixi-tilemap";
+import "./changelog";
 
-// import "./hintbox";
+
+ import "./hintbox";
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
@@ -374,7 +376,7 @@ function stopSpectate() {
 
 document.getElementById("stop_spectating").addEventListener("click", () => {
     stopSpectate();
-	document.getElementById("deathScreen").style.display = "none";
+	document.getElementById("deathScreen").style.visibility = "hidden";
 });
 
 document.addEventListener("keydown", ({ keyCode, which }) => {
