@@ -62,6 +62,7 @@ const minimap = new Minimap(app.stage, size);
 const hud = new HUD();
 const log = new Log();
 const cooldown = new Cooldown();
+const comradebot = new Comradebot();
 let isSpectating = false;
 
 let angle = 0.0;
@@ -321,9 +322,8 @@ setInterval(() => {
             shoot: Controls.shoot,
             chat: message.txt
         };
-		
-		Comradebot.cycle(lastPosition);
     }
+	comradebot.cycle(lastPosition);
 }, 10);
 
 LobbyCallbacks.onLobbyClose = function() {

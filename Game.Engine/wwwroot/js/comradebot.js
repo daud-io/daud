@@ -14,8 +14,7 @@ var data,
 	// dance1 = setInterval(danceFunction, 150), - for dance bot
 
 	
-export class Comradebot {
-	// cycle
+export class Comradebot {	
 	cycle(selfPos) {
 		data = window.Game.cache.bodies;
 		groups = window.Game.cache.groups;
@@ -23,7 +22,7 @@ export class Comradebot {
 			if (data.hasOwnProperty(key)) {
 				body = data[key];
 				d = Math.sqrt(Math.pow(body.Position.X - selfPos.X, 2) + Math.pow(body.Position.Y - selfPos.Y, 2));
-				console.log(d);
+				console.log(body.Sprite + "=>" + d);
 				/*
 				body.Sprite
 				body.Position.X
