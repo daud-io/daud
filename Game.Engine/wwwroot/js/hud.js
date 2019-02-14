@@ -7,6 +7,9 @@ export class HUD {
         this.update();
     }
     update() {
+        if (Settings.hudEnabled) hudh.style.visibility = "visible";
+        else hudh.style.visibility = "hidden";
+
         hudh.innerHTML = `fps: ${this.framesPerSecond || 0} - \
                           players: ${this.playerCount || 0} - \
                           spectators: ${this.spectatorCount || 0} - \

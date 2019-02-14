@@ -31,15 +31,6 @@ body {
     right: 0;
 }
 
-#titan {
-    position: absolute;
-    height: 50vh;
-    width: 30vw;
-    bottom: 0;
-    right: 15px;
-    z-index: 4;
-}
-
 #error {
     display: none;
 }
@@ -67,13 +58,9 @@ body {
 
 .loading .spawnscreen,
 .dead.spectating .spawnscreen,
-.alive .spawnscreen {
-    display: none;
-}
-
-.alive #fullPageCard,
-.spectating #fullPageCard {
-    display: none;
+.alive .spawnscreen,
+.dead #minimapTip {
+    visibility: hidden;
 }
 
 .spawnscreen {
@@ -87,6 +74,16 @@ body {
     top: 0;
 }
 
+#deathScreen {
+    visibility: hidden;
+}
+
+#deathScreen table {
+    margin-left: auto;
+    margin-right: auto;
+    width: 30vw;
+}
+
 @keyframes fadein {
     from {
         opacity: 0;
@@ -98,13 +95,15 @@ body {
 }
 
 #logo {
-    width: 90vmin;
-    image-rendering: pixelated;
+    width: 40vmin;
 }
 
 #hintbox {
     font-size: 14pt;
-    margin: 2rem 0 0 0;
+    margin: auto;
+    display: block;
+    width: 50vw;
+    text-align: center;
 }
 
 a:visited,
@@ -113,49 +112,71 @@ a {
 }
 
 @media only screen and (max-width: 1200px) {
-    #twitterpated,
-    #controls_instructions {
+    #changelog {
         transform: scale(0.6);
         transform-origin: bottom left;
+    }
+    #controls_instructions {
+        transform: scale(0.6);
+        transform-origin: center;
     }
 }
 
 @media only screen and (max-width: 1000px) {
-    #twitterpated,
+    #changelog,
+    #hintbox,
     #socialMediaContainer,
     #controls_instructions {
-        display: none;
+        visibility: hidden;
     }
 }
+
 #socialMediaContainer {
     position: absolute;
     bottom: 3vh;
+    visibility: hidden;
 }
-#twitterpated {
+
+#changelog {
     left: 0;
     width: 500px;
-    background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(32, 32, 32, 0.85);
     padding: 0.5em;
     border-radius: 5px;
     position: absolute;
-    bottom: 10vh;
+    bottom: 1vh;
+    height: 1em;
+    width: 7em;
+    transition: height 0.5s, width 0.5s;
+    -webkit-transition: height 0.5s, width 0.5s;
+    overflow-y: hidden;
+    overflow-x: hidden;
 }
 
-#twitterpated h4 {
+#changelog table {
+    width: 35em;
+}
+
+#changelog:hover,
+#changelog.new {
+    height: 6em;
+    width: 35em;
+}
+
+#changelog h4 {
     margin: 0 0 3px 3px;
 }
 
-#twitterpated .date {
-    float: left;
-    color: #111111;
-    margin-right: 1em;
+#changelog .date {
+    color: #aaaaaa;
+    padding-right: 2em;
 }
 
 #controls_instructions {
-    position: absolute;
-    right: 20vh;
     width: 240px;
-    bottom: 0;
+    display: block;
+    margin-left: 2em;
+    margin-top: 4em;
 }
 
 .spawnscreen .social {
@@ -167,9 +188,12 @@ a {
     width: 96%;
 }
 
-.spectating #nipple-controls,
-.loading #nipple-controls {
+#nipple-controls {
     visibility: hidden;
+}
+
+.alive #nipple-controls {
+    visibility: visible;
 }
 
 #nipple-zone {
@@ -220,27 +244,29 @@ a {
     bottom: 3vh;
 }
 
-#stop_spectating_container {
+#spectatecontrols {
     display: none;
 }
 
-.spectating #stop_spectating_container {
+.spectating #spectatecontrols {
     position: absolute;
-    bottom: 10%;
+    bottom: 0px;
     width: 100%;
+    margin-left: auto;
+    margin-right: auto;
     display: block;
 }
 
-.spectate_only #stop_spectating_container {
+.spectate_only #spectatecontrols {
     display: none;
 }
 
-.spectating #stop_spectating {
+.spectating .button1 {
     opacity: 0.2;
     transition: opacity 1s;
 }
 
-.spectating #stop_spectating:hover {
+.spectating #spectatecontrols:hover .button1 {
     opacity: 1;
 }
 
@@ -250,7 +276,7 @@ a {
     color: #9d9d9d;
     background: none;
     padding: 10px;
-    margin: 1vh 0.5vh;
+    margin: 0.5vh 0.5vh;
     font-size: 0.75rem;
     color: white;
     text-transform: uppercase;
@@ -261,10 +287,6 @@ a {
     cursor: pointer;
     border: 1px solid white;
     color: #fff;
-}
-
-.button1:disabled {
-    border: none;
 }
 
 #nick {
@@ -456,10 +478,22 @@ table {
 }
 
 #settingsContainer {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    padding: 1em;
+}
+#settingsContainer table {
+    margin: auto;
+}
+#settingsContainer table td {
+    vertical-align: top;
+    margin: 3em;
+}
+#settingsContainer label {
+    min-width: 10vw;
+    float: left;
+}
+
+#settingsContainer label.switch {
+    min-width: inherit;
 }
 
 #worldSelector {
@@ -485,7 +519,6 @@ table {
     height: calc(100% - 44px);
 }
 #worlds #topbar {
-    
     margin: -1em -1em 0.5em -1em;
     border-radius: 6px 6px 0px 0px;
     background: transparent;
@@ -609,92 +642,20 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-#fullPageCard {
-    background-color: var(--bg-color-1);
-    width: 100vw;
-    height: 100vh;
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 2;
-    transition: transform 1s;
-}
-
-.hidden {
-    transform: translateY(100%);
-}
-
-#fullPageCard #openArrow {
-    color: #d9d9d9;
-    background-color: #222;
-    margin: auto;
-    width: 100px;
-    height: 30px;
-    text-align: center;
-    transform: translateY(-100%);
-    font-size: 25px;
-    cursor: pointer;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    transition: color 1s;
-}
-
-#fullPageCard #openArrow:hover i {
-    color: #fff;
-}
-
-#fullPageCard #close {
-    color: #9d9d9d;
-    text-align: right;
-    font-size: 25px;
-    transition: color 1s;
-    cursor: pointer;
-    margin-right: 20px;
-}
-
-#fullPageCard #close:hover {
-    color: #fff;
-}
-
-#fullPageCard h1,
-#fullPageCard h2 {
-    text-align: center;
-    text-transform: uppercase;
-}
-
-#fullPageCard #fullPageCardOuterContainer {
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-#fullPageCard #fullPageCardInnerContainer {
-    text-align: justify;
-    column-count: 3;
-    column-gap: 40px;
-    margin: 0 40px 0 40px;
-}
-
-@media only screen and (max-width: 1250px) {
-    #fullPageCard #fullPageCardInnerContainer {
-        column-count: 2;
-    }
-}
-
-@media only screen and (max-width: 700px) {
-    #fullPageCard #fullPageCardInnerContainer {
-        column-count: 1;
-    }
-}
-
-#fullPageCard section {
-    break-inside: avoid;
-}
-
 .spectating #fullPageCard,
 .alive #fullPageCard {
     display: none;
+}
+
+.dead.spectating #hud,
+.dead.spectating #record {
+    visibility: visible;
+}
+
+.dead #hud,
+.dead #autofireContainer,
+.dead #record {
+    visibility: hidden;
 }
 
 #hud {
@@ -894,14 +855,6 @@ progress::-webkit-progress-value {
 
 #settingsTable {
     margin: 10px auto 10px auto;
-}
-
-#minimap {
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    background-color: rgba(0, 0, 0, 0.5);
-    border: 1px solid #999;
 }
 
 #minimapTip {
