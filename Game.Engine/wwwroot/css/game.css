@@ -968,7 +968,7 @@ progress::-webkit-progress-value {
 }
 
 #links .link {
-	width: 130px;
+	width: 170px;
 	height: 40px;
 	border: 2px solid white;
 	border-right: none;
@@ -998,6 +998,10 @@ progress::-webkit-progress-value {
 	transform: rotate(360deg);
 }
 
+#linksDropdown:hover > .link > .linkLogo {
+	transform: rotate(90deg);
+}
+
 #links .linkLogo img {
 	position: absolute;
 	width: 30px;
@@ -1012,4 +1016,15 @@ progress::-webkit-progress-value {
 	right: 10px;
 	transform: translateY(-50%);
 	text-transform: uppercase;
+}
+
+#linksDropdown {
+	position: absolute;
+	height: 54px;
+	overflow: hidden;
+	transition: height 1s;
+}
+
+#linksDropdown:hover {
+	height: 155px;
 }
