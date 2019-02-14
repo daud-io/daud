@@ -24,10 +24,10 @@
                 new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 1 },
                 new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 1 },
 
-                new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0.1f },
+                new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0.1f, Cycle = 200 },
                 new StayInBounds(this) { LookAheadMS = 200, BehaviorWeight = 0.3f },
 
-                new NavigateToPoint(this) { BehaviorWeight = 0.03f },
+                new NavigateToPoint(this) { BehaviorWeight = 0.03f, Cycle = 1000 },
 
                 new StayCloseToTeam(this) {BehaviorWeight = 0.3f, Cycle = 1000},
 
