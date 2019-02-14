@@ -42,11 +42,11 @@ export class Log {
                 scoreCon.insertAdjacentHTML("beforeend", "<div class='plusScore'>+" + lastData.pointsDelta + "</div>");
             } else if (lastData.type == "killed") {
                 lastMsg = "<span style='color:#ff0000'>[&nbsp;</span>" + escapeHtml(lastData.text) + "<span style='color:#ff0000'>&nbsp;]</span>";
-				deathStats(lastData);
+                deathStats(lastData);
             } else {
-				if (lastData.type === "universeDeath") {
-					deathStats(lastData);
-				}
+                if (lastData.type === "universeDeath") {
+                    deathStats(lastData);
+                }
                 return;
             }
             bigLog.innerHTML = lastMsg;
@@ -78,16 +78,16 @@ export class Log {
 }
 
 function deathStats(lastData) {
-	document.getElementById("deathScreen").style.visibility = "visible";
-	document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
-	document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
-	var gameTimeInSeconds = Math.round(lastData.extraData.gameTime/1000),
-		gameTimeMinutes = Math.floor(gameTimeInSeconds/60),
-		gameTimeSeconds = gameTimeInSeconds - 60 * gameTimeMinutes;
-	if (gameTimeMinutes === 0) {
-		document.getElementById("deathScreenGameTime").innerHTML = gameTimeSeconds + "sec";
-	} else {
-		document.getElementById("deathScreenGameTime").innerHTML = gameTimeMinutes + "min " + gameTimeSeconds + "sec";
-	}
-	document.getElementById("deathScreenMaxKillStreak").innerHTML = lastData.extraData.maxCombo;
+    document.getElementById("deathScreen").style.visibility = "visible";
+    document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
+    document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
+    var gameTimeInSeconds = Math.round(lastData.extraData.gameTime / 1000),
+        gameTimeMinutes = Math.floor(gameTimeInSeconds / 60),
+        gameTimeSeconds = gameTimeInSeconds - 60 * gameTimeMinutes;
+    if (gameTimeMinutes === 0) {
+        document.getElementById("deathScreenGameTime").innerHTML = gameTimeSeconds + "sec";
+    } else {
+        document.getElementById("deathScreenGameTime").innerHTML = gameTimeMinutes + "min " + gameTimeSeconds + "sec";
+    }
+    document.getElementById("deathScreenMaxKillStreak").innerHTML = lastData.extraData.maxCombo;
 }

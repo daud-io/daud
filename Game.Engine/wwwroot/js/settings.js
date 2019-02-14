@@ -200,7 +200,7 @@ async function theme(v) {
                                     var replacePairs = [];
                                     for (var imagen = 0; imagen < images.length; imagen++) {
                                         var imocc = images[imagen];
-                                        var m = (/url\("\.\/?(.*?\.png)"\)/g).exec(imocc);
+                                        var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
                                         var imgurl = m[1] + "";
                                         if (debug) console.log(`theme css imagesss ${imgurl}`);
                                         if (fixed.indexOf(imgurl) > 0) {
@@ -210,7 +210,7 @@ async function theme(v) {
                                             fixedMap.push("");
                                             replacePairs.push([imocc, fixed.indexOf(imgurl)]);
                                             imagePromises.push(
-                                                (function (loo) {
+                                                (function(loo) {
                                                     return zip
                                                         .file(`daudmod/${imgurl}`)
                                                         .async("arraybuffer")
@@ -222,7 +222,7 @@ async function theme(v) {
                                                             fixedMap[fixed.indexOf(loo)] = url;
 
                                                             if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
-                                                        })
+                                                        });
                                                 })(imgurl)
                                             );
                                         }
@@ -235,10 +235,10 @@ async function theme(v) {
                                         const urlCreator = window.URL || window.webkitURL;
                                         const url = urlCreator.createObjectURL(blob);
 
-                                        var link = document.createElement('link');
-                                        link.setAttribute('rel', 'stylesheet');
-                                        link.setAttribute('type', 'text/css');
-                                        link.setAttribute('href', url);
+                                        var link = document.createElement("link");
+                                        link.setAttribute("rel", "stylesheet");
+                                        link.setAttribute("type", "text/css");
+                                        link.setAttribute("href", url);
                                         document.getElementById("theme-styles").appendChild(link);
                                     });
                                 })
@@ -255,7 +255,6 @@ async function theme(v) {
                 });
             }
         });
-
 }
 
 load();
@@ -295,14 +294,14 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 let minimapChanged = false;
-window.addEventListener("keydown", function (e) {
+window.addEventListener("keydown", function(e) {
     if (e.keyCode == 77 && !minimapChanged) {
         Settings.displayMinimap = !Settings.displayMinimap;
         minimapChanged = true;
     }
 });
 
-window.addEventListener("keyup", function (e) {
+window.addEventListener("keyup", function(e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
 

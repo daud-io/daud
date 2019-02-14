@@ -32,9 +32,7 @@ export class Minimap {
         const startIndex = data.Type == "Team" || data.Type == "CTF" ? 2 : 0;
         this.ctx.clear();
 
-        if (document.body.classList.contains('alive')
-            || document.body.classList.contains('spectating'))
-        {
+        if (document.body.classList.contains("alive") || document.body.classList.contains("spectating")) {
             this.ctx
                 .lineStyle(1, 0x999999)
                 .beginFill(0x000000, 0.5)

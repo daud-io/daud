@@ -74,17 +74,14 @@ body {
     top: 0;
 }
 
-#deathScreen
-{
+#deathScreen {
     visibility: hidden;
 }
 
-#deathScreen table
-{
+#deathScreen table {
     margin-left: auto;
     margin-right: auto;
     width: 30vw;
-
 }
 
 @keyframes fadein {
@@ -156,12 +153,12 @@ a {
     overflow-x: hidden;
 }
 
-#changelog table
-{
+#changelog table {
     width: 35em;
 }
 
-#changelog:hover,#changelog.new {
+#changelog:hover,
+#changelog.new {
     height: 6em;
     width: 35em;
 }
@@ -171,7 +168,7 @@ a {
 }
 
 #changelog .date {
-    color: #AAAAAA;
+    color: #aaaaaa;
     padding-right: 2em;
 }
 
@@ -191,13 +188,11 @@ a {
     width: 96%;
 }
 
-#nipple-controls
-{
+#nipple-controls {
     visibility: hidden;
 }
 
-.alive #nipple-controls
-{
+.alive #nipple-controls {
     visibility: visible;
 }
 
@@ -524,7 +519,6 @@ table {
     height: calc(100% - 44px);
 }
 #worlds #topbar {
-    
     margin: -1em -1em 0.5em -1em;
     border-radius: 6px 6px 0px 0px;
     background: transparent;
@@ -653,20 +647,16 @@ input:checked + .slider:before {
     display: none;
 }
 
-
 .dead.spectating #hud,
-.dead.spectating #record
- {
+.dead.spectating #record {
     visibility: visible;
 }
 
 .dead #hud,
 .dead #autofireContainer,
-.dead #record
-{
+.dead #record {
     visibility: hidden;
 }
-
 
 #hud {
     font-family: var(--font);

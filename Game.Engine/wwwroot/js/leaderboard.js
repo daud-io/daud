@@ -32,22 +32,18 @@ function getOut(entry, position) {
 }
 export class Leaderboard {
     update(data, position) {
-        if (Settings.leaderboardEnabled)
-        {
+        if (Settings.leaderboardEnabled) {
             record.style.visibility = "visible";
             leaderboard.style.visibility = "visible";
             leaderboardLeft.style.visibility = "visible";
             leaderboardCenter.style.visibility = "visible";
-        }
-        else
-        {
+        } else {
             record.style.visibility = "hidden";
             leaderboard.style.visibility = "hidden";
             leaderboardLeft.style.visibility = "hidden";
             leaderboardCenter.style.visibility = "hidden";
             return;
         }
-
 
         if (data.Record) {
             record.style.fontFamily = Settings.font;
