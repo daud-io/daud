@@ -24,7 +24,6 @@
             foreach (var context in contexts)
                 BlurRing(context);
 
-            /*
             lock (typeof(ContextRingBlendingWeighted))
             {
                 Console.SetCursorPosition(0, 0);
@@ -37,7 +36,7 @@
                     Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.0;-0.0")))}");
                 }
             }
-            */
+
             if (contexts.Any())
             {
                 for (var i = 0; i < Robot.Steps; i++)
