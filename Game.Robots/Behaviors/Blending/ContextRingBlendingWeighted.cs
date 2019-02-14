@@ -19,10 +19,6 @@
         {
             var combined = new ContextRing(Robot.Steps);
 
-            
-            // blur
-            foreach (var context in contexts)
-                BlurRing(context);
 
             lock (typeof(ContextRingBlendingWeighted))
             {
@@ -33,7 +29,25 @@
                     var name = context.Name;
                     while (name.Length < 20)
                         name += ' ';
-                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.0;-0.0")))}");
+                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.00;-0.00")))}");
+                }
+            }
+
+
+            // blur
+            foreach (var context in contexts)
+                BlurRing(context);
+
+            lock (typeof(ContextRingBlendingWeighted))
+            {
+//                Console.SetCursorPosition(0, 0);
+                Console.WriteLine("RingDump post blur");
+                foreach (var context in contexts)
+                {
+                    var name = context.Name;
+                    while (name.Length < 20)
+                        name += ' ';
+                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.00;-0.00")))}");
                 }
             }
 

@@ -22,7 +22,7 @@
             {
                 foreach (var entry in this.Robot.Leaderboard.Entries.Skip(2))
                 {
-                    if (this.Robot.SensorTeam.IsSameTeam(entry.Color))
+                    if (this.Robot.SensorTeam.IsSameTeam(entry.Color) && entry.FleetID != this.Robot.FleetID)
                     {
                         accumulator += entry.Position;
                         count++;

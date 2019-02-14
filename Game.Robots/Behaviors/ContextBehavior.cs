@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Game.Robots.Behaviors
 {
@@ -20,6 +21,7 @@ namespace Game.Robots.Behaviors
         {
             if (this.Robot.GameTime > SleepUntil)
             {
+                //Console.WriteLine("Processing");
                 var ring = new ContextRing(steps);
                 this.PreSweep(ring);
 
@@ -53,7 +55,10 @@ namespace Game.Robots.Behaviors
                 return ring;
             }
             else
-                return LastRing;
+            {
+                //Console.WriteLine("Waiting");
+                return new ContextRing(LastRing);
+            }
         }
 
         protected void Sleep(int ms)

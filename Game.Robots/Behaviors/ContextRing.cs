@@ -10,6 +10,14 @@
         public float RingWeight { get; set; } = 1f;
         public string Name { get; set; }
 
+        public ContextRing(ContextRing template)
+        {
+            this.Weights = template.Weights.ToArray();
+            this.StepSize = template.StepSize;
+            this.RingWeight = template.RingWeight;
+            this.Name = template.Name;
+        }
+
         public ContextRing(int size)
         {
             Weights = new float[size]; // a weight for each slice
