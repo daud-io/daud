@@ -130,7 +130,7 @@
 
             if (CanShoot)
             {
-                var target = null //FleetTargeting.ChooseTarget()
+                var target = FleetTargeting.ChooseTarget()
                     ?? AbandonedTargeting.ChooseTarget()
                     ?? FishTargeting.ChooseTarget();
 
