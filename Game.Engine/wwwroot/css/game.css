@@ -1041,7 +1041,13 @@ progress::-webkit-progress-value {
 }
 
 #worldList2 > span {
+	cursor: pointer;
+	opacity: 0.8;
+	transition: opacity 0.6s;
+}
 
+#worldList2 > span:hover {
+	opacity: 1;
 }
 
 #worldList2 > span:after {
