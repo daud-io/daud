@@ -1,4 +1,4 @@
-import Plotly from 'plotly.js-dist';
+import Plotly from './plotly-subset';
 
 export class Overlay {
     constructor(container, canvas, plotly) {

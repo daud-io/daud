@@ -24,7 +24,7 @@
     "pixi-layers": "^0.1.9",
     "pixi-tilemap": "^1.2.4",
     "pixi.js": "^4.8.5",
-    "plotly.js-dist": "^1.44.4",
+    "plotly.js": "^1.44.4",
     "prettier": "^1.16.1",
     "whatwg-fetch": "^3.0.0"
   }

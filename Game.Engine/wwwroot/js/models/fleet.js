@@ -1,4 +1,4 @@
-﻿import Plotly from 'plotly.js-dist';
+﻿import Plotly from '../plotly-subset';
 import { Settings } from "../settings";
 
 export class Fleet {
