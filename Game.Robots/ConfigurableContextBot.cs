@@ -4,6 +4,7 @@
     using Newtonsoft.Json;
     using System;
     using System.IO;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class ConfigurableContextBot : ContextRobot
@@ -78,33 +79,46 @@
             this.CustomData = JsonConvert.SerializeObject(new
             {
                 plotly = new {
-                    data = new[] {
+                    /*data = new[] {
                         new {
                             r = this.Behaviors[1]?.LastRing?.Weights,
                             name = "dodge",
-                            marker = new { color = "rgb(100,201,226)" },
+                            color = "rgb(100,201,226)",
                             type = "barpolar"
                         },
                         new {
                             r = this.Behaviors[2]?.LastRing?.Weights,
                             name = "dodge",
-                            marker = new { color = "rgb(150,201,226)" },
+                            color = "rgb(100,201,226)",
                             type = "barpolar"
                         },
                         new {
                             r = this.Behaviors[3]?.LastRing?.Weights,
                             name = "dodge",
-                            marker = new { color = "rgb(203,201,226)" },
+                            color = "rgb(100,201,226)",
                             type = "barpolar"
                         }
-                    },
+                    },*/
+
+                    data = this.Behaviors.Where(b => b.Plot).Select(b => new
+                    {
+                        r = b.LastRing?.Weights.Select(w => w * b.BehaviorWeight).Reverse(),
+                        name = b.LastRing?.Name,
+                        opacity = 0.5,
+                        type = "barpolar"
+                    }),
                     layout = new
                     {
                         paper_bgcolor = "rgba(0,0,0,0)",
                         plot_bgcolor = "rgba(0,0,0,0)",
+                        hovermode = false,
                         polar = new
                         {
-                            bgcolor = "rgba(0,0,0,0)"
+                            bgcolor = "rgba(0,0,0,0)",
+                            angularaxis = new
+                            {
+                                rotation = 180
+                            }
                         }
                     }
                 }

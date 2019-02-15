@@ -60,6 +60,7 @@
 
                 behavior.BehaviorWeight = descriptor.BehaviorWeight;
                 behavior.Cycle = descriptor.Cycle;
+                behavior.Plot = descriptor.Plot;
                 behavior.LookAheadMS = descriptor.LookAheadMS;
 
                 return behavior;

@@ -11,6 +11,7 @@ namespace Game.Robots.Behaviors
         private long SleepUntil = 0;
         public ContextRing LastRing = null;
         public int Cycle = 0;
+        public bool Plot { get; set; }
 
         public ContextBehavior(ContextRobot robot)
         {

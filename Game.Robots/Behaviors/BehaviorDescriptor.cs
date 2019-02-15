@@ -6,5 +6,6 @@
         public int LookAheadMS { get; set; }
         public float BehaviorWeight { get; set; }
         public int Cycle { get; set; }
+        public bool Plot { get; set; }
     }
 }

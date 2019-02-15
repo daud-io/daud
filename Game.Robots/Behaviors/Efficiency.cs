@@ -35,5 +35,10 @@
             else
                 return -MathF.Abs(difference) * Scale;
         }
+
+        protected override void PostSweep(ContextRing ring)
+        {
+            ring.Normalize();
+        }
     }
 }

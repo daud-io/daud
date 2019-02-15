@@ -28,12 +28,13 @@
 
         public void Normalize()
         {
-            var max = Weights.Max(w => MathF.Abs(w));
-            if (max > 0)
+            var max = Weights.Max(w => w);
+            var min = Weights.Min(w => w);
+            if (max != 0 || min != 0)
             {
-                float factor = 1f / max;
+                float factor = 1f / (max - min);
                 for (var i = 0; i < Weights.Length; i++)
-                    Weights[i] *= factor;
+                    Weights[i] = (Weights[i] - min) * factor;
             }
         }
     }

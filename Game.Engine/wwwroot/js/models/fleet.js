@@ -88,7 +88,12 @@ export class Fleet {
         if (this.plotly && this.ID == myfleetID)
         {
             this.container.plotly.style.visibility = "visible";
-            Plotly.react( this.container.plotly, this.plotly.data, this.plotly.layout);
+            Plotly.react( this.container.plotly, this.plotly.data, this.plotly.layout,
+            {
+                displayModeBar: false,
+                staticPlot: true
+                
+            });
         }
         //else
           //  this.container.plotly.style.visibility = "hidden";
