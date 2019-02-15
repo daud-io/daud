@@ -205,7 +205,7 @@ connection.onView = newView => {
                 buttonSpectate.value = button.value = `${countDown--} ...`;
                 buttonSpectate.disabled = button.disabled = true;
             } else {
-                buttonSpectate.value = button.value = `LAUNCH!`;
+                buttonSpectate.value = button.value = `Launch!`;
                 buttonSpectate.disabled = button.disabled = false;
                 clearInterval(interval);
             }
