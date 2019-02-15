@@ -4,6 +4,8 @@ import { __esModule } from "pixi.js/lib/core";
 
 const worlds = document.getElementById("worlds");
 const worldList = document.getElementById("worldList");
+const worlds2 = document.getElementById("worlds2");
+const worldList2 = document.getElementById("worldList2");
 
 let allWorlds = false;
 let lastKeys = false;
@@ -27,7 +29,8 @@ function buildList(response) {
 
     allWorlds = {};
 
-    let options = "";
+    let options = "",
+		options2 = "";
     for (const world of response) {
         allWorlds[world.world] = world;
 
@@ -41,10 +44,13 @@ function buildList(response) {
         const img = world.image ? `<img src="${imgs[world.image]}" />` : "";
         if (world.instructions || img) options += `<tr class="details"><td colspan="3">${img}${world.instructions || ""}</td></tr>`;
         options += `</tbody>`;
+		
+		options2 += `<span>${world.name}</span>`;
     }
 
     worldList.innerHTML = `${options}`;
-
+	worldList2.innerHTML = `${options2}`;
+	
     document.querySelectorAll(".worldrow").forEach(worldRow =>
         worldRow.addEventListener("click", function(e) {
             const worldKey = this.getAttribute("world");

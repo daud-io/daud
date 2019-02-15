@@ -1028,3 +1028,28 @@ progress::-webkit-progress-value {
 #linksDropdown:hover {
 	height: 155px;
 }
+
+#worldList2 {
+	text-transform: uppercase;
+	transform: scale(0, 0);
+	transform-origin: center top;
+	transition: transform 0.6s;
+}
+
+#worlds2:hover #worldList2 {
+	transform: scale(1, 1);
+}
+
+#worldList2 > span {
+
+}
+
+#worldList2 > span:after {
+	display: inline-block;
+	margin: 0 5px 0 5px;
+	content: "●";
+}
+
+#worldList2 > span:last-child:after {
+	display: none;
+}
