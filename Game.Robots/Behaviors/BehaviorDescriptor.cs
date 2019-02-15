@@ -7,5 +7,6 @@
         public float BehaviorWeight { get; set; }
         public int Cycle { get; set; }
         public bool Plot { get; set; }
+        public object Config { get; set; }
     }
 }

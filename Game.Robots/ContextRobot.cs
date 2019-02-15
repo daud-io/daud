@@ -51,7 +51,7 @@
 
             SteerAngle(angle);
         }
-
+        
         protected virtual void OnFinalRing(ContextRing ring)
         {
 
@@ -68,6 +68,13 @@
                 behavior.Cycle = descriptor.Cycle;
                 behavior.Plot = descriptor.Plot;
                 behavior.LookAheadMS = descriptor.LookAheadMS;
+
+                if (descriptor.Config != null)
+                {
+                    // there should probably be a way to do this without json.. but this is neat.
+                    var json = JsonConvert.SerializeObject(descriptor.Config);
+                    JsonConvert.PopulateObject(json, behavior);
+                }
 
                 return behavior;
             }).ToList();
