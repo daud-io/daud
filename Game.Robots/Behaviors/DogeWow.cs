@@ -42,7 +42,7 @@ namespace Game.Robots.Behaviors
                        
                     foreach (var ship in flet.Fleet.Ships){
                         
-                            PhantomProjections.Append(RoboMath.ProjectClosest( Robot.HookComputer,ship.Position,Robot.Position,LookAheadMS,flet.Fleet.Ships.Count()));
+                            // PhantomProjections.Append(RoboMath.ProjectClosest( Robot.HookComputer,ship.Position,Robot.Position,LookAheadMS,flet.Fleet.Ships.Count()));
                         }
                     }
             ConsideredPoints = new List<Vector2>();

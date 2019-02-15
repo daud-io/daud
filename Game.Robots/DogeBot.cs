@@ -25,7 +25,7 @@ namespace Game.Robots
 
         public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
         public int BoostThreshold { get; set; } = 1;
-        public float BoostDangerThreshold { get; set; } = 4;
+        public float BoostDangerThreshold { get; set; } = 9.5f;
 
 
         public DogeBot()
@@ -38,7 +38,7 @@ namespace Game.Robots
             // Behaviors.Add(Dodge1 = new DodgeNew(this) { LookAheadMS = 150, BehaviorWeight = 2 });
             // Behaviors.Add(DodgeNewd = new DodgeNew(this) { LookAheadMS = 200, BehaviorWeight = 2 });
             for(var i=100;i<2000;i+=100){
-                Behaviors.Add( new DogeWow(this) { LookAheadMS = i, BehaviorWeight = 2/((float)(i))*100.0f });
+                Behaviors.Add( new DogeWow(this) { LookAheadMS = i, BehaviorWeight = 2 });
             }
             Behaviors.Add(Separation = new SeparationClose(this) { LookAheadMS = 500, BehaviorWeight = 5.0f });
             Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
@@ -73,7 +73,7 @@ namespace Game.Robots
                 }
             }
 
-            
+
             Navigation.TargetPoint=new Vector2(this.Position.Y,-this.Position.X);
             if (SensorCTF.CTFModeEnabled)
             {
@@ -120,7 +120,7 @@ namespace Game.Robots
             var angle = ContextRingBlending.Blend(contexts);
             var combined = new ContextRing(this.Steps);
 
-            
+
             // blur
 
             // lock (typeof(ContextRingBlendingWeighted))
@@ -135,7 +135,7 @@ namespace Game.Robots
             //         Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.0;-0.0")))}");
             //     }
             // }
-            
+
             if (contexts.Any())
             {
                 for (var i = 0; i < this.Steps; i++)
@@ -152,9 +152,9 @@ namespace Game.Robots
                         minIndex = i;
                 }
 
-                
-            //(maxIndex+this.Steps/2)%this.Steps
-            if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold && combined.Weights[minIndex]-combined.Weights[maxIndex]<-BoostDangerThreshold)
+
+
+            if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold && (combined.Weights[(maxIndex+this.Steps/2)%this.Steps]-combined.Weights[maxIndex]<-BoostDangerThreshold ||(SensorFleets.MyFleet?.Ships.Count ?? 0) > 8))
                 Boost();
             }
 
