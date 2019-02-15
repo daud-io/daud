@@ -15,7 +15,7 @@
             this.Robot = robot;
         }
 
-        public float Blend(IEnumerable<ContextRing> contexts)
+        public (ContextRing, float) Blend(IEnumerable<ContextRing> contexts)
         {
             var combined = new ContextRing(Robot.Steps);
 
@@ -66,11 +66,11 @@
                         maxIndex = i;
                 }
 
-                return combined.Angle(maxIndex);
+                return (combined, combined.Angle(maxIndex));
             }
             else
             {
-                return 0; // going east a lot ?
+                return (null, 0); // going east a lot ?
             }
         }
 

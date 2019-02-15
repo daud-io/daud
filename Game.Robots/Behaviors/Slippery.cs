@@ -40,7 +40,7 @@
                 if (!this.Robot.SensorTeam.IsSameTeam(fleet))
                 {
                     var original = FiringInterceptAngles[fleet];
-                    var newAngle = CalculateIntercept(fleet, position, momentum);
+                    var newAngle = CalculateIntercept(fleet, position, momentum, LookAheadMS);
 
                     if (!float.IsNaN(original) && !float.IsNaN(newAngle))
                         accumulator += MathF.Abs(RoboMath.CalculateDifferenceBetweenAngles(newAngle, original));
@@ -49,12 +49,14 @@
             return accumulator;
         }
 
-        private float CalculateIntercept(Fleet fleet, Vector2 position, Vector2 momentum)
+        private float CalculateIntercept(Fleet fleet, Vector2 position, Vector2 momentum, int projectedIntoFutureMS = 0)
         {
             var myFleet = this.Robot.SensorFleets.MyFleet;
 
+            var projectedFleetCenter = fleet.Center + fleet.Momentum * projectedIntoFutureMS;
+
             var interceptPoint = RoboMath.FiringIntercept(this.Robot.HookComputer,
-                fleet.Center, position, momentum, myFleet.Ships.Count);
+                projectedFleetCenter, position, momentum, myFleet.Ships.Count);
 
             var toTarget = interceptPoint - fleet.Center;
             return MathF.Atan2(toTarget.Y, toTarget.X);
