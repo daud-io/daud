@@ -967,6 +967,18 @@ progress::-webkit-progress-value {
 	z-index: 10;
 }
 
+@media only screen and (max-width: 1420px) {
+	#links {
+		transform: translateY(-50%) scale(0.7, 0.7);
+	}
+}
+
+@media only screen and (max-width: 900px) {
+	#links {
+		display: none;
+	}
+}
+
 #links .link {
 	width: 170px;
 	height: 40px;
@@ -1019,7 +1031,6 @@ progress::-webkit-progress-value {
 }
 
 #linksDropdown {
-	position: absolute;
 	height: 54px;
 	overflow: hidden;
 	transition: height 1s;
