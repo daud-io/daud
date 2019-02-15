@@ -38,11 +38,11 @@ namespace Game.Robots.Behaviors
                         && MathF.Abs(p.Fleet.Center.Y - Robot.Position.Y) <= ViewportCrop.Y)
                     .Where(p => !Robot.HookComputer.TeamMode || p.Fleet.Color != Robot.Color);
                     foreach (var flet in muchFleets){
-                        Projections.Append(RoboMath.ProjectClosest( Robot.HookComputer,flet.Fleet.Center,Robot.Position,LookAheadMS,flet.Fleet.Ships.Count()));
+                        // Projections.Append(RoboMath.ProjectClosest( Robot.HookComputer,flet.Fleet.Center,Robot.Position,LookAheadMS,flet.Fleet.Ships.Count()));
                        
                     foreach (var ship in flet.Fleet.Ships){
                         
-                            // PhantomProjections.Append(RoboMath.ProjectClosest( Robot.HookComputer,ship.Position,Robot.Position,LookAheadMS,flet.Fleet.Ships.Count()));
+                            PhantomProjections.Append(RoboMath.ProjectClosest( Robot.HookComputer,ship.Position,Robot.Position,LookAheadMS,flet.Fleet.Ships.Count()));
                         }
                     }
             ConsideredPoints = new List<Vector2>();

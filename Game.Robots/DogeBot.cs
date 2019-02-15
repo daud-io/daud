@@ -26,6 +26,7 @@ namespace Game.Robots
         public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
         public int BoostThreshold { get; set; } = 1;
         public float BoostDangerThreshold { get; set; } = 9.5f;
+        public float MidBad=0.5f;
 
 
         public DogeBot()
@@ -53,25 +54,7 @@ namespace Game.Robots
         {
             foreach (var sensor in Sensors)
                 sensor.Sense();
-            if (CanShoot)
-            {
-                var closest = SensorFleets.Others
-                    .Select(f => new { Fleet = f, Distance = Vector2.Distance(this.Position, f.Center) })
-                    .Where(p => MathF.Abs(p.Fleet.Center.X - this.Position.X) <= ViewportCrop.X
-                        && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
-                    .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
-                    .OrderBy(p => p.Distance)
-                    .FirstOrDefault()
-                    ?.Fleet;
-
-                if (closest != null){
-                    ShootAtFleet(closest);
-                }else{
-                    if(SensorFleets.MyFleet!=null){
-                       ShootAt(SensorFleets.MyFleet.Momentum);//*100.0f+this.Position);
-                    }
-                }
-            }
+            
 
 
             Navigation.TargetPoint=new Vector2(this.Position.Y,-this.Position.X);
@@ -154,9 +137,41 @@ namespace Game.Robots
 
 
 
-            if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold && (combined.Weights[(maxIndex+this.Steps/2)%this.Steps]-combined.Weights[maxIndex]<-BoostDangerThreshold ||(SensorFleets.MyFleet?.Ships.Count ?? 0) > 8))
+            if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold && (combined.Weights[(maxIndex+this.Steps/2)%this.Steps]-combined.Weights[maxIndex]<-BoostDangerThreshold ||(SensorFleets.MyFleet?.Ships.Count ?? 0) > 108))
                 Boost();
+           
+           this.MidBad=combined.Weights[maxIndex]/2.0f+combined.Weights[minIndex]/2.0f;
+            
+            if (CanShoot)
+            {
+                var closest = SensorFleets.Others
+                    .Select(f => new { Fleet = f, Distance = Vector2.Distance(this.Position, f.Center) })
+                    .Where(p => MathF.Abs(p.Fleet.Center.X - this.Position.X) <= ViewportCrop.X
+                        && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
+                    .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
+                    .OrderBy(p => p.Distance)
+                    .FirstOrDefault()
+                    ?.Fleet;
+                var fff=closest;
+                if (closest != null){
+                    Vector2 sp=RoboMath.FiringIntercept(
+                    HookComputer,
+                    this.Position,
+                    fff.Center,
+                    fff.Momentum,
+                    this.SensorFleets.MyFleet?.Ships.Count ?? 0
+                )-this.Position;
+                var angleg=(int) (MathF.Atan2(sp.Y,sp.X)/MathF.Atan2(0.0f,-1.0f)/2.0f*Steps);
+                if(combined.Weights[((angleg)%Steps+Steps)%Steps]>MidBad/2.0f+combined.Weights[minIndex]/2.0f)
+                    ShootAt(sp+this.Position);
+                }else{
+                    if(SensorFleets.MyFleet!=null){
+                       ShootAt(SensorFleets.MyFleet.Momentum*100.0f+this.Position);
+                    }
+                }
             }
+            }
+            
 
             SteerAngle(angle);
         }
@@ -169,6 +184,13 @@ namespace Game.Robots
 
         private void ShootAtFleet(Fleet f)
         {
+            // Vector2 sp=RoboMath.FiringIntercept(
+            //         HookComputer,
+            //         this.Position,
+            //         f.Center,
+            //         f.Momentum,
+            //         this.SensorFleets.MyFleet?.Ships.Count ?? 0
+            //     )-this.Position;
             ShootAt(
                 RoboMath.FiringIntercept(
                     HookComputer,
