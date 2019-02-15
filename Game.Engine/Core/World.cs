@@ -375,6 +375,13 @@
                     })
                     .OrderByDescending(location => location.Closest)
                     .First().Point;
+					
+				case "ScoreBased":
+					return new Vector2
+                    {
+                        X = x * Hook.WorldSize * 0.95f,
+                        Y = y * Hook.WorldSize * 0.95f
+                    };
             }
         }
 
