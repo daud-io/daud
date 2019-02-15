@@ -9,7 +9,7 @@ namespace Game.Robots.Behaviors
         protected readonly ContextRobot Robot;
         public int LookAheadMS { get; set; } = 100;
         private long SleepUntil = 0;
-        private ContextRing LastRing = null;
+        public ContextRing LastRing = null;
         public int Cycle = 0;
 
         public ContextBehavior(ContextRobot robot)

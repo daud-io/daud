@@ -59,7 +59,8 @@
 
                 SetBehaviors(config.Behaviors);
             }
-            catch (Exception e) 
+            catch (IOException) { }
+            catch (Exception e)
             {
                 this.Log("Failed to read configuration: " + e);
             }
@@ -73,6 +74,42 @@
 
         protected async override Task AliveAsync()
         {
+
+            this.CustomData = JsonConvert.SerializeObject(new
+            {
+                plotly = new {
+                    data = new[] {
+                        new {
+                            r = this.Behaviors[1]?.LastRing?.Weights,
+                            name = "dodge",
+                            marker = new { color = "rgb(100,201,226)" },
+                            type = "barpolar"
+                        },
+                        new {
+                            r = this.Behaviors[2]?.LastRing?.Weights,
+                            name = "dodge",
+                            marker = new { color = "rgb(150,201,226)" },
+                            type = "barpolar"
+                        },
+                        new {
+                            r = this.Behaviors[3]?.LastRing?.Weights,
+                            name = "dodge",
+                            marker = new { color = "rgb(203,201,226)" },
+                            type = "barpolar"
+                        }
+                    },
+                    layout = new
+                    {
+                        paper_bgcolor = "rgba(0,0,0,0)",
+                        plot_bgcolor = "rgba(0,0,0,0)",
+                        polar = new
+                        {
+                            bgcolor = "rgba(0,0,0,0)"
+                        }
+                    }
+                }
+            });
+
             if (CanShoot)
             {
                 var target = FleetTargeting.ChooseTarget()
@@ -83,7 +120,7 @@
                     ShootAt(target.Position);
             }
 
-            if (CanBoost && (this.SensorFleets.MyFleet?.Ships.Count ?? 0) > 10)
+            if (CanBoost && (this.SensorFleets.MyFleet?.Ships.Count ?? 0) > 16)
                 Boost();
 
             await base.AliveAsync();

@@ -8,7 +8,7 @@
     public class Slippery : ContextBehavior
     {
         private Dictionary<Fleet, float> FiringInterceptAngles = null;
-
+        //public float ThresholdAngle { get; set; } = MathF.PI / 
         public Slippery(ContextRobot robot): base(robot)
         {
 
@@ -24,8 +24,10 @@
 
             foreach (var fleet in this.Robot.SensorFleets.Others)
                 if (!this.Robot.SensorTeam.IsSameTeam(fleet))
-                    FiringInterceptAngles.Add(fleet, 
-                        CalculateIntercept(fleet, myFleet.Center, myFleet.Momentum));
+                {
+                    var angle = CalculateIntercept(fleet, myFleet.Center, myFleet.Momentum);
+                    FiringInterceptAngles.Add(fleet, angle);
+                }
 
             Sleep(750);
         }
@@ -39,7 +41,9 @@
                 {
                     var original = FiringInterceptAngles[fleet];
                     var newAngle = CalculateIntercept(fleet, position, momentum);
-                    accumulator += MathF.Abs(RoboMath.CalculateDifferenceBetweenAngles(newAngle, original));
+
+                    if (!float.IsNaN(original) && !float.IsNaN(newAngle))
+                        accumulator += MathF.Abs(RoboMath.CalculateDifferenceBetweenAngles(newAngle, original));
                 }
 
             return accumulator;

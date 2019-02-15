@@ -1,4 +1,5 @@
-﻿import { Settings } from "../settings";
+﻿import Plotly from 'plotly.js-dist';
+import { Settings } from "../settings";
 
 export class Fleet {
     constructor(container, cache) {
@@ -10,6 +11,7 @@ export class Fleet {
         this.text = new PIXI.Text("", { fontFamily: [Settings.font, "NotoColorEmoji"], fontSize: Settings.nameSize, fill: 0xffffff });
         this.textChat = new PIXI.Text("", { fontFamily: "FontAwesome", fontSize: Settings.nameSize, fill: 0xffffff });
         this.chat = false;
+        this.plotly = false;
         this.text.anchor.set(0.5, 0.5);
         this.textChat.anchor.set(0.5, 0.5);
         this.text.position.x = 0;
@@ -35,8 +37,14 @@ export class Fleet {
         this.caption = groupUpdate.Caption;
         this.ID = groupUpdate.ID;
 
-        if (groupUpdate.CustomData && groupUpdate.CustomData.chat) this.chat = groupUpdate.CustomData.chat;
-        else this.chat = false;
+        if (groupUpdate.CustomData)
+        {
+            if (groupUpdate.CustomData.chat) this.chat = groupUpdate.CustomData.chat;
+            else this.chat = false;
+
+            if (groupUpdate.CustomData.plotly) this.plotly = groupUpdate.CustomData.plotly;
+            else this.plotly = false;
+        }
     }
 
     preRender(time, interpolator, myfleetID) {
@@ -75,6 +83,17 @@ export class Fleet {
             this.text.visible = false;
             this.textChat.visible = false;
         }
+
+
+        if (this.plotly && this.ID == myfleetID)
+        {
+            this.container.plotly.style.visibility = "visible";
+            Plotly.react( this.container.plotly, this.plotly.data, this.plotly.layout);
+        }
+        //else
+          //  this.container.plotly.style.visibility = "hidden";
+
+
     }
 
     destroy() {

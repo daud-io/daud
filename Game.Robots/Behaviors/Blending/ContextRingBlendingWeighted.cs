@@ -20,6 +20,7 @@
             var combined = new ContextRing(Robot.Steps);
 
 
+            if (false)
             lock (typeof(ContextRingBlendingWeighted))
             {
                 Console.SetCursorPosition(0, 0);
@@ -38,6 +39,7 @@
             foreach (var context in contexts)
                 BlurRing(context);
 
+            if (false)
             lock (typeof(ContextRingBlendingWeighted))
             {
 //                Console.SetCursorPosition(0, 0);
