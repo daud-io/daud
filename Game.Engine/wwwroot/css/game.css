@@ -76,6 +76,9 @@ body {
 
 #deathScreen {
     visibility: hidden;
+    background: rgba(0, 0, 50, 0.8);
+    border-radius: 10px;
+    padding: 20px;
 }
 
 #deathScreen table {
@@ -255,10 +258,9 @@ a {
 
 .spectating #spectatecontrols {
     position: absolute;
-    bottom: 0px;
-    width: 100%;
-    margin-left: auto;
-    margin-right: auto;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
     display: block;
 }
 
@@ -282,9 +284,9 @@ a {
     background: none;
     padding: 10px;
     margin: 0.5vh 0.5vh;
-    font-size: 0.75rem;
+    font-size: 1rem;
+    font-family: var(--font);
     color: white;
-    text-transform: uppercase;
     transition: border 1s, color 1s;
 }
 
