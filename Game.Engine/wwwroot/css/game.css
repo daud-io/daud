@@ -970,6 +970,6 @@ progress::-webkit-progress-value {
     top: 0;
     bottom: 0;
     margin: auto;
-    z-index: 3;
+    z-index: 0;
     visibility: hidden;
 }

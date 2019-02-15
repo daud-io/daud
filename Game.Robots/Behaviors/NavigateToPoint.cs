@@ -18,5 +18,11 @@
             var difference = RoboMath.CalculateDifferenceBetweenAngles(angle, angleToPoint);
             return -MathF.Abs(difference);
         }
+
+        protected override void PostSweep(ContextRing ring)
+        {
+            ring.Normalize();
+            base.PostSweep(ring);
+        }
     }
 }

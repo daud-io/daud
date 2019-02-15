@@ -10,7 +10,7 @@
         private Dictionary<Fleet, float> FiringInterceptAngles = null;
         //public float ThresholdAngle { get; set; } = MathF.PI / 
         private List<Fleet> FleetsOfConcern = null;
-        private int MaximumRange = 10000;
+        public int MaximumRange { get; set; } = 10000;
 
         public Slippery(ContextRobot robot): base(robot)
         {
@@ -29,12 +29,14 @@
             foreach (var fleet in this.Robot.SensorFleets.Others)
                 if (!this.Robot.SensorTeam.IsSameTeam(fleet))
                 {
-                    if (Vector2.Distance(fleet.Center, myFleet.Center) > MaximumRange)
+                    if (Vector2.Distance(fleet.Center, myFleet.Center) < MaximumRange)
+                    {
                         if (FleetsOfConcern == null)
                             FleetsOfConcern = new List<Fleet>();
-                    FleetsOfConcern.Add(fleet);
-                    var angle = CalculateIntercept(fleet, myFleet.Center, myFleet.Momentum);
-                    FiringInterceptAngles.Add(fleet, angle);
+                        FleetsOfConcern.Add(fleet);
+                        var angle = CalculateIntercept(fleet, myFleet.Center, myFleet.Momentum);
+                        FiringInterceptAngles.Add(fleet, angle);
+                    }
                 }
 
             Sleep(750);

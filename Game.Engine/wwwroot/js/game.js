@@ -262,6 +262,7 @@ connection.onView = newView => {
     for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d));
 
     cache.update(updates, deletes, groups, groupDeletes, gameTime, fleetID);
+    overlay.update(newView.customData());
 
     hud.playerCount = newView.playerCount();
     hud.spectatorCount = newView.spectatorCount();
@@ -278,7 +279,6 @@ connection.onView = newView => {
         cooldownShoot: newView.cooldownShoot()
     })*/
 
-    overlay.update(newView.customData());
     view.camera = bodyFromServer(cache, newView.camera());
 
     if (spawnOnView) {

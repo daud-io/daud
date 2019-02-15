@@ -33,7 +33,7 @@ export class Fleet {
         this.ships = this.ships.filter(s => s != ship);
     }
 
-    update(groupUpdate) {
+    update(groupUpdate, myFleetID) {
         this.caption = groupUpdate.Caption;
         this.ID = groupUpdate.ID;
 
@@ -45,11 +45,38 @@ export class Fleet {
             if (groupUpdate.CustomData.plotly) this.plotly = groupUpdate.CustomData.plotly;
             else this.plotly = false;
         }
+
+        if (this.plotly && this.ID == myFleetID)
+        {
+            if (!this.container.plotly.used)
+            {
+                this.container.plotly.used = true;
+                this.usingPlotly = true;
+                console.log('setting plotly use');
+            }
+            Plotly.react( this.container.plotly, this.plotly.data, this.plotly.layout,
+            {
+                displayModeBar: false,
+                staticPlot: true
+            });
+        }
+
+        if (this.usingPlotly && this.ID != myFleetID)
+        {
+            // we must have been spectating a fleet
+            // with plotly data, and now we've switched
+            // to a different fleet to follow
+            // but the original one is still on screen
+            // ... that's us. 
+            this.container.plotly.used = false;
+            this.usingPlotly = false;
+        }
+
     }
 
-    preRender(time, interpolator, myfleetID) {
+    preRender(time, interpolator, myFleetID) {
         //console.log(`Group: ${this.ID} ${this.caption} ${this.ships.length}`);
-        if (this.ships.length > 0 && (this.ID != myfleetID || Settings.showOwnName || document.body.classList.contains("spectating"))) {
+        if (this.ships.length > 0 && (this.ID != myFleetID || Settings.showOwnName || document.body.classList.contains("spectating"))) {
             if (this.text.visible != Settings.namesEnabled) this.text.visible = Settings.namesEnabled;
 
             if (Settings.nameSize) {
@@ -85,16 +112,6 @@ export class Fleet {
         }
 
 
-        if (this.plotly && this.ID == myfleetID)
-        {
-            this.container.plotly.style.visibility = "visible";
-            Plotly.react( this.container.plotly, this.plotly.data, this.plotly.layout,
-            {
-                displayModeBar: false,
-                staticPlot: true
-                
-            });
-        }
         //else
           //  this.container.plotly.style.visibility = "hidden";
 
@@ -104,6 +121,10 @@ export class Fleet {
     destroy() {
         this.container.removeChild(this.text);
         this.container.removeChild(this.textChat);
-        //console.log("fleet destroyed");
+        if (this.usingPlotly)
+        {
+            this.container.plotly.used = false;
+            console.log('unsetting plotly use');            
+        }
     }
 }
