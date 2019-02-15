@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context us.daud.io player robots --type-name Game.Robots.ConfigurableContextBot,Game.Robots --name \"configbot\" --world duel --replicas 2 --color cyan --sprite ship_cyan",
+      "commandLineArgs": "--context us.daud.io player robots --type-name Game.Robots.ConfigurableContextBot,Game.Robots --name \"configbot\" --world duel --replicas 1 --color cyan --sprite ship_cyan",
       "workingDirectory": "c:\\code\\mods\\bots"
     }
   }

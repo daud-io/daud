@@ -46,9 +46,15 @@
         {
 
             var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
-            var angle = ContextRingBlending.Blend(contexts);
+            (var finalRing, var angle) = ContextRingBlending.Blend(contexts);
+            OnFinalRing(finalRing);
 
             SteerAngle(angle);
+        }
+        
+        protected virtual void OnFinalRing(ContextRing ring)
+        {
+
         }
 
         public void SetBehaviors(IEnumerable<BehaviorDescriptor> behaviors)
@@ -62,6 +68,13 @@
                 behavior.Cycle = descriptor.Cycle;
                 behavior.Plot = descriptor.Plot;
                 behavior.LookAheadMS = descriptor.LookAheadMS;
+
+                if (descriptor.Config != null)
+                {
+                    // there should probably be a way to do this without json.. but this is neat.
+                    var json = JsonConvert.SerializeObject(descriptor.Config);
+                    JsonConvert.PopulateObject(json, behavior);
+                }
 
                 return behavior;
             }).ToList();

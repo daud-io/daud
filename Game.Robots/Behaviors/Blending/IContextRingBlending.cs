@@ -4,6 +4,6 @@
 
     public interface IContextRingBlending
     {
-        float Blend(IEnumerable<ContextRing> contexts);
+        (ContextRing, float) Blend(IEnumerable<ContextRing> contexts);
     }
 }
