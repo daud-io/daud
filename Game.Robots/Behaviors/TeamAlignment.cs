@@ -30,13 +30,16 @@
                     var distance = Vector2.Distance(fleet.Center, this.Robot.Position);
                     if (distance >= MinimumRange && distance <= MaximumRange)
                     {
-                        AverageAngle += 
-                            RoboMath.CalculateDifferenceBetweenAngles(
-                                fleet.Ships.Average(s => s.Angle), 
-                                0
-                            );
+                        if (fleet.Ships.Any())
+                        {
+                            AverageAngle +=
+                                RoboMath.CalculateDifferenceBetweenAngles(
+                                    fleet.Ships.Average(s => MathF.Atan2(s.Momentum.Y, s.Momentum.X)),
+                                    0
+                                );
 
-                        count++;
+                            count++;
+                        }
                     }
                 }
                 if (count > 0)
