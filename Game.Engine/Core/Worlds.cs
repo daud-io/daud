@@ -8,19 +8,21 @@
     public static class Worlds
     {
         public static readonly Dictionary<string, World> AllWorlds = new Dictionary<string, World>();
+        private static GameConfiguration GameConfiguration;
+		private static Player Player;
 
         private static World Default;
 
-        public static void Initialize()
+        public static void Initialize(GameConfiguration gameConfiguration)
         {
+            GameConfiguration = gameConfiguration;
             Default = WorldDefault();
             AddWorld("default", Default);
             AddWorld("duel", WorldDuel());
             AddWorld("team", WorldTeam());
             AddWorld("ctf", WorldCTF());
-            // AddWorld("other", WorldOther());
-			
-			/*
+            /*
+            AddWorld("other", WorldOther());
             AddWorld("sharks", WorldSharks());
             AddWorld("sumo", WorldSumo());
             AddWorld("boss", WorldBoss());
@@ -72,8 +74,22 @@
             hook.Description = "FFA Arena";
             hook.Instructions = "Mouse to aim, click to shoot. Press 's' to boost.";
             hook.Weight = 10;
+			
+			if (Player != null) {
+				if (Player.Roles.Contains("Player")) {
+					hook.AllowedColors = new[] {
+						"ship_pink",
+						"ship_red",
+						"ship_orange",
+						"ship_yellow",
+						"ship_green",
+						"ship_cyan",
+						"ship_secret"
+					};
+				}
+			}
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldOther()
@@ -91,7 +107,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldSnake()
@@ -112,7 +128,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldSumo()
@@ -139,7 +155,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldDuel()
@@ -162,7 +178,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldTeam()
@@ -179,7 +195,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldCTF()
@@ -211,7 +227,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldSharks()
@@ -236,7 +252,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World
+            return new World(null, GameConfiguration)
             {
                 Hook = hook,
                 NewFleetGenerator = delegate (Player p, string Color)
@@ -267,7 +283,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldBoss()
@@ -285,7 +301,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         private static World WorldBeach()
@@ -300,7 +316,7 @@
 			
 			hook.WorldResizeEnabled = false;
 
-            return new World(hook);
+            return new World(hook, GameConfiguration);
         }
 
         public static World Find(string world = null)
