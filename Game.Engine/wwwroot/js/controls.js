@@ -184,6 +184,9 @@ export var Controls = {
     },
     initializeWorld: function(world) {
         const colors = world.allowedColors;
+		
+		
+
         const selector = document.getElementById("shipSelectorSwitch");
         while (selector.firstChild) selector.removeChild(selector.firstChild);
 
@@ -305,3 +308,18 @@ if (savedEmoji != undefined) {
     Controls.emoji = unicode(savedEmoji2);
     emojiTrigger.firstChild.setAttribute("data-index", savedEmoji);
 }
+
+
+const discord = require("discord.js");
+console.log(discord);
+const client = new discord.Client();
+
+client.on("ready", () => {
+    console.log("Bot online!");
+    const guild = client.guilds.get("The_server_id");
+	console.log(guild.roles);
+	/*
+    const role = guild.roles.find("name", "Your_role_name");
+
+    console.log(`Found the role ${role.name}`);*/
+})
