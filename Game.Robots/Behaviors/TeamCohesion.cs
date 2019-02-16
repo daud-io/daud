@@ -49,7 +49,7 @@
                     }
                 }
                 if (accumulator != Vector2.Zero && count > 0)
-                    TargetPoint = accumulator / ((float)count)+(this.Robot.SensorFleets.MyFleet==null?Vector2.Zero:this.Robot.SensorFleets.MyFleet.Momentum*100.0f);
+                    TargetPoint = accumulator / ((float)count)+(this.Robot.SensorFleets.MyFleet==null?Vector2.Zero:this.Robot.SensorFleets.MyFleet.Momentum*150.0f);
             }
         }
 
