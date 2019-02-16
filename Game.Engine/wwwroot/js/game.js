@@ -3,6 +3,7 @@
 import { Renderer } from "./renderer";
 import { Background } from "./background";
 import { Border } from "./border";
+import { Overlay } from "./overlay";
 import { spriteIndices } from "./spriteIndices";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
@@ -55,6 +56,8 @@ container.addChild(container.tiles);
 const renderer = new Renderer(container);
 const background = new Background(container);
 const border = new Border(container);
+const overlay = new Overlay(container, canvas, document.getElementById('plotly'));
+container.plotly = document.getElementById('plotly');
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
@@ -163,9 +166,9 @@ connection.onView = newView => {
 
     view.isAlive = newView.isAlive();
 
+    fleetID = newView.fleetID();
     if (view.isAlive && !lastAliveState) {
         lastAliveState = true;
-        fleetID = newView.fleetID();
         document.body.classList.remove("dead");
         document.body.classList.remove("spectating");
         document.body.classList.add("alive");
@@ -259,6 +262,7 @@ connection.onView = newView => {
     for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d));
 
     cache.update(updates, deletes, groups, groupDeletes, gameTime, fleetID);
+    overlay.update(newView.customData());
 
     hud.playerCount = newView.playerCount();
     hud.spectatorCount = newView.spectatorCount();
@@ -274,14 +278,6 @@ connection.onView = newView => {
         cooldownBoost: newView.cooldownBoost(),
         cooldownShoot: newView.cooldownShoot()
     })*/
-
-    const data = newView.customData();
-    if (data) {
-        CustomData = data;
-        CustomDataTime = view.time;
-    } else if (CustomDataTime + 5000 < view.time) {
-        CustomData = false;
-    }
 
     view.camera = bodyFromServer(cache, newView.camera());
 
@@ -475,6 +471,7 @@ app.ticker.add(() => {
     background.draw(cache, interpolator, gameTime);
     minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
+    overlay.draw(cache, interpolator, gameTime);
 
     lastPosition = position;
 

@@ -4,6 +4,8 @@
 
     public class Separation: ContextBehavior
     {
+        public int ActiveRange { get; set; } = 10000;
+
         public Separation(ContextRobot robot) : base(robot)
         {
         }
@@ -21,8 +23,10 @@
             {
                 foreach (var other in Robot.SensorFleets.Others)
                 {
-                    var distSq = Vector2.DistanceSquared(other.Center, position);
-                    accumulator -= 1 / distSq;
+
+                    var dist = Vector2.Distance(other.Center, position);
+                    if (dist < ActiveRange)
+                        accumulator -= 1 / (dist*dist);
                 }
             }
 

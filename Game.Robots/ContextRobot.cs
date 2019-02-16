@@ -3,15 +3,17 @@
     using Game.Robots.Behaviors;
     using Game.Robots.Behaviors.Blending;
     using Game.Robots.Senses;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class ContextRobot : Robot
     {
         protected readonly List<ISense> Sensors = new List<ISense>();
-        protected readonly List<IBehaviors> Behaviors = new List<IBehaviors>();
+        protected List<ContextBehavior> Behaviors = new List<ContextBehavior>();
         public readonly SensorBullets SensorBullets;
         public readonly SensorFleets SensorFleets;
         public readonly SensorTeam SensorTeam;
@@ -44,10 +46,40 @@
         {
 
             var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
-            var angle = ContextRingBlending.Blend(contexts);
+            (var finalRing, var angle) = ContextRingBlending.Blend(contexts);
+            OnFinalRing(finalRing);
 
             SteerAngle(angle);
         }
+        
+        protected virtual void OnFinalRing(ContextRing ring)
+        {
+
+        }
+
+        public void SetBehaviors(IEnumerable<BehaviorDescriptor> behaviors)
+        {
+            this.Behaviors = behaviors.Select(descriptor =>
+            {
+                var type = Type.GetType(descriptor.BehaviorTypeName);
+                var behavior = Activator.CreateInstance(type, this) as ContextBehavior;
+
+                behavior.BehaviorWeight = descriptor.BehaviorWeight;
+                behavior.Cycle = descriptor.Cycle;
+                behavior.Plot = descriptor.Plot;
+                behavior.LookAheadMS = descriptor.LookAheadMS;
+
+                if (descriptor.Config != null)
+                {
+                    // there should probably be a way to do this without json.. but this is neat.
+                    var json = JsonConvert.SerializeObject(descriptor.Config);
+                    JsonConvert.PopulateObject(json, behavior);
+                }
+
+                return behavior;
+            }).ToList();
+        }
+
 
         protected virtual Task OnSensors()
         {
@@ -56,10 +88,14 @@
 
         protected void Log(string message)
         {
+            try{
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.Write($"[{this.FleetID}\t{this.Name}]\t");
             Console.ResetColor();
             Console.WriteLine(message);
+            }catch(NullReferenceException e){
+
+            }
         }
 
         protected override Task OnDeathAsync()

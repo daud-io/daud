@@ -15,16 +15,12 @@
             this.Robot = robot;
         }
 
-        public float Blend(IEnumerable<ContextRing> contexts)
+        public (ContextRing, float) Blend(IEnumerable<ContextRing> contexts)
         {
             var combined = new ContextRing(Robot.Steps);
 
-            
-            // blur
-            foreach (var context in contexts)
-                BlurRing(context);
 
-            /*
+            if (false)
             lock (typeof(ContextRingBlendingWeighted))
             {
                 Console.SetCursorPosition(0, 0);
@@ -34,10 +30,29 @@
                     var name = context.Name;
                     while (name.Length < 20)
                         name += ' ';
-                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.0;-0.0")))}");
+                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.00;-0.00")))}");
                 }
             }
-            */
+
+
+            // blur
+            foreach (var context in contexts)
+                BlurRing(context);
+
+            if (false)
+            lock (typeof(ContextRingBlendingWeighted))
+            {
+//                Console.SetCursorPosition(0, 0);
+                Console.WriteLine("RingDump post blur");
+                foreach (var context in contexts)
+                {
+                    var name = context.Name;
+                    while (name.Length < 20)
+                        name += ' ';
+                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.00;-0.00")))}");
+                }
+            }
+
             if (contexts.Any())
             {
                 for (var i = 0; i < Robot.Steps; i++)
@@ -51,11 +66,11 @@
                         maxIndex = i;
                 }
 
-                return combined.Angle(maxIndex);
+                return (combined, combined.Angle(maxIndex));
             }
             else
             {
-                return 0; // going east a lot ?
+                return (null, 0); // going east a lot ?
             }
         }
 

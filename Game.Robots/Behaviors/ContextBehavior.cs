@@ -1,15 +1,17 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Numerics;
 
 namespace Game.Robots.Behaviors
 {
-    public class ContextBehavior : IBehaviors
+    public class ContextBehavior : IBehavior
     {
         public virtual float BehaviorWeight { get; set; } = 1f;
         protected readonly ContextRobot Robot;
         public int LookAheadMS { get; set; } = 100;
         private long SleepUntil = 0;
-        private ContextRing LastRing = null;
+        public ContextRing LastRing = null;
         public int Cycle = 0;
+        public bool Plot { get; set; }
 
         public ContextBehavior(ContextRobot robot)
         {
@@ -20,6 +22,7 @@ namespace Game.Robots.Behaviors
         {
             if (this.Robot.GameTime > SleepUntil)
             {
+                //Console.WriteLine("Processing");
                 var ring = new ContextRing(steps);
                 this.PreSweep(ring);
 
@@ -53,7 +56,10 @@ namespace Game.Robots.Behaviors
                 return ring;
             }
             else
-                return LastRing;
+            {
+                //Console.WriteLine("Waiting");
+                return new ContextRing(LastRing);
+            }
         }
 
         protected void Sleep(int ms)
