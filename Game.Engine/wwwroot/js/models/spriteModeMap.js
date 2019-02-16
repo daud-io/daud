@@ -24,7 +24,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship0"
     },
@@ -36,7 +38,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship_cyan"
     },
@@ -47,7 +51,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship_green"
     },
@@ -58,7 +64,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship_orange"
     },
@@ -69,7 +77,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship_pink"
     },
@@ -80,7 +90,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship_red"
     },
@@ -91,7 +103,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship_yellow"
     },
@@ -103,7 +117,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship_secret"
     },
@@ -114,7 +130,9 @@ export const spriteModeMap = {
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],
             invulnerable: ["invulnerable"],
-            shield: ["shield"]
+            shield: ["shield"],
+			create: ["create"],
+			destroy: ["destroy"]
         },
         selector: "ship_zed"
     },

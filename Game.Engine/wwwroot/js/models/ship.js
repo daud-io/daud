@@ -20,6 +20,10 @@ export class Ship extends RenderedObject {
         if ((mode & 2) != 0) modes.push("invulnerable");
 
         if ((mode & 16) != 0) modes.push("shield");
+		
+		if ((mode & 32) != 0) modes.push("create");
+		
+		if ((mode & 64) != 0) modes.push("destroy");
 
         return modes;
     }

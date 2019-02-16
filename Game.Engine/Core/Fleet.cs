@@ -64,7 +64,9 @@
             invulnerable = 2,
             defense_upgrade = 4,
             offense_upgrade = 8,
-            shield = 16
+            shield = 16,
+			create = 32,
+			destroy = 64
         }
 
         public Sprites BulletSprite
