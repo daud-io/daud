@@ -11,6 +11,8 @@
 
         public string ConfigurationFileName { get; set; } = "config.json";
 
+        private long ReloadConfigAfter = 0;
+
         public ConfigurableContextBot()
         {
             InitializeConfiguration();
@@ -57,11 +59,18 @@
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
-            LoadConfig();
+            ReloadConfigAfter = GameTime + 500;
+            
         }
 
         protected async override Task AliveAsync()
         {
+            if (ReloadConfigAfter > 0 && ReloadConfigAfter < GameTime)
+            {
+                LoadConfig();
+                ReloadConfigAfter = 0;
+            }
+
             await base.AliveAsync();
         }
     }
