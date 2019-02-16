@@ -108,7 +108,7 @@
                     SeekerRange = 2100,
                     SeekerDelay = 250,
 
-                    SpawnLocationMode = "QuietSpot", // Corners, QuietSpot, Static
+                    SpawnLocationMode = "RankBased", // Corners, QuietSpot, Static, RankBased
                     SpawnLocation = Vector2.Zero,
 
                     PointsPerKillShip = 1,

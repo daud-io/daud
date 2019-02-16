@@ -325,7 +325,7 @@
             };
         }
 
-        public Vector2 RandomSpawnPosition(Fleet fleet = null)
+        public Vector2 RandomSpawnPosition(Fleet fleet = null, Player player = null)
         {
             if (FleetSpawnPositionGenerator != null)
                 return FleetSpawnPositionGenerator(fleet);
@@ -376,12 +376,97 @@
                     .OrderByDescending(location => location.Closest)
                     .First().Point;
 					
+				case "RankBased":
+					string MODE = "horizontal"; // horizontal, vertical
+					
+					/*
+					Leaderboard = new Leaderboard
+					{
+						Entries = Player.GetWorldPlayers(this)
+							.Where(p => p.IsAlive)
+							.Select(p => new Leaderboard.Entry
+							{
+								FleetID = p.Fleet?.ID ?? 0,
+								Name = p.Name,
+								Score = p.Score,
+								Color = p.Color,
+								Position = p.Fleet.FleetCenter,
+								Token = p.Token
+							})
+								.OrderByDescending(e => e.Score)
+								.Take(10)
+								.ToList(),
+						Type = "FFA",
+						Time = this.Time,
+						ArenaRecord = Leaderboard?.ArenaRecord
+							?? new Leaderboard.Entry()
+					};*/
+
+					//var firstPlace = Leaderboard.Entries.FirstOrDefault();
+					
+					if (MODE == "horizontal") {
+						return new Vector2
+						{
+							X = r.Next(-Hook.WorldSize, Hook.WorldSize),
+							Y = r.Next(-Hook.WorldSize, Hook.WorldSize)
+						};
+					} else if (MODE == "vertical") {
+						return new Vector2
+						{
+							X = r.Next(-Hook.WorldSize, Hook.WorldSize),
+							Y = r.Next(-Hook.WorldSize, Hook.WorldSize)
+						};
+					} else {
+						Console.WriteLine("FATAL ERROR: ScoreBased spawn system - unknown mode " + MODE);
+						return new Vector2{};
+					}
+					break;
+					
 				case "ScoreBased":
-					return new Vector2
-                    {
-                        X = x * Hook.WorldSize * 0.95f,
-                        Y = y * Hook.WorldSize * 0.95f
-                    };
+					MODE = "horizontal"; // horizontal, vertical
+					
+					Leaderboard = new Leaderboard
+					{
+						Entries = Player.GetWorldPlayers(this)
+							.Where(p => p.IsAlive)
+							.Select(p => new Leaderboard.Entry
+							{
+								FleetID = p.Fleet?.ID ?? 0,
+								Name = p.Name,
+								Score = p.Score,
+								Color = p.Color,
+								Position = p.Fleet.FleetCenter,
+								Token = p.Token
+							})
+								.OrderByDescending(e => e.Score)
+								.Take(10)
+								.ToList(),
+						Type = "FFA",
+						Time = this.Time,
+						ArenaRecord = Leaderboard?.ArenaRecord
+							?? new Leaderboard.Entry()
+					};
+
+					var firstPlace = Leaderboard.Entries.FirstOrDefault();
+					Console.WriteLine(firstPlace.Score);
+					
+					if (MODE == "horizontal") {
+						return new Vector2
+						{
+							X = r.Next(-Hook.WorldSize, Hook.WorldSize),
+							Y = r.Next(-Hook.WorldSize, Hook.WorldSize)
+						};
+					} else if (MODE == "vertical") {
+						return new Vector2
+						{
+							X = r.Next(-Hook.WorldSize, Hook.WorldSize),
+							Y = r.Next(-Hook.WorldSize, Hook.WorldSize)
+						};
+					} else {
+						Console.WriteLine("FATAL ERROR: ScoreBased spawn system - unknown mode " + MODE);
+						return new Vector2{};
+					}
+					break;
             }
         }
 
