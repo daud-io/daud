@@ -23,7 +23,7 @@
 
         protected IContextRingBlending ContextRingBlending { get; set; }
 
-        public int Steps { get; protected set; }
+        public int Steps { get; set; }
 
         public bool RingDebugEnabled { get; set; } = false;
 
