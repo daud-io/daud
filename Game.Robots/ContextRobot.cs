@@ -19,10 +19,13 @@
         public readonly SensorTeam SensorTeam;
         public readonly SensorFish SensorFish;
         public readonly SensorAbandoned SensorAbandoned;
+        private ContextRing BlendedRing = null;
 
         protected IContextRingBlending ContextRingBlending { get; set; }
 
         public int Steps { get; protected set; }
+
+        public bool RingDebugEnabled { get; set; } = false;
 
         public ContextRobot()
         {
@@ -47,14 +50,14 @@
 
             var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
             (var finalRing, var angle) = ContextRingBlending.Blend(contexts);
-            OnFinalRing(finalRing);
-
+            BlendedRing = finalRing;
             SteerAngle(angle);
         }
         
+        [Obsolete]
         protected virtual void OnFinalRing(ContextRing ring)
         {
-
+            
         }
 
         public void SetBehaviors(IEnumerable<BehaviorDescriptor> behaviors)
@@ -118,5 +121,60 @@
 
             Behave();
         }
+
+
+        class PlotTrace
+        {
+            public IEnumerable<float> r { get; set; }
+            public string name { get; set; }
+            public float opacity { get; set; } = 0.5f;
+            public string type { get; set; } = "barpolar";
+        }
+
+        protected void RingDebugExecute()
+        {
+            if (!RingDebugEnabled)
+                return;
+
+
+            var traces = new List<PlotTrace>();
+
+            traces.AddRange(this.Behaviors.Where(b => b.Plot).Select(b => new PlotTrace
+            {
+                r = b.LastRing?.Weights.Select(w => w * b.BehaviorWeight),
+                name = b.LastRing?.Name
+            }));
+
+            if (this.BlendedRing != null)
+                traces.Add(new PlotTrace
+                {
+                    r = this.BlendedRing.Weights,
+                    name = "blended"
+                });
+
+            this.CustomData = JsonConvert.SerializeObject(new
+            {
+                plotly = new
+                {
+                    data = traces,
+                    layout = new
+                    {
+                        paper_bgcolor = "rgba(0,0,0,0)",
+                        plot_bgcolor = "rgba(0,0,0,0)",
+                        hovermode = false,
+                        polar = new
+                        {
+                            bgcolor = "rgba(0,0,0,0)",
+                            angularaxis = new
+                            {
+                                rotation = 0,
+                                direction = "clockwise"
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
     }
 }
