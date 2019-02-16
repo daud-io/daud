@@ -120,6 +120,7 @@
             await this.OnSensors();
 
             Behave();
+            RingDebugExecute();
         }
 
 
