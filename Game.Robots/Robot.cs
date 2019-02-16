@@ -63,7 +63,7 @@
         public Task StartAsync(string server, string room)
             => StartAsync(new Connection(server, room));
 
-        public async Task StartAsync(Connection connection)
+        public virtual async Task StartAsync(Connection connection)
         {
             this.Connection = connection;
 
