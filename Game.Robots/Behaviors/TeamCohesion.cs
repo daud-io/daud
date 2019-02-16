@@ -22,19 +22,34 @@
             TargetPoint = null;
             if (LocalTeammates.Any())
             {
-                int count = 0;
+                float count = 0;
+                int n=0;
                 Vector2 accumulator = Vector2.Zero;
-                foreach (var fleet in LocalTeammates)
+                var BestTeammates=LocalTeammates.Select(f =>
                 {
+                    return new
+                    {
+                        Fleet = f,
+                        Distance = Vector2.Distance(this.Robot.Position, f.Center),
+                    };
+                })
+                .OrderBy(p => p.Distance).Select(f =>
+                f.Fleet);
+                foreach (var fleet in BestTeammates)
+                {
+                    if(n>4){
+                        break;
+                    }
                     var distance = Vector2.Distance(fleet.Center, this.Robot.Position);
                     if (distance <= MaximumRange && distance >= MinimumRange)
                     {
-                        accumulator += fleet.Center;
-                        count++;
+                        accumulator += (fleet.Center+(fleet.Momentum*(1.0f))*250.0f);
+                        count+=1.0f;
+                        n+=1;
                     }
                 }
                 if (accumulator != Vector2.Zero && count > 0)
-                    TargetPoint = accumulator / count;
+                    TargetPoint = accumulator / ((float)count)+(this.Robot.SensorFleets.MyFleet==null?Vector2.Zero:this.Robot.SensorFleets.MyFleet.Momentum*100.0f);
             }
         }
 
