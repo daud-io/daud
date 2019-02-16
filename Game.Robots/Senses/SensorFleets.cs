@@ -20,6 +20,11 @@
             this.AllVisibleFleets = new List<Fleet>(); ;
         }
 
+        public Fleet ByID(uint fleetID)
+        {
+            return AllVisibleFleets.FirstOrDefault(f => f.ID == fleetID);
+        }
+
         public void Sense()
         {
             var newFleets = Robot.Bodies
