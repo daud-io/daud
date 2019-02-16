@@ -23,34 +23,30 @@
             if (LocalTeammates.Any())
             {
                 int count = 0;
-                AverageAngle = 0;
+                var averageMomentum = Vector2.Zero;
 
                 foreach (var fleet in LocalTeammates)
                 {
                     var distance = Vector2.Distance(fleet.Center, this.Robot.Position);
+
                     if (distance >= MinimumRange && distance <= MaximumRange)
                     {
-                        if (fleet.Ships.Any())
-                        {
-                            AverageAngle +=
-                                RoboMath.CalculateDifferenceBetweenAngles(
-                                    fleet.Ships.Average(s => MathF.Atan2(s.Momentum.Y, s.Momentum.X)),
-                                    0
-                                );
-
-                            count++;
-                        }
+                        averageMomentum += fleet.Momentum;
+                        count++;
                     }
                 }
                 if (count > 0)
-                    AverageAngle /= count;
+                {
+                    averageMomentum /= count;
+                    AverageAngle = MathF.Atan2(averageMomentum.Y, averageMomentum.X);
+                }
             }
         }
 
         protected override float ScoreAngle(float angle, Vector2 position, Vector2 momentum)
         {
             if (Active && AverageAngle != null)
-                return 1 - (RoboMath.CalculateDifferenceBetweenAngles(AverageAngle.Value, angle) / MathF.PI);
+                return -Math.Abs(RoboMath.CalculateDifferenceBetweenAngles(AverageAngle.Value, angle));
 
             return 0;
         }
