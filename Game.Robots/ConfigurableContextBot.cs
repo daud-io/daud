@@ -1,5 +1,6 @@
 ﻿namespace Game.Robots
 {
+    using Game.API.Client;
     using Newtonsoft.Json;
     using System;
     using System.IO;
@@ -13,9 +14,10 @@
 
         private long ReloadConfigAfter = 0;
 
-        public ConfigurableContextBot()
+        public override Task StartAsync(Connection connection)
         {
             InitializeConfiguration();
+            return base.StartAsync(connection);
         }
 
         private void InitializeConfiguration()
