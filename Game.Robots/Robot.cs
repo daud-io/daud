@@ -35,7 +35,7 @@
         public Vector2 Position { get => this.Connection.Position; }
         public long GameTime { get => this.Connection.GameTime; }
         public ushort WorldSize { get => this.Connection.WorldSize; }
-        public uint FleetID { get => this.Connection.FleetID; }
+        public uint FleetID { get => this.Connection?.FleetID ?? 0; }
 
         protected virtual Task AliveAsync() => Task.FromResult(0);
         protected virtual Task DeadAsync() => Task.FromResult(0);
