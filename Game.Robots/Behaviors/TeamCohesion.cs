@@ -37,9 +37,6 @@
                 f.Fleet);
                 foreach (var fleet in BestTeammates.Take(MaxFleets))
                 {
-                    if(n>4){
-                        break;
-                    }
                     var distance = Vector2.Distance(fleet.Center, this.Robot.Position);
                     if (distance <= MaximumRange && distance >= MinimumRange)
                     {
