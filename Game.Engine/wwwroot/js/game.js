@@ -537,3 +537,18 @@ const query = parseQuery(window.location.search);
 if (query.spectate && query.spectate !== "0") {
     startSpectate(true);
 }
+
+
+// clicking enter in nick causes fleet spawn
+document.getElementById("nick").addEventListener("keyup", function(e) {
+	if (e.keyCode === 13) {
+		doSpawn();
+	}
+});
+
+// clicking enter in spectate mode causes fleet spawn
+document.body.addEventListener("keyup", function(e) {
+	if (document.body.classList.contains("spectating") && e.keyCode === 13) {
+		doSpawn();
+	}
+});
