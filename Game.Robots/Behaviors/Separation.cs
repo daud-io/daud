@@ -9,6 +9,7 @@
 
         public Separation(ContextRobot robot) : base(robot)
         {
+            Normalize = false;
         }
 
         protected override void PreSweep(ContextRing ring)
@@ -32,11 +33,6 @@
             }
 
             return accumulator;
-        }
-
-        protected override void PostSweep(ContextRing ring)
-        {
-            //ring.Normalize();
         }
     }
 }

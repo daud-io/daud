@@ -1,8 +1,7 @@
-﻿using System;
-using System.Numerics;
-
-namespace Game.Robots.Behaviors
+﻿namespace Game.Robots.Behaviors
 {
+    using System.Numerics;
+
     public class ContextBehavior : IBehavior
     {
         public virtual float BehaviorWeight { get; set; } = 1f;
@@ -12,6 +11,7 @@ namespace Game.Robots.Behaviors
         public ContextRing LastRing = null;
         public int Cycle = 0;
         public bool Plot { get; set; }
+        public bool Normalize { get; set; } = true;
 
         public ContextBehavior(ContextRobot robot)
         {
@@ -77,6 +77,8 @@ namespace Game.Robots.Behaviors
 
         protected virtual void PostSweep(ContextRing ring)
         {
+            if (Normalize)
+                ring.Normalize();
         }
 
         protected virtual float ScoreAngle(float angle, Vector2 position, Vector2 momentum) => 0f;

@@ -51,10 +51,5 @@
 
             return accumulator;
         }
-
-        protected override void PostSweep(ContextRing ring)
-        {
-            ring.Normalize();
-        }
     }
 }

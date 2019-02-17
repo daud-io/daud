@@ -23,10 +23,8 @@
 
             if (this.Robot.HookComputer.Hook.TeamMode)
             {
-
                 foreach (var entry in this.Robot.Leaderboard.Entries.Skip(2))
                 {
-
                     if (this.Robot.SensorTeam.IsSameTeam(entry.Color) 
                         && entry.FleetID != this.Robot.FleetID)
                     {
@@ -58,11 +56,6 @@
             }
 
             return 0;
-        }
-
-        protected override void PostSweep(ContextRing ring)
-        {
-            ring.Normalize();
         }
     }
 }

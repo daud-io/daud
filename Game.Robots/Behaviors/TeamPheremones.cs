@@ -46,10 +46,5 @@
             else
                 return 0;
         }
-
-        protected override void PostSweep(ContextRing ring)
-        {
-            ring.Normalize();
-        }
     }
 }

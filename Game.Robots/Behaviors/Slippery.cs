@@ -14,7 +14,7 @@
 
         public Slippery(ContextRobot robot): base(robot)
         {
-
+            Normalize = false;
         }
 
         protected override void PreSweep(ContextRing ring)

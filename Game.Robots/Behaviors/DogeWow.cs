@@ -106,10 +106,5 @@ namespace Game.Robots.Behaviors
 
             return accumulator;//-0.5f+1.0f/(1.0f+MathF.Exp(accumulator));
         }
-
-        protected override void PostSweep(ContextRing ring)
-        {
-            ring.Normalize();
-        }
     }
 }
