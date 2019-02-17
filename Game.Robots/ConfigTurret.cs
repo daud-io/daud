@@ -11,6 +11,7 @@
         public bool AttackFleets=true;
         public bool AttackFish=true;
         public bool AttackAbandoned=true;
+        public int BoostThreshold { get; set; } = 16;
 
         public ConfigTurret()
         {
@@ -33,7 +34,7 @@
                     ShootAt(target.Position);
             }
 
-            if (CanBoost && (this.SensorFleets.MyFleet?.Ships.Count ?? 0) > 16)
+            if (CanBoost && (this.SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold)
                 Boost();
 
         }
