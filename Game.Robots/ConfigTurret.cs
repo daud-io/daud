@@ -8,6 +8,9 @@
         private readonly FleetTargeting FleetTargeting;
         private readonly AbandonedTargeting AbandonedTargeting;
         private readonly FishTargeting FishTargeting;
+        public bool AttackFleets=true;
+        public bool AttackFish=true;
+        public bool AttackAbandoned=true;
 
         public ConfigTurret()
         {
@@ -22,9 +25,9 @@
 
             if (CanShoot)
             {
-                var target = FleetTargeting.ChooseTarget()
-                    ?? AbandonedTargeting.ChooseTarget()
-                    ?? FishTargeting.ChooseTarget();
+                var target = (AttackFleets?FleetTargeting.ChooseTarget():null)
+                    ?? (AttackAbandoned?AbandonedTargeting.ChooseTarget():null)
+                    ?? (AttackFish?FishTargeting.ChooseTarget():null);
 
                 if (target != null)
                     ShootAt(target.Position);
