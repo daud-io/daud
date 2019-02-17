@@ -142,12 +142,12 @@ a {
 
 #changelog {
     left: 0;
+	position: absolute;
+	top: calc(-100vh+10px);
     width: 500px;
     background-color: rgba(32, 32, 32, 0.85);
     padding: 0.5em;
     border-radius: 5px;
-    position: absolute;
-    bottom: 1vh;
     height: 1em;
     width: 7em;
     transition: height 0.5s, width 0.5s;
