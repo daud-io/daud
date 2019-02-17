@@ -959,6 +959,20 @@ progress::-webkit-progress-value {
     border-bottom-left-radius: 0;
 }
 
+
+#plotly {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    z-index: 0;
+    visibility: hidden;
+}
+
 #links {
 	position: absolute;
 	right: 0;

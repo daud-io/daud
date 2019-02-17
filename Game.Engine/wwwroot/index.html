@@ -55,34 +55,34 @@
             </div>
 
             <div id="spectatecontrols">
-				<div id="deathScreen">
-					<table>
-						<tr>
-							<td>High score:</td>
-							<td id="deathScreenScore">
-								<span style="color:red">ERROR</span>
-							</td>
-						</tr>
-						<tr>
-							<td>Game time:</td>
-							<td id="deathScreenGameTime">
-								<span style="color:red">ERROR</span>
-							</td>
-						</tr>
-						<tr>
-							<td>Kills:</td>
-							<td id="deathScreenKills">
-								<span style="color:red">ERROR</span>
-							</td>
-						</tr>
-						<tr>
-							<td>Max combo kill:</td>
-							<td id="deathScreenMaxKillStreak">
-								<span style="color:red">ERROR</span>
-							</td>
-						</tr>
-					</table>
-				</div>
+                <div id="deathScreen">
+                    <table>
+                        <tr>
+                            <td>High score:</td>
+                            <td id="deathScreenScore">
+                                <span style="color:red">ERROR</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Game time:</td>
+                            <td id="deathScreenGameTime">
+                                <span style="color:red">ERROR</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Kills:</td>
+                            <td id="deathScreenKills">
+                                <span style="color:red">ERROR</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Max combo kill:</td>
+                            <td id="deathScreenMaxKillStreak">
+                                <span style="color:red">ERROR</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
 
                 <input type="button" id="stop_spectating" class="button1" value="Menu" />
                 <input type="button" id="spawnSpectate" class="button1" value="Launch">
@@ -90,6 +90,9 @@
                 <div id="hintbox"></div>
 
             </div>
+
+            <div id="plotly"></div>
+            
             <table id="leaderboard" cellspacing="0"></table>
             <table id="leaderboard-left" cellspacing="0"></table>
             <table id="leaderboard-center" cellspacing="0"></table>
@@ -201,7 +204,7 @@
                     <table>
                         <tr>
                             <td>
-                                <h4>Display</h4> 
+                                <h4>Display</h4>
                                 <label for="settingsThemeSelector">Theme Selection</label>
                                 <select id="settingsThemeSelector" class="button1">
                                     <option value="">default</option>
@@ -228,7 +231,7 @@
                                     <option value="64">medium</option>
                                     <option value="72">big</option>
                                     <option value="96">woah</option>
-                                </select>                                
+                                </select>
                                 <br />
 
                                 <label for="settingsLog">Log Length</label>
@@ -241,11 +244,11 @@
                                     <option value="10">historian</option>
                                 </select>
                                 <br />
-            
-            
+
+
                             </td>
                             <td>
-                                <h4>Controls</h4> 
+                                <h4>Controls</h4>
 
                                 <label for="settingsMouseScale">Mouse Sensitivity</label>
                                 <select id="settingsMouseScale" class="button1">
@@ -253,9 +256,9 @@
                                     <option value="4">medium</option>
                                     <option value="10">straight-shooter</option>
                                 </select>
-            
+
                                 <br />
-            
+
                                 <label for="settingsBandwidth">Bandwidth</label>
                                 <select id="settingsBandwidth" class="button1">
                                     <option value="100">high</option>
@@ -370,16 +373,16 @@
                     </table>
 
                     <button id="settingsSave" class="button1">
-                            <i class="fas fa-save"></i> Save
-                        </button>   
+                        <i class="fas fa-save"></i> Save
+                    </button>
 
-                        <button id="settingsCancel" class="button1">
-                            <i class="fas fa-ban"></i> Cancel
-                        </button>   
+                    <button id="settingsCancel" class="button1">
+                        <i class="fas fa-ban"></i> Cancel
+                    </button>
                     <br>
                     <button id="settingsReset" class="button1">
                         <i class="fas fa-undo"></i> Reset Defaults
-                    </button>   
+                    </button>
                 </div>
             </div>
             <div class="social">
@@ -430,12 +433,11 @@
 
 
     <div id="theme-styles" style="display:none;"></div>
-    <img src="https://dezov.s3.amazonaws.com/media/crown-pngc7b-43cc-b490-18fccb3229df.png" id="minimapCrownImage" style="display:none" />
 
     <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/flatbuffers.js"></script>
     <script type="text/javascript" src="js/game_generated.js"></script>
-
+    
     <script type="text/javascript" src="js/game.js"></script>
 
 </body>

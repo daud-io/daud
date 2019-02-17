@@ -1,11 +1,15 @@
 ﻿namespace Game.Robots.Behaviors
 {
     using System.Numerics;
+    using System;
 
-    public class Separation: ContextBehavior
+    public class Separation : ContextBehavior
     {
+        public int ActiveRange { get; set; } = 10000;
+
         public Separation(ContextRobot robot) : base(robot)
         {
+            Normalize = false;
         }
 
         protected override void PreSweep(ContextRing ring)
@@ -21,17 +25,14 @@
             {
                 foreach (var other in Robot.SensorFleets.Others)
                 {
-                    var distSq = Vector2.DistanceSquared(other.Center, position);
-                    accumulator -= 1 / distSq;
+                    var dist = Vector2.Distance(other.Center + other.Momentum * LookAheadMS, position);
+                    if (dist < ActiveRange)
+                        accumulator -= Vector2.Dot(other.Center + other.Momentum * LookAheadMS-position,new Vector2(MathF.Cos(angle),MathF.Sin(angle)))/dist/dist/dist;
+
                 }
             }
 
             return accumulator;
-        }
-
-        protected override void PostSweep(ContextRing ring)
-        {
-            ring.Normalize();
         }
     }
 }

@@ -7,6 +7,7 @@
     {
         public StayInBounds(ContextRobot robot) : base(robot)
         {
+            Normalize = false;
         }
 
         protected override float ScoreAngle(float angle, Vector2 position, Vector2 momentum)
