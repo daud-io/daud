@@ -36,7 +36,7 @@
 
         protected override void PostSweep(ContextRing ring)
         {
-            ring.Normalize();
+            //ring.Normalize();
         }
     }
 }
