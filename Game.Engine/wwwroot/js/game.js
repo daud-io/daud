@@ -537,3 +537,34 @@ const query = parseQuery(window.location.search);
 if (query.spectate && query.spectate !== "0") {
     startSpectate(true);
 }
+
+
+// clicking enter in nick causes fleet spawn
+document.getElementById("nick").addEventListener("keyup", function(e) {
+	if (e.keyCode === 13) {
+		doSpawn();
+	}
+});
+
+// clicking enter in spectate mode causes fleet spawn
+document.body.addEventListener("keydown", function(e) {
+	if (document.body.classList.contains("spectating") && e.keyCode === 13) {
+		doSpawn();
+	}
+});
+
+// toggle worlds with W
+const worlds = document.getElementById("worlds");
+document.body.addEventListener("keydown", function(e) {
+	if (document.body.classList.contains("dead") && document.getElementById("nick") !== document.activeElement && e.keyCode === 87) {
+		if (worlds.classList.contains("closed")) {
+			worlds.classList.remove("closed");
+		} else {
+			worlds.classList.add("closed");
+		}
+	}
+});
+
+document.getElementById("wcancel").addEventListener("click", function() {
+	worlds.classList.add("closed");
+});
