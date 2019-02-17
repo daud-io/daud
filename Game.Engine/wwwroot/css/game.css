@@ -70,7 +70,7 @@ body {
     vertical-align: middle;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 50, 0.8);
+    background-color: rgba(0, 0, 0, 0.6);
     top: 0;
 }
 
@@ -95,8 +95,10 @@ body {
 }
 
 #logo {
-    height: 25vw;
+    height: 20vw;
     image-rendering: pixelated;
+	display: block;
+	margin: auto;
 }
 
 #hintbox {
@@ -309,8 +311,8 @@ a {
 }
 
 #shipSelectorSwitch .circle {
-    max-width: 6vh;
-    max-height: 6vh;
+    max-width: 8vh;
+    max-height: 8vh;
     margin: 0 5px 0 5px;
     cursor: pointer;
     border-radius: 0%;
@@ -976,7 +978,7 @@ progress::-webkit-progress-value {
 #links {
 	position: absolute;
 	right: 0;
-	top: 60%;
+	top: 50%;
 	transform: translateY(-50%);
 	z-index: 10;
 }
