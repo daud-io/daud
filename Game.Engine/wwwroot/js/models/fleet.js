@@ -7,21 +7,35 @@ export class Fleet {
         this.caption = false;
         this.ships = [];
         this.ID = false;
-
+		
         this.text = new PIXI.Text("", { fontFamily: [Settings.font, "NotoColorEmoji"], fontSize: Settings.nameSize, fill: 0xffffff });
-        this.textChat = new PIXI.Text("", { fontFamily: "FontAwesome", fontSize: Settings.nameSize, fill: 0xffffff });
+        this.textChat = new PIXI.Text("", { fontFamily: "Calibri", fontSize: "100px", fill: 0xffffff });
+		this.textChatBackground = PIXI.Sprite.fromImage("../../short-txt-chat-bg.4635942a.png"); // ../../img/short-txt-chat-bg.png.png
+		this.textChat.zIndex = 1;
+		
         this.chat = false;
         this.plotly = false;
+		
         this.text.anchor.set(0.5, 0.5);
         this.textChat.anchor.set(0.5, 0.5);
+		this.textChatBackground.anchor.set(0.5, 0.5);
+		
         this.text.position.x = 0;
         this.text.position.y = 0;
         this.textChat.position.x = 0;
         this.textChat.position.y = 0;
+		this.textChatBackground.position.x = 0;
+        this.textChatBackground.position.y = 0;
+		
+		this.textChatBackground.alpha = 0.0;
+		
         this.text.parentGroup = this.container.bodyGroup;
         this.textChat.parentGroup = this.container.bodyGroup;
+		this.textChatBackground.parentGroup = this.container.bodyGroup;
+		
         this.container.addChild(this.text);
         this.container.addChild(this.textChat);
+		this.container.addChild(this.textChatBackground);
     }
 
     addShip(ship) {
@@ -85,8 +99,12 @@ export class Fleet {
 
                 //this.chat = "\uf165 testing";
 
-                if (this.chat) this.textChat.text = this.chat;
-                else this.textChat.text = "";
+                if (this.chat) {
+					this.textChat.text = this.chat;
+					this.textChatBackground.alpha = 1.0;
+				} else {
+					this.textChat.text = "";
+				}
 
                 //this.text.text += " " + this.ships.length;
                 let accX = 0,
@@ -105,10 +123,13 @@ export class Fleet {
                 this.text.position.y = accY / count + offsetY;
                 this.textChat.position.x = accX / count;
                 this.textChat.position.y = accY / count + offsetY - 200;
+				this.textChatBackground.position.x = accX / count;
+                this.textChatBackground.position.y = accY / count + offsetY - 200;
             }
         } else {
             this.text.visible = false;
             this.textChat.visible = false;
+			this.textChatBackground.alpha = 0.0;
         }
 
 
@@ -121,6 +142,7 @@ export class Fleet {
     destroy() {
         this.container.removeChild(this.text);
         this.container.removeChild(this.textChat);
+		this.container.removeChild(this.textChatBackground);
         if (this.usingPlotly)
         {
             this.container.plotly.used = false;

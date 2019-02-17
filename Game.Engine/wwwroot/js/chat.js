@@ -3,7 +3,7 @@ export var message = {
     time: Date.now()
 };
 var chat = document.getElementById("chat");
-var messages = ["✅", "❌", "⁉️", "👋", "☠️", "👑", "👈", "👉", "👆", "👇"];
+var messages = ["hi", "bye", "gg", "lol", "team?", "duel?", "yes!", "no!", "die!", "easy!"];
 for (var i in messages) {
     chat.innerHTML += `<tr><td>${i < 9 ? 1 + ~~i : 0}</td><td>${messages[i]}</td></tr>`;
 }
