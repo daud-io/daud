@@ -8,11 +8,11 @@
 
     public class ConfigurableContextBot : ContextRobot
     {
-        private FileSystemWatcher Watcher;
+        protected FileSystemWatcher Watcher;
 
         public string ConfigurationFileName { get; set; } = "config.json";
 
-        private long ReloadConfigAfter = 0;
+        protected long ReloadConfigAfter = 0;
 
         public override Task StartAsync(Connection connection)
         {
@@ -42,7 +42,7 @@
             LoadConfig();
         }
 
-        private void LoadConfig()
+        protected void LoadConfig()
         {
             try
             {

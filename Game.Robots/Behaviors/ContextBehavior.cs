@@ -38,8 +38,17 @@
                             ring.Angle(i),
                             LookAheadMS
                         );
+                        var momentumBoost = momentum/momentum.Length()*Robot.HookComputer.Hook.BoostThrust;
+                        var positionBoost = RoboMath.ShipThrustProjection(Robot.HookComputer,
+                            position,
+                            ref momentumBoost,
+                            Robot.SensorFleets.MyFleet.Ships.Count,
+                            ring.Angle(i),
+                            Robot.HookComputer.Hook.BoostDuration
+                        );
 
                         ring.Weights[i] = ScoreAngle(ring.Angle(i), position, momentum);
+                        ring.WeightsBoost[i] = ScoreAngle(ring.Angle(i), positionBoost, momentumBoost);
                     }
                 }
 

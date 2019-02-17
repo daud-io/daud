@@ -49,7 +49,7 @@
         {
 
             var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
-            (var finalRing, var angle) = ContextRingBlending.Blend(contexts);
+            (var finalRing, var angle,var boost) = ContextRingBlending.Blend(contexts,false);
             BlendedRing = finalRing;
             SteerAngle(angle);
         }
