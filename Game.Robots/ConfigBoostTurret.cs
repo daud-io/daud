@@ -18,7 +18,7 @@
         public bool AttackFleets=true;
         public bool AttackFish=true;
         public bool AttackAbandoned=true;
-        public int BoostThreshold { get; set; } = 1;
+        public int BoostThreshold { get; set; } = 2;
 
         public ConfigBoostTurret()
         {
