@@ -70,7 +70,7 @@ body {
     vertical-align: middle;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 50, 0.8);
+    background-color: rgba(0, 0, 45, 0.57);
     top: 0;
 }
 
@@ -81,7 +81,8 @@ body {
 #deathScreen table {
     margin-left: auto;
     margin-right: auto;
-    width: 30vw;
+    width: 15vw;
+	min-width: 200px;
 }
 
 @keyframes fadein {
@@ -95,8 +96,10 @@ body {
 }
 
 #logo {
-    height: 25vw;
+    height: 20vw;
     image-rendering: pixelated;
+	display: block;
+	margin: auto;
 }
 
 #hintbox {
@@ -140,12 +143,13 @@ a {
 
 #changelog {
     left: 0;
+	position: absolute;
+	/*top: calc(-100vh+10px);*/
+	bottom: 50px;
     width: 500px;
     background-color: rgba(32, 32, 32, 0.85);
     padding: 0.5em;
     border-radius: 5px;
-    position: absolute;
-    bottom: 1vh;
     height: 1em;
     width: 7em;
     transition: height 0.5s, width 0.5s;
@@ -309,8 +313,8 @@ a {
 }
 
 #shipSelectorSwitch .circle {
-    max-width: 6vh;
-    max-height: 6vh;
+    max-width: 8vh;
+    max-height: 8vh;
     margin: 0 5px 0 5px;
     cursor: pointer;
     border-radius: 0%;
@@ -976,7 +980,7 @@ progress::-webkit-progress-value {
 #links {
 	position: absolute;
 	right: 0;
-	top: 60%;
+	top: 50%;
 	transform: translateY(-50%);
 	z-index: 10;
 }
