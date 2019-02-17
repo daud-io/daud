@@ -9,6 +9,7 @@
 
         public int MaximumRange { get; set; } = int.MaxValue;
         public int MinimumRange { get; set; } = 0;
+        public int MaxFleets { get; set; } = 5;
 
         public TeamCohesion(ContextRobot robot) : base(robot)
         {
@@ -16,7 +17,6 @@
 
         protected override void PreSweep(ContextRing ring)
         {
-
             base.PreSweep(ring);
 
             TargetPoint = null;
@@ -35,11 +35,8 @@
                 })
                 .OrderBy(p => p.Distance).Select(f =>
                 f.Fleet);
-                foreach (var fleet in BestTeammates)
+                foreach (var fleet in BestTeammates.Take(MaxFleets))
                 {
-                    if(n>4){
-                        break;
-                    }
                     var distance = Vector2.Distance(fleet.Center, this.Robot.Position);
                     if (distance <= MaximumRange && distance >= MinimumRange)
                     {
@@ -49,7 +46,7 @@
                     }
                 }
                 if (accumulator != Vector2.Zero && count > 0)
-                    TargetPoint = accumulator / ((float)count)+(this.Robot.SensorFleets.MyFleet==null?Vector2.Zero:this.Robot.SensorFleets.MyFleet.Momentum*150.0f);
+                    TargetPoint = accumulator / ((float)count)+(this.Robot.SensorFleets.MyFleet==null?Vector2.Zero:this.Robot.SensorFleets.MyFleet.Momentum*LookAheadMS);
             }
         }
 
@@ -59,12 +56,6 @@
                 return ScoreAngleByTargetPoint(TargetPoint.Value, angle, position, momentum);
             else
                 return 0;
-        }
-
-
-        protected override void PostSweep(ContextRing ring)
-        {
-            ring.Normalize();
         }
     }
 }
