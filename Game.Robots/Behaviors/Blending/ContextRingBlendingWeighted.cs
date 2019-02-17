@@ -1,6 +1,5 @@
 ﻿namespace Game.Robots.Behaviors.Blending
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -9,6 +8,7 @@
         private readonly ContextRobot Robot;
         public int BlurSteps { get; set; } = 10;
         public float BlurAmount { get; set; } = 0.05f;
+        public int BlurResolutionMultiplier { get; set; } = 1;
 
         public ContextRingBlendingWeighted(ContextRobot robot)
         {
@@ -17,50 +17,24 @@
 
         public (ContextRing, float) Blend(IEnumerable<ContextRing> contexts)
         {
-            var combined = new ContextRing(Robot.Steps);
+            var finalSteps = Robot.Steps * BlurResolutionMultiplier;
+            var combined = new ContextRing(finalSteps);
 
-
-            if (false)
-            lock (typeof(ContextRingBlendingWeighted))
-            {
-                Console.SetCursorPosition(0, 0);
-                Console.WriteLine("RingDump");
-                foreach (var context in contexts)
-                {
-                    var name = context.Name;
-                    while (name.Length < 20)
-                        name += ' ';
-                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.00;-0.00")))}");
-                }
-            }
-
-
-            // blur
-            foreach (var context in contexts)
-                BlurRing(context);
-
-            if (false)
-            lock (typeof(ContextRingBlendingWeighted))
-            {
-//                Console.SetCursorPosition(0, 0);
-                Console.WriteLine("RingDump post blur");
-                foreach (var context in contexts)
-                {
-                    var name = context.Name;
-                    while (name.Length < 20)
-                        name += ' ';
-                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.00;-0.00")))}");
-                }
-            }
+            if (BlurResolutionMultiplier > 1)
+                contexts = contexts.Select(c => c.ResolutionMultiply(BlurResolutionMultiplier)).ToList();
 
             if (contexts.Any())
             {
-                for (var i = 0; i < Robot.Steps; i++)
+                // blur
+                foreach (var context in contexts)
+                    BlurRing(context);
+
+                for (var i = 0; i < finalSteps; i++)
                     combined.Weights[i] = contexts.Sum(c => c.Weights[i] * c.RingWeight);
 
                 var maxIndex = 0;
 
-                for (var i = 0; i < Robot.Steps; i++)
+                for (var i = 0; i < finalSteps; i++)
                 {
                     if (combined.Weights[i] > combined.Weights[maxIndex])
                         maxIndex = i;

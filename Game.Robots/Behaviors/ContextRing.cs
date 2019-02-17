@@ -6,7 +6,7 @@
     public class ContextRing
     {
         public readonly float[] Weights;
-        private readonly float StepSize;
+        public float StepSize;
         public float RingWeight { get; set; } = 1f;
         public string Name { get; set; }
 
@@ -36,6 +36,24 @@
                 for (var i = 0; i < Weights.Length; i++)
                     Weights[i] = (Weights[i] - min) * factor;
             }
+        }
+
+        public ContextRing ResolutionMultiply(int multiplier)
+        {
+            var ring = new ContextRing(this.Weights.Length * multiplier)
+            {
+                RingWeight = this.RingWeight,
+                Name = this.Name,
+                StepSize = this.StepSize / multiplier
+            };
+
+            for (var i = 0; i < Weights.Length; i++)
+            {
+                for (var j = 0; j < multiplier; j++)
+                    ring.Weights[i * multiplier + j] = this.Weights[i];
+            }
+
+            return ring;
         }
     }
 }
