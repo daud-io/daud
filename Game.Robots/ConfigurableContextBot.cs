@@ -51,6 +51,10 @@
 
                 SetBehaviors(config.Behaviors);
                 JsonConvert.PopulateObject(text, this);
+
+
+                JsonConvert.PopulateObject(JsonConvert.SerializeObject(config.BlendingConfig), ContextRingBlending);
+
             }
             catch (IOException) { }
             catch (Exception e)
