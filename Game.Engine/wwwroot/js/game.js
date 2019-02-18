@@ -72,7 +72,7 @@ let aimTarget = { X: 0, Y: 0 };
 let d = 500; // for steering with arrows
 
 let keyboardSteering = false;
-let keyboardSteeringSpeed = 0.08;
+let keyboardSteeringSpeed = 0.075;
 
 let cache = new Cache(container);
 let view = false;
