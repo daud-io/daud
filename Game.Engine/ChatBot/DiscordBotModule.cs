@@ -1,5 +1,6 @@
 namespace Game.Engine.ChatBot
 {
+    using Docker.DotNet;
     using Discord;
     using Discord.Commands;
     using Discord.Rest;
@@ -8,17 +9,26 @@ namespace Game.Engine.ChatBot
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Docker.DotNet.Models;
+    using Game.Engine.Hosting;
 
     // Modules must be public and inherit from an IModuleBase
     public class DiscordBotModule : ModuleBase<SocketCommandContext>
     {
+
         private static Dictionary<string, RestSelfUser> TokenUserMap = new Dictionary<string, RestSelfUser>();
         private static Dictionary<ulong, RestSelfUser> IDUserMap = new Dictionary<ulong, RestSelfUser>();
+        private readonly GameConfiguration GameConfiguration;
+
+        public DiscordBotModule(GameConfiguration gameConfiguration)
+        {
+            GameConfiguration = gameConfiguration;
+        }
 
         [Command("ping")]
         [Alias("pong", "hello")]
         public Task PingAsync()
-            => ReplyAsync("pong!");
+            => ReplyAsync("stop it!");
 
         // Get info on a user, or the user who invoked the command if one is not specified
         [Command("userinfo")]
@@ -36,6 +46,19 @@ namespace Game.Engine.ChatBot
             Program.Abort();
             await ReplyAsync("woah... room spinning. so... cold...");
         }
+
+        [Command("deploy"), RequireUserPermission(GuildPermission.ManageChannels)]
+        public async Task DeployAsync(string url, string tag)
+        {
+            if (url == GameConfiguration.PublicURL || url == "*")
+            {
+                await DockerUpgrade.UpgradeAsync(GameConfiguration, tag, async (message) =>
+                {
+                    await ReplyAsync(message);
+                });
+            }
+        }
+
 
         [Command("worlds")]
         public async Task WorldsAsync()

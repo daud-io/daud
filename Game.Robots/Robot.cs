@@ -13,8 +13,8 @@
 
         public string Target { get; set; } = "";
         public string Name { get; set; } = "Robot";
-        public string Sprite { get; set; } = "ship0";
-        public string Color { get; set; } = "ship0";
+        public string Sprite { get; set; } = "ship_cyan";
+        public string Color { get; set; } = "cyan";
 
         private bool IsAlive = false;
         public bool AutoSpawn { get; set; } = true;
@@ -35,7 +35,7 @@
         public Vector2 Position { get => this.Connection.Position; }
         public long GameTime { get => this.Connection.GameTime; }
         public ushort WorldSize { get => this.Connection.WorldSize; }
-        public uint FleetID { get => this.Connection.FleetID; }
+        public uint FleetID { get => this.Connection?.FleetID ?? 0; }
 
         protected virtual Task AliveAsync() => Task.FromResult(0);
         protected virtual Task DeadAsync() => Task.FromResult(0);
@@ -60,9 +60,16 @@
             this.HookComputer = new HookComputer();
         }
 
-        public async Task Start(Connection connection)
+        public Task StartAsync(string server, string room)
+            => StartAsync(new Connection(server, room));
+
+        public virtual async Task StartAsync(Connection connection)
         {
             this.Connection = connection;
+
+            if (!this.Connection.IsConnected)
+                await this.Connection.ConnectAsync();
+
             this.Connection.OnView = OnView;
             this.Connection.OnLeaderboard = OnLeaderboard;
             await this.Connection.ListenAsync();
@@ -73,7 +80,7 @@
             await this.OnNewLeaderboardAsync();
         }
 
-        private async Task OnView()
+        protected virtual async Task OnView()
         {
             this.HookComputer.Hook = Connection.Hook;
 
@@ -156,12 +163,15 @@
             await DeadAsync();
 
             if (AutoSpawn)
-            {
                 if (DeathTime + RESPAWN_FALLOFF < GameTime)
                 {
-                    await Connection.SpawnAsync(Name, Sprite, Color);
+                    await SpawnAsync();
                 }
-            }
+        }
+
+        protected async Task SpawnAsync()
+        {
+            await Connection.SpawnAsync("🤖"+Name, Sprite, Color);
         }
 
         public void ShootAt(Vector2 target)

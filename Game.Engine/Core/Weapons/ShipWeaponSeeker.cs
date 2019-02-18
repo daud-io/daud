@@ -26,7 +26,7 @@ namespace Game.Engine.Core.Weapons
             Ship target = null;
             if (World.Time > TimeBirth + World.Hook.SeekerDelay)
             {
-                var targets = World.BodiesNear(this.Position, World.Hook.SeekerRange, offsetSize: true);
+                var targets = World.BodiesNear(this.Position, World.Hook.SeekerRange);
 
                 target = targets
                     .OfType<Ship>()

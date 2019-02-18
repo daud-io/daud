@@ -4,12 +4,13 @@
     using System;
     using System.Numerics;
 
-    public abstract class PickupBase : ActorBody, ICollide
+    public abstract class PickupBase : ActorBody
     {
         public PickupBase()
         {
             Size = 100;
             Sprite = Sprites.seeker_pickup;
+            CausesCollisions = true;
         }
 
         public override void Init(World world)
@@ -33,10 +34,10 @@
 
         protected abstract void EquipFleet(Fleet fleet);
 
-        public void CollisionExecute(Body projectedBody)
+        protected override void Collided(ICollide otherObject)
         {
-            var ship = projectedBody as Ship;
-            var fleet = ship.Fleet;
+            var ship = otherObject as Ship;
+            var fleet = ship?.Fleet;
 
             if (fleet != null)
             {
@@ -44,19 +45,8 @@
 
                 Randomize();
             }
-        }
 
-        public bool IsCollision(Body projectedBody)
-        {
-            if (projectedBody is Ship ship)
-            {
-                if (ship.Abandoned)
-                    return false;
-
-                return Vector2.Distance(projectedBody.Position, this.Position)
-                    < (projectedBody.Size + this.Size);
-            }
-            return false;
+            base.Collided(otherObject);
         }
 
         public override void Think()

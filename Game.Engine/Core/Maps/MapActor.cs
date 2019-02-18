@@ -3,13 +3,37 @@
     using Game.API.Common;
     using Game.API.Common.Models;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Numerics;
 
     public class MapActor : IActor
     {
         private World World = null;
         private WorldMap Map { get; set; } = null;
 
-        private IEnumerable<MapTileModel> NewTileSet = null;
+        private MapModel NewMapModel = null;
+
+        public void Think()
+        {
+            if (Map != null)
+            {
+                foreach (var ship in AllShips().ToList())
+                {
+                    var tile = Map.TileFromPosition(ship.Position);
+                    if (tile != null)
+                        tile.InteractWithShip(ship);
+                }
+            }
+        }
+
+        private IEnumerable<Ship> AllShips()
+        {
+            return Player.GetWorldPlayers(World)
+                .Where(p => p.IsAlive)
+                .Where(p => p.Fleet != null)
+                .Where(p => p.Fleet.Ships.Any())
+                .SelectMany(p => p.Fleet.Ships);
+        }
 
         void IActor.CreateDestroy()
         {
@@ -25,9 +49,9 @@
                 Map = null;
             }
 
-            if (NewTileSet != null && Map != null)
+            if (NewMapModel != null && Map != null)
             {
-                LoadTiles(NewTileSet);
+                LoadTiles(NewMapModel);
             }
         }
 
@@ -46,32 +70,51 @@
             World.Actors.Add(this);
         }
 
-        public void SetTiles(IEnumerable<MapTileModel> tiles)
+        public void SetMap(MapModel map)
         {
-            this.NewTileSet = tiles;
+            this.NewMapModel = map;
         }
 
-        private void LoadTiles(IEnumerable<MapTileModel> tiles)
+        private void LoadTiles(MapModel mapModel)
         {
             if (Map != null)
             {
                 Map.DestroyTiles();
-                foreach (var tile in tiles)
-                    Map.AddTile(new Tile
+                Map.Size = mapModel.TileSize;
+                Map.Columns = mapModel.Columns;
+                Map.Rows = mapModel.Rows;
+
+                Map.Offset = new Vector2(-mapModel.TileSize * mapModel.Columns / 2f, -mapModel.TileSize * mapModel.Rows / 2f);
+                var halfTile = new Vector2(mapModel.TileSize / 2, mapModel.TileSize / 2);
+                if (mapModel.Tiles != null)
+                {
+                    foreach (var tile in mapModel.Tiles)
                     {
-                        Sprite = (Sprites)(ushort)(1000 + tile.TileGridID),
-                        Position = tile.Position,
-                        Size = tile.Size,
-                        IsDeadly = (tile.Type == "deadly"),
-                        IsObstacle = (tile.Type == "obstacle"),
-                    });
+                        if (tile.TileGridID != -1)
+                        {
+                            TileBase tileObject;
+                            if (tile.Type == "turret")
+                                tileObject = new TileTurret();
+                            else
+                                tileObject = new TileBase();
 
-                NewTileSet = null;
+                            tileObject.Sprite = (Sprites)(ushort)(1000 + tile.TileGridID);
+                            tileObject.Position =
+                                new Vector2(tile.Column * mapModel.TileSize, tile.Row * mapModel.TileSize) // top left
+                                + halfTile // center
+                                + Map.Offset; // offset map
+                            tileObject.Size = mapModel.TileSize / 2;
+                            tileObject.Drag = tile.Drag;
+
+                            Map.AddTile(tileObject);
+                        }
+                        else
+                            Map.AddTile(null);
+                    }
+                }
+
+                NewMapModel = null;
             }
-        }
-
-        public void Think()
-        {
         }
     }
 }

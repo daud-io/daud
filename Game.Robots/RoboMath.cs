@@ -15,28 +15,48 @@
         }
 
         public static Vector2 ShipThrustProjection(
-            HookComputer hook,
+            HookComputer hookComputer,
             Vector2 position, 
-            Vector2 momentum,
+            ref Vector2 momentum,
             int fleetSize,
             float angle,
             long ms
         )
         {
-            var thrustAmount = hook.ShipThrust(fleetSize);
-            var stepSize = hook.StepSize;
+            var thrustAmount = hookComputer.ShipThrust(fleetSize);
+            var stepSize = hookComputer.Hook.StepTime;
             
             for (var time=0; time <= ms; time += stepSize)
             {
                 var thrust = new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * thrustAmount;
-                momentum = (momentum + thrust) * hook.Drag;
+                momentum = (momentum + thrust) * hookComputer.Hook.Drag;
                 position += momentum * stepSize;
             }
 
             return position;
         }
 
-        public static Vector2 FiringIntercept(HookComputer hook, Vector2 fromPosition, Vector2 targetPosition, Vector2 targetMomentum, int fleetSize)
+        public static Vector2 FiringIntercept(
+            HookComputer hook,
+            Vector2 fromPosition,
+            Vector2 targetPosition,
+            Vector2 targetMomentum,
+            int fleetSize
+        )
+        {
+            int timeToImpact = 0;
+            return FiringIntercept(hook, fromPosition, targetPosition, targetMomentum, fleetSize, out timeToImpact);
+        }
+
+
+        public static Vector2 FiringIntercept(
+            HookComputer hook, 
+            Vector2 fromPosition, 
+            Vector2 targetPosition, 
+            Vector2 targetMomentum, 
+            int fleetSize,
+            out int timeToImpact
+        )
         {
             var toTarget = targetPosition - fromPosition;
 
@@ -61,9 +81,25 @@
             var aimSpot = targetPosition + targetMomentum  * t;
 
             var bulletPath = aimSpot - fromPosition;
-            var timeToImpact = bulletPath.Length() / bulletSpeed;//speed must be in units per second            
+            timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            
+
+            if (timeToImpact > hook.Hook.BulletLife)
+                timeToImpact = int.MaxValue;
 
             return aimSpot;
+        }
+        public static Vector2 ProjectClosest(HookComputer hook,Vector2 fromPosition, Vector2 targetPosition, float maxTime,int fleetSize)
+        {
+            var boostSpeed=hook.ShipThrust(1)*4;
+             var bulletSpeed = hook.ShotThrust(fleetSize) * 10;
+            var path=targetPosition-fromPosition;
+            var pLen=path.Length();
+            var maxD=bulletSpeed*maxTime+boostSpeed*1000.0f;
+            // if(maxD>pLen){
+            //     Console.Write("Switch");
+            // }
+            return fromPosition+path*(1.0f/pLen)*MathF.Min(pLen-10.0f,maxD);
+            
         }
     }
 }

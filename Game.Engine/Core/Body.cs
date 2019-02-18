@@ -9,8 +9,10 @@
     {
         public long ProjectedTime { get; set; }
         private Vector2 _position { get; set; } = new Vector2(0, 0);
+        protected long MaximumCleanTime = 2000;
 
         public Envelope Envelope;
+        private bool ProjectedOnce = false;
 
         public uint ID { get; set; }
         public uint DefinitionTime { get; set; }
@@ -19,6 +21,13 @@
         public bool Exists { get; set; }
         public bool IsDirty { get; set; } = true;
 
+        public bool Indexed { get; set; } = false;
+        public bool Removed { get; set; } = false;
+        public bool Updated { get; set; } = false;
+
+        public Vector2 IndexedPosition { get; set; }
+
+        public bool IsStatic { get; set; } = false;
 
         private int _size { get; set; }
         public virtual int Size
@@ -176,25 +185,37 @@
 
         public void Project(uint time)
         {
-            ProjectedTime = time;
-            if (DefinitionTime == 0)
-                DefinitionTime = time;
+            if (IsStatic)
+            {
+                if (!ProjectedOnce)
+                {
+                    _position = _originalPosition;
+                    _angle = _originalAngle;
+                    Envelope = new Envelope(_position.X - Size, _position.Y - Size, _position.X + Size, _position.Y + Size);
+                    ProjectedOnce = true;
+                }
+            }
+            else
+            {
+                ProjectedTime = time;
+                if (DefinitionTime == 0)
+                    DefinitionTime = time;
 
-            var timeDelta = (time - this.DefinitionTime);
+                var timeDelta = (time - this.DefinitionTime);
 
-            _position = Vector2.Add(OriginalPosition, Vector2.Multiply(Momentum, timeDelta));
+                _position = Vector2.Add(OriginalPosition, Vector2.Multiply(Momentum, timeDelta));
 
-            _angle = OriginalAngle + timeDelta * AngularVelocity;
+                _angle = OriginalAngle + timeDelta * AngularVelocity;
 
-            if (time - this.DefinitionTime > 1000)
-                this.IsDirty = true;
-
-            Envelope = new Envelope(_position.X - Size, _position.Y - Size, _position.X + Size, _position.Y + Size);
+                if (time - this.DefinitionTime > MaximumCleanTime)
+                    this.IsDirty = true;
+            }
         }
 
         public Body Clone()
         {
             return this.MemberwiseClone() as Body;
         }
+
     }
 }

@@ -19,9 +19,11 @@ node.js and npm need to be installed
 ### Running from the command line
 
 1. `git clone https://github.com/daud-io/daud.git`
-2. `cd daud/Game.Engine`
-3. `npm install --prefix wwwroot`
-4. `dotnet run` or `dotnet run -c Release`
+2. `cd daud/Game.Engine/wwwroot`
+3. `npm install`
+4. `npm run build`
+5. `cd ..`
+6. `dotnet run` or `dotnet run -c Release`
 
 ### Publishing to Heroku
 1. Set up an account on Heroku and on Docker Hub

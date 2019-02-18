@@ -14,7 +14,7 @@ export function clear() {
     leaderboardCenter.style.height = null;
 }
 
-function escapeHtml(str) {
+export function escapeHtml(str) {
     const div = document.createElement("div");
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
@@ -32,6 +32,19 @@ function getOut(entry, position) {
 }
 export class Leaderboard {
     update(data, position) {
+        if (Settings.leaderboardEnabled) {
+            record.style.visibility = "visible";
+            leaderboard.style.visibility = "visible";
+            leaderboardLeft.style.visibility = "visible";
+            leaderboardCenter.style.visibility = "visible";
+        } else {
+            record.style.visibility = "hidden";
+            leaderboard.style.visibility = "hidden";
+            leaderboardLeft.style.visibility = "hidden";
+            leaderboardCenter.style.visibility = "hidden";
+            return;
+        }
+
         if (data.Record) {
             record.style.fontFamily = Settings.font;
             record.innerHTML = `record: ${escapeHtml(data.Record.Name) || "Unknown Fleet"} - ${data.Record.Score}`;

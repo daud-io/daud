@@ -23,10 +23,16 @@
 */
 
 export const textureMap = {
-    bg: { file: "bg", scale: 1 },
+    bg: { file: "bg", scale: 4 },
+    bg2: { file: "bg2", scale: 5 },
+    bg3: { file: "bg2", scale: 6 },
+    bg4: { file: "bg2", scale: 7 },
+    bg5: { file: "bg2", scale: 8 },
+    bg6: { file: "bg2", scale: 9 },
+    bg7: { file: "bg2", scale: 10 },
 
     // fish
-    fish: { file: "ship0", scale: 0.01 },
+    fish: { file: "fish", scale: 0.03 },
 
     // daudelins
     ship0: { file: "ship0", scale: 0.02 },
@@ -45,7 +51,7 @@ export const textureMap = {
 
     // premium ships
     ship_secret: { file: "ship_secret", scale: 0.02 },
-    ship_zed: { file: "ship_zed", scale: 0.02 },
+    ship_zed: { file: "ship_base", scale: 0.0025 },
 
     bullet: { file: "bullet", scale: 0.03 },
     bullet_cyan: { file: "bullet_cyan", scale: 0.03 },
@@ -238,7 +244,7 @@ export const textureMap = {
         imageHeight: 416,
         scale: 0.0655
     },
-    map: {
+    map_wilds: {
         file: "buch-outdoor",
         map: true,
         tileHeight: 16,
@@ -246,6 +252,18 @@ export const textureMap = {
         tileCount: 288,
         imageWidth: 384,
         imageHeight: 192,
+        scale: 0.0655,
+        tileSpaceHeight: 400,
+        tileSpaceWidth: 400
+    },
+    map: {
+        file: "spritesheet",
+        map: true,
+        tileHeight: 64,
+        tileWidth: 64,
+        tileCount: 81,
+        imageWidth: 1024,
+        imageHeight: 1024,
         scale: 0.0655,
         tileSpaceHeight: 400,
         tileSpaceWidth: 400

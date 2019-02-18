@@ -51,6 +51,14 @@
             }
         }
 
+        public RegistryClient RegistryAPI
+        {
+            get
+            {
+                return Root.RegistryConnection;
+            }
+        }
+
         protected void Table(string name, object row)
         {
             Table(name, new[] { row });

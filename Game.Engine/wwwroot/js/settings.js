@@ -9,7 +9,7 @@ export const Settings = {
     theme: false,
     themeCustom: false,
     mouseScale: 1.0,
-    font: "sans-serif",
+    font: "Exo 2",
     leaderboardEnabled: true,
     displayMinimap: "always",
     hudEnabled: true,
@@ -19,9 +19,13 @@ export const Settings = {
     logLength: 4,
     displayMinimap: true,
     bigKillMessage: true,
+    showKeyboardHints: true,
     showOwnName: true,
+    showHints: true,
     nameSize: 48,
-    background: "on"
+    background: "on",
+    mipmapping: true,
+    updatesVersion: 0
 };
 
 function save() {
@@ -38,22 +42,31 @@ function save() {
         theme(Settings.themeCustom);
     }
 
+    if (Settings.mipmapping != document.getElementById("settingsMipMapping").checked) {
+        Settings.mipmapping = document.getElementById("settingsMipMapping").checked;
+        reload = true;
+    }
+
+    Settings.font = "Exo 2";
     Settings.mouseScale = document.getElementById("settingsMouseScale").value;
-    Settings.font = document.getElementById("settingsFont").value;
     Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
-    Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").value;
+    Settings.showHints = document.getElementById("settingsShowHints").checked;
     Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
     Settings.bandwidth = document.getElementById("settingsBandwidth").value;
     Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
     Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
     Settings.logLength = document.getElementById("settingsLog").value;
     Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").checked;
+    Settings.mipmapping = document.getElementById("settingsMipMapping").checked;
     Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
+    Settings.showKeyboardHints = document.getElementById("settingsShowKeyboardHints").checked;
     Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
     Settings.nameSize = Number(document.getElementById("settingsNameSize").value);
     Settings.background = document.getElementById("settingsBackground").value;
 
     Cookies.set("settings", Settings, cookieOptions);
+
+    keyboardHints();
 
     if (reload) window.location.reload();
 }
@@ -77,9 +90,9 @@ function load() {
     document.getElementById("settingsThemeSelectorCustom").value = Settings.themeCustom || "";
 
     document.getElementById("settingsMouseScale").value = Settings.mouseScale;
-    document.getElementById("settingsFont").value = Settings.font;
     document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
-    document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
+    document.getElementById("settingsShowHints").checked = Settings.showHints;
+    document.getElementById("settingsMipMapping").checked = Settings.mipmapping;
     document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
     document.getElementById("settingsBandwidth").value = Settings.bandwidth;
     document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
@@ -87,6 +100,7 @@ function load() {
     document.getElementById("settingsLog").value = Settings.logLength;
     document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
     document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
+    document.getElementById("settingsShowKeyboardHints").checked = Settings.showKeyboardHints;
     document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
     document.getElementById("settingsNameSize").value = Settings.nameSize;
     document.getElementById("settingsBackground").value = Settings.background;
@@ -95,6 +109,7 @@ function load() {
 const debug = true;
 
 async function theme(v) {
+    document.getElementById("theme-styles").innerHTML = "";
     if (v) v = v.toLowerCase();
     const link = `https://dl.dropboxusercontent.com/s/${v}/daudmod.zip`;
     const zip = await fetch(link)
@@ -106,6 +121,16 @@ async function theme(v) {
             const info = JSON.parse(text);
 
             const version = info.version || 1;
+            var changesBk = false;
+            if (info.spriteModeMap) {
+                changesBk = changesBk || info.spriteModeMap.hasOwnProperty("bg");
+            }
+            if (info.textureMap) {
+                changesBk = changesBk || info.textureMap.hasOwnProperty("bg");
+            }
+            if (changesBk) {
+                spriteModeMap["bg"].additionalLayers = [];
+            }
 
             if (info.spriteModeMap) {
                 for (let key in info.spriteModeMap) {
@@ -157,6 +182,68 @@ async function theme(v) {
                                 textureMap[key].url = url;
                             })
                     );
+                }
+                if (info.styles) {
+                    for (var i = 0; i < info.styles.length; i++) {
+                        const css = info.styles[i];
+
+                        promises.push(
+                            zip
+                                .file(`daudmod/${css}`)
+                                .async("string")
+                                .then(ab => {
+                                    var imagePromises = [];
+                                    var cleansed = ab;
+                                    var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
+                                    var fixed = [];
+                                    var fixedMap = [];
+                                    var replacePairs = [];
+                                    for (var imagen = 0; imagen < images.length; imagen++) {
+                                        var imocc = images[imagen];
+                                        var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
+                                        var imgurl = m[1] + "";
+                                        if (debug) console.log(`theme css imagesss ${imgurl}`);
+                                        if (fixed.indexOf(imgurl) > 0) {
+                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                        } else {
+                                            fixed.push(imgurl);
+                                            fixedMap.push("");
+                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                            imagePromises.push(
+                                                (function(loo) {
+                                                    return zip
+                                                        .file(`daudmod/${imgurl}`)
+                                                        .async("arraybuffer")
+                                                        .then(ab => {
+                                                            const arrayBufferView = new Uint8Array(ab);
+                                                            const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                            const urlCreator = window.URL || window.webkitURL;
+                                                            const url = urlCreator.createObjectURL(blob);
+                                                            fixedMap[fixed.indexOf(loo)] = url;
+
+                                                            if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
+                                                        });
+                                                })(imgurl)
+                                            );
+                                        }
+                                    }
+                                    Promise.all(imagePromises).then(() => {
+                                        for (var k = 0; k < replacePairs.length; k++) {
+                                            cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
+                                        }
+                                        const blob = new Blob([cleansed], { type: "text/css" });
+                                        const urlCreator = window.URL || window.webkitURL;
+                                        const url = urlCreator.createObjectURL(blob);
+
+                                        var link = document.createElement("link");
+                                        link.setAttribute("rel", "stylesheet");
+                                        link.setAttribute("type", "text/css");
+                                        link.setAttribute("href", url);
+                                        document.getElementById("theme-styles").appendChild(link);
+                                    });
+                                })
+                        );
+                    }
                 }
                 Promise.all(promises).then(() => {
                     if (window.Game && window.Game.cache) {
@@ -217,3 +304,15 @@ window.addEventListener("keydown", function(e) {
 window.addEventListener("keyup", function(e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
+
+keyboardHints();
+
+function keyboardHints() {
+    if (Settings.showKeyboardHints) {
+        document.getElementById("minimapTip").style.display = "block";
+        document.getElementById("autofireContainer").style.display = "block";
+    } else {
+        document.getElementById("minimapTip").style.display = "none";
+        document.getElementById("autofireContainer").style.display = "none";
+    }
+}

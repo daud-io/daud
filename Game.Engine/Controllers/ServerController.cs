@@ -28,7 +28,7 @@
             return new Server
             {
                 PlayerCount = Player.GetWorldPlayers(world).Count,
-                WorldCount = 1
+                WorldCount = Worlds.AllWorlds.Count
             };
         }
 
@@ -51,24 +51,6 @@
             return true;
         }
 
-        [HttpPost, Route("hook")]
-        public async Task<string> Hook(string worldName = null)
-        {
-            string json = null;
-
-            using (StreamReader reader = new StreamReader(Request.Body, Encoding.UTF8))
-                json = await reader.ReadToEndAsync();
-
-            var world = Worlds.Find(worldName);
-
-            JsonConvert.PopulateObject(json, world.Hook);
-            
-            // connection is using getHashCode for change detection
-            world.Hook = world.Hook.Clone();
-
-            return JsonConvert.SerializeObject(world.Hook, Formatting.Indented);
-        }
-
         [HttpGet, Route("players")]
         public IEnumerable<GameConnection> GetPlayers(string worldName = null)
         {
@@ -88,20 +70,6 @@
                     Bandwidth = p.Connection?.Bandwidth ?? 0,
                     Latency = p.Connection?.Latency ?? 0
                 });
-        }
-
-        [AllowAnonymous, HttpGet, Route("worlds"),EnableCors("AllowAllOrigins")]
-        public IEnumerable<object> GetWorlds(string worldName = null)
-        {
-            return Worlds.AllWorlds.Select(w => new {
-                world = w.Key,
-                players = w.Value.AdvertisedPlayerCount,
-                name = w.Value.Name,
-                description = w.Value.Description,
-                allowedColors = w.Value.AllowedColors,
-                image = w.Value.Image,
-                instructions = w.Value.Instructions
-            });
         }
     }
 }

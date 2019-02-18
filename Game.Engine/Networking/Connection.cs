@@ -136,14 +136,9 @@ namespace Game.Engine.Networking
 
                         if (followBody != null)
                         {
-                            var halfViewport = new Vector2(3300, 3300);
-
                             BodyCache.Update(
-                                world.Bodies,
-                                world.Groups,
-                                world.Time,
-                                Vector2.Subtract(followBody.Position, halfViewport),
-                                Vector2.Add(followBody.Position, halfViewport)
+                                world.BodiesNear(followBody.Position, 6000).ToList(),
+                                world.Time
                             );
 
                             var updates = BodyCache.BodiesByError();
@@ -161,6 +156,7 @@ namespace Game.Engine.Networking
 
                                     var caption = builder.CreateString(serverGroup.Caption ?? " ");
                                     var color = builder.CreateString(serverGroup.Color ?? "");
+                                    var customData = builder.CreateString(serverGroup.CustomData ?? "");
 
                                     var group = NetGroup.CreateNetGroup(builder,
                                         group: serverGroup.ID,
@@ -168,7 +164,8 @@ namespace Game.Engine.Networking
                                         captionOffset: caption,
                                         zindex: serverGroup.ZIndex,
                                         owner: serverGroup.OwnerID,
-                                        colorOffset: color
+                                        colorOffset: color,
+                                        customDataOffset: customData
                                     );
                                     return group;
                                 }).ToArray());
@@ -223,10 +220,16 @@ namespace Game.Engine.Networking
                                 {
                                     var stringType = builder.CreateString(e.Type);
                                     var stringMessage = builder.CreateString(e.Message);
+                                    var stringExtraData = e.ExtraData != null
+                                        ? builder.CreateString(JsonConvert.SerializeObject(e.ExtraData))
+                                        : new StringOffset();
 
                                     NetAnnouncement.StartNetAnnouncement(builder);
                                     NetAnnouncement.AddType(builder, stringType);
                                     NetAnnouncement.AddText(builder, stringMessage);
+                                    if (e.ExtraData != null)
+                                        NetAnnouncement.AddExtraData(builder, stringExtraData);
+                                    NetAnnouncement.AddPointsDelta(builder, e.PointsDelta);
 
                                     return NetAnnouncement.EndNetAnnouncement(builder);
                                 }).ToArray());
@@ -449,6 +452,8 @@ namespace Game.Engine.Networking
 
                     Sprites shipSprite = Sprites.ship_red;
 
+                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score}");
+
                     switch (spawn.Ship)
                     {
                         case "ship0":
@@ -545,6 +550,8 @@ namespace Game.Engine.Networking
             Socket = socket;
 
             var worldRequest = httpContext.Request.Query["world"].FirstOrDefault();
+
+            this.Logger.LogInformation($"New Connection: {worldRequest}");
 
             world = Worlds.Find(worldRequest);
 

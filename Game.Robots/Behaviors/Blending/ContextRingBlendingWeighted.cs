@@ -1,6 +1,5 @@
 ﻿namespace Game.Robots.Behaviors.Blending
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -9,53 +8,58 @@
         private readonly ContextRobot Robot;
         public int BlurSteps { get; set; } = 10;
         public float BlurAmount { get; set; } = 0.05f;
+        public int BlurResolutionMultiplier { get; set; } = 1;
 
         public ContextRingBlendingWeighted(ContextRobot robot)
         {
             this.Robot = robot;
         }
 
-        public float Blend(IEnumerable<ContextRing> contexts)
+        public (ContextRing, float,bool) Blend(IEnumerable<ContextRing> contexts,bool doBoost)
         {
-            var combined = new ContextRing(Robot.Steps);
+            var finalSteps = Robot.Steps * BlurResolutionMultiplier;
+            var combined = new ContextRing(finalSteps);
 
-            
-            // blur
-            foreach (var context in contexts)
-                BlurRing(context);
+            if (BlurResolutionMultiplier > 1)
+                contexts = contexts.Select(c => c.ResolutionMultiply(BlurResolutionMultiplier)).ToList();
 
-            /*
-            lock (typeof(ContextRingBlendingWeighted))
-            {
-                Console.SetCursorPosition(0, 0);
-                Console.WriteLine("RingDump");
-                foreach (var context in contexts)
-                {
-                    var name = context.Name;
-                    while (name.Length < 20)
-                        name += ' ';
-                    Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.0;-0.0")))}");
-                }
-            }
-            */
             if (contexts.Any())
             {
-                for (var i = 0; i < Robot.Steps; i++)
+                // blur
+                foreach (var context in contexts)
+                    BlurRing(context);
+
+                for (var i = 0; i < finalSteps; i++)
                     combined.Weights[i] = contexts.Sum(c => c.Weights[i] * c.RingWeight);
+                for (var i = 0; i < finalSteps; i++)
+                    combined.WeightsBoost[i] = contexts.Sum(c => c.WeightsBoost[i] * c.RingWeight);
 
                 var maxIndex = 0;
 
-                for (var i = 0; i < Robot.Steps; i++)
+                for (var i = 0; i < finalSteps; i++)
                 {
                     if (combined.Weights[i] > combined.Weights[maxIndex])
                         maxIndex = i;
                 }
+                var maxBoostIndex = 0;
 
-                return combined.Angle(maxIndex);
+                for (var i = 0; i < finalSteps; i++)
+                {
+                    if (combined.WeightsBoost[i] > combined.WeightsBoost[maxBoostIndex])
+                        maxBoostIndex = i;
+                }
+                bool willBoost=false;
+                var bestIndex=maxIndex;
+                if(combined.Weights[maxIndex]<combined.WeightsBoost[maxBoostIndex]-0.9 && doBoost){
+                    willBoost=true;
+                    bestIndex=maxBoostIndex;
+                }
+
+                return (combined, combined.Angle(bestIndex),willBoost);
             }
             else
             {
-                return 0; // going east a lot ?
+                return (null, 0,false); // going east a lot ?
             }
         }
 

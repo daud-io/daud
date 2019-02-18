@@ -28,6 +28,8 @@
         public bool BoostRequested { get; set; }
         public bool ShootRequested { get; set; }
 
+		public long LastKillTime { get; set; } = 0;
+		public int ComboCounter { get; set; } = 0;
         public long ShootCooldownTimeStart { get; set; } = 0;
         public long ShootCooldownTime { get; set; } = 0;
         public float ShootCooldownStatus { get; set; } = 0;
@@ -53,8 +55,6 @@
         public bool Shark { get; set; } = false;
         public bool LastTouchedLeft { get; set; } = false;
         public bool FiringWeapon { get; private set; } = false;
-
-        public string CustomData { get; set; }
 
         [Flags]
         public enum ShipModeEnum
@@ -89,19 +89,93 @@
         {
             if (player != null)
             {
-                player.Score += World.Hook.PointsPerKillFleet;
+				try
+				
+				{
+				var comboTxt = "";
+				var comboPlusScore = 0;
+				if (player.IsAlive)
+                {
+                    if (World.Time - player.Fleet.LastKillTime < World.Hook.ComboDelay)
+                    {
+                        player.Fleet.ComboCounter += 1;
+                        comboTxt = $"x{player.Fleet.ComboCounter} combo!";
+                        comboPlusScore = (player.Fleet.ComboCounter - 1) * World.Hook.ComboPointsStep;
+                        player.Score += comboPlusScore;
+                    }
+                    else
+                    {
+                        player.Fleet.ComboCounter = 1;
+                    }
+					player.MaxCombo = (player.MaxCombo < player.Fleet.ComboCounter) ? player.Fleet.ComboCounter : player.MaxCombo;
 
-                player.SendMessage($"You Killed {this.Owner.Name} - ping (you: {player?.Connection?.Latency ?? 0} them:{this.Owner?.Connection?.Latency ?? 0})");
+                    var PreviousKillTime = player.Fleet.LastKillTime;
+                    player.Fleet.LastKillTime = World.Time;
+
+                    int plusScore = Convert.ToInt32(World.Hook.PointsPerKillFleetStep * (Math.Floor((decimal)this.Owner.Score / (decimal)World.Hook.PointsPerKillFleetPerStep) + 1));
+                    plusScore = (plusScore < World.Hook.PointsPerKillFleetMax) ? plusScore : World.Hook.PointsPerKillFleetMax;
+                    player.Score += plusScore;
+
+                    player.SendMessage($"You Killed {this.Owner.Name}", "kill",
+                        plusScore,
+                        new
+                        {
+                            ping = new
+                            {
+                                you = player?.Connection?.Latency ?? 0,
+                                them = this.Owner?.Connection?.Latency ?? 0
+                            },
+                            combo = new
+                            {
+                                text = comboTxt,
+                                score = comboPlusScore
+                            }
+                        }
+                    );
+					player.KillCounter += 1;
+                }
                 if (this.Owner.Connection != null)
                     this.Owner.Connection.SpectatingFleet = player.Fleet;
-                this.Owner.SendMessage($"Killed by {player.Name} - ping (you: {this.Owner?.Connection?.Latency ?? 0} them:{player?.Connection?.Latency ?? 0})");
+					//this.Owner.SendMessage($"Killed by {player.Name} - ping (you: {this.Owner?.Connection?.Latency ?? 0} them:{player?.Connection?.Latency ?? 0})");
+					this.Owner.SendMessage($"Killed by {player.Name}", "killed",
+						(int)MathF.Ceiling(this.Owner.Score / 2),
+						new
+						{
+							score = this.Owner.Score,
+							kills = this.Owner.KillCounter,
+							gameTime = World.Time - this.Owner.AliveSince,
+							maxCombo = this.Owner.MaxCombo,
+							ping = new
+							{
+								you = this.Owner?.Connection?.Latency ?? 0,
+								them = player?.Connection?.Latency ?? 0
+							}
+						}
+					);
+					this.Owner.KillCounter = 0;
+					this.Owner.MaxCombo = 0;
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine($"Exception while scoring and sending messages: {e}");
+				}
             }
             else
             {
                 if (this.Owner != null)
                 {
-                    this.Owner.SendMessage($"Killed by the universe");
+                    this.Owner.SendMessage($"Killed by the universe", "universeDeath", World.Hook.PointsPerUniverseDeath,
+						new
+						{
+							score = this.Owner.Score,
+							kills = this.Owner.KillCounter,
+							gameTime = World.Time - this.Owner.AliveSince,
+							maxCombo = this.Owner.MaxCombo
+						}
+					);
                     this.Owner.Score += World.Hook.PointsPerUniverseDeath;
+					this.Owner.KillCounter = 0;
+					this.Owner.MaxCombo = 0;
                 }
             }
 
@@ -299,7 +373,7 @@
                         | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
                         | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
                         | (!Owner.IsShielded && Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
-                        | (Owner.IsShielded ? ShipModeEnum.shield : ShipModeEnum.none)
+                        | (Owner.IsShielded && ship.ShieldStrength > 0 ? ShipModeEnum.shield : ShipModeEnum.none)
                     );
 
                 if (isBoostInitial)
@@ -329,7 +403,7 @@
 
             if (MathF.Abs(FleetCenter.X) >  World.Hook.WorldSize &&
                 FleetCenter.X<0!=LastTouchedLeft &&
-                World.Name == "Sharks and Minnows" &&
+                World.Hook.Name == "Sharks and Minnows" &&
                 !Owner.IsInvulnerable &&
                 !Shark)
             {

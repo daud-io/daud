@@ -3,13 +3,16 @@
     using Discord.Commands;
     using Discord.WebSocket;
     using Game.API.Authentication;
+    using Game.API.Client;
     using Game.API.Common.Security;
     using Game.Engine.ChatBot;
+    using Game.Engine.Core;
     using Game.Engine.Networking;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;
@@ -21,7 +24,7 @@
             var config = LoadConfiguration(services);
             services.AddSingleton<GameConfiguration>(config);
 
-            services.AddTransient<Connection>();
+            services.AddTransient<Networking.Connection>();
 
             services.UseJWTAuthentication();
             services.AddTransient<JWT, JWT>();
@@ -52,6 +55,11 @@
                 .AddSingleton<CommandHandlingService>()
                 .AddSingleton<HttpClient>()
                 .AddSingleton<DiscordBot>();
+
+
+            services.AddSingleton(new RegistryClient(new Uri(config.RegistryUri)));
+            if (config.RegistryEnabled)
+                services.AddSingleton<RegistryHandling>();
         }
 
         private GameConfiguration LoadConfiguration(IServiceCollection services)
@@ -103,13 +111,22 @@
                         context.Context.Response.Headers.Add("Expires", "-1");
                     }
                 }
-        });
+            });
+            app.UseAcmeChallengeHandler();
 
             app.UseWebSockets(new WebSocketOptions
             {
                 KeepAliveInterval = TimeSpan.FromMilliseconds(10000)
             });
             app.UseGameWebsocketHandler();
+
+            Worlds.Initialize();
+
+            if (config.RegistryEnabled)
+            {
+                Console.WriteLine("Registry reporting is enabled");
+                provider.GetService<RegistryHandling>();
+            }
         }
     }
 }

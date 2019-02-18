@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Game.API.Common\Game.API.Common.csproj" />
+    <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.2.0" />
+  </ItemGroup>
+
+</Project>

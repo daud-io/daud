@@ -77,8 +77,7 @@
                 {
                     Uri = root.Server,
                     UserKey = root.UserKey,
-                    Password = root.Password,
-                    Token = root.Token
+                    Password = root.Password
                 };
 
             return (config.Config, context);

@@ -37,10 +37,13 @@
             public bool Variation { get; set; } = false;
 
             [Option("--type-name")]
-            public string TypeName { get; set; } = "Game.Robots.ContextTurret";
+            public string TypeName { get; set; } = "Game.Robots.ConfigurableContextBot,Game.Robots";
 
             [Option("--startup-delay")]
             public int StartupDelay{ get; set; } = 0;
+
+            [Option("--file")]
+            public string File { get; set; } = "config.json";
 
             protected async override Task ExecuteAsync()
             {
@@ -61,11 +64,21 @@
                     robot.Name = Name;
                     robot.Target = Target;
                     robot.Sprite = Sprite;
-                    tasks.Add(robot.Start(connection));
+
+                    if (robot is ConfigurableContextBot configBot)
+                        configBot.ConfigurationFileName = File;
+
+                    tasks.Add(robot.StartAsync(connection));
 
                 };
 
                 await Task.WhenAll(tasks);
+
+                foreach (var task in tasks)
+                {
+                    if(task.IsFaulted)
+                        Console.WriteLine($"Robot Crashed: {task.Exception}");
+                }
             }
         }
     }

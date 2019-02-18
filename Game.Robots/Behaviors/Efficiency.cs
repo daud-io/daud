@@ -26,7 +26,7 @@
                 Scale = 0;
         }
 
-        protected override float ScoreAngle(float angle, Vector2 position)
+        protected override float ScoreAngle(float angle, Vector2 position, Vector2 momentum)
         {
             var difference = RoboMath.CalculateDifferenceBetweenAngles(angle, TargetAngle);
 

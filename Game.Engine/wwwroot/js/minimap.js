@@ -32,16 +32,19 @@ export class Minimap {
         const startIndex = data.Type === "Team" ? 2 : 0;
 		const isCTF = (data.Type === "CTF");
         this.ctx.clear();
-        this.ctx
-            .lineStyle(1, 0x999999)
-            .beginFill(0x000000, 0.5)
-            .drawRect(0, 0, minimapSize, minimapSize)
-            .endFill()
-            .lineStyle(0);
-        for (let i = startIndex; i < data.Entries.length; i++) {
-            const entry = data.Entries[i];
-            const entryIsSelf = entry.FleetID == fleetID;
-            this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf, i, isCTF);
+
+        if (document.body.classList.contains("alive") || document.body.classList.contains("spectating")) {
+            this.ctx
+                .lineStyle(1, 0x999999)
+                .beginFill(0x000000, 0.5)
+                .drawRect(0, 0, minimapSize, minimapSize)
+                .endFill()
+                .lineStyle(0);
+            for (let i = startIndex; i < data.Entries.length; i++) {
+                const entry = data.Entries[i];
+                const entryIsSelf = entry.FleetID == fleetID;
+                this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf, i, isCTF);
+            }
         }
     }
     drawMinimap(x, y, color, self, rank, isCTF) {

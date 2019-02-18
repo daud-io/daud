@@ -48,7 +48,7 @@
                         && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
                     .Where(p => !DontFireAtSameName || p.Fleet.Name != this.Name)
                     .Where(p => p.Fleet.Name.Contains(this.Target) || this.Target == "")
-                    .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
+                    .Where(p => !HookComputer.Hook.TeamMode || p.Fleet.Color != this.Color)
                     .OrderBy(p => p.Distance)
                     .FirstOrDefault()
                     ?.Fleet;

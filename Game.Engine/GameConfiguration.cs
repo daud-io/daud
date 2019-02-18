@@ -8,10 +8,22 @@
         public int TokenExpirationSeconds { get; set; } = 100000;
         public string AdministratorPassword { get; set; }
 
+        public string ACMEStateDirectory { get; set; }
+        
+
         public string DiscordToken {get; set;} = null;
 
         public bool ForceHTTPS { get; set; } = false;
 
         public bool AllowCORS {get; set;} = true;
+
+        public bool RegistryEnabled { get; set; }
+        public string RegistryUri { get; set; }
+        public string RegistryUserKey { get; set; }
+        public string RegistryPassword { get; set; }
+
+        public bool LetsEncryptEnabled { get; set; }
+
+        public string PublicURL { get; set; }
     }
 }
