@@ -1,4 +1,4 @@
-﻿import Plotly from '../plotly-subset';
+﻿import Plotly from "../plotly-subset";
 import { Settings } from "../settings";
 
 export class Fleet {
@@ -37,8 +37,7 @@ export class Fleet {
         this.caption = groupUpdate.Caption;
         this.ID = groupUpdate.ID;
 
-        if (groupUpdate.CustomData)
-        {
+        if (groupUpdate.CustomData) {
             if (groupUpdate.CustomData.chat) this.chat = groupUpdate.CustomData.chat;
             else this.chat = false;
 
@@ -46,32 +45,27 @@ export class Fleet {
             else this.plotly = false;
         }
 
-        if (this.plotly && this.ID == myFleetID)
-        {
-            if (!this.container.plotly.used)
-            {
+        if (this.plotly && this.ID == myFleetID) {
+            if (!this.container.plotly.used) {
                 this.container.plotly.used = true;
                 this.usingPlotly = true;
-                console.log('setting plotly use');
+                console.log("setting plotly use");
             }
-            Plotly.react( this.container.plotly, this.plotly.data, this.plotly.layout,
-            {
+            Plotly.react(this.container.plotly, this.plotly.data, this.plotly.layout, {
                 displayModeBar: false,
                 staticPlot: true
             });
         }
 
-        if (this.usingPlotly && this.ID != myFleetID)
-        {
+        if (this.usingPlotly && this.ID != myFleetID) {
             // we must have been spectating a fleet
             // with plotly data, and now we've switched
             // to a different fleet to follow
             // but the original one is still on screen
-            // ... that's us. 
+            // ... that's us.
             this.container.plotly.used = false;
             this.usingPlotly = false;
         }
-
     }
 
     preRender(time, interpolator, myFleetID) {
@@ -111,20 +105,16 @@ export class Fleet {
             this.textChat.visible = false;
         }
 
-
         //else
-          //  this.container.plotly.style.visibility = "hidden";
-
-
+        //  this.container.plotly.style.visibility = "hidden";
     }
 
     destroy() {
         this.container.removeChild(this.text);
         this.container.removeChild(this.textChat);
-        if (this.usingPlotly)
-        {
+        if (this.usingPlotly) {
             this.container.plotly.used = false;
-            console.log('unsetting plotly use');            
+            console.log("unsetting plotly use");
         }
     }
 }

@@ -56,8 +56,8 @@ container.addChild(container.tiles);
 const renderer = new Renderer(container);
 const background = new Background(container);
 const border = new Border(container);
-const overlay = new Overlay(container, canvas, document.getElementById('plotly'));
-container.plotly = document.getElementById('plotly');
+const overlay = new Overlay(container, canvas, document.getElementById("plotly"));
+container.plotly = document.getElementById("plotly");
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
@@ -69,6 +69,10 @@ let isSpectating = false;
 
 let angle = 0.0;
 let aimTarget = { X: 0, Y: 0 };
+let d = 500; // for steering with arrows
+
+let keyboardSteering = false;
+let keyboardSteeringSpeed = 0.075;
 
 let cache = new Cache(container);
 let view = false;
@@ -481,11 +485,27 @@ app.ticker.add(() => {
     if (Controls.mouseX) {
         const pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);
 
-        angle = Controls.angle;
-        aimTarget = {
-            X: Settings.mouseScale * (pos.x - position.X),
-            Y: Settings.mouseScale * (pos.y - position.Y)
-        };
+        if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
+            if (Controls.right && !Controls.left) {
+                angle += keyboardSteeringSpeed * Math.PI;
+            } else if (Controls.left && !Controls.right) {
+                angle -= keyboardSteeringSpeed * Math.PI;
+            }
+            if (Controls.up) {
+                angle += Math.PI;
+            } // optional
+            aimTarget = {
+                X: d * Math.cos(angle),
+                Y: d * Math.sin(angle)
+            };
+            keyboardSteering = true;
+        } else {
+            angle = Controls.angle;
+            aimTarget = {
+                X: Settings.mouseScale * (pos.x - position.X),
+                Y: Settings.mouseScale * (pos.y - position.Y)
+            };
+        }
     }
 
     if (CustomData != lastCustomData) {
@@ -537,3 +557,37 @@ const query = parseQuery(window.location.search);
 if (query.spectate && query.spectate !== "0") {
     startSpectate(true);
 }
+
+canvas.onmousemove = function() {
+    keyboardSteering = false;
+};
+
+// clicking enter in nick causes fleet spawn
+document.getElementById("nick").addEventListener("keyup", function(e) {
+    if (e.keyCode === 13) {
+        doSpawn();
+    }
+});
+
+// clicking enter in spectate mode causes fleet spawn
+document.body.addEventListener("keydown", function(e) {
+    if (document.body.classList.contains("spectating") && e.keyCode === 13) {
+        doSpawn();
+    }
+});
+
+// toggle worlds with W
+const worlds = document.getElementById("worlds");
+document.body.addEventListener("keydown", function(e) {
+    if (document.body.classList.contains("dead") && document.getElementById("nick") !== document.activeElement && e.keyCode === 87) {
+        if (worlds.classList.contains("closed")) {
+            worlds.classList.remove("closed");
+        } else {
+            worlds.classList.add("closed");
+        }
+    }
+});
+
+document.getElementById("wcancel").addEventListener("click", function() {
+    worlds.classList.add("closed");
+});

@@ -1,4 +1,4 @@
-import Plotly from './plotly-subset';
+import Plotly from "./plotly-subset";
 
 export class Overlay {
     constructor(container, canvas, plotly) {
@@ -10,15 +10,10 @@ export class Overlay {
 
     update(customData) {
         this.data = customData;
-        
-        if (this.plotly.used)
-            this.container.plotly.style.visibility = "visible";
-        else
-            this.container.plotly.style.visibility = "hidden";
 
+        if (this.plotly.used) this.container.plotly.style.visibility = "visible";
+        else this.container.plotly.style.visibility = "hidden";
     }
 
-    draw(cache, interpolator, currentTime, fleetID)
-    {
-    }
+    draw(cache, interpolator, currentTime, fleetID) {}
 }
