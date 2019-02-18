@@ -20,6 +20,7 @@ namespace Game.Robots.Behaviors
 
         public DogeWow(ContextRobot robot) : base(robot)
         {
+            Normalize=false;
         }
 
         protected override void PreSweep(ContextRing ring)
@@ -56,20 +57,28 @@ namespace Game.Robots.Behaviors
             float accumulator = 0f;
 
             var fleet = Robot.SensorFleets.MyFleet;
-
+            var dead=0;
             if (fleet != null)
             {
                 ConsideredPoints.Add(position);
                 foreach (var ship in fleet.Ships)
                 {
+                    var shipDead=0;
                     float farA = 40000 * 40000;
                     float farB = 40000 * 40000;
+                    float minA=0.0f;
+                    float hitd=90.0f;
                     foreach (var danger in Projections)
                     {
                         var dist = Vector2.Distance(danger, position + ship.Position - fleet.Center);
                         if (dist < DistanceFromCenterThreshold)
                         {
+                            var fm=-hitd*hitd/MathF.Max(dist*dist,hitd*hitd) / fleet.Ships.Count*(2.0f+Vector2.Dot(danger-(position + ship.Position - fleet.Center),new Vector2(MathF.Cos(angle),MathF.Sin(angle)))/dist);
                             farA = MathF.Min(dist, farA);
+                            minA = MathF.Min(fm, minA);
+                            if(dist<hitd){
+                                shipDead=1;
+                            }
                         }
 
                     }
@@ -83,29 +92,46 @@ namespace Game.Robots.Behaviors
                     }
 
                     var thr = DistanceFromCenterThreshold;
+                    // if (farB < thr && farA < thr)
+                    // {
+
+
+                    //     var dist = farB;
+                    //     var accumulator1 = -10.0f * 10.0f / (MathF.Max(dist * dist, 10.0f * 10.0f)) / fleet.Ships.Count/2.0f;
+                    //     dist = farA;
+                    //     accumulator1 = MathF.Min(accumulator1,-10.0f * 10.0f / (MathF.Max(dist * dist, 10.0f * 10.0f)) / fleet.Ships.Count);
+                    //     accumulator+=accumulator1;
+                    //     // accumulator -= 1.0f / (MathF.Max(dist*dist,10.0f*10.0f)+0.001f)/fleet.Ships.Count/2.0f;
+
+                    //     // accumulator -=1.0f/d/fleet.Ships.Count/4.0f;//( 400.0f*400.0f )/ (farA+1.0f)/fleet.Ships.Count;
+                    // }else{
                     if (farA < thr)
                     {
 
 
                         var dist = farA;
-                        accumulator -= 10.0f * 10.0f / (MathF.Max(dist * dist, 10.0f * 10.0f)) / fleet.Ships.Count;
+                        accumulator += minA;
                     }
-                    if (farB < thr)
-                    {
+                    // if (farB < thr)
+                    // {
 
 
-                        var dist = farB;
-                        //accumulator -= 1.0f / (MathF.Max(dist * dist, 1.0f * 1.0f)) / fleet.Ships.Count/2.0f;
-                        // accumulator -= 1.0f / (MathF.Max(dist*dist,10.0f*10.0f)+0.001f)/fleet.Ships.Count/2.0f;
+                    //     var dist = farB;
+                    //     accumulator -= 1.0f / (MathF.Max(dist * dist, 10.0f * 10.0f)) / fleet.Ships.Count/2.0f;
+                    //     // accumulator -= 1.0f / (MathF.Max(dist*dist,10.0f*10.0f)+0.001f)/fleet.Ships.Count/2.0f;
 
-                        // accumulator -=1.0f/d/fleet.Ships.Count/4.0f;//( 400.0f*400.0f )/ (farA+1.0f)/fleet.Ships.Count;
-                    }
+                    //     // accumulator -=1.0f/d/fleet.Ships.Count/4.0f;//( 400.0f*400.0f )/ (farA+1.0f)/fleet.Ships.Count;
+                    // }
+                    // }
+                 dead+=shipDead;   
                 }
 
             }
+            if(fleet.Ships.Count<dead*2+1){
+                return accumulator*1000.0f;
+            }
 
-
-            return accumulator;//-0.5f+1.0f/(1.0f+MathF.Exp(accumulator));
+            return accumulator*((float)dead+1.0f);//-0.5f+1.0f/(1.0f+MathF.Exp(accumulator));
         }
     }
 }

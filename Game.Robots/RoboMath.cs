@@ -90,15 +90,15 @@
         }
         public static Vector2 ProjectClosest(HookComputer hook,Vector2 fromPosition, Vector2 targetPosition, float maxTime,int fleetSize)
         {
-            var boostSpeed=hook.ShipThrust(1)*4;
+            var boostSpeed=hook.Hook.BoostThrust;
              var bulletSpeed = hook.ShotThrust(fleetSize) * 10;
             var path=targetPosition-fromPosition;
             var pLen=path.Length();
-            var maxD=bulletSpeed*maxTime+boostSpeed*1000.0f;
+            var maxD=bulletSpeed*maxTime+boostSpeed*hook.Hook.BoostDuration;
             // if(maxD>pLen){
             //     Console.Write("Switch");
             // }
-            return fromPosition+path*(1.0f/pLen)*MathF.Min(pLen-10.0f,maxD);
+            return fromPosition+path*(1.0f/pLen)*MathF.Min(pLen,maxD);
             
         }
     }
