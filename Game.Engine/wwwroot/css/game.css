@@ -82,7 +82,7 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: 15vw;
-	min-width: 200px;
+    min-width: 200px;
 }
 
 @keyframes fadein {
@@ -98,8 +98,8 @@ body {
 #logo {
     height: 20vw;
     image-rendering: pixelated;
-	display: block;
-	margin: auto;
+    display: block;
+    margin: auto;
 }
 
 #hintbox {
@@ -143,9 +143,9 @@ a {
 
 #changelog {
     left: 0;
-	position: absolute;
-	/*top: calc(-100vh+10px);*/
-	bottom: 50px;
+    position: absolute;
+    /*top: calc(-100vh+10px);*/
+    bottom: 50px;
     width: 500px;
     background-color: rgba(32, 32, 32, 0.85);
     padding: 0.5em;
@@ -179,7 +179,7 @@ a {
 
 #controls_instructions {
     width: 240px;
-    position: absolute; 
+    position: absolute;
     left: 0;
 }
 
@@ -963,7 +963,6 @@ progress::-webkit-progress-value {
     border-bottom-left-radius: 0;
 }
 
-
 #plotly {
     position: absolute;
     width: 600px;
@@ -978,82 +977,82 @@ progress::-webkit-progress-value {
 }
 
 #links {
-	position: absolute;
-	right: 0;
-	top: 50%;
-	transform: translateY(-50%);
-	z-index: 10;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
 }
 
 @media only screen and (max-width: 1420px) {
-	#links {
-		transform: translateY(-50%) scale(0.7, 0.7);
-	}
+    #links {
+        transform: translateY(-50%) scale(0.7, 0.7);
+    }
 }
 
 @media only screen and (max-width: 900px) {
-	#links {
-		display: none;
-	}
+    #links {
+        display: none;
+    }
 }
 
 #links .link {
-	width: 170px;
-	height: 40px;
-	border: 2px solid white;
-	border-right: none;
-	border-top-left-radius: 24px;
-	border-bottom-left-radius: 24px;
-	padding: 2px 2px 2px 2px;
-	position: relative;
-	margin: 1px 0 1px 0;
-	opacity: 0.8;
-	transition: opacity 0.6s;
+    width: 170px;
+    height: 40px;
+    border: 2px solid white;
+    border-right: none;
+    border-top-left-radius: 24px;
+    border-bottom-left-radius: 24px;
+    padding: 2px 2px 2px 2px;
+    position: relative;
+    margin: 1px 0 1px 0;
+    opacity: 0.8;
+    transition: opacity 0.6s;
 }
 
 #links .link:hover {
-	opacity: 1;
+    opacity: 1;
 }
 
 #links .linkLogo {
-	background-color: white;
-	border-radius: 50%;
-	width: 40px;
-	height: 40px;
-	position: relative;
-	transition: transform 0.6s;
+    background-color: white;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    position: relative;
+    transition: transform 0.6s;
 }
 
 #links .link:hover .linkLogo {
-	transform: rotate(360deg);
+    transform: rotate(360deg);
 }
 
 #linksDropdown:hover > .link > .linkLogo {
-	transform: rotate(90deg);
+    transform: rotate(90deg);
 }
 
 #links .linkLogo img {
-	position: absolute;
-	width: 30px;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+    position: absolute;
+    width: 30px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 #links .linkText {
-	position: absolute;
-	top: 50%;
-	right: 10px;
-	transform: translateY(-50%);
-	text-transform: uppercase;
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    text-transform: uppercase;
 }
 
 #linksDropdown {
-	height: 54px;
-	overflow: hidden;
-	transition: height 1s;
+    height: 54px;
+    overflow: hidden;
+    transition: height 1s;
 }
 
 #linksDropdown:hover {
-	height: 155px;
+    height: 155px;
 }

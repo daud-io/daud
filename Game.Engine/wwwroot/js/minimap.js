@@ -30,7 +30,7 @@ export class Minimap {
     update(data, worldSize, fleetID) {
         this.worldSize = worldSize;
         const startIndex = data.Type === "Team" ? 2 : 0;
-		const isCTF = (data.Type === "CTF");
+        const isCTF = data.Type === "CTF";
         this.ctx.clear();
 
         if (document.body.classList.contains("alive") || document.body.classList.contains("spectating")) {
@@ -78,9 +78,9 @@ export class Minimap {
                 .lineTo(0 + x, 4 + y)
                 .closePath()
                 .endFill();
-		} else if (isCTF && rank < 2) {
-			// draw flags in CTF mode
-			this.ctx
+        } else if (isCTF && rank < 2) {
+            // draw flags in CTF mode
+            this.ctx
                 .lineStyle(2, colors[color])
                 .drawRect(minimapX - 4, minimapY - 4, 8, 8)
                 .endFill();
