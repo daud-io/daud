@@ -53,7 +53,8 @@
                 JsonConvert.PopulateObject(text, this);
 
 
-                JsonConvert.PopulateObject(JsonConvert.SerializeObject(config.BlendingConfig), ContextRingBlending);
+                if (config.BlendingConfig != null)
+                    JsonConvert.PopulateObject(JsonConvert.SerializeObject(config.BlendingConfig), ContextRingBlending);
 
             }
             catch (IOException) { }
@@ -66,7 +67,6 @@
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
             ReloadConfigAfter = GameTime + 500;
-            
         }
 
         protected async override Task AliveAsync()
