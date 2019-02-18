@@ -69,6 +69,10 @@ let isSpectating = false;
 
 let angle = 0.0;
 let aimTarget = { X: 0, Y: 0 };
+let d = 500; // for steering with arrows
+
+let keyboardSteering = false;
+let keyboardSteeringSpeed = 0.075;
 
 let cache = new Cache(container);
 let view = false;
@@ -480,12 +484,26 @@ app.ticker.add(() => {
 
     if (Controls.mouseX) {
         const pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);
-
-        angle = Controls.angle;
-        aimTarget = {
-            X: Settings.mouseScale * (pos.x - position.X),
-            Y: Settings.mouseScale * (pos.y - position.Y)
-        };
+        
+        if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
+            if (Controls.right && !Controls.left) {
+                angle += keyboardSteeringSpeed * Math.PI;
+            } else if (Controls.left && !Controls.right) {
+                angle -= keyboardSteeringSpeed * Math.PI;
+            }
+			if (Controls.up) {angle += Math.PI} // optional
+            aimTarget = {
+                X: d * Math.cos(angle),
+                Y: d * Math.sin(angle)
+            };
+			keyboardSteering = true;
+        } else {
+            angle = Controls.angle;
+            aimTarget = {
+                X: Settings.mouseScale * (pos.x - position.X),
+                Y: Settings.mouseScale * (pos.y - position.Y)
+            };
+        }
     }
 
     if (CustomData != lastCustomData) {
@@ -538,6 +556,9 @@ if (query.spectate && query.spectate !== "0") {
     startSpectate(true);
 }
 
+canvas.onmousemove = function() {
+	keyboardSteering = false;
+}
 
 // clicking enter in nick causes fleet spawn
 document.getElementById("nick").addEventListener("keyup", function(e) {
