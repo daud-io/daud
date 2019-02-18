@@ -1,7 +1,7 @@
 ﻿namespace Game.Robots.Behaviors
 {
     using System.Numerics;
-
+    using System;
     public class ContextBehavior : IBehavior
     {
         public virtual float BehaviorWeight { get; set; } = 1f;
@@ -44,7 +44,7 @@
                             ref momentumBoost,
                             Robot.SensorFleets.MyFleet.Ships.Count,
                             ring.Angle(i),
-                            Robot.HookComputer.Hook.BoostDuration
+                            Math.Min(Robot.HookComputer.Hook.BoostDuration,LookAheadMS)
                         );
 
                         ring.Weights[i] = ScoreAngle(ring.Angle(i), position, momentum);

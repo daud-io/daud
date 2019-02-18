@@ -50,7 +50,7 @@
                 }
                 bool willBoost=false;
                 var bestIndex=maxIndex;
-                if(combined.Weights[maxIndex]>combined.WeightsBoost[maxBoostIndex] && doBoost){
+                if(combined.Weights[maxIndex]<combined.WeightsBoost[maxBoostIndex]-0.9 && doBoost){
                     willBoost=true;
                     bestIndex=maxBoostIndex;
                 }

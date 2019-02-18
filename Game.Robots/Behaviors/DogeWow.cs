@@ -88,14 +88,14 @@ namespace Game.Robots.Behaviors
 
 
                         var dist = farA;
-                        accumulator -= 1.0f / (MathF.Max(dist * dist, 1.0f * 1.0f)) / fleet.Ships.Count;
+                        accumulator -= 10.0f * 10.0f / (MathF.Max(dist * dist, 10.0f * 10.0f)) / fleet.Ships.Count;
                     }
                     if (farB < thr)
                     {
 
 
                         var dist = farB;
-                        // accumulator -= 1.0f / (MathF.Max(dist * dist, 1.0f * 1.0f)) / fleet.Ships.Count/2.0f;
+                        //accumulator -= 1.0f / (MathF.Max(dist * dist, 1.0f * 1.0f)) / fleet.Ships.Count/2.0f;
                         // accumulator -= 1.0f / (MathF.Max(dist*dist,10.0f*10.0f)+0.001f)/fleet.Ships.Count/2.0f;
 
                         // accumulator -=1.0f/d/fleet.Ships.Count/4.0f;//( 400.0f*400.0f )/ (farA+1.0f)/fleet.Ships.Count;
