@@ -1,0 +1,4 @@
+{
+  "KeyType": "ES256",
+  "KeyExport": "{\r\n  \"HashSize\": 256,\r\n  \"D\": \"8hYRH35DGmXTPZhZH2Y8ThSxzcRj6rj3kTVL7U/w7gE=\",\r\n  \"X\": \"L/SjqchAZrVRHKvbWZxcf963va0DXcaib80qtRnfLK8=\",\r\n  \"Y\": \"mx6CzFFkqT1rSlMonlLUe3NV5MyqlrFL56qyFIPVbbs=\"\r\n}"
+}
