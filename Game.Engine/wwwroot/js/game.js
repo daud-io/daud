@@ -73,7 +73,6 @@ let d = 500; // for steering with arrows
 
 let keyboardSteering = false;
 let keyboardSteeringSpeed = 0.08;
-let keyboardSteeringSpeed2 = 100;
 
 let cache = new Cache(container);
 let view = false;
