@@ -105,7 +105,7 @@
             if(SensorFleets.MyFleet!=null){
                 bangle=MathF.Atan2(this.SensorFleets.MyFleet.Momentum.Y,this.SensorFleets.MyFleet.Momentum.X);
             }
-            (var finalRing, var angle) = ContextRingBlending.Blend(contexts);
+            (var finalRing, var angle,var boost) = ContextRingBlending.Blend(contexts,false);
             OnFinalRing(finalRing);
             var combined = new ContextRing(this.Steps);
 
