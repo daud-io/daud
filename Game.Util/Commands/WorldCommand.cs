@@ -83,7 +83,8 @@
 
                 if (Clear)
                 {
-                    await API.World.SetMap(WorldKey, new MapModel {
+                    await API.World.SetMap(WorldKey, new MapModel
+                    {
                         Rows = 0,
                         Columns = 0
                     });
@@ -99,12 +100,12 @@
                         .Select(p => new Vector2((float)p.X, (float)p.Y))
                         .FirstOrDefault();
 
-                var mapOffset = new Vector2(-(map.Width * Size) / 2, -(map.Height * Size)/2);
+                var mapOffset = new Vector2(-(map.Width * Size) / 2, -(map.Height * Size) / 2);
 
                 if (spawnLocation != null)
                     await API.World.PostHookAsync(new
                     {
-                        SpawnLocation = spawnLocation/map.TileWidth * Size + mapOffset
+                        SpawnLocation = spawnLocation / map.TileWidth * Size + mapOffset
                     }, WorldKey);
 
                 if (groundLayer != null)

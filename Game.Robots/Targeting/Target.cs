@@ -4,6 +4,6 @@
 
     public class Target
     {
-        public Vector2 Position { get; set; } 
+        public Vector2 Position { get; set; }
     }
 }

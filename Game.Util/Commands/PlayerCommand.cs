@@ -42,7 +42,7 @@
             public string TypeName { get; set; } = null;
 
             [Option("--startup-delay")]
-            public int StartupDelay{ get; set; } = 0;
+            public int StartupDelay { get; set; } = 0;
 
             [Option("--file")]
             public string File { get; set; } = "config.json";
@@ -112,7 +112,7 @@
 
                 foreach (var task in tasks)
                 {
-                    if(task.IsFaulted)
+                    if (task.IsFaulted)
                         Console.WriteLine($"Robot Crashed: {task.Exception}");
                 }
             }

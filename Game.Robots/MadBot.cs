@@ -3,7 +3,7 @@
     using Game.Robots.Behaviors;
     using Game.Robots.Models;
     using Game.Robots.Senses;
-        using Game.Robots.Targeting;
+    using Game.Robots.Targeting;
     using Newtonsoft.Json;
     using System;
     using System.Linq;
@@ -28,7 +28,7 @@
         public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
         public int BoostThreshold { get; set; } = 1;
         public float BoostDangerThreshold { get; set; } = -7.0f;
-        public float MidBad=0.5f;
+        public float MidBad = 0.5f;
 
 
 
@@ -42,8 +42,9 @@
             // Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 100, BehaviorWeight = 2 });
             // Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 200, BehaviorWeight = 2 });
             // Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 300, BehaviorWeight = 2 });
-            for( int m=000;m<2000;m+=50){
-                 Behaviors.Add(new DogeWow(this) { LookAheadMS = m+50, BehaviorWeight = 1 });
+            for (int m = 000; m < 2000; m += 50)
+            {
+                Behaviors.Add(new DogeWow(this) { LookAheadMS = m + 50, BehaviorWeight = 1 });
             }
             Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 2.0f });
             Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 10f });
@@ -58,9 +59,9 @@
         {
             foreach (var sensor in Sensors)
                 sensor.Sense();
-            
 
-            
+
+
 
 
             if (SensorCTF.CTFModeEnabled)
@@ -100,12 +101,13 @@
                 }
             }
 
-      var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
-            var bangle=0.0f;
-            if(SensorFleets.MyFleet!=null){
-                bangle=MathF.Atan2(this.SensorFleets.MyFleet.Momentum.Y,this.SensorFleets.MyFleet.Momentum.X);
+            var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
+            var bangle = 0.0f;
+            if (SensorFleets.MyFleet != null)
+            {
+                bangle = MathF.Atan2(this.SensorFleets.MyFleet.Momentum.Y, this.SensorFleets.MyFleet.Momentum.X);
             }
-            (var finalRing, var angle,var boost) = ContextRingBlending.Blend(contexts,false);
+            (var finalRing, var angle, var boost) = ContextRingBlending.Blend(contexts, false);
             OnFinalRing(finalRing);
             var combined = new ContextRing(this.Steps);
 
@@ -143,36 +145,40 @@
 
 
 
-            if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold && (combined.Weights[maxIndex]<BoostDangerThreshold ||(SensorFleets.MyFleet?.Ships.Count ?? 0) > 108))
-                Boost();
-           
-           this.MidBad=combined.Weights[maxIndex]/2.0f+combined.Weights[minIndex]/2.0f;
-            
-            if (CanShoot)
-            {
-             
-                var target = FleetTargeting.ChooseTarget()
-                    ?? AbandonedTargeting.ChooseTarget()
-                    ?? FishTargeting.ChooseTarget();
+                if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold && (combined.Weights[maxIndex] < BoostDangerThreshold || (SensorFleets.MyFleet?.Ships.Count ?? 0) > 108))
+                    Boost();
 
-                if (target != null){
-                    
-            
-                var fff=target;
-                    Vector2 sp=fff.Position-this.Position;
-                var angleg=(int) (MathF.Atan2(sp.Y,sp.X)/MathF.Atan2(0.0f,-1.0f)/2.0f*Steps);
-                if(true)//combined.Weights[((angleg)%Steps+Steps)%Steps]>combined.Weights[minIndex])
-                    ShootAt(sp+this.Position);
-                }else{
+                this.MidBad = combined.Weights[maxIndex] / 2.0f + combined.Weights[minIndex] / 2.0f;
 
-                    if(SensorFleets.MyFleet!=null){
-                        ShootAt(SensorFleets.MyFleet.Momentum);
+                if (CanShoot)
+                {
+
+                    var target = FleetTargeting.ChooseTarget()
+                        ?? AbandonedTargeting.ChooseTarget()
+                        ?? FishTargeting.ChooseTarget();
+
+                    if (target != null)
+                    {
+
+
+                        var fff = target;
+                        Vector2 sp = fff.Position - this.Position;
+                        var angleg = (int)(MathF.Atan2(sp.Y, sp.X) / MathF.Atan2(0.0f, -1.0f) / 2.0f * Steps);
+                        if (true)//combined.Weights[((angleg)%Steps+Steps)%Steps]>combined.Weights[minIndex])
+                            ShootAt(sp + this.Position);
+                    }
+                    else
+                    {
+
+                        if (SensorFleets.MyFleet != null)
+                        {
+                            ShootAt(SensorFleets.MyFleet.Momentum);
+                        }
                     }
                 }
             }
-            }
-            
-            
+
+
 
             SteerAngle(angle);
         }

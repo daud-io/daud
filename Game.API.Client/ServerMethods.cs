@@ -43,8 +43,8 @@
 
         public async Task<bool> AnnounceAsync(string message, string worldName = null)
         {
-            return await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.ServerAnnounce, 
-                queryStringContent: new { message, worldName});
+            return await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.ServerAnnounce,
+                queryStringContent: new { message, worldName });
         }
 
         public async Task<IEnumerable<GameConnection>> ConnectionsAsync(string worldName = null)

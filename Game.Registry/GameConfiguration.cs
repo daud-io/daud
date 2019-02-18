@@ -8,6 +8,6 @@
         public int TokenExpirationSeconds { get; set; } = 100000;
         public string AdministratorPassword { get; set; }
 
-        public bool AllowCORS {get; set;} = true;
+        public bool AllowCORS { get; set; } = true;
     }
 }

@@ -45,7 +45,7 @@
                 + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
 
             var momentum =
-                new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) 
+                new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle))
                 * Vector2.Distance(ship.Momentum, Vector2.Zero);
 
 

@@ -51,7 +51,7 @@
 
         public string CustomData { get => Connection.CustomData; set => Connection.CustomData = value; }
 
-        public Leaderboard Leaderboard {get => Connection.Leaderboard; }
+        public Leaderboard Leaderboard { get => Connection.Leaderboard; }
 
         public HookComputer HookComputer { get; private set; }
 
@@ -171,7 +171,7 @@
 
         protected async Task SpawnAsync()
         {
-            await Connection.SpawnAsync("🤖"+Name, Sprite, Color);
+            await Connection.SpawnAsync("🤖" + Name, Sprite, Color);
         }
 
         public void ShootAt(Vector2 target)

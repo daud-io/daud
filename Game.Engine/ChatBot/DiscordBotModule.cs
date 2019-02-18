@@ -42,7 +42,7 @@ namespace Game.Engine.ChatBot
         [Command("reset"), RequireUserPermission(GuildPermission.ManageChannels)]
         public async Task ResetAsync()
         {
-            
+
             Program.Abort();
             await ReplyAsync("woah... room spinning. so... cold...");
         }

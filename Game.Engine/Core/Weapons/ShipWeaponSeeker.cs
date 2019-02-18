@@ -44,7 +44,7 @@ namespace Game.Engine.Core.Weapons
                 thrustAngle = MathF.Atan2(delta.Y, delta.X);
 
                 Angle = thrustAngle;
-                
+
             }
             else
                 thrustAngle = Angle;

@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Numerics;
 
-    public class Advance: ContextBehavior
+    public class Advance : ContextBehavior
     {
         private bool Active = true;
         public Vector2 TargetPoint = Vector2.Zero;

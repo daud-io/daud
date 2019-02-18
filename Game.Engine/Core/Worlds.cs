@@ -19,8 +19,8 @@
             AddWorld("team", WorldTeam());
             AddWorld("ctf", WorldCTF());
             // AddWorld("other", WorldOther());
-			
-			/*
+
+            /*
             AddWorld("sharks", WorldSharks());
             AddWorld("sumo", WorldSumo());
             AddWorld("boss", WorldBoss());
@@ -82,14 +82,14 @@
             hook.BotBase = 10;
             hook.BotRespawnDelay = 0;
             hook.PickupShields = 10;
-			hook.ComboDelay = 2000;
+            hook.ComboDelay = 2000;
 
             hook.Name = "Planet Daud";
             hook.Description = "AAAAAHHH! Run!";
             hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
             hook.Weight = 100;
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }
@@ -109,8 +109,8 @@
             hook.Name = "Snake World";
             hook.Description = "Hisssssss...";
             hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }
@@ -136,8 +136,8 @@
 
             hook.Name = "Sumo World";
             hook.Description = "Bigger Better...";
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }
@@ -159,8 +159,8 @@
 
             hook.Name = "Dueling Room";
             hook.Description = "1 vs. 1";
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }
@@ -176,8 +176,8 @@
             hook.Name = "Team";
             hook.Description = "Cyan vs. Red";
             hook.AllowedColors = Hook.TeamColors;
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }
@@ -208,8 +208,8 @@
                     to your base.</p>";
 
             hook.AllowedColors = Hook.TeamColors;
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }
@@ -233,8 +233,8 @@
                     + " - Minnows (blue) run towards borders (left & right)";
 
             hook.AllowedColors = Hook.TeamColors;
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World
             {
@@ -264,8 +264,8 @@
             hook.Description = "Wormhole test";
             hook.AllowedColors = Hook.TeamColors;
             hook.Weight = 1000;
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }
@@ -282,8 +282,8 @@
             hook.Description = "So many Circles! Much wow!";
             hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
             hook.Weight = 100;
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }
@@ -297,8 +297,8 @@
             hook.Name = "Beach World";
             hook.Description = "Come on in, the water's fine";
             hook.Weight = 1000;
-			
-			hook.WorldResizeEnabled = false;
+
+            hook.WorldResizeEnabled = false;
 
             return new World(hook);
         }

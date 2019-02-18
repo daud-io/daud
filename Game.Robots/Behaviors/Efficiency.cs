@@ -10,7 +10,7 @@
         private float Scale = 0f;
         public float MaximumAngle = 0;
 
-        public Efficiency(ContextRobot robot): base(robot)
+        public Efficiency(ContextRobot robot) : base(robot)
         {
         }
 
