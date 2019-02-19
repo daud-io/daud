@@ -83,7 +83,9 @@ function load() {
         // any values NOT in the cookie will remain defined with the new defaults
         for (const key in savedSettings) Settings[key] = savedSettings[key];
 
-        if (Settings.theme == "3ds2agh4z76feci") Settings.theme = "516mkwof6m4d4tg";
+        // retro upgrades
+        if (Settings.theme == "3ds2agh4z76feci") Settings.theme = "xn4t5ce2916uxbx";
+        if (Settings.theme == "516mkwof6m4d4tg") Settings.theme = "xn4t5ce2916uxbx";
     }
 
     document.getElementById("settingsThemeSelector").value = Settings.theme;
