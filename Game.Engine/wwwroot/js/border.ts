@@ -1,9 +1,14 @@
+import { Container } from "pixi.js";
+
 export class Border {
-    constructor(container) {
+    container: Container;
+    graphics: PIXI.Graphics;
+    worldSize: any;
+    constructor(container: Container) {
         this.container = container;
 
         this.graphics = new PIXI.Graphics();
-        this.graphics.parentGroup = this.container.backgroundGroup;
+        this.graphics.parentGroup = (<any>this.container).backgroundGroup;
 
         this.updateWorldSize(6000);
         this.container.addChild(this.graphics);
@@ -25,5 +30,5 @@ export class Border {
         this.worldSize = size;
     }
 
-    draw(cache, interpolator, currentTime, fleetID) {}
+    draw(cache, interpolator, currentTime) {}
 }

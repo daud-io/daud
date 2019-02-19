@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 
 var changelog = document.getElementById("changelog");
-var currentChangelogVersion = 0;
+var currentChangelogVersion = "0";
 var lastversion = Cookies.get("changelog");
 var open = false;
 

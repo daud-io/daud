@@ -25,6 +25,7 @@ import "pixi-tilemap";
 import "./changelog";
 
 import "./hintbox";
+import { Vector2 } from "./Vector2";
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
@@ -32,9 +33,9 @@ const canvas = document.getElementById("gameCanvas");
 //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 //PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
-const app = new PIXI.Application({ view: canvas, transparent: true });
+const app = new PIXI.Application({ view: canvas, transparent: true } as PIXI.ApplicationOptions);
 app.stage = new PIXI.display.Stage();
-app.stage.group.enableSort = true;
+(<any>app.stage).group.enableSort = true;
 const container = new PIXI.Container();
 app.stage.addChild(container);
 
@@ -46,18 +47,18 @@ app.stage.addChild(new PIXI.display.Layer(backgroundGroup));
 app.stage.addChild(new PIXI.display.Layer(tileGroup));
 app.stage.addChild(new PIXI.display.Layer(bodyGroup));
 
-container.backgroundGroup = backgroundGroup;
+(<any>container).backgroundGroup = backgroundGroup;
 container.bodyGroup = bodyGroup;
 
-container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
-container.tiles.parentGroup = tileGroup;
-container.addChild(container.tiles);
+(<any>container).tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
+(<any>container).tiles.parentGroup = tileGroup;
+container.addChild((<any>container).tiles);
 
 const renderer = new Renderer(container);
 const background = new Background(container);
 const border = new Border(container);
 const overlay = new Overlay(container, canvas, document.getElementById("plotly"));
-container.plotly = document.getElementById("plotly");
+(<any>container).plotly = document.getElementById("plotly");
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
@@ -75,14 +76,14 @@ let keyboardSteering = false;
 let keyboardSteeringSpeed = 0.075;
 
 let cache = new Cache(container);
-let view = false;
-let serverTimeOffset = false;
-let lastOffset = false;
-let gameTime = false;
-let lastPosition = false;
+let view = null;
+let serverTimeOffset = null;
+let lastOffset = null;
+let gameTime = null;
+let lastPosition = null;
 let worldSize = 1000;
 
-let CustomData = false;
+let CustomData = null;
 let CustomDataTime = false;
 
 let currentWorld = false;
@@ -93,12 +94,12 @@ const connection = new Connection();
 /*if (window.location.hash) connection.connect(window.location.hash.substring(1));
 else connection.connect();*/
 
-window.Game.primaryConnection = connection;
-window.Game.isBackgrounded = false;
-window.Game.cache = cache;
-window.Game.controls = Controls;
+(<any>window).Game.primaryConnection = connection;
+(<any>window).Game.isBackgrounded = false;
+(<any>window).Game.cache = cache;
+(<any>window).Game.controls = Controls;
 
-window.Game.reinitializeWorld = function() {
+(<any>window).Game.reinitializeWorld = function() {
     if (currentWorld) Controls.initializeWorld(currentWorld);
 
     background.refreshSprite();
@@ -111,7 +112,7 @@ const bodyFromServer = (cache, body) => {
     const VELOCITY_SCALE_FACTOR = 5000.0;
 
     var spriteIndex = body.sprite();
-    var spriteName = false;
+    var spriteName = null;
     if (spriteIndex >= 1000) spriteName = `map[${spriteIndex - 1000}]`;
     else spriteName = spriteIndices[spriteIndex];
 
@@ -158,8 +159,8 @@ connection.onLeaderboard = lb => {
 };
 
 var fleetID = 0;
-let lastAliveState = false;
-let aliveSince = false;
+let lastAliveState = null;
+let aliveSince = null;
 let joiningWorld = false;
 
 connection.onView = newView => {
@@ -188,10 +189,10 @@ connection.onView = newView => {
         Events.Death((gameTime - aliveSince) / 1000);
 
         let countDown = 3;
-        let interval = false;
+        let interval = null;
         const updateButton = function() {
-            const button = document.getElementById("spawn");
-            const buttonSpectate = document.getElementById("spawnSpectate");
+            const button = document.getElementById("spawn")as HTMLButtonElement;
+            const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
 
             if (countDown > 0) {
                 buttonSpectate.value = button.value = `${countDown--} ...`;
@@ -208,7 +209,7 @@ connection.onView = newView => {
     }
 
     lastOffset = view.time - performance.now() + Math.random();
-    if (serverTimeOffset === false) serverTimeOffset = lastOffset;
+    if (!serverTimeOffset) serverTimeOffset = lastOffset;
     serverTimeOffset = 0.99 * serverTimeOffset + 0.01 * lastOffset;
 
     const groupsLength = newView.groupsLength();
@@ -291,7 +292,7 @@ connection.onView = newView => {
     }
 };
 
-let lastControl = {};
+let lastControl:any = {};
 
 setInterval(() => {
     if (
@@ -302,13 +303,13 @@ setInterval(() => {
         Controls.shoot !== lastControl.shoot ||
         message.txt !== lastControl.chat
     ) {
-        let spectateControl = false;
+        let spectateControl = null;
         if (isSpectating) {
             if (Controls.shoot) spectateControl = "action:next";
             else spectateControl = "spectating";
         }
 
-        var customData = false;
+        var customData = null;
 
         if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
 
@@ -352,7 +353,7 @@ function doSpawn() {
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
 
-function startSpectate(hideButton) {
+function startSpectate(hideButton=false) {
     isSpectating = true;
     Events.Spectate();
     document.body.classList.add("spectating");
@@ -431,8 +432,8 @@ function doPing() {
 
     if (frameCounter === 0) {
         //console.log("backgrounded");
-        Game.isBackgrounded = true;
-    } else Game.isBackgrounded = false;
+        (<any>window).Game.isBackgrounded = true;
+    } else  (<any>window).Game.isBackgrounded = false;
     frameCounter = 0;
     viewCounter = 0;
     updateCounter = 0;
@@ -483,7 +484,7 @@ app.ticker.add(() => {
     // cooldown.draw();
 
     if (Controls.mouseX) {
-        const pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);
+        const pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
 
         if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
             if (Controls.right && !Controls.left) {
@@ -554,7 +555,7 @@ function parseQuery(queryString) {
 }
 
 const query = parseQuery(window.location.search);
-if (query.spectate && query.spectate !== "0") {
+if ((<any>query).spectate && (<any>query).spectate !== "0") {
     startSpectate(true);
 }
 

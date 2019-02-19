@@ -2,16 +2,25 @@
 import { Settings } from "../settings";
 
 export class Fleet {
+    container: any;
+    caption?: string;
+    ships: any[];
+    ID: boolean;
+    text: PIXI.Text;
+    textChat: PIXI.Text;
+    chat?: string;
+    plotly?: {data,layout};
+    usingPlotly: boolean;
     constructor(container, cache) {
         this.container = container;
-        this.caption = false;
+        this.caption = null;
         this.ships = [];
         this.ID = false;
 
         this.text = new PIXI.Text("", { fontFamily: [Settings.font, "NotoColorEmoji"], fontSize: Settings.nameSize, fill: 0xffffff });
         this.textChat = new PIXI.Text("", { fontFamily: "FontAwesome", fontSize: Settings.nameSize, fill: 0xffffff });
-        this.chat = false;
-        this.plotly = false;
+        this.chat = null;
+        this.plotly = null;
         this.text.anchor.set(0.5, 0.5);
         this.textChat.anchor.set(0.5, 0.5);
         this.text.position.x = 0;
@@ -39,10 +48,10 @@ export class Fleet {
 
         if (groupUpdate.CustomData) {
             if (groupUpdate.CustomData.chat) this.chat = groupUpdate.CustomData.chat;
-            else this.chat = false;
+            else this.chat = null;
 
             if (groupUpdate.CustomData.plotly) this.plotly = groupUpdate.CustomData.plotly;
-            else this.plotly = false;
+            else this.plotly = null;
         }
 
         if (this.plotly && this.ID == myFleetID) {

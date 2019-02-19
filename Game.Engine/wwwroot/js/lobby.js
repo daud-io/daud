@@ -71,8 +71,8 @@ let showing = false;
 let firstLoad = true;
 
 export const LobbyCallbacks = {
-    onLobbyClose: false,
-    onWorldJoin: false
+    onLobbyClose: null,
+    onWorldJoin: null
 };
 
 LobbyCallbacks.joinWorld = function(worldKey) {
