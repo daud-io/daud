@@ -33,7 +33,7 @@
 
         public IEnumerable<Body> Bodies { get => Connection.Bodies; }
         public Vector2 Position { get => this.Connection.Position; }
-        public long GameTime { get => this.Connection.GameTime; }
+        public virtual long GameTime { get => this.Connection.GameTime; }
         public ushort WorldSize { get => this.Connection.WorldSize; }
         public uint FleetID { get => this.Connection?.FleetID ?? 0; }
 
@@ -46,6 +46,10 @@
         public bool Shooting { get; private set; }
         public Vector2 ShootingAt { get; private set; }
         public long ShootUntil { get; set; }
+        public long ShootAfter { get; set; }
+
+        public int ShootingTime { get; set; } = 100;
+        public int ShootingDelay { get; set; } = 0;
 
         public long BoostUntil { get; set; }
 
@@ -174,13 +178,14 @@
             await Connection.SpawnAsync("🤖" + Name, Sprite, Color);
         }
 
-        public void ShootAt(Vector2 target)
+        public virtual void ShootAt(Vector2 target)
         {
             if (CanShoot)
             {
                 Shooting = true;
                 ShootingAt = target;
-                ShootUntil = GameTime + 100;
+                ShootUntil = GameTime + ShootingTime;
+                ShootAfter = GameTime + ShootingDelay;
                 Connection.ControlIsShooting = true;
             }
         }

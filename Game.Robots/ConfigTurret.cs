@@ -3,17 +3,25 @@
     using Game.Robots.Targeting;
     using System.Threading.Tasks;
     using System;
+    using System.Numerics;
 
     public class ConfigTurret : ConfigurableContextBot
     {
         private readonly FleetTargeting FleetTargeting;
         private readonly AbandonedTargeting AbandonedTargeting;
         private readonly FishTargeting FishTargeting;
-        public bool AttackFleets = true;
-        public bool AttackFish = true;
-        public bool Safe = false;
-        public bool AttackAbandoned = true;
+        public bool AttackFleets { get; set; } = true;
+        public bool AttackFish { get; set; } = true;
+        public bool Safe { get; set; } = false;
+        public bool AttackAbandoned { get; set; } = true;
         public int BoostThreshold { get; set; } = 1;
+
+        public float TargetingAverageError { get; set; } = 0;
+        public int FiringDelayMS { get; set; } = 1000;
+        private long DeferShootUntil = 0;
+        private bool LastCanShoot = false;
+
+        public int TimeOffset { get; set; } = 0;
 
         public ConfigTurret()
         {
@@ -22,11 +30,30 @@
             FishTargeting = new FishTargeting(this);
         }
 
+        public override long GameTime => base.GameTime + TimeOffset;
+
+        public override void ShootAt(Vector2 target)
+        {
+            var angle = MathF.Atan2(target.Y, target.X);
+            var mag = target.Length();
+
+            var r = new Random();
+            angle += (float)r.NextDouble() * TargetingAverageError * 2;
+
+            base.ShootAt(new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * mag);
+        }
+
         protected async override Task AliveAsync()
         {
             await base.AliveAsync();
 
-            if (CanShoot)
+            // when shooting becomes available
+            // lets see if we should delay
+            if (!LastCanShoot && CanShoot)
+                DeferShootUntil = GameTime + FiringDelayMS;
+            LastCanShoot = CanShoot;
+
+            if (CanShoot && DeferShootUntil < GameTime)
             {
                 var target = (AttackFleets ? FleetTargeting.ChooseTarget() : null)
                     ?? (AttackAbandoned ? AbandonedTargeting.ChooseTarget() : null)
