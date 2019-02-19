@@ -272,6 +272,17 @@
             };
         }
 
+        public async Task SendExitAsync()
+        {
+            var builder = new FlatBufferBuilder(1);
+            var exit = NetExit.CreateNetExit(builder);
+            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetExit, exit.Value);
+            builder.Finish(q.Value);
+
+            await SendAsync(builder.DataBuffer, default);
+        }
+
+
         public async Task SpawnAsync(string name, string sprite, string color)
         {
             var builder = new FlatBufferBuilder(1);

@@ -25,7 +25,7 @@
 
         public bool AutoFire { get; set; } = false;
 
-        public bool CanShoot { get => CooldownShoot == 1; }
+        public bool CanShoot { get => CooldownShoot == 1 && !Shooting; }
         public bool CanBoost { get => CooldownBoost == 1; }
 
         public float CooldownShoot { get => Connection.CooldownShoot; }
@@ -42,6 +42,8 @@
         protected virtual Task OnDeathAsync() => Task.FromResult(0);
         protected virtual Task OnSpawnAsync() => Task.FromResult(0);
         protected virtual Task OnNewLeaderboardAsync() => Task.FromResult(0);
+
+        private bool IsSpawning = false;
 
         public bool Shooting { get; private set; }
         public Vector2 ShootingAt { get; private set; }
@@ -97,6 +99,7 @@
             {
                 this.SpawnTime = Connection.GameTime;
                 await OnSpawnAsync();
+                IsSpawning = false;
             }
 
             IsAlive = Connection.IsAlive;
@@ -135,6 +138,10 @@
             if (!this.CanBoost && this.Connection.ControlIsBoosting && GameTime > BoostUntil)
                 this.Connection.ControlIsBoosting = false;
 
+            if (!this.Connection.ControlIsShooting
+                && ShootAfter <= GameTime
+                && GameTime < ShootUntil)
+                Connection.ControlIsShooting = true;
 
             if (!this.CanShoot && this.Shooting && GameTime > ShootUntil)
             {
@@ -166,15 +173,22 @@
         {
             await DeadAsync();
 
-            if (AutoSpawn)
+            if (AutoSpawn && !IsSpawning)
                 if (DeathTime + RESPAWN_FALLOFF < GameTime)
                 {
                     await SpawnAsync();
                 }
         }
 
+
+        protected async Task Exit()
+        {
+            await Connection.SendExitAsync();
+        }
+
         protected async Task SpawnAsync()
         {
+            IsSpawning = true;
             await Connection.SpawnAsync("🤖" + Name, Sprite, Color);
         }
 
@@ -186,7 +200,6 @@
                 ShootingAt = target;
                 ShootUntil = GameTime + ShootingTime;
                 ShootAfter = GameTime + ShootingDelay;
-                Connection.ControlIsShooting = true;
             }
         }
 

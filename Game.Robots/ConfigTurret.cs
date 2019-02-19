@@ -17,7 +17,7 @@
         public int BoostThreshold { get; set; } = 1;
 
         public float TargetingAverageError { get; set; } = 0;
-        public int FiringDelayMS { get; set; } = 1000;
+        public int FiringDelayMS { get; set; } = 0;
         private long DeferShootUntil = 0;
         private bool LastCanShoot = false;
 

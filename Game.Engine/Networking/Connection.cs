@@ -421,7 +421,7 @@ namespace Game.Engine.Networking
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
             builder.Finish(q.Value);
 
-            await SendAsync(builder.DataBuffer, default(CancellationToken));
+            await SendAsync(builder.DataBuffer, default);
         }
 
         private async Task HandlePingAsync(NetPing ping)
