@@ -1,6 +1,6 @@
 ﻿import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
-
+import arrow from "../img/arrow.png";
 const record = document.getElementById("record");
 const leaderboard = document.getElementById("leaderboard");
 const leaderboardLeft = document.getElementById("leaderboard-left");
@@ -23,7 +23,7 @@ function getOut(entry, position) {
     const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
     return (
         `<tr>` +
-        `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+        `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${arrow}" style="transform:rotate(${angle}rad)"></img></td>` +
         `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
         `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
         `<td class="score">${entry.Score}</td>` +

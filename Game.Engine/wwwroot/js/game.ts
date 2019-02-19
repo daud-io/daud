@@ -27,6 +27,8 @@ import "./changelog";
 import "./hintbox";
 import { Vector2 } from "./Vector2";
 
+window.Game = window.Game || {};
+
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
 
@@ -48,7 +50,7 @@ app.stage.addChild(new PIXI.display.Layer(tileGroup));
 app.stage.addChild(new PIXI.display.Layer(bodyGroup));
 
 (<any>container).backgroundGroup = backgroundGroup;
-container.bodyGroup = bodyGroup;
+(<any>container).bodyGroup = bodyGroup;
 
 (<any>container).tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
 (<any>container).tiles.parentGroup = tileGroup;
