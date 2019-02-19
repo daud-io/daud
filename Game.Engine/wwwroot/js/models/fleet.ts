@@ -9,7 +9,7 @@ export class Fleet {
     text: PIXI.Text;
     textChat: PIXI.Text;
     chat?: string;
-    plotly?: {data,layout};
+    plotly?: { data; layout };
     usingPlotly: boolean;
     constructor(container, cache) {
         this.container = container;

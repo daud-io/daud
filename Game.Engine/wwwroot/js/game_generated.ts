@@ -2014,4 +2014,4 @@ Game.Engine.Networking.FlatBuffers.NetQuantum.finishNetQuantumBuffer = function(
 
 // Exports for Node.js and RequireJS
 this.Game = Game;
-export {Game};
+export { Game };

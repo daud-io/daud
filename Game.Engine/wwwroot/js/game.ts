@@ -191,7 +191,7 @@ connection.onView = newView => {
         let countDown = 3;
         let interval = null;
         const updateButton = function() {
-            const button = document.getElementById("spawn")as HTMLButtonElement;
+            const button = document.getElementById("spawn") as HTMLButtonElement;
             const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
 
             if (countDown > 0) {
@@ -292,7 +292,7 @@ connection.onView = newView => {
     }
 };
 
-let lastControl:any = {};
+let lastControl: any = {};
 
 setInterval(() => {
     if (
@@ -353,7 +353,7 @@ function doSpawn() {
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
 
-function startSpectate(hideButton=false) {
+function startSpectate(hideButton = false) {
     isSpectating = true;
     Events.Spectate();
     document.body.classList.add("spectating");
@@ -433,7 +433,7 @@ function doPing() {
     if (frameCounter === 0) {
         //console.log("backgrounded");
         (<any>window).Game.isBackgrounded = true;
-    } else  (<any>window).Game.isBackgrounded = false;
+    } else (<any>window).Game.isBackgrounded = false;
     frameCounter = 0;
     viewCounter = 0;
     updateCounter = 0;

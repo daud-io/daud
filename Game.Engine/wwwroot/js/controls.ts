@@ -52,7 +52,7 @@ shipSelectorSwitch.addEventListener("click", function(e) {
     refreshSelectedStyle();
 });
 
-const nick:HTMLInputElement = document.querySelector("#nick");
+const nick: HTMLInputElement = document.querySelector("#nick");
 nick.addEventListener("change", e => {
     Controls.nick = nick.value;
     if (Controls && Controls.canvas) Controls.canvas.focus();
@@ -94,11 +94,11 @@ export var Controls = {
     autofire: false,
     downSince: null,
     customData: false,
-    mouseX:0,
-    mouseY:0,
-    angle:0,
-    canvas:null,
-    color:null,
+    mouseX: 0,
+    mouseY: 0,
+    angle: 0,
+    canvas: null,
+    color: null,
     registerCanvas(canvas) {
         const getMousePos = (canvas, { clientX, clientY }) => {
             const rect = canvas.getBoundingClientRect();

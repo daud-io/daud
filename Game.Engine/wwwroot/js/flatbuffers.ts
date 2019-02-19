@@ -140,7 +140,7 @@ var flatbuffers = {};
  * @constructor
  * @param {number=} opt_initial_size
  */
-(<any>flatbuffers).Builder = function(opt_initial_size:number) {
+(<any>flatbuffers).Builder = function(opt_initial_size: number) {
     if (!opt_initial_size) {
         var initial_size = 1024;
     } else {
@@ -735,7 +735,7 @@ var flatbuffers = {};
  * @return {(<any>flatbuffers).Offset} The offset in the buffer where the encoded string starts
  */
 (<any>flatbuffers).Builder.prototype.createString = function(s) {
-    var utf8:Uint8Array|any[];
+    var utf8: Uint8Array | any[];
     if (s instanceof Uint8Array) {
         utf8 = s;
     } else {
@@ -1194,4 +1194,4 @@ var flatbuffers = {};
 /// @endcond
 /// @}
 
-export {flatbuffers};
+export { flatbuffers };

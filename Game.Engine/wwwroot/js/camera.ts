@@ -5,9 +5,9 @@ export class Camera {
     lookat: number[];
     size: any;
     fieldOfView: any;
-    viewport: { left: number; right: number; top: number; bottom: number; width: number; height: number; scale: number[]; };
+    viewport: { left: number; right: number; top: number; bottom: number; width: number; height: number; scale: number[] };
     aspectRatio: number;
-    constructor(size, settings = {fieldOfView:Math.PI / 4.0}) {
+    constructor(size, settings = { fieldOfView: Math.PI / 4.0 }) {
         this.distance = 1500.0;
         this.lookat = [0, 0];
         this.size = size;
@@ -47,7 +47,7 @@ export class Camera {
         this.updateViewport();
     }
 
-    screenToWorld(pos:Vector2, obj:Vector2=new Vector2(0,0)) {
+    screenToWorld(pos: Vector2, obj: Vector2 = new Vector2(0, 0)) {
         obj.x = pos.x / this.viewport.scale[0] + this.viewport.left;
         obj.y = pos.y / this.viewport.scale[1] + this.viewport.top;
         return obj;

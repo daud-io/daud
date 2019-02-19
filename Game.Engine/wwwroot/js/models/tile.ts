@@ -1,7 +1,7 @@
 ﻿import { RenderedObject } from "./renderedObject";
 
 export class Tile extends RenderedObject {
-    constructor(container,cache) {
+    constructor(container, cache) {
         super(container);
         (<any>this.container).tiles.isDirty = true;
     }

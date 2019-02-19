@@ -14,14 +14,14 @@ export class RenderedObject {
     currentMode: number;
     currentZIndex: number;
     activeTextures: {};
-    body?:any;
+    body?: any;
     spriteLayers?: any;
     constructor(container: Container) {
         this.container = container;
         this.currentSpriteName = false;
         this.currentMode = 0;
         this.currentZIndex = 0;
-        
+
         this.activeTextures = {};
     }
 
@@ -56,7 +56,7 @@ export class RenderedObject {
             const baseTexture = PIXI.BaseTexture.from(img);
 
             baseTexture.mipmap = Settings.mipmapping;
-            (<any>baseTexture).defaultAnchor=new PIXI.Point(0,0);
+            (<any>baseTexture).defaultAnchor = new PIXI.Point(0, 0);
 
             if (textureDefinition.animated) {
                 const tileSize = textureDefinition.tileSize || 32;
@@ -121,16 +121,16 @@ export class RenderedObject {
         else return false;
     }
 
-    buildSprite(textureName, spriteName):Sprite {
+    buildSprite(textureName, spriteName): Sprite {
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
         const textures = RenderedObject.loadTexture(textureDefinition, textureName);
-        var pixiSprite:Sprite = null;
+        var pixiSprite: Sprite = null;
 
         if (textureDefinition.animated) {
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);
-            if(pixiSprite instanceof PIXI.extras.AnimatedSprite){
+            if (pixiSprite instanceof PIXI.extras.AnimatedSprite) {
                 pixiSprite.loop = textureDefinition.loop;
-            pixiSprite.animationSpeed = textureDefinition.animationSpeed;
+                pixiSprite.animationSpeed = textureDefinition.animationSpeed;
             }
             pixiSprite.parentGroup = this.container.bodyGroup;
         } else if (textureDefinition.map) {
@@ -162,7 +162,7 @@ export class RenderedObject {
         return pixiSprite;
     }
 
-    static getSpriteDefinition(spriteName):any {
+    static getSpriteDefinition(spriteName): any {
         let spriteDefinition = null;
 
         var mapKey = this.parseMapKey(spriteName);
@@ -244,7 +244,7 @@ export class RenderedObject {
         this.setSprite(this.currentSpriteName, this.currentMode, this.currentZIndex, true);
     }
 
-    setSprite(spriteName, mode, zIndex, reload=false) {
+    setSprite(spriteName, mode, zIndex, reload = false) {
         // check that we really need to change anything
         if (reload || spriteName != this.currentSpriteName || mode != this.currentMode || zIndex != this.currentZIndex) {
             this.currentSpriteName = spriteName;
