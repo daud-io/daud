@@ -1,8 +1,8 @@
 ﻿export class Events {
-    static Report(category, action, value) {
-        window.dataLayer = window.dataLayer || [];
-        function gtag() {
-            dataLayer.push(arguments);
+    static Report(category, action, value?) {
+        (<any>window).dataLayer = (<any>window).dataLayer || [];
+        function gtag(...args) {
+            (<any>window).dataLayer.push(args);
         }
         gtag("event", action, { event_category: category, value: value });
     }

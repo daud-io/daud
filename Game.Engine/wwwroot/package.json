@@ -27,5 +27,8 @@
     "plotly.js": "^1.44.4",
     "prettier": "^1.16.1",
     "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.3.3"
   }
 }

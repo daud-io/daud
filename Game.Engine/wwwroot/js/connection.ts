@@ -4,16 +4,30 @@ import { Cache } from "./cache";
 import { Settings } from "./settings";
 
 export class Connection {
+    onView: (view: any) => void;
+    onLeaderboard: (leaderboard: any) => void;
+    onConnected: () => void;
+    reloading: boolean;
+    connected: boolean;
+    framesPerSecond: number;
+    viewsPerSecond: number;
+    updatesPerSecond: number;
+    statBytesUp: number;
+    statBytesDown: number;
+    statBytesDownPerSecond: number;
+    statBytesUpPerSecond: number;
+    fb: any;
+    latency: number;
+    minLatency: number;
+    simulateLatency: number;
+    socket: any;
+    pingSent: number;
     constructor() {
         this.onView = view => {};
         this.onLeaderboard = leaderboard => {};
         this.onConnected = () => {};
         this.reloading = false;
         this.connected = false;
-
-        this.framesPerSecond = false;
-        this.viewsPerSecond = false;
-        this.updatesPerSecond = false;
 
         this.statBytesUp = 0;
         this.statBytesDown = 0;
@@ -41,7 +55,7 @@ export class Connection {
     disconnect() {
         if (this.socket) this.socket.close();
     }
-    connect(world) {
+    connect(world?) {
         let url;
         if (window.location.protocol === "https:") {
             url = "wss:";
@@ -99,7 +113,7 @@ export class Connection {
         };
     }
     sendPing() {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new (<any>flatbuffers).Builder(0);
 
         this.fb.NetPing.startNetPing(builder);
 
@@ -125,9 +139,12 @@ export class Connection {
 
         this.send(builder.asUint8Array());
     }
+    isBackgrounded(builder: any, isBackgrounded: any): any {
+        throw new Error("Method not implemented.");
+    }
 
     sendExit() {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new (<any>flatbuffers).Builder(0);
 
         this.fb.NetExit.startNetExit(builder);
 
@@ -145,7 +162,7 @@ export class Connection {
     }
 
     sendSpawn(name, color, ship, token) {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new (<any>flatbuffers).Builder(0);
 
         const stringColor = builder.createString(color || "gray");
         const stringName = builder.createString(name || "unknown");
@@ -171,7 +188,7 @@ export class Connection {
     }
 
     sendControl(angle, boost, shoot, x, y, spectateControl, customDataJson) {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new (<any>flatbuffers).Builder(0);
 
         let spectateString = false;
         let customDataJsonString = false;
@@ -230,14 +247,14 @@ export class Connection {
 
     onMessage(event) {
         const data = new Uint8Array(event.data);
-        const buf = new flatbuffers.ByteBuffer(data);
+        const buf = new (<any>flatbuffers).ByteBuffer(data);
 
         this.statBytesDown += data.byteLength;
 
         const quantum = this.fb.NetQuantum.getRootAsNetQuantum(buf);
 
         const messageType = quantum.messageType();
-        let message = false;
+        let message = null;
 
         switch (messageType) {
             case this.fb.AllMessages.NetWorldView:

@@ -1,13 +1,13 @@
 ﻿import { RenderedObject } from "./renderedObject";
 
 export class Tile extends RenderedObject {
-    constructor(container) {
+    constructor(container,cache) {
         super(container);
-        this.container.tiles.isDirty = true;
+        (<any>this.container).tiles.isDirty = true;
     }
 
     destroy() {
-        this.container.tiles.isDirty = true;
+        (<any>this.container).tiles.isDirty = true;
         super.destroy();
     }
 
@@ -16,11 +16,11 @@ export class Tile extends RenderedObject {
         //super.update(updateData);
     }
 
-    preRender(currentTime, interpolator, fleetID) {
+    preRender(currentTime, interpolator) {
         if (!this.body) return;
 
-        if (this.container.tiles.isRefreshing) {
-            var tiles = this.container.tiles;
+        if ((<any>this.container).tiles.isRefreshing) {
+            var tiles = (<any>this.container).tiles;
             var mapKey = RenderedObject.parseMapKey(this.body.Sprite);
 
             if (!mapKey) console.log(`non-map key used to reference map texture: ${this.body.Sprite}`);

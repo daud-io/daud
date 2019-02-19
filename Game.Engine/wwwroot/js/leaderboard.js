@@ -85,8 +85,8 @@ export class Leaderboard {
         } else if (data.Type == "CTF") {
             let outL = "";
             let outR = "";
-            let redFlag = false;
-            let cyanFlag = false;
+            let redFlag = null;
+            let cyanFlag = null;
 
             data.Entries.forEach((entry, i) => {
                 let str = getOut(entry, position);

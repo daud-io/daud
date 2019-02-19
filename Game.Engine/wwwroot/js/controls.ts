@@ -13,7 +13,7 @@ new EmojiPanel(document.getElementById("emoji-container"), {
         Cookies.set("emoji", e.index);
         Cookies.set("emoji2", e.unified);
         var x = unicode(e.unified);
-        emojiTrigger.firstChild.setAttribute("data-index", e.index);
+        (emojiTrigger.firstChild as HTMLElement).setAttribute("data-index", e.index);
 
         Controls.emoji = x;
         console.log(Controls.emoji);
@@ -52,7 +52,7 @@ shipSelectorSwitch.addEventListener("click", function(e) {
     refreshSelectedStyle();
 });
 
-const nick = document.querySelector("#nick");
+const nick:HTMLInputElement = document.querySelector("#nick");
 nick.addEventListener("change", e => {
     Controls.nick = nick.value;
     if (Controls && Controls.canvas) Controls.canvas.focus();
@@ -92,8 +92,13 @@ export var Controls = {
     boost: false,
     shoot: false,
     autofire: false,
-    downSince: false,
+    downSince: null,
     customData: false,
+    mouseX:0,
+    mouseY:0,
+    angle:0,
+    canvas:null,
+    color:null,
     registerCanvas(canvas) {
         const getMousePos = (canvas, { clientX, clientY }) => {
             const rect = canvas.getBoundingClientRect();
@@ -303,5 +308,5 @@ if (savedColor != undefined) {
 
 if (savedEmoji != undefined) {
     Controls.emoji = unicode(savedEmoji2);
-    emojiTrigger.firstChild.setAttribute("data-index", savedEmoji);
+    (emojiTrigger.firstChild as HTMLElement).setAttribute("data-index", savedEmoji);
 }

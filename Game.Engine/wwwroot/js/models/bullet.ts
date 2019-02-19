@@ -1,7 +1,7 @@
 ﻿import { RenderedObject } from "./renderedObject";
 
 export class Bullet extends RenderedObject {
-    constructor(container) {
+    constructor(container,cache) {
         super(container);
     }
 }

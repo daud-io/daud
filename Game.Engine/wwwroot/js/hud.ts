@@ -2,6 +2,10 @@
 
 const hudh = document.getElementById("hud");
 export class HUD {
+    _latency: any;
+    framesPerSecond: number;
+    playerCount: number;
+    spectatorCount: number;
     set latency(l) {
         this._latency = l;
         this.update();

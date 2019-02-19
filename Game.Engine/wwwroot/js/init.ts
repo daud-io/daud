@@ -1,2 +1,2 @@
 ﻿// wrapper for our game "classes", "methods" and "objects"
-window.Game = window.Game || {};
+(<any>window).Game = (<any>window).Game || {};
