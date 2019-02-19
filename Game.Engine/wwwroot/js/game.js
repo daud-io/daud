@@ -153,7 +153,7 @@ const groupFromServer = (cache, group) => {
 };
 
 connection.onLeaderboard = lb => {
-    leaderboard.update(lb, lastPosition);
+    leaderboard.update(lb, lastPosition, fleetID);
     minimap.update(lb, worldSize, fleetID);
 };
 
