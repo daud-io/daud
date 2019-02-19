@@ -19,6 +19,8 @@
         public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
 
         public int Score { get; set; }
+        public int KillCounter { get; set; } = 0;
+        public int MaxCombo { get; set; }
 
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
@@ -26,7 +28,8 @@
         public List<PlayerMessage> Messages { get; set; } = new List<PlayerMessage>();
 
         public bool IsAlive { get; set; } = false;
-        public bool IsStillPlaying {get;set;} = false;
+        public bool IsStillPlaying { get; set; } = false;
+        public long AliveSince { get; set; } = 0;
         public long DeadSince { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
@@ -80,7 +83,7 @@
                 PendingDestruction = false;
             }
 
-            IsStillPlaying = !PendingDestruction && 
+            IsStillPlaying = !PendingDestruction &&
                 DeadSince > World.Time - World.Hook.PlayerCountGracePeriodMS;
         }
 
@@ -142,6 +145,10 @@
             InvulnerableUntil = World.Time + duration;
             IsInvulnerable = true;
             IsShielded = isShield;
+
+            if (isShield && Fleet != null)
+                foreach (var ship in Fleet.Ships)
+                    ship.ShieldStrength = World.Hook.ShieldStrength;
         }
 
         public virtual void Think()
@@ -175,7 +182,12 @@
                     IsInvulnerable = false;
 
                 if (!IsInvulnerable)
+                {
                     IsShielded = false;
+
+                    foreach (var ship in Fleet?.Ships)
+                        ship.ShieldStrength = 0;
+                }
             }
         }
 
@@ -207,6 +219,8 @@
             Color = color;
 
             Token = token;
+
+            AliveSince = World.Time;
 
             IsSpawning = true;
 
@@ -261,12 +275,14 @@
             }
         }
 
-        public void SendMessage(string message, string type = "message")
+        public void SendMessage(string message, string type = "message", int pointsDelta = 0, object extraData = null)
         {
             this.Messages.Add(new PlayerMessage
             {
                 Type = type,
-                Message = message
+                Message = message,
+                ExtraData = extraData,
+                PointsDelta = pointsDelta
             });
         }
 

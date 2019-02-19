@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Game.API.Models\Game.API.Common.csproj" />
-    <ProjectReference Include="..\Game.Engine.Networking.Client\Game.API.Client.csproj" />
+    <ProjectReference Include="..\Game.API.Client\Game.API.Client.csproj" />
+    <ProjectReference Include="..\Game.API.Common\Game.API.Common.csproj" />
   </ItemGroup>
 </Project>

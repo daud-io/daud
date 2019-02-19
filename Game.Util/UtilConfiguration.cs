@@ -18,7 +18,9 @@
                 public string UserKey { get; set; }
                 public string Password { get; set; }
 
-                public string Token { get; set; }
+                public string RegistryUri { get; set; }
+                public string RegistryUserKey { get; set; }
+                public string RegistryPassword { get; set; }
             }
         }
     }

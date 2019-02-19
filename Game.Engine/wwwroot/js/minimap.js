@@ -29,21 +29,25 @@ export class Minimap {
     }
     update(data, worldSize, fleetID) {
         this.worldSize = worldSize;
-        const startIndex = data.Type == "Team" || data.Type == "CTF" ? 2 : 0;
+        const startIndex = data.Type === "Team" ? 2 : 0;
+        const isCTF = data.Type === "CTF";
         this.ctx.clear();
-        this.ctx
-            .lineStyle(1, 0x999999)
-            .beginFill(0x000000, 0.5)
-            .drawRect(0, 0, minimapSize, minimapSize)
-            .endFill()
-            .lineStyle(0);
-        for (let i = startIndex; i < data.Entries.length; i++) {
-            const entry = data.Entries[i];
-            const entryIsSelf = entry.FleetID == fleetID;
-            this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf, i);
+
+        if (document.body.classList.contains("alive") || document.body.classList.contains("spectating")) {
+            this.ctx
+                .lineStyle(1, 0x999999)
+                .beginFill(0x000000, 0.5)
+                .drawRect(0, 0, minimapSize, minimapSize)
+                .endFill()
+                .lineStyle(0);
+            for (let i = startIndex; i < data.Entries.length; i++) {
+                const entry = data.Entries[i];
+                const entryIsSelf = entry.FleetID == fleetID;
+                this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf, i, isCTF);
+            }
         }
     }
-    drawMinimap(x, y, color, self, rank) {
+    drawMinimap(x, y, color, self, rank, isCTF) {
         const minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimapSize;
         const minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize;
 
@@ -54,7 +58,7 @@ export class Minimap {
                 .lineStyle(1, 0xffffff)
                 .drawRect(minimapX - 3, minimapY - 3, 6, 6)
                 .endFill();
-        } else if (rank === 0) {
+        } else if (rank === 0 && !isCTF) {
             // mark the king
             //this.ctx.drawImage(crownImg, 0, 0);
             //.beginFill(0xdaa520)
@@ -73,6 +77,12 @@ export class Minimap {
                 .lineTo(8 + x, 4 + y)
                 .lineTo(0 + x, 4 + y)
                 .closePath()
+                .endFill();
+        } else if (isCTF && rank < 2) {
+            // draw flags in CTF mode
+            this.ctx
+                .lineStyle(2, colors[color])
+                .drawRect(minimapX - 4, minimapY - 4, 8, 8)
                 .endFill();
         } else {
             this.ctx

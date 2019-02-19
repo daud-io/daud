@@ -1,4 +1,5 @@
-﻿import { Settings } from "../settings";
+﻿import Plotly from "../plotly-subset";
+import { Settings } from "../settings";
 
 export class Fleet {
     constructor(container, cache) {
@@ -7,12 +8,20 @@ export class Fleet {
         this.ships = [];
         this.ID = false;
 
-        this.text = new PIXI.Text("", { fontFamily: Settings.font, fontSize: Settings.nameSize, fill: 0xffffff });
+        this.text = new PIXI.Text("", { fontFamily: [Settings.font, "NotoColorEmoji"], fontSize: Settings.nameSize, fill: 0xffffff });
+        this.textChat = new PIXI.Text("", { fontFamily: "FontAwesome", fontSize: Settings.nameSize, fill: 0xffffff });
+        this.chat = false;
+        this.plotly = false;
         this.text.anchor.set(0.5, 0.5);
+        this.textChat.anchor.set(0.5, 0.5);
         this.text.position.x = 0;
         this.text.position.y = 0;
+        this.textChat.position.x = 0;
+        this.textChat.position.y = 0;
         this.text.parentGroup = this.container.bodyGroup;
+        this.textChat.parentGroup = this.container.bodyGroup;
         this.container.addChild(this.text);
+        this.container.addChild(this.textChat);
     }
 
     addShip(ship) {
@@ -24,23 +33,54 @@ export class Fleet {
         this.ships = this.ships.filter(s => s != ship);
     }
 
-    update(groupUpdate) {
+    update(groupUpdate, myFleetID) {
         this.caption = groupUpdate.Caption;
         this.ID = groupUpdate.ID;
 
-        if (this.ships.length == 0) {
-            console.log("update on zero length fleet");
+        if (groupUpdate.CustomData) {
+            if (groupUpdate.CustomData.chat) this.chat = groupUpdate.CustomData.chat;
+            else this.chat = false;
+
+            if (groupUpdate.CustomData.plotly) this.plotly = groupUpdate.CustomData.plotly;
+            else this.plotly = false;
+        }
+
+        if (this.plotly && this.ID == myFleetID) {
+            if (!this.container.plotly.used) {
+                this.container.plotly.used = true;
+                this.usingPlotly = true;
+                console.log("setting plotly use");
+            }
+            Plotly.react(this.container.plotly, this.plotly.data, this.plotly.layout, {
+                displayModeBar: false,
+                staticPlot: true
+            });
+        }
+
+        if (this.usingPlotly && this.ID != myFleetID) {
+            // we must have been spectating a fleet
+            // with plotly data, and now we've switched
+            // to a different fleet to follow
+            // but the original one is still on screen
+            // ... that's us.
+            this.container.plotly.used = false;
+            this.usingPlotly = false;
         }
     }
 
-    preRender(time, interpolator, myfleetID) {
+    preRender(time, interpolator, myFleetID) {
         //console.log(`Group: ${this.ID} ${this.caption} ${this.ships.length}`);
-        if (this.ships.length > 0 && (this.ID != myfleetID || Settings.showOwnName || document.body.classList.contains("spectating"))) {
+        if (this.ships.length > 0 && (this.ID != myFleetID || Settings.showOwnName || document.body.classList.contains("spectating"))) {
             if (this.text.visible != Settings.namesEnabled) this.text.visible = Settings.namesEnabled;
 
             if (Settings.nameSize) {
                 if (this.caption) this.text.text = this.caption;
                 else this.text.text = "";
+
+                //this.chat = "\uf165 testing";
+
+                if (this.chat) this.textChat.text = this.chat;
+                else this.textChat.text = "";
 
                 //this.text.text += " " + this.ships.length;
                 let accX = 0,
@@ -57,12 +97,24 @@ export class Fleet {
                 const offsetY = 0;
                 this.text.position.x = accX / count;
                 this.text.position.y = accY / count + offsetY;
+                this.textChat.position.x = accX / count;
+                this.textChat.position.y = accY / count + offsetY - 200;
             }
-        } else this.text.visible = false;
+        } else {
+            this.text.visible = false;
+            this.textChat.visible = false;
+        }
+
+        //else
+        //  this.container.plotly.style.visibility = "hidden";
     }
 
     destroy() {
         this.container.removeChild(this.text);
-        //console.log("fleet destroyed");
+        this.container.removeChild(this.textChat);
+        if (this.usingPlotly) {
+            this.container.plotly.used = false;
+            console.log("unsetting plotly use");
+        }
     }
 }

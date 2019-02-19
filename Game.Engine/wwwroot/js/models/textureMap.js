@@ -23,10 +23,16 @@
 */
 
 export const textureMap = {
-    bg: { file: "bg", scale: 1 },
+    bg: { file: "bg", scale: 4 },
+    bg2: { file: "bg2", scale: 5 },
+    bg3: { file: "bg2", scale: 6 },
+    bg4: { file: "bg2", scale: 7 },
+    bg5: { file: "bg2", scale: 8 },
+    bg6: { file: "bg2", scale: 9 },
+    bg7: { file: "bg2", scale: 10 },
 
     // fish
-    fish: { file: "ship0", scale: 0.01 },
+    fish: { file: "fish", scale: 0.03 },
 
     // daudelins
     ship0: { file: "ship0", scale: 0.02 },
@@ -45,7 +51,7 @@ export const textureMap = {
 
     // premium ships
     ship_secret: { file: "ship_secret", scale: 0.02 },
-    ship_zed: { file: "ship_zed", scale: 0.02 },
+    ship_zed: { file: "ship_base", scale: 0.0025 },
 
     bullet: { file: "bullet", scale: 0.03 },
     bullet_cyan: { file: "bullet_cyan", scale: 0.03 },

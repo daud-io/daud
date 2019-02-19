@@ -2,8 +2,8 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context local world parse beach orthogonal-outside.tmx",
-      "workingDirectory": "C:\\Users\\andy\\Downloads\\tiled-windows-64bit-snapshot\\examples"
+      "commandLineArgs": "--context us.daud.io player robots --type-name Game.Robots.ConfigurableContextBot,Game.Robots --name \"🥚\" --world default --replicas 4 --color cyan --sprite ship_cyan",
+      "workingDirectory": "c:\\code\\mods\\bots"
     }
   }
 }

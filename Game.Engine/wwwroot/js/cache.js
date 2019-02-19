@@ -75,9 +75,10 @@ export class Cache {
                 existing.Caption = group.Caption;
                 existing.Type = group.Type;
                 existing.ZIndex = group.ZIndex;
+                existing.CustomData = group.CustomData;
             }
 
-            if (existing.renderer) existing.renderer.update(existing);
+            if (existing.renderer) existing.renderer.update(existing, myFleetID);
 
             this.groups[`g-${group.ID}`] = existing;
         }
@@ -144,11 +145,13 @@ export class Cache {
                                 break;
                         }
                     }
-                } else update.renderer = new RenderedObject(this.container);
+                }
+                if (!update.renderer) update.renderer = new RenderedObject(this.container);
+
                 update.group = group;
                 update.zIndex = group.ZIndex || 0;
 
-                if (update.renderer) update.renderer.update(update);
+                if (update.renderer) update.renderer.update(update, myFleetID);
 
                 Cache.count++;
             }

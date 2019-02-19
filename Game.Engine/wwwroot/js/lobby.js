@@ -6,6 +6,7 @@ const worlds = document.getElementById("worlds");
 const worldList = document.getElementById("worldList");
 
 let allWorlds = false;
+let lastKeys = false;
 
 function selectRow(selectedWorld) {
     for (const world in allWorlds) {
@@ -16,7 +17,13 @@ function selectRow(selectedWorld) {
 }
 const imgs = require(`../img/worlds/*.png`);
 function buildList(response) {
-    if (allWorlds != false) return updateList(response);
+    if (allWorlds != false) {
+        let keys = "";
+        response.forEach(w => (keys += ":" + w.world));
+
+        if (lastKeys == keys) return updateList(response);
+        else lastKeys = keys;
+    }
 
     allWorlds = {};
 
@@ -27,12 +34,12 @@ function buildList(response) {
         options += `<tbody id="${world.world}_row" world="${world.world}" class="worldrow">`;
         options +=
             `<tr>` +
-            `<td><button class="button1" id="join">Join</button> (<span id="${world.world}_playercount">${world.players}</span>)</td>` +
-            `<td><b>${world.name}</b>: ${world.description}</td>` +
+            `<td><button class="button1 button3" id="join">Join</button> (<span id="${world.world}_playercount">${world.players}</span>)</td>` +
+            `<td id="second-world-td"><b>${world.name}</b>: ${world.description}</td>` +
             `</tr>`;
 
         const img = world.image ? `<img src="${imgs[world.image]}" />` : "";
-        if (world.instructions || img) options += `<tr class="details"><td colspan="2">${img}${world.instructions || ""}</td></tr>`;
+        if (world.instructions || img) options += `<tr class="details"><td colspan="3">${img}${world.instructions || ""}</td></tr>`;
         options += `</tbody>`;
     }
 
@@ -78,7 +85,7 @@ function refreshList(autoJoinWorld) {
     const autoJoin = firstLoad || autoJoinWorld;
     firstLoad = false;
 
-    fetch("/api/v1/server/worlds", {
+    fetch("/api/v1/world/all", {
         method: "GET",
         headers: {
             "Content-Type": "application/json; charset=utf-8"
@@ -94,7 +101,7 @@ function refreshList(autoJoinWorld) {
 
                 buildList(response);
 
-                if (autoJoin) joinWorld(autoJoinWorld || "default");
+                if (autoJoin) joinWorld(autoJoinWorld || "us.daud.io/default");
             }
         });
 }

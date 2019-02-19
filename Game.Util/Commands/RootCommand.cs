@@ -11,6 +11,7 @@
     [Subcommand("server", typeof(ServerCommand))]
     [Subcommand("player", typeof(PlayerCommand))]
     [Subcommand("world", typeof(WorldCommand))]
+    [Subcommand("registry", typeof(RegistryCommand))]
     public class RootCommand : CommandBase
     {
 
@@ -26,8 +27,14 @@
         [Option(Description = "spefify a password for authentication")]
         public string Password { get; }
 
-        [Option(Description = "Do not use auth token cached in context, reauthenticate instead")]
-        public bool NoCachedToken { get; set; } = false;
+        [Option(Template = "--registry-server", Description = "full url of the Registry API server")]
+        public string RegistryServer { get; }
+
+        [Option(Template = "--registry-user-key", Description = "specify a UserKey for registry authentication")]
+        public string RegistryUserKey { get; }
+
+        [Option(Template = "--registry-password", Description = "specify a Password for registry authentication")]
+        public string RegistryPassword { get; }
 
         [Option(Description = "specify a token for authentication")]
         public string Token { get; }
@@ -44,6 +51,18 @@
             }
         }
 
+        private RegistryClient registryConnection = null;
+        public RegistryClient RegistryConnection
+        {
+            get
+            {
+                if (registryConnection == null)
+                    registryConnection = RegistryConnectAsync().Result;
+
+                return registryConnection;
+            }
+        }
+
         public async Task<APIClient> ConnectAsync()
         {
             (var config, var context) = Configuration.Load(this);
@@ -53,35 +72,35 @@
 
             var connection = new APIClient(serverUri);
 
-            async Task authenticate()
+            if (context.UserKey != null)
             {
-                var tokenResponse = await connection.User.AuthenticateAsync(new UserIdentifier
+                await connection.User.AuthenticateAsync(new UserIdentifier
                 {
                     UserKey = UserKey ?? context.UserKey
                 }, Password ?? context.Password);
-
-                if (!NoCachedToken)
-                {
-                    context.Token = tokenResponse.Token;
-                    Configuration.Save(config);
-                }
             }
 
-            if (!string.IsNullOrEmpty(context.Token) && !NoCachedToken)
+            return connection;
+        }
+
+        public async Task<RegistryClient> RegistryConnectAsync()
+        {
+            (var config, var context) = Configuration.Load(this);
+
+            if (!Uri.TryCreate(RegistryServer ?? context.RegistryUri ?? string.Empty, UriKind.Absolute, out Uri serverUri))
+                throw new Exception("Config Server URI missing/invalid");
+
+            var connection = new RegistryClient(serverUri);
+
+            if (context.RegistryUserKey == null)
+                throw new Exception("Config missing UserKey");
+            if (context.RegistryPassword == null)
+                throw new Exception("Config missing Password");
+
+            await connection.User.AuthenticateAsync(new UserIdentifier
             {
-                connection.Token = context.Token;
-                connection.OnSecurityException = authenticate;
-            }
-            else
-            {
-                if (context.UserKey == null)
-                    throw new Exception("Config missing UserKey");
-                if (context.Password == null)
-                    throw new Exception("Config missing Password");
-
-                await authenticate();
-                connection.OnSecurityException = authenticate;
-            }
+                UserKey = RegistryUserKey ?? context.RegistryUserKey
+            }, RegistryPassword ?? context.RegistryPassword);
 
             return connection;
         }

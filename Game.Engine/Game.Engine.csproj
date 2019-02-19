@@ -6,26 +6,32 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="ACMESharpCore" Version="2.0.0.49-beta1" />
+    <PackageReference Include="Docker.DotNet" Version="3.125.2" />
     <PackageReference Include="KdSoft.FlatBuffers" Version="1.9.3" />
     <PackageReference Include="Nito.AsyncEx" Version="5.0.0-pre-05" />
     <PackageReference Include="RBush" Version="2.0.31" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Discord.Net" Version="2.0.0-beta2-01039" />
+    <PackageReference Include="DnsClient" Version="1.1.1" />
+    <PackageReference Include="Makaretu.Dns.Unicast" Version="0.5.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Game.API.Models\Game.API.Common.csproj" />
+    <ProjectReference Include="..\Game.API.Client\Game.API.Client.csproj" />
+    <ProjectReference Include="..\Game.API.Common\Game.API.Common.csproj" />
     <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
+    <ProjectReference Include="..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="hosting.json">
+    <None Update="appSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
+    </None>
+    <None Update="hosting.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Dockerfile">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

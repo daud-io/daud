@@ -10,7 +10,7 @@
         private float Scale = 0f;
         public float MaximumAngle = 0;
 
-        public Efficiency(ContextRobot robot): base(robot)
+        public Efficiency(ContextRobot robot) : base(robot)
         {
         }
 
@@ -26,7 +26,7 @@
                 Scale = 0;
         }
 
-        protected override float ScoreAngle(float angle, Vector2 position)
+        protected override float ScoreAngle(float angle, Vector2 position, Vector2 momentum)
         {
             var difference = RoboMath.CalculateDifferenceBetweenAngles(angle, TargetAngle);
 

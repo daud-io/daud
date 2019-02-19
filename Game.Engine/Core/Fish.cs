@@ -8,6 +8,9 @@
 
     public class Fish : Ship
     {
+        private long SleepUntil = 0;
+        private int SleepTime = 500;
+
         public Fish()
         {
             Size = 10;
@@ -35,8 +38,12 @@
 
         public override void Think()
         {
-            base.Think();
-            Flock();
+            if (SleepUntil < World.Time)
+            {
+                base.Think();
+                Flock();
+                SleepUntil = World.Time + SleepTime;
+            }
         }
 
         private void Flock()

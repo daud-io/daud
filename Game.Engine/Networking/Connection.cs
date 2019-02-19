@@ -82,7 +82,7 @@ namespace Game.Engine.Networking
                     var builder = new FlatBufferBuilder(1);
 
                     lock (world.Bodies) // wrong kind of lock but might do for now
-                    { 
+                    {
                         // First try to focus camera on the player if they have
                         // a fleet alive;
                         var followFleet = player?.Fleet;
@@ -136,14 +136,9 @@ namespace Game.Engine.Networking
 
                         if (followBody != null)
                         {
-                            var halfViewport = new Vector2(3300, 3300);
-
                             BodyCache.Update(
-                                world.Bodies,
-                                world.Groups,
-                                world.Time,
-                                Vector2.Subtract(followBody.Position, halfViewport),
-                                Vector2.Add(followBody.Position, halfViewport)
+                                world.BodiesNear(followBody.Position, 6000).ToList(),
+                                world.Time
                             );
 
                             var updates = BodyCache.BodiesByError();
@@ -161,6 +156,7 @@ namespace Game.Engine.Networking
 
                                     var caption = builder.CreateString(serverGroup.Caption ?? " ");
                                     var color = builder.CreateString(serverGroup.Color ?? "");
+                                    var customData = builder.CreateString(serverGroup.CustomData ?? "");
 
                                     var group = NetGroup.CreateNetGroup(builder,
                                         group: serverGroup.ID,
@@ -168,7 +164,8 @@ namespace Game.Engine.Networking
                                         captionOffset: caption,
                                         zindex: serverGroup.ZIndex,
                                         owner: serverGroup.OwnerID,
-                                        colorOffset: color
+                                        colorOffset: color,
+                                        customDataOffset: customData
                                     );
                                     return group;
                                 }).ToArray());
@@ -223,10 +220,16 @@ namespace Game.Engine.Networking
                                 {
                                     var stringType = builder.CreateString(e.Type);
                                     var stringMessage = builder.CreateString(e.Message);
+                                    var stringExtraData = e.ExtraData != null
+                                        ? builder.CreateString(JsonConvert.SerializeObject(e.ExtraData))
+                                        : new StringOffset();
 
                                     NetAnnouncement.StartNetAnnouncement(builder);
                                     NetAnnouncement.AddType(builder, stringType);
                                     NetAnnouncement.AddText(builder, stringMessage);
+                                    if (e.ExtraData != null)
+                                        NetAnnouncement.AddExtraData(builder, stringExtraData);
+                                    NetAnnouncement.AddPointsDelta(builder, e.PointsDelta);
 
                                     return NetAnnouncement.EndNetAnnouncement(builder);
                                 }).ToArray());
@@ -313,7 +316,7 @@ namespace Game.Engine.Networking
 
                         var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
                         var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
-                        
+
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
                         NetLeaderboardEntry.AddName(builder, stringName);
@@ -360,7 +363,7 @@ namespace Game.Engine.Networking
                         await this.SendAsync(builder.DataBuffer, cancellationToken);
                     }
 
-                    while(Events.Count > 0)
+                    while (Events.Count > 0)
                     {
                         var e = Events.Dequeue();
 
@@ -418,7 +421,7 @@ namespace Game.Engine.Networking
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
             builder.Finish(q.Value);
 
-            await SendAsync(builder.DataBuffer, default(CancellationToken));
+            await SendAsync(builder.DataBuffer, default);
         }
 
         private async Task HandlePingAsync(NetPing ping)
@@ -448,6 +451,8 @@ namespace Game.Engine.Networking
                     var color = "red";
 
                     Sprites shipSprite = Sprites.ship_red;
+
+                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score}");
 
                     switch (spawn.Ship)
                     {
@@ -506,13 +511,13 @@ namespace Game.Engine.Networking
                     switch (input.SpectateControl)
                     {
                         case "action:next":
-                            var next = 
+                            var next =
                                 Player.GetWorldPlayers(world)
                                     .Where(p => p.IsAlive)
                                     .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
                                     .OrderBy(p => p?.Fleet?.ID)
                                     .FirstOrDefault()?.Fleet;
-                                
+
                             if (next == null)
                                 next = Player.GetWorldPlayers(world)
                                     .Where(p => p.IsAlive)
@@ -545,6 +550,8 @@ namespace Game.Engine.Networking
             Socket = socket;
 
             var worldRequest = httpContext.Request.Query["world"].FirstOrDefault();
+
+            this.Logger.LogInformation($"New Connection: {worldRequest}");
 
             world = Worlds.Find(worldRequest);
 

@@ -3,6 +3,7 @@
 import { Renderer } from "./renderer";
 import { Background } from "./background";
 import { Border } from "./border";
+import { Overlay } from "./overlay";
 import { spriteIndices } from "./spriteIndices";
 import { Camera } from "./camera";
 import { Cache } from "./cache";
@@ -13,6 +14,7 @@ import { HUD } from "./hud";
 import { Log } from "./log";
 import { Cooldown } from "./cooldown";
 import { Controls } from "./controls";
+import { message } from "./chat";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { Settings } from "./settings";
@@ -20,14 +22,16 @@ import { Events } from "./events";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
 import * as PIXI from "pixi.js";
 import "pixi-tilemap";
+import "./changelog";
 
-// import "./hintbox";
+import "./hintbox";
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
 
 //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
+//PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
 const app = new PIXI.Application({ view: canvas, transparent: true });
 app.stage = new PIXI.display.Stage();
 app.stage.group.enableSort = true;
@@ -52,6 +56,8 @@ container.addChild(container.tiles);
 const renderer = new Renderer(container);
 const background = new Background(container);
 const border = new Border(container);
+const overlay = new Overlay(container, canvas, document.getElementById("plotly"));
+container.plotly = document.getElementById("plotly");
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
@@ -63,6 +69,10 @@ let isSpectating = false;
 
 let angle = 0.0;
 let aimTarget = { X: 0, Y: 0 };
+let d = 500; // for steering with arrows
+
+let keyboardSteering = false;
+let keyboardSteeringSpeed = 0.075;
 
 let cache = new Cache(container);
 let view = false;
@@ -86,6 +96,7 @@ else connection.connect();*/
 window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
 window.Game.cache = cache;
+window.Game.controls = Controls;
 
 window.Game.reinitializeWorld = function() {
     if (currentWorld) Controls.initializeWorld(currentWorld);
@@ -132,8 +143,11 @@ const groupFromServer = (cache, group) => {
         ID: group.group(),
         Caption: group.caption(),
         Type: group.type(),
-        ZIndex: group.zindex()
+        ZIndex: group.zindex(),
+        CustomData: group.customData()
     };
+
+    if (newGroup.CustomData) newGroup.CustomData = JSON.parse(newGroup.CustomData);
 
     return newGroup;
 };
@@ -157,9 +171,9 @@ connection.onView = newView => {
 
     view.isAlive = newView.isAlive();
 
+    fleetID = newView.fleetID();
     if (view.isAlive && !lastAliveState) {
         lastAliveState = true;
-        fleetID = newView.fleetID();
         document.body.classList.remove("dead");
         document.body.classList.remove("spectating");
         document.body.classList.add("alive");
@@ -218,9 +232,6 @@ connection.onView = newView => {
     for (let u = 0; u < announcementsLength; u++) {
         const announcement = newView.announcements(u);
         switch (announcement.type()) {
-            case "message":
-                log.addEntry(announcement.text());
-                break;
             case "join":
                 let worldKey = announcement.text();
 
@@ -229,6 +240,18 @@ connection.onView = newView => {
                     console.log("received join: " + worldKey);
                     LobbyCallbacks.joinWorld(worldKey);
                 }
+                break;
+            default:
+                let extra = announcement.extraData();
+
+                if (extra) extra = JSON.parse(extra);
+
+                log.addEntry({
+                    type: announcement.type(),
+                    text: announcement.text(),
+                    pointsDelta: announcement.pointsDelta(),
+                    extraData: extra
+                });
                 break;
         }
     }
@@ -244,6 +267,7 @@ connection.onView = newView => {
     for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d));
 
     cache.update(updates, deletes, groups, groupDeletes, gameTime, fleetID);
+    overlay.update(newView.customData());
 
     hud.playerCount = newView.playerCount();
     hud.spectatorCount = newView.spectatorCount();
@@ -260,14 +284,6 @@ connection.onView = newView => {
         cooldownShoot: newView.cooldownShoot()
     })*/
 
-    const data = newView.customData();
-    if (data) {
-        CustomData = data;
-        CustomDataTime = view.time;
-    } else if (CustomDataTime + 5000 < view.time) {
-        CustomData = false;
-    }
-
     view.camera = bodyFromServer(cache, newView.camera());
 
     if (spawnOnView) {
@@ -279,20 +295,32 @@ connection.onView = newView => {
 let lastControl = {};
 
 setInterval(() => {
-    if (angle !== lastControl.angle || aimTarget.X !== aimTarget.X || aimTarget.Y !== aimTarget.Y || Controls.boost !== lastControl.boost || Controls.shoot !== lastControl.shoot) {
+    if (
+        angle !== lastControl.angle ||
+        aimTarget.X !== aimTarget.X ||
+        aimTarget.Y !== aimTarget.Y ||
+        Controls.boost !== lastControl.boost ||
+        Controls.shoot !== lastControl.shoot ||
+        message.txt !== lastControl.chat
+    ) {
         let spectateControl = false;
         if (isSpectating) {
             if (Controls.shoot) spectateControl = "action:next";
             else spectateControl = "spectating";
         }
 
-        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl);
+        var customData = false;
+
+        if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
+
+        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl, customData);
 
         lastControl = {
             angle,
             aimTarget,
             boost: Controls.boost,
-            shoot: Controls.shoot
+            shoot: Controls.shoot,
+            chat: message.txt
         };
     }
 }, 10);
@@ -312,6 +340,7 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
     connection.disconnect();
     cache.empty();
     connection.connect(worldKey);
+    serverTimeOffset = false;
 
     Controls.initializeWorld(world);
 };
@@ -320,7 +349,7 @@ function doSpawn() {
 	if (countDown <= 0) {
 		Events.Spawn();
 		aliveSince = gameTime;
-		connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
+		connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
 	}
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
@@ -349,6 +378,7 @@ function stopSpectate() {
 
 document.getElementById("stop_spectating").addEventListener("click", () => {
     stopSpectate();
+    document.getElementById("deathScreen").style.visibility = "hidden";
 });
 
 document.addEventListener("keydown", ({ keyCode, which }) => {
@@ -403,7 +433,7 @@ function doPing() {
     hud.latency = connection.latency;
 
     if (frameCounter === 0) {
-        console.log("backgrounded");
+        //console.log("backgrounded");
         Game.isBackgrounded = true;
     } else Game.isBackgrounded = false;
     frameCounter = 0;
@@ -448,6 +478,7 @@ app.ticker.add(() => {
     background.draw(cache, interpolator, gameTime);
     minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
+    overlay.draw(cache, interpolator, gameTime);
 
     lastPosition = position;
 
@@ -457,11 +488,27 @@ app.ticker.add(() => {
     if (Controls.mouseX) {
         const pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);
 
-        angle = Controls.angle;
-        aimTarget = {
-            X: Settings.mouseScale * (pos.x - position.X),
-            Y: Settings.mouseScale * (pos.y - position.Y)
-        };
+        if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
+            if (Controls.right && !Controls.left) {
+                angle += keyboardSteeringSpeed * Math.PI;
+            } else if (Controls.left && !Controls.right) {
+                angle -= keyboardSteeringSpeed * Math.PI;
+            }
+            if (Controls.up) {
+                angle += Math.PI;
+            } // optional
+            aimTarget = {
+                X: d * Math.cos(angle),
+                Y: d * Math.sin(angle)
+            };
+            keyboardSteering = true;
+        } else {
+            angle = Controls.angle;
+            aimTarget = {
+                X: Settings.mouseScale * (pos.x - position.X),
+                Y: Settings.mouseScale * (pos.y - position.Y)
+            };
+        }
     }
 
     if (CustomData != lastCustomData) {
@@ -513,3 +560,37 @@ const query = parseQuery(window.location.search);
 if (query.spectate && query.spectate !== "0") {
     startSpectate(true);
 }
+
+canvas.onmousemove = function() {
+    keyboardSteering = false;
+};
+
+// clicking enter in nick causes fleet spawn
+document.getElementById("nick").addEventListener("keyup", function(e) {
+    if (e.keyCode === 13) {
+        doSpawn();
+    }
+});
+
+// clicking enter in spectate mode causes fleet spawn
+document.body.addEventListener("keydown", function(e) {
+    if (document.body.classList.contains("spectating") && e.keyCode === 13) {
+        doSpawn();
+    }
+});
+
+// toggle worlds with W
+const worlds = document.getElementById("worlds");
+document.body.addEventListener("keydown", function(e) {
+    if (document.body.classList.contains("dead") && document.getElementById("nick") !== document.activeElement && e.keyCode === 87) {
+        if (worlds.classList.contains("closed")) {
+            worlds.classList.remove("closed");
+        } else {
+            worlds.classList.add("closed");
+        }
+    }
+});
+
+document.getElementById("wcancel").addEventListener("click", function() {
+    worlds.classList.add("closed");
+});

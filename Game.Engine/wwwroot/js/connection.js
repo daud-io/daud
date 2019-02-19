@@ -55,6 +55,14 @@ export class Connection {
             hostname = "daud.io";
         }
 
+        if (world) {
+            var worldKeyParse = world.match(/^(.*?)\/(.*)$/);
+            if (worldKeyParse) {
+                hostname = worldKeyParse[1];
+                world = worldKeyParse[2];
+            }
+        }
+
         url += `//${hostname}`;
         url += "/api/v1/connect?";
 
@@ -162,12 +170,14 @@ export class Connection {
         console.log("spawned");
     }
 
-    sendControl(angle, boost, shoot, x, y, spectateControl) {
+    sendControl(angle, boost, shoot, x, y, spectateControl, customDataJson) {
         const builder = new flatbuffers.Builder(0);
 
         let spectateString = false;
+        let customDataJsonString = false;
 
         if (spectateControl) spectateString = builder.createString(spectateControl);
+        if (customDataJson) customDataJsonString = builder.createString(customDataJson);
 
         this.fb.NetControlInput.startNetControlInput(builder);
         this.fb.NetControlInput.addAngle(builder, angle);
@@ -176,6 +186,7 @@ export class Connection {
         this.fb.NetControlInput.addX(builder, x);
         this.fb.NetControlInput.addY(builder, y);
         if (spectateControl) this.fb.NetControlInput.addSpectateControl(builder, spectateString);
+        if (customDataJson) this.fb.NetControlInput.addCustomData(builder, customDataJsonString);
 
         const input = this.fb.NetControlInput.endNetControlInput(builder);
 

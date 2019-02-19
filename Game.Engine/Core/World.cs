@@ -1,7 +1,9 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common.Models;
     using Game.Engine.Core.Maps;
     using Game.Engine.Networking;
+    using Newtonsoft.Json;
     using RBush;
     using System;
     using System.Collections.Generic;
@@ -21,7 +23,9 @@
 
         private readonly List<IDisposable> Disposables = new List<IDisposable>();
 
-        private RBush<Body> RTree = new RBush<Body>();
+        private RBush<Body> RTreeDynamic = new RBush<Body>();
+        private RBush<Body> RTreeStatic = new RBush<Body>();
+
         public List<Body> Bodies = new List<Body>();
         public List<Group> Groups = new List<Group>();
         public List<IActor> Actors = new List<IActor>();
@@ -29,27 +33,26 @@
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
 
+        private int SearchMargin = 0;
+
         private bool Processing = false;
 
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
 
-        public string Name {get;set;}
-        public string Description {get;set;}
-        public string Instructions { get; set; }
+        //public int StepCounter { get; set; }
 
-        public string[] AllowedColors {get;set;}
-
-        public int AdvertisedPlayerCount {get;set;}
+        public int AdvertisedPlayerCount { get; set; }
+        public string WorldKey { get; set; }
 
         public string Image { get; set; } = "default";
         public MapActor MapActor { get; private set; } = null;
 
-        public World()
+        public World(Hook hook = null)
         {
             OffsetTicks = DateTime.Now.Ticks;
-            Hook = Hook.Default;
+            Hook = hook ?? Hook.Default;
 
             SystemActor<Advertisement>();
             SystemActor<RobotTender>();
@@ -59,11 +62,13 @@
 
             SystemActor(MapActor = new MapActor());
 
+            Console.WriteLine($"Initializing World: {this.Hook.Name}");
+
             InitializeStepTimer();
         }
 
         private void SystemActor<T>(T instance = null)
-            where T: class, IActor, new()
+            where T : class, IActor, new()
         {
             var actor = instance ?? new T();
             actor.Init(this);
@@ -78,16 +83,23 @@
             lock (this.Bodies)
             {
                 var start = DateTime.Now;
-                
+
                 var oldTime = Time;
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
                 LastStepSize = Time - oldTime;
 
-                RTree.Clear();
+                RTreeDynamic.Clear();
                 foreach (var body in Bodies)
+                {
                     body.Project(Time);
+                    body.Envelope = new Envelope(
+                        body.Position.X - body.Size,
+                        body.Position.Y - body.Size,
+                        body.Position.X + body.Size,
+                        body.Position.Y + body.Size);
+                }
 
-                RTree.BulkLoad(Bodies);
+                RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
 
                 var origActors = Actors.ToList();
                 foreach (var actor in Actors)
@@ -102,6 +114,7 @@
                     actor.CreateDestroy();
 
                 foreach (var body in Bodies)
+                {
                     if (body.IsDirty)
                     {
                         body.DefinitionTime = this.Time;
@@ -109,18 +122,54 @@
                         body.OriginalAngle = body.Angle;
                         body.IsDirty = false;
                     }
+                }
 
                 ProcessLeaderboard();
 
-                var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
-                if (elapsed > Hook.StepTime)
-                    Console.WriteLine($"**** 100% processing time warning: {elapsed}");
-                else if (elapsed > Hook.StepTime * 0.8f)
-                    Console.WriteLine($"*** 80% processing time warning: {elapsed}");
-                else if (elapsed > Hook.StepTime * 0.5f)
-                    Console.WriteLine($"** 50% processing time warning: {elapsed}");
+                if (Time > 10000) // lets not get too excited if things slow down when initialized
+                {
+                    var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
+                    if (elapsed > Hook.StepTime)
+                        Console.WriteLine($"**** 100% processing time warning: {elapsed}");
+                    else if (elapsed > Hook.StepTime * 0.8f)
+                        Console.WriteLine($"*** 80% processing time warning: {elapsed}");
+                    else if (elapsed > Hook.StepTime * 0.5f)
+                        Console.WriteLine($"** 50% processing time warning: {elapsed}");
+                }
             }
             Processing = false;
+
+            if (Hook.WorldResizeEnabled)
+            {
+                int resizeCount = (this.AdvertisedPlayerCount < Hook.WorldMinPlayersToResize) ? 0 : this.AdvertisedPlayerCount - Hook.WorldMinPlayersToResize + 1;
+                int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldSizeDeltaPerPlayer;
+                if (Hook.WorldSize < newSize)
+                {
+                    Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
+                }
+                else if (Hook.WorldSize > newSize && Hook.WorldSize - newSize > Hook.WorldResizeSpeed)
+                {
+                    Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
+                }
+                Hook.Obstacles = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.ObstaclesMultiplier));
+                Hook.Fishes = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.FishesMultiplier));
+                Hook.PickupSeekers = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupSeekersMultiplier));
+                Hook.PickupShields = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupShieldsMultiplier));
+            }
+        }
+
+        public void BodyAdd(Body body)
+        {
+            Bodies.Add(body);
+            if (body.IsStatic)
+                RTreeStatic.Insert(body);
+        }
+
+        public void BodyRemove(Body body)
+        {
+            Bodies.Remove(body);
+            if (body.IsStatic)
+                RTreeStatic.Delete(body);
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
@@ -248,21 +297,26 @@
         private uint _id = 0;
         public uint NextID()
         {
-            lock(this)
+            lock (this)
                 return _id++;
         }
 
-        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0, bool offsetSize = false)
+        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0)
         {
             if (maximumDistance == 0)
                 return this.Bodies;
             else
-                return RTree.Search(new Envelope(
-                    point.X - maximumDistance / 2,
-                    point.Y - maximumDistance / 2,
-                    point.X + maximumDistance / 2,
-                    point.Y + maximumDistance / 2
-                ));
+            {
+                var searchEnvelope = new Envelope(
+                    point.X - maximumDistance / 2 - SearchMargin,
+                    point.Y - maximumDistance / 2 - SearchMargin,
+                    point.X + maximumDistance / 2 + SearchMargin,
+                    point.Y + maximumDistance / 2 + SearchMargin
+                );
+
+                return RTreeDynamic.Search(searchEnvelope)
+                    .Union(RTreeStatic.Search(searchEnvelope));
+            }
         }
 
         public Vector2 RandomPosition()
@@ -299,6 +353,9 @@
                         Y = y * Hook.WorldSize * 0.95f
                     };
 
+                case "Static":
+                    return Hook.SpawnLocation;
+
                 case "QuietSpot":
                     const int POINTS_TO_TEST = 10;
                     const int MAXIMUM_SEARCH_SIZE = 4000;
@@ -332,8 +389,22 @@
         {
             if (!disposedValue)
                 if (disposing)
+                {
+
+                    foreach (var player in Player.GetWorldPlayers(this))
+                        try
+                        {
+                            player.Destroy();
+                        }
+                        catch (Exception) { }
+
                     foreach (var d in Disposables)
-                        d.Dispose();
+                        try
+                        {
+                            d.Dispose();
+                        }
+                        catch (Exception) { }
+                }
             disposedValue = true;
         }
         void IDisposable.Dispose()

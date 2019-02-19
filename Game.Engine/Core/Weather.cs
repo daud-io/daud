@@ -1,7 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using System.Linq;
-    
+
     public class Weather : IActor
     {
         private World World = null;
@@ -22,7 +22,7 @@
 
         public void Think()
         {
-            
+
         }
     }
 }
