@@ -15,7 +15,7 @@ function selectRow(selectedWorld) {
         else row.classList.remove("selected");
     }
 }
-const imgs = require(`../img/worlds/*.png`);
+import imgs from "../img/worlds/*.png";
 function buildList(response) {
     if (allWorlds != false) {
         let keys = "";

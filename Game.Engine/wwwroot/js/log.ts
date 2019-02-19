@@ -6,6 +6,8 @@ const scoreCon = document.getElementById("plusScoreContainer");
 const comboMsg = document.getElementById("comboMessage");
 
 export class Log {
+    data: Array<{time: Date, entry: any }>;
+    lastDisplay: any;
     constructor() {
         this.data = [];
         this.lastDisplay = false;

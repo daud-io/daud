@@ -1,4 +1,5 @@
 export class Renderer {
+    container: any;
     constructor(container) {
         this.container = container;
     }

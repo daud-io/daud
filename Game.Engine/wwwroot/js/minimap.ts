@@ -1,5 +1,5 @@
 import { Settings } from "./settings";
-
+import * as PIXI from "pixi.js";
 const minimapSize = 180;
 const minimapMarginBottom = 15;
 const minimapMarginRight = 15;
@@ -14,6 +14,8 @@ const colors = {
 };
 
 export class Minimap {
+    ctx: PIXI.Graphics;
+    worldSize: number;
     constructor(stage, size) {
         this.ctx = new PIXI.Graphics();
         this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
@@ -47,7 +49,7 @@ export class Minimap {
             }
         }
     }
-    drawMinimap(x, y, color, self, rank, isCTF) {
+    drawMinimap(x: number, y: number, color, self, rank, isCTF) {
         const minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimapSize;
         const minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize;
 
