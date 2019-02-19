@@ -91,7 +91,7 @@
         public static bool MightHit(
             HookComputer hook,
             Fleet shooter,
-            Fleet innocent,
+            Fleet monstrosity,
             float angle
         )
         {
@@ -99,7 +99,7 @@
             bool hit = false;
             foreach (var firer in shooter.Ships)
             {
-                foreach (var other in innocent.Ships)
+                foreach (var other in monstrosity.Ships)
                 {
                     var toTarget = other.Position - firer.Position;
 
