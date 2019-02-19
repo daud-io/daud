@@ -40,7 +40,7 @@ namespace Game.Engine.Common
                 return _Client;
             }
         }
-        
+
         public static async Task<IEnumerable<string>> LookupRecordAsync(string type, string name)
         {
             var dnsType = (DnsClient.QueryType)Enum.Parse(typeof(DnsClient.QueryType), type);

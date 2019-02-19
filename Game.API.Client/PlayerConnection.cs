@@ -51,13 +51,13 @@
 
         public uint FleetID { get; set; } = 0;
 
-        public Leaderboard Leaderboard {get; private set;} = null;
+        public Leaderboard Leaderboard { get; private set; } = null;
 
         public Hook Hook { get; set; }
 
         public Connection(string server, string worldName = null)
             : this(new APIClient(new Uri(server)), worldName)
-        {}
+        { }
 
         public Connection(APIClient apiClient, string worldName = null)
         {
@@ -88,7 +88,7 @@
         private Task HandleNetEvent(NetEvent netEvent)
         {
 
-            switch(netEvent.Type)
+            switch (netEvent.Type)
             {
                 case "hook":
                     this.Hook = JsonConvert.DeserializeObject<Hook>(netEvent.Data);
@@ -145,9 +145,10 @@
         private Leaderboard.Entry EntryFromNetEntry(NetLeaderboardEntry? entry)
         {
             return entry != null
-                ? new Leaderboard.Entry {
+                ? new Leaderboard.Entry
+                {
                     Color = entry?.Color,
-                    FleetID= entry?.FleetID ?? 0,
+                    FleetID = entry?.FleetID ?? 0,
                     ModeData = entry?.ModeData,
                     Name = entry?.Name,
                     Position = new Vector2(entry?.Position?.X ?? 0, entry?.Position?.Y ?? 0),
@@ -166,9 +167,9 @@
                 Entries = new List<Leaderboard.Entry>()
             };
 
-            for (var i=0; i<entryCount; i++)
+            for (var i = 0; i < entryCount; i++)
                 leaderboard.Entries.Add(EntryFromNetEntry(netLeaderboard.Entries(i)));
-            
+
             leaderboard.Type = netLeaderboard.Type;
 
             Leaderboard = leaderboard;

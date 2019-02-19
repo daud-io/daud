@@ -9,13 +9,13 @@
         public string AdministratorPassword { get; set; }
 
         public string ACMEStateDirectory { get; set; }
-        
 
-        public string DiscordToken {get; set;} = null;
+
+        public string DiscordToken { get; set; } = null;
 
         public bool ForceHTTPS { get; set; } = false;
 
-        public bool AllowCORS {get; set;} = true;
+        public bool AllowCORS { get; set; } = true;
 
         public bool RegistryEnabled { get; set; }
         public string RegistryUri { get; set; }

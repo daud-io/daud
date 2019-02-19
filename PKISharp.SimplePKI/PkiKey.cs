@@ -67,7 +67,7 @@ namespace PKISharp.SimplePKI
                         var keyInfo = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(NativeKey);
                         return keyInfo.GetDerEncoded();
                     }
-                
+
                 default:
                     throw new NotSupportedException();
             }

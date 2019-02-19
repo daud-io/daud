@@ -114,7 +114,7 @@
                     var bulletPath = toTarget;
                     var timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            
 
-                    if (timeToImpact < hook.Hook.BulletLife && q < 1000 &&c>0)
+                    if (timeToImpact < hook.Hook.BulletLife && q < 1000 && c > 0)
                     {
                         hit = true;
                         break;

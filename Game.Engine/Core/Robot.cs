@@ -59,7 +59,7 @@
             var vel = Vector2.Zero;
             if (player != null)
             {
-                vel+=player.Fleet.FleetCenter - this.Fleet.FleetCenter;
+                vel += player.Fleet.FleetCenter - this.Fleet.FleetCenter;
 
                 this.ControlInput.ShootRequested = true;
             }

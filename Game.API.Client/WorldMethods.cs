@@ -48,8 +48,8 @@
         public async Task<bool> SetMap(string worldKey, MapModel mapModel, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await APIClient.APICallAsync<bool>(
-                HttpMethod.Post, 
-                APIEndpoint.WorldMap, 
+                HttpMethod.Post,
+                APIEndpoint.WorldMap,
                 queryStringContent: new
                 {
                     worldKey
@@ -74,8 +74,8 @@
 
         public async Task<bool> AnnounceAsync(string message, string worldName = null)
         {
-            return await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.ServerAnnounce, 
-                queryStringContent: new { message, worldName});
+            return await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.ServerAnnounce,
+                queryStringContent: new { message, worldName });
         }
 
         public async Task<IEnumerable<GameConnection>> ConnectionsAsync(string worldName = null)

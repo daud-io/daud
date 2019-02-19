@@ -27,7 +27,7 @@ namespace Game.Engine
         public bool AcceptTermsOfService { get; set; }
 
         public IEnumerable<string> DnsNames { get; set; }
-       
+
         public string ChallengeType { get; } = AcmeState.Http01ChallengeType;
 
         public Func<IServiceProvider, IChallengeValidationDetails, bool> ChallengeHandler { get; set; }
@@ -37,10 +37,10 @@ namespace Game.Engine
 
         public string CertificateKeyAlgor { get; set; } = "ec";
 
-        public int? CertificateKeySize { get; set; }    
+        public int? CertificateKeySize { get; set; }
 
         public int WaitForAuthorizations { get; set; } = 60;
 
-        public int WaitForCertificate { get; set; } = 60; 
+        public int WaitForCertificate { get; set; } = 60;
     }
 }

@@ -23,14 +23,14 @@
             this.Herd.Add(member);
 
             if (member is ILifeCycle canSpawn)
-               canSpawn.Spawn();
+                canSpawn.Spawn();
         }
 
         private void Remove()
         {
             var member = Herd[Herd.Count - 1];
             Herd.Remove(member);
-            
+
             if (member is ILifeCycle canDie)
                 canDie.Die();
             else

@@ -19,8 +19,8 @@
         public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
 
         public int Score { get; set; }
-		public int KillCounter { get; set; } = 0;
-		public int MaxCombo { get; set; }
+        public int KillCounter { get; set; } = 0;
+        public int MaxCombo { get; set; }
 
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
@@ -28,8 +28,8 @@
         public List<PlayerMessage> Messages { get; set; } = new List<PlayerMessage>();
 
         public bool IsAlive { get; set; } = false;
-        public bool IsStillPlaying {get;set;} = false;
-		public long AliveSince { get; set; } = 0;
+        public bool IsStillPlaying { get; set; } = false;
+        public long AliveSince { get; set; } = 0;
         public long DeadSince { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
@@ -83,7 +83,7 @@
                 PendingDestruction = false;
             }
 
-            IsStillPlaying = !PendingDestruction && 
+            IsStillPlaying = !PendingDestruction &&
                 DeadSince > World.Time - World.Hook.PlayerCountGracePeriodMS;
         }
 
@@ -219,8 +219,8 @@
             Color = color;
 
             Token = token;
-			
-			AliveSince = World.Time;
+
+            AliveSince = World.Time;
 
             IsSpawning = true;
 

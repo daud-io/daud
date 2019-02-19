@@ -15,7 +15,7 @@
             this.Robot = robot;
         }
 
-        public (ContextRing, float,bool) Blend(IEnumerable<ContextRing> contexts,bool doBoost)
+        public (ContextRing, float, bool) Blend(IEnumerable<ContextRing> contexts, bool doBoost)
         {
             var finalSteps = Robot.Steps * BlurResolutionMultiplier;
             var combined = new ContextRing(finalSteps);
@@ -48,18 +48,19 @@
                     if (combined.WeightsBoost[i] > combined.WeightsBoost[maxBoostIndex])
                         maxBoostIndex = i;
                 }
-                bool willBoost=false;
-                var bestIndex=maxIndex;
-                if(combined.Weights[maxIndex]<combined.WeightsBoost[maxBoostIndex]-0.5 && doBoost){
-                    willBoost=true;
-                    bestIndex=maxBoostIndex;
+                bool willBoost = false;
+                var bestIndex = maxIndex;
+                if (combined.Weights[maxIndex] < combined.WeightsBoost[maxBoostIndex] - 0.5 && doBoost)
+                {
+                    willBoost = true;
+                    bestIndex = maxBoostIndex;
                 }
 
-                return (combined, combined.Angle(bestIndex),willBoost);
+                return (combined, combined.Angle(bestIndex), willBoost);
             }
             else
             {
-                return (null, 0,false); // going east a lot ?
+                return (null, 0, false); // going east a lot ?
             }
         }
 

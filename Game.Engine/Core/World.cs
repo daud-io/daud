@@ -41,8 +41,8 @@
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
 
-		//public int StepCounter { get; set; }
-		
+        //public int StepCounter { get; set; }
+
         public int AdvertisedPlayerCount { get; set; }
         public string WorldKey { get; set; }
 
@@ -68,7 +68,7 @@
         }
 
         private void SystemActor<T>(T instance = null)
-            where T: class, IActor, new()
+            where T : class, IActor, new()
         {
             var actor = instance ?? new T();
             actor.Init(this);
@@ -138,20 +138,24 @@
                 }
             }
             Processing = false;
-			
-			if (Hook.WorldResizeEnabled) {
-				int resizeCount = (this.AdvertisedPlayerCount < Hook.WorldMinPlayersToResize) ? 0 : this.AdvertisedPlayerCount - Hook.WorldMinPlayersToResize + 1;
-				int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldSizeDeltaPerPlayer;
-				if (Hook.WorldSize < newSize) {
-					Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
-				} else if (Hook.WorldSize > newSize && Hook.WorldSize - newSize > Hook.WorldResizeSpeed) {
-					Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
-				}
-				Hook.Obstacles = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.ObstaclesMultiplier));
-				Hook.Fishes = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.FishesMultiplier));
-				Hook.PickupSeekers = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupSeekersMultiplier));
-				Hook.PickupShields = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupShieldsMultiplier));
-			}
+
+            if (Hook.WorldResizeEnabled)
+            {
+                int resizeCount = (this.AdvertisedPlayerCount < Hook.WorldMinPlayersToResize) ? 0 : this.AdvertisedPlayerCount - Hook.WorldMinPlayersToResize + 1;
+                int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldSizeDeltaPerPlayer;
+                if (Hook.WorldSize < newSize)
+                {
+                    Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
+                }
+                else if (Hook.WorldSize > newSize && Hook.WorldSize - newSize > Hook.WorldResizeSpeed)
+                {
+                    Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
+                }
+                Hook.Obstacles = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.ObstaclesMultiplier));
+                Hook.Fishes = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.FishesMultiplier));
+                Hook.PickupSeekers = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupSeekersMultiplier));
+                Hook.PickupShields = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupShieldsMultiplier));
+            }
         }
 
         public void BodyAdd(Body body)
@@ -293,7 +297,7 @@
         private uint _id = 0;
         public uint NextID()
         {
-            lock(this)
+            lock (this)
                 return _id++;
         }
 

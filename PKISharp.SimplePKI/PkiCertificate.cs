@@ -47,7 +47,7 @@ namespace PKISharp.SimplePKI
 
                 case PkiEncodingFormat.Der:
                     return NativeCertificate.GetEncoded();
-                
+
                 default:
                     throw new NotSupportedException();
             }
@@ -153,7 +153,7 @@ namespace PKISharp.SimplePKI
                 return new PkiCertificate
                 {
                     NativeCertificate = new X509CertificateParser().ReadCertificate(_certificate),
-                }; 
+                };
             }
         }
     }

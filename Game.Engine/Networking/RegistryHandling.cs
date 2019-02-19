@@ -53,12 +53,13 @@
 
                 try
                 {
-                    Task.Run(() => {
+                    Task.Run(() =>
+                    {
                         try
                         {
                             return RegistryClient.Registry.PostReportAsync(report);
                         }
-                        catch(Exception e)
+                        catch (Exception e)
                         {
                             Console.WriteLine($"Registration failure: {e.Message}");
                         }

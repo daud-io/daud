@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Numerics;
 
-    public class Dodge: ContextBehavior
+    public class Dodge : ContextBehavior
     {
         private IEnumerable<Body> DangerousBullets;
 
@@ -45,7 +45,7 @@
                 {
                     var dist = Vector2.Distance(danger, position);
                     if (dist < DistanceFromCenterThreshold)
-                        accumulator -= 1 / (dist*dist);
+                        accumulator -= 1 / (dist * dist);
                 }
             }
 

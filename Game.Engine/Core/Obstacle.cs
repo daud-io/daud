@@ -72,14 +72,14 @@
             if (weatherMultiplerDelta / World.Hook.ObstacleMaxMomentumWeatherMultiplier > 0.02)
                 Multiplier = Multiplier * 0.97f + World.Hook.ObstacleMaxMomentumWeatherMultiplier * 0.03f;
             Momentum = TargetMomentum * Multiplier;
-            
+
             if (IdealSize > 0 && MathF.Abs(IdealSize - TargetSize) / IdealSize > 0.02f)
             {
                 var step = (IdealSize * 0.97f + TargetSize * 0.03f) - IdealSize;
 
-                if(step > 0)
+                if (step > 0)
                     step = MathF.Max(step, 0.03f * MathF.Abs(IdealSize - TargetSize));
-                else if(step < 0)
+                else if (step < 0)
                     step = MathF.Min(step, -0.03f * MathF.Abs(IdealSize - TargetSize));
 
                 IdealSize += step;
@@ -106,7 +106,7 @@
             long LengthOfDeath = World.Hook.LifecycleDuration;
             DieByTime = World.Time + LengthOfDeath;
             TargetSize = 0;
-            
+
             //GrowthRate = -1 * (float)Size / (float)LengthOfDeath; // shrink
         }
 

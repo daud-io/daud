@@ -49,15 +49,15 @@
         {
 
             var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
-            (var finalRing, var angle,var boost) = ContextRingBlending.Blend(contexts,false);
+            (var finalRing, var angle, var boost) = ContextRingBlending.Blend(contexts, false);
             BlendedRing = finalRing;
             SteerAngle(angle);
         }
-        
+
         [Obsolete]
         protected virtual void OnFinalRing(ContextRing ring)
         {
-            
+
         }
 
         public void SetBehaviors(IEnumerable<BehaviorDescriptor> behaviors)
@@ -91,12 +91,15 @@
 
         protected void Log(string message)
         {
-            try{
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.Write($"[{this.FleetID}\t{this.Name}]\t");
-            Console.ResetColor();
-            Console.WriteLine(message);
-            }catch(NullReferenceException e){
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write($"[{this.FleetID}\t{this.Name}]\t");
+                Console.ResetColor();
+                Console.WriteLine(message);
+            }
+            catch (NullReferenceException e)
+            {
 
             }
         }

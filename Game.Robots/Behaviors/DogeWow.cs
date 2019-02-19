@@ -20,7 +20,7 @@ namespace Game.Robots.Behaviors
 
         public DogeWow(ContextRobot robot) : base(robot)
         {
-            Normalize=false;
+            Normalize = false;
         }
 
         protected override void PreSweep(ContextRing ring)
@@ -57,27 +57,28 @@ namespace Game.Robots.Behaviors
             float accumulator = 0f;
 
             var fleet = Robot.SensorFleets.MyFleet;
-            var dead=0;
+            var dead = 0;
             if (fleet != null)
             {
                 ConsideredPoints.Add(position);
                 foreach (var ship in fleet.Ships)
                 {
-                    var shipDead=0;
+                    var shipDead = 0;
                     float farA = 40000 * 40000;
                     float farB = 40000 * 40000;
-                    float minA=0.0f;
-                    float hitd=90.0f;
+                    float minA = 0.0f;
+                    float hitd = 90.0f;
                     foreach (var danger in Projections)
                     {
                         var dist = Vector2.Distance(danger, position + ship.Position - fleet.Center);
                         if (dist < DistanceFromCenterThreshold)
                         {
-                            var fm=-hitd*hitd/MathF.Max(dist*dist,hitd*hitd) / fleet.Ships.Count*(2.0f+Vector2.Dot(danger-(position + ship.Position - fleet.Center),new Vector2(MathF.Cos(angle),MathF.Sin(angle)))/dist);
+                            var fm = -hitd * hitd / MathF.Max(dist * dist, hitd * hitd) / fleet.Ships.Count * (2.0f + Vector2.Dot(danger - (position + ship.Position - fleet.Center), new Vector2(MathF.Cos(angle), MathF.Sin(angle))) / dist);
                             farA = MathF.Min(dist, farA);
                             minA = MathF.Min(fm, minA);
-                            if(dist<hitd){
-                                shipDead=1;
+                            if (dist < hitd)
+                            {
+                                shipDead = 1;
                             }
                         }
 
@@ -123,15 +124,16 @@ namespace Game.Robots.Behaviors
                     //     // accumulator -=1.0f/d/fleet.Ships.Count/4.0f;//( 400.0f*400.0f )/ (farA+1.0f)/fleet.Ships.Count;
                     // }
                     // }
-                 dead+=shipDead;   
+                    dead += shipDead;
                 }
 
             }
-            if(fleet.Ships.Count<dead*2+1){
-                return accumulator*1000.0f;
+            if (fleet.Ships.Count < dead * 2 + 1)
+            {
+                return accumulator * 1000.0f;
             }
 
-            return accumulator*((float)dead+1.0f);//-0.5f+1.0f/(1.0f+MathF.Exp(accumulator));
+            return accumulator * ((float)dead + 1.0f);//-0.5f+1.0f/(1.0f+MathF.Exp(accumulator));
         }
     }
 }

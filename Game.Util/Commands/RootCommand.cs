@@ -27,7 +27,7 @@
         [Option(Description = "spefify a password for authentication")]
         public string Password { get; }
 
-        [Option(Template="--registry-server", Description = "full url of the Registry API server")]
+        [Option(Template = "--registry-server", Description = "full url of the Registry API server")]
         public string RegistryServer { get; }
 
         [Option(Template = "--registry-user-key", Description = "specify a UserKey for registry authentication")]

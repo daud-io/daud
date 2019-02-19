@@ -4,6 +4,6 @@
 
     public interface IContextRingBlending
     {
-        (ContextRing, float,bool) Blend(IEnumerable<ContextRing> contexts,bool doBoost);
+        (ContextRing, float, bool) Blend(IEnumerable<ContextRing> contexts, bool doBoost);
     }
 }

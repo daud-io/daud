@@ -63,7 +63,7 @@
                     WormholesDestination = null,
 
                     Obstacles = 10,
-					ObstaclesMultiplier = 0.0005,
+                    ObstaclesMultiplier = 0.0005,
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
                     ObstacleMinSize = 300,
@@ -96,13 +96,13 @@
                     FlockSpeed = 0,
 
                     PickupSeekers = 6,
-					PickupSeekersMultiplier = 0.0006,
+                    PickupSeekersMultiplier = 0.0006,
                     PickupShields = 4,
-					PickupShieldsMultiplier = 0.0004,
+                    PickupShieldsMultiplier = 0.0004,
                     ShieldStrength = 3,
 
                     Fishes = 60,
-					FishesMultiplier = 0.01,
+                    FishesMultiplier = 0.01,
                     FishThrust = 0.04f,
 
                     SeekerRange = 2100,
@@ -114,12 +114,12 @@
                     PointsPerKillShip = 1,
                     PointsPerUniverseDeath = -1,
                     PointsMultiplierDeath = 0.5f,
-					PointsPerKillFleet = 55, // to resolve some problems in Worlds.cs
-					PointsPerKillFleetMax = 55,
-					PointsPerKillFleetStep = 5,
-					PointsPerKillFleetPerStep = 50,
-					ComboDelay = 3000,
-					ComboPointsStep = 5,
+                    PointsPerKillFleet = 55, // to resolve some problems in Worlds.cs
+                    PointsPerKillFleetMax = 55,
+                    PointsPerKillFleetStep = 5,
+                    PointsPerKillFleetPerStep = 50,
+                    ComboDelay = 3000,
+                    ComboPointsStep = 5,
 
                     PlayerCountGracePeriodMS = 15000,
                     FleetWeaponStackDepth = 1,
@@ -135,11 +135,11 @@
 
 
         public int WorldSize { get; set; }
-		public bool WorldResizeEnabled { get; set; }
-		public int WorldResizeSpeed { get; set; }
-		public int WorldSizeBasic { get; set; }
-		public int WorldSizeDeltaPerPlayer { get; set; }
-		public int WorldMinPlayersToResize { get; set; }
+        public bool WorldResizeEnabled { get; set; }
+        public int WorldResizeSpeed { get; set; }
+        public int WorldSizeBasic { get; set; }
+        public int WorldSizeDeltaPerPlayer { get; set; }
+        public int WorldMinPlayersToResize { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
@@ -157,12 +157,12 @@
         public int PointsPerKillShip { get; set; }
         public int PointsPerUniverseDeath { get; set; }
         public float PointsMultiplierDeath { get; set; }
-		public int PointsPerKillFleet { get; set; }
-		public int PointsPerKillFleetMax { get; set; }
-		public int PointsPerKillFleetStep { get; set; }
-		public decimal PointsPerKillFleetPerStep { get; set; }
-		public int ComboDelay { get; set; }
-		public int ComboPointsStep { get; set; }
+        public int PointsPerKillFleet { get; set; }
+        public int PointsPerKillFleetMax { get; set; }
+        public int PointsPerKillFleetStep { get; set; }
+        public decimal PointsPerKillFleetPerStep { get; set; }
+        public int ComboDelay { get; set; }
+        public int ComboPointsStep { get; set; }
 
         public int HealthHitCost { get; set; }
         public float HealthRegenerationPerFrame { get; set; }
@@ -193,13 +193,13 @@
 
         public int Obstacles { get; set; }
         public int PickupSeekers { get; set; } = 0;
-		public double PickupSeekersMultiplier { get; set; }
-		public double PickupShieldsMultiplier { get; set; }
+        public double PickupSeekersMultiplier { get; set; }
+        public double PickupShieldsMultiplier { get; set; }
         public int Fishes { get; set; } = 0;
-		public double FishesMultiplier { get; set; }
+        public double FishesMultiplier { get; set; }
         public float FishThrust { get; set; } = 0;
 
-		public double ObstaclesMultiplier { get; set; }
+        public double ObstaclesMultiplier { get; set; }
         public float ObstacleMaxMomentum { get; set; }
         public int ObstacleMinSize { get; set; }
         public int ObstacleMaxSize { get; set; }
@@ -250,7 +250,7 @@
         public string SpawnLocationMode { get; set; }
         public Vector2 SpawnLocation { get; set; }
 
-        public int LifecycleDuration {get;set;}
+        public int LifecycleDuration { get; set; }
 
         public int PlayerCountGracePeriodMS { get; set; }
         public int FleetWeaponStackDepth { get; set; }

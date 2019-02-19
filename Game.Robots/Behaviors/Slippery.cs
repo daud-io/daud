@@ -12,7 +12,7 @@
         private List<Fleet> FleetsOfConcern = null;
         public int MaximumRange { get; set; } = 10000;
 
-        public Slippery(ContextRobot robot): base(robot)
+        public Slippery(ContextRobot robot) : base(robot)
         {
             Normalize = false;
         }

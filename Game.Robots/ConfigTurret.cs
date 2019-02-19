@@ -9,10 +9,10 @@
         private readonly FleetTargeting FleetTargeting;
         private readonly AbandonedTargeting AbandonedTargeting;
         private readonly FishTargeting FishTargeting;
-        public bool AttackFleets=true;
-        public bool AttackFish=true;
-        public bool Safe=false;
-        public bool AttackAbandoned=true;
+        public bool AttackFleets = true;
+        public bool AttackFish = true;
+        public bool Safe = false;
+        public bool AttackAbandoned = true;
         public int BoostThreshold { get; set; } = 1;
 
         public ConfigTurret()
@@ -28,23 +28,28 @@
 
             if (CanShoot)
             {
-                var target = (AttackFleets?FleetTargeting.ChooseTarget():null)
-                    ?? (AttackAbandoned?AbandonedTargeting.ChooseTarget():null)
-                    ?? (AttackFish?FishTargeting.ChooseTarget():null);
+                var target = (AttackFleets ? FleetTargeting.ChooseTarget() : null)
+                    ?? (AttackAbandoned ? AbandonedTargeting.ChooseTarget() : null)
+                    ?? (AttackFish ? FishTargeting.ChooseTarget() : null);
 
-                if (target != null){
-                    var shootAngle=MathF.Atan2(target.Position.Y-this.Position.Y,target.Position.X-this.Position.X);
-                    bool dangerous=false;
-                    if(!AttackFleets && this.SensorFleets.MyFleet!=null){
-                        var flets=FleetTargeting.PotentialTargetFleets();
-                        foreach(var flet in flets){
-                            if(RoboMath.MightHit(this.HookComputer,this.SensorFleets.MyFleet,flet,shootAngle)){
-                                dangerous=true;
+                if (target != null)
+                {
+                    var shootAngle = MathF.Atan2(target.Position.Y - this.Position.Y, target.Position.X - this.Position.X);
+                    bool dangerous = false;
+                    if (!AttackFleets && this.SensorFleets.MyFleet != null)
+                    {
+                        var flets = FleetTargeting.PotentialTargetFleets();
+                        foreach (var flet in flets)
+                        {
+                            if (RoboMath.MightHit(this.HookComputer, this.SensorFleets.MyFleet, flet, shootAngle))
+                            {
+                                dangerous = true;
                             }
                         }
                     }
-                    if(!Safe || !dangerous){
-                    ShootAt(target.Position);
+                    if (!Safe || !dangerous)
+                    {
+                        ShootAt(target.Position);
                     }
                 }
             }

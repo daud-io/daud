@@ -25,7 +25,7 @@
             {
                 foreach (var entry in this.Robot.Leaderboard.Entries.Skip(2))
                 {
-                    if (this.Robot.SensorTeam.IsSameTeam(entry.Color) 
+                    if (this.Robot.SensorTeam.IsSameTeam(entry.Color)
                         && entry.FleetID != this.Robot.FleetID)
                     {
                         var fleet = this.Robot.SensorFleets.ByID(entry.FleetID);
@@ -37,7 +37,7 @@
                 }
 
                 Active = true;
-                
+
             }
             else
                 Active = false;

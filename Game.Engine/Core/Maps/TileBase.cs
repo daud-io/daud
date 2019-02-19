@@ -14,7 +14,7 @@
         public virtual void InteractWithShip(Ship ship)
         {
             if (Drag != 0 && ship.Momentum.Length() < 5)
-              ship.Momentum *= Drag;
+                ship.Momentum *= Drag;
         }
     }
 }
