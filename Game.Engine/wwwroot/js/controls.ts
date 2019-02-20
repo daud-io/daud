@@ -1,25 +1,36 @@
 ﻿import Cookies from "js-cookie";
-import nipplejs from "nipplejs";
-// import { setInterval, setTimeout } from "timers";
+import * as nipplejs from "nipplejs";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
-import EmojiPanel from "emoji-panel";
+import "emoji-mart/css/emoji-mart.css";
+import { Picker } from "emoji-mart";
+import React from "react";
+import ReactDOM from "react-dom";
+
+ReactDOM.render(
+    React.createElement(
+        Picker,
+        {
+            set: "google",
+            onClick: e => {
+                console.log(e);
+                Cookies.set("emoji", e.native);
+                var x = e.native;
+                emojiTrigger.innerText = e.native;
+
+                Controls.emoji = x;
+                console.log(Controls.emoji);
+                document.getElementById("emoji-container").classList.remove("open");
+            }
+        },
+        null
+    ),
+    document.getElementById("emoji-container")
+);
 
 const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
 const emojiTrigger = document.getElementById("emoji-trigger");
-new EmojiPanel(document.getElementById("emoji-container"), {
-    onClick: e => {
-        Cookies.set("emoji", e.index);
-        Cookies.set("emoji2", e.unified);
-        var x = unicode(e.unified);
-        (emojiTrigger.firstChild as HTMLElement).setAttribute("data-index", e.index);
-
-        Controls.emoji = x;
-        console.log(Controls.emoji);
-        document.getElementById("emoji-container").classList.remove("open");
-    }
-});
 
 emojiTrigger.addEventListener("click", () => {
     document.getElementById("emoji-container").classList.toggle("open");
@@ -294,7 +305,6 @@ function save() {
 const savedNick = Cookies.get("nick");
 const savedColor = Cookies.get("color");
 const savedEmoji = Cookies.get("emoji");
-const savedEmoji2 = Cookies.get("emoji2");
 
 if (savedNick != undefined) {
     Controls.nick = savedNick;
@@ -307,6 +317,6 @@ if (savedColor != undefined) {
 }
 
 if (savedEmoji != undefined) {
-    Controls.emoji = unicode(savedEmoji2);
-    (emojiTrigger.firstChild as HTMLElement).setAttribute("data-index", savedEmoji);
+    Controls.emoji = savedEmoji;
+    emojiTrigger.innerText = savedEmoji;
 }

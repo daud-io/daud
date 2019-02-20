@@ -7,7 +7,7 @@ import { textureCache } from "./models/textureCache";
 
 export const Settings = {
     theme: "",
-    themeCustom: false,
+    themeCustom: "",
     mouseScale: 1.0,
     font: "Exo 2",
     leaderboardEnabled: true,
@@ -26,42 +26,59 @@ export const Settings = {
     mipmapping: true,
     updatesVersion: 0
 };
+const themeSelector = <HTMLInputElement>document.getElementById("settingsThemeSelector");
+const themeSelectorCustom = <HTMLInputElement>document.getElementById("settingsThemeSelectorCustom");
+const mouseScale = <HTMLInputElement>document.getElementById("settingsMouseScale");
+const leaderboardEnabled = <HTMLInputElement>document.getElementById("settingsLeaderboardEnabled");
+const showHints = <HTMLInputElement>document.getElementById("settingsShowHints");
+const namesEnabled = <HTMLInputElement>document.getElementById("settingsNamesEnabled");
+const bandwidth = <HTMLInputElement>document.getElementById("settingsBandwidth");
+const hudEnabled = <HTMLInputElement>document.getElementById("settingsHUDEnabled");
+const showCooldown = <HTMLInputElement>document.getElementById("settingsShowCooldown");
+const logLength = <HTMLInputElement>document.getElementById("settingsLog");
+const displayMinimap = <HTMLInputElement>document.getElementById("settingsDisplayMinimap");
+const mipmapping = <HTMLInputElement>document.getElementById("settingsMipMapping");
+const bigKillMessage = <HTMLInputElement>document.getElementById("settingsBigKillMessage");
+const showKeyboardHints = <HTMLInputElement>document.getElementById("settingsShowKeyboardHints");
+const showOwnName = <HTMLInputElement>document.getElementById("settingsShowOwnName");
+const nameSize = <HTMLInputElement>document.getElementById("settingsNameSize");
+const background = <HTMLInputElement>document.getElementById("settingsBackground");
 
 function save() {
     const cookieOptions = { expires: 300 };
     let reload = false;
 
-    if (Settings.theme != document.getElementById("settingsThemeSelector").value) {
-        Settings.theme = document.getElementById("settingsThemeSelector").value;
+    if (Settings.theme != themeSelector.value) {
+        Settings.theme = themeSelector.value;
         if (Settings.theme == "") reload = true;
         else theme(Settings.theme);
     }
-    if (Settings.themeCustom != document.getElementById("settingsThemeSelectorCustom").value) {
-        Settings.themeCustom = document.getElementById("settingsThemeSelectorCustom").value;
+    if (Settings.themeCustom != themeSelectorCustom.value) {
+        Settings.themeCustom = themeSelectorCustom.value;
         theme(Settings.themeCustom);
     }
 
-    if (Settings.mipmapping != document.getElementById("settingsMipMapping").checked) {
-        Settings.mipmapping = document.getElementById("settingsMipMapping").checked;
+    if (Settings.mipmapping != mipmapping.checked) {
+        Settings.mipmapping = mipmapping.checked;
         reload = true;
     }
 
     Settings.font = "Exo 2";
-    Settings.mouseScale = document.getElementById("settingsMouseScale").value;
-    Settings.leaderboardEnabled = document.getElementById("settingsLeaderboardEnabled").checked;
-    Settings.showHints = document.getElementById("settingsShowHints").checked;
-    Settings.namesEnabled = document.getElementById("settingsNamesEnabled").checked;
-    Settings.bandwidth = document.getElementById("settingsBandwidth").value;
-    Settings.hudEnabled = document.getElementById("settingsHUDEnabled").checked;
-    Settings.showCooldown = document.getElementById("settingsShowCooldown").checked;
-    Settings.logLength = document.getElementById("settingsLog").value;
-    Settings.displayMinimap = document.getElementById("settingsDisplayMinimap").checked;
-    Settings.mipmapping = document.getElementById("settingsMipMapping").checked;
-    Settings.bigKillMessage = document.getElementById("settingsBigKillMessage").checked;
-    Settings.showKeyboardHints = document.getElementById("settingsShowKeyboardHints").checked;
-    Settings.showOwnName = document.getElementById("settingsShowOwnName").checked;
-    Settings.nameSize = Number(document.getElementById("settingsNameSize").value);
-    Settings.background = document.getElementById("settingsBackground").value;
+    Settings.mouseScale = Number(mouseScale.value);
+    Settings.leaderboardEnabled = leaderboardEnabled.checked;
+    Settings.showHints = showHints.checked;
+    Settings.namesEnabled = namesEnabled.checked;
+    Settings.bandwidth = Number(bandwidth.value);
+    Settings.hudEnabled = hudEnabled.checked;
+    Settings.showCooldown = showCooldown.checked;
+    Settings.logLength = Number(logLength.value);
+    Settings.displayMinimap = displayMinimap.checked;
+    Settings.mipmapping = mipmapping.checked;
+    Settings.bigKillMessage = bigKillMessage.checked;
+    Settings.showKeyboardHints = showKeyboardHints.checked;
+    Settings.showOwnName = showOwnName.checked;
+    Settings.nameSize = Number(nameSize.value);
+    Settings.background = background.value;
 
     Cookies.set("settings", Settings, cookieOptions);
 
@@ -87,24 +104,24 @@ function load() {
         if (Settings.theme == "516mkwof6m4d4tg") Settings.theme = "xn4t5ce2916uxbx";
     }
 
-    document.getElementById("settingsThemeSelector").value = Settings.theme;
-    document.getElementById("settingsThemeSelectorCustom").value = Settings.themeCustom || "";
+    themeSelector.value = Settings.theme;
+    themeSelectorCustom.value = Settings.themeCustom || "";
 
-    document.getElementById("settingsMouseScale").value = Settings.mouseScale;
-    document.getElementById("settingsLeaderboardEnabled").checked = Settings.leaderboardEnabled;
-    document.getElementById("settingsShowHints").checked = Settings.showHints;
-    document.getElementById("settingsMipMapping").checked = Settings.mipmapping;
-    document.getElementById("settingsNamesEnabled").checked = Settings.namesEnabled;
-    document.getElementById("settingsBandwidth").value = Settings.bandwidth;
-    document.getElementById("settingsHUDEnabled").checked = Settings.hudEnabled;
-    document.getElementById("settingsShowCooldown").checked = Settings.showCooldown;
-    document.getElementById("settingsLog").value = Settings.logLength;
-    document.getElementById("settingsDisplayMinimap").checked = Settings.displayMinimap;
-    document.getElementById("settingsBigKillMessage").checked = Settings.bigKillMessage;
-    document.getElementById("settingsShowKeyboardHints").checked = Settings.showKeyboardHints;
-    document.getElementById("settingsShowOwnName").checked = Settings.showOwnName;
-    document.getElementById("settingsNameSize").value = Settings.nameSize;
-    document.getElementById("settingsBackground").value = Settings.background;
+    mouseScale.value = String(Settings.mouseScale);
+    leaderboardEnabled.checked = Settings.leaderboardEnabled;
+    showHints.checked = Settings.showHints;
+    mipmapping.checked = Settings.mipmapping;
+    namesEnabled.checked = Settings.namesEnabled;
+    bandwidth.value = String(Settings.bandwidth);
+    hudEnabled.checked = Settings.hudEnabled;
+    showCooldown.checked = Settings.showCooldown;
+    logLength.value = String(Settings.logLength);
+    displayMinimap.checked = Settings.displayMinimap;
+    bigKillMessage.checked = Settings.bigKillMessage;
+    showKeyboardHints.checked = Settings.showKeyboardHints;
+    showOwnName.checked = Settings.showOwnName;
+    nameSize.value = String(Settings.nameSize);
+    background.value = Settings.background;
 }
 
 const debug = true;
@@ -171,12 +188,12 @@ async function theme(v) {
                             .then(ab => {
                                 const arrayBufferView = new Uint8Array(ab);
                                 const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                const urlCreator = window.URL || window.webkitURL;
+                                const urlCreator = window.URL;
                                 const url = urlCreator.createObjectURL(blob);
 
                                 if (key == "shield") {
                                     console.log("breakpoint");
-                                    textureMap[key].flag = true;
+                                    (<any>textureMap[key]).flag = true;
                                 }
 
                                 if (debug) console.log(`textureMap.${key}.url: set to blob`);
@@ -218,7 +235,7 @@ async function theme(v) {
                                                         .then(ab => {
                                                             const arrayBufferView = new Uint8Array(ab);
                                                             const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                                            const urlCreator = window.URL || window.webkitURL;
+                                                            const urlCreator = window.URL;
                                                             const url = urlCreator.createObjectURL(blob);
                                                             fixedMap[fixed.indexOf(loo)] = url;
 
@@ -233,7 +250,7 @@ async function theme(v) {
                                             cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
                                         }
                                         const blob = new Blob([cleansed], { type: "text/css" });
-                                        const urlCreator = window.URL || window.webkitURL;
+                                        const urlCreator = window.URL;
                                         const url = urlCreator.createObjectURL(blob);
 
                                         var link = document.createElement("link");

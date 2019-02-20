@@ -11,6 +11,7 @@ dependencies:
   autoprefixer: 9.4.8
   babel-polyfill: 6.26.0
   dat.gui: 0.7.5
+  emoji-mart: 2.9.2
   emoji-panel: 0.5.2
   flatbuffers: 1.10.2
   img: 3.0.3
@@ -22,6 +23,8 @@ dependencies:
   pixi.js: 4.8.6
   plotly.js: 1.44.4
   prettier: 1.16.4
+  react: 16.8.2
+  react-dom: 16.8.2
   whatwg-fetch: 3.0.0
 devDependencies:
   cssnano: 4.1.10
@@ -2634,6 +2637,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-uXrBiWvCCOzxgzVkogaHpSFdA4k=
+  /emoji-mart/2.9.2:
+    dev: false
+    peerDependencies:
+      react: ^0.14.0 || ^15.0.0-0 || ^16.0.0
+    resolution:
+      integrity: sha512-5S743OpjFb9nBbbx5F4APWgcp2IOjdT7gLLzu2OBh0k44C3ZoCm+wuIN1llOtj5eosUa3lYqrZWtU/ZiaCULrg==
   /emoji-panel/0.5.2:
     dependencies:
       emoji-datasource: 2.4.4
@@ -4211,7 +4220,6 @@ packages:
     resolution:
       integrity: sha512-X2BB11YZtrRqY4EnQcLX5Rh373zbK4alC1FW7D7MBhL2gtcC17cTnr6DmfHZeS0s2rTHjUTMMHfG7gO8SSdw+g==
   /js-tokens/4.0.0:
-    dev: true
     resolution:
       integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
   /js-yaml/3.12.1:
@@ -4365,7 +4373,6 @@ packages:
   /loose-envify/1.4.0:
     dependencies:
       js-tokens: 4.0.0
-    dev: true
     hasBin: true
     resolution:
       integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -5974,6 +5981,14 @@ packages:
       node: '>= 0.6.0'
     resolution:
       integrity: sha1-czIwDoQBYb2j5podHZGn1LwW8YI=
+  /prop-types/15.7.2:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      react-is: 16.8.2
+    dev: false
+    resolution:
+      integrity: sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
   /proto-list/1.2.4:
     dev: true
     resolution:
@@ -6106,6 +6121,32 @@ packages:
     dev: false
     resolution:
       integrity: sha1-Dd4rZrezS7G80qI4BerIBth/0X8=
+  /react-dom/16.8.2:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.7.2
+      scheduler: 0.13.2
+    dev: false
+    peerDependencies:
+      react: ^16.0.0
+    resolution:
+      integrity: sha512-cPGfgFfwi+VCZjk73buu14pYkYBR1b/SRMSYqkLDdhSEHnSwcuYTPu6/Bh6ZphJFIk80XLvbSe2azfcRzNF+Xg==
+  /react-is/16.8.2:
+    dev: false
+    resolution:
+      integrity: sha512-D+NxhSR2HUCjYky1q1DwpNUD44cDpUXzSmmFyC3ug1bClcU/iDNy0YNn1iwme28fn+NFhpA13IndOd42CrFb+Q==
+  /react/16.8.2:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+      prop-types: 15.7.2
+      scheduler: 0.13.2
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-aB2ctx9uQ9vo09HVknqv3DGRpI7OIGJhCx3Bt0QqoRluEjHSaObJl+nG12GDdYH6sTgE7YiPJ6ZUyMx9kICdXw==
   /readable-stream/1.0.34:
     dependencies:
       core-util-is: 1.0.2
@@ -6539,6 +6580,13 @@ packages:
     dev: true
     resolution:
       integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==
+  /scheduler/0.13.2:
+    dependencies:
+      loose-envify: 1.4.0
+      object-assign: 4.1.1
+    dev: false
+    resolution:
+      integrity: sha512-qK5P8tHS7vdEMCW5IPyt8v9MJOHqTrOUgPXib7tqm9vh834ibBX5BNhwkplX/0iOzHW5sXyluehYfS9yrkz9+w==
   /seedrandom/2.4.4:
     dev: false
     resolution:
@@ -7785,6 +7833,7 @@ specifiers:
   babel-polyfill: ^6.26.0
   cssnano: ^4.1.10
   dat.gui: ^0.7.5
+  emoji-mart: ^2.9.2
   emoji-panel: ^0.5.2
   flatbuffers: ^1.10.2
   img: ^3.0.3
@@ -7797,5 +7846,7 @@ specifiers:
   pixi.js: ^4.8.5
   plotly.js: ^1.44.4
   prettier: ^1.16.4
+  react: ^16.8.2
+  react-dom: ^16.8.2
   typescript: ^2.9.2
   whatwg-fetch: ^3.0.0
