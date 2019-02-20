@@ -4,6 +4,7 @@ import nipplejs from "nipplejs";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
 import EmojiPanel from "emoji-panel";
+import { Connection } from "./connection";
 
 const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
@@ -44,6 +45,9 @@ const refreshSelectedStyle = function() {
         if (option.getAttribute("data-color") == Controls.ship) option.classList.add("selected");
         else option.classList.remove("selected");
     }
+	
+	console.log(window.discordData);
+	Controls.addSecretShips(window.discordData);
 };
 
 shipSelectorSwitch.addEventListener("click", function(e) {
@@ -188,6 +192,7 @@ export var Controls = {
         Controls.canvas = canvas;
     },
     initializeWorld: function(world) {
+		this.world = world;
         const colors = world.allowedColors;
         const selector = document.getElementById("shipSelectorSwitch");
         while (selector.firstChild) selector.removeChild(selector.firstChild);
@@ -207,7 +212,24 @@ export var Controls = {
         Controls.ship = colors[shipIndex];
         refreshSelectedStyle();
     },
-    ship: "ship_green"
+    ship: "ship_green",
+	addSecretShips: function(event) {
+		const selector = document.getElementById("shipSelectorSwitch");
+		
+		if (event !== undefined) {
+			if (event.data.roles.includes("Player")) {
+				const selectorImage = Ship.getSelectorImage("ship_secret");
+
+				if (selectorImage) {
+					selector.appendChild(selectorImage);
+					selectorImage.setAttribute("data-color", "ship_secret");
+					selectorImage.classList.add("circle");
+				}
+				
+				world.allowedColors.push("ship_secret");
+			}
+		}
+	}
 };
 
 window.addEventListener(

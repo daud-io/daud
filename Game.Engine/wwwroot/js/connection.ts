@@ -2,6 +2,8 @@
 import { Game } from "./game_generated";
 import { Cache } from "./cache";
 import { Settings } from "./settings";
+import { Ship } from "./models/ship";
+import { Controls } from "./controls";
 
 export class Connection {
     onView: (view: any) => void;
@@ -297,8 +299,10 @@ export class Connection {
                     data: JSON.parse(message.data())
                 };
 
-                console.log(event);
-
+				window.discordData = event;
+				
+				Controls.addSecretShips(event);
+				
                 break;
             case this.fb.AllMessages.NetLeaderboard:
                 message = quantum.message(new this.fb.NetLeaderboard());

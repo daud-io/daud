@@ -462,7 +462,7 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_secret":
-                            if (player.Roles.Contains("Old Guard"))
+                            if (player.Roles.Contains("Player"))
                             {
                                 shipSprite = Sprites.ship_secret;
                                 color = "yellow";
@@ -482,16 +482,8 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_orange":
-                            if (player.Roles.Contains("Old Guard"))
-                            {
-                                shipSprite = Sprites.ship_secret;
-                                color = "yellow";
-                            }
-                            else
-                            {
-                                shipSprite = Sprites.ship_orange;
-                                color = "orange";
-                            }
+							shipSprite = Sprites.ship_orange;
+                            color = "orange";
                             break;
                         case "ship_pink":
                             shipSprite = Sprites.ship_pink;
