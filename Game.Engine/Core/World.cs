@@ -41,8 +41,8 @@
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
 
-		//public int StepCounter { get; set; }
-		
+        //public int StepCounter { get; set; }
+
         public int AdvertisedPlayerCount { get; set; }
         public string WorldKey { get; set; }
 
@@ -72,7 +72,7 @@
         }
 
         private void SystemActor<T>(T instance = null)
-            where T: class, IActor, new()
+            where T : class, IActor, new()
         {
             var actor = instance ?? new T();
             actor.Init(this);
@@ -117,29 +117,16 @@
                 foreach (var actor in Actors.ToList())
                     actor.CreateDestroy();
 
-                var unindexed = 0;
-                var indexed = 0;
                 foreach (var body in Bodies)
                 {
-                    if (body.IsDirty || !body.Indexed)
+                    if (body.IsDirty)
                     {
                         body.DefinitionTime = this.Time;
                         body.OriginalPosition = body.Position;
                         body.OriginalAngle = body.Angle;
                         body.IsDirty = false;
-
-                        /*if (Vector2.Distance(body.IndexedPosition, body.Position) > SearchMargin)
-                        {
-                            BodyCleaned(body);
-                            indexed++;
-                        }
-                        else
-                            unindexed++;*/
                     }
                 }
-
-                if (false && unindexed + indexed > 0)
-                    Console.WriteLine($"{1f * indexed / (unindexed + indexed)}\t");
 
                 ProcessLeaderboard();
 
@@ -155,63 +142,38 @@
                 }
             }
             Processing = false;
-			
-			if (Hook.WorldResizeEnabled) {
-				int resizeCount = (this.AdvertisedPlayerCount < Hook.WorldMinPlayersToResize) ? 0 : this.AdvertisedPlayerCount - Hook.WorldMinPlayersToResize + 1;
-				int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldSizeDeltaPerPlayer;
-				if (Hook.WorldSize < newSize) {
-					Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
-				} else if (Hook.WorldSize > newSize && Hook.WorldSize - newSize > Hook.WorldResizeSpeed) {
-					Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
-				}
-				Hook.Obstacles = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.ObstaclesMultiplier));
-				Hook.Fishes = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.FishesMultiplier));
-				Hook.PickupSeekers = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupSeekersMultiplier));
-				Hook.PickupShields = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupShieldsMultiplier));
-			}
-        }
 
-        public void BodyCleaned(Body body)
-        {
-            if (body.IsStatic)
-                RTreeStatic.Delete(body);
-            else
-                RTreeDynamic.Delete(body);
-
-            if (!body.Exists)
-                return;
-
-            body.Envelope = new Envelope(
-                body.Position.X - body.Size, 
-                body.Position.Y - body.Size, 
-                body.Position.X + body.Size, 
-                body.Position.Y + body.Size);
-
-            body.IndexedPosition = body.Position;
-            body.Indexed = true;
-            body.Updated = true;
-
-            if (body.IsStatic)
-                RTreeStatic.Insert(body);
-            else
-                RTreeDynamic.Insert(body);
+            if (Hook.WorldResizeEnabled)
+            {
+                int resizeCount = (this.AdvertisedPlayerCount < Hook.WorldMinPlayersToResize) ? 0 : this.AdvertisedPlayerCount - Hook.WorldMinPlayersToResize + 1;
+                int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldSizeDeltaPerPlayer;
+                if (Hook.WorldSize < newSize)
+                {
+                    Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
+                }
+                else if (Hook.WorldSize > newSize && Hook.WorldSize - newSize > Hook.WorldResizeSpeed)
+                {
+                    Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
+                }
+                Hook.Obstacles = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.ObstaclesMultiplier));
+                Hook.Fishes = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.FishesMultiplier));
+                Hook.PickupSeekers = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupSeekersMultiplier));
+                Hook.PickupShields = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupShieldsMultiplier));
+            }
         }
 
         public void BodyAdd(Body body)
         {
             Bodies.Add(body);
+            if (body.IsStatic)
+                RTreeStatic.Insert(body);
         }
 
         public void BodyRemove(Body body)
         {
             Bodies.Remove(body);
-            return;
-
             if (body.IsStatic)
                 RTreeStatic.Delete(body);
-            else
-                RTreeDynamic.Delete(body);
-            body.Removed = true;
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
@@ -339,7 +301,7 @@
         private uint _id = 0;
         public uint NextID()
         {
-            lock(this)
+            lock (this)
                 return _id++;
         }
 

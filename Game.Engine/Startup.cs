@@ -38,7 +38,7 @@
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
-            
+
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowAllOrigins",
@@ -72,9 +72,9 @@
         }
 
         public void Configure(
-            IApplicationBuilder app, 
-            IHostingEnvironment env, 
-            IServiceProvider provider, 
+            IApplicationBuilder app,
+            IHostingEnvironment env,
+            IServiceProvider provider,
             GameConfiguration config
         )
         {
@@ -94,7 +94,7 @@
 
             if (config.ForceHTTPS)
                 app.UseHttpsRedirection();
-            
+
             if (config.AllowCORS)
                 app.UseCors();
 

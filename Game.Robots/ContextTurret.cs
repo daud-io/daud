@@ -27,14 +27,14 @@
         public ContextTurret()
         {
             Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.00f });
-            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 1f, MaximumAngle = MathF.PI / 4});
+            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 1f, MaximumAngle = MathF.PI / 4 });
             Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
             Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
             Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
             Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0f });
             Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
 
-            Navigation.TargetPoint = new Vector2(0,0);
+            Navigation.TargetPoint = new Vector2(0, 0);
             Steps = 16;
         }
 
@@ -48,7 +48,7 @@
                         && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
                     .Where(p => !DontFireAtSameName || p.Fleet.Name != this.Name)
                     .Where(p => p.Fleet.Name.Contains(this.Target) || this.Target == "")
-                    .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
+                    .Where(p => !HookComputer.Hook.TeamMode || p.Fleet.Color != this.Color)
                     .OrderBy(p => p.Distance)
                     .FirstOrDefault()
                     ?.Fleet;

@@ -94,7 +94,7 @@ namespace PKISharp.SimplePKI
             // // var attr = new AttributeX509(PkcsObjectIdentifiers.Pkcs9AtExtensionRequest,
             // //         new DerSet(extGen.Generate()));
 
-            
+
             // Based on:
             //    http://unitstep.net/blog/2008/10/27/extracting-x509-extensions-from-a-csr-using-the-bouncy-castle-apis/
             //    https://stackoverflow.com/q/24448909/5428506
@@ -136,7 +136,7 @@ namespace PKISharp.SimplePKI
 
                             // No need to search any more.
                             break;
-                        }                        
+                        }
                     }
                 }
             }
@@ -214,7 +214,7 @@ namespace PKISharp.SimplePKI
                         pemWriter.WriteObject(pkcs10);
                         return Encoding.UTF8.GetBytes(sw.GetStringBuilder().ToString());
                     }
-                
+
                 case PkiEncodingFormat.Der:
                     return pkcs10.GetDerEncoded();
 
@@ -248,10 +248,10 @@ namespace PKISharp.SimplePKI
             var snum = Org.BouncyCastle.Utilities.BigIntegers.CreateRandomInRange(
                             BigInteger.One, BigInteger.ValueOf(long.MaxValue),
                             new SecureRandom()).ToByteArrayUnsigned();
-            
+
             // Key Usage:
             //    Digital Signature, Certificate Signing, Off-line CRL Signing, CRL Signing (86)
-            
+
             return Create(name, _keyPair.PrivateKey, name, notBefore, notAfter, snum,
                     new X509KeyUsage(
                             X509KeyUsage.DigitalSignature |
@@ -322,7 +322,7 @@ namespace PKISharp.SimplePKI
                     KeyPurposeID.IdKPClientAuth,
                     KeyPurposeID.IdKPServerAuth
                 };
-            
+
             certGen.AddExtension("2.5.29.15", true, keyUsage);
             certGen.AddExtension("2.5.29.37", true, new DerSequence(extKeyUsage));
 
@@ -404,7 +404,7 @@ namespace PKISharp.SimplePKI
         {
             public RecoverableSerialForm()
             { }
-            
+
             public RecoverableSerialForm(PkiCertificateSigningRequest csr)
             {
                 _subject = csr.SubjectName;

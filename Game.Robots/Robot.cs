@@ -13,8 +13,8 @@
 
         public string Target { get; set; } = "";
         public string Name { get; set; } = "Robot";
-        public string Sprite { get; set; } = "ship0";
-        public string Color { get; set; } = "ship0";
+        public string Sprite { get; set; } = "ship_cyan";
+        public string Color { get; set; } = "cyan";
 
         private bool IsAlive = false;
         public bool AutoSpawn { get; set; } = true;
@@ -25,7 +25,7 @@
 
         public bool AutoFire { get; set; } = false;
 
-        public bool CanShoot { get => CooldownShoot == 1; }
+        public bool CanShoot { get => CooldownShoot == 1 && !Shooting; }
         public bool CanBoost { get => CooldownBoost == 1; }
 
         public float CooldownShoot { get => Connection.CooldownShoot; }
@@ -33,9 +33,9 @@
 
         public IEnumerable<Body> Bodies { get => Connection.Bodies; }
         public Vector2 Position { get => this.Connection.Position; }
-        public long GameTime { get => this.Connection.GameTime; }
+        public virtual long GameTime { get => this.Connection.GameTime; }
         public ushort WorldSize { get => this.Connection.WorldSize; }
-        public uint FleetID { get => this.Connection.FleetID; }
+        public uint FleetID { get => this.Connection?.FleetID ?? 0; }
 
         protected virtual Task AliveAsync() => Task.FromResult(0);
         protected virtual Task DeadAsync() => Task.FromResult(0);
@@ -43,15 +43,21 @@
         protected virtual Task OnSpawnAsync() => Task.FromResult(0);
         protected virtual Task OnNewLeaderboardAsync() => Task.FromResult(0);
 
+        private bool IsSpawning = false;
+
         public bool Shooting { get; private set; }
         public Vector2 ShootingAt { get; private set; }
         public long ShootUntil { get; set; }
+        public long ShootAfter { get; set; }
+
+        public int ShootingTime { get; set; } = 100;
+        public int ShootingDelay { get; set; } = 0;
 
         public long BoostUntil { get; set; }
 
         public string CustomData { get => Connection.CustomData; set => Connection.CustomData = value; }
 
-        public Leaderboard Leaderboard {get => Connection.Leaderboard; }
+        public Leaderboard Leaderboard { get => Connection.Leaderboard; }
 
         public HookComputer HookComputer { get; private set; }
 
@@ -60,9 +66,16 @@
             this.HookComputer = new HookComputer();
         }
 
-        public async Task Start(Connection connection)
+        public Task StartAsync(string server, string room)
+            => StartAsync(new Connection(server, room));
+
+        public virtual async Task StartAsync(Connection connection)
         {
             this.Connection = connection;
+
+            if (!this.Connection.IsConnected)
+                await this.Connection.ConnectAsync();
+
             this.Connection.OnView = OnView;
             this.Connection.OnLeaderboard = OnLeaderboard;
             await this.Connection.ListenAsync();
@@ -86,6 +99,7 @@
             {
                 this.SpawnTime = Connection.GameTime;
                 await OnSpawnAsync();
+                IsSpawning = false;
             }
 
             IsAlive = Connection.IsAlive;
@@ -124,6 +138,10 @@
             if (!this.CanBoost && this.Connection.ControlIsBoosting && GameTime > BoostUntil)
                 this.Connection.ControlIsBoosting = false;
 
+            if (!this.Connection.ControlIsShooting
+                && ShootAfter <= GameTime
+                && GameTime < ShootUntil)
+                Connection.ControlIsShooting = true;
 
             if (!this.CanShoot && this.Shooting && GameTime > ShootUntil)
             {
@@ -155,26 +173,33 @@
         {
             await DeadAsync();
 
-            if (AutoSpawn)
+            if (AutoSpawn && !IsSpawning)
                 if (DeathTime + RESPAWN_FALLOFF < GameTime)
                 {
                     await SpawnAsync();
                 }
         }
 
-        protected async Task SpawnAsync()
+
+        protected async Task Exit()
         {
-            await Connection.SpawnAsync(Name, Sprite, Color);
+            await Connection.SendExitAsync();
         }
 
-        public void ShootAt(Vector2 target)
+        protected async Task SpawnAsync()
+        {
+            IsSpawning = true;
+            await Connection.SpawnAsync("🤖" + Name, Sprite, Color);
+        }
+
+        public virtual void ShootAt(Vector2 target)
         {
             if (CanShoot)
             {
                 Shooting = true;
                 ShootingAt = target;
-                ShootUntil = GameTime + 100;
-                Connection.ControlIsShooting = true;
+                ShootUntil = GameTime + ShootingTime;
+                ShootAfter = GameTime + ShootingDelay;
             }
         }
 

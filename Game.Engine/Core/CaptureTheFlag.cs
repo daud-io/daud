@@ -32,7 +32,7 @@
             }).ToList();
 
             var players = Player.GetWorldPlayers(World);
-            
+
             foreach (var team in Teams)
             {
                 entries.AddRange(players
@@ -71,7 +71,7 @@
                     var points = new List<Vector2>();
                     int failsafe = 10000;
 
-                    while(points.Count < POINTS_TO_TEST)
+                    while (points.Count < POINTS_TO_TEST)
                     {
                         var position = World.RandomPosition();
                         if (Vector2.Distance(position, team.BaseLocation) < World.Hook.CTFSpawnDistance)

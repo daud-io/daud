@@ -1,6 +1,7 @@
 ﻿namespace Game.Robots.Senses
 {
     using Game.Engine.Networking.Client;
+    using Game.Robots.Models;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -39,11 +40,24 @@
                 return Teams.Red;
         }
 
+        public bool IsTeamMode { get => this.Robot.HookComputer.Hook.TeamMode; }
+
+        public bool IsSameTeam(Fleet fleet)
+            => IsSameTeam(fleet.Color);
+
+        public bool IsSameTeam(string color)
+        {
+            if (!IsTeamMode)
+                return false;
+
+            return ParseTeam(color) == MyTeam;
+        }
+
         public int MyTeamSize
         {
             get
             {
-                return this.Robot.HookComputer.TeamMode
+                return IsTeamMode
                     ? LeaderboardEntries(MyTeam).Count()
                     : 0;
             }
@@ -53,7 +67,7 @@
         {
             get
             {
-                return this.Robot.HookComputer.TeamMode
+                return IsTeamMode
                     ? LeaderboardEntries(TheirTeam).Count()
                     : 0;
             }

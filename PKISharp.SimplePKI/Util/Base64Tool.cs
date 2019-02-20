@@ -62,4 +62,5 @@ namespace PKISharp.SimplePKI.Util
                 encoding = Encoding.UTF8;
             return encoding.GetString(UrlDecode(enc));
         }
-    }}
+    }
+}

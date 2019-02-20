@@ -6,7 +6,7 @@
     using System.Linq;
 
     public class ShipWeaponVolley<T> : ActorGroup
-        where T: IShipWeapon, new()
+        where T : IShipWeapon, new()
     {
         public Fleet FiredFrom { get; set; }
         public List<IShipWeapon> NewWeapons { get; set; } = new List<IShipWeapon>();
@@ -26,7 +26,7 @@
                 Color = fleet.Color
             };
 
-            for (var i=0; i<fleet.Ships.Count; i++)
+            for (var i = 0; i < fleet.Ships.Count; i++)
                 volley.FiringSequence.Add(
                     new Tuple<Ship, long>(
                         fleet.Ships[i],
@@ -48,11 +48,11 @@
                 var fireBy = pair.Item2;
 
                 if (
-                    ship.Exists 
-                    && !ship.PendingDestruction 
+                    ship.Exists
+                    && !ship.PendingDestruction
                     && !ship.Abandoned
                     && ship.Fleet != null
-                    && fireBy <= ship.World.Time 
+                    && fireBy <= ship.World.Time
                     && fireBy > 0)
                 {
 
@@ -68,10 +68,10 @@
             FiringSequence = FiringSequence.Except(fired).ToList();
             fired.Clear();
 
-            this.PendingDestruction = 
+            this.PendingDestruction =
                 this.PendingDestruction
                 || (
-                    !NewWeapons.Any() 
+                    !NewWeapons.Any()
                     && !AllWeapons.Any(b => b.Active)
                 );
         }

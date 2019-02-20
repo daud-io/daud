@@ -52,7 +52,7 @@ namespace Game.Engine
             Reinitialize();
 
             _logger.LogInformation("Preparing to launch background task...");
-            
+
             // We delay for 5 seconds just to give other parts of
             // the service (like request handling) to get in place
             _timer = new Timer(DoTheWork, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(300));
@@ -100,7 +100,7 @@ namespace Game.Engine
             _timer?.Change(Timeout.Infinite, 0);
 
             _state.Certificate?.Dispose();
-            
+
             return Task.CompletedTask;
         }
 
@@ -194,7 +194,7 @@ namespace Game.Engine
                         return;
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogWarning($"Exception while getting SSL Certificate: {e}");
             }
@@ -377,7 +377,7 @@ namespace Game.Engine
 
                 _logger.LogWarning("Found {0} Authorization(s) NOT YET valid",
                         _state.Authorizations.Count - validCount);
-                
+
                 if (now.AddSeconds(_options.WaitForAuthorizations) < DateTime.Now)
                 {
                     _logger.LogError("Timed out waiting for Authorizations; ABORTING");
@@ -509,7 +509,7 @@ namespace Game.Engine
             _state.Certificate = new X509Certificate2(value, CERT_PASSWORD);
 
             return true;
-       }
+        }
 
         protected (bool exists, T value) Load<T>(string path, T def = default(T))
         {

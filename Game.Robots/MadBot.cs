@@ -3,6 +3,7 @@
     using Game.Robots.Behaviors;
     using Game.Robots.Models;
     using Game.Robots.Senses;
+    using Game.Robots.Targeting;
     using Newtonsoft.Json;
     using System;
     using System.Linq;
@@ -13,27 +14,40 @@
     {
         protected readonly NavigateToPoint Navigation;
         protected readonly Efficiency Efficiency;
-        protected readonly Dodge Dodge0;
-        protected readonly Dodge Dodge1;
-        protected readonly Dodge Dodge2;
+        // protected readonly Dodge Dodge0;
+        // protected readonly Dodge Dodge1;
+        // protected readonly Dodge Dodge2;
+        private readonly FleetTargeting FleetTargeting;
+        private readonly AbandonedTargeting AbandonedTargeting;
+        private readonly FishTargeting FishTargeting;
         protected readonly StayInBounds StayInBounds;
         protected readonly Separation Separation;
 
         public readonly SensorCTF SensorCTF;
 
         public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
-        public int BoostThreshold { get; set; } = 16;
+        public int BoostThreshold { get; set; } = 1;
+        public float BoostDangerThreshold { get; set; } = -7.0f;
+        public float MidBad = 0.5f;
+
 
 
         public MadBot()
         {
-            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.01f });
-            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.1f });
-            Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
-            Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
-            Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
-            Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0f });
-            Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
+            FleetTargeting = new FleetTargeting(this);
+            AbandonedTargeting = new AbandonedTargeting(this);
+            FishTargeting = new FishTargeting(this);
+            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 1.0f });
+            // Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.0f });
+            // Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 100, BehaviorWeight = 2 });
+            // Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 200, BehaviorWeight = 2 });
+            // Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 300, BehaviorWeight = 2 });
+            for (int m = 000; m < 2000; m += 50)
+            {
+                Behaviors.Add(new DogeWow(this) { LookAheadMS = m + 50, BehaviorWeight = 1 });
+            }
+            Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 2.0f });
+            Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 10f });
 
             Sensors.Add(SensorCTF = new SensorCTF(this));
 
@@ -43,28 +57,11 @@
 
         protected async override Task AliveAsync()
         {
-            if (CanShoot)
-            {
-                var closest = SensorFleets.Others
-                    .Select(f => new { Fleet = f, Distance = Vector2.Distance(this.Position, f.Center) })
-                    .Where(p => MathF.Abs(p.Fleet.Center.X - this.Position.X) <= ViewportCrop.X
-                        && MathF.Abs(p.Fleet.Center.Y - this.Position.Y) <= ViewportCrop.Y)
-                    .Where(p => !HookComputer.TeamMode || p.Fleet.Color != this.Color)
-                    .OrderBy(p => p.Distance)
-                    .FirstOrDefault()
-                    ?.Fleet;
+            foreach (var sensor in Sensors)
+                sensor.Sense();
 
-                if (closest != null){
-                    ShootAtFleet(closest);
-                }else{
-                    if(SensorFleets.MyFleet!=null){
-                        ShootAt(SensorFleets.MyFleet.Momentum);
-                    }
-                }
-            }
 
-            if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold&& false)
-                Boost();
+
 
 
             if (SensorCTF.CTFModeEnabled)
@@ -104,9 +101,87 @@
                 }
             }
 
-            await base.AliveAsync();
-        }
+            var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
+            var bangle = 0.0f;
+            if (SensorFleets.MyFleet != null)
+            {
+                bangle = MathF.Atan2(this.SensorFleets.MyFleet.Momentum.Y, this.SensorFleets.MyFleet.Momentum.X);
+            }
+            (var finalRing, var angle, var boost) = ContextRingBlending.Blend(contexts, false);
+            OnFinalRing(finalRing);
+            var combined = new ContextRing(this.Steps);
 
+
+            // blur
+
+            // lock (typeof(ContextRingBlendingWeighted))
+            // {
+            //     Console.SetCursorPosition(0, 0);
+            //     Console.WriteLine("RingDump");
+            //     foreach (var context in contexts)
+            //     {
+            //         var name = context.Name;
+            //         while (name.Length < 20)
+            //             name += ' ';
+            //         Console.WriteLine($"{name}\t{string.Join(',', context.Weights.Select(w => (w * context.RingWeight).ToString("+0.0;-0.0")))}");
+            //     }
+            // }
+
+            if (contexts.Any())
+            {
+                for (var i = 0; i < this.Steps; i++)
+                    combined.Weights[i] = contexts.Sum(c => c.Weights[i] * c.RingWeight);
+
+                var maxIndex = 0;
+                var minIndex = 0;
+
+                for (var i = 0; i < this.Steps; i++)
+                {
+                    if (combined.Weights[i] > combined.Weights[maxIndex])
+                        maxIndex = i;
+                    if (combined.Weights[i] < combined.Weights[minIndex])
+                        minIndex = i;
+                }
+
+
+
+                if (CanBoost && (SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold && (combined.Weights[maxIndex] < BoostDangerThreshold || (SensorFleets.MyFleet?.Ships.Count ?? 0) > 108))
+                    Boost();
+
+                this.MidBad = combined.Weights[maxIndex] / 2.0f + combined.Weights[minIndex] / 2.0f;
+
+                if (CanShoot)
+                {
+
+                    var target = FleetTargeting.ChooseTarget()
+                        ?? AbandonedTargeting.ChooseTarget()
+                        ?? FishTargeting.ChooseTarget();
+
+                    if (target != null)
+                    {
+
+
+                        var fff = target;
+                        Vector2 sp = fff.Position - this.Position;
+                        var angleg = (int)(MathF.Atan2(sp.Y, sp.X) / MathF.Atan2(0.0f, -1.0f) / 2.0f * Steps);
+                        if (true)//combined.Weights[((angleg)%Steps+Steps)%Steps]>combined.Weights[minIndex])
+                            ShootAt(sp + this.Position);
+                    }
+                    else
+                    {
+
+                        if (SensorFleets.MyFleet != null)
+                        {
+                            ShootAt(SensorFleets.MyFleet.Momentum);
+                        }
+                    }
+                }
+            }
+
+
+
+            SteerAngle(angle);
+        }
         protected override Task OnNewLeaderboardAsync()
         {
 

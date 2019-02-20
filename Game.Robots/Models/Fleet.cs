@@ -10,8 +10,11 @@
         public uint ID { get; set; }
         public Sprites Sprite { get; set; }
         public string Color { get; set; }
+        public bool PendingDestruction { get; set; }
 
         public List<Ship> Ships { get; set; } = new List<Ship>();
+
+        public Dictionary<string, object> Notes { get; set; } = new Dictionary<string, object>();
 
         public Vector2 Center
         {
@@ -43,14 +46,6 @@
                 else
                     return Vector2.Zero;
             }
-        }
-
-        public class Ship
-        {
-            public Vector2 Position { get; set; }
-            public Vector2 Momentum { get; set; }
-            public int Size { get; set; }
-            public float Angle { get; set; }
         }
     }
 }

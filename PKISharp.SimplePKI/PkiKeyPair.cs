@@ -82,7 +82,7 @@ namespace PKISharp.SimplePKI
                         {
                             case 521: hashBits = 512; transcodeLength = 132; break;
                             case 384: hashBits = 384; transcodeLength = 96; break;
-                            default : hashBits = 256; transcodeLength = 64; break;
+                            default: hashBits = 256; transcodeLength = 64; break;
                         }
                     }
                     sigAlgor = $"SHA{hashBits}WITHECDSA";
@@ -133,7 +133,7 @@ namespace PKISharp.SimplePKI
             // So according to [this](https://github.com/golang/go/issues/18634#issuecomment-272527314)
             // it seems we were passing in arbitrary curve details instead of a named curve OID as we do here:
 
-            var ecCurveOid = NistNamedCurves.GetOid("P-" + bits);;
+            var ecCurveOid = NistNamedCurves.GetOid("P-" + bits); ;
             var ecParams = new ECKeyGenerationParameters(ecCurveOid, new SecureRandom());
             var ecKpGen = GeneratorUtilities.GetKeyPairGenerator("ECDSA");
             ecKpGen.Init(ecParams);
@@ -167,7 +167,7 @@ namespace PKISharp.SimplePKI
         {
             if (_verifier == null)
                 throw new NotSupportedException();
-            
+
             return _verifier(this.PublicKey, data, sig);
         }
 
@@ -175,7 +175,7 @@ namespace PKISharp.SimplePKI
         {
             // Based on:
             //    http://mytenpennies.wikidot.com/blog:using-bouncy-castle
-            
+
             var signer = SignerUtilities.GetSigner(algor);
             signer.Init(true, prv.NativeKey);
             signer.BlockUpdate(input, 0, input.Length);
@@ -193,7 +193,7 @@ namespace PKISharp.SimplePKI
         {
             // Based on:
             //    http://mytenpennies.wikidot.com/blog:using-bouncy-castle
-            
+
             var signer = SignerUtilities.GetSigner(algor);
             signer.Init(false, pub.NativeKey);
             signer.BlockUpdate(input, 0, input.Length);
@@ -322,7 +322,7 @@ namespace PKISharp.SimplePKI
         {
             if (@private)
                 throw new NotImplementedException();
-            
+
             var pub = (ECPublicKeyParameters)keys.PublicKey.NativeKey;
             return new
             {

@@ -28,12 +28,12 @@
         }
 
         [HttpPost, Route("map")]
-        public bool SetMap([FromBody] IEnumerable<MapTileModel> tiles, string worldKey)
+        public bool SetMap([FromBody] MapModel mapModel, string worldKey)
         {
             var world = Worlds.Find(worldKey);
             if (world != null)
             {
-                world.MapActor.SetTiles(tiles);
+                world.MapActor.SetMap(mapModel);
                 return true;
             }
             else

@@ -45,7 +45,7 @@
                 + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
 
             var momentum =
-                new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) 
+                new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle))
                 * Vector2.Distance(ship.Momentum, Vector2.Zero);
 
 
@@ -70,7 +70,7 @@
             this.Group = group;
         }
 
-        public virtual void FireFrom(Tile tile, float angle)
+        public virtual void FireFrom(TileBase tile, float angle)
         {
             World = tile.World;
 
@@ -82,6 +82,7 @@
             this.Color = "green";
             this.ThrustAmount = 1 * World.Hook.ShotThrustM + World.Hook.ShotThrustB;
             this.TimeBirth = World.Time;
+            this.Group = tile.WorldMap.WeaponGroup;
         }
 
         public bool Active => this.Exists;

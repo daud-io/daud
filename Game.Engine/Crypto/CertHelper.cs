@@ -106,7 +106,7 @@ namespace Game.Engine.Crypto
 
             // }
             // var ecParamSpec = ECNamedCurveTable.GetByName(curveName);
- 
+
             // From:
             //    https://www.codeproject.com/Tips/1150485/Csharp-Elliptical-Curve-Cryptography-with-Bouncy-C
             var ecKpg = new ECKeyPairGenerator("ECDSA");
@@ -117,7 +117,7 @@ namespace Game.Engine.Crypto
             {
                 KeyPair = ecKp
             };
-        }        
+        }
 
 
         public static void ExportPrivateKey(CertPrivateKey pk, EncodingFormat fmt, Stream target)
@@ -312,7 +312,7 @@ namespace Game.Engine.Crypto
         }
 
         public static (CertPrivateKey, BcCertificate) GenerateRsaSelfSignedCertificate(string subjectName, string issuerName,
-                AsymmetricKeyParameter issuerPrivKey,  int keyStrength = 2048)
+                AsymmetricKeyParameter issuerPrivKey, int keyStrength = 2048)
         {
             // Generating Random Numbers
             var randomGenerator = new CryptoApiRandomGenerator();
@@ -452,19 +452,19 @@ namespace Game.Engine.Crypto
                 var bcCerts = certs.Select(x =>
                         new X509CertificateEntry(x)).ToArray();
                 var pfx = new Pkcs12Store();
-				pfx.SetCertificateEntry(bcCerts[0].Certificate.SubjectDN.ToString(), bcCerts[0]);
-				pfx.SetKeyEntry(bcCerts[0].Certificate.SubjectDN.ToString(),
-						new AsymmetricKeyEntry(pk.KeyPair.Private), new[] { bcCerts[0] });
+                pfx.SetCertificateEntry(bcCerts[0].Certificate.SubjectDN.ToString(), bcCerts[0]);
+                pfx.SetKeyEntry(bcCerts[0].Certificate.SubjectDN.ToString(),
+                        new AsymmetricKeyEntry(pk.KeyPair.Private), new[] { bcCerts[0] });
 
                 for (int i = 1; i < bcCerts.Length; ++i)
                 {
-					//pfx.SetCertificateEntry(bcCerts[i].Certificate.SubjectDN.ToString(),
-					pfx.SetCertificateEntry(i.ToString(), bcCerts[i]);
+                    //pfx.SetCertificateEntry(bcCerts[i].Certificate.SubjectDN.ToString(),
+                    pfx.SetCertificateEntry(i.ToString(), bcCerts[i]);
                 }
 
-				// It used to be pretty straight forward to export this...
-				pfx.Save(target, password?.ToCharArray(), new SecureRandom());
-			}
+                // It used to be pretty straight forward to export this...
+                pfx.Save(target, password?.ToCharArray(), new SecureRandom());
+            }
             else
             {
                 throw new NotSupportedException("unsupported archive format");

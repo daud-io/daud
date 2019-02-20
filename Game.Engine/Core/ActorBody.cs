@@ -23,7 +23,7 @@
         {
             World = world;
             this.ID = world.NextID();
-            
+
             world.Actors.Add(this);
             World.BodyAdd(this);
 

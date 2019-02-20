@@ -4,6 +4,7 @@
     using McMaster.Extensions.CommandLineUtils;
     using Newtonsoft.Json;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
     using System.Threading.Tasks;
@@ -82,7 +83,11 @@
 
                 if (Clear)
                 {
-                    await API.World.SetMapTiles(WorldKey, new MapTileModel[0]);
+                    await API.World.SetMap(WorldKey, new MapModel
+                    {
+                        Rows = 0,
+                        Columns = 0
+                    });
                     return;
                 }
 
@@ -95,60 +100,62 @@
                         .Select(p => new Vector2((float)p.X, (float)p.Y))
                         .FirstOrDefault();
 
-                var mapOffset = new Vector2(-(map.Width * Size) / 2, -(map.Height * Size)/2);
-
+                var mapOffset = new Vector2(-(map.Width * Size) / 2, -(map.Height * Size) / 2);
 
                 if (spawnLocation != null)
                     await API.World.PostHookAsync(new
                     {
-                        SpawnLocation = spawnLocation/map.TileWidth * Size + mapOffset
+                        SpawnLocation = spawnLocation / map.TileWidth * Size + mapOffset
                     }, WorldKey);
 
                 if (groundLayer != null)
                 {
                     var tileSet = map.Tilesets[0];
 
-
-                    var tileModels = groundLayer.Tiles.Select(t =>
+                    var mapModel = new MapModel
                     {
-                        var gridID = t.Gid - tileSet.FirstGid;
-
-                        var tile = tileSet.Tiles.ContainsKey(gridID)
-                            ? tileSet.Tiles[gridID]
-                            : null;
-
-                        var mapTileModel = new MapTileModel
+                        Rows = map.Height,
+                        Columns = map.Width,
+                        TileSize = Size,
+                        Tiles = groundLayer.Tiles.Select(t =>
                         {
-                            Position = new Vector2(t.X * Size, t.Y * Size) + mapOffset,
-                            Size = Size/2,
-                            TileGridID = gridID
-                        };
+                            var gridID = t.Gid - tileSet.FirstGid;
 
-                        Console.WriteLine($"grid: {gridID}");
+                            var tile = tileSet.Tiles.ContainsKey(gridID)
+                                ? tileSet.Tiles[gridID]
+                                : null;
 
-                        if (tile != null)
-                        {
-
-                            if (tile.TerrainEdges.All(e => e?.Name == "Water"))
+                            var mapTileModel = new MapTileModel
                             {
-                                mapTileModel.Type = "turret";
+                                Row = t.Y,
+                                Column = t.X,
+                                TileGridID = gridID
+                            };
+
+                            if (tile != null)
+                            {
+
+                                if (tile.TerrainEdges.All(e => e?.Name == "Water"))
+                                {
+                                    mapTileModel.Type = "turret";
+                                }
+
+
+                                if (tile.TerrainEdges.All(e => e?.Name == "Obstacle"))
+                                    mapTileModel.Type = "obstacle";
+
+                                if (tile.TerrainEdges.Any(e => e?.Name == "Bouncy"))
+                                    mapTileModel.Type = "bouncy";
+
+                                if (tile.Properties.ContainsKey("drag"))
+                                    mapTileModel.Drag = float.Parse(tile.Properties["drag"]);
                             }
 
-                            if (tile.TerrainEdges.All(e => e?.Name == "Obstacle"))
-                                mapTileModel.Type = "obstacle";
+                            return mapTileModel;
+                        }).ToList()
+                    };
 
-                            if (tile.TerrainEdges.Any(e => e?.Name == "Bouncy"))
-                                mapTileModel.Type = "bouncy";
-
-                            if (tile.Properties.ContainsKey("drag"))
-                                mapTileModel.Drag = float.Parse(tile.Properties["drag"]);
-
-                        }
-
-                        return mapTileModel;
-                    });
-
-                    await API.World.SetMapTiles(WorldKey, tileModels);
+                    await API.World.SetMap(WorldKey, mapModel);
                 }
             }
         }

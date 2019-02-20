@@ -13,7 +13,7 @@
 
         public void Update(IEnumerable<Body> bodies, uint time)
         {
-            
+
             // update cache items and flag missing ones as stale
             UpdateLocalBodies(bodies);
 
@@ -95,17 +95,17 @@
                 }
 
                 if (obj.Group != null)
-                if (Groups.ContainsKey(obj.Group.ID))
-                    Groups[obj.Group.ID].Stale = false;
-                else
-                {
-                    var bucket = new BucketGroup
+                    if (Groups.ContainsKey(obj.Group.ID))
+                        Groups[obj.Group.ID].Stale = false;
+                    else
                     {
-                        GroupUpdated = obj.Group,
-                        Stale = false
-                    };
-                    Groups.Add(obj.Group.ID, bucket);
-                }
+                        var bucket = new BucketGroup
+                        {
+                            GroupUpdated = obj.Group,
+                            Stale = false
+                        };
+                        Groups.Add(obj.Group.ID, bucket);
+                    }
             }
         }
 
@@ -137,7 +137,13 @@
 
             public void CalculateError()
             {
-                if (GroupClient == null)
+                if (GroupClient == null
+                    || GroupClient.CustomData != GroupUpdated.CustomData
+                    || GroupClient.Color != GroupUpdated.Color
+                    || GroupClient.GroupType != GroupClient.GroupType
+                    || GroupClient.Caption != GroupClient.Caption
+                    )
+
                     Error = 1;
                 else
                     Error = 0;

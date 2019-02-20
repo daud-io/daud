@@ -30,13 +30,16 @@ namespace Game.Engine
 
         public static IWebHostBuilder AddAcmeServices(this IWebHostBuilder builder, AcmeOptions acmeOptions)
         {
-            builder.ConfigureServices(services => {
+            builder.ConfigureServices(services =>
+            {
                 services.AddSingleton<AcmeOptions>(acmeOptions);
                 services.AddSingleton(AcmeState.Instance);
                 services.AddHostedService<AcmeHostedService>();
             });
-            builder.UseKestrel((context, options) => options.ConfigureHttpsDefaults(configOpts => {
-                configOpts.ServerCertificateSelector = (cc, x) => {
+            builder.UseKestrel((context, options) => options.ConfigureHttpsDefaults(configOpts =>
+            {
+                configOpts.ServerCertificateSelector = (cc, x) =>
+                {
                     return AcmeState.Instance.Certificate;
                 };
             }));
@@ -45,7 +48,8 @@ namespace Game.Engine
 
         public static IApplicationBuilder UseAcmeChallengeHandler(this IApplicationBuilder app)
         {
-            app.Map($"/{AcmeHttp01ChallengeHandler.AcmeHttp01PathPrefix}", appBuilder => {
+            app.Map($"/{AcmeHttp01ChallengeHandler.AcmeHttp01PathPrefix}", appBuilder =>
+            {
                 appBuilder.Run(AcmeHttp01ChallengeHandler.HandleHttp01ChallengeRequest);
             });
 
