@@ -1,4 +1,4 @@
-﻿import { flatbuffers } from "./flatbuffers";
+﻿import { flatbuffers } from "flatbuffers";
 import { Game } from "./game_generated";
 import { Cache } from "./cache";
 import { Settings } from "./settings";
