@@ -11,7 +11,7 @@ ReactDOM.render(
     React.createElement(
         Picker,
         {
-            set: "google",
+            native: true,
             onClick: e => {
                 console.log(e);
                 Cookies.set("emoji", e.native);
