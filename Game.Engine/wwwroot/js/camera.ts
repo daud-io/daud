@@ -3,8 +3,8 @@ import { Vector2 } from "./Vector2";
 export class Camera {
     distance: number;
     lookat: number[];
-    size: any;
-    fieldOfView: any;
+    size: { width: number; height: number };
+    fieldOfView: number;
     viewport: { left: number; right: number; top: number; bottom: number; width: number; height: number; scale: number[] };
     aspectRatio: number;
     constructor(size, settings = { fieldOfView: Math.PI / 4.0 }) {

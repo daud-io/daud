@@ -125,7 +125,7 @@ export class RenderedObject {
     buildSprite(textureName, spriteName): Sprite {
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
         const textures = RenderedObject.loadTexture(textureDefinition, textureName);
-        var pixiSprite: Sprite = null;
+        var pixiSprite = null;
 
         if (textureDefinition.animated) {
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);

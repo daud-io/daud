@@ -1,6 +1,6 @@
 ﻿import Cookies from "js-cookie";
 import nipplejs from "nipplejs";
-import { setInterval, setTimeout } from "timers";
+// import { setInterval, setTimeout } from "timers";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
 import EmojiPanel from "emoji-panel";
@@ -27,7 +27,7 @@ emojiTrigger.addEventListener("click", () => {
 
 export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
-    resetJoystick: false
+    restJoystick: false
 });
 const isMobile = "ontouchstart" in document.documentElement;
 if (!isMobile) {

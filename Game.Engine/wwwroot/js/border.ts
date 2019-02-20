@@ -4,7 +4,7 @@ import { RenderedObject } from "./models/renderedObject";
 
 export class Border extends RenderedObject {
     graphics: PIXI.Graphics;
-    worldSize: any;
+    worldSize: number;
     constructor(container: CustomContainer) {
         super(container);
 
