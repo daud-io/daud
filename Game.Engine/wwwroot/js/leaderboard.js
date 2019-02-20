@@ -22,6 +22,12 @@ export function escapeHtml(str) {
 function getOut(entry, position, rank, entryIsSelf) {
     const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
 	
+	if (rank === undefined) {
+		rank = "";
+	} else {
+		rank += ".";
+	}
+	
 	var begin;
 	if (!entryIsSelf) {
 		begin = `<tr>`;
@@ -33,7 +39,7 @@ function getOut(entry, position, rank, entryIsSelf) {
 	
     return (
         begin +
-		`<td style="width:25px">${rank}.</td>` +
+		`<td style="width:25px">${rank}</td>` +
         `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
         `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
         `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
