@@ -1,13 +1,13 @@
 import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
-import { Container } from "pixi.js";
+import { Container, extras } from "pixi.js";
 import { Vector2 } from "./Vector2";
 
 export class Background extends RenderedObject {
     container: Container;
     focus: Vector2;
-    speeds: any[];
-    backgroundSprites: any;
+    speeds: number[];
+    backgroundSprites: extras.TilingSprite[];
     constructor(container: Container) {
         super(container);
         this.container = container;

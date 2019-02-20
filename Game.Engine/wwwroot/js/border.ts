@@ -3,7 +3,7 @@ import { Container } from "pixi.js";
 export class Border {
     container: Container;
     graphics: PIXI.Graphics;
-    worldSize: any;
+    worldSize: number;
     constructor(container: Container) {
         this.container = container;
 

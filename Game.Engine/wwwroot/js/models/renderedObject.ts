@@ -9,7 +9,7 @@ import { compressionOptions } from "jszip/lib/defaults";
 import { Container, Sprite } from "pixi.js";
 
 export class RenderedObject {
-    container: Container;
+    container: any;
     currentSpriteName: boolean;
     currentMode: number;
     currentZIndex: number;
@@ -124,7 +124,7 @@ export class RenderedObject {
     buildSprite(textureName, spriteName): Sprite {
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
         const textures = RenderedObject.loadTexture(textureDefinition, textureName);
-        var pixiSprite: Sprite = null;
+        var pixiSprite = null;
 
         if (textureDefinition.animated) {
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);

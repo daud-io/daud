@@ -20,7 +20,7 @@ export class Connection {
     latency: number;
     minLatency: number;
     simulateLatency: number;
-    socket: any;
+    socket: WebSocket;
     pingSent: number;
     constructor() {
         this.onView = view => {};
