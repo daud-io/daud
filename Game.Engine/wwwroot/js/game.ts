@@ -26,6 +26,7 @@ import "./changelog";
 
 import "./hintbox";
 import { Vector2 } from "./Vector2";
+import { CustomContainer } from "./CustomContainer";
 
 window.Game = window.Game || {};
 
@@ -38,7 +39,7 @@ PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 const app = new PIXI.Application({ view: canvas, transparent: true } as PIXI.ApplicationOptions);
 app.stage = new PIXI.display.Stage();
 (<any>app.stage).group.enableSort = true;
-const container = new PIXI.Container();
+const container = new CustomContainer();
 app.stage.addChild(container);
 
 var backgroundGroup = new PIXI.display.Group(0, true);
@@ -49,12 +50,12 @@ app.stage.addChild(new PIXI.display.Layer(backgroundGroup));
 app.stage.addChild(new PIXI.display.Layer(tileGroup));
 app.stage.addChild(new PIXI.display.Layer(bodyGroup));
 
-(<any>container).backgroundGroup = backgroundGroup;
-(<any>container).bodyGroup = bodyGroup;
+container.backgroundGroup = backgroundGroup;
+container.bodyGroup = bodyGroup;
 
-(<any>container).tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
-(<any>container).tiles.parentGroup = tileGroup;
-container.addChild((<any>container).tiles);
+container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
+container.tiles.parentGroup = tileGroup;
+container.addChild(container.tiles);
 
 const renderer = new Renderer(container);
 const background = new Background(container);

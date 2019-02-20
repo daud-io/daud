@@ -4,13 +4,14 @@ import { RenderedObject } from "./models/renderedObject";
 import { Fleet } from "./models/fleet";
 import { Tile } from "./models/tile";
 import { Container } from "pixi.js";
+import { CustomContainer } from "./CustomContainer";
 
 export class Cache {
-    container: Container;
+    container: CustomContainer;
     bodies: any;
     groups: any;
     static count: number;
-    constructor(container: Container) {
+    constructor(container: CustomContainer) {
         this.container = container;
         this.clear();
     }

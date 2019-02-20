@@ -3,11 +3,11 @@
 export class Tile extends RenderedObject {
     constructor(container, cache) {
         super(container);
-        (<any>this.container).tiles.isDirty = true;
+        this.container.tiles.isDirty = true;
     }
 
     destroy() {
-        (<any>this.container).tiles.isDirty = true;
+        this.container.tiles.isDirty = true;
         super.destroy();
     }
 
@@ -19,8 +19,8 @@ export class Tile extends RenderedObject {
     preRender(currentTime, interpolator) {
         if (!this.body) return;
 
-        if ((<any>this.container).tiles.isRefreshing) {
-            var tiles = (<any>this.container).tiles;
+        if (this.container.tiles.isRefreshing) {
+            var tiles = this.container.tiles;
             var mapKey = RenderedObject.parseMapKey(this.body.Sprite);
 
             if (!mapKey) console.log(`non-map key used to reference map texture: ${this.body.Sprite}`);

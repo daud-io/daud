@@ -1,14 +1,15 @@
 import { Container } from "pixi.js";
+import { CustomContainer } from "./CustomContainer";
+import { RenderedObject } from "./models/renderedObject";
 
-export class Border {
-    container: Container;
+export class Border extends RenderedObject {
     graphics: PIXI.Graphics;
     worldSize: any;
-    constructor(container: Container) {
-        this.container = container;
+    constructor(container: CustomContainer) {
+        super(container);
 
         this.graphics = new PIXI.Graphics();
-        this.graphics.parentGroup = (<any>this.container).backgroundGroup;
+        this.graphics.parentGroup = this.container.backgroundGroup;
 
         this.updateWorldSize(6000);
         this.container.addChild(this.graphics);

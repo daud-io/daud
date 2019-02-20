@@ -7,16 +7,17 @@ import "pixi.js";
 import "pixi-layers";
 import { compressionOptions } from "jszip/lib/defaults";
 import { Container, Sprite } from "pixi.js";
+import { CustomContainer } from "../CustomContainer";
 
 export class RenderedObject {
-    container: Container;
+    container: CustomContainer;
     currentSpriteName: boolean;
     currentMode: number;
     currentZIndex: number;
     activeTextures: {};
     body?: any;
     spriteLayers?: any;
-    constructor(container: Container) {
+    constructor(container: CustomContainer) {
         this.container = container;
         this.currentSpriteName = false;
         this.currentMode = 0;

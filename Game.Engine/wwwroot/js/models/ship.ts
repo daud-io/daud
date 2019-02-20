@@ -1,10 +1,11 @@
 ﻿import { RenderedObject } from "./renderedObject";
 import { Fleet } from "./fleet";
+import { CustomContainer } from "../CustomContainer";
 
 export class Ship extends RenderedObject {
     fleet?: Fleet;
     body: any;
-    constructor(container) {
+    constructor(container:CustomContainer) {
         super(container);
         this.fleet = null;
     }

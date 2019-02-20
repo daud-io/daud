@@ -1,8 +1,10 @@
 ﻿import Plotly from "../plotly-subset";
 import { Settings } from "../settings";
+import "pixi.js";
+import { CustomContainer } from "../CustomContainer";
 
 export class Fleet {
-    container: any;
+    container: CustomContainer;
     caption?: string;
     ships: any[];
     ID: boolean;
@@ -11,7 +13,7 @@ export class Fleet {
     chat?: string;
     plotly?: { data; layout };
     usingPlotly: boolean;
-    constructor(container, cache) {
+    constructor(container:CustomContainer, cache) {
         this.container = container;
         this.caption = null;
         this.ships = [];

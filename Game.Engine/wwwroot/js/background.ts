@@ -2,15 +2,14 @@ import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
 import { Container } from "pixi.js";
 import { Vector2 } from "./Vector2";
+import { CustomContainer } from "./CustomContainer";
 
 export class Background extends RenderedObject {
-    container: Container;
     focus: Vector2;
     speeds: any[];
     backgroundSprites: any;
-    constructor(container: Container) {
+    constructor(container: CustomContainer) {
         super(container);
-        this.container = container;
         this.focus = new Vector2(0, 0);
         this.speeds = [];
         this.refreshSprite();
@@ -59,7 +58,7 @@ export class Background extends RenderedObject {
                 var backgroundSprite = this.backgroundSprites[i];
                 if (!backgroundSprite) {
                     backgroundSprite = new PIXI.extras.TilingSprite(textures[0], 200000, 200000);
-                    backgroundSprite.parentGroup = (<any>this.container).backgroundGroup;
+                    backgroundSprite.parentGroup = this.container.backgroundGroup;
                     this.container.addChild(backgroundSprite);
                     backgroundSprite.tileScale.set(allLayersTextures[i].scale, allLayersTextures[i].scale);
                     backgroundSprite.rotation = Math.random() - 0.5;
