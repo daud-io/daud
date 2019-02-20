@@ -213,7 +213,7 @@
         public bool SumoMode { get; set; }
         public int SumoRingSize { get; set; }
 
-        public int LeaderboardRefresh { get; set; } = 750;
+        public int LeaderboardRefresh { get; set; } = 250;
 
         public float FlockAlignment { get; set; }
         public float FlockCohesion { get; set; }

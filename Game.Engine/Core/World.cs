@@ -244,7 +244,6 @@
                                     Token = p.Token
                                 })
                                     .OrderByDescending(e => e.Score)
-                                    .Take(10)
                                     .ToList(),
                             Type = "FFA",
                             Time = this.Time,

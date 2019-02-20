@@ -19,10 +19,27 @@ export function escapeHtml(str) {
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
 }
-function getOut(entry, position) {
+function getOut(entry, position, rank, entryIsSelf) {
     const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+	
+	if (rank === undefined) {
+		rank = "";
+	} else {
+		rank += ".";
+	}
+	
+	var begin;
+	if (!entryIsSelf) {
+		begin = `<tr>`;
+	} else if (rank <= 10) {
+		begin = `<tr style="background-color:rgba(255,255,255,0.1)">`;
+	} else {
+		begin = `<tr style="background-color:rgba(255,255,255,0.1);transform:translateY(7px)">`;
+	}
+	
     return (
-        `<tr>` +
+        begin +
+		`<td style="width:25px">${rank}</td>` +
         `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${arrow}" style="transform:rotate(${angle}rad)"></img></td>` +
         `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
         `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
@@ -31,7 +48,7 @@ function getOut(entry, position) {
     );
 }
 export class Leaderboard {
-    update(data, position) {
+    update(data, position, fleetID) {
         if (Settings.leaderboardEnabled) {
             record.style.visibility = "visible";
             leaderboard.style.visibility = "visible";
@@ -60,7 +77,10 @@ export class Leaderboard {
         if (data.Type == "FFA") {
             let out = "";
             for (let i = 0; i < data.Entries.length; i++) {
-                out += getOut(data.Entries[i], position);
+				const entryIsSelf = data.Entries[i].FleetID == fleetID;
+				if (i < 10 || entryIsSelf) {
+					out += getOut(data.Entries[i], position, i + 1, entryIsSelf);
+				}
             }
             leaderboard.innerHTML = `<tbody>${out}</tbody>`;
         } else if (data.Type == "Team") {
