@@ -2,10 +2,6 @@
   "profiles": {
     "Game.Engine": {
       "commandName": "Project",
-      "environmentVariables": {
-        "config:DiscordToken": "NTI0Mjg1NDY1NzkzMzk2NzQx.Dvl2zw.NR24PeW55yCgWBzn_9g8OoNopsU",
-        "config:DiscordGuildID": "472025150959648791"
-      },
       "applicationUrl": "http://localhost:5000"
     }
   }
