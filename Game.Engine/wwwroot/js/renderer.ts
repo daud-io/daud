@@ -1,4 +1,6 @@
 import { CustomContainer } from "./CustomContainer";
+import { Interpolator } from "./interpolator";
+import {Cache} from "./cache";
 
 export class Renderer {
     container: CustomContainer;
@@ -6,7 +8,7 @@ export class Renderer {
         this.container = container;
     }
 
-    draw(cache, interpolator, currentTime, fleetID) {
+    draw(cache:Cache, interpolator:Interpolator, currentTime:number, fleetID:number) {
         const groupsUsed = [];
 
         if (this.container.tiles.isDirty) {

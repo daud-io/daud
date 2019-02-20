@@ -1,13 +1,14 @@
 import { Vector2 } from "./Vector2";
+import { Dimension2 } from "./Dimension2";
 
 export class Camera {
     distance: number;
     lookat: number[];
-    size: { width: number; height: number };
+    size: Dimension2;
     fieldOfView: number;
     viewport: { left: number; right: number; top: number; bottom: number; width: number; height: number; scale: number[] };
     aspectRatio: number;
-    constructor(size, settings = { fieldOfView: Math.PI / 4.0 }) {
+    constructor(size:Dimension2, settings = { fieldOfView: Math.PI / 4.0 }) {
         this.distance = 1500.0;
         this.lookat = [0, 0];
         this.size = size;
@@ -41,9 +42,9 @@ export class Camera {
         this.updateViewport();
     }
 
-    moveTo(x, y) {
-        this.lookat[0] = x;
-        this.lookat[1] = y;
+    moveTo(position:Vector2) {
+        this.lookat[0] = position.x;
+        this.lookat[1] = position.y;
         this.updateViewport();
     }
 

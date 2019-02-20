@@ -100,8 +100,8 @@ export class Fleet {
 
                 this.ships.forEach(ship => {
                     const position = interpolator.projectObject(ship.body, time);
-                    accX += position.X;
-                    accY += position.Y;
+                    accX += position.x;
+                    accY += position.y;
                     count++;
                 });
 

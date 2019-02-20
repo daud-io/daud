@@ -1,11 +1,12 @@
 import Plotly from "./plotly-subset";
+import { CustomContainer } from "./CustomContainer";
 
 export class Overlay {
-    container: any;
+    container: CustomContainer;
     plotly: Plotly;
     canvas: HTMLCanvasElement;
     data: any;
-    constructor(container, canvas, plotly) {
+    constructor(container:CustomContainer, canvas: HTMLCanvasElement, plotly:Plotly) {
         this.container = container;
         this.plotly = plotly;
         this.canvas = canvas;

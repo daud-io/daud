@@ -1,6 +1,7 @@
 ﻿import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
 import arrow from "../img/arrow.png";
+import { Vector2 } from "./Vector2";
 const record = document.getElementById("record");
 const leaderboard = document.getElementById("leaderboard");
 const leaderboardLeft = document.getElementById("leaderboard-left");
@@ -19,8 +20,8 @@ export function escapeHtml(str) {
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
 }
-function getOut(entry, position) {
-    const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
+function getOut(entry, position:Vector2) {
+    const angle = Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
     return (
         `<tr>` +
         `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${arrow}" style="transform:rotate(${angle}rad)"></img></td>` +
@@ -141,8 +142,8 @@ export class Leaderboard {
             const image = textureName => {
                 return `<img class="overlap" src="${RenderedObject.getTextureImage(textureName).src}"></img>`;
             };
-            const cyanAngle = Math.atan2(cyanFlag.Position.Y - position.Y, cyanFlag.Position.X - position.X);
-            const redAngle = Math.atan2(redFlag.Position.Y - position.Y, redFlag.Position.X - position.X);
+            const cyanAngle = Math.atan2(cyanFlag.Position.y - position.y, cyanFlag.Position.x - position.x);
+            const redAngle = Math.atan2(redFlag.Position.y - position.y, redFlag.Position.x - position.x);
             leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
             leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
             leaderboardCenter.style.width = "372px";

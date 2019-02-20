@@ -1,5 +1,7 @@
 import { Settings } from "./settings";
 import * as PIXI from "pixi.js";
+import { Vector2 } from "./Vector2";
+import { Dimension2 } from "./Dimension2";
 const minimapSize = 180;
 const minimapMarginBottom = 15;
 const minimapMarginRight = 15;
@@ -16,15 +18,13 @@ const colors = {
 export class Minimap {
     ctx: PIXI.Graphics;
     worldSize: number;
-    constructor(stage, size) {
+    constructor(stage, size:Dimension2) {
         this.ctx = new PIXI.Graphics();
-        this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
-        this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
+        this.size(size);
         stage.addChild(this.ctx);
     }
-    size(size) {
-        this.ctx.position.x = size.width - minimapSize - minimapMarginRight;
-        this.ctx.position.y = size.height - minimapSize - minimapMarginBottom;
+    size(size:Dimension2) {
+        this.ctx.position = new Vector2(size.width - minimapSize - minimapMarginRight, size.height - minimapSize - minimapMarginBottom);
     }
     checkDisplay() {
         if (Settings.displayMinimap != this.ctx.visible) this.ctx.visible = Settings.displayMinimap;
@@ -45,13 +45,13 @@ export class Minimap {
             for (let i = startIndex; i < data.Entries.length; i++) {
                 const entry = data.Entries[i];
                 const entryIsSelf = entry.FleetID == fleetID;
-                this.drawMinimap(entry.Position.X, entry.Position.Y, entry.Color, entryIsSelf, i, isCTF);
+                this.drawMinimap(new Vector2(entry.Position.x,entry.Position.y), entry.Color, entryIsSelf, i, isCTF);
             }
         }
     }
-    drawMinimap(x: number, y: number, color, self, rank, isCTF) {
-        const minimapX = ((x + this.worldSize) / 2 / this.worldSize) * minimapSize;
-        const minimapY = ((y + this.worldSize) / 2 / this.worldSize) * minimapSize;
+    drawMinimap(position:Vector2, color, self, rank, isCTF) {
+        const minimapX = ((position.x + this.worldSize) / 2 / this.worldSize) * minimapSize;
+        const minimapY = ((position.y + this.worldSize) / 2 / this.worldSize) * minimapSize;
 
         if (self) {
             // mark "self" player
