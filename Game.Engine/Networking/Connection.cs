@@ -462,8 +462,16 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_secret":
-                            shipSprite = Sprites.ship_secret;
-                            color = "yellow";
+                            if (player.Roles.Contains("Old Guard"))
+                            {
+                                shipSprite = Sprites.ship_secret;
+                                color = "yellow";
+                            }
+                            else
+                            {
+                                shipSprite = Sprites.ship_yellow;
+                                color = "yellow";
+                            }
                             break;
                         case "ship_zed":
                             shipSprite = Sprites.ship_zed;
@@ -474,8 +482,16 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_orange":
-                            shipSprite = Sprites.ship_orange;
-                            color = "orange";
+                            if (player.Roles.Contains("Old Guard"))
+                            {
+                                shipSprite = Sprites.ship_secret;
+                                color = "yellow";
+                            }
+                            else
+                            {
+                                shipSprite = Sprites.ship_orange;
+                                color = "orange";
+                            }
                             break;
                         case "ship_pink":
                             shipSprite = Sprites.ship_pink;
@@ -527,7 +543,7 @@ namespace Game.Engine.Networking
                         SpectatingFleet = next;
                         IsSpectating = true;
                     }
-                    else if (input.SpectateControl.StartsWith("action:fleet:"))
+                    else if (input.SpectateControl?.StartsWith("action:fleet:") ?? false)
                     {
                         var match = Regex.Match(input.SpectateControl, @"\d*$");
                         var fleetID = int.Parse(match.Value);
