@@ -15,6 +15,7 @@ namespace Game.Engine.Networking
     using System.Linq;
     using System.Net.WebSockets;
     using System.Numerics;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -508,34 +509,42 @@ namespace Game.Engine.Networking
                         CustomData = input.CustomData
                     });
 
-                    switch (input.SpectateControl)
+                    if (input.SpectateControl == "action:next")
                     {
-                        case "action:next":
-                            var next =
-                                Player.GetWorldPlayers(world)
-                                    .Where(p => p.IsAlive)
-                                    .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
-                                    .OrderBy(p => p?.Fleet?.ID)
-                                    .FirstOrDefault()?.Fleet;
+                        var next =
+                            Player.GetWorldPlayers(world)
+                                .Where(p => p.IsAlive)
+                                .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
+                                .OrderBy(p => p?.Fleet?.ID)
+                                .FirstOrDefault()?.Fleet;
 
-                            if (next == null)
-                                next = Player.GetWorldPlayers(world)
-                                    .Where(p => p.IsAlive)
-                                    .OrderBy(p => p?.Fleet?.ID)
-                                    .FirstOrDefault()?.Fleet;
+                        if (next == null)
+                            next = Player.GetWorldPlayers(world)
+                                .Where(p => p.IsAlive)
+                                .OrderBy(p => p?.Fleet?.ID)
+                                .FirstOrDefault()?.Fleet;
 
-                            SpectatingFleet = next;
-                            IsSpectating = true;
-                            break;
-
-                        case "spectating":
-                            IsSpectating = true;
-                            break;
-
-                        default:
-                            IsSpectating = false;
-                            break;
+                        SpectatingFleet = next;
+                        IsSpectating = true;
                     }
+                    else if (input.SpectateControl.StartsWith("action:fleet:"))
+                    {
+                        var match = Regex.Match(input.SpectateControl, @"\d*$");
+                        var fleetID = int.Parse(match.Value);
+
+                        var next =
+                            Player.GetWorldPlayers(world)
+                                .Where(p => p.IsAlive)
+                                .Where(p => p?.Fleet?.ID  == fleetID)
+                                .FirstOrDefault()?.Fleet;
+
+                        SpectatingFleet = next;
+                        IsSpectating = true;
+                    }
+                    else if (input.SpectateControl == "spectating")
+                        IsSpectating = true;
+                    else
+                        IsSpectating = false;
 
                     break;
 
