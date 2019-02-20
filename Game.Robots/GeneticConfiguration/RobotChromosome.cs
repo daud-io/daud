@@ -23,17 +23,12 @@
         public string ID { get; } = System.Guid.NewGuid().ToString();
 
         public bool Evaluated { get; set; }
-        public float MaxDistance { get; set; }
-        public float MaxDistanceTime { get; set; }
-        public float MaxVelocity 
-        { 
-            get 
-            {
-                return MaxDistanceTime > 0 ? MaxDistance / MaxDistanceTime : 0; 
-                            
-            } 
+
+        public float Score()
+        {
+            return 1;
         }
-      
+
         public override IChromosome CreateNew()
         {
             return new RobotChromosome(Config);
