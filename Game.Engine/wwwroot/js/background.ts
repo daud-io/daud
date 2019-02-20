@@ -30,8 +30,8 @@ export class Background extends RenderedObject {
             }
         }
     }
-    updateFocus(x, y) {
-        this.focus = { x: x, y: y };
+    updateFocus(focus:Vector2) {
+        this.focus = focus;
     }
 
     refreshSprite() {

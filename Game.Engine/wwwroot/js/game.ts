@@ -72,7 +72,7 @@ const cooldown = new Cooldown();
 let isSpectating = false;
 
 let angle = 0.0;
-let aimTarget = { X: 0, Y: 0 };
+let aimTarget = new Vector2(0,0);
 let d = 500; // for steering with arrows
 
 let keyboardSteering = false;
@@ -300,8 +300,8 @@ let lastControl: any = {};
 setInterval(() => {
     if (
         angle !== lastControl.angle ||
-        aimTarget.X !== aimTarget.X ||
-        aimTarget.Y !== aimTarget.Y ||
+        aimTarget.x !== aimTarget.x ||
+        aimTarget.y !== aimTarget.y ||
         Controls.boost !== lastControl.boost ||
         Controls.shoot !== lastControl.shoot ||
         message.txt !== lastControl.chat
@@ -316,7 +316,7 @@ setInterval(() => {
 
         if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
 
-        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl, customData);
+        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.x, aimTarget.y, spectateControl, customData);
 
         lastControl = {
             angle,
@@ -475,7 +475,7 @@ app.ticker.add(() => {
     container.position.y = Math.floor(container.position.y);
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
-    background.updateFocus(position.X, position.Y);
+    background.updateFocus(new Vector2(position.X, position.Y));
     background.draw(cache, interpolator, gameTime);
     minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
@@ -498,17 +498,17 @@ app.ticker.add(() => {
             if (Controls.up) {
                 angle += Math.PI;
             } // optional
-            aimTarget = {
-                X: d * Math.cos(angle),
-                Y: d * Math.sin(angle)
-            };
+            aimTarget = new Vector2(
+                 d * Math.cos(angle),
+                 d * Math.sin(angle)
+            );
             keyboardSteering = true;
         } else {
             angle = Controls.angle;
-            aimTarget = {
-                X: Settings.mouseScale * (pos.x - position.X),
-                Y: Settings.mouseScale * (pos.y - position.Y)
-            };
+            aimTarget = new Vector2(
+                Settings.mouseScale * (pos.x - position.X),
+                Settings.mouseScale * (pos.y - position.Y)
+            );
         }
     }
 
