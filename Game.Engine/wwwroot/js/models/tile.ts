@@ -1,7 +1,7 @@
 ﻿import { RenderedObject } from "./renderedObject";
 
 export class Tile extends RenderedObject {
-    constructor(container) {
+    constructor(container, cache) {
         super(container);
         this.container.tiles.isDirty = true;
     }
@@ -16,7 +16,7 @@ export class Tile extends RenderedObject {
         //super.update(updateData);
     }
 
-    preRender(currentTime, interpolator, fleetID) {
+    preRender(currentTime, interpolator) {
         if (!this.body) return;
 
         if (this.container.tiles.isRefreshing) {

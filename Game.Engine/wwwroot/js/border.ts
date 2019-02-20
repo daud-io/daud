@@ -1,6 +1,12 @@
-export class Border {
-    constructor(container) {
-        this.container = container;
+import { Container } from "pixi.js";
+import { CustomContainer } from "./CustomContainer";
+import { RenderedObject } from "./models/renderedObject";
+
+export class Border extends RenderedObject {
+    graphics: PIXI.Graphics;
+    worldSize: number;
+    constructor(container: CustomContainer) {
+        super(container);
 
         this.graphics = new PIXI.Graphics();
         this.graphics.parentGroup = this.container.backgroundGroup;
@@ -25,5 +31,5 @@ export class Border {
         this.worldSize = size;
     }
 
-    draw(cache, interpolator, currentTime, fleetID) {}
+    draw(cache, interpolator, currentTime) {}
 }

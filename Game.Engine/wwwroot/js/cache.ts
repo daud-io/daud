@@ -3,9 +3,15 @@ import { Ship } from "./models/ship";
 import { RenderedObject } from "./models/renderedObject";
 import { Fleet } from "./models/fleet";
 import { Tile } from "./models/tile";
+import { Container } from "pixi.js";
+import { CustomContainer } from "./CustomContainer";
 
 export class Cache {
-    constructor(container) {
+    container: CustomContainer;
+    bodies: any;
+    groups: any;
+    static count: number;
+    constructor(container: CustomContainer) {
         this.container = container;
         this.clear();
     }
@@ -105,16 +111,20 @@ export class Cache {
                 if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
                 if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
 
-                let group = false;
+                let group = null;
                 if (update.Group != 0) group = this.getGroup(update.Group);
                 update.group = group;
-                update.zIndex = group.ZIndex || 0;
+                try {
+                    update.zIndex = group.ZIndex || 0;
+                } catch (e) {
+                    update.zIndex = 0;
+                }
 
                 if (update.renderer) update.renderer.update(update);
             }
 
             if (!existing) {
-                let group = false;
+                let group = null;
                 if (update.Group != 0) {
                     group = this.groups[`g-${update.Group}`];
                     if (group) {
@@ -149,7 +159,11 @@ export class Cache {
                 if (!update.renderer) update.renderer = new RenderedObject(this.container);
 
                 update.group = group;
-                update.zIndex = group.ZIndex || 0;
+                try {
+                    update.zIndex = group.ZIndex || 0;
+                } catch (e) {
+                    update.zIndex = 0;
+                }
 
                 if (update.renderer) update.renderer.update(update, myFleetID);
 
@@ -171,7 +185,7 @@ export class Cache {
         }, this);
     }
 
-    foreachGroup(action, thisObj) {
+    foreachGroup(action, thisObj?) {
         const sortedGroups = [];
 
         for (const key in this.groups) {

@@ -4,7 +4,7 @@ export var message = {
 };
 var chat = document.getElementById("chat");
 var messages = ["✅", "❌", "⁉️", "👋", "☠️", "👑", "👈", "👉", "👆", "👇"];
-for (var i in messages) {
+for (var i = 0; i < messages.length; i++) {
     chat.innerHTML += `<tr><td>${i < 9 ? 1 + ~~i : 0}</td><td>${messages[i]}</td></tr>`;
 }
 window.addEventListener("keydown", e => {

@@ -1,6 +1,10 @@
 import Plotly from "./plotly-subset";
 
 export class Overlay {
+    container: any;
+    plotly: Plotly;
+    canvas: HTMLCanvasElement;
+    data: any;
     constructor(container, canvas, plotly) {
         this.container = container;
         this.plotly = plotly;
@@ -15,5 +19,5 @@ export class Overlay {
         else this.container.plotly.style.visibility = "hidden";
     }
 
-    draw(cache, interpolator, currentTime, fleetID) {}
+    draw(cache, interpolator, currentTime) {}
 }

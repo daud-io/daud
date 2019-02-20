@@ -1,5 +1,8 @@
+import { CustomContainer } from "./CustomContainer";
+
 export class Renderer {
-    constructor(container) {
+    container: CustomContainer;
+    constructor(container: CustomContainer) {
         this.container = container;
     }
 

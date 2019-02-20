@@ -25,6 +25,10 @@ import "pixi-tilemap";
 import "./changelog";
 
 import "./hintbox";
+import { Vector2 } from "./Vector2";
+import { CustomContainer } from "./CustomContainer";
+
+window.Game = window.Game || {};
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas");
@@ -32,10 +36,10 @@ const canvas = document.getElementById("gameCanvas");
 //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 //PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
-const app = new PIXI.Application({ view: canvas, transparent: true });
+const app = new PIXI.Application(<PIXI.ApplicationOptions>{ view: canvas, transparent: true });
 app.stage = new PIXI.display.Stage();
-app.stage.group.enableSort = true;
-const container = new PIXI.Container();
+(<PIXI.display.Stage>app.stage).group.enableSort = true;
+const container = new CustomContainer();
 app.stage.addChild(container);
 
 var backgroundGroup = new PIXI.display.Group(0, true);
@@ -57,7 +61,7 @@ const renderer = new Renderer(container);
 const background = new Background(container);
 const border = new Border(container);
 const overlay = new Overlay(container, canvas, document.getElementById("plotly"));
-container.plotly = document.getElementById("plotly");
+(<any>container).plotly = document.getElementById("plotly");
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
@@ -68,21 +72,21 @@ const cooldown = new Cooldown();
 let isSpectating = false;
 
 let angle = 0.0;
-let aimTarget = { X: 0, Y: 0 };
+let aimTarget = new Vector2(0, 0);
 let d = 500; // for steering with arrows
 
 let keyboardSteering = false;
 let keyboardSteeringSpeed = 0.075;
 
 let cache = new Cache(container);
-let view = false;
-let serverTimeOffset = false;
-let lastOffset = false;
-let gameTime = false;
-let lastPosition = false;
+let view = null;
+let serverTimeOffset = null;
+let lastOffset = null;
+let gameTime = null;
+let lastPosition = null;
 let worldSize = 1000;
 
-let CustomData = false;
+let CustomData = null;
 let CustomDataTime = false;
 
 let currentWorld = false;
@@ -111,7 +115,7 @@ const bodyFromServer = (cache, body) => {
     const VELOCITY_SCALE_FACTOR = 5000.0;
 
     var spriteIndex = body.sprite();
-    var spriteName = false;
+    var spriteName = null;
     if (spriteIndex >= 1000) spriteName = `map[${spriteIndex - 1000}]`;
     else spriteName = spriteIndices[spriteIndex];
 
@@ -158,8 +162,8 @@ connection.onLeaderboard = lb => {
 };
 
 var fleetID = 0;
-let lastAliveState = false;
-let aliveSince = false;
+let lastAliveState = null;
+let aliveSince = null;
 let joiningWorld = false;
 
 connection.onView = newView => {
@@ -188,10 +192,10 @@ connection.onView = newView => {
         Events.Death((gameTime - aliveSince) / 1000);
 
         let countDown = 3;
-        let interval = false;
+        let interval = null;
         const updateButton = function() {
-            const button = document.getElementById("spawn");
-            const buttonSpectate = document.getElementById("spawnSpectate");
+            const button = document.getElementById("spawn") as HTMLButtonElement;
+            const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
 
             if (countDown > 0) {
                 buttonSpectate.value = button.value = `${countDown--} ...`;
@@ -208,7 +212,7 @@ connection.onView = newView => {
     }
 
     lastOffset = view.time - performance.now() + Math.random();
-    if (serverTimeOffset === false) serverTimeOffset = lastOffset;
+    if (!serverTimeOffset) serverTimeOffset = lastOffset;
     serverTimeOffset = 0.99 * serverTimeOffset + 0.01 * lastOffset;
 
     const groupsLength = newView.groupsLength();
@@ -291,28 +295,34 @@ connection.onView = newView => {
     }
 };
 
-let lastControl = {};
+let lastControl = {
+    angle: null,
+    aimTarget: null,
+    boost: null,
+    shoot: null,
+    chat: null
+};
 
 setInterval(() => {
     if (
         angle !== lastControl.angle ||
-        aimTarget.X !== aimTarget.X ||
-        aimTarget.Y !== aimTarget.Y ||
+        aimTarget.x !== aimTarget.x ||
+        aimTarget.y !== aimTarget.y ||
         Controls.boost !== lastControl.boost ||
         Controls.shoot !== lastControl.shoot ||
         message.txt !== lastControl.chat
     ) {
-        let spectateControl = false;
+        let spectateControl = null;
         if (isSpectating) {
             if (Controls.shoot) spectateControl = "action:next";
             else spectateControl = "spectating";
         }
 
-        var customData = false;
+        var customData = null;
 
         if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
 
-        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.X, aimTarget.Y, spectateControl, customData);
+        connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.x, aimTarget.y, spectateControl, customData);
 
         lastControl = {
             angle,
@@ -352,7 +362,7 @@ function doSpawn() {
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
 
-function startSpectate(hideButton) {
+function startSpectate(hideButton = false) {
     isSpectating = true;
     Events.Spectate();
     document.body.classList.add("spectating");
@@ -431,8 +441,8 @@ function doPing() {
 
     if (frameCounter === 0) {
         //console.log("backgrounded");
-        Game.isBackgrounded = true;
-    } else Game.isBackgrounded = false;
+        window.Game.isBackgrounded = true;
+    } else window.Game.isBackgrounded = false;
     frameCounter = 0;
     viewCounter = 0;
     updateCounter = 0;
@@ -471,7 +481,7 @@ app.ticker.add(() => {
     container.position.y = Math.floor(container.position.y);
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
-    background.updateFocus(position.X, position.Y);
+    background.updateFocus(new Vector2(position.X, position.Y));
     background.draw(cache, interpolator, gameTime);
     minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
@@ -483,7 +493,7 @@ app.ticker.add(() => {
     // cooldown.draw();
 
     if (Controls.mouseX) {
-        const pos = camera.screenToWorld(Controls.mouseX, Controls.mouseY);
+        const pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
 
         if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
             if (Controls.right && !Controls.left) {
@@ -494,17 +504,11 @@ app.ticker.add(() => {
             if (Controls.up) {
                 angle += Math.PI;
             } // optional
-            aimTarget = {
-                X: d * Math.cos(angle),
-                Y: d * Math.sin(angle)
-            };
+            aimTarget = new Vector2(d * Math.cos(angle), d * Math.sin(angle));
             keyboardSteering = true;
         } else {
             angle = Controls.angle;
-            aimTarget = {
-                X: Settings.mouseScale * (pos.x - position.X),
-                Y: Settings.mouseScale * (pos.y - position.Y)
-            };
+            aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.X), Settings.mouseScale * (pos.y - position.Y));
         }
     }
 
@@ -554,7 +558,7 @@ function parseQuery(queryString) {
 }
 
 const query = parseQuery(window.location.search);
-if (query.spectate && query.spectate !== "0") {
+if ((<any>query).spectate && (<any>query).spectate !== "0") {
     startSpectate(true);
 }
 

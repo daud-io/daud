@@ -5,8 +5,8 @@ import { __esModule } from "pixi.js/lib/core";
 const worlds = document.getElementById("worlds");
 const worldList = document.getElementById("worldList");
 
-let allWorlds = false;
-let lastKeys = false;
+let allWorlds = null;
+let lastKeys = null;
 
 function selectRow(selectedWorld) {
     for (const world in allWorlds) {
@@ -15,9 +15,9 @@ function selectRow(selectedWorld) {
         else row.classList.remove("selected");
     }
 }
-const imgs = require(`../img/worlds/*.png`);
+import imgs from "../img/worlds/*.png";
 function buildList(response) {
-    if (allWorlds != false) {
+    if (allWorlds != null) {
         let keys = "";
         response.forEach(w => (keys += ":" + w.world));
 
@@ -71,8 +71,9 @@ let showing = false;
 let firstLoad = true;
 
 export const LobbyCallbacks = {
-    onLobbyClose: false,
-    onWorldJoin: false
+    onLobbyClose: null,
+    onWorldJoin: null,
+    joinWorld: null
 };
 
 LobbyCallbacks.joinWorld = function(worldKey) {
@@ -139,7 +140,7 @@ document.getElementById("wcancel").addEventListener("click", e => {
 
 document.getElementById("arenas").addEventListener("click", e => {
     show();
-    refreshList();
+    refreshList(false);
     worlds.classList.remove("closed");
     e.preventDefault();
     return false;

@@ -6,12 +6,11 @@ import { spriteModeMap } from "./models/spriteModeMap";
 import { textureCache } from "./models/textureCache";
 
 export const Settings = {
-    theme: false,
+    theme: "",
     themeCustom: false,
     mouseScale: 1.0,
     font: "Exo 2",
     leaderboardEnabled: true,
-    displayMinimap: "always",
     hudEnabled: true,
     namesEnabled: true,
     bandwidth: 100,

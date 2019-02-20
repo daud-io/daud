@@ -1,9 +1,13 @@
 ﻿import { RenderedObject } from "./renderedObject";
+import { Fleet } from "./fleet";
+import { CustomContainer } from "../CustomContainer";
 
 export class Ship extends RenderedObject {
-    constructor(container) {
+    fleet?: Fleet;
+    body: any;
+    constructor(container: CustomContainer) {
         super(container);
-        this.fleet = false;
+        this.fleet = null;
     }
 
     decodeModes(mode) {
@@ -44,7 +48,7 @@ export class Ship extends RenderedObject {
         // but it's disconnected from its group
         if (this.fleet && this.body.Group != this.fleet.ID) {
             this.fleet.removeShip(this);
-            this.fleet = false;
+            this.fleet = null;
         }
     }
 }

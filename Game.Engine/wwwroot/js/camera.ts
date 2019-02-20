@@ -1,5 +1,13 @@
+import { Vector2 } from "./Vector2";
+
 export class Camera {
-    constructor(size, settings = {}) {
+    distance: number;
+    lookat: number[];
+    size: { width: number; height: number };
+    fieldOfView: number;
+    viewport: { left: number; right: number; top: number; bottom: number; width: number; height: number; scale: number[] };
+    aspectRatio: number;
+    constructor(size, settings = { fieldOfView: Math.PI / 4.0 }) {
         this.distance = 1500.0;
         this.lookat = [0, 0];
         this.size = size;
@@ -39,9 +47,9 @@ export class Camera {
         this.updateViewport();
     }
 
-    screenToWorld(x, y, obj = {}) {
-        obj.x = x / this.viewport.scale[0] + this.viewport.left;
-        obj.y = y / this.viewport.scale[1] + this.viewport.top;
+    screenToWorld(pos: Vector2, obj: Vector2 = new Vector2(0, 0)) {
+        obj.x = pos.x / this.viewport.scale[0] + this.viewport.left;
+        obj.y = pos.y / this.viewport.scale[1] + this.viewport.top;
         return obj;
     }
 }

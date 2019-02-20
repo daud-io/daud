@@ -1,6 +1,6 @@
 ﻿import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
-
+import arrow from "../img/arrow.png";
 const record = document.getElementById("record");
 const leaderboard = document.getElementById("leaderboard");
 const leaderboardLeft = document.getElementById("leaderboard-left");
@@ -40,7 +40,7 @@ function getOut(entry, position, rank, entryIsSelf) {
     return (
         begin +
 		`<td style="width:25px">${rank}</td>` +
-        `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${require("../img/arrow.png")}" style="transform:rotate(${angle}rad)"></img></td>` +
+        `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${arrow}" style="transform:rotate(${angle}rad)"></img></td>` +
         `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
         `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
         `<td class="score">${entry.Score}</td>` +
@@ -105,8 +105,8 @@ export class Leaderboard {
         } else if (data.Type == "CTF") {
             let outL = "";
             let outR = "";
-            let redFlag = false;
-            let cyanFlag = false;
+            let redFlag = null;
+            let cyanFlag = null;
 
             data.Entries.forEach((entry, i) => {
                 let str = getOut(entry, position);

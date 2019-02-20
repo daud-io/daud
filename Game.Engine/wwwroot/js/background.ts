@@ -1,10 +1,16 @@
 import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
+import { Container, extras } from "pixi.js";
+import { Vector2 } from "./Vector2";
+import { CustomContainer } from "./CustomContainer";
 
-export class Background {
-    constructor(container) {
-        this.container = container;
-        this.focus = { x: 0, y: 0 };
+export class Background extends RenderedObject {
+    focus: Vector2;
+    speeds: number[];
+    backgroundSprites: extras.TilingSprite[];
+    constructor(container: CustomContainer) {
+        super(container);
+        this.focus = new Vector2(0, 0);
         this.speeds = [];
         this.refreshSprite();
     }
@@ -24,8 +30,8 @@ export class Background {
             }
         }
     }
-    updateFocus(x, y) {
-        this.focus = { x: x, y: y };
+    updateFocus(focus: Vector2) {
+        this.focus = focus;
     }
 
     refreshSprite() {

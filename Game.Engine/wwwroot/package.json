@@ -7,25 +7,39 @@
     "build": "parcel build game.html changes.html",
     "watch": "parcel watch index.html --out-dir dist",
     "watch2": "parcel watch --no-hmr index.html --out-dir dist",
-    "format": "prettier --tab-width 4 --print-width 200 --write \"**/*.{js,css}\""
+    "format": "prettier --tab-width 4 --print-width 200 --write \"**/*.{ts,js,css}\""
   },
   "author": "modderme123",
   "license": "ISC",
   "dependencies": {
-    "autoprefixer": "^9.4.6",
+    "@aurelia/debug": "dev",
+    "@aurelia/jit": "dev",
+    "@aurelia/jit-html": "dev",
+    "@aurelia/jit-html-browser": "dev",
+    "@aurelia/kernel": "dev",
+    "@aurelia/runtime": "dev",
+    "@aurelia/runtime-html": "dev",
+    "@aurelia/runtime-html-browser": "dev",
+    "@types/flatbuffers": "^1.9.1",
+    "autoprefixer": "^9.4.7",
     "babel-polyfill": "^6.26.0",
     "dat.gui": "^0.7.5",
     "emoji-panel": "^0.5.2",
+    "flatbuffers": "^1.10.2",
     "img": "^3.0.3",
     "js-cookie": "^2.2.0",
     "jszip": "^3.1.5",
-    "nipplejs": "^0.8.0",
-    "parcel-bundler": "^1.11.0",
+    "nipplejs": "^0.8.1",
     "pixi-layers": "^0.1.9",
     "pixi-tilemap": "^1.2.4",
     "pixi.js": "^4.8.5",
     "plotly.js": "^1.44.4",
-    "prettier": "^1.16.1",
+    "prettier": "^1.16.4",
     "whatwg-fetch": "^3.0.0"
+  },
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "parcel-bundler": "^1.11.0",
+    "typescript": "^2.9.2"
   }
 }

@@ -6,9 +6,18 @@ import { spriteModeMap } from "./spriteModeMap";
 import "pixi.js";
 import "pixi-layers";
 import { compressionOptions } from "jszip/lib/defaults";
+import { Container, Sprite } from "pixi.js";
+import { CustomContainer } from "../CustomContainer";
 
 export class RenderedObject {
-    constructor(container) {
+    container: CustomContainer;
+    currentSpriteName: boolean;
+    currentMode: number;
+    currentZIndex: number;
+    activeTextures: {};
+    body?: any;
+    spriteLayers?: any;
+    constructor(container: CustomContainer) {
         this.container = container;
         this.currentSpriteName = false;
         this.currentMode = 0;
@@ -45,9 +54,9 @@ export class RenderedObject {
 
             const img = RenderedObject.getImageFromTextureDefinition(textureDefinition);
 
-            const baseTexture = new PIXI.Texture.fromLoader(img);
+            const baseTexture = PIXI.BaseTexture.from(img);
 
-            baseTexture.baseTexture.mipmap = Settings.mipmapping;
+            baseTexture.mipmap = Settings.mipmapping;
 
             if (textureDefinition.animated) {
                 const tileSize = textureDefinition.tileSize || 32;
@@ -58,8 +67,7 @@ export class RenderedObject {
                     const sy = 0;
                     const sw = tileSize;
                     const sh = tileSize;
-
-                    textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), false, false, textureDefinition.rotate || 0));
+                    textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0));
                 }
             } else if (textureDefinition.map) {
                 let imageWidth = textureDefinition.imageWidth;
@@ -76,13 +84,11 @@ export class RenderedObject {
                         let y = Math.floor(row * tileHeight);
 
                         var texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
-                        texture.row = row;
-                        texture.col = col;
-                        texture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+                        texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
                         //texture.scaleMode = PIXI.SCALE_MODES.LINEAR;
                         textures.push(texture);
                     }
-            } else textures.push(baseTexture);
+            } else textures.push(new PIXI.Texture(baseTexture));
 
             textureCache[textureName] = textures;
         }
@@ -113,15 +119,17 @@ export class RenderedObject {
         else return false;
     }
 
-    buildSprite(textureName, spriteName) {
+    buildSprite(textureName, spriteName): Sprite {
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
         const textures = RenderedObject.loadTexture(textureDefinition, textureName);
-        let pixiSprite = false;
+        var pixiSprite = null;
 
         if (textureDefinition.animated) {
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);
-            pixiSprite.loop = textureDefinition.loop;
-            pixiSprite.animationSpeed = textureDefinition.animationSpeed;
+            if (pixiSprite instanceof PIXI.extras.AnimatedSprite) {
+                pixiSprite.loop = textureDefinition.loop;
+                pixiSprite.animationSpeed = textureDefinition.animationSpeed;
+            }
             pixiSprite.parentGroup = this.container.bodyGroup;
         } else if (textureDefinition.map) {
             console.log("warning: requested tile from RenderedObject");
@@ -147,13 +155,13 @@ export class RenderedObject {
         pixiSprite.scale = textureDefinition.scale;
         pixiSprite.baseOffset = textureDefinition.offset || { x: 0, y: 0 };
 
-        if (textureDefinition.animated) pixiSprite.play();
+        if (textureDefinition.animated && pixiSprite instanceof PIXI.extras.AnimatedSprite) pixiSprite.play();
 
         return pixiSprite;
     }
 
-    static getSpriteDefinition(spriteName) {
-        let spriteDefinition = false;
+    static getSpriteDefinition(spriteName): any {
+        let spriteDefinition = null;
 
         var mapKey = this.parseMapKey(spriteName);
         if (mapKey) spriteName = mapKey.name;
@@ -186,7 +194,7 @@ export class RenderedObject {
         if (layers) {
             const spriteLayers = [];
             for (let i = 0; i < layers.length; i++) {
-                let spriteLayer = false;
+                let spriteLayer = null;
                 var textureName = layers[i];
 
                 if (this.activeTextures[textureName]) spriteLayer = this.activeTextures[textureName];
@@ -234,7 +242,7 @@ export class RenderedObject {
         this.setSprite(this.currentSpriteName, this.currentMode, this.currentZIndex, true);
     }
 
-    setSprite(spriteName, mode, zIndex, reload) {
+    setSprite(spriteName, mode, zIndex, reload = false) {
         // check that we really need to change anything
         if (reload || spriteName != this.currentSpriteName || mode != this.currentMode || zIndex != this.currentZIndex) {
             this.currentSpriteName = spriteName;
@@ -248,7 +256,7 @@ export class RenderedObject {
 
             this.foreachLayer(function(layer, index) {
                 this.container.addChildAt(layer, 2);
-            }, this);
+            });
         }
     }
 
