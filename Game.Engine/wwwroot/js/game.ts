@@ -31,7 +31,7 @@ import { CustomContainer } from "./CustomContainer";
 window.Game = window.Game || {};
 
 const size = { width: 1000, height: 500 };
-const canvas = document.getElementById("gameCanvas");
+const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 
 //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
@@ -61,7 +61,7 @@ const renderer = new Renderer(container);
 const background = new Background(container);
 const border = new Border(container);
 const overlay = new Overlay(container, canvas, document.getElementById("plotly"));
-(<any>container).plotly = document.getElementById("plotly");
+container.plotly = document.getElementById("plotly");
 const camera = new Camera(size);
 const interpolator = new Interpolator();
 const leaderboard = new Leaderboard();
@@ -87,7 +87,7 @@ let lastPosition = null;
 let worldSize = 1000;
 
 let CustomData = null;
-let CustomDataTime = false;
+let CustomDataTime = null;
 
 let currentWorld = false;
 
@@ -108,7 +108,7 @@ window.Game.reinitializeWorld = function() {
     background.refreshSprite();
 };
 
-const bodyFromServer = (cache, body) => {
+const bodyFromServer = (cache: Cache, body) => {
     const originalPosition = body.originalPosition();
     const momentum = body.velocity();
     const groupID = body.group();
@@ -129,14 +129,8 @@ const bodyFromServer = (cache, body) => {
         Group: groupID,
         OriginalAngle: (body.originalAngle() / 127) * Math.PI,
         AngularVelocity: body.angularVelocity() / 10000,
-        Momentum: {
-            X: momentum.x() / VELOCITY_SCALE_FACTOR,
-            Y: momentum.y() / VELOCITY_SCALE_FACTOR
-        },
-        OriginalPosition: {
-            X: originalPosition.x(),
-            Y: originalPosition.y()
-        }
+        Momentum: new Vector2(momentum.x() / VELOCITY_SCALE_FACTOR, momentum.y() / VELOCITY_SCALE_FACTOR),
+        OriginalPosition: new Vector2(originalPosition.x(), originalPosition.y())
     };
 
     return newBody;
@@ -433,7 +427,7 @@ window.addEventListener("resize", () => {
 let frameCounter = 0;
 var viewCounter = 0;
 var updateCounter = 0;
-let lastCamera = { X: 0, Y: 0 };
+let lastCamera = new Vector2(0, 0);
 
 function doPing() {
     hud.framesPerSecond = frameCounter;
@@ -467,25 +461,26 @@ app.ticker.add(() => {
     gameTime = performance.now() + serverTimeOffset - latency / 2;
     frameCounter++;
 
-    let position = { X: 0, Y: 0 };
+    let position = new Vector2(0, 0);
 
     if (view) {
-        position = interpolator.projectObject(view.camera, gameTime);
-        position.X = Math.floor(position.X * 0.2 + lastCamera.X * 0.8);
-        position.Y = Math.floor(position.Y * 0.2 + lastCamera.Y * 0.8);
+        var positionA = interpolator.projectObject(view.camera, gameTime);
+        position = new Vector2(positionA.x, positionA.y);
+        position.x = Math.floor(position.x * 0.2 + lastCamera.x * 0.8);
+        position.y = Math.floor(position.y * 0.2 + lastCamera.y * 0.8);
 
         lastCamera = position;
 
-        camera.moveTo(position.X, position.Y);
+        camera.moveTo(position);
         camera.zoomTo(5500);
     }
-    container.pivot.x = Math.floor(position.X - 5500 / 2);
-    container.pivot.y = Math.floor(position.Y - (5500 / 2) * (9 / 16));
+    container.pivot.x = Math.floor(position.x - 5500 / 2);
+    container.pivot.y = Math.floor(position.y - (5500 / 2) * (9 / 16));
     container.position.x = Math.floor(container.position.x);
     container.position.y = Math.floor(container.position.y);
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
-    background.updateFocus(new Vector2(position.X, position.Y));
+    background.updateFocus(new Vector2(position.x, position.y));
     background.draw(cache, interpolator, gameTime);
     minimap.checkDisplay();
     border.draw(cache, interpolator, gameTime);
@@ -512,7 +507,7 @@ app.ticker.add(() => {
             keyboardSteering = true;
         } else {
             angle = Controls.angle;
-            aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.X), Settings.mouseScale * (pos.y - position.Y));
+            aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
         }
     }
 

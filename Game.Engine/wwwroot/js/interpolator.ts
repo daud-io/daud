@@ -1,3 +1,5 @@
+import { Vector2 } from "./Vector2";
+
 export class Interpolator {
     constructor(settings = {}) {}
 
@@ -20,10 +22,7 @@ export class Interpolator {
     projectObject(object, time) {
         const timeShift = time - object.DefinitionTime;
         object.Angle = object.OriginalAngle + timeShift * object.AngularVelocity;
-        object.Position = {
-            X: Math.floor(object.OriginalPosition.X + timeShift * object.Momentum.X),
-            Y: Math.floor(object.OriginalPosition.Y + timeShift * object.Momentum.Y)
-        };
+        object.Position = new Vector2(Math.floor(object.OriginalPosition.x + timeShift * object.Momentum.x), Math.floor(object.OriginalPosition.y + timeShift * object.Momentum.y));
 
         if (object.previous && object.previous.Position) {
             //var lerpAmount = Math.max(0.0, Math.min((time-object.previous.obsolete) / 400.0, 1.0));
@@ -41,16 +40,16 @@ export class Interpolator {
             object.previous.Angle = this.angleLerp(object.previous.Angle, object.Angle, lerpAmount);
 
             var newPoint = {
-                X: object.previous.Position.X,
-                Y: object.previous.Position.Y,
+                x: object.previous.Position.x,
+                y: object.previous.Position.y,
                 Angle: object.previous.Angle
             };
 
             return newPoint;
         } else {
             var newPoint = {
-                X: object.Position.X,
-                Y: object.Position.Y,
+                x: object.Position.x,
+                y: object.Position.y,
                 Angle: object.Angle
             };
 

@@ -274,9 +274,9 @@ export class RenderedObject {
             layer.pivot.x = Math.floor(layer.texture.width / 2);
             layer.pivot.y = Math.floor(layer.texture.height / 2);
 
-            layer.position.x = Math.floor(interpolatedPosition.X + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle)));
+            layer.position.x = Math.floor(interpolatedPosition.x + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle)));
 
-            layer.position.y = Math.floor(interpolatedPosition.Y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle)));
+            layer.position.y = Math.floor(interpolatedPosition.y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle)));
 
             layer.rotation = angle;
 
