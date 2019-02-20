@@ -166,6 +166,10 @@ let lastAliveState = null;
 let aliveSince = null;
 let joiningWorld = false;
 
+connection.onConnected = () => {
+    connection.sendAuthenticate(getToken());
+};
+
 connection.onView = newView => {
     viewCounter++;
 
