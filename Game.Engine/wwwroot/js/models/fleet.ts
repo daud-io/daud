@@ -13,7 +13,7 @@ export class Fleet {
     chat?: string;
     plotly?: { data; layout };
     usingPlotly: boolean;
-    constructor(container:CustomContainer, cache) {
+    constructor(container: CustomContainer, cache) {
         this.container = container;
         this.caption = null;
         this.ships = [];

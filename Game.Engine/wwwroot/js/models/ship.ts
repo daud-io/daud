@@ -5,7 +5,7 @@ import { CustomContainer } from "../CustomContainer";
 export class Ship extends RenderedObject {
     fleet?: Fleet;
     body: any;
-    constructor(container:CustomContainer) {
+    constructor(container: CustomContainer) {
         super(container);
         this.fleet = null;
     }

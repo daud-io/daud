@@ -30,7 +30,7 @@ export class Background extends RenderedObject {
             }
         }
     }
-    updateFocus(focus:Vector2) {
+    updateFocus(focus: Vector2) {
         this.focus = focus;
     }
 

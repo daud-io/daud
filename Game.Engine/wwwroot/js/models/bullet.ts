@@ -2,7 +2,7 @@
 import { CustomContainer } from "../CustomContainer";
 
 export class Bullet extends RenderedObject {
-    constructor(container:CustomContainer, cache) {
+    constructor(container: CustomContainer, cache) {
         super(container);
     }
 }

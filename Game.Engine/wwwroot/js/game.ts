@@ -72,7 +72,7 @@ const cooldown = new Cooldown();
 let isSpectating = false;
 
 let angle = 0.0;
-let aimTarget = new Vector2(0,0);
+let aimTarget = new Vector2(0, 0);
 let d = 500; // for steering with arrows
 
 let keyboardSteering = false;
@@ -297,10 +297,10 @@ connection.onView = newView => {
 
 let lastControl = {
     angle: null,
-            aimTarget: null,
-            boost: null,
-            shoot: null,
-            chat: null
+    aimTarget: null,
+    boost: null,
+    shoot: null,
+    chat: null
 };
 
 setInterval(() => {
@@ -504,17 +504,11 @@ app.ticker.add(() => {
             if (Controls.up) {
                 angle += Math.PI;
             } // optional
-            aimTarget = new Vector2(
-                 d * Math.cos(angle),
-                 d * Math.sin(angle)
-            );
+            aimTarget = new Vector2(d * Math.cos(angle), d * Math.sin(angle));
             keyboardSteering = true;
         } else {
             angle = Controls.angle;
-            aimTarget = new Vector2(
-                Settings.mouseScale * (pos.x - position.X),
-                Settings.mouseScale * (pos.y - position.Y)
-            );
+            aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.X), Settings.mouseScale * (pos.y - position.Y));
         }
     }
 
