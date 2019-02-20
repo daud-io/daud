@@ -22,7 +22,7 @@
                     FiringSequenceDelay = 0,
 
                     BaseThrustM = -0.0035f,
-                    BaseThrustB = 0.155f,
+                    BaseThrustB = 0.15f,
 
                     Drag = 0.92f,
 
@@ -38,11 +38,11 @@
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 550,
 
-                    ShotCooldownTimeBotM = 21,
+                    ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 550,
 
-                    ShotThrustM = -0.004f,
-                    ShotThrustB = 0.2f,
+                    ShotThrustM = -0.006f,
+                    ShotThrustB = 0.22f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -53,7 +53,7 @@
 
                     MaxHealthBot = 50,
                     PrecisionBullets = false,
-                    BulletLife = 1890,
+                    BulletLife = 1500,
                     BotPerXPoints = 500,
                     BotBase = 1,
                     BotRespawnDelay = 10000,
