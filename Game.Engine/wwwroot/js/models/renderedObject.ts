@@ -57,7 +57,6 @@ export class RenderedObject {
             const baseTexture = PIXI.BaseTexture.from(img);
 
             baseTexture.mipmap = Settings.mipmapping;
-            (<any>baseTexture).defaultAnchor = new PIXI.Point(0, 0);
 
             if (textureDefinition.animated) {
                 const tileSize = textureDefinition.tileSize || 32;
@@ -85,9 +84,7 @@ export class RenderedObject {
                         let y = Math.floor(row * tileHeight);
 
                         var texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
-                        (<any>texture).row = row;
-                        (<any>texture).col = col;
-                        (<any>texture).scaleMode = PIXI.SCALE_MODES.NEAREST;
+                        texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
                         //texture.scaleMode = PIXI.SCALE_MODES.LINEAR;
                         textures.push(texture);
                     }

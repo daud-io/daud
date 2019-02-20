@@ -38,7 +38,7 @@ PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 //PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
 const app = new PIXI.Application({ view: canvas, transparent: true } as PIXI.ApplicationOptions);
 app.stage = new PIXI.display.Stage();
-(<any>app.stage).group.enableSort = true;
+(<PIXI.display.Stage>app.stage).group.enableSort = true;
 const container = new CustomContainer();
 app.stage.addChild(container);
 
@@ -97,12 +97,12 @@ const connection = new Connection();
 /*if (window.location.hash) connection.connect(window.location.hash.substring(1));
 else connection.connect();*/
 
-(<any>window).Game.primaryConnection = connection;
-(<any>window).Game.isBackgrounded = false;
-(<any>window).Game.cache = cache;
-(<any>window).Game.controls = Controls;
+window.Game.primaryConnection = connection;
+window.Game.isBackgrounded = false;
+window.Game.cache = cache;
+window.Game.controls = Controls;
 
-(<any>window).Game.reinitializeWorld = function() {
+window.Game.reinitializeWorld = function() {
     if (currentWorld) Controls.initializeWorld(currentWorld);
 
     background.refreshSprite();
@@ -295,7 +295,13 @@ connection.onView = newView => {
     }
 };
 
-let lastControl: any = {};
+let lastControl = {
+    angle: null,
+            aimTarget: null,
+            boost: null,
+            shoot: null,
+            chat: null
+};
 
 setInterval(() => {
     if (
@@ -435,8 +441,8 @@ function doPing() {
 
     if (frameCounter === 0) {
         //console.log("backgrounded");
-        (<any>window).Game.isBackgrounded = true;
-    } else (<any>window).Game.isBackgrounded = false;
+        window.Game.isBackgrounded = true;
+    } else window.Game.isBackgrounded = false;
     frameCounter = 0;
     viewCounter = 0;
     updateCounter = 0;

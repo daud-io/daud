@@ -2,7 +2,7 @@
 
 const hudh = document.getElementById("hud");
 export class HUD {
-    _latency: any;
+    _latency: number;
     framesPerSecond: number;
     playerCount: number;
     spectatorCount: number;

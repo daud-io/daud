@@ -14,7 +14,7 @@ let token = sp.get("access_token") || Cookies.get("auth_token");
 if (token) {
     history.pushState({}, "", "/");
     dauth.style.display = "none";
-    (<any>dauth.previousElementSibling).value = "Launch";
+    (<HTMLButtonElement>dauth.previousElementSibling).value = "Launch";
 
     if (sp.get("access_token")) {
         let expirationSeconds = parseFloat(sp.get("expires_in"));
@@ -22,7 +22,7 @@ if (token) {
         Cookies.set("auth_token", token, cookieOptions);
     }
 } else if (window.frameElement) {
-    (<any>dauth.previousElementSibling).value = "Launch";
+    (<HTMLButtonElement>dauth.previousElementSibling).value = "Launch";
     dauth.style.display = "none";
 }
 
