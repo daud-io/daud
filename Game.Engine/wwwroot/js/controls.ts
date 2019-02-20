@@ -12,6 +12,8 @@ ReactDOM.render(
         Picker,
         {
             native: true,
+            title: '',
+            emoji: 'rocket',
             onClick: e => {
                 console.log(e);
                 Cookies.set("emoji", e.native);
