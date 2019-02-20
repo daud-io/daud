@@ -542,6 +542,15 @@ namespace Game.Engine.Networking
                 case AllMessages.NetExit:
                     player.Exit();
                     break;
+
+                case AllMessages.NetAuthenticate:
+                    var auth = quantum.Message<NetAuthenticate>().Value;
+                    if (player != null)
+                    {
+                        player.Token = auth.Token;
+                        player.AuthenticationStarted = false;
+                    }
+                    break;
             }
         }
 

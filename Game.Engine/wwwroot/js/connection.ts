@@ -161,6 +161,26 @@ export class Connection {
         this.send(builder.asUint8Array());
     }
 
+    sendAuthenticate(token) {
+        const builder = new (<any>flatbuffers).Builder(0);
+
+        const stringToken = builder.createString(token || "");
+
+        this.fb.NetAuthenticate.startNetAuthenticate(builder);
+        this.fb.NetAuthenticate.addToken(builder, stringToken);
+        const auth = this.fb.NetAuthenticate.endNetAuthenticate(builder);
+
+        this.fb.NetQuantum.startNetQuantum(builder);
+        this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetAuthenticate);
+        this.fb.NetQuantum.addMessage(builder, auth);
+        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
+
+        builder.finish(quantum);
+
+        this.send(builder.asUint8Array());
+        console.log("sent auth");
+    }
+
     sendSpawn(name, color, ship, token) {
         const builder = new (<any>flatbuffers).Builder(0);
 

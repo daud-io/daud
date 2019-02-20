@@ -13,7 +13,8 @@ export enum AllMessages{
   NetControlInput= 4,
   NetPing= 5,
   NetLeaderboard= 6,
-  NetExit= 7
+  NetExit= 7,
+  NetAuthenticate= 8
 }};
 
 /**
@@ -1858,6 +1859,71 @@ static addExtraData(builder:flatbuffers.Builder, extraDataOffset:flatbuffers.Off
  * @returns flatbuffers.Offset
  */
 static endNetAnnouncement(builder:flatbuffers.Builder):flatbuffers.Offset {
+  var offset = builder.endObject();
+  return offset;
+};
+
+}
+}
+/**
+ * @constructor
+ */
+export namespace Game.Engine.Networking.FlatBuffers{
+export class NetAuthenticate {
+  bb: flatbuffers.ByteBuffer|null = null;
+
+  bb_pos:number = 0;
+/**
+ * @param number i
+ * @param flatbuffers.ByteBuffer bb
+ * @returns NetAuthenticate
+ */
+__init(i:number, bb:flatbuffers.ByteBuffer):NetAuthenticate {
+  this.bb_pos = i;
+  this.bb = bb;
+  return this;
+};
+
+/**
+ * @param flatbuffers.ByteBuffer bb
+ * @param NetAuthenticate= obj
+ * @returns NetAuthenticate
+ */
+static getRootAsNetAuthenticate(bb:flatbuffers.ByteBuffer, obj?:NetAuthenticate):NetAuthenticate {
+  return (obj || new NetAuthenticate).__init(bb.readInt32(bb.position()) + bb.position(), bb);
+};
+
+/**
+ * @param flatbuffers.Encoding= optionalEncoding
+ * @returns string|Uint8Array|null
+ */
+token():string|null
+token(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+token(optionalEncoding?:any):string|Uint8Array|null {
+  var offset = this.bb!.__offset(this.bb_pos, 4);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ */
+static startNetAuthenticate(builder:flatbuffers.Builder) {
+  builder.startObject(1);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @param flatbuffers.Offset tokenOffset
+ */
+static addToken(builder:flatbuffers.Builder, tokenOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, tokenOffset, 0);
+};
+
+/**
+ * @param flatbuffers.Builder builder
+ * @returns flatbuffers.Offset
+ */
+static endNetAuthenticate(builder:flatbuffers.Builder):flatbuffers.Offset {
   var offset = builder.endObject();
   return offset;
 };
