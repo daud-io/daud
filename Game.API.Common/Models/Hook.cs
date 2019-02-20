@@ -278,7 +278,7 @@
         public string[] AllowedColors { get; set; }
 
         public int Weight { get; set; }
-
+        public int MaxNameLength { get; set; } = 15;
 
         public Hook Clone()
         {

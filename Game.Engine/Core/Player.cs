@@ -214,8 +214,8 @@
         {
             // sanitize the name
             if (name != null
-                && name.Length > 15)
-                name = name.Substring(0, 15);
+                && name.Length > World.Hook.MaxNameLength)
+                name = name.Substring(0, World.Hook.MaxNameLength);
 
             CummulativeBoostRequested = false;
             CummulativeShootRequested = false;
