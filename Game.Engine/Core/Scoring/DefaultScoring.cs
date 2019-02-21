@@ -39,7 +39,7 @@
                         var PreviousKillTime = killer.LastKillTime;
                         killer.LastKillTime = time;
 
-                        int plusScore = Convert.ToInt32(hook.PointsPerKillFleetStep * (Math.Floor((decimal)victim.Score / (decimal)hook.PointsPerKillFleetPerStep) + 1));
+                        int plusScore = (int)(hook.PointsPerKillFleetStep * (MathF.Floor(victim.Score / hook.PointsPerKillFleetPerStep) + 1));
                         plusScore = (plusScore < hook.PointsPerKillFleetMax) ? plusScore : hook.PointsPerKillFleetMax;
                         killer.Score += plusScore;
 

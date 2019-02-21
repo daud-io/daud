@@ -162,7 +162,7 @@
         public int PointsPerKillFleet { get; set; }
         public int PointsPerKillFleetMax { get; set; }
         public int PointsPerKillFleetStep { get; set; }
-        public decimal PointsPerKillFleetPerStep { get; set; }
+        public float PointsPerKillFleetPerStep { get; set; }
         public int ComboDelay { get; set; }
         public int ComboPointsStep { get; set; }
 
