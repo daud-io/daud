@@ -31,7 +31,6 @@
         public List<Group> Groups = new List<Group>();
         public List<IActor> Actors = new List<IActor>();
 
-        private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
 
         private bool Processing = false;
@@ -42,11 +41,16 @@
 
         public int AdvertisedPlayerCount { get; set; }
         public string WorldKey { get; set; }
-
         public string Image { get; set; } = "default";
-        public MapActor MapActor { get; private set; } = null;
 
         public GameConfiguration GameConfiguration { get; set; }
+
+        private uint _id = 0;
+        public uint NextID()
+        {
+            lock (this)
+                return _id++;
+        }
 
         public World(Hook hook, GameConfiguration gameConfiguration)
         {
@@ -62,16 +66,23 @@
 
         private void InitializeSystemActors()
         {
-            SystemActor<Advertisement>();
-            SystemActor<RobotTender>();
-            SystemActor<ObstacleTender>();
-            SystemActor<CaptureTheFlag>();
-            SystemActor<Sumo>();
-            SystemActor<Authenticator>();
-            SystemActor(MapActor = new MapActor());
+            InitializeSystemActor<SpawnLocationsActor>();
+            InitializeSystemActor<LeaderboardActor>();
+            InitializeSystemActor<Authenticator>();
+            InitializeSystemActor<Advertisement>();
+            InitializeSystemActor<RobotTender>();
+            InitializeSystemActor<ObstacleTender>();
+            InitializeSystemActor<CaptureTheFlag>();
+            InitializeSystemActor<Sumo>();
+            InitializeSystemActor<MapActor>();
         }
 
-        private void SystemActor<T>(T instance = null)
+        public T GetActor<T>()
+        {
+            return this.Actors.OfType<T>().FirstOrDefault();
+        }
+
+        private void InitializeSystemActor<T>(T instance = null)
             where T : class, IActor, new()
         {
             var actor = instance ?? new T();
@@ -128,8 +139,6 @@
                     }
                 }
 
-                ProcessLeaderboard();
-
                 if (Time > 10000) // lets not get too excited if things slow down when initialized
                 {
                     var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
@@ -182,107 +191,6 @@
             return Math.Max(pos.X - Hook.WorldSize + buffer, Math.Max(pos.Y - Hook.WorldSize + buffer, 0));
         }
 
-        private void ProcessLeaderboard()
-        {
-            if (Time >= TimeLeaderboardRecalc)
-            {
-                if (LeaderboardGenerator != null)
-                    Leaderboard = LeaderboardGenerator();
-                else
-                {
-                    if (Hook.TeamMode)
-                    {
-                        var entries = new List<Leaderboard.Entry>();
-
-                        var cyanTeam = Player.GetTeam(this, "cyan");
-                        var redTeam = Player.GetTeam(this, "red");
-
-                        entries.Add(new Leaderboard.Entry
-                        {
-                            Name = "cyan",
-                            Score = cyanTeam.Sum(p => p.Score),
-                            Color = "cyan"
-                        });
-
-                        entries.Add(new Leaderboard.Entry
-                        {
-                            Name = "red",
-                            Score = redTeam.Sum(p => p.Score),
-                            Color = "red"
-                        });
-
-                        entries.AddRange(Player.GetWorldPlayers(this)
-                            .Where(p => p.IsAlive)
-                            .OrderBy(p => p.Color)
-                            .ThenByDescending(p => p.Score)
-                            .Select(p => new Leaderboard.Entry
-                            {
-                                FleetID = p.Fleet?.ID ?? 0,
-                                Name = p.Name,
-                                Score = p.Score,
-                                Color = p.Color,
-                                Position = p.Fleet?.FleetCenter ?? Vector2.Zero
-                            })
-                            .ToList());
-
-                        Leaderboard = new Leaderboard
-                        {
-                            Entries = entries,
-                            Type = "Team",
-                            Time = this.Time
-                        };
-                    }
-                    else
-                    {
-                        Leaderboard = new Leaderboard
-                        {
-                            Entries = Player.GetWorldPlayers(this)
-                                .Where(p => p.IsAlive)
-                                .Select(p => new Leaderboard.Entry
-                                {
-                                    FleetID = p.Fleet?.ID ?? 0,
-                                    Name = p.Name,
-                                    Score = p.Score,
-                                    Color = p.Color,
-                                    Position = p.Fleet.FleetCenter,
-                                    Token = p.Token
-                                })
-                                    .OrderByDescending(e => e.Score)
-                                    .ToList(),
-                            Type = "FFA",
-                            Time = this.Time,
-                            ArenaRecord = Leaderboard?.ArenaRecord
-                                ?? new Leaderboard.Entry()
-                        };
-
-                        var firstPlace = Leaderboard.Entries.FirstOrDefault();
-                        if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
-                            Leaderboard.ArenaRecord = firstPlace;
-                    }
-                }
-
-                TimeLeaderboardRecalc = this.Time + Hook.LeaderboardRefresh;
-            }
-        }
-
-        private void WrapAroundWorld(Body body)
-        {
-            var position = body.Position;
-
-            if (position.X > Hook.WorldSize)
-                position.X -= 2 * Hook.WorldSize;
-            if (position.X < -Hook.WorldSize)
-                position.X += 2 * Hook.WorldSize;
-            if (position.Y > Hook.WorldSize)
-                position.Y -= 2 * Hook.WorldSize;
-            if (position.Y < -Hook.WorldSize)
-                position.Y += 2 * Hook.WorldSize;
-
-            if (position.X != body.Position.X
-                || position.Y != body.Position.Y)
-                body.Position = position;
-        }
-
         private void InitializeStepTimer()
         {
             Heartbeat = new Timer((state) =>
@@ -295,13 +203,6 @@
 
             }, null, 0, Hook.StepTime);
             Disposables.Add(Heartbeat);
-        }
-
-        private uint _id = 0;
-        public uint NextID()
-        {
-            lock (this)
-                return _id++;
         }
 
         public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0)
@@ -337,52 +238,7 @@
             if (FleetSpawnPositionGenerator != null)
                 return FleetSpawnPositionGenerator(fleet);
 
-            var r = new Random();
-
-            switch (Hook.SpawnLocationMode)
-            {
-                default:
-                case "Corners":
-                    var x = r.NextDouble() > .5
-                        ? 1
-                        : -1;
-                    var y = r.NextDouble() > .5
-                        ? 1
-                        : -1;
-
-                    return new Vector2
-                    {
-                        X = x * Hook.WorldSize * 0.95f,
-                        Y = y * Hook.WorldSize * 0.95f
-                    };
-
-                case "Static":
-                    return Hook.SpawnLocation;
-
-                case "QuietSpot":
-                    const int POINTS_TO_TEST = 10;
-                    const int MAXIMUM_SEARCH_SIZE = 4000;
-
-                    var points = new List<Vector2>();
-
-                    for (var i = 0; i < POINTS_TO_TEST; i++)
-                        points.Add(RandomPosition());
-
-                    return points.Select(p =>
-                    {
-                        var closeBodies = BodiesNear(p, MAXIMUM_SEARCH_SIZE)
-                                .OfType<Ship>();
-                        return new
-                        {
-                            Closest = closeBodies.Any()
-                                ? closeBodies.Min(s => Vector2.Distance(s.Position, p))
-                                : MAXIMUM_SEARCH_SIZE,
-                            Point = p
-                        };
-                    })
-                    .OrderByDescending(location => location.Closest)
-                    .First().Point;
-            }
+            return RandomPosition();
         }
 
         #region IDisposable Support

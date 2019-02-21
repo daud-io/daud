@@ -7,23 +7,18 @@
 
     public class LeaderboardActor : SystemActorBase
     {
-        public Leaderboard Leaderboard = null;
-
-        public LeaderboardActor()
-        {
-            CycleMS = World.Hook.LeaderboardRefresh;
-        }
-
         protected override void Cycle()
         {
+            CycleMS = World.Hook.LeaderboardRefresh;
+
             if (World.LeaderboardGenerator != null)
-                Leaderboard = World.LeaderboardGenerator();
+                World.Leaderboard = World.LeaderboardGenerator();
             else
             {
                 if (World.Hook.TeamMode)
-                    Leaderboard = GenerateTeamLeaderboard();
+                    World.Leaderboard = GenerateTeamLeaderboard();
                 else
-                    Leaderboard = GenerateStandardLeaderboard();
+                    World.Leaderboard = GenerateStandardLeaderboard();
             }
         }
 
@@ -46,13 +41,13 @@
                         .ToList(),
                 Type = "FFA",
                 Time = World.Time,
-                ArenaRecord = Leaderboard?.ArenaRecord
+                ArenaRecord = World.Leaderboard?.ArenaRecord
                     ?? new Leaderboard.Entry()
             };
 
             var firstPlace = leaderboard.Entries.FirstOrDefault();
-            if (firstPlace?.Score > Leaderboard.ArenaRecord.Score)
-                Leaderboard.ArenaRecord = firstPlace;
+            if (World.Leaderboard != null && firstPlace?.Score > World.Leaderboard.ArenaRecord.Score)
+                World.Leaderboard.ArenaRecord = firstPlace;
 
             return leaderboard;
         }

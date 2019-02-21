@@ -22,9 +22,14 @@
             CycleMS = 0;
         }
 
+        public override void Init(World world)
+        {
+            base.Init(world);
+            World.GetActor<SpawnLocationsActor>().GeneratorAdd("CTF", this.FleetSpawnPosition);
+        }
+
         public Leaderboard LeaderboardGenerator()
         {
-            
             var entries = Teams.Select(t => new Leaderboard.Entry
             {
                 Color = t.ColorName,
