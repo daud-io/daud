@@ -2,6 +2,7 @@
 {
     using Game.API.Common;
     using Game.API.Common.Models;
+    using Game.Engine.Core.Scoring;
     using Game.Engine.Core.SystemActors;
     using Game.Engine.Core.SystemActors.CTF;
     using Game.Engine.Networking;
@@ -51,6 +52,8 @@
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
 
         public GameConfiguration GameConfiguration { get; set; }
+
+        public ScoringBase Scoring = new DefaultScoring();
 
         private uint LastObjectID = 0;
         public uint GenerateObjectID() { lock (this) return ++LastObjectID; }
