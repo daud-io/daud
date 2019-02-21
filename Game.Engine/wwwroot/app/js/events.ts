@@ -7,7 +7,7 @@
         Events.Report("life", "spawn");
     }
 
-    static Death(secondsPlayed) {
+    static Death(secondsPlayed: number) {
         Events.Report("life", "death", secondsPlayed);
     }
 

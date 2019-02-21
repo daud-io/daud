@@ -81,7 +81,7 @@ const cooldown = new Cooldown();
 let isSpectating = false;
 
 let angle = 0.0;
-let aimTarget = new Vector2(0, 0);
+const aimTarget = new Vector2(0, 0);
 const d = 500; // for steering with arrows
 
 let keyboardSteering = false;
@@ -466,8 +466,8 @@ setInterval(doPing, 1000);
 const graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
-let lastCustomData = false;
-let spotSprites = [];
+const lastCustomData = false;
+const spotSprites = [];
 
 // Game Loop
 app.ticker.add(() => {
@@ -559,8 +559,7 @@ app.ticker.add(() => {
             if (Controls.up) {
                 angle += Math.PI;
             } // optional
-            */
-            aimTarget = new Vector2(d * Math.cos(angle), d * Math.sin(angle));
+            aimTarget = Vector2.Polar(angle, d);
             keyboardSteering = true;
         } else {
             pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));

@@ -80,7 +80,7 @@ nick.addEventListener("change", e => {
 function unicode(e) {
     return e.split("-").reduce((total, x) => total + getUnicodeCharacter(parseInt(x, 16)), "");
 }
-function getUnicodeCharacter(cp) {
+function getUnicodeCharacter(cp: number) {
     if ((cp >= 0 && cp <= 0xd7ff) || (cp >= 0xe000 && cp <= 0xffff)) {
         return String.fromCharCode(cp);
     } else if (cp >= 0x10000 && cp <= 0x10ffff) {

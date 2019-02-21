@@ -1,12 +1,13 @@
 import { Vector2 } from "./Vector2";
 import { Dimension2 } from "./Dimension2";
+import * as PIXI from "pixi.js";
 
 export class Camera {
     distance: number;
     lookat: number[];
     size: Dimension2;
     fieldOfView: number;
-    viewport: { left: number; right: number; top: number; bottom: number; width: number; height: number; scale: number[] };
+    viewport: { rectangle: PIXI.Rectangle; scale: number[] };
     aspectRatio: number;
     constructor(size: Dimension2, settings = { fieldOfView: Math.PI / 4.0 }) {
         this.distance = 1500.0;
@@ -14,12 +15,7 @@ export class Camera {
         this.size = size;
         this.fieldOfView = settings.fieldOfView || Math.PI / 4.0;
         this.viewport = {
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: 0,
-            height: 0,
+            rectangle: new PIXI.Rectangle(0, 0, 0, 0),
             scale: [1.0, 1.0]
         };
         this.updateViewport();
@@ -27,14 +23,14 @@ export class Camera {
 
     updateViewport() {
         this.aspectRatio = this.size.width / this.size.height;
-        this.viewport.width = this.distance * Math.tan(this.fieldOfView);
-        this.viewport.height = this.viewport.width / this.aspectRatio;
-        this.viewport.left = this.lookat[0] - this.viewport.width / 2.0;
-        this.viewport.top = this.lookat[1] - this.viewport.height / 2.0;
-        this.viewport.right = this.viewport.left + this.viewport.width;
-        this.viewport.bottom = this.viewport.top + this.viewport.height;
-        this.viewport.scale[0] = this.size.width / this.viewport.width;
-        this.viewport.scale[1] = this.size.height / this.viewport.height;
+        this.viewport.rectangle = new PIXI.Rectangle(
+            this.lookat[0] - (this.distance * Math.tan(this.fieldOfView)) / 2.0,
+            this.lookat[1] - (this.distance * Math.tan(this.fieldOfView)) / this.aspectRatio / 2.0,
+            this.distance * Math.tan(this.fieldOfView),
+            (this.distance * Math.tan(this.fieldOfView)) / this.aspectRatio
+        );
+        this.viewport.scale[0] = this.size.width / this.viewport.rectangle.width;
+        this.viewport.scale[1] = this.size.height / this.viewport.rectangle.height;
     }
 
     zoomTo(z) {
@@ -49,8 +45,8 @@ export class Camera {
     }
 
     screenToWorld(pos: Vector2, obj: Vector2 = new Vector2(0, 0)) {
-        obj.x = pos.x / this.viewport.scale[0] + this.viewport.left;
-        obj.y = pos.y / this.viewport.scale[1] + this.viewport.top;
+        obj.x = pos.x / this.viewport.scale[0] + this.viewport.rectangle.left;
+        obj.y = pos.y / this.viewport.scale[1] + this.viewport.rectangle.top;
         return obj;
     }
 }
