@@ -47,7 +47,6 @@ export class Connection {
         this.statBytesUpPerSecond = 0;
         this.statPongCount = 0;
 
-        const self = this;
         this.fb = Game.Engine.Networking.FlatBuffers;
         this.latency = 0;
         this.minLatency = 999;
@@ -56,17 +55,17 @@ export class Connection {
         this.bandwidthThrottle = Settings.bandwidth;
 
         setInterval(() => {
-            if (self.connected) {
-                self.sendPing();
+            if (this.connected) {
+                this.sendPing();
             }
         }, 250);
 
         setInterval(() => {
-            self.statBytesDownPerSecond = self.statBytesDown;
-            self.statBytesUpPerSecond = self.statBytesUp;
+            this.statBytesDownPerSecond = this.statBytesDown;
+            this.statBytesUpPerSecond = this.statBytesUp;
 
-            self.statBytesUp = 0;
-            self.statBytesDown = 0;
+            this.statBytesUp = 0;
+            this.statBytesDown = 0;
         }, 1000);
     }
     disconnect() {
@@ -111,26 +110,24 @@ export class Connection {
         this.socket = new WebSocket(url);
         this.socket.binaryType = "arraybuffer";
 
-        const self = this;
-
         this.socket.onmessage = event => {
-            if (self.simulateLatency > 0) {
+            if (this.simulateLatency > 0) {
                 setTimeout(() => {
-                    self.onMessage(event);
-                }, self.simulateLatency);
-            } else self.onMessage(event);
+                    this.onMessage(event);
+                }, this.simulateLatency);
+            } else this.onMessage(event);
         };
 
         this.socket.onerror = error => {
-            if (self.connectionStatusReporting) document.body.classList.add("connectionerror");
+            if (this.connectionStatusReporting) document.body.classList.add("connectionerror");
         };
 
         this.socket.onopen = event => {
-            if (self.connectionStatusReporting) document.body.classList.remove("connectionerror");
-            self.onOpen(event);
+            if (this.connectionStatusReporting) document.body.classList.remove("connectionerror");
+            this.onOpen(event);
         };
         this.socket.onclose = event => {
-            self.onClose(event);
+            this.onClose(event);
         };
     }
     sendPing() {

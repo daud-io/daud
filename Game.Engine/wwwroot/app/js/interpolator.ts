@@ -3,23 +3,23 @@ import { Vector2 } from "./Vector2";
 export class Interpolator {
     constructor(settings = {}) {}
 
-    shortAngleDist(a0, a1) {
+    shortAngleDist(a0: number, a1: number) {
         const max = Math.PI * 2;
         const da = (a1 - a0) % max;
         return ((2 * da) % max) - da;
     }
 
-    angleLerp(a0, a1, t) {
+    angleLerp(a0: number, a1: number, t: number) {
         return a0 + this.shortAngleDist(a0, a1) * t;
     }
 
-    lerp(value1, value2, amount) {
+    lerp(value1: number, value2: number, amount: number) {
         amount = amount < 0 ? 0 : amount;
         amount = amount > 1 ? 1 : amount;
         return value1 + (value2 - value1) * amount;
     }
 
-    projectObject(object, time) {
+    projectObject(object, time: number) {
         const timeShift = time - object.DefinitionTime;
         object.Angle = object.OriginalAngle + timeShift * object.AngularVelocity;
         object.Position = new Vector2(Math.floor(object.OriginalPosition.x + timeShift * object.Momentum.x), Math.floor(object.OriginalPosition.y + timeShift * object.Momentum.y));
