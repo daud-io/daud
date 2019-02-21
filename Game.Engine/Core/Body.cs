@@ -212,6 +212,17 @@
             }
         }
 
+        public void Update(uint time)
+        {
+            if (IsDirty)
+            {
+                DefinitionTime = time;
+                OriginalPosition = Position;
+                OriginalAngle = Angle;
+                IsDirty = false;
+            }
+        }
+
         public Body Clone()
         {
             return this.MemberwiseClone() as Body;

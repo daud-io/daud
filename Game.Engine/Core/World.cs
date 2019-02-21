@@ -137,15 +137,7 @@
         private void UpdateDirtyBodies()
         {
             foreach (var body in Bodies)
-            {
-                if (body.IsDirty)
-                {
-                    body.DefinitionTime = this.Time;
-                    body.OriginalPosition = body.Position;
-                    body.OriginalAngle = body.Angle;
-                    body.IsDirty = false;
-                }
-            }
+                body.Update(Time);
         }
 
         private void ActorsCreateDestroy()
