@@ -128,7 +128,9 @@
                     MapEnabled = false,
 
                     AllowedColors = AllColors,
-                    Name = "FFA"
+                    Name = "FFA",
+
+                    LeaderboardRefresh = 750
                 };
             }
         }
@@ -213,7 +215,7 @@
         public bool SumoMode { get; set; }
         public int SumoRingSize { get; set; }
 
-        public int LeaderboardRefresh { get; set; } = 250;
+        public int LeaderboardRefresh { get; set; }
 
         public float FlockAlignment { get; set; }
         public float FlockCohesion { get; set; }
