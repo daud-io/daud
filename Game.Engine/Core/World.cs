@@ -15,14 +15,11 @@
     public class World : IDisposable
     {
         public uint Time { get; private set; } = 0;
-        public uint LastStepSize { get; private set; } = 0;
         private readonly long OffsetTicks = 0;
 
         public Hook Hook { get; set; } = null;
 
         private Timer Heartbeat = null;
-
-        private readonly List<IDisposable> Disposables = new List<IDisposable>();
 
         private RBush<Body> RTreeDynamic = new RBush<Body>();
         private RBush<Body> RTreeStatic = new RBush<Body>();
@@ -41,16 +38,11 @@
 
         public int AdvertisedPlayerCount { get; set; }
         public string WorldKey { get; set; }
-        public string Image { get; set; } = "default";
 
         public GameConfiguration GameConfiguration { get; set; }
 
-        private uint _id = 0;
-        public uint NextID()
-        {
-            lock (this)
-                return _id++;
-        }
+        private uint LastObjectID = 0;
+        public uint GenerateObjectID() { lock (this) return ++LastObjectID; }
 
         public World(Hook hook, GameConfiguration gameConfiguration)
         {
@@ -62,6 +54,28 @@
 
             InitializeSystemActors();
             InitializeStepTimer();
+        }
+
+        public void Step()
+        {
+            if (Processing)
+                return;
+
+            Processing = true;
+            lock (this.Bodies)
+            {
+                var start = DateTime.Now;
+                Time = (uint)((start.Ticks - OffsetTicks) / 10000);
+
+                RebuildDynamicIndex();
+                ActorsThink();
+                ActorsCreateDestroy();
+                UpdateDirtyBodies();
+
+                CheckTimings(start);
+            }
+            Processing = false;
+
         }
 
         private void InitializeSystemActors()
@@ -90,69 +104,84 @@
             actor.Init(this);
         }
 
-        public void Step()
+        private void CheckTimings(DateTime start)
         {
-            if (Processing)
-                return;
-
-            Processing = true;
-            lock (this.Bodies)
+            if (Time > 10000) // lets not get too excited if things slow down when initialized
             {
-                var start = DateTime.Now;
+                var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
+                if (elapsed > Hook.StepTime)
+                    Console.WriteLine($"**** 100% processing time warning: {elapsed}");
+                else if (elapsed > Hook.StepTime * 0.8f)
+                    Console.WriteLine($"*** 80% processing time warning: {elapsed}");
+                else if (elapsed > Hook.StepTime * 0.5f)
+                    Console.WriteLine($"** 50% processing time warning: {elapsed}");
+            }
+        }
 
-                var oldTime = Time;
-                Time = (uint)((start.Ticks - OffsetTicks) / 10000);
-                LastStepSize = Time - oldTime;
-
-                RTreeDynamic.Clear();
-                foreach (var body in Bodies)
+        private void UpdateDirtyBodies()
+        {
+            foreach (var body in Bodies)
+            {
+                if (body.IsDirty)
                 {
-                    body.Project(Time);
-                    body.Envelope = new Envelope(
-                        body.Position.X - body.Size,
-                        body.Position.Y - body.Size,
-                        body.Position.X + body.Size,
-                        body.Position.Y + body.Size);
-                }
-
-                RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
-
-                var origActors = Actors.ToList();
-                foreach (var actor in Actors)
-                {
-                    int actors = Actors.Count();
-                    actor.Think();
-                    if (Actors.Count() != actors)
-                        throw new Exception("Collection modified in think time");
-                }
-
-                foreach (var actor in Actors.ToList())
-                    actor.CreateDestroy();
-
-                foreach (var body in Bodies)
-                {
-                    if (body.IsDirty)
-                    {
-                        body.DefinitionTime = this.Time;
-                        body.OriginalPosition = body.Position;
-                        body.OriginalAngle = body.Angle;
-                        body.IsDirty = false;
-                    }
-                }
-
-                if (Time > 10000) // lets not get too excited if things slow down when initialized
-                {
-                    var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
-                    if (elapsed > Hook.StepTime)
-                        Console.WriteLine($"**** 100% processing time warning: {elapsed}");
-                    else if (elapsed > Hook.StepTime * 0.8f)
-                        Console.WriteLine($"*** 80% processing time warning: {elapsed}");
-                    else if (elapsed > Hook.StepTime * 0.5f)
-                        Console.WriteLine($"** 50% processing time warning: {elapsed}");
+                    body.DefinitionTime = this.Time;
+                    body.OriginalPosition = body.Position;
+                    body.OriginalAngle = body.Angle;
+                    body.IsDirty = false;
                 }
             }
-            Processing = false;
+        }
 
+        private void ActorsCreateDestroy()
+        {
+            foreach (var actor in Actors.ToList())
+                actor.CreateDestroy();
+        }
+
+        private void ActorsThink()
+        {
+            foreach (var actor in Actors)
+            {
+                int actors = Actors.Count();
+                actor.Think();
+                if (Actors.Count() != actors)
+                    throw new Exception($"Collection modified in think time by {actor.GetType().Name}");
+            }
+
+        }
+
+        private void RebuildDynamicIndex()
+        {
+            RTreeDynamic.Clear();
+            foreach (var body in Bodies)
+            {
+                body.Project(Time);
+                body.Envelope = new Envelope(
+                    body.Position.X - body.Size,
+                    body.Position.Y - body.Size,
+                    body.Position.X + body.Size,
+                    body.Position.Y + body.Size);
+            }
+
+            RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
+        }
+
+        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0)
+        {
+            if (maximumDistance == 0)
+                return this.Bodies;
+            else
+            {
+                var searchEnvelope = new Envelope(
+                    point.X - maximumDistance / 2,
+                    point.Y - maximumDistance / 2,
+                    point.X + maximumDistance / 2,
+                    point.Y + maximumDistance / 2
+                );
+
+                return RTreeDynamic.Search(searchEnvelope)
+                    .Union(RTreeStatic.Search(searchEnvelope));
+            }
         }
 
         public void BodyAdd(Body body)
@@ -186,25 +215,6 @@
                 ConnectionHeartbeat.Step();
 
             }, null, 0, Hook.StepTime);
-            Disposables.Add(Heartbeat);
-        }
-
-        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0)
-        {
-            if (maximumDistance == 0)
-                return this.Bodies;
-            else
-            {
-                var searchEnvelope = new Envelope(
-                    point.X - maximumDistance / 2,
-                    point.Y - maximumDistance / 2,
-                    point.X + maximumDistance / 2,
-                    point.Y + maximumDistance / 2
-                );
-
-                return RTreeDynamic.Search(searchEnvelope)
-                    .Union(RTreeStatic.Search(searchEnvelope));
-            }
         }
 
         public Vector2 RandomPosition()
@@ -241,12 +251,7 @@
                         }
                         catch (Exception) { }
 
-                    foreach (var d in Disposables)
-                        try
-                        {
-                            d.Dispose();
-                        }
-                        catch (Exception) { }
+                    Heartbeat?.Dispose();
                 }
             disposedValue = true;
         }
