@@ -67,6 +67,7 @@
         private void InitializeSystemActors()
         {
             InitializeSystemActor<SpawnLocationsActor>();
+            InitializeSystemActor<WorldResizer>();
             InitializeSystemActor<LeaderboardActor>();
             InitializeSystemActor<Authenticator>();
             InitializeSystemActor<Advertisement>();
@@ -152,23 +153,6 @@
             }
             Processing = false;
 
-            if (Hook.WorldResizeEnabled)
-            {
-                int resizeCount = (this.AdvertisedPlayerCount < Hook.WorldMinPlayersToResize) ? 0 : this.AdvertisedPlayerCount - Hook.WorldMinPlayersToResize + 1;
-                int newSize = Hook.WorldSizeBasic + resizeCount * Hook.WorldSizeDeltaPerPlayer;
-                if (Hook.WorldSize < newSize)
-                {
-                    Hook.WorldSize = Hook.WorldSize + Hook.WorldResizeSpeed;
-                }
-                else if (Hook.WorldSize > newSize && Hook.WorldSize - newSize > Hook.WorldResizeSpeed)
-                {
-                    Hook.WorldSize = Hook.WorldSize - Hook.WorldResizeSpeed;
-                }
-                Hook.Obstacles = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.ObstaclesMultiplier));
-                Hook.Fishes = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.FishesMultiplier));
-                Hook.PickupSeekers = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupSeekersMultiplier));
-                Hook.PickupShields = Convert.ToInt32(Math.Floor(Hook.WorldSize * Hook.PickupShieldsMultiplier));
-            }
         }
 
         public void BodyAdd(Body body)
