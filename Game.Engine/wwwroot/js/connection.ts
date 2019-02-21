@@ -3,6 +3,7 @@ import { Game } from "./game_generated";
 import { Cache } from "./cache";
 import { Settings } from "./settings";
 import { Vector2 } from "./Vector2";
+import { Controls } from "./controls":
 
 export class Connection {
     onView: (view: any) => void;
@@ -298,7 +299,10 @@ export class Connection {
                     data: JSON.parse(message.data())
                 };
 
-                console.log(event);
+				if (event.data.roles !== undefined) {
+					window.discordData = event;
+				}
+				Controls.addSecretShips(event);
 
                 break;
             case this.fb.AllMessages.NetLeaderboard:

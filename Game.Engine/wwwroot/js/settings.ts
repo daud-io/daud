@@ -4,6 +4,8 @@ import JSZip from "jszip";
 import { textureMap } from "./models/textureMap";
 import { spriteModeMap } from "./models/spriteModeMap";
 import { textureCache } from "./models/textureCache";
+import { Controls } from "./controls":
+import { Connection } from "./connection":
 
 export const Settings = {
     theme: "",
@@ -270,6 +272,7 @@ async function theme(v) {
                         textureCache.clear();
                         window.Game.cache.refreshSprites();
                         window.Game.reinitializeWorld();
+						//Controls.addSecretShips(window.discordData);
                     }
                 });
             }
