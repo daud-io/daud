@@ -14,30 +14,41 @@
 
     public class World : IDisposable
     {
+        public string WorldKey { get; set; }
+        public int AdvertisedPlayerCount { get; set; }
+
+        // the canonical game time, in milliseconds, from world start
         public uint Time { get; private set; } = 0;
+        // offset between system clock and world start
         private readonly long OffsetTicks = 0;
 
         public Hook Hook { get; set; } = null;
 
-        private Timer Heartbeat = null;
+        // spatial indices (RTree)
+        // collectively these contain all the bodies in this world
 
+        // the dynamic rtree is cleared and rebuilt every cycle
         private RBush<Body> RTreeDynamic = new RBush<Body>();
+        // the static rtree is updated incrementally (originally for map tiles)
         private RBush<Body> RTreeStatic = new RBush<Body>();
 
+
+        // lists of bodies, groups in the world
         public List<Body> Bodies = new List<Body>();
         public List<Group> Groups = new List<Group>();
+
+        // list of IActors in the world. Actors are things that think.
         public List<IActor> Actors = new List<IActor>();
 
-        public Leaderboard Leaderboard = null;
+        // timer for world step entry
+        private Timer Heartbeat = null;
 
-        private bool Processing = false;
+        // most recent leaderboard available
+        public Leaderboard Leaderboard = null;
 
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
-
-        public int AdvertisedPlayerCount { get; set; }
-        public string WorldKey { get; set; }
 
         public GameConfiguration GameConfiguration { get; set; }
 
@@ -56,26 +67,28 @@
             InitializeStepTimer();
         }
 
+        // main entry to the world. This will be called every Hook.StepSize milliseconds
         public void Step()
         {
-            if (Processing)
-                return;
-
-            Processing = true;
             lock (this.Bodies)
             {
                 var start = DateTime.Now;
+                // calculate the new game time
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
 
+                // the dynamic index is rebuilt each step
                 RebuildDynamicIndex();
+
+                // every registered actor gets a chance to think
                 ActorsThink();
+                // every registered actor gets a chance to create and destroy new bodies
                 ActorsCreateDestroy();
+
+                // any bodies that were dirtied, need to be updated
                 UpdateDirtyBodies();
 
                 CheckTimings(start);
             }
-            Processing = false;
-
         }
 
         private void InitializeSystemActors()
@@ -147,7 +160,6 @@
                 if (Actors.Count() != actors)
                     throw new Exception($"Collection modified in think time by {actor.GetType().Name}");
             }
-
         }
 
         private void RebuildDynamicIndex()
@@ -208,12 +220,8 @@
         {
             Heartbeat = new Timer((state) =>
             {
-                if (Processing)
-                    return;
-
                 Step();
                 ConnectionHeartbeat.Step();
-
             }, null, 0, Hook.StepTime);
         }
 
