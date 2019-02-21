@@ -92,6 +92,9 @@
 
         protected void LoadLevel()
         {
+            if (this.Leveling == null)
+                return;
+
             var level = this.Leveling.Levels[CurrentLevel];
             var json = JsonConvert.SerializeObject(level, Formatting.Indented);
             JsonConvert.PopulateObject(json, this);
@@ -117,7 +120,7 @@
             }
 
 
-            if (GameTime - SpawnTime > Leveling.DownlevelThresholdMS && CurrentLevel > 0)
+            if (Leveling != null && GameTime - SpawnTime > Leveling.DownlevelThresholdMS && CurrentLevel > 0)
             {
                 if (!DownLeveling)
                 {
