@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.Engine.Core.Pickups;
+    using Game.Engine.Core.SystemActors.CTF;
     using Game.Engine.Core.Weapons;
     using System;
     using System.Linq;
@@ -127,8 +128,8 @@
             if (!this.Abandoned)
             {
                 if (projectedBody is PickupBase
-                    || projectedBody is CaptureTheFlag.Base
-                    || projectedBody is CaptureTheFlag.Flag)
+                    || projectedBody is SystemActors.CTF.Base
+                    || projectedBody is SystemActors.CTF.Flag)
                     return ((Vector2.Distance(projectedBody.Position, this.Position)
                             <= this.Size + projectedBody.Size));
             }

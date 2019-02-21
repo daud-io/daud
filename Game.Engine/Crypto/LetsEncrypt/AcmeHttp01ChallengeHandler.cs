@@ -1,13 +1,13 @@
-using System;
-using System.Net;
-using System.Threading.Tasks;
-using ACMESharp.Authorizations;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
-namespace Game.Engine
+namespace Game.Engine.Crypto.LetsEncrypt
 {
+    using System;
+    using System.Net;
+    using System.Threading.Tasks;
+    using ACMESharp.Authorizations;
+    using Microsoft.AspNetCore.Http;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
+
     public class AcmeHttp01ChallengeHandler
     {
         public static readonly string AcmeHttp01PathPrefix =

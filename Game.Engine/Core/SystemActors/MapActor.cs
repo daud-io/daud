@@ -1,7 +1,8 @@
-﻿namespace Game.Engine.Core.Maps
+﻿namespace Game.Engine.Core.SystemActors
 {
     using Game.API.Common;
     using Game.API.Common.Models;
+    using Game.Engine.Core.Maps;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;

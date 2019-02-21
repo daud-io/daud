@@ -2,7 +2,6 @@
 {
     using Game.API.Common;
     using Game.API.Common.Models;
-    using Game.Engine.Networking.Client;
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
     using Newtonsoft.Json;
@@ -14,7 +13,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public class Connection : IDisposable
+    public class PlayerConnection : IDisposable
     {
         private readonly APIClient APIClient;
         private readonly string WorldName = null;
@@ -55,11 +54,11 @@
 
         public Hook Hook { get; set; }
 
-        public Connection(string server, string worldName = null)
+        public PlayerConnection(string server, string worldName = null)
             : this(new APIClient(new Uri(server)), worldName)
         { }
 
-        public Connection(APIClient apiClient, string worldName = null)
+        public PlayerConnection(APIClient apiClient, string worldName = null)
         {
             WorldName = worldName;
             APIClient = apiClient;
@@ -149,11 +148,11 @@
                 {
                     Color = entry?.Color,
                     FleetID = entry?.FleetID ?? 0,
-                    ModeData = entry?.ModeData,
+                    ModeData = entry?.ModeData != null ? JsonConvert.DeserializeObject(entry?.ModeData) : null,
                     Name = entry?.Name,
                     Position = new Vector2(entry?.Position?.X ?? 0, entry?.Position?.Y ?? 0),
                     Score = entry?.Score ?? 0,
-                    Token = entry?.Token ?? false
+                    Token = (entry?.Token ?? false).ToString()
                 }
                 : null;
         }

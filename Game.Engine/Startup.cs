@@ -5,14 +5,15 @@
     using Game.API.Authentication;
     using Game.API.Client;
     using Game.API.Common.Security;
+    using Game.Engine.Authentication;
     using Game.Engine.ChatBot;
     using Game.Engine.Core;
+    using Game.Engine.Crypto.LetsEncrypt;
     using Game.Engine.Networking;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.Logging;
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;

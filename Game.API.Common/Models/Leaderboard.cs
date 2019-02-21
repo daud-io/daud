@@ -1,4 +1,4 @@
-namespace Game.Engine.Networking.Client
+﻿namespace Game.API.Common
 {
     using System.Collections.Generic;
     using System.Numerics;
@@ -18,8 +18,8 @@ namespace Game.Engine.Networking.Client
             public string Name { get; set; }
             public string Color { get; set; } = "white";
             public Vector2 Position { get; set; }
-            public bool Token { get; set; }
-            public string ModeData { get; set; }
+            public string Token { get; set; }
+            public object ModeData { get; set; }
         }
     }
 }

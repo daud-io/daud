@@ -91,17 +91,10 @@
 
         protected void Log(string message)
         {
-            try
-            {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write($"[{this.FleetID}\t{this.Name}]\t");
-                Console.ResetColor();
-                Console.WriteLine(message);
-            }
-            catch (NullReferenceException e)
-            {
-
-            }
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.Write($"[{this.FleetID}\t{this.Name}]\t");
+            Console.ResetColor();
+            Console.WriteLine(message);
         }
 
         protected override Task OnDeathAsync()

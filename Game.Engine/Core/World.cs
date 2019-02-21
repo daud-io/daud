@@ -1,9 +1,10 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common;
     using Game.API.Common.Models;
-    using Game.Engine.Core.Maps;
+    using Game.Engine.Core.SystemActors;
+    using Game.Engine.Core.SystemActors.CTF;
     using Game.Engine.Networking;
-    using Newtonsoft.Json;
     using RBush;
     using System;
     using System.Collections.Generic;
@@ -33,15 +34,11 @@
         private long TimeLeaderboardRecalc = 0;
         public Leaderboard Leaderboard = null;
 
-        private int SearchMargin = 0;
-
         private bool Processing = false;
 
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
         public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
-
-        //public int StepCounter { get; set; }
 
         public int AdvertisedPlayerCount { get; set; }
         public string WorldKey { get; set; }
@@ -57,18 +54,21 @@
             OffsetTicks = DateTime.Now.Ticks;
             Hook = hook ?? Hook.Default;
 
+            Console.WriteLine($"Initializing World: {this.Hook.Name}");
+
+            InitializeSystemActors();
+            InitializeStepTimer();
+        }
+
+        private void InitializeSystemActors()
+        {
             SystemActor<Advertisement>();
             SystemActor<RobotTender>();
             SystemActor<ObstacleTender>();
             SystemActor<CaptureTheFlag>();
             SystemActor<Sumo>();
             SystemActor<Authenticator>();
-
             SystemActor(MapActor = new MapActor());
-
-            Console.WriteLine($"Initializing World: {this.Hook.Name}");
-
-            InitializeStepTimer();
         }
 
         private void SystemActor<T>(T instance = null)
@@ -311,10 +311,10 @@
             else
             {
                 var searchEnvelope = new Envelope(
-                    point.X - maximumDistance / 2 - SearchMargin,
-                    point.Y - maximumDistance / 2 - SearchMargin,
-                    point.X + maximumDistance / 2 + SearchMargin,
-                    point.Y + maximumDistance / 2 + SearchMargin
+                    point.X - maximumDistance / 2,
+                    point.Y - maximumDistance / 2,
+                    point.X + maximumDistance / 2,
+                    point.Y + maximumDistance / 2
                 );
 
                 return RTreeDynamic.Search(searchEnvelope)

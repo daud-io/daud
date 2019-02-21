@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using ACMESharp.Authorizations;
-using ACMESharp.Protocol.Resources;
-
-namespace Game.Engine
+namespace Game.Engine.Crypto.LetsEncrypt
 {
+    using ACMESharp.Authorizations;
+    using System;
+    using System.Collections.Generic;
+
     public class AcmeOptions
     {
         public const string LetsEncryptV2StagingEndpoint = "https://acme-staging-v02.api.letsencrypt.org/";

@@ -1,6 +1,8 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.API.Common;
+    using Game.API.Common.Models;
+    using Game.Engine.Core.Auditing;
     using Game.Engine.Networking;
     using Newtonsoft.Json;
     using System;

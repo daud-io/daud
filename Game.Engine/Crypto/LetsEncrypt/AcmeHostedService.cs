@@ -1,22 +1,22 @@
-using ACMESharp.Authorizations;
-using ACMESharp.Protocol;
-using ACMESharp.Protocol.Resources;
-using Game.API.Client;
-using Game.Engine.Common.PKI;
-using Game.Engine.Crypto;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Game.Engine
+namespace Game.Engine.Crypto.LetsEncrypt
 {
+    using ACMESharp.Authorizations;
+    using ACMESharp.Protocol;
+    using ACMESharp.Protocol.Resources;
+    using Game.API.Client;
+    using Game.Engine.Common.PKI;
+    using Game.Engine.Crypto;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class AcmeHostedService : IHostedService, IDisposable
     {
         private readonly ILogger _logger;

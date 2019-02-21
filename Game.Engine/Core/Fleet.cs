@@ -262,12 +262,8 @@
 
         public override void CreateDestroy()
         {
-            /*if (this.Owner != null && this.Owner.IsAlive)
-                this.PendingDestruction = true;*/
-
             if (FiringWeapon)
             {
-
                 var weapon = this.WeaponStack.Any()
                     ? this.WeaponStack.Pop()
                     : this.BaseWeapon;
@@ -340,25 +336,19 @@
                 }
             }
 
-            FleetCenter = Flocking.FleetCenterNaive(this.Ships);
-            FleetMomentum = Flocking.FleetMomentum(this.Ships);
+            FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
+            FleetMomentum = FleetMath.FleetMomentum(this.Ships);
 
-            var summation = new Vector2();
-            var moment = new Vector2();
             foreach (var ship in Ships)
             {
                 var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
+                // todo: this dirties the ship body every cycle
                 ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
 
-                if (Ships.IndexOf(ship) < 5)
-                {
-                    summation += ship.Position;
-                    moment += ship.Momentum;
-                }
-                Flock(ship);
-                Snake(ship);
-                Ring(ship, summation, moment);
+                Flocking.Flock(ship);
+                Snaking.Snake(ship);
+                Ringing.Ring(ship);
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
@@ -419,63 +409,5 @@
                 Die(null);
         }
 
-        private void Flock(Ship ship)
-        {
-            if (World.Hook.FlockWeight == 0)
-                return;
-
-            if (Ships.Count < 2)
-                return;
-
-            var shipFlockingVector =
-                (World.Hook.FlockCohesion * Flocking.Cohesion(Ships, ship, World.Hook.FlockCohesionMaximumDistance))
-                + (World.Hook.FlockSeparation * Flocking.Separation(Ships, ship, World.Hook.FlockSeparationMinimumDistance));
-
-            var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
-
-            steeringVector += World.Hook.FlockWeight * shipFlockingVector;
-
-            ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
-        }
-
-        private void Ring(Ship ship, Vector2 average, Vector2 momentum)
-        {
-            if (!BossMode)
-                return;
-
-            var targetAngle = MathF.Atan2(AimTarget.Y, AimTarget.X);
-            var shipIndex = Ships.IndexOf(ship);
-            var innerAngle = (shipIndex - 5) / (float)(Ships.Count - 5) * 2 * MathF.PI;
-            var angle = (shipIndex - 5) / (float)(Ships.Count - 5) * 2 * MathF.PI;
-            if (shipIndex > 4)
-            {
-                ship.Position = average / 5 +
-                    new Vector2(
-                        MathF.Cos(angle + targetAngle),
-                        MathF.Sin(angle + targetAngle)
-                    ) * (50 + 15 * Ships.Count);
-                ship.Momentum = momentum / 5;
-                ship.Angle = angle + targetAngle;
-
-            }
-        }
-        private void Snake(Ship ship)
-        {
-            if (World.Hook.SnakeWeight == 0)
-                return;
-            if (Ships.Count < 2)
-                return;
-
-            var shipIndex = Ships.IndexOf(ship);
-            if (shipIndex > 0)
-            {
-                ship.Size = 70;
-                var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
-                steeringVector += (Ships[shipIndex - 1].Position - ship.Position) * World.Hook.SnakeWeight;
-                ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
-            }
-            else
-                ship.Size = 100;
-        }
     }
 }

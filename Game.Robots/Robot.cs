@@ -1,7 +1,7 @@
 ﻿namespace Game.Robots
 {
     using Game.API.Client;
-    using Game.Engine.Networking.Client;
+    using Game.API.Common;
     using System;
     using System.Collections.Generic;
     using System.Numerics;
@@ -9,7 +9,7 @@
 
     public class Robot
     {
-        private Connection Connection;
+        private PlayerConnection Connection;
 
         public string Target { get; set; } = "";
         public string Name { get; set; } = "Robot";
@@ -67,9 +67,9 @@
         }
 
         public Task StartAsync(string server, string room)
-            => StartAsync(new Connection(server, room));
+            => StartAsync(new PlayerConnection(server, room));
 
-        public virtual async Task StartAsync(Connection connection)
+        public virtual async Task StartAsync(PlayerConnection connection)
         {
             this.Connection = connection;
 
