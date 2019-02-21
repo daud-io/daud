@@ -1,4 +1,4 @@
-namespace Game.Robots.GeneticConfiguration
+namespace Game.Robots.Breeding
 {
     using GeneticSharp.Domain;
     using GeneticSharp.Domain.Terminations;
@@ -18,7 +18,7 @@ namespace Game.Robots.GeneticConfiguration
             if (bestFitness <= m_lastFitness)
             {
                 m_stagnantGenerationsCount++;
-                Console.WriteLine($"Fitness stagned for {m_stagnantGenerationsCount} generations.");
+                Console.WriteLine($"Fitness stagnant for {m_stagnantGenerationsCount} generations.");
             }
             else
             {

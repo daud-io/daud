@@ -1,12 +1,9 @@
-﻿namespace Game.Robots.GeneticConfiguration
+﻿namespace Game.Robots.Breeding
 {
     using GeneticSharp.Domain.Chromosomes;
+    using GeneticSharp.Infrastructure.Framework.Commons;
     using System;
     using System.Linq;
-    using GeneticSharp.Infrastructure.Framework.Commons;
-    using GeneticSharp.Domain.Randomizations;
-    using System.Collections.Generic;
-    using System.Diagnostics;
 
     public abstract class BitStringChromosome<TPhenotypeEntity> : BinaryChromosomeBase
         where TPhenotypeEntity : IPhenotypeEntity
@@ -83,82 +80,4 @@
             return new Gene(Convert.ToInt32(m_originalValueStringRepresentation[geneIndex].ToString()));
         }
     }
-
-    public interface IPhenotype
-    {
-        string Name { get; }
-        int Length { get; }
-        double MinValue { get; }
-        double MaxValue { get; }
-        double Value { get; set; }
-
-        double RandomValue();
-    }
-
-    public interface IPhenotypeEntity
-    {
-        IPhenotype[] Phenotypes { get; }
-        void Load(IEnumerable<int> entityGenes);
-    }
-
-    public static class PhenotypeEntityExtensions
-    {
-        public static int GetTotalBits(this IPhenotypeEntity entity)
-        {
-            return entity.Phenotypes.Sum(p => p.Length);
-        }
-    }
-
-    public abstract class PhenotypeEntityBase : IPhenotypeEntity
-    {
-        public IPhenotype[] Phenotypes { get; protected set; }
-
-        public void Load(IEnumerable<int> entityGenes)
-        {
-            var skip = 0;
-
-            foreach (var p in Phenotypes)
-            {
-                p.Value = GetValue(entityGenes, skip, p);
-                skip += p.Length;
-            }
-        }
-
-        private double GetValue(IEnumerable<int> genes, int skip, IPhenotype phenotype)
-        {
-            var representation = string.Join(String.Empty, genes.Skip(skip).Take(phenotype.Length));
-            var value = (float)BinaryStringRepresentation.ToDouble(representation, 0);
-
-            if (value < phenotype.MinValue)
-                return phenotype.MinValue;
-
-            if (value > phenotype.MaxValue)
-                return phenotype.MaxValue;
-
-            return value;
-        }
-    }
-
-    [DebuggerDisplay("{Name} = {MinValue} <= {Value} <= {MaxValue}")]
-    public class Phenotype : IPhenotype
-    {
-        public Phenotype(string name, int length)
-        {
-            Name = name;
-            Length = length;
-        }
-
-        public string Name { get; }
-        public int Length { get; }
-        public double MinValue { get; set; } = 0;
-        public double MaxValue { get; set; } = 100;
-        public virtual double Value { get; set; }
-
-        public virtual double RandomValue()
-        {
-            return RandomizationProvider.Current.GetDouble(MinValue, MaxValue + 1);
-        }
-    }
-
-
 }

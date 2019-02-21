@@ -66,6 +66,9 @@
             this.HookComputer = new HookComputer();
         }
 
+        public Task StartAsync()
+            => StartAsync(this.Connection);
+
         public Task StartAsync(string server, string room)
             => StartAsync(new Connection(server, room));
 
@@ -79,6 +82,11 @@
             this.Connection.OnView = OnView;
             this.Connection.OnLeaderboard = OnLeaderboard;
             await this.Connection.ListenAsync();
+        }
+
+        public void SetConnection(Connection connection)
+        {
+            this.Connection = connection;
         }
 
         private async Task OnLeaderboard()

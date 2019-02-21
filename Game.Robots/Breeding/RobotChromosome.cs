@@ -1,4 +1,4 @@
-﻿namespace Game.Robots.GeneticConfiguration
+﻿namespace Game.Robots.Breeding
 {
     using GeneticSharp.Domain.Chromosomes;
 
@@ -11,7 +11,7 @@
 
             var phenotypeEntities = new BehaviorPhenotypeEntity[config.BehaviorCount];
 
-            for (int i = 0; i < phenotypeEntities.Length; i ++)
+            for (int i = 0; i < phenotypeEntities.Length; i++)
             {
                 phenotypeEntities[i] = new BehaviorPhenotypeEntity(config, i);
             }
@@ -19,10 +19,6 @@
             SetPhenotypes(phenotypeEntities);
             CreateGenes();
         }
-
-        public string ID { get; } = System.Guid.NewGuid().ToString();
-
-        public bool Evaluated { get; set; }
 
         public float Score()
         {

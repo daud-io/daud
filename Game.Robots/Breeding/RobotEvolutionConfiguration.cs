@@ -1,4 +1,4 @@
-﻿namespace Game.Robots.GeneticConfiguration
+﻿namespace Game.Robots.Breeding
 {
     public class RobotEvolutionConfiguration
     {

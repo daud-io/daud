@@ -1,6 +1,7 @@
 ﻿namespace Game.Util.Commands
 {
     using Game.Robots;
+    using Game.Robots.Breeding;
     using McMaster.Extensions.CommandLineUtils;
     using Newtonsoft.Json;
     using System;
@@ -47,6 +48,9 @@
             [Option("--file")]
             public string File { get; set; } = "config.json";
 
+            [Option("--evolve")]
+            public bool Evolve { get; set; } = false;
+
             protected async override Task ExecuteAsync()
             {
                 if (StartupDelay > 0)
@@ -90,9 +94,8 @@
                 if (Color == null)
                     Color = "red";
 
-                for (int i = 0; i < Replicas; i++)
+                async Task<Robot> CreateRobot()
                 {
-                    var connection = await API.Player.ConnectAsync(World);
                     var robot = Activator.CreateInstance(robotType) as Robot;
                     robot.AutoSpawn = true;
                     robot.AutoFire = Firing;
@@ -100,20 +103,46 @@
                     robot.Name = Name;
                     robot.Target = Target;
                     robot.Sprite = Sprite;
+                    var connection = await API.Player.ConnectAsync(World);
+                    robot.SetConnection(connection);
 
                     if (robot is ConfigurableContextBot configBot)
                         configBot.ConfigurationFileName = File;
 
-                    tasks.Add(robot.StartAsync(connection));
+                    return robot;
+                }
 
-                };
-
-                await Task.WhenAll(tasks);
-
-                foreach (var task in tasks)
+                if (Evolve)
                 {
-                    if (task.IsFaulted)
-                        Console.WriteLine($"Robot Crashed: {task.Exception}");
+                    var controller = new RobotEvolutionController();
+                    var ga = controller.CreateGA(async (chromosome) =>
+                    {
+                        var robot = await CreateRobot() as ConfigurableContextBot;
+                        if (robot == null)
+                            throw new Exception("Failed to create robot or it isn't derived from ConfigurableContextBot");
+
+                        return robot;
+                    }, new RobotEvolutionConfiguration
+                    {
+                        BehaviorCount = 7
+                    });
+                    ga.Start();
+                }
+                else
+                {
+                    for (int i = 0; i < Replicas; i++)
+                    {
+                        var robot = await CreateRobot();
+                        tasks.Add(robot.StartAsync());
+                    };
+
+                    await Task.WhenAll(tasks);
+
+                    foreach (var task in tasks)
+                    {
+                        if (task.IsFaulted)
+                            Console.WriteLine($"Robot Crashed: {task.Exception}");
+                    }
                 }
             }
         }
