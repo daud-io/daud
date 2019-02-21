@@ -2,6 +2,7 @@
 import { Game } from "./game_generated";
 import { Cache } from "./cache";
 import { Settings } from "./settings";
+import { Vector2 } from "./Vector2";
 
 export class Connection {
     onView: (view: any) => void;
@@ -313,10 +314,7 @@ export class Connection {
                         Name: entry.name(),
                         Color: entry.color(),
                         Score: entry.score(),
-                        Position: {
-                            X: entry.position().x(),
-                            Y: entry.position().y()
-                        },
+                        Position: new Vector2(entry.position().x(), entry.position().y()),
                         Token: entry.token(),
                         ModeData: JSON.parse(entry.modeData()) || { flagStatus: "home" }
                     });

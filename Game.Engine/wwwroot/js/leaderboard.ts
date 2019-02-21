@@ -1,6 +1,7 @@
 ﻿import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
 import arrow from "../img/arrow.png";
+import { Vector2 } from "./Vector2";
 const record = document.getElementById("record");
 const leaderboard = document.getElementById("leaderboard");
 const leaderboardLeft = document.getElementById("leaderboard-left");
@@ -19,27 +20,27 @@ export function escapeHtml(str) {
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
 }
-function getOut(entry, position, rank, entryIsSelf) {
-    const angle = Math.atan2(entry.Position.Y - position.Y, entry.Position.X - position.X);
-	
-	if (rank === undefined) {
-		rank = "";
-	} else {
-		rank += ".";
-	}
-	
-	var begin;
-	if (!entryIsSelf) {
-		begin = `<tr>`;
-	} else if (rank <= 10) {
-		begin = `<tr style="background-color:rgba(255,255,255,0.1)">`;
-	} else {
-		begin = `<tr style="background-color:rgba(255,255,255,0.1);transform:translateY(7px)">`;
-	}
-	
+function getOut(entry, position: Vector2, rank, entryIsSelf) {
+    const angle = Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
+
+    if (rank === undefined) {
+        rank = "";
+    } else {
+        rank += ".";
+    }
+
+    var begin;
+    if (!entryIsSelf) {
+        begin = `<tr>`;
+    } else if (rank <= 10) {
+        begin = `<tr style="background-color:rgba(255,255,255,0.1)">`;
+    } else {
+        begin = `<tr style="background-color:rgba(255,255,255,0.1);transform:translateY(7px)">`;
+    }
+
     return (
         begin +
-		`<td style="width:25px">${rank}</td>` +
+        `<td style="width:25px">${rank}</td>` +
         `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${arrow}" style="transform:rotate(${angle}rad)"></img></td>` +
         `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
         `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
@@ -77,10 +78,10 @@ export class Leaderboard {
         if (data.Type == "FFA") {
             let out = "";
             for (let i = 0; i < data.Entries.length; i++) {
-				const entryIsSelf = data.Entries[i].FleetID == fleetID;
-				if (i < 10 || entryIsSelf) {
-					out += getOut(data.Entries[i], position, i + 1, entryIsSelf);
-				}
+                const entryIsSelf = data.Entries[i].FleetID == fleetID;
+                if (i < 10 || entryIsSelf) {
+                    out += getOut(data.Entries[i], position, i + 1, entryIsSelf);
+                }
             }
             leaderboard.innerHTML = `<tbody>${out}</tbody>`;
         } else if (data.Type == "Team") {
@@ -161,8 +162,8 @@ export class Leaderboard {
             const image = textureName => {
                 return `<img class="overlap" src="${RenderedObject.getTextureImage(textureName).src}"></img>`;
             };
-            const cyanAngle = Math.atan2(cyanFlag.Position.Y - position.Y, cyanFlag.Position.X - position.X);
-            const redAngle = Math.atan2(redFlag.Position.Y - position.Y, redFlag.Position.X - position.X);
+            const cyanAngle = Math.atan2(cyanFlag.Position.y - position.y, cyanFlag.Position.x - position.x);
+            const redAngle = Math.atan2(redFlag.Position.y - position.y, redFlag.Position.x - position.x);
             leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
             leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
             leaderboardCenter.style.width = "372px";

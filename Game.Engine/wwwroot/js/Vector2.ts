@@ -1,8 +1,6 @@
-export class Vector2 {
-    x: number;
-    y: number;
+import * as PIXI from "pixi.js";
+export class Vector2 extends PIXI.Point {
     constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
+        super(x, y);
     }
 }
