@@ -27,6 +27,8 @@ namespace Game.Engine.Crypto.LetsEncrypt
         private readonly GameConfiguration _gameConfiguration;
         private Timer _timer;
 
+        private bool WarnedLocalMode = false;
+
         private readonly static string CERT_PASSWORD = "AHHH!Dauds!";
 
         public AcmeHostedService(ILogger<AcmeHostedService> logger,
@@ -122,7 +124,10 @@ namespace Game.Engine.Crypto.LetsEncrypt
                     _options.DnsNames = new[] { suggestion };
                 else
                 {
-                    _logger.LogError("registry reports we are not accessible on http TCP/80 on our public IP. If you're in development mode, this is fine.");
+                    if (!WarnedLocalMode)
+                        _logger.LogWarning("registry reports we are not accessible on http TCP/80 on our public IP. If you're in development mode, this is fine.");
+
+                    WarnedLocalMode = true;
                     return;
                 }
             }
@@ -515,7 +520,6 @@ namespace Game.Engine.Crypto.LetsEncrypt
         {
             if (!File.Exists(path))
             {
-                _logger.LogWarning($"Load: file {path} doesn't exist");
                 return (false, def);
             }
 
