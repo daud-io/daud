@@ -197,7 +197,7 @@
         protected async Task SpawnAsync()
         {
             IsSpawning = true;
-            await Connection.SpawnAsync("🤖" + Name, Sprite, Color);
+            await Connection.SpawnAsync(Name, Sprite, Color);
         }
 
         public virtual void ShootAt(Vector2 target)
