@@ -462,10 +462,23 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_secret":
-                            shipSprite = Sprites.ship_secret;
+							/*
+                            if (player.Roles.Contains("Player"))
+                            {
+                                shipSprite = Sprites.ship_secret;
+                                color = "yellow";
+                            }
+                            else
+                            {
+                                shipSprite = Sprites.ship_yellow;
+                                color = "yellow";
+                            }
+							*/
+							shipSprite = Sprites.ship_secret;
                             color = "yellow";
                             break;
                         case "ship_zed":
+							/*
                             if (player.Roles.Contains("Old Guard"))
                             {
                                 shipSprite = Sprites.ship_zed;
@@ -477,13 +490,17 @@ namespace Game.Engine.Networking
                                 color = "red";
                             }
                             break;
+							*/
+							shipSprite = Sprites.ship_zed;
+                            color = "red";
+                            break;
                         case "ship_green":
                             shipSprite = Sprites.ship_green;
                             color = "green";
                             break;
                         case "ship_orange":
-                            shipSprite = Sprites.ship_orange;
-                            color = "orange";
+                            shipSprite = Sprites.ship_green;
+                            color = "green";
                             break;
                         case "ship_pink":
                             shipSprite = Sprites.ship_pink;
