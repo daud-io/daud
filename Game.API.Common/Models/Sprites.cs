@@ -57,6 +57,7 @@
         shield_pickup,
         wormhole,
 		ship_blue,
-		thruster_blue
+		thruster_blue,
+		bullet_blue
     }
 }

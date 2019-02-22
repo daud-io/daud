@@ -56,6 +56,7 @@ export const textureMap = {
 
     bullet: { file: "bullet", scale: 0.03 },
     bullet_cyan: { file: "bullet_cyan", scale: 0.03 },
+	bullet_blue: { file: "bullet_blue", scale: 0.03 },
     bullet_green: { file: "bullet_green", scale: 0.03 },
     bullet_orange: { file: "bullet_orange", scale: 0.03 },
     bullet_pink: { file: "bullet_pink", scale: 0.03 },
@@ -118,7 +119,7 @@ export const textureMap = {
         tileCount: 29
     },
 	thruster_blue: {
-        file: "thruster_cyan",
+        file: "thruster_blue",
         animated: true,
         loop: false,
         animationSpeed: 1.0,
