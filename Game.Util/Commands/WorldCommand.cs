@@ -20,15 +20,18 @@
         class Create : CommandBase
         {
             [Argument(0)]
-            public string WorldKey { get; set; }
+            public string World { get; set; }
 
             [Argument(1)]
             public string HookJSON { get; set; } = null;
 
+            [Option]
+            public string File { get; set; } = null;
+
             protected async override Task ExecuteAsync()
             {
-                var hook = JsonConvert.DeserializeObject(HookJSON);
-                hook = await API.World.PutWorldAsync(WorldKey, hook);
+                var hook = JsonConvert.DeserializeObject(HookJSON ?? System.IO.File.ReadAllText(File));
+                hook = await API.World.PutWorldAsync(World, hook);
 
                 Console.WriteLine(hook);
             }
@@ -47,15 +50,19 @@
 
         class Hook : CommandBase
         {
-            [Option]
-            public string World { get; set; } = null;
-
             [Argument(0)]
+            public string World { get; set; }
+
+            [Argument(1)]
             public string HookJSON { get; set; } = null;
+
+            [Option]
+            public string File { get; set; } = null;
 
             protected async override Task ExecuteAsync()
             {
-                var hook = JsonConvert.DeserializeObject(HookJSON);
+
+                var hook = JsonConvert.DeserializeObject(HookJSON ?? System.IO.File.ReadAllText(File));
                 hook = await API.World.PostHookAsync(hook, World);
 
                 Console.WriteLine(hook);
