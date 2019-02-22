@@ -55,14 +55,10 @@
             Steps = 16;
         }
 
-        protected async override Task AliveAsync()
+        protected override Task AliveAsync()
         {
             foreach (var sensor in Sensors)
                 sensor.Sense();
-
-
-
-
 
             if (SensorCTF.CTFModeEnabled)
             {
@@ -108,7 +104,6 @@
                 bangle = MathF.Atan2(this.SensorFleets.MyFleet.Momentum.Y, this.SensorFleets.MyFleet.Momentum.X);
             }
             (var finalRing, var angle, var boost) = ContextRingBlending.Blend(contexts, false);
-            OnFinalRing(finalRing);
             var combined = new ContextRing(this.Steps);
 
 
@@ -181,6 +176,8 @@
 
 
             SteerAngle(angle);
+
+            return Task.FromResult(0);
         }
         protected override Task OnNewLeaderboardAsync()
         {

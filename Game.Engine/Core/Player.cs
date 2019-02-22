@@ -1,6 +1,8 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.API.Common;
+    using Game.API.Common.Models;
+    using Game.Engine.Core.Auditing;
     using Game.Engine.Networking;
     using Newtonsoft.Json;
     using System;
@@ -20,8 +22,13 @@
         public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
 
         public int Score { get; set; }
-        public int KillCounter { get; set; } = 0;
+        public int KillStreak { get; set; } = 0;
+        public int KillCount { get; set; } = 0;
+        public int DeathCount { get; set; } = 0;
+
         public int MaxCombo { get; set; }
+        public long LastKillTime { get; set; } = 0;
+        public int ComboCounter { get; set; } = 0;
 
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
@@ -249,7 +256,8 @@
 
         protected virtual void OnDeath(Player player = null)
         {
-            Score = (int)Math.Max(Score * World.Hook.PointsMultiplierDeath, 0);
+            if (Connection != null && player?.Fleet != null)
+                Connection.SpectatingFleet = player.Fleet;
 
             if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(player?.Token))
                 RemoteEventLog.SendEvent(new

@@ -20,7 +20,7 @@
             AddWorld("duel", WorldDuel());
             AddWorld("team", WorldTeam());
             AddWorld("ctf", WorldCTF());
-            // AddWorld("other", WorldOther());
+            AddWorld("other", WorldOther());
 
             /*
             AddWorld("sharks", WorldSharks());

@@ -22,7 +22,7 @@
         public virtual void Init(World world)
         {
             World = world;
-            this.ID = world.NextID();
+            this.ID = world.GenerateObjectID();
 
             world.Actors.Add(this);
             World.BodyAdd(this);

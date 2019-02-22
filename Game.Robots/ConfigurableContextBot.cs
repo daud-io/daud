@@ -20,7 +20,7 @@
         public LevelingConfig Leveling { get; set; }
         private bool DownLeveling = false;
 
-        public override Task StartAsync(Connection connection)
+        public override Task StartAsync(PlayerConnection connection)
         {
             InitializeConfiguration();
             return base.StartAsync(connection);

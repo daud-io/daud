@@ -4,6 +4,7 @@
     using Game.API.Common.Models;
     using Game.API.Common.Security;
     using Game.Engine.Core;
+    using Game.Engine.Core.SystemActors;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
@@ -33,7 +34,7 @@
             var world = Worlds.Find(worldKey);
             if (world != null)
             {
-                world.MapActor.SetMap(mapModel);
+                world.GetActor<MapActor>().SetMap(mapModel);
                 return true;
             }
             else

@@ -1,7 +1,9 @@
 ﻿namespace Game.Robots
 {
     using Game.API.Client;
-    using Game.Engine.Networking.Client;
+    using Game.API.Common;
+    using Game.API.Common.Models;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Numerics;
@@ -9,7 +11,7 @@
 
     public class Robot
     {
-        private Connection Connection;
+        private PlayerConnection Connection;
 
         public string Target { get; set; } = "";
         public string Name { get; set; } = "Robot";
@@ -55,6 +57,9 @@
 
         public long BoostUntil { get; set; }
 
+        public int StatsKills { get; set; }
+        public int StatsDeaths { get; set; }
+
         public string CustomData { get => Connection.CustomData; set => Connection.CustomData = value; }
 
         public Leaderboard Leaderboard { get => Connection.Leaderboard; }
@@ -66,10 +71,13 @@
             this.HookComputer = new HookComputer();
         }
 
-        public Task StartAsync(string server, string room)
-            => StartAsync(new Connection(server, room));
+        public Task StartAsync()
+            => StartAsync(this.Connection);
 
-        public virtual async Task StartAsync(Connection connection)
+        public Task StartAsync(string server, string room)
+            => StartAsync(new PlayerConnection(server, room));
+
+        public virtual async Task StartAsync(PlayerConnection connection)
         {
             this.Connection = connection;
 
@@ -81,9 +89,73 @@
             await this.Connection.ListenAsync();
         }
 
+        public void SetConnection(PlayerConnection connection)
+        {
+            this.Connection = connection;
+        }
+
         private async Task OnLeaderboard()
         {
             await this.OnNewLeaderboardAsync();
+        }
+
+        protected virtual Task OnKillAsync(Announcement announcement)
+        {
+            Log(announcement.Text);
+            return Task.FromResult(0);
+        }
+
+        protected virtual Task OnKilledAsync(Announcement announcement)
+        {
+            Log(announcement.Text);
+            return Task.FromResult(0);
+        }
+
+        protected virtual async Task OnAnnouncementAsync(Announcement announcement)
+        {
+
+            if (announcement.ExtraData != null)
+            {
+                var extraData = JsonConvert.DeserializeAnonymousType(announcement.ExtraData, new
+                {
+                    ping = new
+                    {
+                        you = 0,
+                        them = 0
+                    },
+                    combo = new
+                    {
+                        text = null as string,
+                        score = 0
+                    },
+                    stats = new
+                    {
+                        kills = 0,
+                        deaths = 0
+                    }
+                });
+
+                if (extraData != null && extraData.stats != null)
+                {
+                    StatsKills = extraData.stats.kills;
+                    StatsDeaths = extraData.stats.deaths;
+
+                    Log($"Stats: k:{StatsKills} d:{StatsDeaths} k/d:{(float)StatsKills / StatsDeaths:0.000}");
+                }
+            }
+
+            switch(announcement.Type)
+            {
+                case "kill":
+                    await OnKillAsync(announcement);
+                    break;
+                case "killed":
+                    await OnKilledAsync(announcement);
+                    break;
+                default:
+                    this.Log(JsonConvert.SerializeObject(announcement, Formatting.Indented));
+                    break;
+            }
         }
 
         protected virtual async Task OnView()
@@ -103,6 +175,9 @@
             }
 
             IsAlive = Connection.IsAlive;
+
+            while (Connection.Announcements.Count > 0)
+                await this.OnAnnouncementAsync(Connection.Announcements.Dequeue());
 
             if (!Connection.IsAlive)
                 await StepDeadAsync();
@@ -189,7 +264,7 @@
         protected async Task SpawnAsync()
         {
             IsSpawning = true;
-            await Connection.SpawnAsync("🤖" + Name, Sprite, Color);
+            await Connection.SpawnAsync(Name, Sprite, Color);
         }
 
         public virtual void ShootAt(Vector2 target)
@@ -206,6 +281,17 @@
         public Vector2 VectorToAbsolutePoint(Vector2 absolutePoint)
         {
             return absolutePoint - this.Position;
+        }
+
+        protected virtual void Log(string message)
+        {
+            lock (typeof(Console))
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.Write($"[{this.FleetID}\t{this.Name}]\t");
+                Console.ResetColor();
+                Console.WriteLine(message);
+            }
         }
     }
 }
