@@ -47,7 +47,7 @@
 
             var firstPlace = leaderboard.Entries.FirstOrDefault();
             if (World.Leaderboard != null && firstPlace?.Score > World.Leaderboard.ArenaRecord.Score)
-                World.Leaderboard.ArenaRecord = firstPlace;
+                leaderboard.ArenaRecord = firstPlace;
 
             return leaderboard;
         }
