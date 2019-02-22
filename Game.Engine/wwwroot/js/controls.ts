@@ -30,6 +30,11 @@ ReactDOM.render(
     document.getElementById("emoji-container")
 );
 
+const secretShips = [
+	"ship_secret",
+	"ship_zed"
+];
+
 const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
 const emojiTrigger = document.getElementById("emoji-trigger");
@@ -57,6 +62,8 @@ const refreshSelectedStyle = function() {
         if (option.getAttribute("data-color") == Controls.ship) option.classList.add("selected");
         else option.classList.remove("selected");
     }
+	
+	Controls.addSecretShips(window.discordData);
 };
 
 shipSelectorSwitch.addEventListener("click", function(e) {
@@ -212,6 +219,9 @@ export var Controls = {
                 selector.appendChild(selectorImage);
                 selectorImage.setAttribute("data-color", colors[i]);
                 selectorImage.classList.add("circle");
+				if (secretShips.includes(colors[i])) {
+					selectorImage.style.display = "none";
+				}
             }
         }
 
@@ -220,7 +230,21 @@ export var Controls = {
         Controls.ship = colors[shipIndex];
         refreshSelectedStyle();
     },
-    ship: "ship_green"
+    ship: "ship_green",
+	
+	addSecretShips: function(discord) {
+		try {
+			if (discord.data.roles.includes("Player")) {
+				shipSelectorSwitch.querySelector("[data-color=ship_secret]").style.display = "inline-block";
+			}
+			if (discord.data.roles.includes("Old Guard")) {
+				shipSelectorSwitch.querySelector("[data-color=ship_zed]").style.display = "inline-block";
+			}
+		}
+		catch(err) {
+			console.log(err);
+		}
+	}
 };
 
 window.addEventListener(

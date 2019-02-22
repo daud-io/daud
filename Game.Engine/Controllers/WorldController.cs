@@ -102,16 +102,25 @@
                         .Where(s => new[] { "de.daud.io", "us.daud.io" }.Contains(s.URL))
                         .SelectMany(server => server.Worlds.Select(world => new { server, world }))
                         .Where(s => allWorlds || !s.world.Hook.Hidden)
-                        .Where(s => s.server.URL == "us.daud.io" || (s.server.URL == "de.daud.io" && s.world.WorldKey == "default"))
+                        .Where(s => 
+                            s.server.URL == "us.daud.io"
+                            || (s.server.URL == "de.daud.io" && s.world.WorldKey == "default")
+                            || (s.server.URL == "de.daud.io" && s.world.WorldKey == "duel")
+                        )
                         .OrderBy(s => s.world.Hook.Weight)
                         .Select(s =>
                         {
                             var name = s.world.Hook.Name;
                             var description = s.world.Hook.Description;
 
-                            if (name == "FFA" && s.server.URL == "de.daud.io")
+                            if (s.world.WorldKey == "default" && s.server.URL == "de.daud.io")
                             {
-                                name = "FFA - Europe";
+                                name = "FFA-Europe";
+                                description = "Like regular FFA but with different ping times and metric-sized cup holders";
+                            }
+                            if (s.world.WorldKey == "duel" && s.server.URL == "de.daud.io")
+                            {
+                                name = "Dueling Room-Europe";
                                 description = "Like regular FFA but with different ping times and metric-sized cup holders";
                             }
                             return

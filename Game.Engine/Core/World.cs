@@ -106,6 +106,7 @@
             InitializeSystemActor<CaptureTheFlag>();
             InitializeSystemActor<Sumo>();
             InitializeSystemActor<MapActor>();
+            InitializeSystemActor<TeamColors>();
         }
 
         public T GetActor<T>()
