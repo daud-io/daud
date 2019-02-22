@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Numerics;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class Robot
@@ -71,13 +72,13 @@
             this.HookComputer = new HookComputer();
         }
 
-        public Task StartAsync()
-            => StartAsync(this.Connection);
+        public Task StartAsync(CancellationToken cancellationToken = default)
+            => StartAsync(this.Connection, cancellationToken);
 
-        public Task StartAsync(string server, string room)
-            => StartAsync(new PlayerConnection(server, room));
+        public Task StartAsync(string server, string room, CancellationToken cancellationToken = default)
+            => StartAsync(new PlayerConnection(server, room), cancellationToken);
 
-        public virtual async Task StartAsync(PlayerConnection connection)
+        public virtual async Task StartAsync(PlayerConnection connection, CancellationToken cancellationToken = default)
         {
             this.Connection = connection;
 
@@ -86,7 +87,7 @@
 
             this.Connection.OnView = OnView;
             this.Connection.OnLeaderboard = OnLeaderboard;
-            await this.Connection.ListenAsync();
+            await this.Connection.ListenAsync(cancellationToken);
         }
 
         public void SetConnection(PlayerConnection connection)

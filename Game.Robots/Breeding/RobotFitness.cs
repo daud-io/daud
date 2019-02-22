@@ -3,6 +3,8 @@ namespace Game.Robots.Breeding
     using GeneticSharp.Domain.Chromosomes;
     using GeneticSharp.Domain.Fitnesses;
     using System;
+    using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class RobotFitness : IFitness
@@ -20,13 +22,30 @@ namespace Game.Robots.Breeding
         {
             var c = chromosome as RobotChromosome;
 
+            ConfigurableContextBot robot = null;
+
             Task.Run(async () =>
             {
-                var robot = await this.BotFactoryAsync(c);
-                await robot.StartAsync();
+                robot = await this.BotFactoryAsync(c);
+
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(5000);
+
+                try
+                {
+                    await robot.StartAsync(cts.Token);
+                }
+                catch (TaskCanceledException) { }
+                catch (OperationCanceledException) { }
+                catch (Exception e)
+                {
+                    Console.WriteLine("exception in RobotFitness: " + e);
+                }
             }).Wait();
 
-            return c.Score();
+            return robot.StatsDeaths > 0
+                ? robot.StatsKills / robot.StatsDeaths
+                : double.MaxValue;
         }
     }
 }

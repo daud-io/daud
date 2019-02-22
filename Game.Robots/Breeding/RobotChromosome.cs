@@ -20,11 +20,6 @@
             CreateGenes();
         }
 
-        public float Score()
-        {
-            return 1;
-        }
-
         public override IChromosome CreateNew()
         {
             return new RobotChromosome(Config);
