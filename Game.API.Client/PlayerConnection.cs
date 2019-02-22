@@ -378,9 +378,9 @@
             }
         }
 
-        public async Task<bool> ListenAsync()
+        public async Task<bool> ListenAsync(CancellationToken cancellationToken = default)
         {
-            await StartReadAsync(HandleIncomingMessage);
+            await StartReadAsync(HandleIncomingMessage, cancellationToken);
 
             return true;
         }

@@ -5,6 +5,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
     using static Game.Robots.ConfigurableContextBotConfig;
 
@@ -20,10 +21,10 @@
         public LevelingConfig Leveling { get; set; }
         private bool DownLeveling = false;
 
-        public override Task StartAsync(PlayerConnection connection)
+        public override Task StartAsync(PlayerConnection connection, CancellationToken cancellationToken = default)
         {
             InitializeConfiguration();
-            return base.StartAsync(connection);
+            return base.StartAsync(connection, cancellationToken);
         }
 
         private void InitializeConfiguration()
