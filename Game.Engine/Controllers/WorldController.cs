@@ -113,12 +113,12 @@
                             var name = s.world.Hook.Name;
                             var description = s.world.Hook.Description;
 
-                            if (name == "FFA" && s.server.URL == "de.daud.io")
+                            if (s.world.WorldKey == "default" && s.server.URL == "de.daud.io")
                             {
                                 name = "FFA-Europe";
                                 description = "Like regular FFA but with different ping times and metric-sized cup holders";
                             }
-                            if (name == "duel" && s.server.URL == "de.daud.io")
+                            if (s.world.WorldKey == "duel" && s.server.URL == "de.daud.io")
                             {
                                 name = "Dueling Room-Europe";
                                 description = "Like regular FFA but with different ping times and metric-sized cup holders";
