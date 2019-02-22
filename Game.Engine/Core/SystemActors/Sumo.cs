@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core
+﻿namespace Game.Engine.Core.SystemActors
 {
     using Game.API.Common;
     using System;

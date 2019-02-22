@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine
 {
     using Game.Engine.ChatBot;
+    using Game.Engine.Crypto.LetsEncrypt;
     using Game.Engine.Hosting;
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;

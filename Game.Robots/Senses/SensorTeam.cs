@@ -1,6 +1,6 @@
 ﻿namespace Game.Robots.Senses
 {
-    using Game.Engine.Networking.Client;
+    using Game.API.Common;
     using Game.Robots.Models;
     using System.Collections.Generic;
     using System.Linq;

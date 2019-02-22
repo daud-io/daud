@@ -1,22 +1,22 @@
-using ACMESharp.Authorizations;
-using ACMESharp.Protocol;
-using ACMESharp.Protocol.Resources;
-using Game.API.Client;
-using Game.Engine.Common.PKI;
-using Game.Engine.Crypto;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Game.Engine
+namespace Game.Engine.Crypto.LetsEncrypt
 {
+    using ACMESharp.Authorizations;
+    using ACMESharp.Protocol;
+    using ACMESharp.Protocol.Resources;
+    using Game.API.Client;
+    using Game.Engine.Common.PKI;
+    using Game.Engine.Crypto;
+    using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class AcmeHostedService : IHostedService, IDisposable
     {
         private readonly ILogger _logger;
@@ -26,6 +26,8 @@ namespace Game.Engine
         private readonly RegistryClient _registryClient;
         private readonly GameConfiguration _gameConfiguration;
         private Timer _timer;
+
+        private bool WarnedLocalMode = false;
 
         private readonly static string CERT_PASSWORD = "AHHH!Dauds!";
 
@@ -122,7 +124,10 @@ namespace Game.Engine
                     _options.DnsNames = new[] { suggestion };
                 else
                 {
-                    _logger.LogError("registry reports we are not accessible on http TCP/80 on our public IP. If you're in development mode, this is fine.");
+                    if (!WarnedLocalMode)
+                        _logger.LogWarning("registry reports we are not accessible on http TCP/80 on our public IP. If you're in development mode, this is fine.");
+
+                    WarnedLocalMode = true;
                     return;
                 }
             }
@@ -515,7 +520,6 @@ namespace Game.Engine
         {
             if (!File.Exists(path))
             {
-                _logger.LogWarning($"Load: file {path} doesn't exist");
                 return (false, def);
             }
 

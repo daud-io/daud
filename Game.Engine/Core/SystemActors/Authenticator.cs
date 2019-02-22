@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core
+﻿namespace Game.Engine.Core.SystemActors
 {
     using Discord.Rest;
     using System;
@@ -6,26 +6,14 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    public class Authenticator : IActor
+    public class Authenticator : SystemActorBase
     {
-        private World World = null;
-
-        public void CreateDestroy()
+        public Authenticator()
         {
+            this.CycleMS = 0;
         }
 
-        public void Destroy()
-        {
-            this.World.Actors.Remove(this);
-        }
-
-        public void Init(World world)
-        {
-            this.World = world;
-            this.World.Actors.Add(this);
-        }
-
-        public void Think()
+        protected override void Cycle()
         {
             if (World.GameConfiguration.DiscordGuildID != null && World.GameConfiguration.DiscordToken != null)
             {

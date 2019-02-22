@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core
+﻿namespace Game.Engine.Core.Auditing
 {
     using System;
     using System.Collections.Generic;

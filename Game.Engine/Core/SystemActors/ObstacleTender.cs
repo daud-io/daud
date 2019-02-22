@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core
+﻿namespace Game.Engine.Core.SystemActors
 {
     using Game.Engine.Core.Pickups;
     using System.Collections.Generic;

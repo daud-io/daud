@@ -1,11 +1,10 @@
-namespace Game.Engine
+namespace Game.Engine.Crypto.LetsEncrypt
 {
     using ACMESharp.Authorizations;
     using ACMESharp.Protocol;
     using ACMESharp.Protocol.Resources;
     using Game.Engine.Common.PKI;
     using System.Collections.Generic;
-    using System.IO;
     using System.Security.Cryptography.X509Certificates;
 
     public class AcmeState

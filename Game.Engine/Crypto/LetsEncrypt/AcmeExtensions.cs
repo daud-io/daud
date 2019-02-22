@@ -1,14 +1,10 @@
-using System.Collections.Generic;
-using System.Net;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-
-namespace Game.Engine
+namespace Game.Engine.Crypto.LetsEncrypt
 {
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Hosting;
+    using Microsoft.Extensions.DependencyInjection;
+    using System.Collections.Generic;
+
     public static class AcmeExtensions
     {
         public static IWebHostBuilder AddAcmeServices(this IWebHostBuilder builder,

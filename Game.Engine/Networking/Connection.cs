@@ -4,6 +4,7 @@ namespace Game.Engine.Networking
 {
     using Game.API.Common;
     using Game.Engine.Core;
+    using Game.Engine.Core.Steering;
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
     using Microsoft.AspNetCore.Http;
@@ -112,7 +113,7 @@ namespace Game.Engine.Networking
                                 followBody = followFleet.Ships.FirstOrDefault();
                             else
                             {
-                                var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
+                                var center = FleetMath.FleetCenterNaive(followFleet.Ships);
                                 followBody = new Body
                                 {
                                     DefinitionTime = world.Time,

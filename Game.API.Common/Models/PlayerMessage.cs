@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Core
+﻿namespace Game.API.Common.Models
 {
     public class PlayerMessage
     {
