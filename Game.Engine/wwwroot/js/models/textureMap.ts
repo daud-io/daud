@@ -51,7 +51,7 @@ export const textureMap = {
 
     // premium ships
     ship_secret: { file: "ship_secret", scale: 0.02 },
-    ship_zed: { file: "ship_base", scale: 0.0025 },
+    ship_zed: { file: "ship_zed", scale: 0.02 },
 
     bullet: { file: "bullet", scale: 0.03 },
     bullet_cyan: { file: "bullet_cyan", scale: 0.03 },

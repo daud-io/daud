@@ -453,8 +453,9 @@ namespace Game.Engine.Networking
 
                     Sprites shipSprite = Sprites.ship_red;
 
-                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score}");
-
+					player.Connection = this;
+                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score} Roles: {player.Roles}");
+					
                     switch (spawn.Ship)
                     {
                         case "ship0":
@@ -462,8 +463,7 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_secret":
-							/*
-                            if (player.Roles.Contains("Player"))
+							if (player?.Roles?.Contains("Player") ?? false)
                             {
                                 shipSprite = Sprites.ship_secret;
                                 color = "yellow";
@@ -472,14 +472,15 @@ namespace Game.Engine.Networking
                             {
                                 shipSprite = Sprites.ship_yellow;
                                 color = "yellow";
-                            }
-							*/
+							}
+							break;
+							/*
 							shipSprite = Sprites.ship_secret;
                             color = "yellow";
                             break;
+							*/
                         case "ship_zed":
-							/*
-                            if (player.Roles.Contains("Old Guard"))
+                            if (player?.Roles?.Contains("Old Guard") ?? false)
                             {
                                 shipSprite = Sprites.ship_zed;
                                 color = "red";
@@ -488,12 +489,13 @@ namespace Game.Engine.Networking
                             {
                                 shipSprite = Sprites.ship_red;
                                 color = "red";
-                            }
-                            break;
-							*/
+							}
+							break;
+							/*
 							shipSprite = Sprites.ship_zed;
                             color = "red";
                             break;
+							*/
                         case "ship_green":
                             shipSprite = Sprites.ship_green;
                             color = "green";
