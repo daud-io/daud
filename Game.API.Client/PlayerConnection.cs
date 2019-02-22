@@ -54,6 +54,8 @@
 
         public Hook Hook { get; set; }
 
+        public Queue<Announcement> Announcements = new Queue<Announcement>();
+
         public PlayerConnection(string server, string worldName = null)
             : this(new APIClient(new Uri(server)), worldName)
         { }
@@ -245,6 +247,22 @@
             WorldSize = netWorldView.WorldSize;
             CooldownBoost = netWorldView.CooldownBoost / 255f;
             CooldownShoot = netWorldView.CooldownShoot / 255f;
+
+            if (netWorldView.AnnouncementsLength > 0)
+            {
+                for (var i = 0; i < netWorldView.AnnouncementsLength; i++)
+                {
+                    var announcement = netWorldView.Announcements(i);
+
+                    Announcements.Enqueue(new Announcement
+                    {
+                        Type = announcement.Value.Type,
+                        Text = announcement.Value.Text,
+                        PointsDelta = announcement.Value.PointsDelta,
+                        ExtraData = announcement.Value.ExtraData
+                    });
+                }
+            }
 
             if (OnView != null)
                 await OnView();
