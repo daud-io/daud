@@ -1,7 +1,10 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.API.Common;
+    using Game.API.Common.Models;
+    using Game.Engine.Core.Auditing;
     using Game.Engine.Networking;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -19,8 +22,13 @@
         public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
 
         public int Score { get; set; }
-        public int KillCounter { get; set; } = 0;
+        public int KillStreak { get; set; } = 0;
+        public int KillCount { get; set; } = 0;
+        public int DeathCount { get; set; } = 0;
+
         public int MaxCombo { get; set; }
+        public long LastKillTime { get; set; } = 0;
+        public int ComboCounter { get; set; } = 0;
 
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
@@ -42,6 +50,11 @@
         public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
         public string Token { get; set; }
+
+        public bool AuthenticationStarted { get; set; }
+        public List<string> Roles { get; set; } = null;
+        public string LoginName { get; set; }
+
         public bool PendingDestruction { get; set; } = false;
         private bool IsSpawning = false;
 
@@ -208,27 +221,43 @@
         {
             // sanitize the name
             if (name != null
-                && name.Length > 15)
-                name = name.Substring(0, 15);
+                && name.Length > World.Hook.MaxNameLength)
+                name = name.Substring(0, World.Hook.MaxNameLength);
+
+            CummulativeBoostRequested = false;
+            CummulativeShootRequested = false;
 
             Name = name;
 
-
             ShipSprite = sprite;
-
             Color = color;
-
             Token = token;
 
             AliveSince = World.Time;
 
             IsSpawning = true;
+        }
 
+        public void OnAuthenticated()
+        {
+            if (this.Connection != null)
+            {
+                this.Connection.Events.Enqueue(new BroadcastEvent
+                {
+                    EventType = "authenticated",
+                    Data = JsonConvert.SerializeObject(new
+                    {
+                        roles = this.Roles,
+                        loginName = this.LoginName
+                    })
+                });
+            }
         }
 
         protected virtual void OnDeath(Player player = null)
         {
-            Score = (int)Math.Max(Score * World.Hook.PointsMultiplierDeath, 0);
+            if (Connection != null && player?.Fleet != null)
+                Connection.SpectatingFleet = player.Fleet;
 
             if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(player?.Token))
                 RemoteEventLog.SendEvent(new

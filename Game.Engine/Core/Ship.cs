@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.Engine.Core.Pickups;
+    using Game.Engine.Core.SystemActors.CTF;
     using Game.Engine.Core.Weapons;
     using System;
     using System.Linq;
@@ -49,22 +50,14 @@
         private void Die(Player player, Fleet fleet, ShipWeaponBullet bullet)
         {
             if (player != null)
-                player.Score += World.Hook.PointsPerKillShip;
+                World.Scoring.ShipDied(player, this.Fleet?.Owner, this);
 
-            if (fleet != null)
-            {
-                var random = new Random();
-                var threshold = fleet.Ships.Count * World.Hook.ShipGainBySizeM + World.Hook.ShipGainBySizeB;
-                if (random.NextDouble() < threshold)
-                    if (fleet?.Ships?.Any() ?? false)
-                        fleet.AddShip();
-            }
+            fleet?.KilledShip();
 
             PendingDestruction = true;
 
             if (this.Fleet != null)
                 this.Fleet.ShipDeath(player, this, bullet);
-
         }
 
         public virtual void CollisionExecute(Body projectedBody)
@@ -127,8 +120,8 @@
             if (!this.Abandoned)
             {
                 if (projectedBody is PickupBase
-                    || projectedBody is CaptureTheFlag.Base
-                    || projectedBody is CaptureTheFlag.Flag)
+                    || projectedBody is SystemActors.CTF.Base
+                    || projectedBody is SystemActors.CTF.Flag)
                     return ((Vector2.Distance(projectedBody.Position, this.Position)
                             <= this.Size + projectedBody.Size));
             }

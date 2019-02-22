@@ -2,7 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>7.1</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeneticSharp" Version="2.5.1" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Game.API.Client\Game.API.Client.csproj" />

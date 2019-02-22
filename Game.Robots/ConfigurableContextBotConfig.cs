@@ -14,6 +14,13 @@
         public string Color { get; set; } = null;
         public string RobotType { get; set; } = null;
 
-        public object BlendingConfig { get; set; }
+        public LevelingConfig Leveling { get; set; }
+
+        public class LevelingConfig
+        {
+            public object[] Levels { get; set; }
+            public Dictionary<string, object> BehaviorModifications { get; set; }
+            public int DownlevelThresholdMS { get; set; }
+        }
     }
 }

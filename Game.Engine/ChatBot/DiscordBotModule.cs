@@ -63,7 +63,7 @@ namespace Game.Engine.ChatBot
         [Command("worlds")]
         public async Task WorldsAsync()
         {
-            var response = "*worlds report*\n";
+            var response = $"*worlds report ({GameConfiguration.PublicURL})*\n";
             using (var drc = new DiscordRestClient())
             {
 

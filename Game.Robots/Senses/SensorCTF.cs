@@ -1,7 +1,8 @@
 ﻿namespace Game.Robots.Senses
 {
-    using Game.Engine.Networking.Client;
+    using Game.API.Common;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System.Numerics;
 
     public class SensorCTF : ISense
@@ -43,8 +44,7 @@
                 ? 0
                 : 1];
 
-            var modeData = entry.ModeData;
-            var ctfData = JsonConvert.DeserializeAnonymousType(modeData, new { flagStatus = "" });
+            var flagIsHome = ((JObject)entry.ModeData)?["flagStatus"]?.ToString() == "Home";
 
             var ctfTeam = new CTFTeam
             {
@@ -52,7 +52,7 @@
                 BasePosition = team == SensorTeam.Teams.Cyan
                     ? new Vector2(-this.Robot.WorldSize, -this.Robot.WorldSize)
                     : new Vector2(+this.Robot.WorldSize, +this.Robot.WorldSize),
-                FlagIsHome = ctfData.flagStatus == "Home",
+                FlagIsHome = flagIsHome,
                 FlagPosition = entry.Position,
                 FlagCarriedBy = entry.FleetID,
                 Score = entry.Score

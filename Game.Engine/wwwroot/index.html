@@ -15,7 +15,6 @@
     <link rel="stylesheet" type="text/css" href="css/game.css" />
     <link rel="shortcut icon" type="image/png" href="favicon.ico" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
-    <link rel="stylesheet" href="lib/emoji-panel-google-32.min.css">
 </head>
 
 <body class="loading dead">
@@ -126,7 +125,7 @@
 
                     <div id="shipSelectorSwitch">
                     </div>
-                    <div id="emoji-trigger" class=" button1"><span class="ep-e" data-index="517" style="position: absolute;margin-left: -16px;"></span></div>
+                    <button id="emoji-trigger" class="button1">👋</button>
                     <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
                     <div id="emoji-container"></div>
                     <div id="launch-container">
@@ -433,14 +432,10 @@
         </div>
     </div>
 
-
     <div id="theme-styles" style="display:none;"></div>
 
-    <script type="text/javascript" src="js/init.js"></script>
     <script type="text/javascript" src="js/flatbuffers.js"></script>
-    <script type="text/javascript" src="js/game_generated.js"></script>
-
-    <script type="text/javascript" src="js/game.js"></script>
+    <script type="text/javascript" src="js/game.ts"></script>
 
 </body>
 

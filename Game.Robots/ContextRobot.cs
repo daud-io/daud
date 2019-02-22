@@ -89,21 +89,6 @@
             return Task.FromResult(0);
         }
 
-        protected void Log(string message)
-        {
-            try
-            {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write($"[{this.FleetID}\t{this.Name}]\t");
-                Console.ResetColor();
-                Console.WriteLine(message);
-            }
-            catch (NullReferenceException e)
-            {
-
-            }
-        }
-
         protected override Task OnDeathAsync()
         {
             this.Log("Oh snap, I'm dead.");

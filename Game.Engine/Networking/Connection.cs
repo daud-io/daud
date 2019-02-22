@@ -4,6 +4,7 @@ namespace Game.Engine.Networking
 {
     using Game.API.Common;
     using Game.Engine.Core;
+    using Game.Engine.Core.Steering;
     using Game.Engine.Networking.FlatBuffers;
     using Google.FlatBuffers;
     using Microsoft.AspNetCore.Http;
@@ -15,6 +16,7 @@ namespace Game.Engine.Networking
     using System.Linq;
     using System.Net.WebSockets;
     using System.Numerics;
+    using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -111,7 +113,7 @@ namespace Game.Engine.Networking
                                 followBody = followFleet.Ships.FirstOrDefault();
                             else
                             {
-                                var center = Core.Steering.Flocking.FleetCenterNaive(followFleet.Ships);
+                                var center = FleetMath.FleetCenterNaive(followFleet.Ships);
                                 followBody = new Body
                                 {
                                     DefinitionTime = world.Time,
@@ -421,7 +423,7 @@ namespace Game.Engine.Networking
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
             builder.Finish(q.Value);
 
-            await SendAsync(builder.DataBuffer, default(CancellationToken));
+            await SendAsync(builder.DataBuffer, default);
         }
 
         private async Task HandlePingAsync(NetPing ping)
@@ -452,8 +454,9 @@ namespace Game.Engine.Networking
 
                     Sprites shipSprite = Sprites.ship_red;
 
-                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score}");
-
+					player.Connection = this;
+                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score} Roles: {player.Roles}");
+					
                     switch (spawn.Ship)
                     {
                         case "ship0":
@@ -461,20 +464,46 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_secret":
-                            shipSprite = Sprites.ship_secret;
+							if (player?.Roles?.Contains("Player") ?? false)
+                            {
+                                shipSprite = Sprites.ship_secret;
+                                color = "yellow";
+                            }
+                            else
+                            {
+                                shipSprite = Sprites.ship_yellow;
+                                color = "yellow";
+							}
+							break;
+							/*
+							shipSprite = Sprites.ship_secret;
                             color = "yellow";
                             break;
+							*/
                         case "ship_zed":
-                            shipSprite = Sprites.ship_zed;
+                            if (player?.Roles?.Contains("Old Guard") ?? false)
+                            {
+                                shipSprite = Sprites.ship_zed;
+                                color = "red";
+                            }
+                            else
+                            {
+                                shipSprite = Sprites.ship_red;
+                                color = "red";
+							}
+							break;
+							/*
+							shipSprite = Sprites.ship_zed;
                             color = "red";
                             break;
+							*/
                         case "ship_green":
                             shipSprite = Sprites.ship_green;
                             color = "green";
                             break;
                         case "ship_orange":
-                            shipSprite = Sprites.ship_orange;
-                            color = "orange";
+                            shipSprite = Sprites.ship_green;
+                            color = "green";
                             break;
                         case "ship_pink":
                             shipSprite = Sprites.ship_pink;
@@ -508,39 +537,56 @@ namespace Game.Engine.Networking
                         CustomData = input.CustomData
                     });
 
-                    switch (input.SpectateControl)
+                    if (input.SpectateControl == "action:next")
                     {
-                        case "action:next":
-                            var next =
-                                Player.GetWorldPlayers(world)
-                                    .Where(p => p.IsAlive)
-                                    .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
-                                    .OrderBy(p => p?.Fleet?.ID)
-                                    .FirstOrDefault()?.Fleet;
+                        var next =
+                            Player.GetWorldPlayers(world)
+                                .Where(p => p.IsAlive)
+                                .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
+                                .OrderBy(p => p?.Fleet?.ID)
+                                .FirstOrDefault()?.Fleet;
 
-                            if (next == null)
-                                next = Player.GetWorldPlayers(world)
-                                    .Where(p => p.IsAlive)
-                                    .OrderBy(p => p?.Fleet?.ID)
-                                    .FirstOrDefault()?.Fleet;
+                        if (next == null)
+                            next = Player.GetWorldPlayers(world)
+                                .Where(p => p.IsAlive)
+                                .OrderBy(p => p?.Fleet?.ID)
+                                .FirstOrDefault()?.Fleet;
 
-                            SpectatingFleet = next;
-                            IsSpectating = true;
-                            break;
-
-                        case "spectating":
-                            IsSpectating = true;
-                            break;
-
-                        default:
-                            IsSpectating = false;
-                            break;
+                        SpectatingFleet = next;
+                        IsSpectating = true;
                     }
+                    else if (input.SpectateControl?.StartsWith("action:fleet:") ?? false)
+                    {
+                        var match = Regex.Match(input.SpectateControl, @"\d*$");
+                        var fleetID = int.Parse(match.Value);
+
+                        var next =
+                            Player.GetWorldPlayers(world)
+                                .Where(p => p.IsAlive)
+                                .Where(p => p?.Fleet?.ID  == fleetID)
+                                .FirstOrDefault()?.Fleet;
+
+                        SpectatingFleet = next;
+                        IsSpectating = true;
+                    }
+                    else if (input.SpectateControl == "spectating")
+                        IsSpectating = true;
+                    else
+                        IsSpectating = false;
 
                     break;
 
                 case AllMessages.NetExit:
                     player.Exit();
+                    break;
+
+                case AllMessages.NetAuthenticate:
+                    var auth = quantum.Message<NetAuthenticate>().Value;
+                    if (player != null)
+                    {
+                        player.Token = auth.Token;
+                        player.AuthenticationStarted = false;
+                    }
                     break;
             }
         }

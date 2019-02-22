@@ -28,7 +28,7 @@
             FishTargeting = new FishTargeting(this);
         }
 
-        protected async override Task AliveAsync()
+        protected override Task AliveAsync()
         {
             // await base.AliveAsync();
 
@@ -83,7 +83,7 @@
                 ReloadConfigAfter = 0;
             }
 
+            return Task.FromResult(0);
         }
-
     }
 }

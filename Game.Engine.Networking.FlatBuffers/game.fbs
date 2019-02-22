@@ -8,7 +8,8 @@ union AllMessages
 	NetControlInput,
 	NetPing,
 	NetLeaderboard,
-    NetExit
+    NetExit,
+    NetAuthenticate
 }
 
 table NetLeaderboard
@@ -109,6 +110,10 @@ struct Vec2
 	y:short;
 }
 
+// note: this is a struct not table
+// adding to it adds to every instance
+// also, it comprises about 95% of the bandwidth
+// modify it very carefully
 struct NetBody
 {
 	id:uint;
@@ -129,6 +134,11 @@ table NetAnnouncement
     type:string;
     pointsDelta:int;
     extraData:string;
+}
+
+table NetAuthenticate
+{
+	token:string;
 }
 
 table NetQuantum

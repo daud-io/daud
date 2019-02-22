@@ -22,7 +22,7 @@
                     FiringSequenceDelay = 0,
 
                     BaseThrustM = -0.0035f,
-                    BaseThrustB = 0.155f,
+                    BaseThrustB = 0.15f,
 
                     Drag = 0.92f,
 
@@ -38,11 +38,11 @@
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 550,
 
-                    ShotCooldownTimeBotM = 21,
+                    ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 550,
 
-                    ShotThrustM = -0.004f,
-                    ShotThrustB = 0.2f,
+                    ShotThrustM = -0.006f,
+                    ShotThrustB = 0.22f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -53,7 +53,7 @@
 
                     MaxHealthBot = 50,
                     PrecisionBullets = false,
-                    BulletLife = 1890,
+                    BulletLife = 1500,
                     BotPerXPoints = 500,
                     BotBase = 1,
                     BotRespawnDelay = 10000,
@@ -128,7 +128,9 @@
                     MapEnabled = false,
 
                     AllowedColors = AllColors,
-                    Name = "FFA"
+                    Name = "FFA",
+
+                    LeaderboardRefresh = 750
                 };
             }
         }
@@ -160,7 +162,7 @@
         public int PointsPerKillFleet { get; set; }
         public int PointsPerKillFleetMax { get; set; }
         public int PointsPerKillFleetStep { get; set; }
-        public decimal PointsPerKillFleetPerStep { get; set; }
+        public float PointsPerKillFleetPerStep { get; set; }
         public int ComboDelay { get; set; }
         public int ComboPointsStep { get; set; }
 
@@ -213,7 +215,7 @@
         public bool SumoMode { get; set; }
         public int SumoRingSize { get; set; }
 
-        public int LeaderboardRefresh { get; set; } = 250;
+        public int LeaderboardRefresh { get; set; }
 
         public float FlockAlignment { get; set; }
         public float FlockCohesion { get; set; }
@@ -263,7 +265,9 @@
             "ship_orange",
             "ship_yellow",
             "ship_green",
-            "ship_cyan"
+            "ship_cyan",
+			"ship_secret",
+			"ship_zed"
         };
         public static readonly string[] TeamColors = new[] {
             "ship_red",
@@ -278,7 +282,7 @@
         public string[] AllowedColors { get; set; }
 
         public int Weight { get; set; }
-
+        public int MaxNameLength { get; set; } = 15;
 
         public Hook Clone()
         {

@@ -929,10 +929,11 @@ progress::-webkit-progress-value {
     visibility: visible;
 }
 #emoji-trigger {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    vertical-align: bottom;
+    font-size: 2rem;
+    font-family: var(--font);
+}
+.emoji-mart-emoji-native {
+    font-family: var(--font) !important;
 }
 #chat {
     position: absolute;

@@ -1,17 +1,16 @@
-﻿using Game.Engine.Core.Weapons;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-
-namespace Game.Engine.Core.Maps
+﻿namespace Game.Engine.Core.Maps
 {
+    using Game.Engine.Core.Weapons;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Numerics;
+
     public class TileMisc : TileBase, ICollide
     {
         public bool IsDeadly { get; set; } = false;
         public bool IsObstacle { get; set; } = false;
         public bool IsBouncy { get; set; } = false;
-        public float Drag { get; set; } = 0;
 
         public TileMisc()
         {
