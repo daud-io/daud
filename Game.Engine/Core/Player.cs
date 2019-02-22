@@ -22,7 +22,10 @@
         public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
 
         public int Score { get; set; }
-        public int KillCounter { get; set; } = 0;
+        public int KillStreak { get; set; } = 0;
+        public int KillCount { get; set; } = 0;
+        public int DeathCount { get; set; } = 0;
+
         public int MaxCombo { get; set; }
         public long LastKillTime { get; set; } = 0;
         public int ComboCounter { get; set; } = 0;

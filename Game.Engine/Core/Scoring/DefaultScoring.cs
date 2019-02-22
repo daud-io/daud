@@ -19,68 +19,74 @@
             {
                 try
                 {
-                    var comboTxt = "";
+                    var comboText = "";
                     var comboPlusScore = 0;
 
-                    if (killer.IsAlive)
+                    if (time - killer.LastKillTime < hook.ComboDelay)
                     {
-                        if (time - killer.LastKillTime < hook.ComboDelay)
-                        {
-                            killer.ComboCounter += 1;
-                            comboTxt = $"x{killer.ComboCounter} combo!";
-                            comboPlusScore = (killer.ComboCounter - 1) * hook.ComboPointsStep;
-                            killer.Score += comboPlusScore;
-                        }
-                        else
-                            killer.ComboCounter = 1;
-
-                        killer.MaxCombo = (killer.MaxCombo < killer.ComboCounter) ? killer.ComboCounter : killer.MaxCombo;
-
-                        var PreviousKillTime = killer.LastKillTime;
-                        killer.LastKillTime = time;
-
-                        int plusScore = (int)(hook.PointsPerKillFleetStep * (MathF.Floor(victim.Score / hook.PointsPerKillFleetPerStep) + 1));
-                        plusScore = (plusScore < hook.PointsPerKillFleetMax) ? plusScore : hook.PointsPerKillFleetMax;
-                        killer.Score += plusScore;
-
-                        killer.SendMessage($"You Killed {victim.Name}", "kill",
-                            plusScore,
-                            new
-                            {
-                                ping = new
-                                {
-                                    you = killer?.Connection?.Latency ?? 0,
-                                    them = victim?.Connection?.Latency ?? 0
-                                },
-                                combo = new
-                                {
-                                    text = comboTxt,
-                                    score = comboPlusScore
-                                }
-                            }
-                        );
-
-                        killer.KillCounter += 1;
+                        killer.ComboCounter += 1;
+                        comboText = $"x{killer.ComboCounter} combo!";
+                        comboPlusScore = (killer.ComboCounter - 1) * hook.ComboPointsStep;
+                        killer.Score += comboPlusScore;
                     }
+                    else
+                        killer.ComboCounter = 1;
 
+                    killer.MaxCombo = (killer.MaxCombo < killer.ComboCounter) ? killer.ComboCounter : killer.MaxCombo;
+
+                    var PreviousKillTime = killer.LastKillTime;
+                    killer.LastKillTime = time;
+
+                    int plusScore = (int)(hook.PointsPerKillFleetStep * (MathF.Floor(victim.Score / hook.PointsPerKillFleetPerStep) + 1));
+                    plusScore = (plusScore < hook.PointsPerKillFleetMax) ? plusScore : hook.PointsPerKillFleetMax;
+                    killer.Score += plusScore;
+                    killer.KillStreak++;
+                    killer.KillCount++;
+                    killer.SendMessage($"You Killed {victim.Name}", "kill",
+                        plusScore,
+                        new
+                        {
+                            ping = new
+                            {
+                                you = killer?.Connection?.Latency ?? 0,
+                                them = victim?.Connection?.Latency ?? 0
+                            },
+                            combo = new
+                            {
+                                text = comboText,
+                                score = comboPlusScore
+                            },
+                            stats = new
+                            {
+                                kills = killer.KillCount,
+                                deaths = killer.DeathCount
+                            }
+                        }
+                    );
+
+                    victim.DeathCount++;
                     victim.SendMessage($"Killed by {killer.Name}", "killed",
                         victim.Score,
                         new
                         {
                             score = victim.Score,
-                            kills = victim.KillCounter,
+                            kills = victim.KillStreak,
                             gameTime = time - victim.AliveSince,
                             maxCombo = victim.MaxCombo,
                             ping = new
                             {
                                 you = victim.Connection?.Latency ?? 0,
                                 them = killer?.Connection?.Latency ?? 0
+                            },
+                            stats = new
+                            {
+                                kills = victim.KillCount,
+                                deaths = victim.DeathCount
                             }
                         }
                     );
                     victim.Score = (int)Math.Max(victim.Score * hook.PointsMultiplierDeath, 0);
-
-                    victim.KillCounter = 0;
+                    victim.KillStreak = 0;
                     victim.MaxCombo = 0;
                 }
                 catch (Exception e)
@@ -96,13 +102,18 @@
                         new
                         {
                             score = victim.Score,
-                            kills = victim.KillCounter,
+                            kills = victim.KillStreak,
                             gameTime = fleet.World.Time - victim.AliveSince,
-                            maxCombo = victim.MaxCombo
+                            maxCombo = victim.MaxCombo,
+                            stats = new
+                            {
+                                kills = victim.KillCount,
+                                deaths = victim.DeathCount
+                            }
                         }
                     );
                     victim.Score += hook.PointsPerUniverseDeath;
-                    victim.KillCounter = 0;
+                    victim.KillStreak = 0;
                     victim.MaxCombo = 0;
                 }
             }
