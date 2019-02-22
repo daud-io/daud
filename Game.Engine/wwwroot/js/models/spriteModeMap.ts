@@ -40,6 +40,17 @@ export const spriteModeMap = {
         },
         selector: "ship_cyan"
     },
+	ship_blue: {
+        modes: {
+            default: ["ship_blue"],
+            boost: ["thruster_blue"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
+        },
+        selector: "ship_blue"
+    },
     ship_green: {
         modes: {
             default: ["ship_green"],

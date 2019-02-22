@@ -266,6 +266,7 @@
             "ship_yellow",
             "ship_green",
             "ship_cyan",
+			"ship_blue",
 			"ship_secret",
 			"ship_zed"
         };

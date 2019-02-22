@@ -55,6 +55,8 @@
         circles,
         shield,
         shield_pickup,
-        wormhole
+        wormhole,
+		ship_blue,
+		thruster_blue
     }
 }
