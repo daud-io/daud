@@ -71,6 +71,9 @@
             this.HookComputer = new HookComputer();
         }
 
+        public Task StartAsync()
+            => StartAsync(this.Connection);
+
         public Task StartAsync(string server, string room)
             => StartAsync(new PlayerConnection(server, room));
 
@@ -84,6 +87,11 @@
             this.Connection.OnView = OnView;
             this.Connection.OnLeaderboard = OnLeaderboard;
             await this.Connection.ListenAsync();
+        }
+
+        public void SetConnection(PlayerConnection connection)
+        {
+            this.Connection = connection;
         }
 
         private async Task OnLeaderboard()
@@ -256,7 +264,7 @@
         protected async Task SpawnAsync()
         {
             IsSpawning = true;
-            await Connection.SpawnAsync("🤖" + Name, Sprite, Color);
+            await Connection.SpawnAsync(Name, Sprite, Color);
         }
 
         public virtual void ShootAt(Vector2 target)

@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="GeneticSharp" Version="2.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Game.API.Client\Game.API.Client.csproj" />
     <ProjectReference Include="..\Game.API.Common\Game.API.Common.csproj" />
   </ItemGroup>
