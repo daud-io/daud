@@ -89,7 +89,7 @@
             await this.Connection.ListenAsync();
         }
 
-        public void SetConnection(Connection connection)
+        public void SetConnection(PlayerConnection connection)
         {
             this.Connection = connection;
         }
