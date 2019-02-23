@@ -25,3 +25,6 @@ Options:
   ```game player robots --type-name Game.Robots.CTFBot,Game.Robots --world superduel
 [1504041        robot]  Hooray, I'm alive!
 ```
+
+# demo video
+https://www.youtube.com/watch?v=pcd3S-bcs60&feature=youtu.be

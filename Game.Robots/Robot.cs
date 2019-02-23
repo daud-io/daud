@@ -102,13 +102,13 @@
 
         protected virtual Task OnKillAsync(Announcement announcement)
         {
-            Log(announcement.Text);
+            //Log(announcement.Text);
             return Task.FromResult(0);
         }
 
         protected virtual Task OnKilledAsync(Announcement announcement)
         {
-            Log(announcement.Text);
+            //Log(announcement.Text);
             return Task.FromResult(0);
         }
 
@@ -154,7 +154,7 @@
                     await OnKilledAsync(announcement);
                     break;
                 default:
-                    this.Log(JsonConvert.SerializeObject(announcement, Formatting.Indented));
+                    //this.Log(JsonConvert.SerializeObject(announcement, Formatting.Indented));
                     break;
             }
         }
