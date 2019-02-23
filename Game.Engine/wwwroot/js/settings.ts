@@ -350,10 +350,10 @@ function shipBlue() {
     if (!Settings.allowDarkblueShips) {
         spriteModeMap.ship_blue.modes.default = ["ship_cyan"];
         spriteModeMap.ship_blue.modes.boost = ["thruster_cyan"];
-        spriteModeMap.bullet_blue.modes.boost = ["bullet_cyan"];
+        spriteModeMap.bullet_blue.modes.default = ["bullet_cyan"];
     } else {
         spriteModeMap.ship_blue.modes.default = ["ship_blue"];
         spriteModeMap.ship_blue.modes.boost = ["thruster_blue"];
-        spriteModeMap.bullet_blue.modes.boost = ["bullet_blue"];
+        spriteModeMap.bullet_blue.modes.default = ["bullet_blue"];
     }
 }
