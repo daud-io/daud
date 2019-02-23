@@ -7,6 +7,7 @@ export const spriteIndices = [
     "ship_pink",
     "ship_red",
     "ship_cyan",
+	"ship_blue",
     "ship_yellow",
     "ship_flash",
     "ship_secret",
@@ -16,6 +17,7 @@ export const spriteIndices = [
     "bullet_pink",
     "bullet_red",
     "bullet_cyan",
+	"bullet_blue",
     "bullet_yellow",
     "fish",
     "bullet",
@@ -48,12 +50,10 @@ export const spriteIndices = [
     "thruster_pink",
     "thruster_red",
     "thruster_cyan",
+	"thruster_blue",
     "thruster_yellow",
     "circles",
     "shield",
     "shield_pickup",
-    "wormhole",
-	"ship_blue",
-	"thruster_blue",
-	"bullet_blue"
+    "wormhole"
 ];
