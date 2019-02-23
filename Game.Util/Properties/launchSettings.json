@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "player robots --file slippy.json --evolve --world duel",
+      "commandLineArgs": "player robots --type-name Game.Robots.CTFBot,Game.Robots --world superduel",
       "workingDirectory": "c:\\code\\mods\\bots"
     }
   }

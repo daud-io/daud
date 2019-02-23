@@ -1,0 +1,194 @@
+{
+    "RingDebugEnabled": false,
+    "BoostThreshold": 16,
+    "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
+    "AttackFleets": true,
+
+    "Steps": 16,
+
+    "Leveling": {
+        "DownlevelThresholdMS": 90000,
+        "Levels": [
+            {
+                "Name": "level0",
+                "Sprite": "ship_cyan",
+                "Color": "cyan",
+                "TargetingAverageError": 0.5,
+                "FiringDelayMS": 1000,
+                "ShootingTime": 1000,
+                "ShootingDelay": 500,
+                "AttackAbandoned": false,
+                "AttackFish": false,
+                "BoostThreshold": 8,
+                "ContextRingBlending":
+                {
+                    "BlurAmount": 0.5
+                },
+                "BehaviorsModifications": {
+                    "1": { "BehaviorWeight": 0.5},
+                    "5": { "AdvanceThreshold": 2 }
+                }
+            },
+            {
+                "Name": "level1",
+                "Sprite": "ship_cyan",
+                "Color": "cyan",
+                "TargetingAverageError": 0.2,
+                "FiringDelayMS": 750,
+                "ShootingTime": 500,
+                "ShootingDelay": 250,
+                "AttackAbandoned": false,
+                "AttackFish": true,
+                "BoostThreshold": 8,
+                "ContextRingBlending":
+                {
+                    "BlurAmount": 0.5
+                },
+                "BehaviorsModifications": {
+                    "1": { "BehaviorWeight": 1},
+                    "5": { "AdvanceThreshold": 2 }
+                }
+            },
+            {
+                "Name": "level2",
+                "Sprite": "ship_cyan",
+                "Color": "cyan",
+                "TargetingAverageError": 0.1,
+                "FiringDelayMS": 250,
+                "ShootingTime": 100,
+                "ShootingDelay": 0,
+                "AttackAbandoned": true,
+                "AttackFish": true,
+                "BoostThreshold": 8,
+                "ContextRingBlending":
+                {
+                    "BlurAmount": 0.4
+                },
+                "BehaviorsModifications": {
+                    "1": { "BehaviorWeight": 2},
+                    "5": { "AdvanceThreshold": 2 }
+                }
+            },
+            {
+                "Name": "level3",
+                "Sprite": "ship_red",
+                "Color": "red",
+                "TargetingAverageError": 0.0,
+                "FiringDelayMS": 100,
+                "ShootingTime": 100,
+                "ShootingDelay": 0,
+                "AttackAbandoned": true,
+                "AttackFish": true,
+                "BoostThreshold": 8,
+                "ContextRingBlending":
+                {
+                    "BlurAmount": 0.35
+                },
+                "BehaviorsModifications": {
+                    "1": { "BehaviorWeight": 3},
+                    "5": { "AdvanceThreshold": 0.6 }
+                }
+            },
+            {
+                "Name": "level4",
+                "Sprite": "ship_red",
+                "Color": "red",
+                "TargetingAverageError": 0.0,
+                "FiringDelayMS": 0,
+                "ShootingTime": 100,
+                "ShootingDelay": 0,
+                "AttackAbandoned": true,
+                "AttackFish": true,
+                "BoostThreshold": 16,
+                "ContextRingBlending":
+                {
+                    "BlurAmount": 0.3
+                },
+                "BehaviorsModifications": {
+                    "1": { "BehaviorWeight": 5},
+                    "5": { "AdvanceThreshold": 0.8 }
+                }
+            },
+            {
+                "Name": "level5(max)",
+                "Sprite": "ship_red",
+                "Color": "red",
+                "TargetingAverageError": 0.0,
+                "FiringDelayMS": 0,
+                "ShootingTime": 100,
+                "ShootingDelay": 0,
+                "AttackAbandoned": true,
+                "AttackFish": true,
+                "BoostThreshold": 900,
+                "ContextRingBlending":
+                {
+                    "BlurAmount": 0.3
+                },
+                "BehaviorsModifications": {
+                    "1": { "BehaviorWeight": 5},
+                    "5": { "AdvanceThreshold": 1 }
+                }
+            }
+        ]
+    },
+
+    "ContextRingBlending":
+    {
+        "BlurSteps": 10,
+        "BlurAmount": 0.5,
+        "BlurResolutionMultiplier": 1
+    },
+
+    "Behaviors": [
+        {"BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
+            "LookAheadMS": 100, "BehaviorWeight": 0.1, "Cycle": 500,
+            "Plot": false
+        },
+
+        {
+            "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
+            "LookAheadMS": 200,
+            "BehaviorWeight": 5.0,
+            "Cycle": 0,
+            "Plot": true,
+            "Config": {
+                "DistanceFromCenterThreshold": 750
+            }
+        },
+        
+        {"BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
+            "LookAheadMS": 100, "BehaviorWeight": 10000.0, "Cycle": 40,
+            "Plot": false,
+            "Config": {
+                "ActiveRange": 400
+            }
+        },
+
+        {"BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
+            "LookAheadMS": 100, "BehaviorWeight": 0.05, "Cycle": 0,
+            "Plot": false
+        },
+
+        {"BehaviorTypeName": "Game.Robots.Behaviors.Slippery,Game.Robots",
+            "LookAheadMS": 200, "BehaviorWeight": 0.3, "Cycle": 600,
+            "Plot": false,
+            "Config": {
+                "MaximumRange": 2000
+            }
+        },
+
+        {"BehaviorTypeName": "Game.Robots.Behaviors.Advance,Game.Robots",
+            "LookAheadMS": 200, "BehaviorWeight": 0.3, "Cycle": 10,
+            "Plot": true,
+            "Config": {
+                "ActiveRange": 3000,
+                "AdvanceThreshold": 0.6
+            }
+        },
+
+        {"BehaviorTypeName": "Game.Robots.Behaviors.StayInBounds,Game.Robots",
+            "LookAheadMS": 800, "BehaviorWeight": 0.4, "Cycle": 100,
+            "Plot": true
+        }
+    ]
+}

@@ -46,7 +46,7 @@
             public int StartupDelay { get; set; } = 0;
 
             [Option("--file")]
-            public string File { get; set; } = "config.json";
+            public string File { get; set; } = null;
 
             [Option("--evolve")]
             public bool Evolve { get; set; } = false;

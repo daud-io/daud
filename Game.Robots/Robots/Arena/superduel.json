@@ -1,0 +1,19 @@
+{
+    "BotBase": 0,
+    "WorldSize": 2000,
+    "Obstacles": 0,
+    "Fishes": 1,
+    "PickupSeekers": 0,
+    "PickupShields": 0,
+    "PointsPerKillFleet": 1,
+    "PointsPerKillShip": 0,
+    "PointsPerUniverseDeath": -1,
+    "PointsMultiplierDeath": 1.0,
+    "Weight": 50,
+
+    "Name": "superduel",
+    "Description": "strange things will happen here",
+    "spawnInvulnerabilityTime": 0,
+
+    "WorldResizeEnabled": false
+}
