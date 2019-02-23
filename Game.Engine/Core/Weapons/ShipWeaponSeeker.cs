@@ -11,7 +11,8 @@ namespace Game.Engine.Core.Weapons
             base.FireFrom(ship, group);
 
             this.Momentum /= 2.0f;
-            this.TimeDeath = World.Time + (long)(World.Hook.BulletLife * World.Hook.SeekerLifeMultiplier);
+
+            this.TimeDeath = World.Time + World.Hook.SeekerLife;
             this.Sprite = API.Common.Sprites.seeker;
             this.Size = 100;
 

@@ -45,8 +45,7 @@
                     ShotThrustB = 0.22f,
 
                     SeekerThrustMultiplier = 1.35f,
-                    SeekerLifeMultiplier = 1.15f,
-
+                    
                     HealthHitCost = 100,
                     HealthRegenerationPerFrame = 0.0f,
                     MaxHealth = 100,
@@ -54,6 +53,7 @@
                     MaxHealthBot = 50,
                     PrecisionBullets = false,
                     BulletLife = 1500,
+                    SeekerLife = 1700,
                     BotPerXPoints = 500,
                     BotBase = 1,
                     BotRespawnDelay = 10000,
@@ -186,7 +186,7 @@
         public float SeekerThrustMultiplier { get; set; }
         public bool PrecisionBullets { get; set; }
         public int BulletLife { get; set; }
-        public float SeekerLifeMultiplier { get; set; }
+        public int SeekerLife { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
 
