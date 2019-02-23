@@ -1,5 +1,7 @@
 # game player robots
 
+you need the Game.Util https://github.com/daud-io/daud/tree/master/Game.Util
+
 ```
 >game player robots --help
 Usage: Game.Util player robots [options]
@@ -20,12 +22,16 @@ Options:
   --evolve                  Evolve
   ```
 
-  # examples
+
+
+# examples
+see: https://github.com/daud-io/daud/tree/master/Samples/Robots
 
 ```
 game player robots --type-name Game.Robots.CTFBot,Game.Robots --world superduel
 [1504041        robot]  Hooray, I'm alive!
 ```
+
 
 # demo video
 https://www.youtube.com/watch?v=pcd3S-bcs60&feature=youtu.be
