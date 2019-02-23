@@ -22,7 +22,8 @@ Options:
 
   # examples
 
-  ```game player robots --type-name Game.Robots.CTFBot,Game.Robots --world superduel
+```
+game player robots --type-name Game.Robots.CTFBot,Game.Robots --world superduel
 [1504041        robot]  Hooray, I'm alive!
 ```
 
