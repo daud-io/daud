@@ -9,7 +9,6 @@
     public class Fish : Ship
     {
         private long SleepUntil = 0;
-        private int SleepTime = 500;
 
         public Fish()
         {
@@ -29,10 +28,7 @@
         {
             var r = new Random();
             Position = World.RandomPosition();
-            Momentum = new Vector2(
-                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
-                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
-            );
+            Angle = (float)r.NextDouble() * MathF.PI * 2;
             ThrustAmount = World.Hook.FishThrust;
         }
 
@@ -40,16 +36,16 @@
         {
             if (SleepUntil < World.Time)
             {
-                base.Think();
                 Flock();
-                SleepUntil = World.Time + SleepTime;
+                base.Think();
+                SleepUntil = World.Time + World.Hook.FishCycle;
             }
         }
 
         private void Flock()
         {
-            var oobVectorWeight = 0.2f;
-            var ships = World.BodiesNear(Position, World.Hook.FlockCohesionMaximumDistance)
+            var oobVectorWeight = 0.8f;
+            var ships = World.BodiesNear(Position, World.Hook.FishFlockCohesionMaximumDistance)
                 .OfType<Ship>();
 
             var flockingVector = Vector2.Zero;
@@ -57,12 +53,12 @@
 
             if (ships.Count() > 1)
                 flockingVector =
-                    (World.Hook.FlockCohesion
-                        * Flocking.Cohesion(ships, this, World.Hook.FlockCohesionMaximumDistance))
-                    + (World.Hook.FlockAlignment
+                    (World.Hook.FishFlockCohesion
+                        * Flocking.Cohesion(ships, this, World.Hook.FishFlockCohesionMaximumDistance))
+                    + (World.Hook.FishFlockAlignment
                         * Flocking.Alignment(ships, this))
-                    + (World.Hook.FlockSeparation
-                        * Flocking.Separation(ships, this, World.Hook.FlockSeparationMinimumDistance));
+                    + (World.Hook.FishFlockSeparation
+                        * Flocking.Separation(ships, this, World.Hook.FishFlockSeparationMinimumDistance));
 
             if (IsOOB)
             {
@@ -72,7 +68,7 @@
 
             var steeringVector =
                 new Vector2(MathF.Cos(Angle), MathF.Sin(Angle))
-                + World.Hook.FlockWeight * flockingVector
+                + World.Hook.FishFlockWeight * flockingVector
                 + oobVector;
 
             Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
