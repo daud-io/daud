@@ -492,9 +492,19 @@ app.ticker.add(() => {
     // cooldown.draw();
 
     if (Controls.mouseX) {
-        const pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
-
-        if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
+        var pos;
+        
+        if (Controls.numUp || Controls.numUpRight || Controls.numRight || Controls.numDownRight || Controls.numDown || Controls.numDownLeft || Controls.numLeft || Controls.numUpLeft || keyboardSteering) {
+            var i = 0;
+            if (Controls.numUp) {angle = mergeSet(angle, 3 * Math.PI / 2, i); i++}
+            if (Controls.numUpRight) {angle = mergeSet(angle, 7 * Math.PI / 4, i); i++}
+            if (Controls.numRight) {angle = mergeSet(angle, 0, i); i++}
+            if (Controls.numDownRight) {angle = mergeSet(angle, Math.PI / 4, i); i++}
+            if (Controls.numDown) {angle = mergeSet(angle, Math.PI / 2, i); i++}
+            if (Controls.numDownLeft) {angle = mergeSet(angle, 3 * Math.PI / 4, i); i++}
+            if (Controls.numLeft) {angle = mergeSet(angle, Math.PI, i); i++}
+            if (Controls.numUpLeft) {angle = mergeSet(angle, 5 * Math.PI / 4, i); i++}
+        /*if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
             if (Controls.right && !Controls.left) {
                 angle += keyboardSteeringSpeed * Math.PI;
             } else if (Controls.left && !Controls.right) {
@@ -503,9 +513,11 @@ app.ticker.add(() => {
             if (Controls.up) {
                 angle += Math.PI;
             } // optional
+            */
             aimTarget = new Vector2(d * Math.cos(angle), d * Math.sin(angle));
             keyboardSteering = true;
         } else {
+            pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
             angle = Controls.angle;
             aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
         }
@@ -594,3 +606,10 @@ document.body.addEventListener("keydown", function(e) {
 document.getElementById("wcancel").addEventListener("click", function() {
     worlds.classList.add("closed");
 });
+
+function mergeSet(a0, a, i) {
+    var ret = (a0 * i + a) / (i + 1);
+    if (Math.abs(a - a0) > Math.PI) {
+        ret += Math.PI;
+    }
+    return ret;

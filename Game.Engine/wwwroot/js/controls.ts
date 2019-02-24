@@ -109,6 +109,14 @@ export var Controls = {
     up: false,
     right: false,
     down: false,
+    numUp: false,
+    numUpRight: false,
+    numRight: false,
+    numDownRight: false,
+    numDown: false,
+    numDownLeft: false,
+    numLeft: false,
+    numUpLeft: false,
     boost: false,
     shoot: false,
     autofire: false,
@@ -263,6 +271,30 @@ window.addEventListener(
             case 40: // down arrow
                 Controls.down = true;
                 break;
+            case 104: // numpad 8
+                Controls.numUp = true;
+                break;
+            case 105: // numpad 9
+                Controls.numUpRight = true;
+                break;
+            case 102: // numpad 6
+                Controls.numRight = true;
+                break;
+            case 99: // numpad 3
+                Controls.numDownRight = true;
+                break;
+            case 98: // numpad 2
+                Controls.numDown = true;
+                break;
+            case 97: // numpad 1
+                Controls.numDownLeft = true;
+                break,
+            case 100: // numpad 4
+                Controls.numLeft = true;
+                break;
+            case 103: // numpad 7
+                Controls.numUpLeft = true;
+                break;
             case 83: // s
                 Controls.boost = true;
                 break;
@@ -307,6 +339,30 @@ window.addEventListener(
                 break;
             case 40: // down arrow
                 Controls.down = false;
+                break;
+            case 104: // numpad 8
+                Controls.numUp = false;
+                break;
+            case 105: // numpad 9
+                Controls.numUpRight = false;
+                break;
+            case 102: // numpad 6
+                Controls.numRight = false;
+                break;
+            case 99: // numpad 3
+                Controls.numDownRight = false;
+                break;
+            case 98: // numpad 2
+                Controls.numDown = false;
+                break;
+            case 97: // numpad 1
+                Controls.numDownLeft = false;
+                break,
+            case 100: // numpad 4
+                Controls.numLeft = false;
+                break;
+            case 103: // numpad 7
+                Controls.numUpLeft = false;
                 break;
             case 83: // s
                 Controls.boost = false;
