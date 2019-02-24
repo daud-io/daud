@@ -173,7 +173,7 @@
 
         }
 
-        protected override void Cycle()
+        protected override void CycleThink()
         {
             if (GameRestartTime > 0 && World.Time > GameRestartTime)
             {

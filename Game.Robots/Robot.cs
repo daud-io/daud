@@ -12,7 +12,7 @@
 
     public class Robot
     {
-        private PlayerConnection Connection;
+        public PlayerConnection Connection { get; set; }
 
         public string Target { get; set; } = "";
         public string Name { get; set; } = "Robot";
@@ -61,6 +61,8 @@
         public int StatsKills { get; set; }
         public int StatsDeaths { get; set; }
 
+        public bool DuelingProtocol { get; set; } = false;
+
         public string CustomData { get => Connection.CustomData; set => Connection.CustomData = value; }
 
         public Leaderboard Leaderboard { get => Connection.Leaderboard; }
@@ -90,25 +92,23 @@
             await this.Connection.ListenAsync(cancellationToken);
         }
 
-        public void SetConnection(PlayerConnection connection)
-        {
-            this.Connection = connection;
-        }
-
         private async Task OnLeaderboard()
         {
             await this.OnNewLeaderboardAsync();
         }
 
-        protected virtual Task OnKillAsync(Announcement announcement)
+        protected async virtual Task OnKillAsync(Announcement announcement)
         {
-            //Log(announcement.Text);
-            return Task.FromResult(0);
+            if (DuelingProtocol)
+            {
+                await Task.Delay(80); // let's offset the starts, buggy concurrent spawn position
+                await this.Connection.SendExitAsync();
+                await this.Connection.APIClient.World.ResetWorldAsync(this.Connection.WorldKey);
+            }
         }
 
         protected virtual Task OnKilledAsync(Announcement announcement)
         {
-            //Log(announcement.Text);
             return Task.FromResult(0);
         }
 
@@ -255,7 +255,6 @@
                     await SpawnAsync();
                 }
         }
-
 
         protected async Task Exit()
         {

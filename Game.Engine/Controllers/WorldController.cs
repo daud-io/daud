@@ -89,6 +89,15 @@
             return world.Hook;
         }
 
+        [HttpPost, Route("reset")]
+        public bool Reset(string worldName = null)
+        {
+            var world = Worlds.Find(worldName);
+            world.GetActor<RoomReset>().Reset = true;
+
+            return true;
+        }
+
         [AllowAnonymous, HttpGet, Route("all"), EnableCors("AllowAllOrigins")]
         public async Task<IEnumerable<object>> GetWorlds(string worldName = null, bool allWorlds = false)
         {

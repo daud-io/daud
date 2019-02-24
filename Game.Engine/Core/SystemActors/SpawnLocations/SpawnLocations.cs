@@ -30,7 +30,7 @@
 
         }
 
-        protected override void Cycle()
+        protected override void CycleThink()
         {
             World.FleetSpawnPositionGenerator =
                 SpawnLocationModeMap.ContainsKey(World.Hook.SpawnLocationMode)

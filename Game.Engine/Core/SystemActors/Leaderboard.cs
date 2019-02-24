@@ -7,7 +7,7 @@
 
     public class LeaderboardActor : SystemActorBase
     {
-        protected override void Cycle()
+        protected override void CycleThink()
         {
             CycleMS = World.Hook.LeaderboardRefresh;
 

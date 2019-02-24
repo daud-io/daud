@@ -107,6 +107,7 @@
             InitializeSystemActor<Sumo>();
             InitializeSystemActor<MapActor>();
             InitializeSystemActor<TeamColors>();
+            InitializeSystemActor<RoomReset>();
         }
 
         public T GetActor<T>()

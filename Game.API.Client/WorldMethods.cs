@@ -59,17 +59,10 @@
             );
         }
 
-        public async Task<bool> ServerResetAsync()
+        public async Task<bool> ResetWorldAsync(string worldName = null)
         {
-            try
-            {
-                await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.ServerReset);
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
+            return await APIClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.WorldReset,
+                queryStringContent: new { worldName });
         }
 
         public async Task<bool> AnnounceAsync(string message, string worldName = null)

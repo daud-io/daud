@@ -36,9 +36,6 @@
             [Option]
             public string Sprite { get; set; } = null;
 
-            [Option]
-            public bool Variation { get; set; } = false;
-
             [Option("--type-name")]
             public string TypeName { get; set; } = null;
 
@@ -104,7 +101,7 @@
                     robot.Target = Target;
                     robot.Sprite = Sprite;
                     var connection = await API.Player.ConnectAsync(World);
-                    robot.SetConnection(connection);
+                    robot.Connection = connection;
 
                     if (robot is ConfigurableContextBot configBot)
                         configBot.ConfigurationFileName = File;
@@ -124,7 +121,8 @@
                         return robot;
                     }, new RobotEvolutionConfiguration
                     {
-                        BehaviorCount = 7
+                        BehaviorCount = 7,
+                        FitnessDuration = 60000
                     });
                     ga.Start();
                 }
