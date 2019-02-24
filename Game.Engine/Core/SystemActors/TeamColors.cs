@@ -2,7 +2,7 @@
 {
     public class TeamColors : SystemActorBase
     {
-        protected override void Cycle()
+        protected override void CycleThink()
         {
             if (World.Hook.TeamMode)
             {

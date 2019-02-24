@@ -23,13 +23,14 @@
             this.World.Actors.Add(this);
         }
 
-        protected abstract void Cycle();
+        protected virtual void CycleThink() { }
+        protected virtual void CycleCreateDestroy() { }
 
         public virtual void Think()
         {
             if (World.Time > SleepUntil)
             {
-                Cycle();
+                CycleThink();
 
                 SleepUntil = World.Time + CycleMS;
             }

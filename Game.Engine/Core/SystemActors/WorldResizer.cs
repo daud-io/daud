@@ -9,7 +9,7 @@
             CycleMS = 0;
         }
 
-        protected override void Cycle()
+        protected override void CycleThink()
         {
             var hook = World.Hook;
             if (World.Hook.WorldResizeEnabled)

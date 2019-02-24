@@ -26,10 +26,13 @@ namespace Game.Robots.Breeding
 
             Task.Run(async () =>
             {
+                Console.WriteLine("Evaluating Chromosome");
                 robot = await this.BotFactoryAsync(c);
 
+                Console.WriteLine($"name: {robot.Name}");
+
                 var cts = new CancellationTokenSource();
-                cts.CancelAfter(5000);
+                cts.CancelAfter(RobotEvolutionConfiguration.FitnessDuration);
 
                 try
                 {
@@ -41,7 +44,13 @@ namespace Game.Robots.Breeding
                 {
                     Console.WriteLine("exception in RobotFitness: " + e);
                 }
+
+                Console.WriteLine("Test Complete");
+                Console.WriteLine($"kills:{robot.StatsKills}\tdeaths:{robot.StatsDeaths}");
+
             }).Wait();
+
+            //c.Fitness
 
             return robot.StatsDeaths > 0
                 ? robot.StatsKills / robot.StatsDeaths

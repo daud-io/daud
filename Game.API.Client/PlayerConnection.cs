@@ -15,8 +15,8 @@
 
     public class PlayerConnection : IDisposable
     {
-        private readonly APIClient APIClient;
-        private readonly string WorldName = null;
+        public APIClient APIClient { get; private set; }
+        public string WorldKey { get; private set; }
         public long GameTime { get; private set; }
         public ushort WorldSize { get; private set; }
 
@@ -62,7 +62,7 @@
 
         public PlayerConnection(APIClient apiClient, string worldName = null)
         {
-            WorldName = worldName;
+            WorldKey = worldName;
             APIClient = apiClient;
             PingTimer = new Timer(this.PingEntry, null, 1000, PING_TIMER_MS);
         }
@@ -343,7 +343,7 @@
         public async Task ConnectAsync(CancellationToken cancellationToken = default(CancellationToken))
         {
             Socket = await APIClient.ConnectWebSocket(
-                APIEndpoint.PlayerConnect(WorldName), cancellationToken: cancellationToken
+                APIEndpoint.PlayerConnect(WorldKey), cancellationToken: cancellationToken
             );
 
             IsConnected = true;

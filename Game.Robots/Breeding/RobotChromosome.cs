@@ -4,7 +4,7 @@
 
     public class RobotChromosome : BitStringChromosome<BehaviorPhenotypeEntity>
     {
-        private RobotEvolutionConfiguration Config;
+        private readonly RobotEvolutionConfiguration Config;
         public RobotChromosome(RobotEvolutionConfiguration config)
         {
             Config = config;

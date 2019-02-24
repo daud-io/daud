@@ -5,7 +5,7 @@
     "AttackFish": true,
     "BoostThreshold": 16,
 
-    "DuelingProtocol": false,
+    "DuelingProtocol": true,
 
     "Name": "slippy",
     "Color": "cyan",

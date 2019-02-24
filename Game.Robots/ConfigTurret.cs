@@ -14,7 +14,7 @@
         public bool AttackFish { get; set; } = true;
         public bool Safe { get; set; } = false;
         public bool AttackAbandoned { get; set; } = true;
-        public int BoostThreshold { get; set; } = 1;
+        public int BoostThreshold { get; set; } = 16;
 
         public float TargetingAverageError { get; set; } = 0;
         public int FiringDelayMS { get; set; } = 0;

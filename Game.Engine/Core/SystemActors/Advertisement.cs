@@ -4,7 +4,7 @@
 
     public class Advertisement : SystemActorBase
     {
-        protected override void Cycle()
+        protected override void CycleThink()
         {
             World.AdvertisedPlayerCount = Player.GetWorldPlayers(World)
                 .Where(p => p.IsAlive || p.IsStillPlaying)

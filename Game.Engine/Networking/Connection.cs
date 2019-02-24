@@ -10,6 +10,7 @@ namespace Game.Engine.Networking
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Nito.AsyncEx;
+    using RBush;
     using System;
     using System.Collections.Generic;
     using System.IO;
@@ -138,8 +139,19 @@ namespace Game.Engine.Networking
 
                         if (followBody != null)
                         {
+                            var size = 6000;
+                            var viewportHeight = size * 2;
+                            var viewportWidth = size * 2;
+
+                            var playerViewport = new Envelope(
+                                followBody.Position.X - viewportWidth / 2,
+                                followBody.Position.Y - viewportHeight / 2,
+                                followBody.Position.X + viewportWidth / 2,
+                                followBody.Position.Y + viewportHeight / 2
+                            );
+
                             BodyCache.Update(
-                                world.BodiesNear(followBody.Position, 6000).ToList(),
+                                world.BodiesNear(playerViewport).ToList(),
                                 world.Time
                             );
 

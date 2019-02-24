@@ -47,7 +47,7 @@
                 Fleet.Ships.Remove(this);
         }
 
-        private void Die(Player player, Fleet fleet, ShipWeaponBullet bullet)
+        public void Die(Player player, Fleet fleet, ShipWeaponBullet bullet)
         {
             if (player != null)
                 World.Scoring.ShipDied(player, this.Fleet?.Owner, this);

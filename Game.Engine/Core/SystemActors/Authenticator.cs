@@ -13,7 +13,7 @@
             this.CycleMS = 0;
         }
 
-        protected override void Cycle()
+        protected override void CycleThink()
         {
             if (World.GameConfiguration.DiscordGuildID != null && World.GameConfiguration.DiscordToken != null)
             {

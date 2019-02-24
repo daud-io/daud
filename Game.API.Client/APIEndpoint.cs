@@ -17,6 +17,7 @@
         public static APIEndpoint ServerHook { get => new APIEndpoint("/api/v1/server/hook"); }
         public static APIEndpoint World { get => new APIEndpoint("/api/v1/world"); }
         public static APIEndpoint WorldHook { get => new APIEndpoint("/api/v1/world/hook"); }
+        public static APIEndpoint WorldReset { get => new APIEndpoint("/api/v1/world/reset"); }
         public static APIEndpoint WorldMap { get => new APIEndpoint("/api/v1/world/map"); }
         public static APIEndpoint Registry { get => new APIEndpoint("/api/v1/registry"); }
         public static APIEndpoint RegistrySuggestion { get => new APIEndpoint("/api/v1/registry/suggestion"); }

@@ -15,6 +15,7 @@
     [Subcommand("create", typeof(Create))]
     [Subcommand("parse", typeof(Parse))]
     [Subcommand("delete", typeof(Delete))]
+    [Subcommand("reset", typeof(Reset))]
     class WorldCommand : CommandBase
     {
         class Create : CommandBase
@@ -45,6 +46,17 @@
             protected async override Task ExecuteAsync()
             {
                 await API.World.DeleteWorldAsync(WorldKey);
+            }
+        }
+
+        class Reset : CommandBase
+        {
+            [Argument(0)]
+            public string WorldKey { get; set; }
+
+            protected async override Task ExecuteAsync()
+            {
+                await API.World.ResetWorldAsync(WorldKey);
             }
         }
 
