@@ -495,14 +495,15 @@ app.ticker.add(() => {
         var pos;
         
         if (Controls.numUp || Controls.numUpRight || Controls.numRight || Controls.numDownRight || Controls.numDown || Controls.numDownLeft || Controls.numLeft || Controls.numUpLeft || keyboardSteering) {
-            if (Controls.numUp) {angle = 3 * Math.PI / 2}
-            if (Controls.numUpRight) {angle = 7 * Math.PI / 4}
-            if (Controls.numRight) {angle = 0}
-            if (Controls.numDownRight) {angle = Math.PI / 4}
-            if (Controls.numDown) {angle = Math.PI / 2}
-            if (Controls.numDownLeft) {angle = 3 * Math.PI / 4}
-            if (Controls.numLeft) {angle = Math.PI}
-            if (Controls.numUpLeft) {angle = 5 * Math.PI / 4}
+            var i = 0;
+            if (Controls.numUp) {angle = mergeSet(angle, 3 * Math.PI / 2, i); i++}
+            if (Controls.numUpRight) {angle = mergeSet(angle, 7 * Math.PI / 4, i); i++}
+            if (Controls.numRight) {angle = mergeSet(angle, 0, i); i++}
+            if (Controls.numDownRight) {angle = mergeSet(angle, Math.PI / 4, i); i++}
+            if (Controls.numDown) {angle = mergeSet(angle, Math.PI / 2, i); i++}
+            if (Controls.numDownLeft) {angle = mergeSet(angle, 3 * Math.PI / 4, i); i++}
+            if (Controls.numLeft) {angle = mergeSet(angle, Math.PI, i); i++}
+            if (Controls.numUpLeft) {angle = mergeSet(angle, 5 * Math.PI / 4, i); i++}
         /*if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
             if (Controls.right && !Controls.left) {
                 angle += keyboardSteeringSpeed * Math.PI;
@@ -605,3 +606,10 @@ document.body.addEventListener("keydown", function(e) {
 document.getElementById("wcancel").addEventListener("click", function() {
     worlds.classList.add("closed");
 });
+
+function mergeSet(a0, a, i) {
+    var ret = (a0 * i + a) / (i + 1);
+    if (Math.abs(a - a0) > Math.PI) {
+        ret += Math.PI;
+    }
+    return ret;
