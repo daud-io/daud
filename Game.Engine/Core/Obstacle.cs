@@ -86,7 +86,9 @@
             }
 
             if (IdealSize < World.Hook.ObstacleMinSize * 0.02)
+            {
                 this.PendingDestruction = true;
+            }
 
             /* if (GrowthRate != 0)
                 IdealSize += (GrowthRate * (float)World.LastStepSize);
@@ -103,8 +105,10 @@
 
         public void Die()
         {
+            var random = new Random();
             long LengthOfDeath = World.Hook.LifecycleDuration;
             DieByTime = World.Time + LengthOfDeath;
+            AngularVelocity = ((float)random.NextDouble() - 0.5f) * 0.05f;
             TargetSize = 0;
 
             //GrowthRate = -1 * (float)Size / (float)LengthOfDeath; // shrink
