@@ -174,6 +174,12 @@
             RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
         }
 
+        public IEnumerable<Body> BodiesNear(Envelope searchArea)
+        {
+            return RTreeDynamic.Search(searchArea)
+                    .Union(RTreeStatic.Search(searchArea));
+        }
+
         public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0)
         {
             if (maximumDistance == 0)
@@ -186,9 +192,7 @@
                     point.X + maximumDistance / 2,
                     point.Y + maximumDistance / 2
                 );
-
-                return RTreeDynamic.Search(searchEnvelope)
-                    .Union(RTreeStatic.Search(searchEnvelope));
+                return BodiesNear(searchEnvelope);
             }
         }
 
