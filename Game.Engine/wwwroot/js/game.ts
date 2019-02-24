@@ -492,9 +492,18 @@ app.ticker.add(() => {
     // cooldown.draw();
 
     if (Controls.mouseX) {
-        const pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
-
-        if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
+        var pos;
+        
+        if (Controls.numUp || Controls.numUpRight || Controls.numRight || Controls.numDownRight || Controls.numDown || Controls.numDownLeft || Controls.numLeft || Controls.numUpLeft || keyboardSteering) {
+            if (Controls.numUp) {angle = 3 * Math.PI / 2}
+            if (Controls.numUpRight) {angle = 7 * Math.PI / 4}
+            if (Controls.numRight) {angle = 0}
+            if (Controls.numDownRight) {angle = Math.PI / 4}
+            if (Controls.numDown) {angle = Math.PI / 2}
+            if (Controls.numDownLeft) {angle = 3 * Math.PI / 4}
+            if (Controls.numLeft) {angle = Math.PI}
+            if (Controls.numUpLeft) {angle = 5 * Math.PI / 4}
+        /*if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
             if (Controls.right && !Controls.left) {
                 angle += keyboardSteeringSpeed * Math.PI;
             } else if (Controls.left && !Controls.right) {
@@ -503,9 +512,11 @@ app.ticker.add(() => {
             if (Controls.up) {
                 angle += Math.PI;
             } // optional
+            */
             aimTarget = new Vector2(d * Math.cos(angle), d * Math.sin(angle));
             keyboardSteering = true;
         } else {
+            pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
             angle = Controls.angle;
             aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
         }
