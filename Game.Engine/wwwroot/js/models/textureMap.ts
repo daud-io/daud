@@ -43,6 +43,7 @@ export const textureMap = {
 
     // default selectable ships
     ship_cyan: { file: "ship_cyan", scale: 0.02 },
+	ship_blue: { file: "ship_blue", scale: 0.02 },
     ship_green: { file: "ship_green", scale: 0.02 },
     ship_orange: { file: "ship_orange", scale: 0.02 },
     ship_pink: { file: "ship_pink", scale: 0.02 },
@@ -55,6 +56,7 @@ export const textureMap = {
 
     bullet: { file: "bullet", scale: 0.03 },
     bullet_cyan: { file: "bullet_cyan", scale: 0.03 },
+	bullet_blue: { file: "bullet_blue", scale: 0.03 },
     bullet_green: { file: "bullet_green", scale: 0.03 },
     bullet_orange: { file: "bullet_orange", scale: 0.03 },
     bullet_pink: { file: "bullet_pink", scale: 0.03 },
@@ -107,6 +109,17 @@ export const textureMap = {
 
     thruster_cyan: {
         file: "thruster_cyan",
+        animated: true,
+        loop: false,
+        animationSpeed: 1.0,
+        offset: { x: -145, y: 0 },
+        scale: 0.04,
+        rotate: 6,
+        tileSize: 64,
+        tileCount: 29
+    },
+	thruster_blue: {
+        file: "thruster_blue",
         animated: true,
         loop: false,
         animationSpeed: 1.0,

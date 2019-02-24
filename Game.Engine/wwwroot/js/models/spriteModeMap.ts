@@ -40,6 +40,17 @@ export const spriteModeMap = {
         },
         selector: "ship_cyan"
     },
+	ship_blue: {
+        modes: {
+            default: ["ship_blue"],
+            boost: ["thruster_blue"],
+            offenseupgrade: ["offenseupgrade"],
+            defenseupgrade: ["defenseupgrade"],
+            invulnerable: ["invulnerable"],
+            shield: ["shield"]
+        },
+        selector: "ship_blue"
+    },
     ship_green: {
         modes: {
             default: ["ship_green"],
@@ -121,6 +132,7 @@ export const spriteModeMap = {
 
     bullet: { modes: { default: ["bullet"] } },
     bullet_cyan: { modes: { default: ["bullet_cyan"] } },
+	bullet_blue: { modes: { default: ["bullet_blue"] } },
     bullet_green: { modes: { default: ["bullet_green"] } },
     bullet_orange: { modes: { default: ["bullet_orange"] } },
     bullet_pink: { modes: { default: ["bullet_pink"] } },
