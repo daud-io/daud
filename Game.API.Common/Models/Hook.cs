@@ -81,6 +81,15 @@
                     SpawnShipCount = 5,
                     SpawnInvulnerabilityTime = 3000,
 
+                    FishFlockAlignment = .35f,
+                    FishFlockCohesion = 0.006f,
+                    FishFlockCohesionMaximumDistance = 600,
+                    FishFlockSeparation = 80f,
+                    FishFlockSeparationMinimumDistance = 200,
+                    FishFlockWeight = 0.14f,
+                    FishOOBWeight = 0.8f,
+                    FishCycle = 500,
+
                     FlockAlignment = .35f,
                     FlockCohesion = 0.006f,
                     FlockCohesionMaximumDistance = 600,
@@ -217,6 +226,16 @@
 
         public int LeaderboardRefresh { get; set; }
 
+        public float FishFlockAlignment { get; set; }
+        public float FishFlockCohesion { get; set; }
+        public int FishFlockCohesionMaximumDistance { get; set; }
+        public float FishFlockSeparation { get; set; }
+        public int FishFlockSeparationMinimumDistance { get; set; }
+        public float FishFlockWeight { get; set; }
+        public float FishOOBWeight { get; set; }
+        public int FishCycle { get; set; }
+
+
         public float FlockAlignment { get; set; }
         public float FlockCohesion { get; set; }
         public int FlockCohesionMaximumDistance { get; set; }
@@ -266,6 +285,7 @@
             "ship_yellow",
             "ship_green",
             "ship_cyan",
+			"ship_blue",
 			"ship_secret",
 			"ship_zed"
         };

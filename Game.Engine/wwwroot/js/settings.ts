@@ -22,6 +22,7 @@ export const Settings = {
     bigKillMessage: true,
     showKeyboardHints: true,
     showOwnName: true,
+    allowDarkblueShips: true,
     showHints: true,
     nameSize: 48,
     background: "on",
@@ -44,6 +45,7 @@ const mipmapping = <HTMLInputElement>document.getElementById("settingsMipMapping
 const bigKillMessage = <HTMLInputElement>document.getElementById("settingsBigKillMessage");
 const showKeyboardHints = <HTMLInputElement>document.getElementById("settingsShowKeyboardHints");
 const showOwnName = <HTMLInputElement>document.getElementById("settingsShowOwnName");
+const allowDarkblueShips = <HTMLInputElement>document.getElementById("settingsAllowDarkblueShips");
 const nameSize = <HTMLInputElement>document.getElementById("settingsNameSize");
 const background = <HTMLInputElement>document.getElementById("settingsBackground");
 
@@ -80,12 +82,14 @@ function save() {
     Settings.bigKillMessage = bigKillMessage.checked;
     Settings.showKeyboardHints = showKeyboardHints.checked;
     Settings.showOwnName = showOwnName.checked;
+    Settings.allowDarkblueShips = allowDarkblueShips.checked;
     Settings.nameSize = Number(nameSize.value);
     Settings.background = background.value;
 
     Cookies.set("settings", Settings, cookieOptions);
 
     keyboardHints();
+    shipBlue();
 
     if (reload) window.location.reload();
 }
@@ -123,6 +127,7 @@ function load() {
     bigKillMessage.checked = Settings.bigKillMessage;
     showKeyboardHints.checked = Settings.showKeyboardHints;
     showOwnName.checked = Settings.showOwnName;
+    allowDarkblueShips.checked = Settings.allowDarkblueShips;
     nameSize.value = String(Settings.nameSize);
     background.value = Settings.background;
 }
@@ -336,5 +341,19 @@ function keyboardHints() {
     } else {
         document.getElementById("minimapTip").style.display = "none";
         document.getElementById("autofireContainer").style.display = "none";
+    }
+}
+
+shipBlue();
+
+function shipBlue() {
+    if (!Settings.allowDarkblueShips) {
+        spriteModeMap.ship_blue.modes.default = ["ship_cyan"];
+        spriteModeMap.ship_blue.modes.boost = ["thruster_cyan"];
+        spriteModeMap.bullet_blue.modes.default = ["bullet_cyan"];
+    } else {
+        spriteModeMap.ship_blue.modes.default = ["ship_blue"];
+        spriteModeMap.ship_blue.modes.boost = ["thruster_blue"];
+        spriteModeMap.bullet_blue.modes.default = ["bullet_blue"];
     }
 }
