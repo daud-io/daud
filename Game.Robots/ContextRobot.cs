@@ -19,7 +19,7 @@
         public readonly SensorTeam SensorTeam;
         public readonly SensorFish SensorFish;
         public readonly SensorAbandoned SensorAbandoned;
-        private ContextRing BlendedRing = null;
+        protected ContextRing BlendedRing = null;
 
         protected IContextRingBlending ContextRingBlending { get; set; }
 
