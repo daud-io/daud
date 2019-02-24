@@ -72,6 +72,7 @@
                 switch (Owner.ShipSprite)
                 {
                     case Sprites.ship_cyan: return Sprites.bullet_cyan;
+					case Sprites.ship_blue: return Sprites.bullet_blue;
                     case Sprites.ship_green: return Sprites.bullet_green;
                     case Sprites.ship_orange: return Sprites.bullet_orange;
                     case Sprites.ship_pink: return Sprites.bullet_pink;

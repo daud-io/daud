@@ -38,6 +38,10 @@ function getOut(entry, position: Vector2, rank, entryIsSelf) {
         begin = `<tr style="background-color:rgba(255,255,255,0.1);transform:translateY(7px)">`;
     }
 
+    if (entry.Color === "blue") {
+        entry.Color = "#2255ff";
+    }
+    
     return (
         begin +
         `<td style="width:25px">${rank}</td>` +

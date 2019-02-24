@@ -29,6 +29,14 @@ namespace Game.Robots.Breeding
                 Console.WriteLine("Evaluating Chromosome");
                 robot = await this.BotFactoryAsync(c);
 
+                var phenotypes = c.GetPhenotypes();
+
+                for(var i=0; i<robot.ContextBehaviors.Count; i++)
+                {
+                    robot.ContextBehaviors[i].BehaviorWeight = phenotypes[i].BehaviorWeight;
+                    robot.ContextBehaviors[i].LookAheadMS = phenotypes[i].LookAheadMS;
+                }
+
                 Console.WriteLine($"name: {robot.Name}");
 
                 var cts = new CancellationTokenSource();

@@ -34,7 +34,7 @@
 
             foreach (var sensor in Sensors)
                 sensor.Sense();
-            var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
+            var contexts = ContextBehaviors.Select(b => b.Behave(Steps)).ToList();
 
             (var finalRing, var angle, var boost) = ContextRingBlending.Blend(contexts, true);
             SteerAngle(angle);

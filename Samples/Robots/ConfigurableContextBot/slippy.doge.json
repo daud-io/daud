@@ -1,9 +1,8 @@
 {
-    "Name": "Fred",
+    "Name": "slippy.doge",
     "Color": "red",
     "Sprite": "ship_red",
-    "RobotType": "Game.Robots.Behaviors.ConfigBoostTurret,Game.Robots",
-    
+    "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
     "Steps": 16,
     "Behaviors": [
         {"BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",

@@ -37,17 +37,17 @@
             FleetTargeting = new FleetTargeting(this);
             AbandonedTargeting = new AbandonedTargeting(this);
             FishTargeting = new FishTargeting(this);
-            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 1.0f });
+            ContextBehaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 1.0f });
             // Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 0.0f });
             // Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 100, BehaviorWeight = 2 });
             // Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 200, BehaviorWeight = 2 });
             // Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 300, BehaviorWeight = 2 });
             for (int m = 000; m < 2000; m += 50)
             {
-                Behaviors.Add(new DogeWow(this) { LookAheadMS = m + 50, BehaviorWeight = 1 });
+                ContextBehaviors.Add(new DogeWow(this) { LookAheadMS = m + 50, BehaviorWeight = 1 });
             }
-            Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 2.0f });
-            Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 10f });
+            ContextBehaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 2.0f });
+            ContextBehaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 10f });
 
             Sensors.Add(SensorCTF = new SensorCTF(this));
 
@@ -97,7 +97,7 @@
                 }
             }
 
-            var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
+            var contexts = ContextBehaviors.Select(b => b.Behave(Steps)).ToList();
             var bangle = 0.0f;
             if (SensorFleets.MyFleet != null)
             {

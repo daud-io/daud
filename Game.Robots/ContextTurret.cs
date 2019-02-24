@@ -26,13 +26,13 @@
 
         public ContextTurret()
         {
-            Behaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.00f });
-            Behaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 1f, MaximumAngle = MathF.PI / 4 });
-            Behaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
-            Behaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
-            Behaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
-            Behaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0f });
-            Behaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
+            ContextBehaviors.Add(Navigation = new NavigateToPoint(this) { BehaviorWeight = 0.00f });
+            ContextBehaviors.Add(Efficiency = new Efficiency(this) { BehaviorWeight = 1f, MaximumAngle = MathF.PI / 4 });
+            ContextBehaviors.Add(Dodge0 = new Dodge(this) { LookAheadMS = 250, BehaviorWeight = 2 });
+            ContextBehaviors.Add(Dodge1 = new Dodge(this) { LookAheadMS = 500, BehaviorWeight = 2 });
+            ContextBehaviors.Add(Dodge2 = new Dodge(this) { LookAheadMS = 1000, BehaviorWeight = 2 });
+            ContextBehaviors.Add(Separation = new Separation(this) { LookAheadMS = 500, BehaviorWeight = 0f });
+            ContextBehaviors.Add(StayInBounds = new StayInBounds(this) { LookAheadMS = 1000, BehaviorWeight = 1f });
 
             Navigation.TargetPoint = new Vector2(0, 0);
             Steps = 16;
