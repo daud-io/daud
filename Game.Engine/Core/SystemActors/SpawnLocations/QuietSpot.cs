@@ -9,7 +9,7 @@
         public static Vector2 GeneratorQuietSpot(Fleet fleet)
         {
             const int POINTS_TO_TEST = 50;
-            const int MAXIMUM_SEARCH_SIZE = 4000;
+            const int MAXIMUM_SEARCH_SIZE = 10000;
 
             var points = new List<Vector2>();
 
