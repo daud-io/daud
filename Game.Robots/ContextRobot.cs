@@ -13,7 +13,7 @@
     public class ContextRobot : Robot
     {
         protected readonly List<ISense> Sensors = new List<ISense>();
-        protected List<ContextBehavior> Behaviors = new List<ContextBehavior>();
+        public List<ContextBehavior> ContextBehaviors { get; private set;} = new List<ContextBehavior>();
         public readonly SensorBullets SensorBullets;
         public readonly SensorFleets SensorFleets;
         public readonly SensorTeam SensorTeam;
@@ -48,7 +48,7 @@
         private void Behave()
         {
 
-            var contexts = Behaviors.Select(b => b.Behave(Steps)).ToList();
+            var contexts = ContextBehaviors.Select(b => b.Behave(Steps)).ToList();
             (var finalRing, var angle, var boost) = ContextRingBlending.Blend(contexts, false);
             BlendedRing = finalRing;
             SteerAngle(angle);
@@ -62,7 +62,7 @@
 
         public void SetBehaviors(IEnumerable<BehaviorDescriptor> behaviors)
         {
-            this.Behaviors = behaviors.Select(descriptor =>
+            this.ContextBehaviors = behaviors.Select(descriptor =>
             {
                 var type = Type.GetType(descriptor.BehaviorTypeName);
                 var behavior = Activator.CreateInstance(type, this) as ContextBehavior;
@@ -128,7 +128,7 @@
 
             var traces = new List<PlotTrace>();
 
-            traces.AddRange(this.Behaviors.Where(b => b.Plot).Select(b => new PlotTrace
+            traces.AddRange(this.ContextBehaviors.Where(b => b.Plot).Select(b => new PlotTrace
             {
                 r = b.LastRing?.Weights.Select(w => w * b.BehaviorWeight),
                 name = b.LastRing?.Name

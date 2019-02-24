@@ -21,7 +21,7 @@
 
         private bool IsAlive = false;
         public bool AutoSpawn { get; set; } = true;
-        private const int RESPAWN_FALLOFF = 3000;
+        public int RespawnFalloffMS { get; set; } = 3000;
 
         protected long SpawnTime { get; private set; }
         protected long DeathTime { get; private set; }
@@ -250,7 +250,7 @@
             await DeadAsync();
 
             if (AutoSpawn && !IsSpawning)
-                if (DeathTime + RESPAWN_FALLOFF < GameTime)
+                if (DeathTime + RespawnFalloffMS < GameTime)
                 {
                     await SpawnAsync();
                 }

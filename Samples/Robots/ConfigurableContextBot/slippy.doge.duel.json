@@ -1,51 +1,26 @@
 {
-    "RingDebugEnabled": false,
-    "AttackFleets": true,
-    "AttackAbandoned": true,
-    "AttackFish": true,
-    "BoostThreshold": 16,
-
-    "RespawnFalloffMS": 1000,
-    "DuelingProtocol": true,
-
-    "Name": "slippy",
-    "Color": "cyan",
-    "Sprite": "ship_cyan",
+    "Name": "slippy.d.d",
+    "Color": "red",
+    "Sprite": "ship_red",
     "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
-
-    "BlendingConfig":
-    {
-        "BlurSteps": 10,
-        "BlurAmount": 0.3,
-        "BlurResolutionMultiplier": 1
-    },
+    "RingDebugEnabled": false,
+    "DuelingProtocol": true,
+    "RespawnFalloffMS": 1000,
     "Steps": 16,
-
     "Behaviors": [
         {"BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
             "LookAheadMS": 100, "BehaviorWeight": 0.1, "Cycle": 500,
             "Plot": false
         },
 
-        {"BehaviorTypeName": "Game.Robots.Behaviors.Dodge,Game.Robots",
-            "LookAheadMS": 250, "BehaviorWeight": 0.7, "Cycle": 0,
-            "Plot": false,
+        {
+            "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
+            "LookAheadMS": 200,
+            "BehaviorWeight": 5.0,
+            "Cycle": 0,
+            "Plot": true,
             "Config": {
-                "DistanceFromCenterThreshold": 500
-            }
-        },
-        {"BehaviorTypeName": "Game.Robots.Behaviors.Dodge,Game.Robots",
-            "LookAheadMS": 750, "BehaviorWeight": 0.5, "Cycle": 120,
-            "Plot": false,
-            "Config": {
-                "DistanceFromCenterThreshold": 500
-            }
-        },
-        {"BehaviorTypeName": "Game.Robots.Behaviors.Dodge,Game.Robots",
-            "LookAheadMS": 1250, "BehaviorWeight": 0.25, "Cycle": 360,
-            "Plot": false,
-            "Config": {
-                "DistanceFromCenterThreshold": 500
+                "DistanceFromCenterThreshold": 750
             }
         },
         

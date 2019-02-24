@@ -107,7 +107,7 @@
                 {
                     var behaviorIndex = int.Parse(modification.Key);
                     var behaviorJson = JsonConvert.SerializeObject(modification.Value, Formatting.Indented);
-                    JsonConvert.PopulateObject(behaviorJson, this.Behaviors[behaviorIndex]);
+                    JsonConvert.PopulateObject(behaviorJson, this.ContextBehaviors[behaviorIndex]);
                 }
 
         }

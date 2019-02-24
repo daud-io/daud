@@ -39,7 +39,7 @@
                     ShotCooldownTimeB = 550,
 
                     ShotCooldownTimeBotM = 22,
-                    ShotCooldownTimeBotB = 550,
+                    ShotCooldownTimeBotB = 1100,
 
                     ShotThrustM = -0.006f,
                     ShotThrustB = 0.22f,
