@@ -1,0 +1,11 @@
+{
+    "AttackFleets": true,
+    "AttackAbandoned":true,
+    "AttackFish": true,
+    "Steps":4,
+    "RingDebugEnabled": true,
+    "BoostThreshold": 16,
+    "Behaviors": [
+        
+    ]
+}
