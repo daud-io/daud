@@ -81,14 +81,17 @@
                     SpawnShipCount = 5,
                     SpawnInvulnerabilityTime = 3000,
 
+                    Fishes = 60, // ignored if WorldResizeEnabled = true
+                    FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
+                    FishThrust = 0.04f,
                     FishFlockAlignment = .35f,
-                    FishFlockCohesion = 0.006f,
-                    FishFlockCohesionMaximumDistance = 600,
+                    FishFlockCohesion = 0.012f,
+                    FishFlockCohesionMaximumDistance = 1000,
                     FishFlockSeparation = 80f,
-                    FishFlockSeparationMinimumDistance = 200,
-                    FishFlockWeight = 0.14f,
+                    FishFlockSeparationMinimumDistance = 100,
+                    FishFlockWeight = 1f,
                     FishOOBWeight = 0.8f,
-                    FishCycle = 500,
+                    FishCycle = 500, // how often do they think
 
                     FlockAlignment = .35f,
                     FlockCohesion = 0.006f,
@@ -104,18 +107,16 @@
 
                     FlockSpeed = 0,
 
-                    PickupSeekers = 6,
-                    PickupSeekersMultiplier = 0.0006,
                     PickupShields = 4,
                     PickupShieldsMultiplier = 0.0004,
                     ShieldStrength = 3,
 
-                    Fishes = 60,
-                    FishesMultiplier = 0.01,
-                    FishThrust = 0.04f,
-
+                    PickupSeekers = 6,
+                    PickupSeekersMultiplier = 0.0006,
                     SeekerRange = 2100,
-                    SeekerDelay = 250,
+                    SeekerCycle = 250,
+                    SeekerLead = 150,
+                    SeekerNegotiation = true,
 
                     SpawnLocationMode = "QuietSpot", // Corners, QuietSpot, Static
                     SpawnLocation = Vector2.Zero,
@@ -203,8 +204,6 @@
         public string WormholesDestination { get; set; }
 
         public int Obstacles { get; set; }
-        public int PickupSeekers { get; set; } = 0;
-        public double PickupSeekersMultiplier { get; set; }
         public double PickupShieldsMultiplier { get; set; }
         public int Fishes { get; set; } = 0;
         public double FishesMultiplier { get; set; }
@@ -248,8 +247,12 @@
 
         public int FlockSpeed { get; set; }
 
+        public int PickupSeekers { get; set; } = 0;
+        public double PickupSeekersMultiplier { get; set; }
+        public bool SeekerNegotiation { get; set; }
+        public int SeekerLead { get; set; }
         public int SeekerRange { get; set; }
-        public int SeekerDelay { get; set; }
+        public int SeekerCycle { get; set; }
 
         public float ShipGainBySizeM { get; set; }
         public float ShipGainBySizeB { get; set; }

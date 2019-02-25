@@ -1,0 +1,9 @@
+{
+  "seekerNegotiation": true,
+  "seekerLead": 150,
+  "seekerRange": 2100,
+  "seekerCycle": 250,
+  "pickupSeekers": 20,
+  "pickupSeekersMultiplier": 0.06,
+  "botBase": 10
+}
