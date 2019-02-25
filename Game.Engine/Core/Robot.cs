@@ -9,7 +9,10 @@
     {
         public bool AutoSpawn { get; set; } = true;
 
+        public Fleet ExcludeFleet { get; set; } = null;
+
         private long SpawnTimeAfter = 0;
+        public bool OneLifeOnly { get; set; } = false;
 
         public Robot() : base()
         {
@@ -41,7 +44,10 @@
         {
             base.OnDeath(player);
 
-            SpawnTimeAfter = World.Time + World.Hook.BotRespawnDelay;
+            if (OneLifeOnly)
+                PendingDestruction = true;
+            else
+                SpawnTimeAfter = World.Time + World.Hook.BotRespawnDelay;
         }
 
         public override void Think()
@@ -52,6 +58,7 @@
             var player =
                 GetWorldPlayers(World).OrderByDescending(p => p.Score)
                     .Where(p => p.IsAlive)
+                    .Where(p => p.Fleet != ExcludeFleet)
                     .Where(p => (p.Fleet?.Ships?.Count() ?? 0) > 0)
                     .Where(p => !p.Name?.StartsWith("🤖") ?? true)
                     .OrderBy(p => Vector2.Distance(p.Fleet.FleetCenter, this.Fleet.FleetCenter))

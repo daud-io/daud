@@ -54,6 +54,8 @@
         public bool LastTouchedLeft { get; set; } = false;
         public bool FiringWeapon { get; private set; } = false;
 
+        public Vector2? SpawnLocation { get; set; } = null;
+
         [Flags]
         public enum ShipModeEnum
         {
@@ -172,7 +174,10 @@
 
             this.BaseWeapon = new FleetWeaponGeneric<ShipWeaponBullet>();
 
-            FleetCenter = world.RandomSpawnPosition(this);
+            if (SpawnLocation != null)
+                FleetCenter = SpawnLocation.Value;
+            else
+                FleetCenter = world.RandomSpawnPosition(this);
 
             for (int i = 0; i < SpawnShipCount; i++)
                 this.AddShip();

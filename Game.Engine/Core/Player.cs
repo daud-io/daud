@@ -9,6 +9,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Numerics;
 
     public class Player : IActor
     {
@@ -63,6 +64,9 @@
         private bool CummulativeBoostRequested = false;
         private bool CummulativeShootRequested = false;
 
+        public Vector2? SpawnLocation { get; set; } = null;
+        public Vector2? SpawnMomentum { get; set; } = null;
+
         public void SetControl(ControlInput input)
         {
             if (input.BoostRequested)
@@ -83,8 +87,11 @@
                 IsAlive = true;
 
                 Fleet = CreateFleet(Color);
-
+                Fleet.SpawnLocation = SpawnLocation;
                 Fleet.Init(World);
+                if (SpawnMomentum != null)
+                    foreach (var ship in Fleet.NewShips)
+                        ship.Momentum = SpawnMomentum.Value;
 
                 SetInvulnerability(SpawnInvulnerableTime);
                 SpawnTime = World.Time;
@@ -155,13 +162,22 @@
 
         public void SetInvulnerability(int duration, bool isShield = false)
         {
-            InvulnerableUntil = World.Time + duration;
-            IsInvulnerable = true;
-            IsShielded = isShield;
+            if (duration == 0)
+            {
+                InvulnerableUntil = 0;
+                IsInvulnerable = false;
+                isShield = false;
+            }
+            else
+            {
+                InvulnerableUntil = World.Time + duration;
+                IsInvulnerable = true;
+                IsShielded = isShield;
 
-            if (isShield && Fleet != null)
-                foreach (var ship in Fleet.Ships)
-                    ship.ShieldStrength = World.Hook.ShieldStrength;
+                if (isShield && Fleet != null)
+                    foreach (var ship in Fleet.Ships)
+                        ship.ShieldStrength = World.Hook.ShieldStrength;
+            }
         }
 
         public virtual void Think()

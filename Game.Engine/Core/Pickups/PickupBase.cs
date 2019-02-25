@@ -61,7 +61,7 @@
             base.Think();
 
 
-            if (TimeDeath > 0 && TimeDeath > World.Time)
+            if (TimeDeath > 0 && TimeDeath < World.Time)
                 this.PendingDestruction = true;
 
             if (World.DistanceOutOfBounds(Position) > 0)

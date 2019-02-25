@@ -11,7 +11,7 @@
         public void FireFrom(Fleet fleet)
         {
             var pickup = PickupBase.FireFrom<T>(fleet);
-            pickup.TimeDeath = fleet.World.Time + fleet.World.Hook.BulletLife;
+            pickup.TimeDeath = fleet.World.Time + fleet.World.Hook.ShieldCannonballLife;
         }
     }
 }
