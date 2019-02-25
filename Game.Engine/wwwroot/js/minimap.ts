@@ -12,6 +12,7 @@ const colors = {
     orange: 0xffa500,
     yellow: 0xffff00,
     cyan: 0x00ffff,
+    blue: 0x2255ff,
     green: 0x00ff00
 };
 
