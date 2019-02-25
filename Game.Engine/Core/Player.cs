@@ -3,6 +3,7 @@
     using Game.API.Common;
     using Game.API.Common.Models;
     using Game.Engine.Core.Auditing;
+    using Game.Engine.Core.Weapons;
     using Game.Engine.Networking;
     using Newtonsoft.Json;
     using System;
@@ -69,6 +70,8 @@
         public Vector2? SpawnLocation { get; set; } = null;
         public Vector2? SpawnMomentum { get; set; } = null;
 
+        private bool IsGearhead = false;
+
         public void SetControl(ControlInput input)
         {
             if (input.BoostRequested)
@@ -89,8 +92,16 @@
                 IsAlive = true;
 
                 Fleet = CreateFleet(Color);
+
                 Fleet.SpawnLocation = SpawnLocation;
                 Fleet.Init(World);
+
+                if (World.Hook.GearheadName != null && this.Name == World.Hook.GearheadName)
+                {
+                    Fleet.BaseWeapon = new FleetWeaponRobot();
+                    IsGearhead = true;
+                }
+
                 if (SpawnMomentum != null)
                     foreach (var ship in Fleet.NewShips)
                         ship.Momentum = SpawnMomentum.Value;
@@ -191,6 +202,13 @@
 
             if (TimeDeath > 0 && TimeDeath < World.Time)
                 this.PendingDestruction = true;
+
+            if (IsGearhead && Fleet.Ships.Count < 15)
+            {
+                var r = new Random();
+                if (r.NextDouble() < World.Hook.GearheadRegen)
+                    Fleet.AddShip();
+            }
 
             if (this.IsControlNew)
             {
