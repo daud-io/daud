@@ -55,6 +55,7 @@
         public bool FiringWeapon { get; private set; } = false;
 
         public Vector2? SpawnLocation { get; set; } = null;
+        public int ShipSize { get; set; } = 70;
 
         [Flags]
         public enum ShipModeEnum
@@ -136,7 +137,8 @@
             {
                 Fleet = this,
                 Sprite = this.Owner.ShipSprite,
-                Color = this.Owner.Color
+                Color = this.Owner.Color,
+                Size = ShipSize
             };
 
             if (this.Ships.Any())

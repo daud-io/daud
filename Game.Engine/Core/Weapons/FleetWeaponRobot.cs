@@ -11,10 +11,12 @@
 
         public void FireFrom(Fleet fleet)
         {
+            var robotName = "⚙" + fleet.Owner?.Name;
+
             var bot = new Robot()
             {
                 ShipSprite = Sprites.ship0,
-                Name = $"🤖",
+                Name = robotName,
                 Color = fleet.Color,
                 ControlInput = new ControlInput()
             };
@@ -23,14 +25,16 @@
             bot.OneLifeOnly = true;
             bot.SpawnLocation = fleet.FleetCenter;
             bot.ExcludeFleet = fleet;
+            bot.AttackRobots = true;
+            bot.ShipSize = 40;
+            bot.TimeDeath = fleet.World.Time + 10000;
+            bot.ShipSprite = fleet.Owner?.ShipSprite ?? Sprites.ship0;
 
             if (fleet.AimTarget != Vector2.Zero)
                 bot.SpawnMomentum = Vector2.Normalize(fleet.AimTarget)
-                    * ((fleet.Ships.Count() * fleet.ShotThrustM + fleet.ShotThrustB) * 10);
+                    * ((fleet.Ships.Count() * fleet.ShotThrustM + fleet.ShotThrustB) * 20);
 
             bot.Spawn(bot.Name, bot.ShipSprite, bot.Color, "");
-
-            bot.SetInvulnerability(0);
         }
     }
 }

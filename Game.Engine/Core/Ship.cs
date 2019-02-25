@@ -1,10 +1,8 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.Engine.Core.Pickups;
-    using Game.Engine.Core.SystemActors.CTF;
     using Game.Engine.Core.Weapons;
     using System;
-    using System.Linq;
     using System.Numerics;
 
     public class Ship : ActorBody, ICollide
@@ -27,13 +25,17 @@
         protected bool IsOOB = false;
         private long TimeDeath = 0;
 
+        public Ship()
+        {
+            Size = 70;
+        }
+
         public int ShieldStrength { get; set; }
 
         public override void Init(World world)
         {
             base.Init(world);
 
-            Size = 70;
             Health = MaxHealth;
             Drag = World.Hook.Drag;
 

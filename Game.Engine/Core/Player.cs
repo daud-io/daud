@@ -40,6 +40,7 @@
         public bool IsStillPlaying { get; set; } = false;
         public long AliveSince { get; set; } = 0;
         public long DeadSince { get; set; } = 0;
+        public long TimeDeath { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
         public bool IsShielded { get; set; } = false;
@@ -47,6 +48,7 @@
         public long SpawnTime;
         public int SpawnInvulnerableTime => World.Hook.SpawnInvulnerabilityTime;
         public long InvulnerableUntil = 0;
+        public bool DisableSpawnInvulnerability { get; set; } = false;
 
         public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
@@ -93,7 +95,9 @@
                     foreach (var ship in Fleet.NewShips)
                         ship.Momentum = SpawnMomentum.Value;
 
-                SetInvulnerability(SpawnInvulnerableTime);
+                if (!DisableSpawnInvulnerability)
+                    SetInvulnerability(SpawnInvulnerableTime, true);
+
                 SpawnTime = World.Time;
             }
 
@@ -184,6 +188,9 @@
         {
             if (!IsAlive)
                 return;
+
+            if (TimeDeath > 0 && TimeDeath < World.Time)
+                this.PendingDestruction = true;
 
             if (this.IsControlNew)
             {
