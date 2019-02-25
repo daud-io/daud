@@ -81,14 +81,17 @@
                     SpawnShipCount = 5,
                     SpawnInvulnerabilityTime = 3000,
 
+                    Fishes = 60, // ignored if WorldResizeEnabled = true
+                    FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
+                    FishThrust = 0.04f,
                     FishFlockAlignment = .35f,
-                    FishFlockCohesion = 0.006f,
-                    FishFlockCohesionMaximumDistance = 600,
+                    FishFlockCohesion = 0.012f,
+                    FishFlockCohesionMaximumDistance = 1000,
                     FishFlockSeparation = 80f,
-                    FishFlockSeparationMinimumDistance = 200,
-                    FishFlockWeight = 0.14f,
+                    FishFlockSeparationMinimumDistance = 100,
+                    FishFlockWeight = 1f,
                     FishOOBWeight = 0.8f,
-                    FishCycle = 500,
+                    FishCycle = 500, // how often do they think
 
                     FlockAlignment = .35f,
                     FlockCohesion = 0.006f,
@@ -109,10 +112,6 @@
                     PickupShields = 4,
                     PickupShieldsMultiplier = 0.0004,
                     ShieldStrength = 3,
-
-                    Fishes = 60,
-                    FishesMultiplier = 0.01,
-                    FishThrust = 0.04f,
 
                     SeekerRange = 2100,
                     SeekerDelay = 250,
