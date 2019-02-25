@@ -1,5 +1,5 @@
 {
-  "fishes": 200,
+  "fishes": 50,
   "fishesMultiplier": 0.01,
   "fishThrust": 0.04,
   "fishFlockAlignment": 0.35,
