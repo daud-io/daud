@@ -38,14 +38,17 @@ function getOut(entry, position: Vector2, rank, entryIsSelf) {
         begin = `<tr style="background-color:rgba(255,255,255,0.1);transform:translateY(7px)">`;
     }
 
+    var color;
     if (entry.Color === "blue") {
-        entry.Color = "#2255ff";
+        color = "#2255ff";
+    } else {
+        color = entry.Color;
     }
     
     return (
         begin +
         `<td style="width:25px">${rank}</td>` +
-        `<td style="width:28px;height:28px;background:${entry.Color}"><img class="arrow" src="${arrow}" style="transform:rotate(${angle}rad)"></img></td>` +
+        `<td style="width:28px;height:28px;background:${color}"><img class="arrow" src="${arrow}" style="transform:rotate(${angle}rad)"></img></td>` +
         `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
         `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
         `<td class="score">${entry.Score}</td>` +
