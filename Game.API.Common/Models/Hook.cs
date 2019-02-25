@@ -310,6 +310,8 @@
 
         public int Weight { get; set; }
         public int MaxNameLength { get; set; } = 15;
+        public string GearheadName { get; set; }
+        public float GearheadRegen { get; set; }
 
         public Hook Clone()
         {
