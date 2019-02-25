@@ -107,14 +107,16 @@
 
                     FlockSpeed = 0,
 
-                    PickupSeekers = 6,
-                    PickupSeekersMultiplier = 0.0006,
                     PickupShields = 4,
                     PickupShieldsMultiplier = 0.0004,
                     ShieldStrength = 3,
 
+                    PickupSeekers = 6,
+                    PickupSeekersMultiplier = 0.0006,
                     SeekerRange = 2100,
-                    SeekerDelay = 250,
+                    SeekerCycle = 250,
+                    SeekerLead = 150,
+                    SeekerNegotiation = true,
 
                     SpawnLocationMode = "QuietSpot", // Corners, QuietSpot, Static
                     SpawnLocation = Vector2.Zero,
@@ -202,8 +204,6 @@
         public string WormholesDestination { get; set; }
 
         public int Obstacles { get; set; }
-        public int PickupSeekers { get; set; } = 0;
-        public double PickupSeekersMultiplier { get; set; }
         public double PickupShieldsMultiplier { get; set; }
         public int Fishes { get; set; } = 0;
         public double FishesMultiplier { get; set; }
@@ -247,8 +247,12 @@
 
         public int FlockSpeed { get; set; }
 
+        public int PickupSeekers { get; set; } = 0;
+        public double PickupSeekersMultiplier { get; set; }
+        public bool SeekerNegotiation { get; set; }
+        public int SeekerLead { get; set; }
         public int SeekerRange { get; set; }
-        public int SeekerDelay { get; set; }
+        public int SeekerCycle { get; set; }
 
         public float ShipGainBySizeM { get; set; }
         public float ShipGainBySizeB { get; set; }

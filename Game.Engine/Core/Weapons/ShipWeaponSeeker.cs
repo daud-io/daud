@@ -6,6 +6,9 @@ namespace Game.Engine.Core.Weapons
 {
     public class ShipWeaponSeeker : ShipWeaponBullet, ICollide
     {
+
+        public Ship DeclaredTarget { get; private set; } = null;
+
         public override void FireFrom(Ship ship, ActorGroup group)
         {
             base.FireFrom(ship, group);
@@ -24,7 +27,7 @@ namespace Game.Engine.Core.Weapons
             base.Think();
 
             Ship target = null;
-            if (World.Time > TimeBirth + World.Hook.SeekerDelay)
+            if (World.Time > TimeBirth + World.Hook.SeekerCycle)
             {
                 var targets = World.BodiesNear(this.Position, World.Hook.SeekerRange);
 
@@ -33,14 +36,25 @@ namespace Game.Engine.Core.Weapons
                     .Where(s => s.Fleet != OwnedByFleet)
                     .Where(s => s.Fleet != null)
                     .Where(s => !World.Hook.TeamMode || s.Fleet?.Owner.Color != this.Color)
-                    .OrderBy(s => Vector2.Distance(s.Position, Position))
+                    .OrderBy(s => (!World.Hook.SeekerNegotiation
+                        || (!(this.Group as ShipWeaponVolley<ShipWeaponSeeker>)
+                            ?.AllWeapons
+                            .OfType<ShipWeaponSeeker>()
+                            .Any(w => w != this && w.DeclaredTarget == s) ?? false)
+                            )
+                                ? 0
+                                : 1
+                        )
+                    .ThenBy(s => Vector2.Distance(s.Position, Position))
                     .FirstOrDefault();
+
+                DeclaredTarget = target;
             }
 
             float thrustAngle = 0;
             if (target != null)
             {
-                var delta = target.Position - Position;
+                var delta = (target.Position + (target.Momentum * World.Hook.SeekerLead)) - Position;
                 thrustAngle = MathF.Atan2(delta.Y, delta.X);
 
                 Angle = thrustAngle;
