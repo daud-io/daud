@@ -35,12 +35,29 @@
         public override void ShootAt(Vector2 target)
         {
             var angle = MathF.Atan2(target.Y, target.X);
+            var canShoot = true;
+            if (this.firstRow != null)
+            {   
+                var ddd=(int)MathF.Floor(((angle+360.0f)%360.0f)/360.0f*(firstRow.Count-1.0f));
+                if(ddd<0){
+                    ddd=0;
+                }
+                if(ddd<firstRow.Count-1){
+                (var d,var c)=firstRow[ddd].bestChildScorePath();
+                
+                if(d[d.Count-1].Fleet.Ships.Count<1){
+                    canShoot=false;
+                }
+                }
+            }
             var mag = target.Length();
 
             var r = new Random();
             angle += (float)r.NextDouble() * TargetingAverageError * 2;
-
-            base.ShootAt(new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * mag);
+            if (canShoot)
+            {
+                base.ShootAt(new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * mag);
+            }
         }
 
         protected async override Task AliveAsync()

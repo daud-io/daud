@@ -60,15 +60,18 @@ namespace Game.Robots
                 var bestChain=new List<TreeState>();
                 bestChain.Add(this);
                 var f=0;
+                var totC=0.0f;
+                
                 foreach(var ts in Children){
                     (var b,var c)=ts.bestChildScorePath();
+                    totC+=c/Children.Count;
                     if(c>best || f<1){
                         best=c;
                         bestChain=(new List<TreeState>{this}).Concat(b).ToList();
                         f=1;
                     }
                 }
-                return (bestChain,best);//MathF.Min(best,Score));
+                return (bestChain,best);
             }
         }
     }

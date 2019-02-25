@@ -105,6 +105,8 @@
 
                     if (robot is ConfigurableContextBot configBot)
                         configBot.ConfigurationFileName = File;
+                    if (robot is ConfigurableTreeBot configtBot)
+                        configtBot.ConfigurationFileName = File;
 
                     return robot;
                 }
