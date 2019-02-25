@@ -1,5 +1,4 @@
 {
-  "ObstaclesSpawnShieldCannons": true,
-  "ShieldCannonballLife": 5000,
-  "ObstaclesMultiplier": 0.005
+  "ObstaclesSpawnShieldCannons": false,
+  "ShieldCannonballLife": 5000
 }

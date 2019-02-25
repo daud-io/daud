@@ -2,14 +2,16 @@
 {
     using Game.Engine.Core.Pickups;
 
-    public class FleetWeaponShieldCannon : IFleetWeapon
+    public class FleetWeaponPickupCannon<T> : IFleetWeapon
+        where T: PickupBase, new()
     {
         public bool IsOffense => false;
         public bool IsDefense => true;
 
         public void FireFrom(Fleet fleet)
         {
-            PickupBase.FireFrom<PickupShield>(fleet);
+            var pickup = PickupBase.FireFrom<T>(fleet);
+            pickup.TimeDeath = fleet.World.Time + fleet.World.Hook.BulletLife;
         }
     }
 }

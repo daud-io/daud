@@ -250,6 +250,8 @@
         public int FlockSpeed { get; set; }
 
         public int PickupSeekers { get; set; } = 0;
+        public int PickupRobotGuns { get; set; } = 0;
+
         public double PickupSeekersMultiplier { get; set; }
         public bool SeekerNegotiation { get; set; }
         public int SeekerLead { get; set; }

@@ -13,7 +13,7 @@
 
         protected override void EquipFleet(Fleet fleet)
         {
-            fleet.PushStackWeapon(new FleetWeaponShieldCannon());
+            fleet.PushStackWeapon(new FleetWeaponPickupCannon<PickupShield>());
             this.PendingDestruction = true;
         }
     }

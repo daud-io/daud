@@ -7,6 +7,7 @@
 
     public abstract class PickupBase : ActorBody
     {
+        public long TimeDeath { get; set; }
         public Fleet ExcludedFleet { get; set; }
         public bool DontRandomize { get; set; }
         public float Drag { get; set; } = 1.0f;
@@ -59,6 +60,10 @@
         {
             base.Think();
 
+
+            if (TimeDeath > 0 && TimeDeath > World.Time)
+                this.PendingDestruction = true;
+
             if (World.DistanceOutOfBounds(Position) > 0)
             {
                 var speed = Momentum.Length();
@@ -70,7 +75,7 @@
                 Momentum *= Drag;
         }
 
-        public static void FireFrom<T>(Fleet fleet)
+        public static T FireFrom<T>(Fleet fleet)
             where T: PickupBase, new()
         {
 
@@ -84,6 +89,7 @@
                 Momentum = fleet.FleetMomentum,
                 Drag = 0.98f,
 
+
                 DontRandomize = true
             };
 
@@ -92,6 +98,8 @@
                     * ((fleet.Ships.Count() * fleet.ShotThrustM + fleet.ShotThrustB) * 10);
 
             pickup.Init(fleet.World);
+
+            return pickup;
         }
 
     }
