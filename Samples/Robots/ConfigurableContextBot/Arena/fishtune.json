@@ -7,7 +7,7 @@
   "fishFlockCohesionMaximumDistance": 1000,
   "fishFlockSeparation": 80.0,
   "fishFlockSeparationMinimumDistance": 100,
-  "fishFlockWeight": 1,
+  "fishFlockWeight": 0.3,
   "fishOOBWeight": 0.8,
   "fishCycle": 500
 }

@@ -195,6 +195,7 @@
         public int MaxHealthBot { get; set; }
         public float SeekerThrustMultiplier { get; set; }
         public bool PrecisionBullets { get; set; }
+        public int ShieldCannonballLife { get; set; }
         public int BulletLife { get; set; }
         public float SeekerLifeMultiplier { get; set; }
         public int BotBase { get; set; }
@@ -214,6 +215,7 @@
         public int ObstacleMinSize { get; set; }
         public int ObstacleMaxSize { get; set; }
         public float ObstacleMaxMomentumWeatherMultiplier { get; set; }
+        public bool ObstaclesSpawnShieldCannons { get; set; }
         public int ObstacleBorderBuffer { get; set; }
 
         public bool TeamMode { get; set; }
