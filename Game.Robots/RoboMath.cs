@@ -133,7 +133,7 @@
             // if(maxD>pLen){
             //     Console.Write("Switch");
             // }
-            return fromPosition + path * (1.0f / pLen) * MathF.Min(pLen, maxD);
+            return fromPosition + path * (1.0f / pLen) * MathF.Min(pLen-10.0f, maxD);
 
         }
     }
