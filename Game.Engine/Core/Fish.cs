@@ -12,9 +12,8 @@
 
         public Fish()
         {
-            Size = 10;
+            Size = 70;
             Sprite = Sprites.fish;
-            Color = "rgba(128,128,128,.2)";
         }
 
         public override void Init(World world)
