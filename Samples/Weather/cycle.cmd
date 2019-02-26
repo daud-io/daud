@@ -1,4 +1,6 @@
-call game world hook default --file fish-extra.json
-sleep 5
-call game world hook default --file fish-standard.json
-sleep 5
+call apply fish-extra
+call apply fish-fast
+sleep 60
+
+call apply fish-standard
+sleep 60
