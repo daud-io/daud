@@ -1,0 +1,7 @@
+{
+  "ObstaclesMultiplier": 0.0005,
+  "ObstacleMaxMomentum": 0.4,
+  "ObstacleMinSize": 300,
+  "ObstacleMaxSize": 900,
+  "ObstacleBorderBuffer": 1000
+}
