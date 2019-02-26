@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Game.API.Client\Game.API.Client.csproj" />
     <ProjectReference Include="..\Game.API.Common\Game.API.Common.csproj" />
     <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
+    <ProjectReference Include="..\Game.Util\Game.Util.csproj" />
     <ProjectReference Include="..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj" />
   </ItemGroup>
 
