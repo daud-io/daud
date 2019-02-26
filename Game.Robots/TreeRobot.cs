@@ -17,7 +17,7 @@
      
 
         public int MaxSearch =10;
-        public int JumpMS = 100;
+        public int JumpMS = 50;
         public int Depth = 5;
     public List<API.Client.Body> DangerousBullets;
     public List<TreeState> PathV;
@@ -35,36 +35,43 @@
             
 
 
-            var Projections = DangerousBullets.Select(b => b.ProjectNew(this.GameTime + t.OffsetMS).Position).ToList();
+            var Projections = DangerousBullets;//.Select(b => b.ProjectNew(this.GameTime + t.OffsetMS).Position).ToList();
             var PhantomProjections = new List<Vector2>();
             var muchFleets = this.SensorFleets.Others
                     .Select(f => new { Fleet = f, Distance = Vector2.Distance(t.Fleet.Center, f.Center) })
                    // .Where(p => MathF.Abs(p.Fleet.Center.X - t.Fleet.Center.X) <= ViewportCrop.X
                   //      && MathF.Abs(p.Fleet.Center.Y - t.Fleet.Center.Y) <= ViewportCrop.Y)
                     .Where(p => !this.HookComputer.Hook.TeamMode || p.Fleet.Color != this.Color);
-            foreach (var flet in muchFleets)
-            {
-                 //Projections.Append(RoboMath.ProjectClosest( this.HookComputer, flet.Fleet.Center, t.Fleet.Center, t.OffsetMS, flet.Fleet.Ships.Count()));
-
-                foreach (var ship in flet.Fleet.Ships)
-                {
-
-                   Projections.Add(RoboMath.ProjectClosest(this.HookComputer, ship.Position, this.Position, t.OffsetMS, flet.Fleet.Ships.Count()));
-                }
-            }
+           
             var leftShips=new List<Ship>();
             foreach (var ship in t.Fleet.Ships)
                  {
                      var worst=float.MaxValue;
             foreach(var v in Projections){
-                var diff=v-ship.Position;
-                    worst=MathF.Min(diff.Length(),worst);
+                var diff=(v.ProjectNew(this.GameTime + t.OffsetMS).Position-ship.Position).Length();//RoboMath.ProjectClosestIntersectionDist(this.HookComputer,v,-t.Fleet.Center+t.OldFleet.Center+ship.Position,ship.Position,t.LocalOffsetMS,this);
+                // var diff=v-ship.Position;
+                    worst=MathF.Min(diff,worst);
+            }
+             foreach (var flet in muchFleets)
+            {
+                 //Projections.Append(RoboMath.ProjectClosest( this.HookComputer, flet.Fleet.Center, t.Fleet.Center, t.OffsetMS, flet.Fleet.Ships.Count()));
+
+                foreach (var ship2 in flet.Fleet.Ships)
+                {
+                    var diff=(ship.Position-ship2.Position).Length()-300.0f;//RoboMath.ProjectClosest(this.HookComputer, ship2.Position, this.Position, t.OffsetMS, flet.Fleet.Ships.Count())).Length();
+                // var diff=v-ship.Position;
+                    worst=MathF.Min(diff,worst);
+                   //Projections.Add(RoboMath.ProjectClosest(this.HookComputer, ship.Position, this.Position, t.OffsetMS, flet.Fleet.Ships.Count()));
+                }
             }
             var willAdd=true;
             if(worst<1000.0f){
                         s+=-1.0f/MathF.Max(worst/90.0f,1.0f)/t.Fleet.Ships.Count;
                         if(worst<90.0f){
                             willAdd=false;
+                        }
+                        if(worst<0.0f){
+                            s+=-1.0f/MathF.Max(worst/90.0f,1.0f)/t.Fleet.Ships.Count;
                         }
                     }
                     if(willAdd){
@@ -79,9 +86,9 @@
                 var oobX = (MathF.Abs(t.Fleet.Center.X) - this.WorldSize);
                 var oobY = (MathF.Abs(t.Fleet.Center.Y) - this.WorldSize);
 
-                if (oobX > -1000000.0f)
+                if (oobX > -2000.0f)
                     accumulator -= 1.0f/(MathF.Max(-oobX,1.0f));///(MathF.Max(-oobX,1.0f));
-                if (oobY > -1000000.0f)
+                if (oobY > -2000.0f)
                     accumulator -= 1.0f/(MathF.Max(-oobY,1.0f));///(MathF.Max(-oobY,1.0f));
                 if (oobX > -1000.0f)
                     accumulator -= oobX+1000.0f;
@@ -90,17 +97,19 @@
 
             }
     //accumulator=MathF.Max(accumulator,-1.0f);
-           s+=accumulator;
+           s+=accumulator;//*this.SensorFleets.MyFleet.Ships.Count;
            t.Fleet.Ships=leftShips;
         //    if(accumulator<-0.5){
         //        t.Fleet.Ships=new List<Ship>();
         //    }
-            return (s+((float)t.Fleet.Ships.Count-(float)this.SensorFleets.MyFleet.Ships.Count)*0.0f,s-accumulator);
+            return (s+((float)t.Fleet.Ships.Count-(float)this.SensorFleets.MyFleet.Ships.Count),s-accumulator);
         }
 
         private void Behave()
         {
-            this.Steps=4;
+            Random r=new Random();
+            //this.JumpMS=(int)(r.NextDouble()*100.0)+100;
+            this.Steps=6;
             // System.Console.WriteLine(this.Steps);
             if (this.SensorFleets.MyFleet != null)
             {
@@ -131,7 +140,7 @@
                         for (int k = 0; k < this.Steps; k++)
                         {
                             // if(searchPaths[j].Fleet.Ships.Count>0 && searchPaths[j].Children.Count<1){
-                            var p=searchPaths[j].ProjectClone(JumpMS*( 1),  ((float)k)*360.0f / ((float)this.Steps),k>=this.Steps);
+                            var p=searchPaths[j].ProjectClone(JumpMS*( 1+i),  ((float)k)*360.0f / ((float)this.Steps),k>=this.Steps);
                             (var md,var xd)=this.Score(p);
                             p.Score=md;
                             //if(p.Score>-0.1f){
@@ -146,8 +155,8 @@
                     if(i==0){
                         firstRow=newSearchPaths.ToList();
                     }
-                    Random r=new Random();
-                    searchPaths=searchPaths.Concat(newSearchPaths.OrderByDescending(p=>r.NextDouble()).ToList()).ToList();//.Take(i==0?Steps+1:MaxSearch).ToList();
+                    
+                    searchPaths=(newSearchPaths.ToList()).OrderByDescending(p=>p.Score+r.NextDouble()*0.0f).ToList();//.Take(i==0?Steps+1:MaxSearch).ToList();
                 }
                 var contexts = ContextBehaviors.Select(b => b.Behave(Steps)).ToList();
                 (var finalRing, var angle, var boost) = ContextRingBlending.Blend(contexts, false);
@@ -155,7 +164,7 @@
                 (var bestp,var bestc)=baseS.bestChildScorePath();
                 
                 if(bestp.Last().Fleet.Ships.Count*2<=this.SensorFleets.MyFleet.Ships.Count &&CanBoost){
-                    Boost();
+                    //Boost();
                     //System.Console.WriteLine("BOOST");
                 }
                 //Boost();
@@ -178,7 +187,7 @@
                 //System.Console.WriteLine(PathV.Count);
             }
             }else{
-                System.Console.WriteLine("NJJHDfbhjdsfgyhtdsgfhtyfgdsuygt");
+                //System.Console.WriteLine("NJJHDfbhjdsfgyhtdsgfhtyfgdsuygt");
             }
         }
         protected async override Task AliveAsync()

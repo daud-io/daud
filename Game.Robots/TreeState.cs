@@ -14,7 +14,9 @@ namespace Game.Robots
     {
         
         public int OffsetMS { get; set; }
+        public int LocalOffsetMS { get; set; }
         public Fleet Fleet { get; set; }
+        public Fleet OldFleet { get; set; }
         public TreeRobot TRobot { get; set; }
         public List<TreeState> Children =new List<TreeState>();
         public float Score { get; set; }
@@ -24,7 +26,9 @@ namespace Game.Robots
         public TreeState(int offset,Fleet f,TreeRobot r)
         {
             OffsetMS=offset+0;
+            LocalOffsetMS=offset+0;
             Fleet=f.Clone();
+            OldFleet=f.Clone();
             TRobot=r;
             Score=0;
             Angle=45.0f;
@@ -44,8 +48,10 @@ namespace Game.Robots
                         }
                         
             TreeState ns=new TreeState(OffsetMS+time,newF,TRobot);
+            ns.LocalOffsetMS=time;
             ns.Angle=angle;
             ns.Stay=stay;
+            ns.OldFleet=this.Fleet.Clone();
             this.Children.Add(ns);
             return ns;
         }
@@ -71,7 +77,7 @@ namespace Game.Robots
                         f=1;
                     }
                 }
-                return (bestChain,best);
+                return (bestChain,best+3.0f);
             }
         }
     }
