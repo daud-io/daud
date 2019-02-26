@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Numerics;
     using System.Threading.Tasks;
     using TiledSharp;
@@ -71,8 +72,14 @@
             [Option]
             public string File { get; set; } = null;
 
+            [Option("--url")]
+            public string Url { get; set; } = null;
+
             protected async override Task ExecuteAsync()
             {
+                if (Url != null)
+                    using (WebClient cln = new WebClient())
+                        HookJSON = await cln.DownloadStringTaskAsync(Url);
 
                 var hook = JsonConvert.DeserializeObject(HookJSON ?? System.IO.File.ReadAllText(File));
                 hook = await API.World.PostHookAsync(hook, World);
