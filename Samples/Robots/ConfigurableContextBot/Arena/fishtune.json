@@ -1,13 +1,14 @@
 {
   "fishes": 50,
   "fishesMultiplier": 0.01,
-  "fishThrust": 0.04,
-  "fishFlockAlignment": 1,
-  "fishFlockCohesion": 0.012,
+  "fishThrust": 0.06,
+  "fishFlockAlignment": 10,
+  "fishFlockCohesion": 0.008,
   "fishFlockCohesionMaximumDistance": 1000,
-  "fishFlockSeparation": 80.0,
-  "fishFlockSeparationMinimumDistance": 100,
-  "fishFlockWeight": 0.3,
+  "fishFlockSeparation": 1.0,
+  "fishFlockSeparationMinimumDistance": 200,
+  "fishFlockWeight": 0.9,
   "fishOOBWeight": 0.8,
-  "fishCycle": 500
+  "fishCycle": 500,
+  "botBase": 1
 }

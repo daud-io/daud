@@ -83,13 +83,13 @@
 
                     Fishes = 60, // ignored if WorldResizeEnabled = true
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
-                    FishThrust = 0.04f,
-                    FishFlockAlignment = .35f,
-                    FishFlockCohesion = 0.012f,
+                    FishThrust = 0.06f,
+                    FishFlockAlignment = 10f,
+                    FishFlockCohesion = 0.008f,
                     FishFlockCohesionMaximumDistance = 1000,
-                    FishFlockSeparation = 80f,
-                    FishFlockSeparationMinimumDistance = 100,
-                    FishFlockWeight = 1f,
+                    FishFlockSeparation = 1,
+                    FishFlockSeparationMinimumDistance = 200,
+                    FishFlockWeight = 0.9f,
                     FishOOBWeight = 0.8f,
                     FishCycle = 500, // how often do they think
 
@@ -209,9 +209,6 @@
 
         public int Obstacles { get; set; }
         public double PickupShieldsMultiplier { get; set; }
-        public int Fishes { get; set; } = 0;
-        public double FishesMultiplier { get; set; }
-        public float FishThrust { get; set; } = 0;
 
         public double ObstaclesMultiplier { get; set; }
         public float ObstacleMaxMomentum { get; set; }
@@ -230,6 +227,9 @@
 
         public int LeaderboardRefresh { get; set; }
 
+        public int Fishes { get; set; } = 0;
+        public double FishesMultiplier { get; set; }
+        public float FishThrust { get; set; } = 0;
         public float FishFlockAlignment { get; set; }
         public float FishFlockCohesion { get; set; }
         public int FishFlockCohesionMaximumDistance { get; set; }
