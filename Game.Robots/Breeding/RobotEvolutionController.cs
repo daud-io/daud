@@ -1,5 +1,6 @@
 ﻿namespace Game.Robots.Breeding
 {
+    using Game.Robots.Contests;
     using GeneticSharp.Domain;
     using GeneticSharp.Domain.Crossovers;
     using GeneticSharp.Domain.Mutations;
@@ -13,10 +14,10 @@
     {
         private int NumberOfSimultaneousEvaluations = 1;
 
-		public GeneticAlgorithm CreateGA(Func<RobotChromosome, Task<ConfigurableContextBot>> botFactory, RobotEvolutionConfiguration config)
+		public GeneticAlgorithm CreateGA(Func<RobotChromosome, Task<ContestGame>> contestFactory, RobotEvolutionConfiguration config)
         {
             NumberOfSimultaneousEvaluations = 2;
-            var fitness = new RobotFitness(botFactory, config);
+            var fitness = new RobotFitness(contestFactory, config);
             var chromosome = new RobotChromosome(config);      
             var crossover = new UniformCrossover();
             var mutation = new FlipBitMutation();

@@ -49,6 +49,10 @@
 
                 return connection;
             }
+            set
+            {
+                connection = value;
+            }
         }
 
         private RegistryClient registryConnection = null;

@@ -56,7 +56,7 @@
 
             Worlds.AddWorld(world);
 
-            return worldKey;
+            return $"{GameConfiguration.PublicURL}/{worldKey}"; ;
         }
 
         [HttpDelete]

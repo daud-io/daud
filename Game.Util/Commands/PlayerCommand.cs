@@ -1,7 +1,9 @@
 ﻿namespace Game.Util.Commands
 {
+    using Game.API.Common.Models;
     using Game.Robots;
     using Game.Robots.Breeding;
+    using Game.Robots.Contests;
     using McMaster.Extensions.CommandLineUtils;
     using Newtonsoft.Json;
     using System;
@@ -44,6 +46,9 @@
 
             [Option("--file")]
             public string File { get; set; } = null;
+
+            [Option("--challenge-config")]
+            public string ChallengeConfig { get; set; } = null;
 
             [Option("--evolve")]
             public bool Evolve { get; set; } = false;
@@ -91,16 +96,17 @@
                 if (Color == null)
                     Color = "red";
 
-                async Task<Robot> CreateRobot()
+                async Task<Robot> CreateRobot(Type innerRobotType = null, string worldKey = null)
                 {
-                    var robot = Activator.CreateInstance(robotType) as Robot;
+
+                    var robot = Activator.CreateInstance(innerRobotType ?? robotType) as Robot;
                     robot.AutoSpawn = true;
                     robot.AutoFire = Firing;
                     robot.Color = Color;
                     robot.Name = Name;
                     robot.Target = Target;
                     robot.Sprite = Sprite;
-                    var connection = await API.Player.ConnectAsync(World);
+                    var connection = await API.Player.ConnectAsync(worldKey ?? World);
                     robot.Connection = connection;
 
                     if (robot is ConfigurableContextBot configBot)
@@ -116,11 +122,30 @@
                     var controller = new RobotEvolutionController();
                     var ga = controller.CreateGA(async (chromosome) =>
                     {
-                        var robot = await CreateRobot() as ConfigurableContextBot;
-                        if (robot == null)
+                        var contest = new ContestGame();
+                        var worldKey = Guid.NewGuid().ToString();
+                        
+                        contest.Hook = new Hook { };
+                        contest.ArenaURL = (await API.World.PutWorldAsync(worldKey, contest.Hook))
+                            .Replace(worldKey, string.Empty);
+
+                        Root.Connection = new API.Client.APIClient(new Uri(contest.ArenaURL));
+
+                        contest.TestRobot = await CreateRobot(
+                            worldKey: worldKey
+                        ) as ConfigurableContextBot;
+                        if (contest.TestRobot == null)
                             throw new Exception("Failed to create robot or it isn't derived from ConfigurableContextBot");
 
-                        return robot;
+                        contest.ChallengeRobot = await CreateRobot(
+                            worldKey: worldKey,
+                            innerRobotType: typeof(ConfigTurret)
+                        ) as ConfigurableContextBot;
+                        contest.ChallengeRobot.ConfigurationFileName = ChallengeConfig;
+                        if (contest.ChallengeRobot == null)
+                            throw new Exception("Failed to create robot or it isn't derived from ConfigurableContextBot");
+
+                        return contest;
                     }, new RobotEvolutionConfiguration
                     {
                         BehaviorCount = 7,
