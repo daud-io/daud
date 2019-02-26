@@ -40,6 +40,7 @@
 
         public virtual void FireFrom(Ship ship, ActorGroup group)
         {
+            var r = new Random();
             World = ship.World;
             var bulletOrigin = ship.Position
                 + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
@@ -55,8 +56,18 @@
 
             if (World.Hook.PrecisionBullets && ship.Fleet != null)
             {
-                var toTarget = (ship.Fleet.FleetCenter + ship.Fleet.AimTarget) - ship.Position;
-                this.Angle = MathF.Atan2(toTarget.Y, toTarget.X);
+                Vector2 toTarget = Vector2.Zero;
+                if (World.Hook.PrecisionBulletsMinimumRange > 0 && ship.Fleet.AimTarget != Vector2.Zero)
+                {
+                    var minAim = Vector2.Normalize(ship.Fleet.AimTarget) * MathF.Max(ship.Fleet.AimTarget.Length(), World.Hook.PrecisionBulletsMinimumRange);
+
+                    toTarget = (ship.Fleet.FleetCenter + minAim) - ship.Position;
+                }
+                else
+                    toTarget = (ship.Fleet.FleetCenter + ship.Fleet.AimTarget) - ship.Position;
+
+                this.Angle = MathF.Atan2(toTarget.Y, toTarget.X) 
+                    + ((float)r.NextDouble() - 0.5f) * World.Hook.PrecisionBulletsNoise;
             }
             else
                 this.Angle = ship.Angle;

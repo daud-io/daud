@@ -194,7 +194,10 @@
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }
         public float SeekerThrustMultiplier { get; set; }
+        public float PrecisionBulletsNoise { get; set; }
         public bool PrecisionBullets { get; set; }
+        public float PrecisionBulletsMinimumRange { get; set; }
+
         public int ShieldCannonballLife { get; set; }
         public int BulletLife { get; set; }
         public float SeekerLifeMultiplier { get; set; }
