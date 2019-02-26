@@ -7,7 +7,7 @@
     {
         public PickupRobotGun()
         {
-            Size = 100;
+            Size = 80;
             Sprite = Sprites.ship0;
         }
 
