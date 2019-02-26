@@ -87,7 +87,7 @@
                     FishFlockAlignment = 10f,
                     FishFlockCohesion = 0.008f,
                     FishFlockCohesionMaximumDistance = 1000,
-                    FishFlockSeparation = 1,
+                    FishFlockSeparation = 80,
                     FishFlockSeparationMinimumDistance = 200,
                     FishFlockWeight = 0.9f,
                     FishOOBWeight = 0.8f,

@@ -5,10 +5,9 @@
   "fishFlockAlignment": 10,
   "fishFlockCohesion": 0.008,
   "fishFlockCohesionMaximumDistance": 1000,
-  "fishFlockSeparation": 1.0,
+  "fishFlockSeparation": 80.0,
   "fishFlockSeparationMinimumDistance": 200,
   "fishFlockWeight": 0.9,
   "fishOOBWeight": 0.8,
-  "fishCycle": 500,
-  "botBase": 1
+  "fishCycle": 500
 }
