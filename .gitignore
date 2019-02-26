@@ -313,3 +313,5 @@ package-lock.json
 Game.Util/Properties/launchSettings.json
 
 _IGNORE/
+Game.Engine/wwwroot/img/new/base_white.xcf
+Game.Engine/wwwroot/img/base_white.png

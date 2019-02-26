@@ -54,6 +54,9 @@
         public bool LastTouchedLeft { get; set; } = false;
         public bool FiringWeapon { get; private set; } = false;
 
+        public Vector2? SpawnLocation { get; set; } = null;
+        public int ShipSize { get; set; } = 70;
+
         [Flags]
         public enum ShipModeEnum
         {
@@ -134,7 +137,8 @@
             {
                 Fleet = this,
                 Sprite = this.Owner.ShipSprite,
-                Color = this.Owner.Color
+                Color = this.Owner.Color,
+                Size = ShipSize
             };
 
             if (this.Ships.Any())
@@ -172,7 +176,10 @@
 
             this.BaseWeapon = new FleetWeaponGeneric<ShipWeaponBullet>();
 
-            FleetCenter = world.RandomSpawnPosition(this);
+            if (SpawnLocation != null)
+                FleetCenter = SpawnLocation.Value;
+            else
+                FleetCenter = world.RandomSpawnPosition(this);
 
             for (int i = 0; i < SpawnShipCount; i++)
                 this.AddShip();

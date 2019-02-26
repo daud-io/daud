@@ -9,8 +9,13 @@
     {
         public bool AutoSpawn { get; set; } = true;
 
-        private long SpawnTimeAfter = 0;
+        public Fleet ExcludeFleet { get; set; } = null;
 
+        private long SpawnTimeAfter = 0;
+        public bool OneLifeOnly { get; set; } = false;
+        public bool AttackRobots { get; set; } = false;
+        public int ShipSize { get; set; } = 70;
+        
         public Robot() : base()
         {
         }
@@ -21,7 +26,8 @@
             {
                 Owner = this,
                 Caption = this.Name,
-                Color = color
+                Color = color,
+                ShipSize = ShipSize
             };
         }
 
@@ -41,7 +47,10 @@
         {
             base.OnDeath(player);
 
-            SpawnTimeAfter = World.Time + World.Hook.BotRespawnDelay;
+            if (OneLifeOnly)
+                PendingDestruction = true;
+            else
+                SpawnTimeAfter = World.Time + World.Hook.BotRespawnDelay;
         }
 
         public override void Think()
@@ -50,10 +59,12 @@
                 return;
 
             var player =
-                GetWorldPlayers(World).OrderByDescending(p => p.Score)
+                GetWorldPlayers(World)
                     .Where(p => p.IsAlive)
+                    .Where(p => ExcludeFleet == null || (p.Fleet != ExcludeFleet && (p as Robot)?.ExcludeFleet != ExcludeFleet))
                     .Where(p => (p.Fleet?.Ships?.Count() ?? 0) > 0)
-                    .Where(p => !p.Name?.StartsWith("🤖") ?? true)
+                    .Where(p => AttackRobots || (!p.Name?.StartsWith("🤖") ?? true))
+                    .Where(p => p != this)
                     .OrderBy(p => Vector2.Distance(p.Fleet.FleetCenter, this.Fleet.FleetCenter))
                     .FirstOrDefault();
             var vel = Vector2.Zero;

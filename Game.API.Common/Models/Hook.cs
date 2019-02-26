@@ -194,7 +194,11 @@
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }
         public float SeekerThrustMultiplier { get; set; }
+        public float PrecisionBulletsNoise { get; set; }
         public bool PrecisionBullets { get; set; }
+        public float PrecisionBulletsMinimumRange { get; set; }
+
+        public int ShieldCannonballLife { get; set; }
         public int BulletLife { get; set; }
         public float SeekerLifeMultiplier { get; set; }
         public int BotBase { get; set; }
@@ -214,6 +218,7 @@
         public int ObstacleMinSize { get; set; }
         public int ObstacleMaxSize { get; set; }
         public float ObstacleMaxMomentumWeatherMultiplier { get; set; }
+        public bool ObstaclesSpawnShieldCannons { get; set; }
         public int ObstacleBorderBuffer { get; set; }
 
         public bool TeamMode { get; set; }
@@ -248,6 +253,8 @@
         public int FlockSpeed { get; set; }
 
         public int PickupSeekers { get; set; } = 0;
+        public int PickupRobotGuns { get; set; } = 0;
+
         public double PickupSeekersMultiplier { get; set; }
         public bool SeekerNegotiation { get; set; }
         public int SeekerLead { get; set; }
@@ -306,6 +313,8 @@
 
         public int Weight { get; set; }
         public int MaxNameLength { get; set; } = 15;
+        public string GearheadName { get; set; }
+        public float GearheadRegen { get; set; }
 
         public Hook Clone()
         {

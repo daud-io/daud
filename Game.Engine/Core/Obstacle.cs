@@ -12,6 +12,7 @@
         private long DieByTime = 0;
         private float IdealSize = 1;
         protected int TargetSize = 0;
+        private bool SpawnPickup = false;
 
         public virtual void CollisionExecute(Body projectedBody)
         {
@@ -55,6 +56,19 @@
             base.Init(world);
         }
 
+        public override void CreateDestroy()
+        {
+            if (SpawnPickup)
+            {
+                var pickup = new Pickups.PickupShieldCannon();
+                pickup.Init(World);
+                pickup.Position = this.Position;
+                SpawnPickup = false;
+            }
+
+            base.CreateDestroy();
+        }
+
         public override void Think()
         {
             base.Think();
@@ -87,6 +101,8 @@
 
             if (IdealSize < World.Hook.ObstacleMinSize * 0.02)
             {
+                if (World.Hook.ObstaclesSpawnShieldCannons)
+                    SpawnPickup = true;
                 this.PendingDestruction = true;
             }
 

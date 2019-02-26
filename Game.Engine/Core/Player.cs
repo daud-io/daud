@@ -3,12 +3,14 @@
     using Game.API.Common;
     using Game.API.Common.Models;
     using Game.Engine.Core.Auditing;
+    using Game.Engine.Core.Weapons;
     using Game.Engine.Networking;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Numerics;
 
     public class Player : IActor
     {
@@ -39,6 +41,7 @@
         public bool IsStillPlaying { get; set; } = false;
         public long AliveSince { get; set; } = 0;
         public long DeadSince { get; set; } = 0;
+        public long TimeDeath { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
         public bool IsShielded { get; set; } = false;
@@ -46,6 +49,7 @@
         public long SpawnTime;
         public int SpawnInvulnerableTime => World.Hook.SpawnInvulnerabilityTime;
         public long InvulnerableUntil = 0;
+        public bool DisableSpawnInvulnerability { get; set; } = false;
 
         public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
@@ -62,6 +66,11 @@
 
         private bool CummulativeBoostRequested = false;
         private bool CummulativeShootRequested = false;
+
+        public Vector2? SpawnLocation { get; set; } = null;
+        public Vector2? SpawnMomentum { get; set; } = null;
+
+        private bool IsGearhead = false;
 
         public void SetControl(ControlInput input)
         {
@@ -84,9 +93,22 @@
 
                 Fleet = CreateFleet(Color);
 
+                Fleet.SpawnLocation = SpawnLocation;
                 Fleet.Init(World);
 
-                SetInvulnerability(SpawnInvulnerableTime);
+                if (World.Hook.GearheadName != null && this.Name == World.Hook.GearheadName)
+                {
+                    Fleet.BaseWeapon = new FleetWeaponRobot();
+                    IsGearhead = true;
+                }
+
+                if (SpawnMomentum != null)
+                    foreach (var ship in Fleet.NewShips)
+                        ship.Momentum = SpawnMomentum.Value;
+
+                if (!DisableSpawnInvulnerability)
+                    SetInvulnerability(SpawnInvulnerableTime, true);
+
                 SpawnTime = World.Time;
             }
 
@@ -155,19 +177,38 @@
 
         public void SetInvulnerability(int duration, bool isShield = false)
         {
-            InvulnerableUntil = World.Time + duration;
-            IsInvulnerable = true;
-            IsShielded = isShield;
+            if (duration == 0)
+            {
+                InvulnerableUntil = 0;
+                IsInvulnerable = false;
+                isShield = false;
+            }
+            else
+            {
+                InvulnerableUntil = World.Time + duration;
+                IsInvulnerable = true;
+                IsShielded = isShield;
 
-            if (isShield && Fleet != null)
-                foreach (var ship in Fleet.Ships)
-                    ship.ShieldStrength = World.Hook.ShieldStrength;
+                if (isShield && Fleet != null)
+                    foreach (var ship in Fleet.Ships)
+                        ship.ShieldStrength = World.Hook.ShieldStrength;
+            }
         }
 
         public virtual void Think()
         {
             if (!IsAlive)
                 return;
+
+            if (TimeDeath > 0 && TimeDeath < World.Time)
+                this.PendingDestruction = true;
+
+            if (IsGearhead && Fleet.Ships.Count < 15)
+            {
+                var r = new Random();
+                if (r.NextDouble() < World.Hook.GearheadRegen)
+                    Fleet.AddShip();
+            }
 
             if (this.IsControlNew)
             {
