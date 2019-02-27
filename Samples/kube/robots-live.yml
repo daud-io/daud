@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-robots-live
+  labels:
+    app: game-robots-live
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: game-robots-live
+  template:
+    metadata:
+      name: game-robots-live
+      labels:
+        app: game-robots-live
+    spec:
+      containers:
+        - name: game-robots-live
+          image: iodaud/daud:version-1.22
+          resources:
+          command: ["dotnet"]
+          args: ["/app/Game.Util/bin/Release/netcoreapp2.1/publish/Game.Util.dll",
+            "--server", "https://us.daud.io/", 
+            "player", "robots",
+            "--world", "duel", 
+            "--file", "/mnt/q/leveler.json"
+            ]
+          volumeMounts:
+            - name: nfsvol
+              mountPath: /mnt/q
+              subPath: home/game
+      volumes:
+        - name: nfsvol
+          persistentVolumeClaim:
+            claimName: nfs-pvc
+---

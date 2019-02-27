@@ -1,0 +1,167 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-deployment
+  labels:
+    app: game
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: game
+  template:
+    metadata:
+      name: game
+      labels:
+        app: game
+    spec:
+      containers:
+        - name: game
+          #image: iodaud/daud:version-1.23
+          image: andylippitt/iogame:version-1.23.1
+          resources:
+            limits:
+              cpu: "0.45"
+            requests:
+              cpu: "0.45"
+          env:
+          - name: config__RegistryEnabled
+            value: "true"
+          - name: config__LetsEncryptEnabled
+            value: "false"
+          - name: config__RegistryUri
+            value: "http://game-registry-internal:5001"
+          - name: config__RegistryUserKey
+            value: "Administrator"
+          - name: config__RegistryPassword
+            value: ""
+          ports:
+            - containerPort: 80
+          volumeMounts:
+            - name: nfsvol
+              mountPath: /mnt/q
+      volumes:
+        - name: nfsvol
+          persistentVolumeClaim:
+            claimName: nfs-pvc
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: game
+spec:
+  selector:
+    app: game
+  ports:
+  - protocol: TCP
+    port: 80
+    nodePort: 30080
+  type: NodePort
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: game-internal
+spec:
+  selector:
+    app: game
+  ports:
+  - protocol: TCP
+    port: 80
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-robots
+  labels:
+    app: game-robots
+spec:
+  replicas: 10
+  selector:
+    matchLabels:
+      app: game-robots
+  template:
+    metadata:
+      name: game-robots
+      labels:
+        app: game-robots
+    spec:
+      containers:
+        - name: game-robots
+          #image: iodaud/daud:version-1.23
+          image: andylippitt/iogame:version-1.23.1
+          resources:
+            limits:
+              cpu: "0.057"
+            requests:
+              cpu: "0.057"
+          command: ["dotnet"]
+          args: ["/app/Game.Util/bin/Release/netcoreapp2.1/publish/Game.Util.dll",
+            "--server", "http://game-internal/", 
+            "player", "robots",
+            "--type-name", "Game.Robots.CTFBot,Game.Robots", 
+            "--replicas", "1", 
+            "--world", "default", 
+            "--sprite", "ship_red", 
+            "--color", "red"
+            ]
+          env:
+          - name: config__RegistryEnabled
+            value: "false"
+          volumeMounts:
+            - name: nfsvol
+              mountPath: /mnt/q
+      volumes:
+        - name: nfsvol
+          persistentVolumeClaim:
+            claimName: nfs-pvc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-registry-deployment
+  labels:
+    app: game-registry
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: game-registry
+  template:
+    metadata:
+      name: game-registry
+      labels:
+        app: game-registry
+    spec:
+      containers:
+        - name: game-registry
+          image: andylippitt/iogame-registry:16
+          ports:
+            - containerPort: 5001
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: game-registry
+spec:
+  selector:
+    app: game-registry
+  ports:
+  - protocol: TCP
+    port: 5001
+    nodePort: 31000
+  type: NodePort
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: game-registry-internal
+spec:
+  selector:
+    app: game-registry
+  ports:
+  - protocol: TCP
+    port: 5001
+  type: ClusterIP
+---
