@@ -493,18 +493,52 @@ app.ticker.add(() => {
 
     if (Controls.mouseX) {
         var pos;
-        
-        if (Controls.numUp || Controls.numUpRight || Controls.numRight || Controls.numDownRight || Controls.numDown || Controls.numDownLeft || Controls.numLeft || Controls.numUpLeft || keyboardSteering) {
+
+        if (
+            Controls.numUp ||
+            Controls.numUpRight ||
+            Controls.numRight ||
+            Controls.numDownRight ||
+            Controls.numDown ||
+            Controls.numDownLeft ||
+            Controls.numLeft ||
+            Controls.numUpLeft ||
+            keyboardSteering
+        ) {
             var i = 0;
-            if (Controls.numUp) {angle = mergeSet(angle, 3 * Math.PI / 2, i); i++}
-            if (Controls.numUpRight) {angle = mergeSet(angle, 7 * Math.PI / 4, i); i++}
-            if (Controls.numRight) {angle = mergeSet(angle, 0, i); i++}
-            if (Controls.numDownRight) {angle = mergeSet(angle, Math.PI / 4, i); i++}
-            if (Controls.numDown) {angle = mergeSet(angle, Math.PI / 2, i); i++}
-            if (Controls.numDownLeft) {angle = mergeSet(angle, 3 * Math.PI / 4, i); i++}
-            if (Controls.numLeft) {angle = mergeSet(angle, Math.PI, i); i++}
-            if (Controls.numUpLeft) {angle = mergeSet(angle, 5 * Math.PI / 4, i); i++}
-        /*if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
+            if (Controls.numUp) {
+                angle = mergeSet(angle, (3 * Math.PI) / 2, i);
+                i++;
+            }
+            if (Controls.numUpRight) {
+                angle = mergeSet(angle, (7 * Math.PI) / 4, i);
+                i++;
+            }
+            if (Controls.numRight) {
+                angle = mergeSet(angle, 0, i);
+                i++;
+            }
+            if (Controls.numDownRight) {
+                angle = mergeSet(angle, Math.PI / 4, i);
+                i++;
+            }
+            if (Controls.numDown) {
+                angle = mergeSet(angle, Math.PI / 2, i);
+                i++;
+            }
+            if (Controls.numDownLeft) {
+                angle = mergeSet(angle, (3 * Math.PI) / 4, i);
+                i++;
+            }
+            if (Controls.numLeft) {
+                angle = mergeSet(angle, Math.PI, i);
+                i++;
+            }
+            if (Controls.numUpLeft) {
+                angle = mergeSet(angle, (5 * Math.PI) / 4, i);
+                i++;
+            }
+            /*if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
             if (Controls.right && !Controls.left) {
                 angle += keyboardSteeringSpeed * Math.PI;
             } else if (Controls.left && !Controls.right) {
@@ -613,3 +647,4 @@ function mergeSet(a0, a, i) {
         ret += Math.PI;
     }
     return ret;
+}

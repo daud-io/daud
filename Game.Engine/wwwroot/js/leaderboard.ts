@@ -44,7 +44,7 @@ function getOut(entry, position: Vector2, rank, entryIsSelf) {
     } else {
         color = entry.Color;
     }
-    
+
     return (
         begin +
         `<td style="width:25px">${rank}</td>` +

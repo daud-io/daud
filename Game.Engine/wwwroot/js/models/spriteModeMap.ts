@@ -40,7 +40,7 @@ export const spriteModeMap = {
         },
         selector: "ship_cyan"
     },
-	ship_blue: {
+    ship_blue: {
         modes: {
             default: ["ship_blue"],
             boost: ["thruster_blue"],
@@ -132,7 +132,7 @@ export const spriteModeMap = {
 
     bullet: { modes: { default: ["bullet"] } },
     bullet_cyan: { modes: { default: ["bullet_cyan"] } },
-	bullet_blue: { modes: { default: ["bullet_blue"] } },
+    bullet_blue: { modes: { default: ["bullet_blue"] } },
     bullet_green: { modes: { default: ["bullet_green"] } },
     bullet_orange: { modes: { default: ["bullet_orange"] } },
     bullet_pink: { modes: { default: ["bullet_pink"] } },
