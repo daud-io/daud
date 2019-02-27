@@ -126,8 +126,11 @@
                         var worldKey = Guid.NewGuid().ToString();
                         
                         contest.Hook = new Hook { };
-                        contest.ArenaURL = (await API.World.PutWorldAsync(worldKey, contest.Hook))
-                            .Replace(worldKey, string.Empty);
+
+                        contest.ArenaURL = (await API.World.PutWorldAsync(worldKey, contest.Hook));
+                        Console.WriteLine($"world create returned: {contest.ArenaURL}");
+                        contest.ArenaURL = contest.ArenaURL.Replace(worldKey, string.Empty);
+                        Console.WriteLine($"final: {contest.ArenaURL}");
 
                         Root.Connection = new API.Client.APIClient(new Uri(contest.ArenaURL));
 

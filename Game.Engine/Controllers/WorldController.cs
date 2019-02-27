@@ -13,6 +13,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
 
     public class WorldController : APIControllerBase
@@ -42,12 +43,19 @@
         }
 
         [HttpPut]
-        public string Create(string worldKey, string hookJson)
+        public async Task<string> Create(string worldKey, string hookJson)
         {
-
             var hook = Game.API.Common.Models.Hook.Default;
 
             PatchJSONIntoHook(hook, hookJson);
+            var publicURL = GameConfiguration.PublicURL;
+
+            if (GameConfiguration.RegistryEnabled)
+            {
+                var cts = new CancellationTokenSource();
+                cts.CancelAfter(15000);
+                publicURL = await RegistryClient.Registry.SuggestAsync(GameConfiguration.PublicURL, cts.Token);
+            }
 
             var world = new World(hook, GameConfiguration)
             {
@@ -56,7 +64,7 @@
 
             Worlds.AddWorld(world);
 
-            return $"{GameConfiguration.PublicURL}/{worldKey}"; ;
+            return $"{publicURL}/{worldKey}";
         }
 
         [HttpDelete]
