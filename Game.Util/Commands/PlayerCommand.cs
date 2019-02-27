@@ -129,10 +129,13 @@
 
                         contest.ArenaURL = (await API.World.PutWorldAsync(worldKey, contest.Hook));
                         Console.WriteLine($"world create returned: {contest.ArenaURL}");
-                        contest.ArenaURL = contest.ArenaURL.Replace(worldKey, string.Empty);
+                        contest.ArenaURL = "ws://" + contest.ArenaURL.Replace(worldKey, string.Empty);
                         Console.WriteLine($"final: {contest.ArenaURL}");
 
-                        Root.Connection = new API.Client.APIClient(new Uri(contest.ArenaURL));
+                        Root.Connection = new API.Client.APIClient(new Uri(contest.ArenaURL))
+                        {
+                            Token = Root.Connection.Token
+                        };
 
                         contest.TestRobot = await CreateRobot(
                             worldKey: worldKey

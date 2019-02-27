@@ -5,7 +5,7 @@ metadata:
   labels:
     app: game
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: game
@@ -18,7 +18,7 @@ spec:
       containers:
         - name: game
           #image: iodaud/daud:version-1.23
-          image: andylippitt/iogame:version-1.23.1
+          image: andylippitt/iogame:version-1.23.2
           resources:
             limits:
               cpu: "0.45"
@@ -77,7 +77,7 @@ metadata:
   labels:
     app: game-robots
 spec:
-  replicas: 10
+  replicas: 1
   selector:
     matchLabels:
       app: game-robots
@@ -90,12 +90,12 @@ spec:
       containers:
         - name: game-robots
           #image: iodaud/daud:version-1.23
-          image: andylippitt/iogame:version-1.23.1
+          image: andylippitt/iogame:version-1.23.5
           resources:
-            limits:
-              cpu: "0.057"
-            requests:
-              cpu: "0.057"
+            #limits:
+            #  cpu: "0.057"
+            #requests:
+            #  cpu: "0.057"
           command: ["dotnet"]
           args: ["/app/Game.Util/bin/Release/netcoreapp2.1/publish/Game.Util.dll",
             "--server", "http://game-internal/", 
