@@ -4,8 +4,6 @@ namespace Game.Robots.Breeding
     using GeneticSharp.Domain.Chromosomes;
     using GeneticSharp.Domain.Fitnesses;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -23,7 +21,7 @@ namespace Game.Robots.Breeding
         public double Evaluate(IChromosome chromosome)
         {
             var c = chromosome as RobotChromosome;
-            double score = 0;
+            double score = 1;
 
             Task.Run(async () =>
             {
@@ -43,9 +41,9 @@ namespace Game.Robots.Breeding
                     Console.WriteLine($"name: {contest.TestRobot.Name} vs. {contest.ChallengeRobot.Name}");
 
                     contest.ChallengeRobot.DuelingProtocol = true;
-                    contest.ChallengeRobot.RespawnFalloffMS = 1200;
+                    contest.ChallengeRobot.RespawnFalloffMS = 2000;
                     contest.TestRobot.DuelingProtocol = true;
-                    contest.TestRobot.RespawnFalloffMS = 1200;
+                    contest.TestRobot.RespawnFalloffMS = 2000;
 
                     var cts = new CancellationTokenSource();
                     cts.CancelAfter(RobotEvolutionConfiguration.FitnessDuration);
@@ -81,6 +79,7 @@ namespace Game.Robots.Breeding
 
             }).Wait();
 
+            c.Fitness = score;
             return score;
         }
     }

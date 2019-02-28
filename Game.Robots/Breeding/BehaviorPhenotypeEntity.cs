@@ -3,7 +3,7 @@
     public class BehaviorPhenotypeEntity : PhenotypeEntityBase
     {
         public const int LookAheadCyclesBits = 8;
-        public const int BehaviorWeightBits = 9;
+        public const int BehaviorWeightBits = 6;
         public const int PhenotypeSize = LookAheadCyclesBits + BehaviorWeightBits;
 
         public BehaviorPhenotypeEntity(RobotEvolutionConfiguration config, int entityIndex)
@@ -14,7 +14,7 @@
                 new Phenotype("LookAheadCycles", LookAheadCyclesBits)
                 {
                     MinValue = 0,
-                    MaxValue = 255
+                    MaxValue = 254
                 },
                 new Phenotype("BehaviorWeight", BehaviorWeightBits)
                 {
