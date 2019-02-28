@@ -124,8 +124,10 @@
                     {
                         var contest = new ContestGame();
                         var worldKey = Guid.NewGuid().ToString();
-                        
-                        contest.Hook = new Hook { };
+
+                        contest.Hook = Hook.Default;
+                        contest.Hook.Name = "RoboMG";
+                        contest.Hook.Description = "evolving the next wave of murderbots";
 
                         contest.ArenaURL = (await API.World.PutWorldAsync(worldKey, contest.Hook));
                         Console.WriteLine($"world create returned: {contest.ArenaURL}");

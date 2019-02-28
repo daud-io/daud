@@ -48,13 +48,15 @@
             var hook = Game.API.Common.Models.Hook.Default;
 
             PatchJSONIntoHook(hook, hookJson);
-            var publicURL = GameConfiguration.PublicURL;
+            var publicURL = GameConfiguration.PublicURL ?? Request.Host.ToString();
 
             if (GameConfiguration.RegistryEnabled)
             {
                 var cts = new CancellationTokenSource();
                 cts.CancelAfter(15000);
-                publicURL = await RegistryClient.Registry.SuggestAsync(GameConfiguration.PublicURL, cts.Token);
+                var suggestion = await RegistryClient.Registry.SuggestAsync(GameConfiguration.PublicURL, cts.Token);
+                if (suggestion != "localhost")
+                    publicURL = suggestion;
             }
 
             var world = new World(hook, GameConfiguration)

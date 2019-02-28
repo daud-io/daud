@@ -4,6 +4,7 @@ namespace Game.Robots.Breeding
     using GeneticSharp.Domain.Chromosomes;
     using GeneticSharp.Domain.Fitnesses;
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
@@ -26,9 +27,11 @@ namespace Game.Robots.Breeding
 
             Task.Run(async () =>
             {
+
                 Console.WriteLine("Evaluating Chromosome");
-                using (var contest = await this.ContestFactoryAsync(c))
-                {
+                var contest = await this.ContestFactoryAsync(c);
+                try
+                { 
                     var phenotypes = c.GetPhenotypes();
 
                     for (var i = 0; i < contest.TestRobot.ContextBehaviors.Count; i++)
@@ -37,17 +40,16 @@ namespace Game.Robots.Breeding
                         contest.TestRobot.ContextBehaviors[i].LookAheadMS = phenotypes[i].LookAheadMS;
                     }
 
-                    Console.WriteLine($"name: {contest.TestRobot.Name}");
+                    contest.ChallengeRobot.Name = "challenge";
+                    Console.WriteLine($"name: {contest.TestRobot.Name} vs. {contest.ChallengeRobot.Name}");
 
                     var cts = new CancellationTokenSource();
                     cts.CancelAfter(RobotEvolutionConfiguration.FitnessDuration);
 
                     try
                     {
-                        await Task.WhenAny(
-                            contest.TestRobot.StartAsync(cts.Token),
-                            contest.ChallengeRobot.StartAsync(cts.Token)
-                        );
+                        await Task.WhenAny(contest.TestRobot.StartAsync(cts.Token),
+                            contest.ChallengeRobot.StartAsync(cts.Token));
                     }
                     catch (TaskCanceledException) { }
                     catch (OperationCanceledException) { }
@@ -63,6 +65,10 @@ namespace Game.Robots.Breeding
                     Console.WriteLine("Test Complete");
                     Console.WriteLine($"kills:{contest.TestRobot.StatsKills}\tdeaths:{contest.TestRobot.StatsDeaths}");
                     Console.WriteLine($"score:{score}");
+                }
+                finally
+                {
+                    await contest.FinishedAsync();
                 }
 
             }).Wait();
