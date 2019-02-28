@@ -1,4 +1,3 @@
-call reset
 call apply fish-standard
 call apply dauds-standard
 call apply shields-standard
