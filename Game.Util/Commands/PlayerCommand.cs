@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Net;
     using System.Numerics;
     using System.Threading.Tasks;
 
@@ -47,11 +48,17 @@
             [Option("--file")]
             public string File { get; set; } = null;
 
-            [Option("--challenge-config")]
-            public string ChallengeConfig { get; set; } = null;
+            [Option("--url")]
+            public string Url { get; set; } = null;
 
             [Option("--evolve")]
             public bool Evolve { get; set; } = false;
+
+            [Option("--evolve-challenge-config")]
+            public string EvolveChallengeConfig { get; set; } = null;
+
+            [Option("--evolve-hook")]
+            public string EvolveHook { get; set; } = null;
 
             protected async override Task ExecuteAsync()
             {
@@ -61,17 +68,23 @@
                 ConfigurableContextBotConfig config = null;
                 Type robotType = null;
 
-                if (File != null)
+                if (Url != null || File != null)
                 {
-                    var fileName = Path.GetFullPath(File);
-                    var text = System.IO.File.ReadAllText(fileName);
+                    string text = null;
+
+                    if (File != null)
+                        text = System.IO.File.ReadAllText(Path.GetFullPath(File));
+
+                    if (Url != null)
+                        using (var webClient = new WebClient())
+                            text = await webClient.DownloadStringTaskAsync(Url);
+
                     config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
                     if (config.RobotType != null)
                         robotType = Type.GetType(config.RobotType);
                 }
 
                 var tasks = new List<Task>();
-
 
                 if (TypeName != null)
                     robotType = Type.GetType(TypeName);
@@ -98,21 +111,27 @@
 
                 async Task<Robot> CreateRobot(Type innerRobotType = null, string worldKey = null)
                 {
-
                     var robot = Activator.CreateInstance(innerRobotType ?? robotType) as Robot;
                     robot.AutoSpawn = true;
+
+                    if (robot is ConfigurableContextBot configBot)
+                    {
+                        configBot.ConfigurationFileName = File;
+                        configBot.ConfigurationFileUrl = Url;
+                        configBot.InitializeConfiguration();
+                    }
+                    if (robot is ConfigurableTreeBot configtBot)
+                        configtBot.ConfigurationFileName = File;
+
+
                     robot.AutoFire = Firing;
                     robot.Color = Color;
                     robot.Name = Name;
                     robot.Target = Target;
                     robot.Sprite = Sprite;
+
                     var connection = await API.Player.ConnectAsync(worldKey ?? World);
                     robot.Connection = connection;
-
-                    if (robot is ConfigurableContextBot configBot)
-                        configBot.ConfigurationFileName = File;
-                    if (robot is ConfigurableTreeBot configtBot)
-                        configtBot.ConfigurationFileName = File;
 
                     return robot;
                 }
@@ -126,6 +145,12 @@
                         var worldKey = Guid.NewGuid().ToString();
 
                         contest.Hook = Hook.Default;
+                        if (EvolveHook != null)
+                            JsonConvert.PopulateObject(
+                                await System.IO.File.ReadAllTextAsync(EvolveHook),
+                                contest.Hook
+                            );
+
                         contest.Hook.Name = "RoboMG";
                         contest.Hook.Description = "evolving the next wave of murderbots";
 
@@ -134,11 +159,12 @@
                         Console.WriteLine($"world create returned: {contest.ArenaURL}");
                         contest.ArenaURL = "ws://" + contest.ArenaURL.Replace(worldKey, string.Empty);
                         Console.WriteLine($"final: {contest.ArenaURL}");
-
+                         
                         Root.Connection = new API.Client.APIClient(new Uri(contest.ArenaURL))
                         {
                             Token = Root.Connection.Token
                         };
+                        contest.API = Root.Connection;
 
                         contest.TestRobot = await CreateRobot(
                             worldKey: worldKey
@@ -150,14 +176,14 @@
                             worldKey: worldKey,
                             innerRobotType: typeof(ConfigTurret)
                         ) as ConfigurableContextBot;
-                        contest.ChallengeRobot.ConfigurationFileName = ChallengeConfig;
+                        contest.ChallengeRobot.ConfigurationFileName = EvolveChallengeConfig;
                         if (contest.ChallengeRobot == null)
                             throw new Exception("Failed to create robot or it isn't derived from ConfigurableContextBot");
 
                         return contest;
                     }, new RobotEvolutionConfiguration
                     {
-                        BehaviorCount = 7,
+                        BehaviorCount = 9,
                         FitnessDuration = 60000
                     });
                     ga.Start();

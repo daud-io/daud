@@ -39,9 +39,11 @@ namespace Game.Robots.Breeding
                         contest.TestRobot.ContextBehaviors[i].BehaviorWeight = phenotypes[i].BehaviorWeight;
                         contest.TestRobot.ContextBehaviors[i].LookAheadMS = phenotypes[i].LookAheadMS;
                     }
-
                     contest.ChallengeRobot.Name = "challenge";
                     Console.WriteLine($"name: {contest.TestRobot.Name} vs. {contest.ChallengeRobot.Name}");
+
+                    contest.ChallengeRobot.DuelingProtocol = true;
+                    contest.TestRobot.DuelingProtocol = true;
 
                     var cts = new CancellationTokenSource();
                     cts.CancelAfter(RobotEvolutionConfiguration.FitnessDuration);
@@ -65,6 +67,10 @@ namespace Game.Robots.Breeding
                     Console.WriteLine("Test Complete");
                     Console.WriteLine($"kills:{contest.TestRobot.StatsKills}\tdeaths:{contest.TestRobot.StatsDeaths}");
                     Console.WriteLine($"score:{score}");
+                }
+                catch (Exception)
+                {
+
                 }
                 finally
                 {

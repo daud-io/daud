@@ -2,7 +2,6 @@
 {
     using Game.API.Client;
     using Game.API.Common.Models;
-    using System;
     using System.Threading.Tasks;
 
     public class ContestGame

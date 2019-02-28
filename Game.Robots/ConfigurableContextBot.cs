@@ -5,6 +5,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.IO;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using static Game.Robots.ConfigurableContextBotConfig;
@@ -13,49 +14,64 @@
     {
         protected FileSystemWatcher Watcher;
 
-        public string ConfigurationFileName { get; set; } = "config.json";
+        public string ConfigurationFileName { get; set; } = null;
+        public string ConfigurationFileUrl { get; set; } = null;
 
         protected long ReloadConfigAfter = 0;
 
         protected int CurrentLevel { get; set; } = 0;
         public LevelingConfig Leveling { get; set; }
         private bool DownLeveling = false;
+        private bool Initialized = false;
 
         public override Task StartAsync(PlayerConnection connection, CancellationToken cancellationToken = default)
         {
-            InitializeConfiguration();
+            if (!Initialized)
+                InitializeConfiguration();
+
             return base.StartAsync(connection, cancellationToken);
         }
 
-        private void InitializeConfiguration()
+        public void InitializeConfiguration()
         {
-            var fileName = Path.GetFullPath(ConfigurationFileName);
-
-            Watcher = new FileSystemWatcher
+            Initialized = true;
+            if (ConfigurationFileName != null)
             {
-                Path = Path.GetDirectoryName(fileName),
-                Filter = Path.GetFileName(fileName)
-            };
-            Watcher.Changed += Watcher_Changed;
-            Watcher.Created += Watcher_Changed;
-            Watcher.NotifyFilter = NotifyFilters.Attributes |
-                NotifyFilters.CreationTime |
-                NotifyFilters.FileName |
-                NotifyFilters.LastAccess |
-                NotifyFilters.LastWrite |
-                NotifyFilters.Size |
-                NotifyFilters.Security;
-            Watcher.EnableRaisingEvents = true;
-            LoadConfig();
+                var fileName = Path.GetFullPath(ConfigurationFileName);
+
+                Watcher = new FileSystemWatcher
+                {
+                    Path = Path.GetDirectoryName(fileName),
+                    Filter = Path.GetFileName(fileName)
+                };
+                Watcher.Changed += Watcher_Changed;
+                Watcher.Created += Watcher_Changed;
+                Watcher.NotifyFilter = NotifyFilters.Attributes |
+                    NotifyFilters.CreationTime |
+                    NotifyFilters.FileName |
+                    NotifyFilters.LastAccess |
+                    NotifyFilters.LastWrite |
+                    NotifyFilters.Size |
+                    NotifyFilters.Security;
+                Watcher.EnableRaisingEvents = true;
+                LoadConfig();
+            } else if (ConfigurationFileUrl != null)
+                LoadConfig();
         }
 
         protected void LoadConfig()
         {
             try
             {
-                var text = File.ReadAllText(ConfigurationFileName);
-                var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
+                string text = null;
+                if (ConfigurationFileName != null)
+                    text = File.ReadAllText(ConfigurationFileName);
 
+                if (ConfigurationFileUrl != null)
+                    using (var webClient = new WebClient())
+                        text = webClient.DownloadString(ConfigurationFileUrl);
+
+                var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
                 SetBehaviors(config.Behaviors);
                 JsonConvert.PopulateObject(text, this);
 
