@@ -30,10 +30,7 @@ ReactDOM.render(
     document.getElementById("emoji-container")
 );
 
-const secretShips = [
-	"ship_secret",
-	"ship_zed"
-];
+const secretShips = ["ship_secret", "ship_zed"];
 
 const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
@@ -62,8 +59,8 @@ const refreshSelectedStyle = function() {
         if (option.getAttribute("data-color") == Controls.ship) option.classList.add("selected");
         else option.classList.remove("selected");
     }
-	
-	Controls.addSecretShips(window.discordData);
+
+    Controls.addSecretShips(window.discordData);
 };
 
 shipSelectorSwitch.addEventListener("click", function(e) {
@@ -227,9 +224,9 @@ export var Controls = {
                 selector.appendChild(selectorImage);
                 selectorImage.setAttribute("data-color", colors[i]);
                 selectorImage.classList.add("circle");
-				if (secretShips.includes(colors[i])) {
-					selectorImage.style.display = "none";
-				}
+                if (secretShips.includes(colors[i])) {
+                    selectorImage.style.display = "none";
+                }
             }
         }
 
@@ -239,20 +236,19 @@ export var Controls = {
         refreshSelectedStyle();
     },
     ship: "ship_green",
-	
-	addSecretShips: function(discord) {
-		try {
-			if (discord.data.roles.includes("Player")) {
-				shipSelectorSwitch.querySelector("[data-color=ship_secret]").style.display = "inline-block";
-			}
-			if (discord.data.roles.includes("Old Guard")) {
-				shipSelectorSwitch.querySelector("[data-color=ship_zed]").style.display = "inline-block";
-			}
-		}
-		catch(err) {
-			console.log(err);
-		}
-	}
+
+    addSecretShips: function(discord) {
+        try {
+            if (discord.data.roles.includes("Player")) {
+                shipSelectorSwitch.querySelector("[data-color=ship_secret]").style.display = "inline-block";
+            }
+            if (discord.data.roles.includes("Old Guard")) {
+                shipSelectorSwitch.querySelector("[data-color=ship_zed]").style.display = "inline-block";
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 };
 
 window.addEventListener(
@@ -288,7 +284,7 @@ window.addEventListener(
                 break;
             case 97: // numpad 1
                 Controls.numDownLeft = true;
-                break,
+                break;
             case 100: // numpad 4
                 Controls.numLeft = true;
                 break;
@@ -357,7 +353,7 @@ window.addEventListener(
                 break;
             case 97: // numpad 1
                 Controls.numDownLeft = false;
-                break,
+                break;
             case 100: // numpad 4
                 Controls.numLeft = false;
                 break;

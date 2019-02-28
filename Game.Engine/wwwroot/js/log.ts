@@ -22,20 +22,14 @@ export class Log {
         let out = "<table>";
 
         for (const slot of this.data) {
+            out += "<tr>" + `<td><b style="color:gray">${slot.time.toLocaleTimeString()}</b></td>` + `<td>${slot.entry.text}</td>`;
 
-            out += "<tr>"
-                + `<td><b style="color:gray">${slot.time.toLocaleTimeString()}</b></td>`
-                + `<td>${slot.entry.text}</td>`;
-
-            if (slot.entry.extraData && slot.entry.extraData.ping)
-                out += `<td><b style="color:gray">${slot.entry.extraData.ping.you}ms/${slot.entry.extraData.ping.them}ms</b></td>`
-            else
-                out += "<td></td>";
+            if (slot.entry.extraData && slot.entry.extraData.ping) out += `<td><b style="color:gray">${slot.entry.extraData.ping.you}ms/${slot.entry.extraData.ping.them}ms</b></td>`;
+            else out += "<td></td>";
 
             if (slot.entry.extraData && slot.entry.extraData.stats && slot.entry.extraData.stats.deaths > 0)
-                out += `<td><b style="color:gray">k/d: ${slot.entry.extraData.stats.kills / slot.entry.extraData.stats.deaths}</b></td>`
-            else
-                out += "<td></td>";
+                out += `<td><b style="color:gray">k/d: ${slot.entry.extraData.stats.kills / slot.entry.extraData.stats.deaths}</b></td>`;
+            else out += "<td></td>";
 
             out += "</tr>";
         }
