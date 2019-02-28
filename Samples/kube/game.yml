@@ -5,7 +5,7 @@ metadata:
   labels:
     app: game
 spec:
-  replicas: 1
+  replicas: 5
   selector:
     matchLabels:
       app: game
@@ -19,11 +19,11 @@ spec:
         - name: game
           #image: iodaud/daud:version-1.23
           image: andylippitt/iogame:version-1.23.2
-          resources:
-            limits:
-              cpu: "0.45"
-            requests:
-              cpu: "0.45"
+          #resources:
+          #  limits:
+          #    cpu: "0.45"
+          #  requests:
+          #    cpu: "0.45"
           env:
           - name: config__RegistryEnabled
             value: "true"
@@ -37,13 +37,6 @@ spec:
             value: ""
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: nfsvol
-              mountPath: /mnt/q
-      volumes:
-        - name: nfsvol
-          persistentVolumeClaim:
-            claimName: nfs-pvc
 ---
 kind: Service
 apiVersion: v1
@@ -152,16 +145,4 @@ spec:
     port: 5001
     nodePort: 31000
   type: NodePort
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: game-registry-internal
-spec:
-  selector:
-    app: game-registry
-  ports:
-  - protocol: TCP
-    port: 5001
-  type: ClusterIP
 ---
