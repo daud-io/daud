@@ -18,6 +18,7 @@
         public string ConfigurationFileUrl { get; set; } = null;
 
         protected long ReloadConfigAfter = 0;
+        public int ReloadUrlCycle { get; set; } = 5000;
 
         protected int CurrentLevel { get; set; } = 0;
         public LevelingConfig Leveling { get; set; }
@@ -65,11 +66,18 @@
             {
                 string text = null;
                 if (ConfigurationFileName != null)
+                {
                     text = File.ReadAllText(ConfigurationFileName);
+                    ReloadConfigAfter = 0;
+                }
 
                 if (ConfigurationFileUrl != null)
+                {
                     using (var webClient = new WebClient())
                         text = webClient.DownloadString(ConfigurationFileUrl);
+
+                    ReloadConfigAfter = GameTime + ReloadUrlCycle;
+                }
 
                 var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
                 SetBehaviors(config.Behaviors);
@@ -82,6 +90,8 @@
             {
                 this.Log("Failed to read configuration: " + e);
             }
+
+            
         }
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
@@ -131,10 +141,7 @@
         protected async override Task AliveAsync()
         {
             if (ReloadConfigAfter > 0 && ReloadConfigAfter < GameTime)
-            {
                 LoadConfig();
-                ReloadConfigAfter = 0;
-            }
 
 
             if (Leveling != null && GameTime - SpawnTime > Leveling.DownlevelThresholdMS && CurrentLevel > 0)
