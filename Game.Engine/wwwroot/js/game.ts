@@ -455,6 +455,7 @@ container.addChild(graphics);
 let lastCustomData = false;
 let spotSprites = [];
 
+var counter;
 // Game Loop
 app.ticker.add(() => {
     const latency = connection.minLatency || 0;
@@ -554,6 +555,14 @@ app.ticker.add(() => {
             pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
             angle = Controls.angle;
             aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
+        }
+        
+        if (counter == 0) {
+            doSpawn();
+            counter = 1;
+        } else {
+            connection.sendExit();
+            counter = 0;
         }
     }
 
