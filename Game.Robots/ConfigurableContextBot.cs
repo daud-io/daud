@@ -18,7 +18,7 @@
         public string ConfigurationFileUrl { get; set; } = null;
 
         protected long ReloadConfigAfter = 0;
-        public int ReloadUrlCycle { get; set; } = 5000;
+        public int ReloadUrlCycle { get; set; } = 30000;
 
         protected int CurrentLevel { get; set; } = 0;
         public LevelingConfig Leveling { get; set; }
@@ -75,8 +75,6 @@
                 {
                     using (var webClient = new WebClient())
                         text = webClient.DownloadString(ConfigurationFileUrl);
-
-                    ReloadConfigAfter = GameTime + ReloadUrlCycle;
                 }
 
                 var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
@@ -140,8 +138,14 @@
 
         protected async override Task AliveAsync()
         {
+            if (ConfigurationFileUrl != null && ReloadConfigAfter == 0)
+                ReloadConfigAfter = GameTime + ReloadUrlCycle;
+
             if (ReloadConfigAfter > 0 && ReloadConfigAfter < GameTime)
+            {
+                ReloadConfigAfter = GameTime + ReloadUrlCycle;
                 LoadConfig();
+            }
 
 
             if (Leveling != null && GameTime - SpawnTime > Leveling.DownlevelThresholdMS && CurrentLevel > 0)
