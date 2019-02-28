@@ -1,5 +1,6 @@
 ﻿namespace Game.Util.Commands
 {
+    using Game.API.Client;
     using Game.API.Common.Models;
     using Game.Robots;
     using Game.Robots.Breeding;
@@ -109,7 +110,7 @@
                 if (Color == null)
                     Color = "red";
 
-                async Task<Robot> CreateRobot(Type innerRobotType = null, string worldKey = null)
+                async Task<Robot> CreateRobot(Type innerRobotType = null, string worldKey = null, APIClient apiClient = null)
                 {
                     var robot = Activator.CreateInstance(innerRobotType ?? robotType) as Robot;
                     robot.AutoSpawn = true;
@@ -130,7 +131,9 @@
                     robot.Target = Target;
                     robot.Sprite = Sprite;
 
-                    var connection = await API.Player.ConnectAsync(worldKey ?? World);
+                    var connection = await (apiClient ?? API)
+                        .Player.ConnectAsync(worldKey ?? World);
+
                     robot.Connection = connection;
 
                     return robot;
@@ -160,20 +163,21 @@
                         contest.ArenaURL = "ws://" + contest.ArenaURL.Replace(worldKey, string.Empty);
                         Console.WriteLine($"final: {contest.ArenaURL}");
                          
-                        Root.Connection = new API.Client.APIClient(new Uri(contest.ArenaURL))
+                        contest.API = new API.Client.APIClient(new Uri(contest.ArenaURL))
                         {
                             Token = Root.Connection.Token
                         };
-                        contest.API = Root.Connection;
 
                         contest.TestRobot = await CreateRobot(
-                            worldKey: worldKey
+                            worldKey: worldKey,
+                            apiClient: contest.API
                         ) as ConfigurableContextBot;
                         if (contest.TestRobot == null)
                             throw new Exception("Failed to create robot or it isn't derived from ConfigurableContextBot");
 
                         contest.ChallengeRobot = await CreateRobot(
                             worldKey: worldKey,
+                            apiClient: contest.API,
                             innerRobotType: typeof(ConfigTurret)
                         ) as ConfigurableContextBot;
                         contest.ChallengeRobot.ConfigurationFileName = EvolveChallengeConfig;
@@ -184,7 +188,7 @@
                     }, new RobotEvolutionConfiguration
                     {
                         BehaviorCount = 9,
-                        FitnessDuration = 60000
+                        FitnessDuration = 60000 * 10
                     });
                     ga.Start();
                 }

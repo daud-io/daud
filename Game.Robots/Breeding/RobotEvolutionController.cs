@@ -30,7 +30,11 @@
             var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation)
             {
                 Termination = new RobotTermination(),
-                TaskExecutor = new LinearTaskExecutor()
+
+                //TaskExecutor = new LinearTaskExecutor(),
+                TaskExecutor = new ParallelTaskExecutor {
+                    MaxThreads = 10
+                }
             };
             ga.GenerationRan += delegate
             {

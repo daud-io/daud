@@ -43,7 +43,9 @@ namespace Game.Robots.Breeding
                     Console.WriteLine($"name: {contest.TestRobot.Name} vs. {contest.ChallengeRobot.Name}");
 
                     contest.ChallengeRobot.DuelingProtocol = true;
+                    contest.ChallengeRobot.RespawnFalloffMS = 1200;
                     contest.TestRobot.DuelingProtocol = true;
+                    contest.TestRobot.RespawnFalloffMS = 1200;
 
                     var cts = new CancellationTokenSource();
                     cts.CancelAfter(RobotEvolutionConfiguration.FitnessDuration);
