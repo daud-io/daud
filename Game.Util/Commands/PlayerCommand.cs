@@ -129,6 +129,7 @@
                         contest.Hook.Name = "RoboMG";
                         contest.Hook.Description = "evolving the next wave of murderbots";
 
+                        contest.WorldKey = worldKey;
                         contest.ArenaURL = (await API.World.PutWorldAsync(worldKey, contest.Hook));
                         Console.WriteLine($"world create returned: {contest.ArenaURL}");
                         contest.ArenaURL = "ws://" + contest.ArenaURL.Replace(worldKey, string.Empty);
