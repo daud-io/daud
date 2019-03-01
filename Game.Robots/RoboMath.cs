@@ -1,9 +1,11 @@
 ﻿namespace Game.Robots
 {
     using Game.Robots.Models;
+
+    using System.Collections.Generic;
     using System;
     using System.Numerics;
-
+    using Campy;
     public static class RoboMath
     {
         public static float CalculateDifferenceBetweenAngles(float firstAngle, float secondAngle)
@@ -88,6 +90,56 @@
 
             return aimSpot;
         }
+        public static (Vector2[], int[]) FiringIntercepts(
+            HookComputer hook,
+            Vector2[] fromPosition,
+            Vector2[] targetPosition,
+            Vector2[] targetMomentum,
+            int[] fleetSize
+        )
+        {
+            int n = fleetSize.Length;
+            Vector2[] toTarget = new Vector2[n];
+            Vector2[] aimSpot = new Vector2[n];
+            int[] timeToImpact = new int[n];
+            float[] bulletSpeed = new float[n];
+            Campy.Parallel.For(n, i => { toTarget[i] = targetPosition[i] - fromPosition[i]; });
+            Campy.Parallel.For(n, i => { bulletSpeed[i] = hook.ShotThrust(fleetSize[i]) * 10; });
+
+
+
+
+            //Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);
+
+            Campy.Parallel.For(n, i =>
+            {
+                float a = Vector2.Dot(targetMomentum[i], targetMomentum[i]) - (bulletSpeed[i] * bulletSpeed[i]);
+                var b = 2 * Vector2.Dot(targetMomentum[i], toTarget[i]);
+                var c = Vector2.Dot(toTarget[i], toTarget[i]);
+
+                var p = -b / (2 * a);
+                var q = MathF.Sqrt((b * b) - 4 * a * c) / (2 * a);
+
+                var t1 = p - q;
+                var t2 = p + q;
+                var t = 0f;
+
+                if (t1 > t2 && t2 > 0)
+                    t = t2;
+                else
+                    t = t1;
+
+                aimSpot[i] = targetPosition[i] + targetMomentum[i] * t;
+
+                var bulletPath = aimSpot[i] - fromPosition[i];
+                timeToImpact[i] = (int)(bulletPath.Length() / bulletSpeed[i]);//speed must be in units per second            
+
+                if (timeToImpact[i] > hook.Hook.BulletLife)
+                    timeToImpact[i] = int.MaxValue;
+            });
+
+            return (aimSpot, timeToImpact);
+        }
         public static bool MightHit(
             HookComputer hook,
             Fleet shooter,
@@ -133,21 +185,26 @@
             // if(maxD>pLen){
             //     Console.Write("Switch");
             // }
-            return fromPosition + path * (1.0f / pLen) * MathF.Min(pLen-10.0f, maxD);
+            return fromPosition + path * (1.0f / pLen) * MathF.Min(pLen - 10.0f, maxD);
 
         }
-        public static float ProjectClosestIntersectionDist(HookComputer hook, API.Client.Body bullet,Vector2 start, Vector2 destination, float maxTime,Robot r)
+        public static float[] ProjectClosestIntersectionDist(HookComputer hook, API.Client.Body[] bullets, Vector2 start, Vector2 destination, float maxTime, Robot r)
         {
+            int n = bullets.Length;
+            
+            float[] closeDist= new float[n];
+            Campy.Parallel.For(n, i => { 
+                var bullet=bullets[i];
             var path = destination - start;
             var pLen = path.Length();
-            var bS=bullet.Position;
-            var bM=bullet.Momentum;
-            var targetPosition=start;
-            var fromPosition=bS;
+            var bS = bullet.Position;
+            var bM = bullet.Momentum;
+            var targetPosition = start;
+            var fromPosition = bS;
             var toTarget = targetPosition - fromPosition;
 
             var bulletSpeed = bullet.Momentum.Length();
-            var targetMomentum=(destination-start)/((float)maxTime);
+            var targetMomentum = (destination - start) / ((float)maxTime);
 
             var a = Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);
             var b = 2 * Vector2.Dot(targetMomentum, toTarget);
@@ -164,24 +221,28 @@
                 t = t2;
             else
                 t = t1;
-            t=MathF.Max(MathF.Min(maxTime+10.0f,t),0.0f);
+            t = MathF.Max(MathF.Min(maxTime + 10.0f, t), 0.0f);
 
             var aimSpot = targetPosition + targetMomentum * t;
-            var aimMinusS=aimSpot-start;
-            var desMinusS=destination-start;
-            var willHit=false;
-            var disss=float.MaxValue;
+            var aimMinusS = aimSpot - start;
+            var desMinusS = destination - start;
+            var willHit = false;
+            var disss = float.MaxValue;
             var bulletPath = aimSpot - fromPosition;
             var timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            
-            
-            if (timeToImpact > hook.Hook.BulletLife||(timeToImpact>maxTime+10)){
-                timeToImpact = int.MaxValue;
-            }else{
-                var themS=start+targetMomentum*((float)timeToImpact);
-                disss=(themS-aimSpot).Length();
-            }
 
-            return disss;
+            if (timeToImpact > hook.Hook.BulletLife || (timeToImpact > maxTime + 10))
+            {
+                timeToImpact = int.MaxValue;
+            }
+            else
+            {
+                var themS = start + targetMomentum * ((float)timeToImpact);
+                disss = (themS - aimSpot).Length();
+            }
+            closeDist[i]=disss;
+            });
+            return closeDist;
 
         }
     }

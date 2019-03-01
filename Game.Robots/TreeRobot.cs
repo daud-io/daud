@@ -47,10 +47,14 @@
             foreach (var ship in t.Fleet.Ships)
                  {
                      var worst=float.MaxValue;
-            foreach(var v in Projections){
+            /* foreach(var v in Projections){
                 var diff=(v.ProjectNew(this.GameTime + t.OffsetMS).Position-ship.Position).Length();//RoboMath.ProjectClosestIntersectionDist(this.HookComputer,v,-t.Fleet.Center+t.OldFleet.Center+ship.Position,ship.Position,t.LocalOffsetMS,this);
                 // var diff=v-ship.Position;
                     worst=MathF.Min(diff,worst);
+            }*/
+            float[] dists=RoboMath.ProjectClosestIntersectionDist(this.HookComputer,Projections.ToArray(),-t.Fleet.Center+t.OldFleet.Center+ship.Position,ship.Position,t.LocalOffsetMS,this);
+            foreach(var diff in dists){
+               worst=MathF.Min(diff,worst);
             }
              foreach (var flet in muchFleets)
             {

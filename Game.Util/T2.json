@@ -1,0 +1,30 @@
+{
+    "RingDebugEnabled": false,
+    "Behaviors": [
+        
+
+        {"BehaviorTypeName": "Game.Robots.Behaviors.Dodge,Game.Robots",
+            "LookAheadMS": 250, "BehaviorWeight": 0.7, "Cycle": 0,
+            "Plot": false,
+            "Config": {
+                "DistanceFromCenterThreshold": 500
+            }
+        },
+        {"BehaviorTypeName": "Game.Robots.Behaviors.Dodge,Game.Robots",
+            "LookAheadMS": 750, "BehaviorWeight": 0.5, "Cycle": 120,
+            "Plot": false,
+            "Config": {
+                "DistanceFromCenterThreshold": 500
+            }
+        },
+        {"BehaviorTypeName": "Game.Robots.Behaviors.Dodge,Game.Robots",
+            "LookAheadMS": 1250, "BehaviorWeight": 0.25, "Cycle": 360,
+            "Plot": false,
+            "Config": {
+                "DistanceFromCenterThreshold": 500
+            }
+        },
+        
+        
+    ]
+}
