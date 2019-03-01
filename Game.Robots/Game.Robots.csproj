@@ -6,13 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Campy" Version="0.0.16" />
+    <PackageReference Include="Alea" Version="3.0.4" />
     <PackageReference Include="GeneticSharp" Version="2.5.1" />
   </ItemGroup>
+  <!-- missing dll workarounds-->
+  <ItemGroup>
+    <Reference Include="Alea">
+        <HintPath>$(NuGetPackageRoot)\alea\3.0.4\lib\net45\alea.dll</HintPath>
+    </Reference>
+    <Reference Include="Alea.IL">
+        <HintPath>$(NuGetPackageRoot)\alea\3.0.4\lib\net45\alea.il.dll</HintPath>
+    </Reference>
+     <Reference Include="Alea.Parallel">
+        <HintPath>$(NuGetPackageRoot)\alea\3.0.4\lib\net45\alea.parallel.dll</HintPath>
+    </Reference>
+</ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Game.API.Client\Game.API.Client.csproj" />
     <ProjectReference Include="..\Game.API.Common\Game.API.Common.csproj" />
+
   </ItemGroup>
 
   <ItemGroup>

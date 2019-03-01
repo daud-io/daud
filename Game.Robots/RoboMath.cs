@@ -5,7 +5,8 @@
     using System.Collections.Generic;
     using System;
     using System.Numerics;
-    using Campy;
+    using Alea;
+
     public static class RoboMath
     {
         public static float CalculateDifferenceBetweenAngles(float firstAngle, float secondAngle)
@@ -90,56 +91,60 @@
 
             return aimSpot;
         }
-        public static (Vector2[], int[]) FiringIntercepts(
-            HookComputer hook,
-            Vector2[] fromPosition,
-            Vector2[] targetPosition,
-            Vector2[] targetMomentum,
-            int[] fleetSize
-        )
-        {
-            int n = fleetSize.Length;
-            Vector2[] toTarget = new Vector2[n];
-            Vector2[] aimSpot = new Vector2[n];
-            int[] timeToImpact = new int[n];
-            float[] bulletSpeed = new float[n];
-            Campy.Parallel.For(n, i => { toTarget[i] = targetPosition[i] - fromPosition[i]; });
-            Campy.Parallel.For(n, i => { bulletSpeed[i] = hook.ShotThrust(fleetSize[i]) * 10; });
+        // public static (Vector2[], int[]) FiringIntercepts(
+        //     HookComputer hook,
+        //     Vector2[] fromPosition,
+        //     Vector2[] targetPosition,
+        //     Vector2[] targetMomentum,
+        //     int[] fleetSize
+        // )
+        // {
+        //     int n = fleetSize.Length;
+        //     Vector2[] toTarget = new Vector2[n];
+        //     Vector2[] aimSpot = new Vector2[n];
+        //     int[] timeToImpact = new int[n];
+        //     float[] bulletSpeed = new float[n];
+        //     //var gpu = Gpu.Default;
+        //     // Alea.Gpu.AlignOf
+        //     Action<int> opFactory =i =>  {toTarget[i] = targetPosition[i] - fromPosition[i];} ;
+        //     Gpu.Default.For(0,n, opFactory);
+        //     Alea.CSharp.GpuExtensions.Launch(Gpu.Default,()=>{},new LaunchParam(new dim3(n,1,1),new dim3(1,1,1)));
+        //     Gpu.Default.For(0,n, i => { bulletSpeed[i] = hook.ShotThrust(fleetSize[i]) * 10; });
 
 
 
 
-            //Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);
+        //     //Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);
 
-            Campy.Parallel.For(n, i =>
-            {
-                float a = Vector2.Dot(targetMomentum[i], targetMomentum[i]) - (bulletSpeed[i] * bulletSpeed[i]);
-                var b = 2 * Vector2.Dot(targetMomentum[i], toTarget[i]);
-                var c = Vector2.Dot(toTarget[i], toTarget[i]);
+        //     Gpu.Default.For(0,n, i =>
+        //     {
+        //         float a = Vector2.Dot(targetMomentum[i], targetMomentum[i]) - (bulletSpeed[i] * bulletSpeed[i]);
+        //         var b = 2 * Vector2.Dot(targetMomentum[i], toTarget[i]);
+        //         var c = Vector2.Dot(toTarget[i], toTarget[i]);
 
-                var p = -b / (2 * a);
-                var q = MathF.Sqrt((b * b) - 4 * a * c) / (2 * a);
+        //         var p = -b / (2 * a);
+        //         var q = MathF.Sqrt((b * b) - 4 * a * c) / (2 * a);
 
-                var t1 = p - q;
-                var t2 = p + q;
-                var t = 0f;
+        //         var t1 = p - q;
+        //         var t2 = p + q;
+        //         var t = 0f;
 
-                if (t1 > t2 && t2 > 0)
-                    t = t2;
-                else
-                    t = t1;
+        //         if (t1 > t2 && t2 > 0)
+        //             t = t2;
+        //         else
+        //             t = t1;
 
-                aimSpot[i] = targetPosition[i] + targetMomentum[i] * t;
+        //         aimSpot[i] = targetPosition[i] + targetMomentum[i] * t;
 
-                var bulletPath = aimSpot[i] - fromPosition[i];
-                timeToImpact[i] = (int)(bulletPath.Length() / bulletSpeed[i]);//speed must be in units per second            
+        //         var bulletPath = aimSpot[i] - fromPosition[i];
+        //         timeToImpact[i] = (int)(bulletPath.Length() / bulletSpeed[i]);//speed must be in units per second            
 
-                if (timeToImpact[i] > hook.Hook.BulletLife)
-                    timeToImpact[i] = int.MaxValue;
-            });
+        //         if (timeToImpact[i] > hook.Hook.BulletLife)
+        //             timeToImpact[i] = int.MaxValue;
+        //     });
 
-            return (aimSpot, timeToImpact);
-        }
+        //     return (aimSpot, timeToImpact);
+        // }
         public static bool MightHit(
             HookComputer hook,
             Fleet shooter,
@@ -193,7 +198,8 @@
             int n = bullets.Length;
             
             float[] closeDist= new float[n];
-            Campy.Parallel.For(n, i => { 
+            Alea.CSharp.GpuExtensions.Launch(Gpu.Default,()=>{
+                var i=threadIdx.x;
                 var bullet=bullets[i];
             var path = destination - start;
             var pLen = path.Length();
@@ -241,7 +247,7 @@
                 disss = (themS - aimSpot).Length();
             }
             closeDist[i]=disss;
-            });
+            },new LaunchParam(new dim3(n,1,1),new dim3(1,1,1)));
             return closeDist;
 
         }
