@@ -3,6 +3,7 @@
     using Game.Robots.Models;
     using System;
     using System.Numerics;
+    using System.Threading.Tasks;
 
     public static class ParallelRoboMath
     {
@@ -28,8 +29,7 @@
             var targetPosition = start;
             int N = bullet.Length;
             float[] fout = new float[N];
-            for (int i = 0; i < N; i++)
-            {
+            Parallel.For(0,N,i=>{
                 var bS = bullet[i].Position;
                 var bM = bullet[i].Momentum;
 
@@ -73,7 +73,7 @@
                     disss = (themS - aimSpot).Length();
                 }
                 fout[i] = disss;
-            }
+            });
             return fout;
         }
     }
