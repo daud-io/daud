@@ -1,4 +1,6 @@
-﻿namespace Game.Engine.Core.Scoring
+﻿using Game.Engine.Auditing;
+
+namespace Game.Engine.Core.Scoring
 {
     public abstract class ScoringBase
     {
@@ -9,7 +11,7 @@
 
         public virtual void FleetDied(Player killer, Player victim, Fleet fleet)
         {
-
+            RemoteEventLog.SendEvent(new AuditEventDeath(killer, victim, fleet));
         }
     }
 }

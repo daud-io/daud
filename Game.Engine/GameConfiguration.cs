@@ -25,5 +25,10 @@
         public bool LetsEncryptEnabled { get; set; }
 
         public string PublicURL { get; set; }
+
+        public string FirebaseAuthKey { get; set; }
+        public string FirebaseUrl { get; set; }
+
+        public string DuelBotURL { get; set; } = "https://daud-discord.glitch.me/";
     }
 }

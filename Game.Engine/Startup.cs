@@ -5,6 +5,7 @@
     using Game.API.Authentication;
     using Game.API.Client;
     using Game.API.Common.Security;
+    using Game.Engine.Auditing;
     using Game.Engine.Authentication;
     using Game.Engine.ChatBot;
     using Game.Engine.Core;
@@ -121,6 +122,7 @@
             });
             app.UseGameWebsocketHandler();
 
+            RemoteEventLog.Initialize(config);
             Worlds.Initialize(config);
 
             if (config.RegistryEnabled)

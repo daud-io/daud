@@ -117,6 +117,8 @@
                     victim.MaxCombo = 0;
                 }
             }
+
+            base.FleetDied(killer, victim, fleet);
         }
     }
 }
