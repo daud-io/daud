@@ -16,7 +16,7 @@
                     WorldSizeBasic = 8000,
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
-                    WorldMinPlayersToResize = 6,
+                    WorldMinPlayersToResize = 5,
 
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
