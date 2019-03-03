@@ -2,7 +2,7 @@
 {
     using Game.API.Common;
     using Game.API.Common.Models;
-    using Game.Engine.Core.Auditing;
+    using Game.Engine.Auditing;
     using Game.Engine.Core.Weapons;
     using Game.Engine.Networking;
     using Newtonsoft.Json;
@@ -14,8 +14,6 @@
 
     public class Player : IActor
     {
-        private static readonly HttpClient HttpClient = new HttpClient();
-
         public World World = null;
         public Fleet Fleet = null;
 
@@ -96,6 +94,8 @@
                 Fleet.SpawnLocation = SpawnLocation;
                 Fleet.Init(World);
 
+                RemoteEventLog.SendEvent(new AuditEventSpawn(this));
+
                 if (World.Hook.GearheadName != null && this.Name == World.Hook.GearheadName)
                 {
                     Fleet.BaseWeapon = new FleetWeaponRobot();
@@ -149,6 +149,7 @@
         }
 
         public string Name { get; set; }
+        public ulong LoginID { get; set; }
 
         public static List<Player> GetTeam(World world, string color)
         {
@@ -301,7 +302,7 @@
                 Connection.SpectatingFleet = player.Fleet;
 
             if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(player?.Token))
-                RemoteEventLog.SendEvent(new
+                RemoteEventLog.SendEvent(new OnDeath
                 {
                     token = this.Token,
                     name = this.Name,

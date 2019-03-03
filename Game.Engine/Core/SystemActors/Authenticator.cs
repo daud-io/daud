@@ -46,6 +46,7 @@
                                     }
 
                                     player.LoginName = user.Nickname;
+                                    player.LoginID = user.Id;
                                     player.Roles = playerRoles;
                                     player.OnAuthenticated();
                                 }
