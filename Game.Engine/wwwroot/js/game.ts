@@ -455,7 +455,8 @@ container.addChild(graphics);
 let lastCustomData = false;
 let spotSprites = [];
 
-var counter;
+var counter,
+    bot = false;
 // Game Loop
 app.ticker.add(() => {
     const latency = connection.minLatency || 0;
@@ -557,12 +558,14 @@ app.ticker.add(() => {
             aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
         }
         
-        if (counter == 0) {
-            doSpawn();
-            counter = 1;
-        } else {
-            connection.sendExit();
-            counter = 0;
+        if (bot) {
+            if (counter == 0) {
+                doSpawn();
+                counter = 1;
+            } else {
+                connection.sendExit();
+                counter = 0;
+            }
         }
     }
 
@@ -656,4 +659,10 @@ function mergeSet(a0, a, i) {
         ret += Math.PI;
     }
     return ret;
+}
+
+window.onkeydown = function(e) {
+    if (e.keyCode === 80) {
+        bot = !bot;
+    }
 }
