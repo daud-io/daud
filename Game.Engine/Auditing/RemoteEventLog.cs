@@ -3,8 +3,10 @@
     using Firebase.Database;
     using Google.Cloud.Firestore;
     using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -62,7 +64,8 @@
                     {
                         if (Firestore != null) {
                             DocumentReference docRef = Firestore.Collection("events").Document("event");
-                            await docRef.SetAsync(message);
+                            var document = JsonHelper.Flatten(message);
+                            await docRef.SetAsync(document);
                         }
                     }
                 }
