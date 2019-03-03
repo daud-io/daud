@@ -4,14 +4,11 @@
 
     public class AuditEventSpawn : AuditEventBase
     {
-        public long GameTime { get; set; }
         public AuditModelPlayer Player { get; set; }
 
         public AuditEventSpawn(Player player)
+            :base(player?.World)
         {
-            GameTime = player?.World?.Time ?? 0;
-            PublicURL = player?.World?.GameConfiguration?.PublicURL;
-            WorldKey = player?.World?.WorldKey;
             Player = new AuditModelPlayer(player);
         }
     }

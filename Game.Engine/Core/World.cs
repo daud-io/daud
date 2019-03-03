@@ -16,6 +16,8 @@
     public class World : IDisposable
     {
         public string WorldKey { get; set; }
+        public string GameID { get; set; }
+
         public int AdvertisedPlayerCount { get; set; }
 
         // the canonical game time, in milliseconds, from world start
@@ -63,6 +65,7 @@
             this.GameConfiguration = gameConfiguration;
             OffsetTicks = DateTime.Now.Ticks;
             Hook = hook ?? Hook.Default;
+            GameID = Guid.NewGuid().ToString().Replace("-", "");
 
             Console.WriteLine($"Initializing World: {this.Hook.Name}");
 
