@@ -13,10 +13,10 @@
                 {
                     WorldSize = 8000,
                     WorldResizeEnabled = true,
-                    WorldSizeBasic = 4000,
+                    WorldSizeBasic = 8000,
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
-                    WorldMinPlayersToResize = 2,
+                    WorldMinPlayersToResize = 4,
 
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
@@ -62,8 +62,8 @@
                     Wormholes = 0,
                     WormholesDestination = null,
 
-                    Obstacles = 10,
-                    ObstaclesMultiplier = 0.0005,
+                    Obstacles = 10, // ignored if WorldResizeEnabled = true
+                    ObstaclesMultiplier = 0.0005, // used when WorldResizeEnabled = true
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
                     ObstacleMinSize = 300,
@@ -128,7 +128,7 @@
                     PointsPerKillFleetMax = 55,
                     PointsPerKillFleetStep = 5,
                     PointsPerKillFleetPerStep = 50,
-                    ComboDelay = 3000,
+                    ComboDelay = 4000,
                     ComboPointsStep = 5,
 
                     PlayerCountGracePeriodMS = 15000,
