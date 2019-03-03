@@ -10,6 +10,8 @@
         public AuditEventSpawn(Player player)
         {
             GameTime = player?.World?.Time ?? 0;
+            PublicURL = player?.World?.GameConfiguration?.PublicURL;
+            WorldKey = player?.World?.WorldKey;
             Player = new AuditModelPlayer(player);
         }
     }

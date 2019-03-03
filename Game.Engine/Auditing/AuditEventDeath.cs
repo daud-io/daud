@@ -11,6 +11,9 @@
         public AuditEventDeath(Player killer, Player victim, Fleet fleet)
         {
             GameTime = fleet?.World.Time ?? 0;
+            PublicURL = fleet?.World?.GameConfiguration?.PublicURL;
+            WorldKey = fleet?.World?.WorldKey;
+
             Killer = new AuditModelPlayer(killer);
             Victim = new AuditModelPlayer(victim);
         }
