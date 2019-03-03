@@ -13,10 +13,10 @@
                 {
                     WorldSize = 8000,
                     WorldResizeEnabled = true,
-                    WorldSizeBasic = 4000,
+                    WorldSizeBasic = 8000,
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
-                    WorldMinPlayersToResize = 2,
+                    WorldMinPlayersToResize = 6,
 
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
