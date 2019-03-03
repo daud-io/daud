@@ -17,6 +17,8 @@
         public World World = null;
         public Fleet Fleet = null;
 
+        public string PlayerID { get; set; }
+
         public Connection Connection { get; set; }
 
         public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
@@ -69,6 +71,11 @@
         public Vector2? SpawnMomentum { get; set; } = null;
 
         private bool IsGearhead = false;
+
+        public Player()
+        {
+            PlayerID = Guid.NewGuid().ToString().Replace("-", "");
+        }
 
         public void SetControl(ControlInput input)
         {
