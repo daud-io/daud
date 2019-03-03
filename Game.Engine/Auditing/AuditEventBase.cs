@@ -6,7 +6,7 @@
     public class AuditEventBase
     {
         public string Type { get => this.GetType().Name; }
-        public DateTime Created { get; set; }
+        public int Created { get; set; }
         public string PublicURL { get; set; }
         public string WorldKey { get; set; }
         public string GameID { get; set; }
@@ -18,7 +18,7 @@
 
         public AuditEventBase(World world)
         {
-            this.Created = DateTime.Now;
+            this.Created = (int)((DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds);
             if (world != null)
             {
                 this.PublicURL = world.GameConfiguration.PublicURL;
