@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Auditing
 {
     using Firebase.Database;
+    using Google.Cloud.Firestore;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -14,7 +15,7 @@
         private static readonly HttpClient HttpClient = new HttpClient();
         private static Queue<object> queue = new Queue<object>();
         private static readonly int POST_TIMER_MS = 1000;
-        private static FirebaseClient Firebase;
+        private static FirestoreDb Firestore;
         private static GameConfiguration GameConfiguration;
         private static bool Initialized = false;
 
@@ -29,12 +30,13 @@
 
 
             if (gameConfiguration.FirebaseAuthKey != null)
-                Firebase = new FirebaseClient(
+                Firestore = FirestoreDb.Create("daud-230416");
+                /* (new FirebaseClient(
                     gameConfiguration.FirebaseUrl,
                     new FirebaseOptions
                     {
                         AuthTokenAsyncFactory = () => Task.FromResult(gameConfiguration.FirebaseAuthKey)
-                    });
+                    });*/
             Initialized = true;
         }
 
@@ -58,8 +60,10 @@
                     }
                     else
                     {
-                        if (Firebase != null)
-                            await Firebase.Child("events").PostAsync(JsonConvert.SerializeObject(message));
+                        if (Firestore != null) {
+                            DocumentReference docRef = Firestore.Collection("events").Document("event");
+                            await docRef.SetAsync(message);
+                        }
                     }
                 }
             }
