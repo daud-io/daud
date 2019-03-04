@@ -140,7 +140,9 @@
                     AllowedColors = AllColors,
                     Name = "FFA",
 
-                    LeaderboardRefresh = 750
+                    LeaderboardRefresh = 750,
+
+                    MaxNameLength = 17
                 };
             }
         }
@@ -312,7 +314,7 @@
         public string[] AllowedColors { get; set; }
 
         public int Weight { get; set; }
-        public int MaxNameLength { get; set; } = 15;
+        public int MaxNameLength { get; set; }
         public string GearheadName { get; set; }
         public float GearheadRegen { get; set; }
 
