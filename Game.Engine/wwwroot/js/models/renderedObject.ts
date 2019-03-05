@@ -213,7 +213,9 @@ export class RenderedObject {
 
             for (var key in this.activeTextures) {
                 if (layers.indexOf(key) == -1) {
-                    this.container.removeChild(this.activeTextures[key]);
+                    let layer = this.activeTextures[key];
+                    this.container.removeChild(layer);
+                    layer.destroy();
                     //console.log(`delete sprite layer ${spriteName}:${key}`);
                     delete this.activeTextures[key];
                 }
@@ -231,6 +233,7 @@ export class RenderedObject {
         if (this.spriteLayers) {
             for (const layer of this.spriteLayers) {
                 this.container.removeChild(layer);
+                layer.destroy();
             }
 
             this.spriteLayers = false;
