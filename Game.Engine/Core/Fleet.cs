@@ -111,16 +111,16 @@
                 Die(player);
         }
 
-        public void KilledShip()
+        public void KilledShip(Ship killedShip)
         {
             var random = new Random();
             var threshold = Ships.Count * World.Hook.ShipGainBySizeM + World.Hook.ShipGainBySizeB;
             if (random.NextDouble() < threshold)
                 if (Ships?.Any() ?? false)
-                    AddShip();
+                    AddShip(killedShip?.Sprite);
         }
 
-        public void AddShip()
+        public void AddShip(Sprites? sprite = null)
         {
             if (!this.Owner.IsAlive || this.PendingDestruction)
                 return;
@@ -136,7 +136,9 @@
             var ship = new Ship()
             {
                 Fleet = this,
-                Sprite = this.Owner.ShipSprite,
+                Sprite = World.Hook.PromiscuousMode
+                    ? sprite ?? this.Owner.ShipSprite
+                    : this.Owner.ShipSprite,
                 Color = this.Owner.Color,
                 Size = ShipSize
             };

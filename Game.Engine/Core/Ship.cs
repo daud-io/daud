@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common;
     using Game.Engine.Core.Pickups;
     using Game.Engine.Core.Weapons;
     using System;
@@ -32,6 +33,27 @@
 
         public int ShieldStrength { get; set; }
 
+        public Sprites BulletSprite
+        {
+            get
+            {
+                switch (Sprite)
+                {
+                    case Sprites.ship_cyan: return Sprites.bullet_cyan;
+                    case Sprites.ship_blue: return Sprites.bullet_blue;
+                    case Sprites.ship_green: return Sprites.bullet_green;
+                    case Sprites.ship_orange: return Sprites.bullet_orange;
+                    case Sprites.ship_pink: return Sprites.bullet_pink;
+                    case Sprites.ship_red: return Sprites.bullet_red;
+                    case Sprites.ship_yellow: return Sprites.bullet_yellow;
+                    case Sprites.ship_secret: return Sprites.bullet_yellow;
+                    case Sprites.ship_zed: return Sprites.bullet_red;
+                    default: return Sprites.bullet;
+                }
+            }
+        }
+
+
         public override void Init(World world)
         {
             base.Init(world);
@@ -54,7 +76,7 @@
             if (player != null)
                 World.Scoring.ShipDied(player, this.Fleet?.Owner, this);
 
-            fleet?.KilledShip();
+            fleet?.KilledShip(this);
 
             PendingDestruction = true;
 

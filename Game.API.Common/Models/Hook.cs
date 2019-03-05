@@ -317,6 +317,7 @@
         public int MaxNameLength { get; set; }
         public string GearheadName { get; set; }
         public float GearheadRegen { get; set; }
+        public bool PromiscuousMode { get; set; }
 
         public Hook Clone()
         {

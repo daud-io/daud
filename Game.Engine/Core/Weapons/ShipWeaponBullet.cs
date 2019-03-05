@@ -73,7 +73,7 @@
                 this.Angle = ship.Angle;
 
             this.OwnedByFleet = ship.Fleet;
-            this.Sprite = ship.Fleet.BulletSprite;
+            this.Sprite = ship.BulletSprite;
             this.Size = 20;
             this.Color = ship.Color;
             this.ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB;
