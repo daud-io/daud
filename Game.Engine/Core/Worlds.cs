@@ -102,6 +102,7 @@
             hook.Description = "Battle against bots of different difficulty levels";
             hook.AllowedColors = Hook.AllColors;
             hook.Weight = 100;
+            hook.BotBase = 0;
 
             hook.WorldResizeEnabled = false;
 
