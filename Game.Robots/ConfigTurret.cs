@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using System;
     using System.Numerics;
+    using System.Linq;
 
     public class ConfigTurret : ConfigurableContextBot
     {
@@ -25,9 +26,9 @@
 
         public ConfigTurret()
         {
-            FleetTargeting = new FleetTargeting(this);
-            AbandonedTargeting = new AbandonedTargeting(this);
-            FishTargeting = new FishTargeting(this);
+            FleetTargeting = new FleetTargeting(this) { IsSafeShot = this.IsSafeShot };
+            AbandonedTargeting = new AbandonedTargeting(this) { IsSafeShot = this.IsSafeShot };
+            FishTargeting = new FishTargeting(this) { IsSafeShot = this.IsSafeShot };
         }
 
         public override long GameTime => base.GameTime + TimeOffset;
@@ -41,6 +42,24 @@
             angle += (float)r.NextDouble() * TargetingAverageError * 2;
 
             base.ShootAt(new Vector2(MathF.Cos(angle), MathF.Sin(angle)) * mag);
+        }
+
+        public bool IsSafeShot(float angle)
+        {
+            if (Safe)
+            {
+                if (this.SensorFleets.MyFleet != null)
+                    if (FleetTargeting
+                        .PotentialTargetFleets()
+                        .Any(f => RoboMath.MightHit(
+                            this.HookComputer, 
+                            this.SensorFleets.MyFleet, 
+                            f, 
+                            angle)))
+                            return false;
+            }
+
+            return true;
         }
 
         protected async override Task AliveAsync()

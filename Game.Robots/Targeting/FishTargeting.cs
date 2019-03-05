@@ -35,6 +35,7 @@
                     };
                 })
                 .Where(p => IsInViewport(p.Fish.Position))
+                .Where(p => IsSafeTarget(p.Target.Position))
                 .OrderBy(p => p.Time)
                 .FirstOrDefault()
                 ?.Target;

@@ -35,6 +35,7 @@
                     };
                 })
                 .Where(p => IsInViewport(p.Abandoned.Position))
+                .Where(p => IsSafeTarget(p.Target.Position))
                 .OrderBy(p => p.Time)
                 .FirstOrDefault()
                 ?.Target;

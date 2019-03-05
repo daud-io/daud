@@ -1,15 +1,16 @@
 ﻿{
     "RingDebugEnabled": false,
-    "AttackFleets": true,
-    "AttackAbandoned": true,
+    "AttackFleets": false,
+    "AttackAbandoned": false,
     "AttackFish": true,
     "BoostThreshold": 16,
 
     "DuelingProtocol": false,
+    "Safe": true,
 
-    "Name": "slippy",
-    "Color": "yellow",
-    "Sprite": "ship_secret",
+    "Name": "🏳️",
+    "Color": "cyan",
+    "Sprite": "ship0",
     "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
 
     "BlendingConfig":
@@ -81,6 +82,20 @@
                 "AdvanceThreshold": 0.6
             }
         },
+
+        {"BehaviorTypeName": "Game.Robots.Behaviors.TeamCohesion,Game.Robots",
+            "LookAheadMS": 500, "BehaviorWeight": 0.3, "Cycle": 250,
+            "Plot": true,
+            "Config": {
+                "Normalize": false,
+                "MaxFleets": 5
+            }
+        },
+        {"BehaviorTypeName": "Game.Robots.Behaviors.TeamAlignment,Game.Robots",
+            "LookAheadMS": 200, "BehaviorWeight": 0.1, "Cycle": 0,
+            "Plot": true
+        },
+
 
         {"BehaviorTypeName": "Game.Robots.Behaviors.StayInBounds,Game.Robots",
             "LookAheadMS": 800, "BehaviorWeight": 0.2, "Cycle": 100,

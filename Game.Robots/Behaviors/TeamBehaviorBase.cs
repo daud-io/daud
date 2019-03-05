@@ -23,7 +23,11 @@
 
             if (this.Robot.HookComputer.Hook.TeamMode || this.Robot.SensorAllies.HasAllies)
             {
-                foreach (var entry in this.Robot.Leaderboard.Entries.Skip(2))
+                var leaderboardEntries = this.Robot.HookComputer.Hook.TeamMode
+                    ? this.Robot.Leaderboard.Entries.Skip(2)
+                    : this.Robot.Leaderboard.Entries;
+
+                foreach (var entry in leaderboardEntries)
                 {
                     var fleet = this.Robot.SensorFleets.ByID(entry.FleetID);
 

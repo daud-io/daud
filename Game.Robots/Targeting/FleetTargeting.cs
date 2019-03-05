@@ -1,6 +1,7 @@
 ﻿namespace Game.Robots.Targeting
 {
     using Game.Robots.Models;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
@@ -50,6 +51,7 @@
                     };
                 })
                 .Where(p => IsInViewport(p.Fleet.Center))
+                .Where(p => IsSafeTarget(p.Target.Position))
                 .OrderBy(p => p.Time)
                 .FirstOrDefault()
                 ?.Target;
