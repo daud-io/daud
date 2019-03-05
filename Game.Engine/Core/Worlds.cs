@@ -20,7 +20,7 @@
             AddWorld("duel", WorldDuel());
             AddWorld("team", WorldTeam());
             AddWorld("ctf", WorldCTF());
-            //AddWorld("other", WorldOther());
+            AddWorld("robo", RoboTrainer());
 
             /*
             AddWorld("sharks", WorldSharks());
@@ -66,7 +66,6 @@
             AllWorlds.Add(world.WorldKey, world);
         }
 
-
         private static World WorldDefault()
         {
             var hook = Hook.Default;
@@ -89,6 +88,19 @@
             hook.Name = "Planet Daud";
             hook.Description = "AAAAAHHH! Run!";
             hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
+            hook.Weight = 100;
+
+            hook.WorldResizeEnabled = false;
+
+            return new World(hook, GameConfiguration);
+        }
+
+        private static World RoboTrainer()
+        {
+            var hook = Hook.Default;
+            hook.Name = "Robo Trainer";
+            hook.Description = "Battle against bots of different difficulty levels";
+            hook.AllowedColors = Hook.AllColors;
             hook.Weight = 100;
 
             hook.WorldResizeEnabled = false;
