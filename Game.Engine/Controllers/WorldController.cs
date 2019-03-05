@@ -140,7 +140,6 @@
                             if (s.world.WorldKey == "duel" && s.server.URL == "de.daud.io")
                             {
                                 name = "Dueling Room-Europe";
-                                description = "Like regular FFA but with different ping times and metric-sized cup holders";
                             }
                             return
                                 new
