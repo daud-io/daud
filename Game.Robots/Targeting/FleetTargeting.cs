@@ -19,7 +19,9 @@
 
         protected bool IsViableTarget(Fleet fleet)
         {
-            return !Robot.SensorTeam.IsTeamMode || !Robot.SensorTeam.IsSameTeam(fleet);
+            return
+                (!Robot.SensorTeam.IsTeamMode || !Robot.SensorTeam.IsSameTeam(fleet))
+                && !Robot.SensorAllies.IsAlly(fleet);
         }
 
         public override Target ChooseTarget()

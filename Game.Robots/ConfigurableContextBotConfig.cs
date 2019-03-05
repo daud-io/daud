@@ -14,6 +14,8 @@
         public string Color { get; set; } = null;
         public string RobotType { get; set; } = null;
 
+        public List<string> Allies = null;
+
         public LevelingConfig Leveling { get; set; }
 
         public class LevelingConfig

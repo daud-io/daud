@@ -79,6 +79,9 @@
 
                 var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
                 SetBehaviors(config.Behaviors);
+                if (config.Allies != null)
+                    SensorAllies.AlliedNames = config.Allies;
+
                 JsonConvert.PopulateObject(text, this);
 
                 LoadLevel();
