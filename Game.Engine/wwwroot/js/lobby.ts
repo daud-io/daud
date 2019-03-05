@@ -79,7 +79,7 @@ if (firstLoad) {
     if (hostParam != null) {
         hostName = hostParam;
     }  else {
-        hostName = url.host;
+        hostName = "us.daud.io";
     }
     
     var worldParam = url.searchParams.get('world');
