@@ -69,6 +69,23 @@ const controls = document.querySelector(".controls");
 const social = document.querySelector(".social");
 let showing = false;
 let firstLoad = true;
+var hostName = window.location.hash;
+var worldConnect = "default";
+
+if (firstLoad) {      
+    var url = new URL(window.location.href);
+    var hostParam = url.searchParams.get('host');
+
+    if (hostParam != null) {
+        hostName = hostParam;
+    }  else {
+        hostName = url.host;
+    }
+    
+    var worldParam = url.searchParams.get('world');
+
+    if (worldParam != null) { worldConnect = worldParam; }
+}
 
 export const LobbyCallbacks = {
     onLobbyClose: null,
@@ -84,6 +101,7 @@ function refreshList(autoJoinWorld) {
     if (!showing && !firstLoad && !autoJoinWorld) return;
 
     const autoJoin = firstLoad || autoJoinWorld;
+
     firstLoad = false;
 
     fetch("/api/v1/world/all", {
@@ -94,15 +112,17 @@ function refreshList(autoJoinWorld) {
     })
         .then(r => r.json())
         .then(({ success, response }) => {
+            var world = worldConnect;
             if (success) {
                 if (window.location.hash) {
                     const selected = window.location.hash.substring(1);
                     window.Game.primaryConnection.connect(selected);
                 }
 
+                var JoinServer = hostName + "/" + worldConnect;
                 buildList(response);
-
-                if (autoJoin) joinWorld(autoJoinWorld || "us.daud.io/default");
+                
+                if (autoJoin) joinWorld(autoJoinWorld || JoinServer);
             }
         });
 }

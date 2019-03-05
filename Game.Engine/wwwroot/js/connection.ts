@@ -58,6 +58,7 @@ export class Connection {
         if (this.socket) this.socket.close();
     }
     connect(world?) {
+
         let url;
         if (window.location.protocol === "https:") {
             url = "wss:";
@@ -83,7 +84,7 @@ export class Connection {
         url += "/api/v1/connect?";
 
         if (world) url += `world=${encodeURIComponent(world)}&`;
-
+        
         if (this.socket) {
             this.socket.onclose = () => {};
             this.socket.close();
