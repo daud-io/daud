@@ -2,9 +2,11 @@
 {
     using Game.API.Client;
     using Game.API.Common.Models;
+    using Game.API.Common.Models.Auditing;
     using Game.API.Common.Security;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
+    using Nest;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -16,17 +18,19 @@
     public class RegistryController : APIControllerBase
     {
         private readonly GameConfiguration Config;
-
+        private readonly ElasticClient ElasticClient;
         private static Dictionary<string, RegistryReport> Reports = new Dictionary<string, RegistryReport>();
         private DateTime LastCleaning = DateTime.MinValue;
         private const int MAX_AGE = 10000;
 
         public RegistryController(
             ISecurityContext securityContext,
-            GameConfiguration config
+            GameConfiguration config,
+            ElasticClient elasticClient
         ) : base(securityContext)
         {
             this.Config = config;
+            this.ElasticClient = elasticClient;
         }
 
         [
@@ -76,11 +80,11 @@
         {
             // I should probably support some kind of x-forwarded for headers etc.
             var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-            var entry = await Dns.GetHostEntryAsync(ipAddress);
-
-            var apiClient = new APIClient(new Uri($"http://{ipAddress}"));
             try
             {
+                var entry = await Dns.GetHostEntryAsync(ipAddress);
+                var apiClient = new APIClient(new Uri($"http://{ipAddress}"));
+
                 var cts = new CancellationTokenSource();
                 cts.CancelAfter(2000);
                 var server = await apiClient.Server.ServerGetAsync(cts.Token);
@@ -128,6 +132,28 @@
             }
             else
                 return false;
+        }
+
+        [
+            AllowAnonymous,
+            HttpPost,
+            Route("events")
+        ]
+        public bool PostEvents([FromBody]IEnumerable<object> events)
+        {
+            var waitHandle = new CountdownEvent(1);
+
+            var bulkAll = ElasticClient.BulkAll(events, e => e.Size(1000));
+
+            bulkAll.Subscribe(new BulkAllObserver(
+                onNext: (b) => { Console.Write("."); },
+                onError: (e) => { throw e; },
+                onCompleted: () => waitHandle.Signal()
+            ));
+
+            waitHandle.Wait();
+
+            return true;
         }
     }
 }

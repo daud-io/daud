@@ -10,10 +10,10 @@
     <PackageReference Include="McMaster.Extensions.CommandLineUtils" Version="2.2.4" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="TiledSharp" Version="1.0.1" />
-    <PackageReference Include="Google.Cloud.Firestore" Version="1.0.0-beta19" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Game.Robots\Game.Robots.csproj" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="1.0.0-beta19" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Dockerfile">

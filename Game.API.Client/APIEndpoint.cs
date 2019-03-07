@@ -22,6 +22,7 @@
         public static APIEndpoint Registry { get => new APIEndpoint("/api/v1/registry"); }
         public static APIEndpoint RegistrySuggestion { get => new APIEndpoint("/api/v1/registry/suggestion"); }
         public static APIEndpoint RegistryReport { get => new APIEndpoint("/api/v1/registry/report"); }
+        public static APIEndpoint Events { get => new APIEndpoint("/api/v1/registry/events"); }
 
         public static APIEndpoint PlayerConnect(string worldName = null)
         {

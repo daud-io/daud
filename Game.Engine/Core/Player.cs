@@ -2,6 +2,7 @@
 {
     using Game.API.Common;
     using Game.API.Common.Models;
+    using Game.API.Common.Models.Auditing;
     using Game.Engine.Auditing;
     using Game.Engine.Core.Weapons;
     using Game.Engine.Networking;
@@ -101,7 +102,10 @@
                 Fleet.SpawnLocation = SpawnLocation;
                 Fleet.Init(World);
 
-                RemoteEventLog.SendEvent(new AuditEventSpawn(this));
+                RemoteEventLog.SendEvent(new AuditEventSpawn
+                {
+                    Player = this.ToAuditModelPlayer()
+                }, World);
 
                 if (World.Hook.GearheadName != null && this.Name == World.Hook.GearheadName)
                 {
@@ -335,7 +339,6 @@
                 Fleet = null;
                 IsAlive = false;
             }
-
         }
 
         public void Die(Player player = null)
@@ -374,6 +377,29 @@
             }
             else
                 return null;
+        }
+
+        public AuditModelPlayer ToAuditModelPlayer()
+        {
+            return new AuditModelPlayer
+            {
+                LoginID = this.LoginID,
+                LoginName = this.LoginName,
+                PlayerID = this.PlayerID,
+                FleetID = this.Fleet?.ID ?? 0,
+                FleetName = this.Name,
+                FleetSize = this.Fleet?.Ships?.Count ?? 0,
+                Score = this.Score,
+                AliveSince = this.AliveSince,
+                Latency = this.Connection?.Latency ?? 0,
+                KillCount = this.KillCount,
+                KillStreak = this.KillStreak,
+                ComboCounter = this.ComboCounter,
+                MaxCombo = this.MaxCombo,
+
+                Position = this.Fleet?.FleetCenter,
+                Momentum = this.Fleet?.FleetMomentum
+            };
         }
     }
 }

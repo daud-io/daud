@@ -1,6 +1,7 @@
 ﻿namespace Game.API.Client
 {
     using Game.API.Common.Models;
+    using Game.API.Common.Models.Auditing;
     using System.Collections.Generic;
     using System.Net.Http;
     using System.Threading;
@@ -28,6 +29,11 @@
         {
             return await RegistryClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.RegistryReport,
                 bodyContent: registryReport);
+        }
+        public async Task<bool> PostEvents(IEnumerable<AuditEventBase> events)
+        {
+            return await RegistryClient.APICallAsync<bool>(HttpMethod.Post, APIEndpoint.Events,
+                bodyContent: events);
         }
     }
 }

@@ -77,7 +77,8 @@
             IApplicationBuilder app,
             IHostingEnvironment env,
             IServiceProvider provider,
-            GameConfiguration config
+            GameConfiguration config,
+            RegistryClient registryClient
         )
         {
             JsonConvert.DefaultSettings = () =>
@@ -122,7 +123,7 @@
             });
             app.UseGameWebsocketHandler();
 
-            RemoteEventLog.Initialize(config);
+            RemoteEventLog.Initialize(config, registryClient);
             Worlds.Initialize(config);
 
             if (config.RegistryEnabled)

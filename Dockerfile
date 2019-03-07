@@ -16,6 +16,9 @@ RUN ["dotnet", "publish", "-c", "Release"]
 WORKDIR /app/Game.Engine
 RUN ["dotnet", "publish", "-c", "Release"]
 
+WORKDIR /app/Game.Registry
+RUN ["dotnet", "publish", "-c", "Release"]
+
 WORKDIR /app/Game.Engine/bin/Release/netcoreapp2.1/publish
 EXPOSE 5000
 CMD ["dotnet", "Game.Engine.dll"]
