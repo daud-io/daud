@@ -46,18 +46,18 @@
 
         public bool IsSafeShot(float angle)
         {
-            if (Safe)
-            {
-                if (this.SensorFleets.MyFleet != null)
-                    if (FleetTargeting
-                        .PotentialTargetFleets()
-                        .Any(f => RoboMath.MightHit(
-                            this.HookComputer, 
-                            this.SensorFleets.MyFleet, 
-                            f, 
-                            angle)))
-                            return false;
-            }
+            var safeSet = Safe
+                ? SensorFleets.Others
+                : SensorFleets.Others.Where(f => SensorAllies.IsAlly(f));
+
+            if (this.SensorFleets.MyFleet != null)
+                if (safeSet
+                    .Any(f => RoboMath.MightHit(
+                        this.HookComputer, 
+                        this.SensorFleets.MyFleet, 
+                        f, 
+                        angle)))
+                        return false;
 
             return true;
         }
@@ -79,25 +79,7 @@
                     ?? (AttackFish ? FishTargeting.ChooseTarget() : null);
 
                 if (target != null)
-                {
-                    var shootAngle = MathF.Atan2(target.Position.Y - this.Position.Y, target.Position.X - this.Position.X);
-                    bool dangerous = false;
-                    if (!AttackFleets && this.SensorFleets.MyFleet != null)
-                    {
-                        var flets = FleetTargeting.PotentialTargetFleets();
-                        foreach (var flet in flets)
-                        {
-                            if (RoboMath.MightHit(this.HookComputer, this.SensorFleets.MyFleet, flet, shootAngle))
-                            {
-                                dangerous = true;
-                            }
-                        }
-                    }
-                    if (!Safe || !dangerous)
-                    {
-                        ShootAt(target.Position);
-                    }
-                }
+                    ShootAt(target.Position);
             }
 
             if (CanBoost && (this.SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold)

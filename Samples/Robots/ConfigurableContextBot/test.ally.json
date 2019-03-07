@@ -1,33 +1,35 @@
 ﻿{
     "RingDebugEnabled": false,
-    "AttackFleets": false,
-    "AttackAbandoned": false,
+    "AttackFleets": true,
+    "AttackAbandoned": true,
     "AttackFish": true,
     "BoostThreshold": 16,
 
     "DuelingProtocol": false,
-    "Safe": true,
+    "Safe": false,
 
-    "Name": "🏳️",
-    "Color": "cyan",
-    "Sprite": "ship0",
+    "Name": "⚙️",
+    "Color": "ship_secret",
+    "Sprite": "ship_secret",
     "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
 
     "BlendingConfig":
     {
         "BlurSteps": 10,
         "BlurAmount": 0.3,
-        "BlurResolutionMultiplier": 1
+        "BlurResolutionMultiplier": 4
     },
     "Steps": 16,
 
     "Allies": [
-      "☠️little dr."
+        "⚙️little dr.",
+        "⚙️"
+        //"🐙red randy"
     ],
 
     "Behaviors": [
         {"BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
-            "LookAheadMS": 100, "BehaviorWeight": 0.1, "Cycle": 500,
+            "LookAheadMS": 100, "BehaviorWeight": 0.0, "Cycle": 500,
             "Plot": false
         },
 
@@ -53,11 +55,14 @@
             }
         },
         
-        {"BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
-            "LookAheadMS": 100, "BehaviorWeight": 10000.0, "Cycle": 40,
+        {
+            "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
+            "LookAheadMS": 100,
+            "BehaviorWeight": 10000.0,
+            "Cycle": 0,
             "Plot": false,
             "Config": {
-                "ActiveRange": 400
+                "ActiveRange": 1200
             }
         },
 
@@ -76,7 +81,7 @@
 
         {"BehaviorTypeName": "Game.Robots.Behaviors.Advance,Game.Robots",
             "LookAheadMS": 200, "BehaviorWeight": 0.3, "Cycle": 10,
-            "Plot": true,
+            "Plot": false,
             "Config": {
                 "ActiveRange": 3000,
                 "AdvanceThreshold": 0.6
@@ -84,21 +89,25 @@
         },
 
         {"BehaviorTypeName": "Game.Robots.Behaviors.TeamCohesion,Game.Robots",
-            "LookAheadMS": 500, "BehaviorWeight": 0.3, "Cycle": 250,
-            "Plot": true,
+            "LookAheadMS": 500, "BehaviorWeight": 0.08, "Cycle": 250,
+            "Plot": false,
             "Config": {
                 "Normalize": false,
                 "MaxFleets": 5
             }
         },
         {"BehaviorTypeName": "Game.Robots.Behaviors.TeamAlignment,Game.Robots",
-            "LookAheadMS": 200, "BehaviorWeight": 0.1, "Cycle": 0,
-            "Plot": true
+            "LookAheadMS": 200, "BehaviorWeight": 0.03, "Cycle": 0,
+            "Plot": false
+        },
+        {"BehaviorTypeName": "Game.Robots.Behaviors.TeamPheremones,Game.Robots",
+            "LookAheadMS": 200, "BehaviorWeight": 2, "Cycle": 1000,
+            "Plot": false
         },
 
 
         {"BehaviorTypeName": "Game.Robots.Behaviors.StayInBounds,Game.Robots",
-            "LookAheadMS": 800, "BehaviorWeight": 0.2, "Cycle": 100,
+            "LookAheadMS": 800, "BehaviorWeight": 2, "Cycle": 100,
             "Plot": false
         }
     ]
