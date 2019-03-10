@@ -18,7 +18,7 @@
         public string ConfigurationFileUrl { get; set; } = null;
 
         protected long ReloadConfigAfter = 0;
-        public int ReloadUrlCycle { get; set; } = 30000;
+        public int ReloadUrlCycle { get; set; } = 0;
 
         protected int CurrentLevel { get; set; } = 0;
         public LevelingConfig Leveling { get; set; }
@@ -141,12 +141,13 @@
 
         protected async override Task AliveAsync()
         {
-            if (ConfigurationFileUrl != null && ReloadConfigAfter == 0)
+            if (ConfigurationFileUrl != null && ReloadUrlCycle > 0 && ReloadConfigAfter == 0)
                 ReloadConfigAfter = GameTime + ReloadUrlCycle;
 
             if (ReloadConfigAfter > 0 && ReloadConfigAfter < GameTime)
             {
-                ReloadConfigAfter = GameTime + ReloadUrlCycle;
+                if (ReloadUrlCycle > 0)
+                    ReloadConfigAfter = GameTime + ReloadUrlCycle;
                 LoadConfig();
             }
 

@@ -20,14 +20,14 @@
             await API.World.DeleteWorldAsync(WorldKey);
         }
 
-        public async static Task<ContestGame> CreateGameAsync(APIClient api)
+        public async static Task<ContestGame> CreateGameAsync(APIClient api, string hookUri)
         {
             var contest = new ContestGame();
             var worldKey = Guid.NewGuid().ToString();
 
             contest.Hook = Hook.Default;
-            contest.Hook.Name = "RoboMG";
-            contest.Hook.Description = "evolving the next wave of murderbots";
+            await UriTools.PatchAsync(hookUri, contest.Hook);
+
             contest.WorldKey = worldKey;
             contest.ArenaURL = (await api.World.PutWorldAsync(worldKey, contest.Hook));
             Console.WriteLine($"world create returned: {contest.ArenaURL}");

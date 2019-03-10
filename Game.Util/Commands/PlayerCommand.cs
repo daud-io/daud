@@ -143,12 +143,11 @@
                 if (Scenario != null)
                 {
                     var scenario = await UriTools.LoadAsync<ScenarioConfiguration>(Scenario);
-                    var hook = Hook.Default;
-                    await UriTools.PatchAsync(scenario.HookURL, hook);
 
                     var tasks = new List<Task>();
 
-                    var contest = await ContestGame.CreateGameAsync(API);
+                    var contest = await ContestGame.CreateGameAsync(API, scenario.HookURL);
+                    
                     foreach (var robotName in scenario.Robots.Keys)
                     {
                         var robot = await ConfigurableContextBot.Load(scenario.Robots[robotName]);
