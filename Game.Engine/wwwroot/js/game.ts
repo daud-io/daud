@@ -209,9 +209,9 @@ connection.onView = newView => {
         interval = setInterval(updateButton, 1000);
     }
 
-    lastOffset = view.time - performance.now() + Math.random();
+    lastOffset = view.time - performance.now();
     if (!serverTimeOffset) serverTimeOffset = lastOffset;
-    serverTimeOffset = 0.99 * serverTimeOffset + 0.01 * lastOffset;
+    serverTimeOffset = 0.95 * serverTimeOffset + 0.05 * lastOffset;
 
     const groupsLength = newView.groupsLength();
     const groups = [];
