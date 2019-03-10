@@ -23,6 +23,8 @@ namespace Game.Robots.Breeding
             var c = chromosome as RobotChromosome;
             double score = 1;
 
+            /*
+
             Task.Run(async () =>
             {
 
@@ -78,8 +80,10 @@ namespace Game.Robots.Breeding
                 }
 
             }).Wait();
+            */
 
             c.Fitness = score;
+            
             return score;
         }
     }

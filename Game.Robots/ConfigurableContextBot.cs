@@ -163,5 +163,31 @@
 
             await base.AliveAsync();
         }
+
+
+
+        public static async Task<ConfigurableContextBot> Load(string path)
+        {
+            Uri uri = new Uri(path);
+
+            Type robotType = typeof(ConfigurableContextBot);
+            //var text = await UriTools.LoadStringAsync(uri);
+            //var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
+
+            var config = await UriTools.LoadAsync<ConfigurableContextBotConfig>(path);
+            if (config.RobotType != null)
+                robotType = Type.GetType(config.RobotType);
+
+            var robot = Activator.CreateInstance(robotType) as ConfigurableContextBot;
+
+            if (uri.Scheme == "file")
+                robot.ConfigurationFileName = uri.LocalPath;
+            else
+                robot.ConfigurationFileUrl = uri.ToString();
+
+            robot.InitializeConfiguration();
+
+            return robot;
+        }
     }
 }
