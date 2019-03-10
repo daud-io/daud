@@ -256,7 +256,7 @@
                 if (disposing)
                 {
 
-                    foreach (var player in Player.GetWorldPlayers(this))
+                    foreach (var player in Player.GetWorldPlayers(this).ToList())
                         try
                         {
                             player.Destroy();

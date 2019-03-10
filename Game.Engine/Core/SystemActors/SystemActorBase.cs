@@ -28,11 +28,12 @@
 
         public virtual void Think()
         {
-            if (World.Time > SleepUntil)
+            if (World != null && World.Time > SleepUntil)
             {
                 CycleThink();
 
-                SleepUntil = World.Time + CycleMS;
+                if (World != null)
+                    SleepUntil = World.Time + CycleMS;
             }
         }
     }
