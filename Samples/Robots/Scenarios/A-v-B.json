@@ -2,6 +2,6 @@
   "HookURL": "https://raw.githubusercontent.com/daud-io/daud/master/Samples/Arena/superduel.json",
   "Robots": {
     "Robot-A": "https://raw.githubusercontent.com/daud-io/daud/master/Samples/Robots/ConfigurableContextBot/slippy.json",
-    "Robot-B": "https://raw.githubusercontent.com/daud-io/daud/master/Samples/Robots/ConfigurableContextBot/slippy.resolution.json"
+    "Robot-B": "https://raw.githubusercontent.com/daud-io/daud/master/Samples/Robots/ConfigurableContextBot/slippy.doge.json"
   }
 }
