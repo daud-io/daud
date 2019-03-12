@@ -7,9 +7,13 @@
         public World World = null;
         protected long SleepUntil = 0;
         protected int CycleMS = 1000;
+        private bool RunningThisStep = false;
+
 
         public virtual void CreateDestroy()
         {
+            if (RunningThisStep)
+                CycleCreateDestroy();
         }
 
         public virtual void Destroy()
@@ -30,11 +34,14 @@
         {
             if (World != null && World.Time > SleepUntil)
             {
+                RunningThisStep = true;
                 CycleThink();
 
                 if (World != null)
                     SleepUntil = World.Time + CycleMS;
             }
+            else
+                RunningThisStep = false;
         }
     }
 }

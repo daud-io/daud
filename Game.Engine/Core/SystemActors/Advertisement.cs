@@ -1,6 +1,5 @@
 ﻿namespace Game.Engine.Core.SystemActors
 {
-    using System;
     using System.Linq;
 
     public class Advertisement : SystemActorBase
@@ -16,11 +15,17 @@
 
             if (World.AdvertisedPlayerCount > 0)
                 EmptySince = World.Time;
+        }
 
-
-            if (World.Hook.AutoRemoveOnEmptyThreshold > 0 && EmptySince > 0 && (World.Time - EmptySince) > World.Hook.AutoRemoveOnEmptyThreshold)
-            {
+        protected override void CycleCreateDestroy()
+        {
+            base.CycleCreateDestroy();
+            if (World.Hook.AutoRemoveOnEmptyThreshold > 0
+                && EmptySince > 0
+                && (World.Time - EmptySince) > World.Hook.AutoRemoveOnEmptyThreshold
+            ) {
                 Worlds.Destroy(World.WorldKey);
+                EmptySince = 0;
             }
         }
     }

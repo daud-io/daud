@@ -143,8 +143,15 @@
                 Fleet = null;
             }
 
-            World.Actors.Remove(this);
+            if (this.Connection != null)
+                try
+                {
+                    ((IDisposable)this.Connection).Dispose();
+                } catch (Exception) { }
+            this.Connection = null;
 
+            World.Actors.Remove(this);
+            
             var worldPlayers = GetWorldPlayers(World);
             worldPlayers.Remove(this);
         }

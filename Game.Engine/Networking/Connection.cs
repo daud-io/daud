@@ -647,6 +647,7 @@ namespace Game.Engine.Networking
                 if (player != null)
                 {
                     player.PendingDestruction = true;
+                    player.Connection = null;
                 }
             }
         }
