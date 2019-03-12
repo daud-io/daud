@@ -17,6 +17,7 @@
 
         public async static Task Main(string[] args)
         {
+            ThreadPool.SetMinThreads(10, 10);
             var host = CreateWebHostBuilder(args).Build();
             await host.RunAsync(cts.Token);
         }

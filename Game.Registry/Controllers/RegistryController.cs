@@ -80,8 +80,13 @@
         {
             // I should probably support some kind of x-forwarded for headers etc.
             var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+
+            if (Config.DisableSuggestionLookup)
+                return ipAddress;
+
             try
             {
+
                 var entry = await Dns.GetHostEntryAsync(ipAddress);
                 var apiClient = new APIClient(new Uri($"http://{ipAddress}"));
 
