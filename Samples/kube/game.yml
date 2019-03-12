@@ -5,7 +5,7 @@ metadata:
   labels:
     app: game
 spec:
-  replicas: 5
+  replicas: 3
   selector:
     matchLabels:
       app: game
@@ -17,13 +17,7 @@ spec:
     spec:
       containers:
         - name: game
-          #image: iodaud/daud:version-1.23
-          image: andylippitt/iogame:version-1.23.2
-          #resources:
-          #  limits:
-          #    cpu: "0.45"
-          #  requests:
-          #    cpu: "0.45"
+          image: iodaud/daud:version-1.33
           env:
           - name: config__RegistryEnabled
             value: "true"
@@ -82,8 +76,7 @@ spec:
     spec:
       containers:
         - name: game-robots
-          #image: iodaud/daud:version-1.23
-          image: andylippitt/iogame:version-1.23.5
+          image: iodaud/daud:version-1.33
           resources:
             #limits:
             #  cpu: "0.057"
@@ -129,7 +122,17 @@ spec:
     spec:
       containers:
         - name: game-registry
-          image: andylippitt/iogame-registry:16
+          image: iodaud/daud:version-1.33
+          resources:
+            #limits:
+            #  cpu: "0.057"
+            #requests:
+            #  cpu: "0.057"
+          command: ["dotnet"]
+          args: ["/app/Game.Registry/bin/Release/netcoreapp2.1/publish/Game.Registry.dll"]
+          env:
+          - name: config__ElasticSearchURI
+            value: "http://game-elastic:9200"
           ports:
             - containerPort: 5001
 ---
@@ -144,5 +147,117 @@ spec:
   - protocol: TCP
     port: 5001
     nodePort: 31000
+  type: NodePort
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: elasticsearch
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-elastic-deployment
+  labels:
+    app: game-elastic
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: game-elastic
+  template:
+    metadata:
+      name: game-elastic
+      labels:
+        app: game-elastic
+    spec:
+      serviceAccount: elasticsearch
+      initContainers:
+        # init-container for setting the mmap count limit
+      - name: sysctl
+        image: busybox
+        imagePullPolicy: IfNotPresent
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+        securityContext:
+          privileged: true
+      containers:
+      - name: elasticsearch
+        securityContext:
+        # applying fix in: https://github.com/kubernetes/kubernetes/issues/3595#issuecomment-287692878 
+        # https://docs.docker.com/engine/reference/run/#operator-exclusive-options
+          capabilities:
+            add:
+            # Lock memory (mlock(2), mlockall(2), mmap(2), shmctl(2))
+            - IPC_LOCK  
+            # Override resource Limits
+            - SYS_RESOURCE      
+        image: docker.elastic.co/elasticsearch/elasticsearch-oss:6.6.1
+        env:
+          - name: "discovery.type"
+            value: "single-node"
+          - name: "bootstrap.memory_lock"
+            value: "true"
+          - name: "ES_JAVA_OPTS"
+            value: "-Xms2g -Xmx2g"
+        ports:
+          - containerPort: 9200
+        volumeMounts:
+          - name: nfsvol
+            mountPath: /usr/share/elasticsearch/data
+            subPath: home/game/elastic
+      volumes:
+        - name: nfsvol
+          persistentVolumeClaim:
+            claimName: nfs-pvc
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: game-elastic
+spec:
+  selector:
+    app: game-elastic
+  ports:
+  - protocol: TCP
+    port: 9200
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: game-kibana-deployment
+  labels:
+    app: game-kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: game-kibana
+  template:
+    metadata:
+      name: game-kibana
+      labels:
+        app: game-kibana
+    spec:
+      containers:
+        - name: game-kibana
+          image: docker.elastic.co/kibana/kibana-oss:6.6.1
+          env:
+            - name: ELASTICSEARCH_URL
+              value: "http://game-elastic:9200"
+          ports:
+            - containerPort: 5601
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: game-kibana
+spec:
+  selector:
+    app: game-kibana
+  ports:
+  - protocol: TCP
+    port: 5601
+    nodePort: 31601
   type: NodePort
 ---
