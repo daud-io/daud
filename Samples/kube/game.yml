@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: game
-          image: iodaud/daud:version-1.34
+          image: iodaud/daud:version-1.35
           env:
           - name: config__RegistryEnabled
             value: "true"
@@ -29,6 +29,8 @@ spec:
             value: "Administrator"
           - name: config__RegistryPassword
             value: ""
+          - name: config__NoWorlds
+            value: true
           ports:
             - containerPort: 80
 ---
