@@ -17,6 +17,8 @@
 
         public bool AllowCORS { get; set; } = true;
 
+        public bool NoWorlds { get; set; } = false;
+
         public bool RegistryEnabled { get; set; }
         public string RegistryUri { get; set; }
         public string RegistryUserKey { get; set; }

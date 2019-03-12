@@ -15,13 +15,16 @@
         public static void Initialize(GameConfiguration gameConfiguration)
         {
             GameConfiguration = gameConfiguration;
-            Default = WorldDefault();
-            AddWorld("default", Default);
-            AddWorld("duel", WorldDuel());
-            AddWorld("team", WorldTeam());
-            AddWorld("ctf", WorldCTF());
-            AddWorld("robo", RoboTrainer());
 
+            if (!gameConfiguration.NoWorlds)
+            {
+                Default = WorldDefault();
+                AddWorld("default", Default);
+                AddWorld("duel", WorldDuel());
+                AddWorld("team", WorldTeam());
+                AddWorld("ctf", WorldCTF());
+                AddWorld("robo", RoboTrainer());
+            }
             /*
             AddWorld("sharks", WorldSharks());
             AddWorld("sumo", WorldSumo());
