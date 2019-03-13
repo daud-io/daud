@@ -36,17 +36,6 @@
     },
 
     {
-      "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
-      "LookAheadMS": 1200,
-      "BehaviorWeight": 2.0,
-      "Cycle": 0,
-      "Plot": true,
-      "Config": {
-        "DistanceFromCenterThreshold": 750
-      }
-    },
-
-    {
       "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
       "LookAheadMS": 100,
       "BehaviorWeight": 10000.0,
@@ -60,7 +49,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
       "LookAheadMS": 100,
-      "BehaviorWeight": 0.05,
+      "BehaviorWeight": 0.10,
       "Cycle": 0,
       "Plot": false
     },
