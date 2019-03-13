@@ -22,8 +22,8 @@
                     FiringSequenceDelay = 0,
 
                     BaseThrustA = 0.0001f,
-                    BaseThrustM = -0.00165f,
-                    BaseThrustB = 0.17f,
+                    BaseThrustM = -0.00155f,
+                    BaseThrustB = 0.16f,
 
                     Drag = 0.92f,
 
