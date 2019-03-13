@@ -75,6 +75,8 @@ let angle = 0.0;
 let aimTarget = new Vector2(0, 0);
 let d = 500; // for steering with arrows
 
+let zoom = 7000;
+
 let keyboardSteering = false;
 let keyboardSteeringSpeed = 0.075;
 
@@ -415,7 +417,7 @@ const sizeCanvas = () => {
     size.height = Math.floor(height);
     minimap.size(size);
     app.renderer.resize(width, height);
-    container.scale.set(width / 5500, width / 5500);
+    container.scale.set(width / zoom, width / zoom);
 };
 
 sizeCanvas();
@@ -472,10 +474,10 @@ app.ticker.add(() => {
         lastCamera = position;
 
         camera.moveTo(position);
-        camera.zoomTo(5500);
+        camera.zoomTo(zoom);
     }
-    container.pivot.x = Math.floor(position.x - 5500 / 2);
-    container.pivot.y = Math.floor(position.y - (5500 / 2) * (9 / 16));
+    container.pivot.x = Math.floor(position.x - zoom / 2);
+    container.pivot.y = Math.floor(position.y - (zoom / 2) * (9 / 16));
     container.position.x = Math.floor(container.position.x);
     container.position.y = Math.floor(container.position.y);
 

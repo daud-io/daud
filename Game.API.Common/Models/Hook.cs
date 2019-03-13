@@ -21,8 +21,8 @@
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
-                    BaseThrustM = -0.0035f,
-                    BaseThrustB = 0.15f,
+                    BaseThrustM = -0.0015f,
+                    BaseThrustB = 0.17f,
 
                     Drag = 0.92f,
 
@@ -35,13 +35,13 @@
                     BoostSpeed = 1f,
                     BoostDuration = 420,
 
-                    ShotCooldownTimeM = 20,
-                    ShotCooldownTimeB = 550,
+                    ShotCooldownTimeM = 18,
+                    ShotCooldownTimeB = 520,
 
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
 
-                    ShotThrustM = -0.006f,
+                    ShotThrustM = -0.0021f,
                     ShotThrustB = 0.22f,
 
                     SeekerThrustMultiplier = 1.35f,
@@ -94,7 +94,7 @@
                     FishCycle = 500, // how often do they think
 
                     FlockAlignment = .35f,
-                    FlockCohesion = 0.006f,
+                    FlockCohesion = 0.008f,
                     FlockCohesionMaximumDistance = 600,
                     FlockSeparation = 80f,
                     FlockSeparationMinimumDistance = 200,
@@ -102,8 +102,8 @@
                     SnakeWeight = 0f,
                     BossMode = false,
 
-                    ShipGainBySizeM = -0.034f,
-                    ShipGainBySizeB = 1.03f,
+                    ShipGainBySizeM = -0.011f,
+                    ShipGainBySizeB = 1.1f,
 
                     FlockSpeed = 0,
 
