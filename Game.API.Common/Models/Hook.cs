@@ -13,15 +13,16 @@
                 {
                     WorldSize = 8000,
                     WorldResizeEnabled = true,
-                    WorldSizeBasic = 8000,
+                    WorldSizeBasic = 20000,
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
-                    WorldMinPlayersToResize = 4,
+                    WorldMinPlayersToResize = 10,
 
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
-                    BaseThrustM = -0.0015f,
+                    BaseThrustA = -0.0001f,
+                    BaseThrustM = -0.00165f,
                     BaseThrustB = 0.17f,
 
                     Drag = 0.92f,
@@ -155,6 +156,7 @@
         public int WorldSizeDeltaPerPlayer { get; set; }
         public int WorldMinPlayersToResize { get; set; }
 
+        public float BaseThrustA { get; set; }
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
 

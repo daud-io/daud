@@ -15,6 +15,7 @@
         public virtual int ShotCooldownTimeShark { get => World.Hook.ShotCooldownTimeShark; }
         public virtual float ShotThrustM { get => World.Hook.ShotThrustM; }
         public virtual float ShotThrustB { get => World.Hook.ShotThrustB; }
+        public virtual float BaseThrustA { get => World.Hook.BaseThrustA; }
         public virtual float BaseThrustM { get => World.Hook.BaseThrustM; }
         public virtual float BaseThrustB { get => World.Hook.BaseThrustB; }
         public virtual float BoostThrust { get => World.Hook.BoostThrust; }
@@ -279,7 +280,7 @@
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
-                    : (BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
+                    : (BaseThrustA * BaseThrustA * Ships.Count + BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
 
                 ship.Drag = isBoosting
                     ? 1.0f
