@@ -514,8 +514,8 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_orange":
-                            shipSprite = Sprites.ship_green;
-                            color = "green";
+                            shipSprite = Sprites.ship_orange;
+                            color = "orange";
                             break;
                         case "ship_pink":
                             shipSprite = Sprites.ship_pink;
