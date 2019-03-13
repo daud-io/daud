@@ -49,7 +49,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
       "LookAheadMS": 100,
-      "BehaviorWeight": 0.10,
+      "BehaviorWeight": 0.025,
       "Cycle": 0,
       "Plot": false
     },
