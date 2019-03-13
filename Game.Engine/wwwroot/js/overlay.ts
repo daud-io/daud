@@ -19,6 +19,4 @@ export class Overlay {
         if (this.plotly.used) this.container.plotly.style.visibility = "visible";
         else this.container.plotly.style.visibility = "hidden";
     }
-
-    draw(cache, interpolator, currentTime) {}
 }

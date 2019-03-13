@@ -15,7 +15,7 @@ export class Background extends RenderedObject {
         this.refreshSprite();
     }
 
-    draw(cache, interpolator, currentTime) {
+    draw() {
         if (this.backgroundSprites) {
             for (var i = 0; i < this.backgroundSprites.length; i++) {
                 var backgroundSprite = this.backgroundSprites[i];

@@ -211,7 +211,7 @@ connection.onView = newView => {
         interval = setInterval(updateButton, 1000);
     }
 
-    lastOffset = view.time - performance.now();
+    lastOffset = view.time + connection.latency / 2 - performance.now();
     if (!serverTimeOffset) serverTimeOffset = lastOffset;
     serverTimeOffset = 0.95 * serverTimeOffset + 0.05 * lastOffset;
 
@@ -460,7 +460,7 @@ let spotSprites = [];
 // Game Loop
 app.ticker.add(() => {
     const latency = connection.minLatency || 0;
-    gameTime = performance.now() + serverTimeOffset - latency / 2;
+    gameTime = performance.now() + serverTimeOffset;
     frameCounter++;
 
     let position = new Vector2(0, 0);
@@ -483,10 +483,8 @@ app.ticker.add(() => {
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
     background.updateFocus(new Vector2(position.x, position.y));
-    background.draw(cache, interpolator, gameTime);
+    background.draw();
     minimap.checkDisplay();
-    border.draw(cache, interpolator, gameTime);
-    overlay.draw(cache, interpolator, gameTime);
 
     lastPosition = position;
 

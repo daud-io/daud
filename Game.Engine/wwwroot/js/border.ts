@@ -30,6 +30,4 @@ export class Border extends RenderedObject {
 
         this.worldSize = size;
     }
-
-    draw(cache, interpolator, currentTime) {}
 }
