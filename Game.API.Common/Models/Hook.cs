@@ -21,7 +21,7 @@
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
-                    BaseThrustA = -0.0001f,
+                    BaseThrustA = 0.0001f,
                     BaseThrustM = -0.00165f,
                     BaseThrustB = 0.17f,
 
