@@ -68,7 +68,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.Advance,Game.Robots",
       "LookAheadMS": 200,
-      "BehaviorWeight": 0.6,
+      "BehaviorWeight": 2,
       "Cycle": 10,
       "Plot": true,
       "Config": {
