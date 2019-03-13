@@ -57,7 +57,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.Slippery,Game.Robots",
       "LookAheadMS": 200,
-      "BehaviorWeight": 0.3,
+      "BehaviorWeight": 2,
       "Cycle": 600,
       "Plot": false,
       "Config": {
