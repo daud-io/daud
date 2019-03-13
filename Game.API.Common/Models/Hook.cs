@@ -42,8 +42,8 @@
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
 
-                    ShotThrustM = -0.0021f,
-                    ShotThrustB = 0.22f,
+                    ShotThrustM = -0.0023f,
+                    ShotThrustB = 0.25f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -79,7 +79,7 @@
                     SumoMode = false,
                     SumoRingSize = 1000,
 
-                    SpawnShipCount = 5,
+                    SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
                     Fishes = 60, // ignored if WorldResizeEnabled = true
