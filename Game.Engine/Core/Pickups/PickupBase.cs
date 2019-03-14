@@ -95,7 +95,7 @@
 
             if (fleet.AimTarget != Vector2.Zero)
                 pickup.Momentum = Vector2.Normalize(fleet.AimTarget)
-                    * ((fleet.Ships.Count() * fleet.ShotThrustM + fleet.ShotThrustB) * 10);
+                    * ((fleet.Ships.Count() * fleet.Ships.Count() * fleet.ShotThrustA + fleet.Ships.Count() * fleet.ShotThrustM + fleet.ShotThrustB) * 10);
 
             pickup.Init(fleet.World);
 
