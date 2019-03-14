@@ -42,7 +42,8 @@
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
 
-                    ShotThrustM = -0.0023f,
+                    ShotThrustA = -0.000005f,
+                    ShotThrustM = -0.0025f,
                     ShotThrustB = 0.25f,
 
                     SeekerThrustMultiplier = 1.35f,
@@ -192,6 +193,7 @@
         public float ShotCooldownTimeBotM { get; set; }
         public float ShotCooldownTimeBotB { get; set; }
 
+        public float ShotThrustA { get; set; }
         public float ShotThrustM { get; set; }
         public float ShotThrustB { get; set; }
 
