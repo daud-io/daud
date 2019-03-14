@@ -75,7 +75,7 @@ let angle = 0.0;
 let aimTarget = new Vector2(0, 0);
 let d = 500; // for steering with arrows
 
-let zoom = 7000;
+let zoom = 6850;
 
 let keyboardSteering = false;
 let keyboardSteeringSpeed = 0.075;
