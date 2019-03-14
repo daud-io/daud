@@ -4,6 +4,16 @@ export const spriteModeMap = {
         speed: 0.4,
         additionalLayers: [{ texture: "bg3", speed: 0.6 }, { texture: "bg5", speed: 0.8 }, { texture: "bg7", speed: 1 }]
     },
+    
+    dangerZone: {
+        color: 0xff0000,
+        opacity: 0.1
+    },
+    
+    border: {
+        color: 0x0000ff,
+        width: 40
+    },
 
     fish: {
         modes: {

@@ -2,6 +2,9 @@ import { Container } from "pixi.js";
 import { CustomContainer } from "./CustomContainer";
 import { RenderedObject } from "./models/renderedObject";
 
+const dangerZoneDefinition = RenderedObject.getSpriteDefinition("dangerZone");
+const borderDefinition = RenderedObject.getSpriteDefinition("border");
+
 export class Border extends RenderedObject {
     graphics: PIXI.Graphics;
     worldSize: number;
@@ -18,14 +21,14 @@ export class Border extends RenderedObject {
     updateWorldSize(size) {
         const edgeWidth = 4000;
         this.graphics.clear();
-        this.graphics.beginFill(0xff0000, 0.1);
+        this.graphics.beginFill(dangerZoneDefinition.color, dangerZoneDefinition.opacity);
         this.graphics.drawRect(-size - edgeWidth, -size - edgeWidth, 2 * size + 2 * edgeWidth, edgeWidth);
         this.graphics.drawRect(-size - edgeWidth, -size, edgeWidth, 2 * size);
         this.graphics.drawRect(+size, -size, edgeWidth, 2 * size);
         this.graphics.drawRect(-size - edgeWidth, +size, 2 * size + 2 * edgeWidth, edgeWidth);
         this.graphics.endFill();
 
-        this.graphics.lineStyle(40, 0x0000ff);
+        this.graphics.lineStyle(borderDefinition.width, borderDefinition.color);
         this.graphics.drawRect(-size, -size, size * 2, size * 2);
 
         this.worldSize = size;
