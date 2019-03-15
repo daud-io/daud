@@ -13,7 +13,7 @@
                 {
                     WorldSize = 8000,
                     WorldResizeEnabled = true,
-                    WorldSizeBasic = 14000,
+                    WorldSizeBasic = 10000,
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
                     WorldMinPlayersToResize = 10,
