@@ -32,7 +32,7 @@
 
             if (fleet.AimTarget != Vector2.Zero)
                 bot.SpawnMomentum = Vector2.Normalize(fleet.AimTarget)
-                    * ((fleet.Ships.Count() * fleet.Ships.Count() * fleet.ShotThrustA + fleet.Ships.Count() * fleet.ShotThrustM + fleet.ShotThrustB) * 20);
+                    * ((fleet.ShotThrustA / (fleet.Ships.Count() + fleet.ShotThrustB) + fleet.ShotThrustC) * 20);
 
             bot.Spawn(bot.Name, bot.ShipSprite, bot.Color, "");
         }

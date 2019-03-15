@@ -14,8 +14,8 @@
         public virtual float ShotCooldownTimeB { get => World.Hook.ShotCooldownTimeB; }
         public virtual int ShotCooldownTimeShark { get => World.Hook.ShotCooldownTimeShark; }
         public virtual float ShotThrustA { get => World.Hook.ShotThrustA; }
-        public virtual float ShotThrustM { get => World.Hook.ShotThrustM; }
         public virtual float ShotThrustB { get => World.Hook.ShotThrustB; }
+        public virtual float ShotThrustC { get => World.Hook.ShotThrustC; }
         public virtual float BaseThrustA { get => World.Hook.BaseThrustA; }
         public virtual float BaseThrustM { get => World.Hook.BaseThrustM; }
         public virtual float BaseThrustB { get => World.Hook.BaseThrustB; }

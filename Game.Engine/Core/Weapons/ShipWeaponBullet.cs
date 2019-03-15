@@ -76,7 +76,7 @@
             this.Sprite = ship.BulletSprite;
             this.Size = 20;
             this.Color = ship.Color;
-            this.ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustA + ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB;
+            this.ThrustAmount = ship.Fleet.ShotThrustA / (ship.Fleet.Ships.Count() + ship.Fleet.ShotThrustB) + ship.Fleet.ShotThrustC;
             this.TimeBirth = World.Time;
             this.Group = group;
         }
@@ -91,7 +91,7 @@
             this.Sprite = API.Common.Sprites.bullet;
             this.Size = 20;
             this.Color = "green";
-            this.ThrustAmount = 1 * World.Hook.ShotThrustM + World.Hook.ShotThrustB;
+            this.ThrustAmount = World.Hook.ShotThrustA * (1 + World.Hook.ShotThrustB) + World.Hook.ShotThrustC;
             this.TimeBirth = World.Time;
             this.Group = tile.WorldMap.WeaponGroup;
         }

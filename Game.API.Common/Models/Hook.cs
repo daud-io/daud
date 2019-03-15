@@ -42,9 +42,9 @@
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
 
-                    ShotThrustA = 0.000022f,
-                    ShotThrustM = -0.0044f,
-                    ShotThrustB = 0.24f,
+                    ShotThrustA = 0.4f,
+                    ShotThrustB = 1f,
+                    ShotThrustC = 0.04f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -194,8 +194,8 @@
         public float ShotCooldownTimeBotB { get; set; }
 
         public float ShotThrustA { get; set; }
-        public float ShotThrustM { get; set; }
         public float ShotThrustB { get; set; }
+        public float ShotThrustC { get; set; }
 
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }

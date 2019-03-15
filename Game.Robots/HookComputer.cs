@@ -13,7 +13,7 @@
 
         public float ShotThrust(int fleetSize)
         {
-            return fleetSize * Hook.ShotThrustM + Hook.ShotThrustB;
+            return Hook.ShotThrustA / (fleetSize + Hook.ShotThrustB) + Hook.ShotThrustC;
         }
     }
 }
