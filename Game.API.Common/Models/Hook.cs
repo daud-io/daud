@@ -42,9 +42,9 @@
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
 
-                    ShotThrustA = 0.4f,
-                    ShotThrustB = 1f,
-                    ShotThrustC = 0.04f,
+                    ShotThrustA = 4f,
+                    ShotThrustB = 10f,
+                    ShotThrustC = 0.025f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
