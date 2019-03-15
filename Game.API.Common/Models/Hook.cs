@@ -42,9 +42,10 @@
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
 
+                    // formula: y = A / (x + B) + C
                     ShotThrustA = 4f,
-                    ShotThrustB = 10f,
-                    ShotThrustC = 0.025f,
+                    ShotThrustB = 12f,
+                    ShotThrustC = 0.03f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
