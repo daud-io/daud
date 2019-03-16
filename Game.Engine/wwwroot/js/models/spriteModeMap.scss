@@ -1,85 +1,22 @@
-#bg {
-    &.layers:nth-child(1) {
-        cpulevel: 1;
-        texture: 'bg';
-        speed: 0.4;
-    }
-
-    /*
-    //@everyone how are we gonna parse this? if not with antlr?
-    //@dr: we can compile it css, no even in css how do we parse css to extract props?
-    // document.addElement('<ship>') ... this need only be done once OH OK i see, so even slower page load but only one time. yes.
-    
-    //but the modes multiply so it is exponential elements, we could just cache the results and just parse it with antlr every time we are missing something
-    // or just on demand addElement with a cache <-- ok but that might cause constant lag but OK. how? how many variatns can we really have? 
-    
-    // also the custom css props might ruin the whole thing, if it does we will have to use antlr anyway
-    // if you want to use antlr, go for it... I'm proposing what I think might be an easy/fast/lightweight approach.. but I'm likely just wrong. I'm the server guy ;)
-    
-    // yeah I think antlr will be faster and I checked up on the custom props, web side css injection won't work for that.
-    // antlr it is
-    // though... I don't think that really helps implement the rules.
-    // we need a system that can tell us what styles to apply to a given object
-    
-    
-    I think that is the same as it has always been
-    Except now we have to worry about rules
-
-    I think we're going to get from this parser a lovely tree of objects that represent the syntax
-    not a system where we can say getProperties(Ship.red:boost)
-    and I'm worried that's a long ways away
-
-    this is feeling a lot like the original json just reorganized...
-    would it make sense to switch back to json now?
-
-    no.. we need the system that knows how to process the rules.. then we win
-    there's where I thought the browser came in, but I'm sure there's some package
-    that knows how to actually process css instead of just parse it
-
-    what we've got here is awesome... we need to make it work
-    
-
-
-    This bg thing still bothers me
-    
-    */
-
-    &.layers:nth-child(2) {
-        cpulevel: 3;
-        texture: 'bg3';
-        speed: 0.6;
-    }
-
-    // how about cpulevels like screenwidths
-    //same as I feel
-    &.layers:nth-child(3) {
-        cpulevel: 5;
-        texture: 'bg5';
-        speed: 0.8;
-    }
-
-    &.layers:nth-child(4) {
-        cpulevel: 7;
-        texture: 'bg7';
-        speed: 1;
-    }
+bg {
+    layer-speeds: .4, .6, .8, 1;
+    layer-cpu-level: 1, 3, 5, 9001;
+    layer-textures: 'bg', 'bg3', 'bg5', 'bg7';
 }
 
-// how does the engine now when to stop counting?
 
-:root {
-    danger: #ff0000, 0.1;
-    border: 40, #0000ff;
-    blue: #0000ff, 0.1;
+colors {
+    danger: #ff00001a;
+    border: 40px solid #0000ff;
+    blue: #0000ff1a;
 }
 
-#fish {
+fish {
     textures: 'fish';
 }
 
-#ship {
-    textures: 'ship_gray'; /* This should probably be &.default */
-    //we will need a custom parser if we want to inherit layered modes (multiple textures)
+ship {
+    textures: 'ship_gray';
 
     &.gray {
         textures: 'ship_gray';
@@ -101,14 +38,14 @@
         textures: 'ship_cyan';
     }
 
-    &:boost {
+    &.boost {
         textures: inherit, 'thruster_cyan';
     }
 
     &.blue {
         textures: 'ship_blue';
 
-        &:boost {
+        &.boost {
             textures: inherit, 'thruster_blue';
         }
     }
@@ -116,7 +53,7 @@
     &.green {
         textures: 'ship_green';
 
-        &:boost {
+        &.boost {
             textures: inherit, 'thruster_green';
         }
     }
@@ -124,7 +61,7 @@
     &.orange {
         textures: 'ship_orange';
 
-        &:boost {
+        &.boost {
             textures: inherit, 'thruster_orange';
         }
     }
@@ -132,7 +69,7 @@
     &.pink {
         textures: 'ship_pink';
 
-        &:boost {
+        &.boost {
             textures: inherit, 'thruster_pink';
         }
     }
@@ -140,7 +77,7 @@
     &.red {
         textures: 'ship_red';
 
-        &:boost {
+        &.boost {
             textures: inherit, 'thruster_red';
         }
     }
@@ -148,29 +85,29 @@
     &.yellow {
         textures: 'ship_yellow';
 
-        &:boost {
+        &.boost {
             textures: inherit, 'thruster_yellow';
         }
     }
 
-    &:offenseupgrade {
+    &.offenseupgrade {
         textures: inherit, 'offenseupgrade';
     }
 
-    &:defenseupgrade {
+    &.defenseupgrade {
         textures: inherit, 'defenseupgrade';
     }
 
-    &:invulnerable {
+    &.invulnerable {
         textures: inherit, 'invulnerable';
     }
 
-    &:shield {
+    &.shield {
         textures: inherit, 'shield';
     }
 }
 
-#bullet {
+bullet {
     textures: 'bullet';
 
     &.cyan {
@@ -202,38 +139,38 @@
     }
 }
 
-#obstacle {
+obstacle {
     textures: 'obstacle';
 }
 
-#wormhole {
+wormhole {
     textures: 'wormhole';
 }
 
-#seeker {
+seeker {
     textures: 'seeker';
 }
 
-#pickup.seeker {
+pickup.seeker {
     textures: 'seeker_pickup';
 }
 
-#pickup.shield {
+pickup.shield {
     textures: 'shield_pickup';
 }
 
-#ctf_base {
+ctf_base {
     textures: 'ctf_base';
 }
 
-#ctf_flag.blue {
+ctf_flag.blue {
     textures: 'ctf_flag_blue';
 }
 
-#ctf_flag.red {
+ctf_flag.red {
     textures: 'ctf_flag_red';
 }
 
-#map {
+map {
     textures: 'map';
 }
