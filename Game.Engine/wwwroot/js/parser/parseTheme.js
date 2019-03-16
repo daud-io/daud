@@ -35,7 +35,6 @@ function parseCssIntoRules(css) {
    return ruleList;
 }
 var ruleList = parseCssIntoRules(input);
-
 function selectorMatches(selector, selectProps) {
    var thing = {
       type: 'tag',
@@ -68,5 +67,5 @@ function queryProperties(element,ruleList) {
 function getShipProperties(ship, more,ruleList) {
    return queryProperties({ element:"ship", class: ship + " " + more.join(" "), },ruleList)
 }
-console.log(getShipProperties("cyan", ["boost", "defenseupgrade"]),ruleList)
-console.log(queryProperties({ element: "bg"}),ruleList)
+console.log(getShipProperties("cyan", ["boost", "defenseupgrade"],ruleList))
+console.log(queryProperties({ element: "bg"},ruleList))
