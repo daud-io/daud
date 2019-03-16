@@ -23,6 +23,7 @@
     "@types/flatbuffers": "^1.9.1",
     "antlr4": "^4.7.2",
     "babel-polyfill": "^6.26.0",
+    "css-select": "^2.0.2",
     "dat.gui": "^0.7.5",
     "emoji-mart": "^2.9.2",
     "flatbuffers": "^1.10.2",
