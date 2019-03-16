@@ -17,7 +17,7 @@ function parseCssIntoRules(css) {
       var selectors = statement.ruleset().selectors();
       var block = statement.ruleset().block();
 
-      var blockProps = block.property().map((x, i) => [block.property(i).identifier().getText(), block.property(i).values().children.map(x => x.children ? x.children.map(y => y.getText()).join(" ") : x.getText()).join(" ")]);//this
+      var blockProps = block.property().map((x, i) => [block.property(i).identifier().getText(), block.property(i).values().children.map(x => x.children ? x.children.map(y => y.getText()).join(" ") : x.getText()).join(" ")]);
       var blockOBJ = {};
 
       for (var i = 0; i < blockProps.length; i++) {
@@ -50,7 +50,7 @@ function selectorMatches(selector, selectProps) {
 }
 
 
-function queryProperties(element) {
+function queryProperties(element,ruleList) {
    var res = {};
    for (var i = 0; i < ruleList.length; i++) {
       if (selectorMatches(ruleList[i].selector, element)) {
@@ -65,8 +65,8 @@ function queryProperties(element) {
    return res;
 }
 
-function getShipProperties(ship, more) {
-   return queryProperties({ element:"ship", class: ship + " " + more.join(" "), })
+function getShipProperties(ship, more,ruleList) {
+   return queryProperties({ element:"ship", class: ship + " " + more.join(" "), },ruleList)
 }
-console.log(getShipProperties("cyan", ["boost", "defenseupgrade"]))
-console.log(queryProperties({ element: "bg"}))
+console.log(getShipProperties("cyan", ["boost", "defenseupgrade"]),ruleList)
+console.log(queryProperties({ element: "bg"}),ruleList)
