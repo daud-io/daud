@@ -21,6 +21,7 @@
     "@aurelia/runtime-html": "dev",
     "@aurelia/runtime-html-browser": "dev",
     "@types/flatbuffers": "^1.9.1",
+    "antlr4": "^4.7.2",
     "babel-polyfill": "^6.26.0",
     "dat.gui": "^0.7.5",
     "emoji-mart": "^2.9.2",
