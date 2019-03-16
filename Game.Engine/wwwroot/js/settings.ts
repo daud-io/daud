@@ -221,6 +221,7 @@ async function theme(v) {
                                     var imagePromises = [];
                                     var cleansed = ab;
                                     var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
+                                    images=images?images:[];
                                     var fixed = [];
                                     var fixedMap = [];
                                     var replacePairs = [];
