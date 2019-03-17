@@ -11,6 +11,7 @@ import { CustomContainer } from "../CustomContainer";
 import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
 import { readFileSync } from 'fs';
 var textureMapRules = parseScssIntoRules(readFileSync(__dirname + '/textureMap.scss', 'utf-8'));
+var spriteModeMapRules = parseScssIntoRules(readFileSync(__dirname + '/spriteModeMap.scss', 'utf-8'));
 export class RenderedObject {
     container: CustomContainer;
     currentSpriteName: boolean;
@@ -19,12 +20,12 @@ export class RenderedObject {
     activeTextures: {};
     body?: any;
     spriteLayers?: any;
+    additionalClasses?:string[];
     constructor(container: CustomContainer) {
         this.container = container;
         this.currentSpriteName = false;
         this.currentMode = 0;
         this.currentZIndex = 0;
-
         this.activeTextures = {};
     }
 
@@ -174,33 +175,44 @@ export class RenderedObject {
 
         return pixiSprite;
     }
-
-    static getSpriteDefinition(spriteName): any {
+    
+    static getSpriteDefinition(spriteName,additional?:string[]): any {
         let spriteDefinition = null;
-
+        if(!additional){
+            additional=[];
+        }
         var mapKey = this.parseMapKey(spriteName);
         if (mapKey) spriteName = mapKey.name;
-
-        if (spriteModeMap[spriteName]) spriteDefinition = spriteModeMap[spriteName];
+        try {
+            spriteDefinition = queryProperties({ element: spriteName.split("_")[0] ,class:spriteName.split("_").join(" ")+" " +additional.join(" ")}, spriteModeMapRules);
+            for (var i in spriteDefinition) {
+                if (typeof spriteDefinition[i] == "string") {
+                    if(spriteDefinition[i].indexOf(",")<0 && i!=="textures"){
+                        spriteDefinition[i] = JSON.parse(spriteDefinition[i]);
+                    }else{
+                        try{
+                            spriteDefinition[i] = spriteDefinition[i].split(",").map(q=>JSON.parse(q));
+                        }catch (e) {
+                            console.log("SPRITE PROP LIST DECODE FAILED:", e);
+                        }
+                    }
+                }
+            }
+        } catch (e) {
+            console.log("SPRITE FAILED:", e);
+        }
+        if (!spriteDefinition) console.log(`Cannot find sprite: ${spriteName}`);
 
         return spriteDefinition;
     }
 
     getModeMap(spriteName, mode) {
         let layers = [];
-
-        const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
-
-        if (!spriteDefinition) console.log(`Cannot find sprite: ${spriteName}`);
-
         const modes = this.decodeModes(mode);
 
-        modes.forEach(modeName => {
-            var modeLayers = spriteDefinition.modes[modeName];
-            if (modeLayers) modeLayers.forEach(layer => layers.push(layer));
-        });
+        const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName,modes);
 
-        return layers;
+        return spriteDefinition.textures;
     }
 
     buildSpriteLayers(spriteName, mode, zIndex) {

@@ -60,60 +60,60 @@ fish {
   scale: 0.03;
 }
 
+
+ship0,
+ship_gray,
+ship_flash,
+ship_cyan,
+ship_blue,
+ship_green,
+ship_orange,
+ship_pink,
+ship_red,
+ship_yellow,
+ship_secret,
+ship_zed {
+  scale: 0.02;
+}
 // daudelins
 ship0 {
   file: "ship0";
-  scale: 0.02;
 }
-
 // abandoned ships
 ship_gray {
   file: "ship_gray";
-  scale: 0.02;
 }
 ship_flash {
   file: "ship_flash";
-  scale: 0.02;
 }
-
 // default selectable ships
 ship_cyan {
   file: "ship_cyan";
-  scale: 0.02;
 }
 ship_blue {
   file: "ship_blue";
-  scale: 0.02;
 }
 ship_green {
   file: "ship_green";
-  scale: 0.02;
 }
 ship_orange {
   file: "ship_orange";
-  scale: 0.02;
 }
 ship_pink {
   file: "ship_pink";
-  scale: 0.02;
 }
 ship_red {
   file: "ship_red";
-  scale: 0.02;
 }
 ship_yellow {
   file: "ship_yellow";
-  scale: 0.02;
 }
-
 // premium ships
 ship_secret {
   file: "ship_secret";
-  scale: 0.02;
 }
 ship_zed {
   file: "ship_zed";
-  scale: 0.02;
 }
 
 bullet {
@@ -162,28 +162,17 @@ seeker_pickup {
   scale: 0.02;
 }
 
-shield {
-  file: "shield";
-  animated: true;
-  loop: true;
-  animation-speed: 0.5;
-  scale: 0.04;
-  tile:{
-    size: 64;
-    count: 90;
-  };
-}
-
+shield,
 invulnerable {
   file: "shield";
   animated: true;
   loop: true;
   animation-speed: 0.5;
   scale: 0.04;
-  tile:{
+  tile: {
     size: 64;
     count: 90;
-  };
+  }
 }
 
 shield_pickup {
@@ -192,10 +181,10 @@ shield_pickup {
   loop: true;
   animation-speed: 0.5;
   scale: 0.04;
-  tile:{
+  tile: {
     size: 64;
     count: 30;
-  };
+  }
 }
 
 wormhole {
@@ -204,10 +193,10 @@ wormhole {
   loop: true;
   animation-speed: 0.5;
   scale: 0.04;
-  tile:{
+  tile: {
     size: 128;
     count: 90;
-  };
+  }
 }
 
 thruster_cyan,
@@ -226,10 +215,10 @@ thruster_yellow {
   }
   scale: 0.04;
   rotate: 6;
-  tile:{
+  tile: {
     size: 64;
     count: 29;
-  };
+  }
 }
 
 thruster_cyan {
@@ -253,31 +242,28 @@ thruster_red {
 thruster_yellow {
   file: "thruster_yellow";
 }
-
-offenseupgrade {
-  file: "circles";
-  animated: true;
-  loop: true;
-  animation-speed: 0.2;
-  scale: 0.05;
-  tint: 16711680;
-  tile:{
-    size: 72;
-    count: 11;
-  };
-}
-
+offenseupgrade,
 defenseupgrade {
   file: "circles";
   animated: true;
   loop: true;
-  animation-speed: 0.4;
+
   scale: 0.05;
-  tint: 6711039;
-  tile:{
+
+  tile: {
     size: 72;
     count: 11;
-  };
+  }
+}
+
+offenseupgrade {
+  animation-speed: 0.2;
+  tint: 16711680;
+}
+
+defenseupgrade {
+  animation-speed: 0.4;
+  tint: 6711039;
 }
 
 arrow {
@@ -290,27 +276,22 @@ ctf_base {
   file: "ctf_base";
   scale: 0.003;
 }
+ctf_flag_red,
 ctf_flag_blue {
-  file: "ctf_flag_blue";
   animated: true;
-  tile:{
+  tile: {
     size: 128;
     count: 6;
-  };
+  }
   animation-speed: 0.1;
   scale: 0.015;
   loop: true;
 }
+ctf_flag_blue {
+  file: "ctf_flag_blue";
+}
 ctf_flag_red {
   file: "ctf_flag_red";
-  animated: true;
-  tile:{
-    size: 128;
-    count: 6;
-  };
-  animation-speed: 0.1;
-  scale: 0.015;
-  loop: true;
 }
 ctf_score_final {
   file: "ctf_score_final";
@@ -394,32 +375,36 @@ map_beach {
 map_wilds {
   file: "buch-outdoor";
   map: true;
-  tile:{
+  tile: {
     width: 16;
     height: 16;
     count: 288;
-  };
-  image:{
+    space: {
+      height: 400;
+      width: 400;
+    }
+  }
+  image: {
     width: 384;
     height: 192;
-  };
+  }
   scale: 0.0655;
-  tile-space-height: 400;
-  tile-space-width: 400;
 }
 map {
   file: "spritesheet";
   map: true;
-  tile:{
+  tile: {
     width: 64;
     height: 64;
     count: 81;
-  };
-  image:{
+    space: {
+      height: 400;
+      width: 400;
+    }
+  }
+  image: {
     width: 1024;
     height: 1024;
-  };
+  }
   scale: 0.0655;
-  tile-space-height: 400;
-  tile-space-width: 400;
 }

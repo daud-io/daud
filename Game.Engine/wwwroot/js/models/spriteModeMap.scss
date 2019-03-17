@@ -17,25 +17,27 @@ fish {
 
 ship {
     textures: 'ship_gray';
+    selector: 'ship_gray';
 
     &.gray {
         textures: 'ship_gray';
+        selector: 'ship_gray';
     }
 
-    &.bot {
-        textures: 'ship0';
-    }
 
     &.secret {
         textures: 'ship_secret';
+        selector: 'ship_secret';
     }
 
     &.zed {
         textures: 'ship_zed';
+        selector: 'ship_zed';
     }
 
     &.cyan {
         textures: 'ship_cyan';
+        selector: 'ship_cyan';
     }
 
     &.boost {
@@ -44,6 +46,7 @@ ship {
 
     &.blue {
         textures: 'ship_blue';
+        selector: 'ship_blue';
 
         &.boost {
             textures: inherit, 'thruster_blue';
@@ -52,6 +55,7 @@ ship {
 
     &.green {
         textures: 'ship_green';
+        selector: 'ship_green';
 
         &.boost {
             textures: inherit, 'thruster_green';
@@ -60,6 +64,7 @@ ship {
 
     &.orange {
         textures: 'ship_orange';
+        selector: 'ship_orange';
 
         &.boost {
             textures: inherit, 'thruster_orange';
@@ -68,6 +73,7 @@ ship {
 
     &.pink {
         textures: 'ship_pink';
+        selector: 'ship_pink';
 
         &.boost {
             textures: inherit, 'thruster_pink';
@@ -76,6 +82,7 @@ ship {
 
     &.red {
         textures: 'ship_red';
+        selector: 'ship_red';
 
         &.boost {
             textures: inherit, 'thruster_red';
@@ -84,11 +91,38 @@ ship {
 
     &.yellow {
         textures: 'ship_yellow';
+        selector: 'ship_yellow';
 
         &.boost {
             textures: inherit, 'thruster_yellow';
         }
     }
+
+    &.offenseupgrade {
+        textures: inherit, 'offenseupgrade';
+    }
+
+    &.defenseupgrade {
+        textures: inherit, 'defenseupgrade';
+    }
+
+    &.invulnerable {
+        textures: inherit, 'invulnerable';
+    }
+
+    &.shield {
+        textures: inherit, 'shield';
+    }
+}
+
+ship0 {
+    textures: 'ship0';
+    selector: 'ship0';
+    
+    &.boost {
+        textures: inherit, 'thruster_cyan';
+    }
+
 
     &.offenseupgrade {
         textures: inherit, 'offenseupgrade';
@@ -159,15 +193,15 @@ pickup.shield {
     textures: 'shield_pickup';
 }
 
-ctf_base {
+ctf.base {
     textures: 'ctf_base';
 }
 
-ctf_flag.blue {
+ctf.flag.blue {
     textures: 'ctf_flag_blue';
 }
 
-ctf_flag.red {
+ctf.flag.red {
     textures: 'ctf_flag_red';
 }
 
