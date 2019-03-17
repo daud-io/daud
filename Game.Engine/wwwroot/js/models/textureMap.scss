@@ -168,8 +168,8 @@ shield {
   loop: true;
   animationSpeed: 0.5;
   scale: 0.04;
-  tilesize: 64;
-  tilecount: 90;
+  tileSize: 64;
+  tileCount: 90;
 }
 
 invulnerable {
@@ -178,8 +178,8 @@ invulnerable {
   loop: true;
   animationSpeed: 0.5;
   scale: 0.04;
-  tilesize: 64;
-  tilecount: 90;
+  tileSize: 64;
+  tileCount: 90;
 }
 
 shield_pickup {
@@ -188,8 +188,8 @@ shield_pickup {
   loop: true;
   animationSpeed: 0.5;
   scale: 0.04;
-  tilesize: 64;
-  tilecount: 30;
+  tileSize: 64;
+  tileCount: 30;
 }
 
 wormhole {
@@ -198,8 +198,8 @@ wormhole {
   loop: true;
   animationSpeed: 0.5;
   scale: 0.04;
-  tilesize: 128;
-  tilecount: 90;
+  tileSize: 128;
+  tileCount: 90;
 }
 
 thruster_cyan,
@@ -218,8 +218,8 @@ thruster_yellow {
   }
   scale: 0.04;
   rotate: 6;
-  tilesize: 64;
-  tilecount: 29;
+  tileSize: 64;
+  tileCount: 29;
 }
 
 thruster_cyan {
@@ -251,8 +251,8 @@ offenseupgrade {
   animationSpeed: 0.2;
   scale: 0.05;
   tint: 16711680;
-  tilesize: 72;
-  tilecount: 11;
+  tileSize: 72;
+  tileCount: 11;
 }
 
 defenseupgrade {
@@ -262,8 +262,8 @@ defenseupgrade {
   animationSpeed: 0.4;
   scale: 0.05;
   tint: 6711039;
-  tilesize: 72;
-  tilecount: 11;
+  tileSize: 72;
+  tileCount: 11;
 }
 
 arrow {
@@ -279,8 +279,8 @@ ctf_base {
 ctf_flag_blue {
   file: "ctf_flag_blue";
   animated: true;
-  tilesize: 128;
-  tilecount: 6;
+  tileSize: 128;
+  tileCount: 6;
   animationSpeed: 0.1;
   scale: 0.015;
   loop: true;
@@ -288,8 +288,8 @@ ctf_flag_blue {
 ctf_flag_red {
   file: "ctf_flag_red";
   animated: true;
-  tilesize: 128;
-  tilecount: 6;
+  tileSize: 128;
+  tileCount: 6;
   animationSpeed: 0.1;
   scale: 0.015;
   loop: true;
@@ -368,7 +368,7 @@ map_beach {
   map: true;
   tileheight: 16;
   tilewidth: 16;
-  tilecount: 936;
+  tileCount: 936;
   imagewidth: 576;
   imageheight: 416;
   scale: 0.0655;
@@ -378,7 +378,7 @@ map_wilds {
   map: true;
   tileheight: 16;
   tilewidth: 16;
-  tilecount: 288;
+  tileCount: 288;
   imagewidth: 384;
   imageheight: 192;
   scale: 0.0655;
@@ -390,7 +390,7 @@ map {
   map: true;
   tileheight: 64;
   tilewidth: 64;
-  tilecount: 81;
+  tileCount: 81;
   imagewidth: 1024;
   imageheight: 1024;
   scale: 0.0655;
