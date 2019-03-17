@@ -37,14 +37,15 @@ export class Background extends RenderedObject {
     refreshSprite() {
         const spriteDefinition = RenderedObject.getSpriteDefinition("bg");
 
-        var additionalLayers = spriteDefinition.additionalLayers;
-        if (!additionalLayers) {
-            additionalLayers = [];
+        var layerSpeeds = spriteDefinition["layer-speeds"];
+        var layerTextures = spriteDefinition["layer-textures"];
+        if (!layerSpeeds|| !layerTextures) {
+            layerSpeeds=[];
+            layerTextures=[]
         }
-        var speeds = [spriteDefinition.speed ? spriteDefinition.speed : 1].concat(additionalLayers.map(x => x.speed));
+        var speeds = layerSpeeds;
         this.speeds = speeds;
-        var layers = [spriteDefinition].concat(additionalLayers);
-        var allLayersTextureNames = layers.map(x => x.texture);
+        var allLayersTextureNames = layerTextures
         var allLayersTextures = allLayersTextureNames.map(x => RenderedObject.getTextureDefinition(x));
         if (!this.backgroundSprites) {
             this.backgroundSprites = [];
