@@ -4,7 +4,7 @@ var ScssLexer = require("./ScssLexer").ScssLexer;
 var ScssParser = require("./ScssParser").ScssParser;
 var sass = require('sass');
 
-var input = sass.renderSync({file: "../models/spriteModeMap.scss"}).css.toString('utf8'); 
+var input = sass.renderSync({ file: "../models/spriteModeMap.scss" }).css.toString('utf8');
 function parseCssIntoRules(css) {
    var chars = new antlr4.InputStream(css);
    var lexer = new ScssLexer(chars);
@@ -24,7 +24,9 @@ function parseCssIntoRules(css) {
          blockOBJ[blockProps[i][0]] = blockProps[i][1];
       }
       for (var i = 0; i < selectors.children.length; i++) {
-         rules.push({ selector: selectors.selector(i).getText(), obj: blockOBJ });
+         if (selectors.selector(i)) {
+            rules.push({ selector: selectors.selector(i).getText(), obj: blockOBJ });
+         }
       }
    }
 
@@ -49,7 +51,7 @@ function selectorMatches(selector, selectProps) {
 }
 
 
-function queryProperties(element,ruleList) {
+function queryProperties(element, ruleList) {
    var res = {};
    for (var i = 0; i < ruleList.length; i++) {
       if (selectorMatches(ruleList[i].selector, element)) {
@@ -64,8 +66,8 @@ function queryProperties(element,ruleList) {
    return res;
 }
 
-function getShipProperties(ship, more,ruleList) {
-   return queryProperties({ element:"ship", class: ship + " " + more.join(" "), },ruleList)
+function getShipProperties(ship, more, ruleList) {
+   return queryProperties({ element: "ship", class: ship + " " + more.join(" "), }, ruleList)
 }
-console.log(getShipProperties("cyan", ["boost", "defenseupgrade"],ruleList))
-console.log(queryProperties({ element: "bg"},ruleList))
+console.log(getShipProperties("cyan", ["boost", "defenseupgrade"], ruleList))
+console.log(queryProperties({ element: "bg" }, ruleList))
