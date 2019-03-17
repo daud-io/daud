@@ -5,10 +5,12 @@ bg {
 }
 
 
-colors {
-    danger: #ff00001a;
-    border: 40px solid #0000ff;
-    blue: #0000ff1a;
+
+world {
+    danger-color: #ff00001a;
+    edge-color: #0000ff;
+    edge-width:40;
+    blue-color: #0000ff1a;
 }
 
 fish {
