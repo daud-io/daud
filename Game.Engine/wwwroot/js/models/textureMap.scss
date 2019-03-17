@@ -366,34 +366,34 @@ ctf_arrow_trans_flag {
 map_beach {
   file: "beach_tileset";
   map: true;
-  tileheight: 16;
-  tilewidth: 16;
+  tileHeight: 16;
+  tileWidth: 16;
   tileCount: 936;
-  imagewidth: 576;
-  imageheight: 416;
+  imageWidth: 576;
+  imageHeight: 416;
   scale: 0.0655;
 }
 map_wilds {
   file: "buch-outdoor";
   map: true;
-  tileheight: 16;
-  tilewidth: 16;
+  tileHeight: 16;
+  tileWidth: 16;
   tileCount: 288;
-  imagewidth: 384;
-  imageheight: 192;
+  imageWidth: 384;
+  imageHeight: 192;
   scale: 0.0655;
-  tilespaceheight: 400;
-  tilespacewidth: 400;
+  tileSpaceHeight: 400;
+  tileSpaceWidth: 400;
 }
 map {
   file: "spritesheet";
   map: true;
-  tileheight: 64;
-  tilewidth: 64;
+  tileHeight: 64;
+  tileWidth: 64;
   tileCount: 81;
-  imagewidth: 1024;
-  imageheight: 1024;
+  imageWidth: 1024;
+  imageHeight: 1024;
   scale: 0.0655;
-  tilespaceheight: 400;
-  tilespacewidth: 400;
+  tileSpaceHeight: 400;
+  tileSpaceWidth: 400;
 }
