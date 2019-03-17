@@ -3,7 +3,7 @@ const CSSselect = require("css-select");
 var ScssLexer = require("./ScssLexer").ScssLexer;
 var ScssParser = require("./ScssParser").ScssParser;
 var sass = require('sass');
-import { Buffer } from 'buffer';
+var Buffer = require('buffer').Buffer;
 
 // in case your code is isomorphic
 if(typeof window !== 'undefined') window.Buffer = Buffer;
@@ -24,7 +24,11 @@ function parseCssIntoRules(css) {
       var selectors = statement.ruleset().selectors();
       var block = statement.ruleset().block();
 
-      var blockProps = block.property().map((x, i) => [block.property(i).identifier().getText(), block.property(i).values().children.map(x => x.children ? x.children.map(y => y.getText()).join(" ") : x.getText()).join(" ")]);
+      var blockProps = block.property().map((x, i) => {return [
+         block.property(i).identifier().getText(), 
+         block.property(i).values().children.map(x => x.children ? x.children.map(y => y.getText()).join(" ") : x.getText()).filter(y=>y!==",")
+      ]});
+      
       var blockOBJ = {};
 
       for (var i = 0; i < blockProps.length; i++) {
@@ -65,9 +69,9 @@ function queryProperties(element, ruleList) {
       if (selectorMatches(ruleList[i].selector, element)) {
          for (var p in ruleList[i].obj) {
             if (res[p] == undefined) {
-               res[p] = "''";
+               res[p] = [];
             }
-            res[p] = ruleList[i].obj[p].replace("inherit", res[p]);
+            res[p] = ruleList[i].obj[p].map(x=>x=="inherit"?res[p]:[x]).reduce((a,b)=>a.concat(b),[]);
          }
       }
    }

@@ -20,7 +20,7 @@ export class RenderedObject {
     activeTextures: {};
     body?: any;
     spriteLayers?: any;
-    additionalClasses?:string[];
+    additionalClasses?: string[];
     constructor(container: CustomContainer) {
         this.container = container;
         this.currentSpriteName = false;
@@ -107,8 +107,18 @@ export class RenderedObject {
         try {
             textureDefinition = queryProperties({ element: textureName }, textureMapRules);
             for (var i in textureDefinition) {
-                if (typeof textureDefinition[i] == "string") {
-                    textureDefinition[i] = JSON.parse(textureDefinition[i]);
+                textureDefinition[i] = textureDefinition[i].map(function (x) {
+                    var k = x;
+                    try {
+                        var m = JSON.parse(x);
+                        k = m;
+                    } finally {
+                        return k;
+                    }
+
+                });
+                if (textureDefinition[i].length < 2) {
+                    textureDefinition[i] = textureDefinition[i][0];
                 }
             }
         } catch (e) {
@@ -166,37 +176,38 @@ export class RenderedObject {
         pixiSprite.y = 0;
         pixiSprite.baseScale = textureDefinition.scale;
         pixiSprite.scale = textureDefinition.scale;
-        if (textureDefinition["offset-x"]) {
-            textureDefinition.offset = { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] };
-        }
-        pixiSprite.baseOffset = textureDefinition.offset || { x: 0, y: 0 };
+
+        pixiSprite.baseOffset = textureDefinition["offset-x"] ? { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] } : { x: 0, y: 0 };
 
         if (textureDefinition.animated && pixiSprite instanceof PIXI.extras.AnimatedSprite) pixiSprite.play();
 
         return pixiSprite;
     }
-    
-    static getSpriteDefinition(spriteName,additional?:string[]): any {
+
+    static getSpriteDefinition(spriteName, additional?: string[]): any {
         let spriteDefinition = null;
-        if(!additional){
-            additional=[];
+        if (!additional) {
+            additional = [];
         }
         var mapKey = this.parseMapKey(spriteName);
         if (mapKey) spriteName = mapKey.name;
         try {
-            spriteDefinition = queryProperties({ element: spriteName.split("_")[0] ,class:spriteName.split("_").join(" ")+" " +additional.join(" ")}, spriteModeMapRules);
+            spriteDefinition = queryProperties({ element: spriteName.split("_")[0], class: spriteName.split("_").join(" ") + " " + additional.join(" ") }, spriteModeMapRules);
             for (var i in spriteDefinition) {
-                if (typeof spriteDefinition[i] == "string") {
-                    if(spriteDefinition[i].indexOf(",")<0 && i!=="textures"){
-                        spriteDefinition[i] = JSON.parse(spriteDefinition[i]);
-                    }else{
-                        try{
-                            spriteDefinition[i] = spriteDefinition[i].split(",").map(q=>JSON.parse(q));
-                        }catch (e) {
-                            console.log("SPRITE PROP LIST DECODE FAILED:", e);
-                        }
+                spriteDefinition[i] = spriteDefinition[i].map(function (x) {
+                    var k = x;
+                    try {
+                        var m = JSON.parse(x);
+                        k = m;
+                    } finally {
+                        return k;
                     }
+
+                });
+                if (i !== "textures" && spriteDefinition[i].length < 2) {
+                    spriteDefinition[i] = spriteDefinition[i][0];
                 }
+
             }
         } catch (e) {
             console.log("SPRITE FAILED:", e);
@@ -210,7 +221,7 @@ export class RenderedObject {
         let layers = [];
         const modes = this.decodeModes(mode);
 
-        const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName,modes);
+        const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName, modes);
 
         return spriteDefinition.textures;
     }
