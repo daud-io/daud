@@ -61,8 +61,8 @@ export class RenderedObject {
             baseTexture.mipmap = Settings.mipmapping;
 
             if (textureDefinition.animated) {
-                const tileSize = textureDefinition.tileSize || 32;
-                const totalTiles = textureDefinition.tileCount || 1;
+                const tileSize = textureDefinition["tile-size"] || 32;
+                const totalTiles = textureDefinition["tile-count"] || 1;
 
                 for (let tileIndex = 0; tileIndex < totalTiles; tileIndex++) {
                     const sx = tileSize * (tileIndex % totalTiles);
@@ -72,10 +72,10 @@ export class RenderedObject {
                     textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0));
                 }
             } else if (textureDefinition.map) {
-                let imageWidth = textureDefinition.imageWidth;
-                let imageHeight = textureDefinition.imageHeight;
-                let tileWidth = textureDefinition.tileWidth;
-                let tileHeight = textureDefinition.tileHeight;
+                let imageWidth = textureDefinition["image-width"];
+                let imageHeight = textureDefinition["image-height"];
+                let tileWidth = textureDefinition["tile-width"];
+                let tileHeight = textureDefinition["tile-height"];
 
                 let tilesWide = Math.floor(imageWidth / tileWidth);
                 let tilesHigh = Math.floor(imageHeight / tileHeight);
@@ -140,7 +140,7 @@ export class RenderedObject {
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);
             if (pixiSprite instanceof PIXI.extras.AnimatedSprite) {
                 pixiSprite.loop = textureDefinition.loop;
-                pixiSprite.animationSpeed = textureDefinition.animationSpeed;
+                pixiSprite.animationSpeed = textureDefinition["animation-speed"];
             }
             pixiSprite.parentGroup = this.container.bodyGroup;
         } else if (textureDefinition.map) {
