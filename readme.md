@@ -5,12 +5,12 @@ https://daud.io
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/daud-io/daud)
 
 # Requirements
-Microsoft dotnet core 2.1 SDK - https://dotnet.microsoft.com/download
-Node js - https://nodejs.org/en/
+1. Microsoft dotnet core 2.1 SDK - https://dotnet.microsoft.com/download
+2. Node js - https://nodejs.org/en/
 
 # Suggestions
-Github Desktop - https://desktop.github.com/
-VS Code - https://code.visualstudio.com/
+1. Github Desktop - https://desktop.github.com/
+2. VS Code - https://code.visualstudio.com/
 
 ### Running from the command line
 
