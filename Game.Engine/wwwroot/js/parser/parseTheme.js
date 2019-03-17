@@ -3,8 +3,15 @@ const CSSselect = require("css-select");
 var ScssLexer = require("./ScssLexer").ScssLexer;
 var ScssParser = require("./ScssParser").ScssParser;
 var sass = require('sass');
+import { Buffer } from 'buffer';
 
-var input = sass.renderSync({ file: "../models/spriteModeMap.scss" }).css.toString('utf8');
+// in case your code is isomorphic
+if(typeof window !== 'undefined') window.Buffer = Buffer;
+
+function parseScssIntoRules(scss) {
+   return parseCssIntoRules(sass.renderSync({ data:scss}).css.toString('utf8'));
+}
+
 function parseCssIntoRules(css) {
    var chars = new antlr4.InputStream(css);
    var lexer = new ScssLexer(chars);
@@ -36,7 +43,8 @@ function parseCssIntoRules(css) {
    }
    return ruleList;
 }
-var ruleList = parseCssIntoRules(input);
+
+// var ruleList = parseCssIntoRules(input);
 function selectorMatches(selector, selectProps) {
    var thing = {
       type: 'tag',
@@ -69,5 +77,6 @@ function queryProperties(element, ruleList) {
 function getShipProperties(ship, more, ruleList) {
    return queryProperties({ element: "ship", class: ship + " " + more.join(" "), }, ruleList)
 }
-console.log(getShipProperties("cyan", ["boost", "defenseupgrade"], ruleList))
-console.log(queryProperties({ element: "bg" }, ruleList))
+// console.log(getShipProperties("cyan", ["boost", "defenseupgrade"], ruleList))
+// console.log(queryProperties({ element: "bg" }, ruleList))
+export {parseCssIntoRules,queryProperties,getShipProperties,parseScssIntoRules};
