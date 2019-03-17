@@ -137,6 +137,8 @@ export class RenderedObject {
         var pixiSprite = null;
 
         if (textureDefinition.animated) {
+            return null;
+
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);
             if (pixiSprite instanceof PIXI.extras.AnimatedSprite) {
                 pixiSprite.loop = textureDefinition.loop;
@@ -218,12 +220,14 @@ export class RenderedObject {
                     spriteLayer = this.buildSprite(textureName, spriteName);
                 }
 
-                if (zIndex == 0) zIndex = 250;
+                if (spriteLayer != null) {
+                    if (zIndex == 0) zIndex = 250;
 
-                spriteLayer.zOrder = zIndex - i + this.body.ID / 100000;
+                    spriteLayer.zOrder = zIndex - i + this.body.ID / 100000;
 
-                spriteLayers.push(spriteLayer);
-                this.activeTextures[textureName] = spriteLayer;
+                    spriteLayers.push(spriteLayer);
+                    this.activeTextures[textureName] = spriteLayer;
+                }
             }
 
             for (var key in this.activeTextures) {
