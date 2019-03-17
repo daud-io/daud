@@ -17,8 +17,8 @@
         public virtual float ShotThrustB { get => World.Hook.ShotThrustB; }
         public virtual float ShotThrustC { get => World.Hook.ShotThrustC; }
         public virtual float BaseThrustA { get => World.Hook.BaseThrustA; }
-        public virtual float BaseThrustM { get => World.Hook.BaseThrustM; }
         public virtual float BaseThrustB { get => World.Hook.BaseThrustB; }
+        public virtual float BaseThrustC { get => World.Hook.BaseThrustC; }
         public virtual float BoostThrust { get => World.Hook.BoostThrust; }
 
         public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
@@ -281,7 +281,7 @@
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
-                    : (BaseThrustA * BaseThrustA * Ships.Count + BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
+                    : (BaseThrustA / (Ships.Count + BaseThrustB) + BaseThrustC) * (1 - Burden);
 
                 ship.Drag = isBoosting
                     ? 1.0f

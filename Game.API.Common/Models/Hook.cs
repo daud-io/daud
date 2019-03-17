@@ -21,9 +21,9 @@
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
-                    BaseThrustA = 0.000005f,
-                    BaseThrustM = -0.00125f,
-                    BaseThrustB = 0.13f,
+                    BaseThrustA = 5f,
+                    BaseThrustB = 30f,
+                    BaseThrustC = -0.01f,
 
                     Drag = 0.92f,
 
@@ -159,8 +159,8 @@
         public int WorldMinPlayersToResize { get; set; }
 
         public float BaseThrustA { get; set; }
-        public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
+        public float BaseThrustC { get; set; }
 
         public float BoostThrust { get; set; }
 

@@ -8,7 +8,7 @@
 
         public float ShipThrust(int fleetSize)
         {
-            return fleetSize * Hook.BaseThrustM + Hook.BaseThrustB;
+            return Hook.BaseThrustA / (fleetSize + Hook.BaseThrustB) + Hook.BaseThrustC;
         }
 
         public float ShotThrust(int fleetSize)
