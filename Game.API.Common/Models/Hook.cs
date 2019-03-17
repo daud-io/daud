@@ -97,7 +97,7 @@
                     FishCycle = 500, // how often do they think
 
                     FlockAlignment = .35f,
-                    FlockCohesion = 0.008f,
+                    FlockCohesion = 0.01f,
                     FlockCohesionMaximumDistance = 600,
                     FlockSeparation = 80f,
                     FlockSeparationMinimumDistance = 200,
