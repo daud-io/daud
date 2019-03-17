@@ -23,7 +23,7 @@
 
                     BaseThrustA = 5f,
                     BaseThrustB = 30f,
-                    BaseThrustC = -0.01f,
+                    BaseThrustC = 0f,
 
                     Drag = 0.92f,
 
