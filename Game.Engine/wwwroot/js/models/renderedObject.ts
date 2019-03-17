@@ -1,17 +1,14 @@
 ﻿import images from "../../img/*.png";
 import { Settings } from "../settings";
 import { textureCache } from "./textureCache";
-import { textureMap } from "./textureMap";
-import { spriteModeMap } from "./spriteModeMap";
+import { textureMapRules } from "./textureMap";
+import { spriteModeMapRules } from "./spriteModeMap";
 import "pixi.js";
 import "pixi-layers";
 import { compressionOptions } from "jszip/lib/defaults";
 import { Container, Sprite } from "pixi.js";
 import { CustomContainer } from "../CustomContainer";
-import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
-import { readFileSync } from 'fs';
-var textureMapRules = parseScssIntoRules(readFileSync(__dirname + '/textureMap.scss', 'utf-8'));
-var spriteModeMapRules = parseScssIntoRules(readFileSync(__dirname + '/spriteModeMap.scss', 'utf-8'));
+import { queryProperties } from "../parser/parseTheme.js";
 export class RenderedObject {
     container: CustomContainer;
     currentSpriteName: boolean;
@@ -105,7 +102,7 @@ export class RenderedObject {
 
         var textureDefinition = null;
         try {
-            textureDefinition = queryProperties({ element: textureName }, textureMapRules);
+            textureDefinition = queryProperties({ element: textureName }, textureMapRules[0]);
             for (var i in textureDefinition) {
                 textureDefinition[i] = textureDefinition[i].map(function (x) {
                     var k = x;
@@ -192,7 +189,7 @@ export class RenderedObject {
         var mapKey = this.parseMapKey(spriteName);
         if (mapKey) spriteName = mapKey.name;
         try {
-            spriteDefinition = queryProperties({ element: spriteName.split("_")[0], class: spriteName.split("_").join(" ") + " " + additional.join(" ") }, spriteModeMapRules);
+            spriteDefinition = queryProperties({ element: spriteName.split("_")[0], class: spriteName.split("_").join(" ") + " " + additional.join(" ") }, spriteModeMapRules[0]);
             for (var i in spriteDefinition) {
                 spriteDefinition[i] = spriteDefinition[i].map(function (x) {
                     var k = x;
@@ -204,7 +201,7 @@ export class RenderedObject {
                     }
 
                 });
-                if (i !== "textures" && spriteDefinition[i].length < 2) {
+                if (i !== "textures" && i !== "layer-textures" &&i !== "layer-cpu-levels"&&i !== "layer-speeds" && spriteDefinition[i].length < 2) {
                     spriteDefinition[i] = spriteDefinition[i][0];
                 }
 

@@ -78,9 +78,6 @@ function queryProperties(element, ruleList) {
    return res;
 }
 
-function getShipProperties(ship, more, ruleList) {
-   return queryProperties({ element: "ship", class: ship + " " + more.join(" "), }, ruleList)
-}
 // console.log(getShipProperties("cyan", ["boost", "defenseupgrade"], ruleList))
 // console.log(queryProperties({ element: "bg" }, ruleList))
-export {parseCssIntoRules,queryProperties,getShipProperties,parseScssIntoRules};
+export {parseCssIntoRules,queryProperties,parseScssIntoRules};
