@@ -6,7 +6,13 @@ import { spriteModeMapRules } from "./models/spriteModeMap";
 import { textureCache } from "./models/textureCache";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
-import { queryProperties, parseScssIntoRules} from "./parser/parseTheme.js";
+var sass = require('sass');
+var Buffer = require('buffer').Buffer;
+
+// in case your code is isomorphic
+if (typeof window !== 'undefined') (<any>window).Buffer = Buffer;
+
+import { queryProperties, parseScssIntoRules } from "./parser/parseTheme.js";
 
 export const Settings = {
     theme: "",
@@ -146,125 +152,122 @@ async function theme(v) {
         .async("string")
         .then(text => {
             zip.file("daudmod/textureMap.scss")
-        .async("string")
-        .then(text2 => {
-           
-           
+                .async("string")
+                .then(text2 => {
+                    zip.file("daudmod/styles.scss")
+                        .async("string")
+                        .then(text3 => {
 
-            if (text) {
-                var spriteModeMapR=parseScssIntoRules(text);
-                spriteModeMapRules[0]=spriteModeMapRules[0].concat(spriteModeMapR);
-            }
 
-            if (text2) {
-                var textureMapR=parseScssIntoRules(text2);
-                
-                
-                const promises = [];
-                for (var entry of textureMapR) {
-                    (function(ent){
-                    if(ent.obj.file){
-                        var file=JSON.parse(ent.obj.file[0])+"";
-                        
-                    promises.push(
-                        zip
-                            .file(`daudmod/${file}.png`)
-                            .async("arraybuffer")
-                            .then(ab => {
-                                
-                    var key=ent.selector+"";
-                                const arrayBufferView = new Uint8Array(ab);
-                                const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                const urlCreator = window.URL;
-                                const url = urlCreator.createObjectURL(blob);
 
-                                if (key == "shield") {
-                                    console.log("breakpoint");
-                                     (<any>ent.obj).flag = ["true"];
+                            if (text) {
+                                var spriteModeMapR = parseScssIntoRules(text);
+                                spriteModeMapRules[0] = spriteModeMapRules[0].concat(spriteModeMapR);
+                            }
+
+                            if (text2) {
+                                var textureMapR = parseScssIntoRules(text2);
+
+
+                                const promises = [];
+                                for (var entry of textureMapR) {
+                                    (function (ent) {
+                                        if (ent.obj.file) {
+                                            var file = JSON.parse(ent.obj.file[0]) + "";
+
+                                            promises.push(
+                                                zip
+                                                    .file(`daudmod/${file}.png`)
+                                                    .async("arraybuffer")
+                                                    .then(ab => {
+
+                                                        var key = ent.selector + "";
+                                                        const arrayBufferView = new Uint8Array(ab);
+                                                        const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                        const urlCreator = window.URL;
+                                                        const url = urlCreator.createObjectURL(blob);
+
+                                                        if (key == "shield") {
+                                                            console.log("breakpoint");
+                                                            (<any>ent.obj).flag = ["true"];
+                                                        }
+
+                                                        if (debug) console.log(`textureMap.${key}.url: set to blob for file ${file}`);
+                                                        ent.obj.url = [url];
+                                                    })
+                                            );
+                                        }
+                                    })(entry);
+                                }
+                                textureMapRules[0] = textureMapRules[0].concat(textureMapR);
+
+                                if (text3) {
+                                    var ab = sass.renderSync({ data: text3 }).css.toString('utf8');
+                                    var imagePromises = [];
+                                    var cleansed = ab;
+                                    var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
+                                    images = images ? images : [];
+                                    var fixed = [];
+                                    var fixedMap = [];
+                                    var replacePairs = [];
+                                    for (var imagen = 0; imagen < images.length; imagen++) {
+                                        var imocc = images[imagen];
+                                        var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
+                                        var imgurl = m[1] + "";
+                                        if (debug) console.log(`theme css imagesss ${imgurl}`);
+                                        if (fixed.indexOf(imgurl) > 0) {
+                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                        } else {
+                                            fixed.push(imgurl);
+                                            fixedMap.push("");
+                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                            imagePromises.push(
+                                                (function (loo) {
+                                                    return zip
+                                                        .file(`daudmod/${imgurl}`)
+                                                        .async("arraybuffer")
+                                                        .then(ab => {
+                                                            const arrayBufferView = new Uint8Array(ab);
+                                                            const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                            const urlCreator = window.URL;
+                                                            const url = urlCreator.createObjectURL(blob);
+                                                            fixedMap[fixed.indexOf(loo)] = url;
+
+                                                            if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
+                                                        });
+                                                })(imgurl)
+                                            );
+                                        }
+                                    }
+                                    Promise.all(imagePromises).then(() => {
+                                        for (var k = 0; k < replacePairs.length; k++) {
+                                            cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
+                                        }
+                                        const blob = new Blob([cleansed], { type: "text/css" });
+                                        const urlCreator = window.URL;
+                                        const url = urlCreator.createObjectURL(blob);
+
+                                        var link = document.createElement("link");
+                                        link.setAttribute("rel", "stylesheet");
+                                        link.setAttribute("type", "text/css");
+                                        link.setAttribute("href", url);
+                                        document.getElementById("theme-styles").appendChild(link);
+                                    });
+
                                 }
 
-                                if (debug) console.log(`textureMap.${key}.url: set to blob for file ${file}`);
-                                ent.obj.url = [url];
-                            })
-                    );
-                        }
-                    })(entry);
-                }
-                textureMapRules[0]=textureMapRules[0].concat(textureMapR);
-                // if (info.styles) {
-                //     for (var i = 0; i < info.styles.length; i++) {
-                //         const css = info.styles[i];
-
-                //         promises.push(
-                //             zip
-                //                 .file(`daudmod/${css}`)
-                //                 .async("string")
-                //                 .then(ab => {
-                //                     var imagePromises = [];
-                //                     var cleansed = ab;
-                //                     var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
-                //                     images=images?images:[];
-                //                     var fixed = [];
-                //                     var fixedMap = [];
-                //                     var replacePairs = [];
-                //                     for (var imagen = 0; imagen < images.length; imagen++) {
-                //                         var imocc = images[imagen];
-                //                         var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
-                //                         var imgurl = m[1] + "";
-                //                         if (debug) console.log(`theme css imagesss ${imgurl}`);
-                //                         if (fixed.indexOf(imgurl) > 0) {
-                //                             replacePairs.push([imocc, fixed.indexOf(imgurl)]);
-                //                         } else {
-                //                             fixed.push(imgurl);
-                //                             fixedMap.push("");
-                //                             replacePairs.push([imocc, fixed.indexOf(imgurl)]);
-                //                             imagePromises.push(
-                //                                 (function(loo) {
-                //                                     return zip
-                //                                         .file(`daudmod/${imgurl}`)
-                //                                         .async("arraybuffer")
-                //                                         .then(ab => {
-                //                                             const arrayBufferView = new Uint8Array(ab);
-                //                                             const blob = new Blob([arrayBufferView], { type: "image/png" });
-                //                                             const urlCreator = window.URL;
-                //                                             const url = urlCreator.createObjectURL(blob);
-                //                                             fixedMap[fixed.indexOf(loo)] = url;
-
-                //                                             if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
-                //                                         });
-                //                                 })(imgurl)
-                //                             );
-                //                         }
-                //                     }
-                //                     Promise.all(imagePromises).then(() => {
-                //                         for (var k = 0; k < replacePairs.length; k++) {
-                //                             cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
-                //                         }
-                //                         const blob = new Blob([cleansed], { type: "text/css" });
-                //                         const urlCreator = window.URL;
-                //                         const url = urlCreator.createObjectURL(blob);
-
-                //                         var link = document.createElement("link");
-                //                         link.setAttribute("rel", "stylesheet");
-                //                         link.setAttribute("type", "text/css");
-                //                         link.setAttribute("href", url);
-                //                         document.getElementById("theme-styles").appendChild(link);
-                //                     });
-                //                 })
-                //         );
-                //     }
-                // }
-                Promise.all(promises).then(() => {
-                    if (window.Game && window.Game.cache) {
-                        if (debug) console.log(`theme loading complete`);
-                        textureCache.clear();
-                        window.Game.cache.refreshSprites();
-                        window.Game.reinitializeWorld();
-                        //Controls.addSecretShips(window.discordData);
-                    }
+                                Promise.all(promises).then(() => {
+                                    if (window.Game && window.Game.cache) {
+                                        if (debug) console.log(`theme loading complete`);
+                                        textureCache.clear();
+                                        window.Game.cache.refreshSprites();
+                                        window.Game.reinitializeWorld();
+                                        //Controls.addSecretShips(window.discordData);
+                                    }
+                                });
+                            }
+                        });
                 });
-            }
-        });
         });
 }
 
@@ -305,14 +308,14 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 let minimapChanged = false;
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     if (e.keyCode == 77 && !minimapChanged && (document.body.classList.contains("alive") || document.body.classList.contains("spectating"))) {
         Settings.displayMinimap = !Settings.displayMinimap;
         minimapChanged = true;
     }
 });
 
-window.addEventListener("keyup", function(e) {
+window.addEventListener("keyup", function (e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
 
