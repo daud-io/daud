@@ -4,17 +4,13 @@ https://daud.io
 # Deploying to heroku
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/daud-io/daud)
 
-# Setting Up on a Mac
+# Requirements
+Microsoft dotnet core 2.1 SDK - https://dotnet.microsoft.com/download
+Node js - https://nodejs.org/en/
 
-### Installing Tools
-
-Visual Studio can be found at https://visualstudio.microsoft.com/vs/mac/
-
-VSCode can be used as well
-
-Make sure you install .net core, visual studio should prompt you to do so during the process.
-
-node.js and npm need to be installed
+# Suggestions
+Github Desktop - https://desktop.github.com/
+VS Code - https://code.visualstudio.com/
 
 ### Running from the command line
 
@@ -24,6 +20,9 @@ node.js and npm need to be installed
 4. `npm run build`
 5. `cd ..`
 6. `dotnet run` or `dotnet run -c Release`
+
+This should start a web server at http://localhost:5000
+open Game Modes and look for your local server rooms at the bottom of the list
 
 ### Publishing to Heroku
 1. Set up an account on Heroku and on Docker Hub
@@ -43,19 +42,3 @@ Double click "Game.Engine.sln"
 If the project opens in Visual studio, that is good.
 
 You can now run the project locally with the run button. 
-
-### Possible Issues
-
-If you get "error: the projet file cannot be found" when opening the .sln file, follow the steps below
- - navigate to the the Game.Engine folder.
- - double click the .csproj file
- - have it error
- - navigate to the the Game.Models folder.
- - double click the .csproj file
- - have it error
- - open the Game.Engine.sln file again
- - have it work (hopefully)
-
-If the game does not load in a reasonable period of time, click the arrow next to where it says "debug" and change it to "release."
-
-If you get "Unhandled Exception: Microsoft.AspNetCore.Server.Kestrel.Transport.Libuv.Internal.Networking.UvException: Error -13 EACCES permission denied" when running the game, try changing the port number in Program.cs
