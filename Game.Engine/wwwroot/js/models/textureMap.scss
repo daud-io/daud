@@ -166,7 +166,7 @@ shield {
   file: "shield";
   animated: true;
   loop: true;
-  animationspeed: 0.5;
+  animationSpeed: 0.5;
   scale: 0.04;
   tilesize: 64;
   tilecount: 90;
@@ -176,7 +176,7 @@ invulnerable {
   file: "shield";
   animated: true;
   loop: true;
-  animationspeed: 0.5;
+  animationSpeed: 0.5;
   scale: 0.04;
   tilesize: 64;
   tilecount: 90;
@@ -186,7 +186,7 @@ shield_pickup {
   file: "shield_pickup";
   animated: true;
   loop: true;
-  animationspeed: 0.5;
+  animationSpeed: 0.5;
   scale: 0.04;
   tilesize: 64;
   tilecount: 30;
@@ -196,7 +196,7 @@ wormhole {
   file: "wormhole";
   animated: true;
   loop: true;
-  animationspeed: 0.5;
+  animationSpeed: 0.5;
   scale: 0.04;
   tilesize: 128;
   tilecount: 90;
@@ -211,7 +211,7 @@ thruster_red,
 thruster_yellow {
   animated: true;
   loop: false;
-  animationspeed: 1;
+  animationSpeed: 1;
   offset: {
     x: -145;
     y: 0;
@@ -248,7 +248,7 @@ offenseupgrade {
   file: "circles";
   animated: true;
   loop: true;
-  animationspeed: 0.2;
+  animationSpeed: 0.2;
   scale: 0.05;
   tint: 16711680;
   tilesize: 72;
@@ -259,7 +259,7 @@ defenseupgrade {
   file: "circles";
   animated: true;
   loop: true;
-  animationspeed: 0.4;
+  animationSpeed: 0.4;
   scale: 0.05;
   tint: 6711039;
   tilesize: 72;
@@ -281,7 +281,7 @@ ctf_flag_blue {
   animated: true;
   tilesize: 128;
   tilecount: 6;
-  animationspeed: 0.1;
+  animationSpeed: 0.1;
   scale: 0.015;
   loop: true;
 }
@@ -290,7 +290,7 @@ ctf_flag_red {
   animated: true;
   tilesize: 128;
   tilecount: 6;
-  animationspeed: 0.1;
+  animationSpeed: 0.1;
   scale: 0.015;
   loop: true;
 }
