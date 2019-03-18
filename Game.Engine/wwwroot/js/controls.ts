@@ -238,15 +238,15 @@ export var Controls = {
     ship: "ship_green",
 
     addSecretShips: function(discord) {
-        try {
+        if (discord
+            && discord.data
+            && discord.data.roles) {
             if (discord.data.roles.includes("Player")) {
                 shipSelectorSwitch.querySelector("[data-color=ship_secret]").style.display = "inline-block";
             }
             if (discord.data.roles.includes("Old Guard")) {
                 shipSelectorSwitch.querySelector("[data-color=ship_zed]").style.display = "inline-block";
             }
-        } catch (err) {
-            console.log(err);
         }
     }
 };
