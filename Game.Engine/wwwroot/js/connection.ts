@@ -19,6 +19,7 @@ export class Connection {
     statBytesDown: number;
     statBytesDownPerSecond: number;
     statBytesUpPerSecond: number;
+    isBackgrounded: boolean;
     fb: any;
     latency: number;
     minLatency: number;
@@ -28,6 +29,8 @@ export class Connection {
     bandwidthThrottle: number;
     autoReload: boolean;
     statPongCount: number;
+    connectionStatusReporting: boolean;
+
     constructor() {
         this.onView = view => {};
         this.onLeaderboard = leaderboard => {};
@@ -36,12 +39,14 @@ export class Connection {
         this.disconnecting = false;
         this.connected = false;
         this.autoReload = true;
+        this.connectionStatusReporting = true;
 
         this.statBytesUp = 0;
         this.statBytesDown = 0;
         this.statBytesDownPerSecond = 0;
         this.statBytesUpPerSecond = 0;
         this.statPongCount = 0;
+
 
         const self = this;
         this.fb = Game.Engine.Networking.FlatBuffers;
@@ -121,11 +126,13 @@ export class Connection {
         };
 
         this.socket.onerror = error => {
-            document.body.classList.add("connectionerror");
+            if (self.connectionStatusReporting)
+                document.body.classList.add("connectionerror");
         };
 
         this.socket.onopen = event => {
-            document.body.classList.remove("connectionerror");
+            if (self.connectionStatusReporting)
+                document.body.classList.remove("connectionerror");
             self.onOpen(event);
         };
         this.socket.onclose = event => {
@@ -136,7 +143,6 @@ export class Connection {
         const builder = new (<any>flatbuffers).Builder(0);
 
         this.fb.NetPing.startNetPing(builder);
-
         this.pingSent = performance.now();
 
         //this.fb.Ping.addTime(builder, this.pingSent);
@@ -145,7 +151,7 @@ export class Connection {
         this.fb.NetPing.addUps(builder, this.updatesPerSecond);
         this.fb.NetPing.addFps(builder, this.framesPerSecond);
         this.fb.NetPing.addCs(builder, Cache.count);
-        this.fb.NetPing.addBackgrounded(builder, this.isBackgrounded);
+        this.fb.NetPing.addBackgrounded(builder, this.framesPerSecond < 1);
         this.fb.NetPing.addBandwidthThrottle(builder, this.bandwidthThrottle);
 
         const ping = this.fb.NetPing.endNetPing(builder);
@@ -158,9 +164,6 @@ export class Connection {
         builder.finish(quantum);
 
         this.send(builder.asUint8Array());
-    }
-    isBackgrounded(builder: any, isBackgrounded: any): any {
-        throw new Error("Method not implemented.");
     }
 
     sendExit() {

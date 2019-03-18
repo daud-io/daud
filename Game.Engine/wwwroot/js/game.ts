@@ -16,7 +16,6 @@ import { Cooldown } from "./cooldown";
 import { Controls } from "./controls";
 import { message } from "./chat";
 import { Connection } from "./connection";
-import { Router } from "./router";
 import { getToken } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
@@ -94,10 +93,6 @@ let currentWorld = false;
 
 Controls.registerCanvas(canvas);
 
-
-const router = new Router();
-router.pingServer("us.daud.io/default");
-router.pingServer("d3e.daud.io/default");
 
 const connection = new Connection();
 /*if (window.location.hash) connection.connect(window.location.hash.substring(1));
