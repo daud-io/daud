@@ -1,5 +1,5 @@
 ﻿import { fetch } from "whatwg-fetch";
-import { Controls } from "./controls";
+import { Router } from "./router";
 import { __esModule } from "pixi.js/lib/core";
 
 const worlds = document.getElementById("worlds");
@@ -119,10 +119,28 @@ function refreshList(autoJoinWorld) {
                     window.Game.primaryConnection.connect(selected);
                 }
 
-                var JoinServer = hostName + "/" + worldConnect;
                 buildList(response);
                 
-                if (autoJoin) joinWorld(autoJoinWorld || JoinServer);
+                if (autoJoin)
+                {
+                    var worldKey = hostName + "/" + worldConnect;
+                    if (!autoJoinWorld)
+                    {
+                        const router = new Router();
+                        router.findBestServer([
+                            "us.daud.io/default",
+                            "de.daud.io/default"
+                        ], best => {
+
+                            if (allWorlds[best])
+                                joinWorld(best);
+                            else
+                                joinWorld(worldKey);
+                        });
+                    }
+                    else
+                        joinWorld(autoJoinWorld || worldKey);
+                }
             }
         });
 }
@@ -166,5 +184,7 @@ document.getElementById("arenas").addEventListener("click", e => {
     return false;
 });
 
-//refreshList();
+refreshList(false);
 setInterval(refreshList, 1000);
+
+
