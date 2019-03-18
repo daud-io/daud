@@ -60,7 +60,6 @@ fish {
   scale: 0.03;
 }
 
-
 ship0,
 ship_gray,
 ship_flash,
@@ -116,37 +115,39 @@ ship_zed {
   file: "ship_zed";
 }
 
+bullet,
+bullet_cyan,
+bullet_blue,
+bullet_green,
+bullet_orange,
+bullet_pink,
+bullet_red,
+bullet_yellow {
+  scale: 0.03;
+}
 bullet {
   file: "bullet";
-  scale: 0.03;
 }
 bullet_cyan {
   file: "bullet_cyan";
-  scale: 0.03;
 }
 bullet_blue {
   file: "bullet_blue";
-  scale: 0.03;
 }
 bullet_green {
   file: "bullet_green";
-  scale: 0.03;
 }
 bullet_orange {
   file: "bullet_orange";
-  scale: 0.03;
 }
 bullet_pink {
   file: "bullet_pink";
-  scale: 0.03;
 }
 bullet_red {
   file: "bullet_red";
-  scale: 0.03;
 }
 bullet_yellow {
   file: "bullet_yellow";
-  scale: 0.03;
 }
 
 obstacle {
