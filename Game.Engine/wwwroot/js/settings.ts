@@ -28,7 +28,7 @@ export const Settings = {
     background: "on",
     mipmapping: true,
     updatesVersion: 0,
-    mouseOneButton: 0
+    mouseOneButton: 0,
 };
 const themeSelector = <HTMLInputElement>document.getElementById("settingsThemeSelector");
 const themeSelectorCustom = <HTMLInputElement>document.getElementById("settingsThemeSelectorCustom");

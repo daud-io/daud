@@ -16,6 +16,7 @@ import { Cooldown } from "./cooldown";
 import { Controls } from "./controls";
 import { message } from "./chat";
 import { Connection } from "./connection";
+import { Router } from "./router";
 import { getToken } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
@@ -92,6 +93,11 @@ let CustomDataTime = null;
 let currentWorld = false;
 
 Controls.registerCanvas(canvas);
+
+
+const router = new Router();
+router.pingServer("us.daud.io/default");
+router.pingServer("d3e.daud.io/default");
 
 const connection = new Connection();
 /*if (window.location.hash) connection.connect(window.location.hash.substring(1));
@@ -338,6 +344,7 @@ LobbyCallbacks.onLobbyClose = function() {
 
 var spawnOnView = false;
 LobbyCallbacks.onWorldJoin = function(worldKey, world) {
+    console.log(`onWorldJoin: ${worldKey} ${world}`);
     if (joiningWorld) {
         joiningWorld = false;
         spawnOnView = true;
