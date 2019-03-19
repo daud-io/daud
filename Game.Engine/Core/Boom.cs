@@ -18,13 +18,18 @@
 
         public static Boom FromShip(Ship ship)
         {
-            var boom = new Boom();
-            boom.Init(ship.World);
-            boom.Size = ship.Size;
-            boom.Position = ship.Position;
-            boom.Momentum = ship.Momentum;
+            if (ship.World.Hook.BoomLife > 0)
+            {
+                var boom = new Boom();
+                boom.Init(ship.World);
+                boom.Size = ship.Size;
+                boom.Position = ship.Position;
+                boom.Momentum = ship.Momentum;
 
-            return boom;
+                return boom;
+            }
+            else
+                return null;
         }
 
         public override void Think()
