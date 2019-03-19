@@ -218,13 +218,13 @@ export var Controls = {
         while (selector.firstChild) selector.removeChild(selector.firstChild);
 
         for (let i = 0; i < colors.length; i++) {
-            console.log('hi parker, I am inside the loop');
             const selectorImage = Ship.getSelectorImage(colors[i]);
 
             if (selectorImage) {
                 selector.appendChild(selectorImage);
                 selectorImage.setAttribute("data-color", colors[i]);
                 selectorImage.classList.add("circle");
+
                 if (secretShips.includes(colors[i])) {
                     selectorImage.classList.add("locked");
                 }
