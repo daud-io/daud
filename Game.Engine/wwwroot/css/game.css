@@ -323,6 +323,11 @@ a {
     transform: rotate(-90deg);
 }
 
+#shipSelectorSwitch .circle.locked {
+    background-color: red;
+}
+
+
 #shipSelectorSwitch .circle:hover {
     transform: rotate(-90deg) scale(1.1);
 }
