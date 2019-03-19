@@ -24,7 +24,7 @@
 
 bg {
   file: "bg";
-  scale: 4;
+  size: 400%;
 }
 
 bg2,
@@ -36,28 +36,28 @@ bg7 {
   file: "bg2";
 }
 bg2 {
-  scale: 5;
+  size: 500%;
 }
 bg3 {
-  scale: 6;
+  size: 600%;
 }
 bg4 {
-  scale: 7;
+  size: 700%;
 }
 bg5 {
-  scale: 8;
+  size: 800%;
 }
 bg6 {
-  scale: 9;
+  size: 900%;
 }
 bg7 {
-  scale: 10;
+  size: 1000%;
 }
 
 // fish
 fish {
   file: "fish";
-  scale: 0.03;
+  size: 1.92;
 }
 
 ship0,
@@ -72,7 +72,7 @@ ship_red,
 ship_yellow,
 ship_secret,
 ship_zed {
-  scale: 0.02;
+  size: 2.56;
 }
 // daudelins
 ship0 {
@@ -123,7 +123,7 @@ bullet_orange,
 bullet_pink,
 bullet_red,
 bullet_yellow {
-  scale: 0.03;
+  size: 7.68;
 }
 bullet {
   file: "bullet";
@@ -152,15 +152,15 @@ bullet_yellow {
 
 obstacle {
   file: "obstacle";
-  scale: 0.0028;
+  size: 2.8672;
 }
 seeker {
   file: "seeker";
-  scale: 0.02;
+  size: 0.64;
 }
 seeker_pickup {
   file: "seeker_pickup";
-  scale: 0.02;
+  size: 1.28;
 }
 
 shield,
@@ -169,7 +169,7 @@ invulnerable {
   animated: true;
   loop: true;
   animation-speed: 0.5;
-  scale: 0.04;
+  size: 2.56;
   tile: {
     size: 64;
     count: 90;
@@ -181,7 +181,7 @@ shield_pickup {
   animated: true;
   loop: true;
   animation-speed: 0.5;
-  scale: 0.04;
+  size: 2.56;
   tile: {
     size: 64;
     count: 30;
@@ -193,7 +193,7 @@ wormhole {
   animated: true;
   loop: true;
   animation-speed: 0.5;
-  scale: 0.04;
+  size: 5.12;
   tile: {
     size: 128;
     count: 90;
@@ -214,7 +214,7 @@ thruster_yellow {
     x: -145;
     y: 0;
   }
-  scale: 0.04;
+  size: 2.56;
   rotate: 6;
   tile: {
     size: 64;
@@ -249,7 +249,7 @@ defenseupgrade {
   animated: true;
   loop: true;
 
-  scale: 0.05;
+  size: 3.6;
 
   tile: {
     size: 72;
@@ -269,13 +269,13 @@ defenseupgrade {
 
 arrow {
   file: "arrow";
-  scale: 1;
+  size: 100%;
 }
 
 // Capture the Flag
 ctf_base {
   file: "ctf_base";
-  scale: 0.003;
+  size:3.072;
 }
 ctf_flag_red,
 ctf_flag_blue {
@@ -285,7 +285,7 @@ ctf_flag_blue {
     count: 6;
   }
   animation-speed: 0.1;
-  scale: 0.015;
+  size: 1.92;
   loop: true;
 }
 ctf_flag_blue {
@@ -296,71 +296,71 @@ ctf_flag_red {
 }
 ctf_score_final {
   file: "ctf_score_final";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_final_blue {
   file: "ctf_score_final_blue";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_final_red {
   file: "ctf_score_final_red";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_left_0 {
   file: "ctf_score_left_0";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_left_1 {
   file: "ctf_score_left_1";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_left_2 {
   file: "ctf_score_left_2";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_left_3 {
   file: "ctf_score_left_3";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_left_4 {
   file: "ctf_score_left_4";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_right_0 {
   file: "ctf_score_right_0";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_right_1 {
   file: "ctf_score_right_1";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_right_2 {
   file: "ctf_score_right_2";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_right_3 {
   file: "ctf_score_right_3";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_right_4 {
   file: "ctf_score_right_4";
-  scale: 1;
+  size: 100%;
 }
 ctf_score_stripes {
   file: "ctf_score_stripes";
-  scale: 1;
+  size: 100%;
 }
 ctf_arrow_red {
   file: "ctf_arrow_red";
-  scale: 0.05;
+  size: 25.6;
 }
 ctf_arrow_blue {
   file: "ctf_arrow_blue";
-  scale: 0.05;
+  size: 25.6;
 }
 ctf_arrow_trans_flag {
   file: "ctf_arrow_trans_flag";
-  scale: 0.1;
+  size: 51.2;
 }
 
 map_beach {
@@ -371,7 +371,7 @@ map_beach {
   tile-count: 936;
   image-width: 576;
   image-height: 416;
-  scale: 0.0655;
+  size: 27.248;
 }
 map_wilds {
   file: "buch-outdoor";
@@ -389,7 +389,7 @@ map_wilds {
     width: 384;
     height: 192;
   }
-  scale: 0.0655;
+  size: 33.536;
 }
 map {
   file: "spritesheet";
@@ -407,5 +407,5 @@ map {
     width: 1024;
     height: 1024;
   }
-  scale: 0.0655;
+  size:67.072;
 }

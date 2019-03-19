@@ -61,7 +61,7 @@ export class Background extends RenderedObject {
                     backgroundSprite = new PIXI.extras.TilingSprite(textures[0], 200000, 200000);
                     backgroundSprite.parentGroup = this.container.backgroundGroup;
                     this.container.addChild(backgroundSprite);
-                    backgroundSprite.tileScale.set(allLayersTextures[i].scale, allLayersTextures[i].scale);
+                    backgroundSprite.tileScale.set(RenderedObject.getScale(allLayersTextures[i],textures[0]), RenderedObject.getScale(allLayersTextures[i],textures[0]));
                     backgroundSprite.rotation = Math.random() - 0.5;
                     backgroundSprite.position.x = -100000 * (Math.cos(backgroundSprite.rotation) - Math.sin(backgroundSprite.rotation));
                     backgroundSprite.position.y = -100000 * (Math.sin(backgroundSprite.rotation) + Math.cos(backgroundSprite.rotation));
