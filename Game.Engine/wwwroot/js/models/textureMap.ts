@@ -34,6 +34,8 @@ export const textureMap = {
     // fish
     fish: { file: "fish", scale: 0.03 },
 
+    boom: { file: "boom", scale: 0.005 },
+
     // daudelins
     ship0: { file: "ship0", scale: 0.02 },
 

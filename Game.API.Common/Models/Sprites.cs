@@ -58,6 +58,7 @@
         circles,
         shield,
         shield_pickup,
-        wormhole
+        wormhole,
+        boom
     }
 }
