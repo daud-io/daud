@@ -52,13 +52,15 @@ app.stage.addChild(new PIXI.display.Layer(bodyGroup));
 
 container.backgroundGroup = backgroundGroup;
 container.bodyGroup = bodyGroup;
-container.emitterContainer = new PIXI.Container();
-container.emitterContainer.group = bodyGroup;
-app.stage.addChild(container.emitterContainer);
 
 container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
 container.tiles.parentGroup = tileGroup;
 container.addChild(container.tiles);
+
+container.emitterContainer = new PIXI.particles.ParticleContainer();
+container.emitterContainer.parentGroup = bodyGroup;
+container.zOrder = 128;
+container.addChild(container.emitterContainer);
 
 const renderer = new Renderer(container);
 const background = new Background(container);

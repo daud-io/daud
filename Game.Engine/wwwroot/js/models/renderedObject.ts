@@ -1,4 +1,5 @@
 ﻿import images from "../../img/*.png";
+import * as emitters from "../../img/emitters.json";
 import { Settings } from "../settings";
 import { textureCache } from "./textureCache";
 import { textureMap } from "./textureMap";
@@ -8,6 +9,15 @@ import "pixi-layers";
 import * as particles from "pixi-particles";
 import { compressionOptions } from "jszip/lib/defaults";
 import { CustomContainer } from "../CustomContainer";
+
+class GroupParticle extends particles.Particle
+{
+    constructor(emitter: particles.Emitter)
+    {
+        super(emitter);
+        this.parentGroup = emitter.parent.parentGroup;
+    }
+}
 
 export class RenderedObject {
     container: CustomContainer;
@@ -253,60 +263,19 @@ export class RenderedObject {
 
                     if (textureDefinition.emitter)
                     {
-                        let particleTextureName = "fish";
+                        let particleTextureName = textureDefinition.particle;
                         const particleTextures = RenderedObject.loadTexture(RenderedObject.getTextureDefinition(particleTextureName), particleTextureName);
-                
-                        console.log('creating emitter');
+                        
+                        if (typeof textureDefinition.emitter == "string")
+                            textureDefinition.emitter = emitters[textureDefinition.emitter];
 
-                        emitterLayer = new particles.Emitter(this.container.emitterContainer, particleTextures, {
-                            "alpha": {
-                                "start": 1,
-                                "end": 0.22
-                            },
-                            "scale": {
-                                "start": 0.25,
-                                "end": 0.75,
-                                "minimumScaleMultiplier": 0.5
-                            },
-                            "color": {
-                                "start": "#ffffff",
-                                "end": "#ffffff"
-                            },
-                            "speed": {
-                                "start": 200,
-                                "end": 50,
-                                "minimumSpeedMultiplier": 1
-                            },
-                            "acceleration": {
-                                "x": 0,
-                                "y": 0
-                            },
-                            "maxSpeed": 0,
-                            "startRotation": {
-                                "min": 0,
-                                "max": 360
-                            },
-                            "noRotation": false,
-                            "rotationSpeed": {
-                                "min": 0,
-                                "max": 10
-                            },
-                            "lifetime": {
-                                "min": 4,
-                                "max": 4
-                            },
-                            "blendMode": "normal",
-                            "frequency": 0.016,
-                            "emitterLifetime": -1,
-                            "maxParticles": 500,
-                            "pos": {
-                                "x": 0,
-                                "y": 0
-                            },
-                            "addAtBack": false,
-                            "spawnType": "point"
-                        });
+                        emitterLayer = new particles.Emitter(
+                            this.container.emitterContainer,
+                            particleTextures,
+                            textureDefinition.emitter);
                         emitterLayer.emit = true;
+                        let self = this;
+                        emitterLayer.particleConstructor = GroupParticle;
                     }
                 }
 
@@ -379,6 +348,7 @@ export class RenderedObject {
                 this.container.addChildAt(layer, 2);
             });
 
+            // also adds them to the container
             this.emitterLayers = this.buildEmitterLayers(spriteName, mode, zIndex);
         }
     }
@@ -390,9 +360,14 @@ export class RenderedObject {
         }
 
         if (this.lastTime > 0)
+        {
+            //console.log(`update emitters (${time}-${this.lastTime} = ${time - this.lastTime}) * 0.001 = ${(time - this.lastTime) * 0.001}) `);
+            
             this.foreachEmitter(e => {
+                
                 e.update((time-this.lastTime) * 0.001);
             });
+        }
 
         this.lastTime = time;
     }
@@ -414,6 +389,7 @@ export class RenderedObject {
         });
 
         this.foreachEmitter(function(emitter){
+            //console.log(`updating emitter ${interpolatedPosition.x},${interpolatedPosition.y}`);
             emitter.updateSpawnPos(interpolatedPosition.x,interpolatedPosition.y);
         })
     }
@@ -432,6 +408,7 @@ export class RenderedObject {
     }
 
     foreachEmitter(action) {
+        //console.log(`enumerating this.emitterLayers.length ${this.emitterLayers.length}`);
         if (this.emitterLayers && this.emitterLayers.length)
             this.emitterLayers.forEach((layer, i) => {
                 action.apply(this, [layer, i]);
