@@ -2,8 +2,8 @@
 import * as emitters from "../../img/emitters.json";
 import { Settings } from "../settings";
 import { textureCache } from "./textureCache";
-import { textureMap } from "./textureMap";
-import { spriteModeMap } from "./spriteModeMap";
+import { textureMapRules } from "./textureMap";
+import { spriteModeMapRules } from "./spriteModeMap";
 import "pixi.js";
 import "pixi-layers";
 import * as particles from "pixi-particles";
@@ -11,6 +11,7 @@ import { compressionOptions } from "jszip/lib/defaults";
 import { CustomContainer } from "../CustomContainer";
 import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
 import { readFileSync } from 'fs';
+import { queryProperties } from "../parser/parseTheme.js";
 
 class GroupParticle extends particles.Particle
 {
@@ -34,6 +35,7 @@ export class RenderedObject {
     emitterLayers?: any;
     lastTime: number;
 
+    additionalClasses?: string[];
     constructor(container: CustomContainer) {
         this.container = container;
         this.currentSpriteName = false;
@@ -78,21 +80,24 @@ export class RenderedObject {
             baseTexture.mipmap = Settings.mipmapping;
 
             if (textureDefinition.animated) {
-                const tileSize = textureDefinition.tileSize || 32;
-                const totalTiles = textureDefinition.tileCount || 1;
+                const tileSize = textureDefinition["tile-size"] || 32;
+                const totalTiles = textureDefinition["tile-count"] || 1;
 
                 for (let tileIndex = 0; tileIndex < totalTiles; tileIndex++) {
                     const sx = tileSize * (tileIndex % totalTiles);
                     const sy = 0;
                     const sw = tileSize;
                     const sh = tileSize;
-                    textures.push(new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0));
+                    var tex=new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0);
+                    (<any>tex).daudScale=RenderedObject.getScaleWithHeight(textureDefinition,tileSize);
+                    textures.push(tex);
                 }
+                
             } else if (textureDefinition.map) {
-                let imageWidth = textureDefinition.imageWidth;
-                let imageHeight = textureDefinition.imageHeight;
-                let tileWidth = textureDefinition.tileWidth;
-                let tileHeight = textureDefinition.tileHeight;
+                let imageWidth = textureDefinition["image-width"];
+                let imageHeight = textureDefinition["image-height"];
+                let tileWidth = textureDefinition["tile-width"];
+                let tileHeight = textureDefinition["tile-height"];
 
                 let tilesWide = Math.floor(imageWidth / tileWidth);
                 let tilesHigh = Math.floor(imageHeight / tileHeight);
@@ -103,13 +108,20 @@ export class RenderedObject {
                         let y = Math.floor(row * tileHeight);
 
                         var texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
+                        
                         texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
+                        (<any>texture).daudScale=RenderedObject.getScaleWithHeight(textureDefinition,tileHeight);
                         //texture.scaleMode = PIXI.SCALE_MODES.LINEAR;
                         textures.push(texture);
                     }
             } else if (textureDefinition.emitter) {
                 
-            } else textures.push(new PIXI.Texture(baseTexture));
+            } else {
+                var texture=new PIXI.Texture(baseTexture);
+                (<any>texture).daudScale=RenderedObject.getScaleWithHeight(textureDefinition,baseTexture.realHeight);
+                textures.push(texture);
+            }
+
 
             textureCache[textureName] = textures;
         }
@@ -123,10 +135,20 @@ export class RenderedObject {
 
         var textureDefinition = null;
         try {
-            textureDefinition = queryProperties({ element: textureName }, textureMapRules);
+            textureDefinition = queryProperties({ element: textureName }, textureMapRules[0]);
             for (var i in textureDefinition) {
-                if (typeof textureDefinition[i] == "string") {
-                    textureDefinition[i] = JSON.parse(textureDefinition[i]);
+                textureDefinition[i] = textureDefinition[i].map(function (x) {
+                    var k = x;
+                    try {
+                        var m = JSON.parse(x);
+                        k = m;
+                    } finally {
+                        return k;
+                    }
+
+                });
+                if (textureDefinition[i].length < 2) {
+                    textureDefinition[i] = textureDefinition[i][0];
                 }
             }
         } catch (e) {
@@ -159,7 +181,7 @@ export class RenderedObject {
             pixiSprite = new PIXI.extras.AnimatedSprite(textures);
             if (pixiSprite instanceof PIXI.extras.AnimatedSprite) {
                 pixiSprite.loop = textureDefinition.loop;
-                pixiSprite.animationSpeed = textureDefinition.animationSpeed;
+                pixiSprite.animationSpeed = textureDefinition["animation-speed"];
             }
             pixiSprite.parentGroup = this.container.bodyGroup;
         } else if (textureDefinition.emitter) {
@@ -184,44 +206,79 @@ export class RenderedObject {
         pixiSprite.pivot.y = pixiSprite.height / 2;
         pixiSprite.x = 0;
         pixiSprite.y = 0;
-        pixiSprite.baseScale = textureDefinition.scale;
-        pixiSprite.scale = textureDefinition.scale;
-        if (textureDefinition["offset-x"]) {
-            textureDefinition.offset = { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] };
-        }
-        pixiSprite.baseOffset = textureDefinition.offset || { x: 0, y: 0 };
+        
+        pixiSprite.baseScale = (<any>textures[0]).daudScale;
+        pixiSprite.scale =(<any>textures[0]).daudScale;
+        (<any>pixiSprite).textureDefinition=textureDefinition;
+
+        pixiSprite.baseOffset = textureDefinition["offset-x"] ? { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] } : { x: 0, y: 0 };
 
         if (textureDefinition.animated && pixiSprite instanceof PIXI.extras.AnimatedSprite) pixiSprite.play();
 
         return pixiSprite;
     }
-
-    static getSpriteDefinition(spriteName): any {
+    static getScale(textureDefinition,pixiTex):number{
+        var spriteSize=1;
+        if(textureDefinition["size"]){
+        var spriteSizeIsPercent=((typeof textureDefinition["size"]=="string")&&textureDefinition["size"][textureDefinition["size"].length-1]=="%");
+        spriteSize=spriteSizeIsPercent?parseFloat(textureDefinition["size"].slice(0,textureDefinition["size"].length-1))/100:parseFloat(textureDefinition["size"])/pixiTex.height;
+        }
+        if(textureDefinition["scale"]){
+            spriteSize=parseFloat(textureDefinition["scale"]);
+        }
+        return spriteSize;
+    }
+    static getScaleWithHeight(textureDefinition,height):number{
+        var spriteSize=1;
+        if(textureDefinition["size"]){
+        var spriteSizeIsPercent=((typeof textureDefinition["size"]=="string")&&textureDefinition["size"][textureDefinition["size"].length-1]=="%");
+        spriteSize=spriteSizeIsPercent?parseFloat(textureDefinition["size"].slice(0,textureDefinition["size"].length-1))/100:parseFloat(textureDefinition["size"])/height;
+        }
+        if(textureDefinition["scale"]){
+            spriteSize=parseFloat(textureDefinition["scale"]);
+        }
+        return spriteSize;
+    }
+    static getSpriteDefinition(spriteName, additional?: string[]): any {
         let spriteDefinition = null;
-
+        if (!additional) {
+            additional = [];
+        }
         var mapKey = this.parseMapKey(spriteName);
         if (mapKey) spriteName = mapKey.name;
+        try {
+            spriteDefinition = queryProperties({ element: spriteName.split("_")[0], class: spriteName.split("_").join(" ") + " " + additional.join(" ") }, spriteModeMapRules[0]);
+            for (var i in spriteDefinition) {
+                spriteDefinition[i] = spriteDefinition[i].map(function (x) {
+                    var k = x;
+                    try {
+                        var m = JSON.parse(x);
+                        k = m;
+                    } finally {
+                        return k;
+                    }
 
-        if (spriteModeMap[spriteName]) spriteDefinition = spriteModeMap[spriteName];
+                });
+                if (i !== "textures" && i !== "layer-textures" &&i !== "layer-cpu-levels"&&i !== "layer-speeds" && spriteDefinition[i].length < 2) {
+                    spriteDefinition[i] = spriteDefinition[i][0];
+                }
+
+            }
+        } catch (e) {
+            console.log("SPRITE FAILED:", e);
+        }
+        if (!spriteDefinition) console.log(`Cannot find sprite: ${spriteName}`);
 
         return spriteDefinition;
     }
 
     getModeMap(spriteName, mode) {
         let layers = [];
-
-        const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName);
-
-        if (!spriteDefinition) console.log(`Cannot find sprite: ${spriteName}`);
-
         const modes = this.decodeModes(mode);
 
-        modes.forEach(modeName => {
-            var modeLayers = spriteDefinition.modes[modeName];
-            if (modeLayers) modeLayers.forEach(layer => layers.push(layer));
-        });
+        const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName, modes);
 
-        return layers;
+        return spriteDefinition.textures;
     }
 
     buildSpriteLayers(spriteName, mode, zIndex) {
@@ -369,8 +426,14 @@ export class RenderedObject {
             this.emitterLayers = this.buildEmitterLayers(spriteName, mode, zIndex);
         }
     }
-
+    fixLoadingTextureScales(){
+        this.foreachLayer(function (layer, index) {
+            if((<any>layer).textureDefinition)
+            layer.baseScale=RenderedObject.getScaleWithHeight((<any>layer).textureDefinition,layer.texture.height);
+        });
+    }
     preRender(time, interpolator) {
+        this.fixLoadingTextureScales();
         if (this.body) {
             const newPosition = interpolator.projectObject(this.body, time);
             this.moveSprites(newPosition, this.body.Size);
