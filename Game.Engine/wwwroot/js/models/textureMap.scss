@@ -60,6 +60,12 @@ fish {
   scale: 0.03;
 }
 
+// test emitter
+emitter1 {
+  emitter: "emitter1";
+  particle: "fish";
+}
+
 // daudelins
 ship0 {
   file: "ship0";
