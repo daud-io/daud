@@ -11,7 +11,6 @@ import { compressionOptions } from "jszip/lib/defaults";
 import { CustomContainer } from "../CustomContainer";
 import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
 import { readFileSync } from 'fs';
-import { queryProperties } from "../parser/parseTheme.js";
 
 class GroupParticle extends particles.Particle
 {
@@ -22,7 +21,6 @@ class GroupParticle extends particles.Particle
     }
 }
 
-var textureMapRules = parseScssIntoRules(readFileSync(__dirname + '/textureMap.scss', 'utf-8'));
 export class RenderedObject {
     container: CustomContainer;
     currentSpriteName: boolean;

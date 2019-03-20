@@ -193,10 +193,26 @@ async function theme(v) {
                                                         }
 
                                                         if (debug) console.log(`textureMap.${key}.url: set to blob for file ${file}`);
-                                                        ent.obj.url = [url];
+                                                        ent.obj.url = [`"${url}"`];
                                                     })
                                             );
+
                                         }
+
+                                        if (ent.obj.emitter) {
+                                            var emitter = JSON.parse(ent.obj.emitter[0]) + "";
+
+                                            promises.push(
+                                                zip
+                                                    .file(`daudmod/${emitter}.json`)
+                                                    .async("string")
+                                                    .then(json => {
+                                                        ent.obj.emitter = [JSON.parse(json)];
+                                                    })
+                                            );
+
+                                        }
+
                                     })(entry);
                                 }
                                 textureMapRules[0] = textureMapRules[0].concat(textureMapR);
