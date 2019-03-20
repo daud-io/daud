@@ -33,8 +33,8 @@
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeed = 1f,
-                    BoostDuration = 320,
+                    BoostSpeed = 0.6f,
+                    BoostDuration = 420,
 
                     ShotCooldownTimeM = 18,
                     ShotCooldownTimeB = 520,
