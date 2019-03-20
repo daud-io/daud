@@ -66,7 +66,9 @@
 
         public override void Destroy()
         {
+            Boom.FromShip(this);
             base.Destroy();
+
             if (Fleet?.Ships?.Contains(this) ?? false)
                 Fleet.Ships.Remove(this);
         }
