@@ -41,6 +41,8 @@ export const textureMap = {
     ship_gray: { file: "ship_gray", scale: 0.02 },
     ship_flash: { file: "ship_flash", scale: 0.02 },
 
+    emitter1: { emitter: "emitter1.json" },
+
     // default selectable ships
     ship_cyan: { file: "ship_cyan", scale: 0.02 },
     ship_blue: { file: "ship_blue", scale: 0.02 },

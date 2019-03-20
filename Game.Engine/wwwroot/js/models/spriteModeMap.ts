@@ -41,7 +41,7 @@ export const spriteModeMap = {
 
     ship_cyan: {
         modes: {
-            default: ["ship_cyan"],
+            default: ["ship_cyan", "emitter1"],
             boost: ["thruster_cyan"],
             offenseupgrade: ["offenseupgrade"],
             defenseupgrade: ["defenseupgrade"],

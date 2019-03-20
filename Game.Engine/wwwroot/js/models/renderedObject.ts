@@ -5,8 +5,8 @@ import { textureMap } from "./textureMap";
 import { spriteModeMap } from "./spriteModeMap";
 import "pixi.js";
 import "pixi-layers";
+import * as particles from "pixi-particles";
 import { compressionOptions } from "jszip/lib/defaults";
-import { Container, Sprite } from "pixi.js";
 import { CustomContainer } from "../CustomContainer";
 
 export class RenderedObject {
@@ -15,15 +15,21 @@ export class RenderedObject {
     currentMode: number;
     currentZIndex: number;
     activeTextures: {};
+    activeEmitters: {};
     body?: any;
     spriteLayers?: any;
+    emitterLayers?: any;
+    lastTime: number;
+
     constructor(container: CustomContainer) {
         this.container = container;
         this.currentSpriteName = false;
         this.currentMode = 0;
         this.currentZIndex = 0;
 
+        this.lastTime = 0;
         this.activeTextures = {};
+        this.activeEmitters = {};
     }
 
     decodeModes(mode) {
@@ -88,6 +94,8 @@ export class RenderedObject {
                         //texture.scaleMode = PIXI.SCALE_MODES.LINEAR;
                         textures.push(texture);
                     }
+            } else if (textureDefinition.emitter) {
+                
             } else textures.push(new PIXI.Texture(baseTexture));
 
             textureCache[textureName] = textures;
@@ -131,6 +139,8 @@ export class RenderedObject {
                 pixiSprite.animationSpeed = textureDefinition.animationSpeed;
             }
             pixiSprite.parentGroup = this.container.bodyGroup;
+        } else if (textureDefinition.emitter) {
+            return null;
         } else if (textureDefinition.map) {
             console.log("warning: requested tile from RenderedObject");
         } else {
@@ -203,12 +213,15 @@ export class RenderedObject {
                     spriteLayer = this.buildSprite(textureName, spriteName);
                 }
 
-                if (zIndex == 0) zIndex = 250;
+                if (spriteLayer != null)
+                {
+                    if (zIndex == 0) zIndex = 250;
 
-                spriteLayer.zOrder = zIndex - i + this.body.ID / 100000;
+                    spriteLayer.zOrder = zIndex - i + this.body.ID / 100000;
 
-                spriteLayers.push(spriteLayer);
-                this.activeTextures[textureName] = spriteLayer;
+                    spriteLayers.push(spriteLayer);
+                    this.activeTextures[textureName] = spriteLayer;
+                }
             }
 
             for (var key in this.activeTextures) {
@@ -225,6 +238,102 @@ export class RenderedObject {
         } else return false;
     }
 
+    buildEmitterLayers(spriteName, mode, zIndex) {
+        const layers = this.getModeMap(spriteName, mode);
+
+        if (layers) {
+            const emitterLayers = [];
+            for (let i = 0; i < layers.length; i++) {
+                let emitterLayer = null;
+                var textureName = layers[i];
+
+                if (this.activeEmitters[textureName]) emitterLayer = this.activeEmitters[textureName];
+                else {
+                    const textureDefinition = RenderedObject.getTextureDefinition(textureName);
+
+                    if (textureDefinition.emitter)
+                    {
+                        let particleTextureName = "fish";
+                        const particleTextures = RenderedObject.loadTexture(RenderedObject.getTextureDefinition(particleTextureName), particleTextureName);
+                
+                        console.log('creating emitter');
+
+                        emitterLayer = new particles.Emitter(this.container.emitterContainer, particleTextures, {
+                            "alpha": {
+                                "start": 1,
+                                "end": 0.22
+                            },
+                            "scale": {
+                                "start": 0.25,
+                                "end": 0.75,
+                                "minimumScaleMultiplier": 0.5
+                            },
+                            "color": {
+                                "start": "#ffffff",
+                                "end": "#ffffff"
+                            },
+                            "speed": {
+                                "start": 200,
+                                "end": 50,
+                                "minimumSpeedMultiplier": 1
+                            },
+                            "acceleration": {
+                                "x": 0,
+                                "y": 0
+                            },
+                            "maxSpeed": 0,
+                            "startRotation": {
+                                "min": 0,
+                                "max": 360
+                            },
+                            "noRotation": false,
+                            "rotationSpeed": {
+                                "min": 0,
+                                "max": 10
+                            },
+                            "lifetime": {
+                                "min": 4,
+                                "max": 4
+                            },
+                            "blendMode": "normal",
+                            "frequency": 0.016,
+                            "emitterLifetime": -1,
+                            "maxParticles": 500,
+                            "pos": {
+                                "x": 0,
+                                "y": 0
+                            },
+                            "addAtBack": false,
+                            "spawnType": "point"
+                        });
+                        emitterLayer.emit = true;
+                    }
+                }
+
+                if (emitterLayer != null)
+                {
+                    if (zIndex == 0) zIndex = 250;
+
+                    emitterLayer.zOrder = zIndex - i + this.body.ID / 100000;
+
+                    emitterLayers.push(emitterLayer);
+                    this.activeEmitters[textureName] = emitterLayer;
+                }
+            }
+
+            for (var key in this.activeEmitters) {
+                if (layers.indexOf(key) == -1) {
+                    let layer = this.activeEmitters[key];
+                    this.container.removeChild(layer);
+                    layer.destroy();
+                    delete this.activeEmitters[key];
+                }
+            }
+
+            return emitterLayers;
+        } else return false;
+    }
+
     destroy() {
         this.destroySprites();
     }
@@ -238,6 +347,16 @@ export class RenderedObject {
 
             this.spriteLayers = false;
             this.activeTextures = {};
+        }
+
+        if (this.emitterLayers)
+        {
+            for (const layer of this.emitterLayers) {
+                this.container.removeChild(layer);
+                layer.destroy();
+            }
+
+            this.emitterLayers = false;
         }
     }
 
@@ -256,10 +375,11 @@ export class RenderedObject {
             if (reload) this.destroySprites();
 
             this.spriteLayers = this.buildSpriteLayers(spriteName, mode, zIndex);
-
             this.foreachLayer(function(layer, index) {
                 this.container.addChildAt(layer, 2);
             });
+
+            this.emitterLayers = this.buildEmitterLayers(spriteName, mode, zIndex);
         }
     }
 
@@ -268,6 +388,13 @@ export class RenderedObject {
             const newPosition = interpolator.projectObject(this.body, time);
             this.moveSprites(newPosition, this.body.Size);
         }
+
+        if (this.lastTime > 0)
+            this.foreachEmitter(e => {
+                e.update((time-this.lastTime) * 0.001);
+            });
+
+        this.lastTime = time;
     }
 
     moveSprites(interpolatedPosition, size) {
@@ -285,6 +412,10 @@ export class RenderedObject {
 
             layer.scale.set(size * layer.baseScale, size * layer.baseScale);
         });
+
+        this.foreachEmitter(function(emitter){
+            emitter.updateSpawnPos(interpolatedPosition.x,interpolatedPosition.y);
+        })
     }
 
     update(updateData) {
@@ -299,4 +430,11 @@ export class RenderedObject {
                 action.apply(this, [layer, i]);
             });
     }
+
+    foreachEmitter(action) {
+        if (this.emitterLayers && this.emitterLayers.length)
+            this.emitterLayers.forEach((layer, i) => {
+                action.apply(this, [layer, i]);
+            });
+    }    
 }
