@@ -1,0 +1,176 @@
+bg {
+    layer-speeds: .4, .6, .8, 1;
+    layer-cpu-level: 1, 3, 5, 9001;
+    layer-textures: 'bg', 'bg3', 'bg5', 'bg7';
+}
+
+
+colors {
+    danger: #ff00001a;
+    border: 40px solid #0000ff;
+    blue: #0000ff1a;
+}
+
+fish {
+    textures: 'fish';
+}
+
+ship {
+    textures: 'ship_gray';
+
+    &.gray {
+        textures: 'ship_gray';
+    }
+
+    &.bot {
+        textures: 'ship0';
+    }
+
+    &.secret {
+        textures: 'ship_secret';
+    }
+
+    &.zed {
+        textures: 'ship_zed';
+    }
+
+    &.cyan {
+        textures: 'ship_cyan';
+    }
+
+    &.boost {
+        textures: inherit, 'thruster_cyan';
+    }
+
+    &.blue {
+        textures: 'ship_blue';
+
+        &.boost {
+            textures: inherit, 'thruster_blue';
+        }
+    }
+
+    &.green {
+        textures: 'ship_green';
+
+        &.boost {
+            textures: inherit, 'thruster_green';
+        }
+    }
+
+    &.orange {
+        textures: 'ship_orange';
+
+        &.boost {
+            textures: inherit, 'thruster_orange';
+        }
+    }
+
+    &.pink {
+        textures: 'ship_pink';
+
+        &.boost {
+            textures: inherit, 'thruster_pink';
+        }
+    }
+
+    &.red {
+        textures: 'ship_red';
+
+        &.boost {
+            textures: inherit, 'thruster_red';
+        }
+    }
+
+    &.yellow {
+        textures: 'ship_yellow';
+
+        &.boost {
+            textures: inherit, 'thruster_yellow';
+        }
+    }
+
+    &.offenseupgrade {
+        textures: inherit, 'offenseupgrade';
+    }
+
+    &.defenseupgrade {
+        textures: inherit, 'defenseupgrade';
+    }
+
+    &.invulnerable {
+        textures: inherit, 'invulnerable';
+    }
+
+    &.shield {
+        textures: inherit, 'shield';
+    }
+}
+
+bullet {
+    textures: 'bullet';
+
+    &.cyan {
+        textures: 'bullet_cyan';
+    }
+
+    &.blue {
+        textures: 'bullet_blue';
+    }
+
+    &.green {
+        textures: 'bullet_green';
+    }
+
+    &.orange {
+        textures: 'bullet_orange';
+    }
+
+    &.pink {
+        textures: 'bullet_pink';
+    }
+
+    &.red {
+        textures: 'bullet_red';
+    }
+
+    &.yellow {
+        textures: 'bullet_yellow';
+    }
+}
+
+obstacle {
+    textures: 'obstacle';
+}
+
+wormhole {
+    textures: 'wormhole';
+}
+
+seeker {
+    textures: 'seeker';
+}
+
+pickup.seeker {
+    textures: 'seeker_pickup';
+}
+
+pickup.shield {
+    textures: 'shield_pickup';
+}
+
+ctf_base {
+    textures: 'ctf_base';
+}
+
+ctf_flag.blue {
+    textures: 'ctf_flag_blue';
+}
+
+ctf_flag.red {
+    textures: 'ctf_flag_red';
+}
+
+map {
+    textures: 'map';
+}

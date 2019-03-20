@@ -9,6 +9,8 @@ import "pixi-layers";
 import * as particles from "pixi-particles";
 import { compressionOptions } from "jszip/lib/defaults";
 import { CustomContainer } from "../CustomContainer";
+import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
+import { readFileSync } from 'fs';
 
 class GroupParticle extends particles.Particle
 {
@@ -19,6 +21,7 @@ class GroupParticle extends particles.Particle
     }
 }
 
+var textureMapRules = parseScssIntoRules(readFileSync(__dirname + '/textureMap.scss', 'utf-8'));
 export class RenderedObject {
     container: CustomContainer;
     currentSpriteName: boolean;
@@ -118,7 +121,17 @@ export class RenderedObject {
         var mapKey = this.parseMapKey(textureName);
         if (mapKey) textureName = mapKey.name;
 
-        var textureDefinition = textureMap[textureName];
+        var textureDefinition = null;
+        try {
+            textureDefinition = queryProperties({ element: textureName }, textureMapRules);
+            for (var i in textureDefinition) {
+                if (typeof textureDefinition[i] == "string") {
+                    textureDefinition[i] = JSON.parse(textureDefinition[i]);
+                }
+            }
+        } catch (e) {
+            console.log("TEXTURE FAILED:", e);
+        }
         if (!textureDefinition) console.log(`cannot load texture '${textureName}'`);
 
         return textureDefinition;
@@ -173,6 +186,9 @@ export class RenderedObject {
         pixiSprite.y = 0;
         pixiSprite.baseScale = textureDefinition.scale;
         pixiSprite.scale = textureDefinition.scale;
+        if (textureDefinition["offset-x"]) {
+            textureDefinition.offset = { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] };
+        }
         pixiSprite.baseOffset = textureDefinition.offset || { x: 0, y: 0 };
 
         if (textureDefinition.animated && pixiSprite instanceof PIXI.extras.AnimatedSprite) pixiSprite.play();
@@ -344,7 +360,8 @@ export class RenderedObject {
             if (reload) this.destroySprites();
 
             this.spriteLayers = this.buildSpriteLayers(spriteName, mode, zIndex);
-            this.foreachLayer(function(layer, index) {
+
+            this.foreachLayer(function (layer, index) {
                 this.container.addChildAt(layer, 2);
             });
 
@@ -375,7 +392,7 @@ export class RenderedObject {
     moveSprites(interpolatedPosition, size) {
         const angle = interpolatedPosition.Angle;
 
-        this.foreachLayer(function(layer, index) {
+        this.foreachLayer(function (layer, index) {
             layer.pivot.x = Math.floor(layer.texture.width / 2);
             layer.pivot.y = Math.floor(layer.texture.height / 2);
 
