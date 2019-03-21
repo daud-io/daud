@@ -11,13 +11,28 @@ import { compressionOptions } from "jszip/lib/defaults";
 import { CustomContainer } from "../CustomContainer";
 import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
 import { readFileSync } from 'fs';
+import { Sprite } from "pixi.js";
 
 class GroupParticle extends particles.Particle
 {
+    body: any;
+
     constructor(emitter: particles.Emitter)
     {
         super(emitter);
         this.parentGroup = emitter.parent.parentGroup;
+        this.body = (<any>emitter).renderedObject.body;
+
+    }
+
+    update(delta: number): number
+    {
+        var ret = super.update(delta);
+
+        if (this.body)
+            this.scaleMultiplier = this.body.Size;
+
+        return ret;
     }
 }
 
@@ -345,6 +360,8 @@ export class RenderedObject {
                             particleTextures,
                             textureDefinition.emitter);
                         emitterLayer.emit = true;
+                        emitterLayer.renderedObject = this;
+                        
                         let self = this;
                         emitterLayer.particleConstructor = GroupParticle;
                     }
@@ -468,7 +485,7 @@ export class RenderedObject {
 
         this.foreachEmitter(function(emitter){
             //console.log(`updating emitter ${interpolatedPosition.x},${interpolatedPosition.y}`);
-            emitter.updateSpawnPos(interpolatedPosition.x,interpolatedPosition.y);
+            emitter.updateOwnerPos(interpolatedPosition.x,interpolatedPosition.y);
         })
     }
 
