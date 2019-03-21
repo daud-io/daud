@@ -1,6 +1,8 @@
 ﻿namespace Game.Robots.Models
 {
+    using Game.API.Client;
     using Game.API.Common;
+    using System;
     using System.Collections.Generic;
     using System.Numerics;
 
@@ -15,6 +17,11 @@
         public List<Ship> Ships { get; set; } = new List<Ship>();
 
         public Dictionary<string, object> Notes { get; set; } = new Dictionary<string, object>();
+
+        private uint LastBulletID = 0;
+        public long LastFired {get; private set;} = 0;
+        
+        public long ReloadedBy {get;set;} = 0;
 
         public Vector2 Center
         {
@@ -47,6 +54,18 @@
                     return Vector2.Zero;
             }
         }
+
+        public void LogBullet(Body bullet, long time, HookComputer hookComputer)
+        {
+            if (bullet.ID > LastBulletID)
+            {
+                LastBulletID = bullet.ID;
+                LastFired = time;
+
+                ReloadedBy = RoboMath.ReloadTime(hookComputer, this.Ships.Count);
+            }
+        }
+
         public void SetMomentumAndPos(Vector2 po,Vector2 mo)
         {
             Vector2 curpo=po-this.Center;

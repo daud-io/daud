@@ -123,6 +123,12 @@
             }
             return hit;
         }
+
+        public static int ReloadTime(HookComputer hook, int fleetSize)
+        {
+            return ((int)(hook.Hook.ShotCooldownTimeM * fleetSize + hook.Hook.ShotCooldownTimeB));
+        }
+
         public static Vector2 ProjectClosest(HookComputer hook, Vector2 fromPosition, Vector2 targetPosition, float maxTime, int fleetSize)
         {
             var boostSpeed = hook.Hook.BoostThrust;
@@ -169,7 +175,6 @@
             var aimSpot = targetPosition + targetMomentum * t;
             var aimMinusS=aimSpot-start;
             var desMinusS=destination-start;
-            var willHit=false;
             var disss=float.MaxValue;
             var bulletPath = aimSpot - fromPosition;
             var timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            

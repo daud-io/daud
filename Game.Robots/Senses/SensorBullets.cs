@@ -28,6 +28,15 @@
                 .Where(b => b.Group?.Owner != Robot.FleetID) // make sure it's not owned by this robot
                 .OrderBy(b => Vector2.Distance(b.Position, Robot.Position)) // order them by range
                 .ToList();
+
+            foreach (var bullet in VisibleBullets)
+            {
+                if (bullet.Group?.Owner != null)
+                {
+                    var fleet = Robot.SensorFleets.ByID(bullet.Group.Owner);
+                    fleet.LogBullet(bullet, Robot.GameTime, Robot.HookComputer);
+                }
+            }
         }
     }
 }
