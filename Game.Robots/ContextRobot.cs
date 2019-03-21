@@ -122,7 +122,7 @@
             public string type { get; set; } = "barpolar";
         }
 
-        protected void RingDebugExecute()
+        protected virtual void RingDebugExecute()
         {
             if (!RingDebugEnabled)
                 return;

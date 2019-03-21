@@ -11,7 +11,6 @@
     using System.Threading.Tasks;
     using System.Numerics;
     using Game.Robots.Models;
-    using System.Threading.Tasks;
     public class TreeRobot : ContextRobot
     {
 
@@ -147,8 +146,6 @@
                 var searchPaths = new List<TreeState> { baseS };
                 var newSearchPaths = new List<TreeState>();
 
-                var searched = 0;
-
                 for (var i = 0; i < this.Depth; i++)
                 {
                     newSearchPaths = new List<TreeState>();
@@ -236,7 +233,7 @@
             public string type { get; set; } = "scatter";
         }
 
-        protected void RingDebugExecute()
+        protected override void RingDebugExecute()
         {
             List<Vector2> st = new List<Vector2>();
             if (this.PathV != null)
