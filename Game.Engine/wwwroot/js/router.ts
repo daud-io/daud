@@ -2,24 +2,30 @@ import Cookies from "js-cookie";
 import { Connection } from "./connection";
 
 export class Router {
+    savedBestServer : string;
     bestServer: string;
     allResults: any[];
 
     public constructor() {
-        this.load();
+        this.savedBestServer = this.load();
     }
 
     private load()
     {
         const savedRouterConfig = Cookies.getJSON("router");
+
         if (savedRouterConfig) {
             this.bestServer = savedRouterConfig.bestServer;
         }
+
+        return this.bestServer;
     }
 
-    private save()
+    private save(server)
     {
-        Cookies.set("router", {}, { expires: 300 });
+        //Stores a cookie of the best found server. 
+        //Set to expire every 7 days.
+        Cookies.set("router", { "bestServer" : server }, { expires: 7 });
     }
 
     public findBestServer(servers: string[], next: (bestServer: any) => void)
@@ -40,7 +46,7 @@ export class Router {
             });
             
             next(best.worldKey);
-        }, 1100);
+        }, 2500);
     }
 
     public pingServer(worldKey: string)
@@ -52,7 +58,7 @@ export class Router {
 
         var self = this;
         setTimeout(function() {
-            console.log({ worldKey: worldKey, latency: connection.latency, connected: connection.connected, pongs: connection.statPongCount });
+            //console.log({ worldKey: worldKey, latency: connection.latency, connected: connection.connected, pongs: connection.statPongCount });
             if (connection.connected && connection.statPongCount > 1)
                 self.allResults.push({ worldKey: worldKey, latency: connection.latency });
 
