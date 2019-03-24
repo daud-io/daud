@@ -279,7 +279,8 @@ export class Connection {
         this.sendPing();
         this.onConnected();
 
-        if (this.reloading) window.location.reload();
+        // if (this.reloading) window.location.reload(); 
+        //Des: Commented the above line out as it caused endless reloading and prevented url changeing on the browser
     }
 
     onClose(event) {
