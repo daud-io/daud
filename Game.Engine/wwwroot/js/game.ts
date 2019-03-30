@@ -95,6 +95,7 @@ let currentWorld = false;
 
 Controls.registerCanvas(canvas);
 
+
 const connection = new Connection();
 /*if (window.location.hash) connection.connect(window.location.hash.substring(1));
 else connection.connect();*/
@@ -340,6 +341,7 @@ LobbyCallbacks.onLobbyClose = function() {
 
 var spawnOnView = false;
 LobbyCallbacks.onWorldJoin = function(worldKey, world) {
+    console.log(`onWorldJoin: ${worldKey} ${world}`);
     if (joiningWorld) {
         joiningWorld = false;
         spawnOnView = true;
