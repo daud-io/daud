@@ -27,13 +27,14 @@
 
                     Drag = 0.92f,
 
-                    BoostThrust = 0.15f,
+                    BoostThrust = 0.3f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeed = 0.6f,
+                    BoostSpeedB = 0.6f,
+                    BoostSpeedM = -0.005f,
                     BoostDuration = 420,
 
                     ShotCooldownTimeM = 18,
@@ -168,7 +169,8 @@
         public float BoostCooldownTimeB { get; set; }
 
         public int BoostDuration { get; set; }
-        public float BoostSpeed { get; set; }
+        public float BoostSpeedM { get; set; }
+        public float BoostSpeedB { get; set; }
 
         public float Drag { get; set; }
 
