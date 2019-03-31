@@ -21,6 +21,7 @@
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
+                    // formula: y = A / (x + B) + C
                     BaseThrustA = 5f,
                     BaseThrustB = 30f,
                     BaseThrustC = 0f,
@@ -33,8 +34,8 @@
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeedB = 0.6f,
-                    BoostSpeedM = -0.005f,
+                    BoostSpeedB = 0.4f,
+                    BoostSpeedM = -0.003f,
                     BoostDuration = 420,
 
                     ShotCooldownTimeM = 18,
@@ -98,7 +99,7 @@
                     FishCycle = 500, // how often do they think
 
                     FlockAlignment = .35f,
-                    FlockCohesion = 0.01f,
+                    FlockCohesion = 0.02f,
                     FlockCohesionMaximumDistance = 600,
                     FlockSeparation = 80f,
                     FlockSeparationMinimumDistance = 200,
