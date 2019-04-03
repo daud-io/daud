@@ -1,11 +1,18 @@
 import { fetch } from "whatwg-fetch";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
-import { textureMap } from "./models/textureMap";
-import { spriteModeMap } from "./models/spriteModeMap";
+import { textureMapRules } from "./models/textureMap";
+import { spriteModeMapRules } from "./models/spriteModeMap";
 import { textureCache } from "./models/textureCache";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
+var sass = require('sass');
+var Buffer = require('buffer').Buffer;
+
+// in case your code is isomorphic
+if (typeof window !== 'undefined') (<any>window).Buffer = Buffer;
+
+import { queryProperties, parseScssIntoRules } from "./parser/parseTheme.js";
 
 export const Settings = {
     theme: "",
@@ -141,87 +148,65 @@ async function theme(v) {
     const zip = await fetch(link)
         .then(response => response.blob())
         .then(JSZip.loadAsync);
-    zip.file("daudmod/info.json")
+    zip.file("daudmod/spriteModeMap.scss")
         .async("string")
         .then(text => {
-            const info = JSON.parse(text);
+            zip.file("daudmod/textureMap.scss")
+                .async("string")
+                .then(text2 => {
+                    zip.file("daudmod/styles.scss")
+                        .async("string")
+                        .then(text3 => {
 
-            const version = info.version || 1;
-            var changesBk = false;
-            if (info.spriteModeMap) {
-                changesBk = changesBk || info.spriteModeMap.hasOwnProperty("bg");
-            }
-            if (info.textureMap) {
-                changesBk = changesBk || info.textureMap.hasOwnProperty("bg");
-            }
-            if (changesBk) {
-                spriteModeMap["bg"].additionalLayers = [];
-            }
 
-            if (info.spriteModeMap) {
-                for (let key in info.spriteModeMap) {
-                    const modeMap = info.spriteModeMap[key];
 
-                    if (!spriteModeMap.hasOwnProperty(key)) {
-                        console.log(`[warning] theme attempted to define a non-existant sprite: ${key}`);
-                        continue;
-                    }
-                    for (const mapKey in modeMap) {
-                        if (mapKey != "modes") spriteModeMap[key][mapKey] = modeMap[mapKey];
-                    }
+                            if (text) {
+                                var spriteModeMapR = parseScssIntoRules(text);
+                                spriteModeMapRules[0] = spriteModeMapRules[0].concat(spriteModeMapR);
+                            }
 
-                    if (modeMap.modes) for (const mapKey in modeMap.modes) spriteModeMap[key].modes[mapKey] = modeMap.modes[mapKey];
-                }
-            }
+                            if (text2) {
+                                var textureMapR = parseScssIntoRules(text2);
 
-            if (info.textureMap) {
-                const promises = [];
-                for (let key in info.textureMap) {
-                    const map = info.textureMap[key];
 
-                    for (const textureKey in map) {
-                        if (!textureMap[key]) {
-                            if (debug) console.log(`creating texture: ${key}`);
-                            textureMap[key] = {};
-                        }
+                                const promises = [];
+                                for (var entry of textureMapR) {
+                                    (function (ent) {
+                                        if (ent.obj.file) {
+                                            var file = JSON.parse(ent.obj.file[0]) + "";
 
-                        if (debug) console.log(`textureMap.${key}.${textureKey}: ${map[textureKey]}`);
-                        textureMap[key][textureKey] = map[textureKey];
-                    }
+                                            promises.push(
+                                                zip
+                                                    .file(`daudmod/${file}.png`)
+                                                    .async("arraybuffer")
+                                                    .then(ab => {
 
-                    promises.push(
-                        zip
-                            .file(`daudmod/${map.file}.png`)
-                            .async("arraybuffer")
-                            .then(ab => {
-                                const arrayBufferView = new Uint8Array(ab);
-                                const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                const urlCreator = window.URL;
-                                const url = urlCreator.createObjectURL(blob);
+                                                        var key = ent.selector + "";
+                                                        const arrayBufferView = new Uint8Array(ab);
+                                                        const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                        const urlCreator = window.URL;
+                                                        const url = urlCreator.createObjectURL(blob);
 
-                                if (key == "shield") {
-                                    console.log("breakpoint");
-                                    (<any>textureMap[key]).flag = true;
+                                                        if (key == "shield") {
+                                                            console.log("breakpoint");
+                                                            (<any>ent.obj).flag = ["true"];
+                                                        }
+
+                                                        if (debug) console.log(`textureMap.${key}.url: set to blob for file ${file}`);
+                                                        ent.obj.url = [url];
+                                                    })
+                                            );
+                                        }
+                                    })(entry);
                                 }
+                                textureMapRules[0] = textureMapRules[0].concat(textureMapR);
 
-                                if (debug) console.log(`textureMap.${key}.url: set to blob`);
-                                textureMap[key].url = url;
-                            })
-                    );
-                }
-                if (info.styles) {
-                    for (var i = 0; i < info.styles.length; i++) {
-                        const css = info.styles[i];
-
-                        promises.push(
-                            zip
-                                .file(`daudmod/${css}`)
-                                .async("string")
-                                .then(ab => {
+                                if (text3) {
+                                    var ab = sass.renderSync({ data: text3 }).css.toString('utf8');
                                     var imagePromises = [];
                                     var cleansed = ab;
                                     var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
-                                    images=images?images:[];
+                                    images = images ? images : [];
                                     var fixed = [];
                                     var fixedMap = [];
                                     var replacePairs = [];
@@ -237,7 +222,7 @@ async function theme(v) {
                                             fixedMap.push("");
                                             replacePairs.push([imocc, fixed.indexOf(imgurl)]);
                                             imagePromises.push(
-                                                (function(loo) {
+                                                (function (loo) {
                                                     return zip
                                                         .file(`daudmod/${imgurl}`)
                                                         .async("arraybuffer")
@@ -268,20 +253,21 @@ async function theme(v) {
                                         link.setAttribute("href", url);
                                         document.getElementById("theme-styles").appendChild(link);
                                     });
-                                })
-                        );
-                    }
-                }
-                Promise.all(promises).then(() => {
-                    if (window.Game && window.Game.cache) {
-                        if (debug) console.log(`theme loading complete`);
-                        textureCache.clear();
-                        window.Game.cache.refreshSprites();
-                        window.Game.reinitializeWorld();
-                        //Controls.addSecretShips(window.discordData);
-                    }
+
+                                }
+
+                                Promise.all(promises).then(() => {
+                                    if (window.Game && window.Game.cache) {
+                                        if (debug) console.log(`theme loading complete`);
+                                        textureCache.clear();
+                                        window.Game.cache.refreshSprites();
+                                        window.Game.reinitializeWorld();
+                                        //Controls.addSecretShips(window.discordData);
+                                    }
+                                });
+                            }
+                        });
                 });
-            }
         });
 }
 
@@ -322,14 +308,14 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 let minimapChanged = false;
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     if (e.keyCode == 77 && !minimapChanged && (document.body.classList.contains("alive") || document.body.classList.contains("spectating"))) {
         Settings.displayMinimap = !Settings.displayMinimap;
         minimapChanged = true;
     }
 });
 
-window.addEventListener("keyup", function(e) {
+window.addEventListener("keyup", function (e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
 
@@ -349,12 +335,12 @@ shipBlue();
 
 function shipBlue() {
     if (!Settings.allowDarkblueShips) {
-        spriteModeMap.ship_blue.modes.default = ["ship_cyan"];
-        spriteModeMap.ship_blue.modes.boost = ["thruster_cyan"];
-        spriteModeMap.bullet_blue.modes.default = ["bullet_cyan"];
+        //spriteModeMap.ship_blue.modes.default = ["ship_cyan"];
+        //spriteModeMap.ship_blue.modes.boost = ["thruster_cyan"];
+        //spriteModeMap.bullet_blue.modes.default = ["bullet_cyan"];
     } else {
-        spriteModeMap.ship_blue.modes.default = ["ship_blue"];
-        spriteModeMap.ship_blue.modes.boost = ["thruster_blue"];
-        spriteModeMap.bullet_blue.modes.default = ["bullet_blue"];
+        //spriteModeMap.ship_blue.modes.default = ["ship_blue"];
+        //spriteModeMap.ship_blue.modes.boost = ["thruster_blue"];
+        //spriteModeMap.bullet_blue.modes.default = ["bullet_blue"];
     }
 }
