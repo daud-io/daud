@@ -8,6 +8,8 @@ import { Controls } from "./controls";
 import { Connection } from "./connection";
 var sass = require('sass');
 var Buffer = require('buffer').Buffer;
+var textureMapRulesLen = textureMapRules.length;
+var spriteModeMapRulesLen = spriteModeMapRules.length;
 
 // in case your code is isomorphic
 if (typeof window !== 'undefined') (<any>window).Buffer = Buffer;
@@ -159,8 +161,11 @@ async function theme(v) {
                         .then(text3 => {
 
 
+                            textureMapRules[0] = textureMapRules[0].slice(0, textureMapRulesLen);
+                            spriteModeMapRules[0] = spriteModeMapRules[0].slice(0, spriteModeMapRulesLen);
 
                             if (text) {
+
                                 var spriteModeMapR = parseScssIntoRules(text);
                                 spriteModeMapRules[0] = spriteModeMapRules[0].concat(spriteModeMapR);
                             }
@@ -202,58 +207,65 @@ async function theme(v) {
                                 textureMapRules[0] = textureMapRules[0].concat(textureMapR);
 
                                 if (text3) {
-                                    var ab = sass.renderSync({ data: text3 }).css.toString('utf8');
-                                    var imagePromises = [];
-                                    var cleansed = ab;
-                                    var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
-                                    images = images ? images : [];
-                                    var fixed = [];
-                                    var fixedMap = [];
-                                    var replacePairs = [];
-                                    for (var imagen = 0; imagen < images.length; imagen++) {
-                                        var imocc = images[imagen];
-                                        var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
-                                        var imgurl = m[1] + "";
-                                        if (debug) console.log(`theme css imagesss ${imgurl}`);
-                                        if (fixed.indexOf(imgurl) > 0) {
-                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
-                                        } else {
-                                            fixed.push(imgurl);
-                                            fixedMap.push("");
-                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
-                                            imagePromises.push(
-                                                (function (loo) {
-                                                    return zip
-                                                        .file(`daudmod/${imgurl}`)
-                                                        .async("arraybuffer")
-                                                        .then(ab => {
-                                                            const arrayBufferView = new Uint8Array(ab);
-                                                            const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                                            const urlCreator = window.URL;
-                                                            const url = urlCreator.createObjectURL(blob);
-                                                            fixedMap[fixed.indexOf(loo)] = url;
+                                    try {
+                                        var ab = sass.renderSync({ data: text3 }).css.toString('utf8');
+                                        var imagePromises = [];
+                                        var cleansed = ab;
+                                        var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
+                                        images = images ? images : [];
+                                        var fixed = [];
+                                        var fixedMap = [];
+                                        var replacePairs = [];
+                                        for (var imagen = 0; imagen < images.length; imagen++) {
+                                            var imocc = images[imagen];
+                                            var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
+                                            var imgurl = m[1] + "";
+                                            if (debug) console.log(`theme css imagesss ${imgurl}`);
+                                            if (fixed.indexOf(imgurl) > 0) {
+                                                replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                            } else {
+                                                fixed.push(imgurl);
+                                                fixedMap.push("");
+                                                replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                                imagePromises.push(
+                                                    (function (loo) {
+                                                        return zip
+                                                            .file(`daudmod/${imgurl}`)
+                                                            .async("arraybuffer")
+                                                            .then(ab => {
+                                                                const arrayBufferView = new Uint8Array(ab);
+                                                                const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                                const urlCreator = window.URL;
+                                                                const url = urlCreator.createObjectURL(blob);
+                                                                fixedMap[fixed.indexOf(loo)] = url;
 
-                                                            if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
-                                                        });
-                                                })(imgurl)
-                                            );
+                                                                if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
+                                                            });
+                                                    })(imgurl)
+                                                );
+                                            }
                                         }
+                                        Promise.all(imagePromises).then(() => {
+                                            for (var k = 0; k < replacePairs.length; k++) {
+                                                cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
+                                            }
+                                            const blob = new Blob([cleansed], { type: "text/css" });
+                                            const urlCreator = window.URL;
+                                            const url = urlCreator.createObjectURL(blob);
+
+                                            var link = document.createElement("link");
+                                            link.setAttribute("rel", "stylesheet");
+                                            link.setAttribute("type", "text/css");
+                                            link.setAttribute("href", url);
+                                            var m = document.getElementById("theme-styles").children.length;
+                                            for (var l = 0; l < m; l++) {
+                                                document.getElementById("theme-styles").removeChild(document.getElementById("theme-styles").children[l]);
+                                            };
+                                            document.getElementById("theme-styles").appendChild(link);
+                                        });
+                                    } catch (e) {
+                                        console.log("ERROR IN CUSTOM THEME STYLES (STEP 3):", e);
                                     }
-                                    Promise.all(imagePromises).then(() => {
-                                        for (var k = 0; k < replacePairs.length; k++) {
-                                            cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
-                                        }
-                                        const blob = new Blob([cleansed], { type: "text/css" });
-                                        const urlCreator = window.URL;
-                                        const url = urlCreator.createObjectURL(blob);
-
-                                        var link = document.createElement("link");
-                                        link.setAttribute("rel", "stylesheet");
-                                        link.setAttribute("type", "text/css");
-                                        link.setAttribute("href", url);
-                                        document.getElementById("theme-styles").appendChild(link);
-                                    });
-
                                 }
 
                                 Promise.all(promises).then(() => {
