@@ -228,6 +228,7 @@
             ship.Abandoned = true;
             ship.Group = null;
             ship.ThrustAmount = 0;
+            ship.Mode = 0;
 
             if (Ships.Contains(ship))
                 Ships.Remove(ship);
