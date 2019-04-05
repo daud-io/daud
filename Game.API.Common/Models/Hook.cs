@@ -26,6 +26,9 @@
 
                     Drag = 0.92f,
 
+                    BoomDrag = 0.92f,
+                    BoomLife = 500,
+
                     BoostThrust = 0.15f,
 
                     BoostCooldownTimeM = 14.0f,
@@ -167,6 +170,9 @@
         public float BoostSpeed { get; set; }
 
         public float Drag { get; set; }
+
+        public int BoomLife{ get; set; }
+        public float BoomDrag { get; set; }
 
         public int PointsPerKillShip { get; set; }
         public int PointsPerUniverseDeath { get; set; }
@@ -319,6 +325,7 @@
         public float GearheadRegen { get; set; }
         public bool PromiscuousMode { get; set; }
         public int AutoRemoveOnEmptyThreshold { get; set; }
+        public uint ExplosionTime { get; set; }
 
         public Hook Clone()
         {

@@ -114,11 +114,9 @@ export class Cache {
                 let group = null;
                 if (update.Group != 0) group = this.getGroup(update.Group);
                 update.group = group;
-                try {
+                update.zIndex = 0;
+                if (group)
                     update.zIndex = group.ZIndex || 0;
-                } catch (e) {
-                    update.zIndex = 0;
-                }
 
                 if (update.renderer) update.renderer.update(update);
             }
@@ -159,11 +157,9 @@ export class Cache {
                 if (!update.renderer) update.renderer = new RenderedObject(this.container);
 
                 update.group = group;
-                try {
+                update.zIndex = 0;
+                if (group)
                     update.zIndex = group.ZIndex || 0;
-                } catch (e) {
-                    update.zIndex = 0;
-                }
 
                 if (update.renderer) update.renderer.update(update, myFleetID);
 
