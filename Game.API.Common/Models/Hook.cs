@@ -38,8 +38,8 @@
                     BoostSpeedM = -0.003f,
                     BoostDuration = 420,
 
-                    ShotCooldownTimeM = 18,
-                    ShotCooldownTimeB = 520,
+                    ShotCooldownTimeM = 30,
+                    ShotCooldownTimeB = 470,
 
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
