@@ -66,7 +66,11 @@
 
         public override void Destroy()
         {
-            Boom.FromShip(this);
+            if (!(this is Fish)
+                && !(this.Sprite == Sprites.ship_gray)
+            )
+                Boom.FromShip(this);
+
             base.Destroy();
 
             if (Fleet?.Ships?.Contains(this) ?? false)
