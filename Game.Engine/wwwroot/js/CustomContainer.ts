@@ -5,4 +5,5 @@ export class CustomContainer extends Container {
     plotly: any;
     tiles: any;
     backgroundGroup: any;
+    emitterContainer: any;
 }

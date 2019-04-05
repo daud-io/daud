@@ -26,6 +26,9 @@
 
                     Drag = 0.92f,
 
+                    BoomDrag = 0.92f,
+                    BoomLife = 500,
+
                     BoostThrust = 0.15f,
 
                     BoostCooldownTimeM = 14.0f,
@@ -168,6 +171,9 @@
 
         public float Drag { get; set; }
 
+        public int BoomLife{ get; set; }
+        public float BoomDrag { get; set; }
+
         public int PointsPerKillShip { get; set; }
         public int PointsPerUniverseDeath { get; set; }
         public float PointsMultiplierDeath { get; set; }
@@ -271,8 +277,8 @@
 
         public int StepTime { get; set; }
         public float OutOfBoundsDeathLine { get; set; } = 800;
-        public float OutOfBoundsBorder { get; set; } = 300;
-        public float OutOfBoundsDecayDistance { get; set; } = 900;
+        public float OutOfBoundsBorder { get; set; } = 0;
+        public float OutOfBoundsDecayDistance { get; set; } = 4000;
         public int BotRespawnDelay { get; set; }
         public int PickupShields { get; set; }
         public int ShieldStrength { get; set; }
@@ -319,6 +325,7 @@
         public float GearheadRegen { get; set; }
         public bool PromiscuousMode { get; set; }
         public int AutoRemoveOnEmptyThreshold { get; set; }
+        public uint ExplosionTime { get; set; }
 
         public Hook Clone()
         {
