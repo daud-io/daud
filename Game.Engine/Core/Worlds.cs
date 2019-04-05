@@ -211,6 +211,7 @@
             hook.PointsPerUniverseDeath = -1;
             hook.PointsMultiplierDeath = 1.0f;
             hook.Weight = 20;
+            hook.SpawnLocationMode = "CTF";
 
             hook.Name = "Capture the Flag";
             hook.Description = "Cyan vs. Red - Capture the Flag. First to 5 wins!";

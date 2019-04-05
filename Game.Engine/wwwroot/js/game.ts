@@ -57,6 +57,11 @@ container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
 container.tiles.parentGroup = tileGroup;
 container.addChild(container.tiles);
 
+container.emitterContainer = new PIXI.particles.ParticleContainer();
+container.emitterContainer.parentGroup = bodyGroup;
+container.zOrder = 128;
+container.addChild(container.emitterContainer);
+
 const renderer = new Renderer(container);
 const background = new Background(container);
 const border = new Border(container);

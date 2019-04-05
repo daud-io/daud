@@ -9,10 +9,13 @@
         public int Score { get; set; }
         public Flag Flag { get; set; }
         public Base Base { get; set; }
+        public CaptureTheFlag CaptureTheFlag { get; set; }
 
         public void Scored()
         {
             Score++;
+
+            CaptureTheFlag.TeamScored(this);
         }
     }
 }
