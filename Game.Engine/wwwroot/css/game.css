@@ -680,7 +680,7 @@ input:checked + .slider:before {
 }
 
 :root {
-    --leaderboard-width: 260px;
+    --leaderboard-width: 285px;
     --font: "Exo 2", NotoColorEmoji, sans-serif, system-ui;
 }
 
