@@ -45,6 +45,7 @@
         public long TimeDeath { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
+        public bool Backgrounded { get; internal set; }
         public bool IsShielded { get; set; } = false;
 
         public long SpawnTime;
@@ -229,12 +230,14 @@
                     Fleet.AddShip();
             }
 
+
             if (this.IsControlNew)
             {
                 if (float.IsNaN(ControlInput.Position.X))
                     ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
                 Fleet.AimTarget = ControlInput.Position;
+
                 Fleet.BoostRequested = CummulativeBoostRequested;
                 Fleet.ShootRequested = CummulativeShootRequested;
 
@@ -243,6 +246,9 @@
 
                 Fleet.CustomData = ControlInput.CustomData;
             }
+
+            if (this.Backgrounded)
+                Fleet.AimTarget = Vector2.Zero;
 
             this.IsControlNew = false;
 

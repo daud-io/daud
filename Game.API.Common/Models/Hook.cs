@@ -21,7 +21,6 @@
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
-
                     EarnedShipDelay = 0,
 
                     BaseThrustM = -0.0035f,

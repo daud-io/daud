@@ -448,6 +448,9 @@ namespace Game.Engine.Networking
             this.Bandwidth = ping.BandwidthThrottle;
             this.Latency = ping.Latency;
 
+            if (player != null)
+                player.Backgrounded = this.Backgrounded;
+
             await SendPingAsync();
         }
 
