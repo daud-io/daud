@@ -265,7 +265,7 @@
                     var ship = Ships[i];
                     var shipTargetVector = FleetCenter + AimTarget - ship.Position;
                     var shipDistance = shipTargetVector.X * shipTargetVector.X + shipTargetVector.Y * shipTargetVector.Y;
-                    for (int j = 0; j < Sorter.Count; i++)
+                    for (int j = 0; j < Sorter.Count; j++)
                     {
                         var ship2 = Ships[Sorter[j]];
                         var shipTargetVector2 = FleetCenter + AimTarget - ship2.Position;
