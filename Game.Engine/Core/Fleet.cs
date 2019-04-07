@@ -257,10 +257,36 @@
 
                 BoostUntil = World.Time + World.Hook.BoostDuration;
                 isBoostInitial = true;
+                
+                List<int> Sorter = new int[] {0}.ToList();;
+                for (int i = 1; i < Ships.Count; i++)
+                {
+                    bool added = false;
+                    var ship = Ships[i];
+                    var shipTargetVector = FleetCenter + AimTarget - ship.Position;
+                    var shipDistance = shipTargetVector.X * shipTargetVector.X + shipTargetVector.Y * shipTargetVector.Y;
+                    for (int j = 0; j < Sorter.Count; i++)
+                    {
+                        var ship2 = Ships[Sorter[j]];
+                        var shipTargetVector2 = FleetCenter + AimTarget - ship2.Position;
+                        var shipDistance2 = shipTargetVector2.X * shipTargetVector2.X + shipTargetVector2.Y * shipTargetVector2.Y;
+                        if (shipDistance <= shipDistance2)
+                        {
+                            Sorter.Insert(j, i);
+                            added = true;
+                            break;
+                        }
+                    }
+                    if (!added)
+                    {
+                        Sorter.Add(i);
+                    }
+                }
+                
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
                 for (int i = 0; i < shipLoss; i++)
                 {
-                    var ship = Ships.First();
+                    var ship = Ships[Sorter[i]];
                     AbandonShip(ship);
                 }
             }
