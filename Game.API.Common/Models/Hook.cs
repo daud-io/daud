@@ -38,6 +38,8 @@
                     BoostSpeed = 1f,
                     BoostDuration = 420,
 
+                    AbandonBuffer = 120,
+
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 550,
 
@@ -326,6 +328,7 @@
         public bool PromiscuousMode { get; set; }
         public int AutoRemoveOnEmptyThreshold { get; set; }
         public uint ExplosionTime { get; set; }
+        public int AbandonBuffer { get; set; }
 
         public Hook Clone()
         {

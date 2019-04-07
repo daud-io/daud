@@ -230,6 +230,7 @@
             ship.ThrustAmount = 0;
             ship.Mode = 0;
             ship.AbandonedByFleet = this;
+            ship.AbandonedTime = World.Time;
 
             if (Ships.Contains(ship))
                 Ships.Remove(ship);

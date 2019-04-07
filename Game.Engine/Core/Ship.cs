@@ -23,10 +23,10 @@
 
         public bool Abandoned { get; set; }
         public Fleet AbandonedByFleet { get; set; }
+        public long AbandonedTime { get; set; }
 
         protected bool IsOOB = false;
         private long TimeDeath = 0;
-
 
         public Ship()
         {
@@ -136,6 +136,11 @@
 
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.Fleet)
+                    return false;
+
+                // if it came from this fleet
+                if (bullet.OwnedByFleet == this?.AbandonedByFleet
+                    && World.Time < (this.AbandonedTime + World.Hook.AbandonBuffer))
                     return false;
 
                 // team mode ensures that bullets of like colors do no harm
