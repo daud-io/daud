@@ -21,6 +21,9 @@
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
 
+
+                    EarnedShipDelay = 0,
+
                     BaseThrustM = -0.0035f,
                     BaseThrustB = 0.15f,
 
@@ -325,10 +328,10 @@
         public int MaxNameLength { get; set; }
         public string GearheadName { get; set; }
         public float GearheadRegen { get; set; }
-        public bool PromiscuousMode { get; set; }
         public int AutoRemoveOnEmptyThreshold { get; set; }
         public uint ExplosionTime { get; set; }
         public int AbandonBuffer { get; set; }
+        public int EarnedShipDelay { get; set; }
 
         public Hook Clone()
         {
