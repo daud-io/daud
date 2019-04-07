@@ -75,7 +75,7 @@
                 switch (Owner.ShipSprite)
                 {
                     case Sprites.ship_cyan: return Sprites.bullet_cyan;
-					case Sprites.ship_blue: return Sprites.bullet_blue;
+                    case Sprites.ship_blue: return Sprites.bullet_blue;
                     case Sprites.ship_green: return Sprites.bullet_green;
                     case Sprites.ship_orange: return Sprites.bullet_orange;
                     case Sprites.ship_pink: return Sprites.bullet_pink;
@@ -257,9 +257,9 @@
                 BoostUntil = World.Time + World.Hook.BoostDuration;
                 isBoostInitial = true;
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
-                for (int i = 0; i < shipLoss; i++)
+                var Sorter = Ships.OrderByDescending((ship) => Vector2.DistanceSquared(FleetCenter + AimTarget, ship.Position)).Take(shipLoss);
+                foreach (Ship ship in Sorter)
                 {
-                    var ship = Ships.First();
                     AbandonShip(ship);
                 }
             }
