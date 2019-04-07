@@ -147,7 +147,7 @@
                     var tasks = new List<Task>();
 
                     var contest = await ContestGame.CreateGameAsync(API, scenario.HookURL);
-                    
+
                     foreach (var robotName in scenario.Robots.Keys)
                     {
                         var robot = await ConfigurableContextBot.Load(scenario.Robots[robotName]);

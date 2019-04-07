@@ -32,7 +32,7 @@ export class Tile extends RenderedObject {
                 tiles.addFrame(
                     texture,
                     (this.body.OriginalPosition.x / (this.body.Size * 2)) * textureDefinition["tile-width"] - textureDefinition["tile-width"] / 2,
-                    (this.body.OriginalPosition.y / (this.body.Size * 2)) * textureDefinition["tile-height"]- textureDefinition["tile-height"] / 2
+                    (this.body.OriginalPosition.y / (this.body.Size * 2)) * textureDefinition["tile-height"] - textureDefinition["tile-height"] / 2
                 );
 
                 tiles.scale.x = (this.body.Size * 2) / textureDefinition["tile-width"];

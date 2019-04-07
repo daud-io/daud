@@ -64,7 +64,8 @@
                     }
                     else
                     {
-                        if (RegistryClient != null) {
+                        if (RegistryClient != null)
+                        {
                             await RegistryClient.Registry.PostEvents(new[] { message as AuditEventBase });
                         }
                     }

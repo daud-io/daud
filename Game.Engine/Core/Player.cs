@@ -147,11 +147,12 @@
                 try
                 {
                     ((IDisposable)this.Connection).Dispose();
-                } catch (Exception) { }
+                }
+                catch (Exception) { }
             this.Connection = null;
 
             World.Actors.Remove(this);
-            
+
             var worldPlayers = GetWorldPlayers(World);
             worldPlayers.Remove(this);
         }

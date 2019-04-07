@@ -15,7 +15,7 @@
         public bool OneLifeOnly { get; set; } = false;
         public bool AttackRobots { get; set; } = false;
         public int ShipSize { get; set; } = 70;
-        
+
         public Robot() : base()
         {
         }

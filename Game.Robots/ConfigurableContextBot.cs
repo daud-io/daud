@@ -56,7 +56,8 @@
                     NotifyFilters.Security;
                 Watcher.EnableRaisingEvents = true;
                 LoadConfig();
-            } else if (ConfigurationFileUrl != null)
+            }
+            else if (ConfigurationFileUrl != null)
                 LoadConfig();
         }
 
@@ -92,7 +93,7 @@
                 this.Log("Failed to read configuration: " + e);
             }
 
-            
+
         }
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)

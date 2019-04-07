@@ -145,7 +145,7 @@
                 }
             }
 
-            switch(announcement.Type)
+            switch (announcement.Type)
             {
                 case "kill":
                     await OnKillAsync(announcement);

@@ -98,7 +98,6 @@ let currentWorld = false;
 
 Controls.registerCanvas(canvas);
 
-
 const connection = new Connection();
 /*if (window.location.hash) connection.connect(window.location.hash.substring(1));
 else connection.connect();*/

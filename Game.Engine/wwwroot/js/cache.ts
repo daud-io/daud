@@ -115,8 +115,7 @@ export class Cache {
                 if (update.Group != 0) group = this.getGroup(update.Group);
                 update.group = group;
                 update.zIndex = 0;
-                if (group)
-                    update.zIndex = group.ZIndex || 0;
+                if (group) update.zIndex = group.ZIndex || 0;
 
                 if (update.renderer) update.renderer.update(update);
             }
@@ -158,8 +157,7 @@ export class Cache {
 
                 update.group = group;
                 update.zIndex = 0;
-                if (group)
-                    update.zIndex = group.ZIndex || 0;
+                if (group) update.zIndex = group.ZIndex || 0;
 
                 if (update.renderer) update.renderer.update(update, myFleetID);
 

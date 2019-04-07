@@ -1,10 +1,11 @@
 // Generated from ScssParser.g4 by ANTLR 4.5.3
 // jshint ignore: start
-var antlr4 = require('antlr4/index');
-var ScssParserListener = require('./ScssParserListener').ScssParserListener;
+var antlr4 = require("antlr4/index");
+var ScssParserListener = require("./ScssParserListener").ScssParserListener;
 var grammarFileName = "ScssParser.g4";
 
-var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
+var serializedATN = [
+    "\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0003?\u0209\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
     "\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007\u0004",
     "\b\t\b\u0004\t\t\t\u0004\n\t\n\u0004\u000b\t\u000b\u0004\f\t\f\u0004",
@@ -13,8 +14,8 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0014\u0004\u0015\t\u0015\u0004\u0016\t\u0016\u0004\u0017\t\u0017\u0004",
     "\u0018\t\u0018\u0004\u0019\t\u0019\u0004\u001a\t\u001a\u0004\u001b\t",
     "\u001b\u0004\u001c\t\u001c\u0004\u001d\t\u001d\u0004\u001e\t\u001e\u0004",
-    "\u001f\t\u001f\u0004 \t \u0004!\t!\u0004\"\t\"\u0004#\t#\u0004$\t$\u0004",
-    "%\t%\u0004&\t&\u0004\'\t\'\u0004(\t(\u0004)\t)\u0004*\t*\u0004+\t+\u0004",
+    '\u001f\t\u001f\u0004 \t \u0004!\t!\u0004"\t"\u0004#\t#\u0004$\t$\u0004',
+    "%\t%\u0004&\t&\u0004'\t'\u0004(\t(\u0004)\t)\u0004*\t*\u0004+\t+\u0004",
     ",\t,\u0004-\t-\u0004.\t.\u0004/\t/\u00040\t0\u00041\t1\u00042\t2\u0004",
     "3\t3\u00044\t4\u00045\t5\u0003\u0002\u0007\u0002l\n\u0002\f\u0002\u000e",
     "\u0002o\u000b\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003",
@@ -57,13 +58,13 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u001e\u0007\u001e\u0151\n\u001e\f\u001e\u000e\u001e\u0154\u000b\u001e",
     "\u0003\u001e\u0003\u001e\u0003\u001f\u0003\u001f\u0003\u001f\u0005\u001f",
     "\u015b\n\u001f\u0003 \u0003 \u0003 \u0005 \u0160\n \u0003 \u0003 \u0003",
-    "!\u0003!\u0003!\u0003!\u0005!\u0168\n!\u0003\"\u0003\"\u0003\"\u0007",
-    "\"\u016d\n\"\f\"\u000e\"\u0170\u000b\"\u0003#\u0003#\u0003#\u0003#\u0003",
+    '!\u0003!\u0003!\u0003!\u0005!\u0168\n!\u0003"\u0003"\u0003"\u0007',
+    '"\u016d\n"\f"\u000e"\u0170\u000b"\u0003#\u0003#\u0003#\u0003#\u0003',
     "#\u0003#\u0003#\u0003$\u0003$\u0007$\u017b\n$\f$\u000e$\u017e\u000b",
     "$\u0003$\u0007$\u0181\n$\f$\u000e$\u0184\u000b$\u0003%\u0003%\u0003",
     "%\u0003&\u0003&\u0003&\u0003&\u0003&\u0007&\u018e\n&\f&\u000e&\u0191",
-    "\u000b&\u0003&\u0005&\u0194\n&\u0003&\u0003&\u0003\'\u0003\'\u0003\'",
-    "\u0007\'\u019b\n\'\f\'\u000e\'\u019e\u000b\'\u0003(\u0006(\u01a1\n(",
+    "\u000b&\u0003&\u0005&\u0194\n&\u0003&\u0003&\u0003'\u0003'\u0003'",
+    "\u0007'\u019b\n'\f'\u000e'\u019e\u000b'\u0003(\u0006(\u01a1\n(",
     "\r(\u000e(\u01a2\u0003(\u0003(\u0003(\u0007(\u01a8\n(\f(\u000e(\u01ab",
     "\u000b(\u0003(\u0007(\u01ae\n(\f(\u000e(\u01b1\u000b(\u0003(\u0005(",
     "\u01b4\n(\u0003)\u0003)\u0003*\u0003*\u0003*\u0003*\u0003*\u0003*\u0003",
@@ -76,9 +77,9 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\n2\f2\u000e2\u01f8\u000b2\u00033\u00033\u00033\u00033\u00034\u0003",
     "4\u00054\u0200\n4\u00035\u00035\u00035\u00055\u0205\n5\u00035\u0003",
     "5\u00035\u0002\u00026\u0002\u0004\u0006\b\n\f\u000e\u0010\u0012\u0014",
-    "\u0016\u0018\u001a\u001c\u001e \"$&(*,.02468:<>@BDFHJLNPRTVXZ\\^`bd",
+    '\u0016\u0018\u001a\u001c\u001e "$&(*,.02468:<>@BDFHJLNPRTVXZ\\^`bd',
     "fh\u0002\n\u0003\u0002\u001b\u001f\u0005\u0002\u000f\u000f\u0011\u0011",
-    "!\"\u0004\u0002\u0018\u001844\u0004\u0002\u000f\u0010\u001b\u001b\u0004",
+    '!"\u0004\u0002\u0018\u001844\u0004\u0002\u000f\u0010\u001b\u001b\u0004',
     "\u0002\u0012\u0012\u001a\u001a\u0003\u000245\u0003\u0002#%\u0004\u0002",
     "44??\u021f\u0002m\u0003\u0002\u0002\u0002\u0004{\u0003\u0002\u0002\u0002",
     "\u0006}\u0003\u0002\u0002\u0002\b\u0088\u0003\u0002\u0002\u0002\n\u008c",
@@ -87,7 +88,7 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0003\u0002\u0002\u0002\u0014\u00c2\u0003\u0002\u0002\u0002\u0016\u00c7",
     "\u0003\u0002\u0002\u0002\u0018\u00cf\u0003\u0002\u0002\u0002\u001a\u00da",
     "\u0003\u0002\u0002\u0002\u001c\u00df\u0003\u0002\u0002\u0002\u001e\u00e1",
-    "\u0003\u0002\u0002\u0002 \u00ec\u0003\u0002\u0002\u0002\"\u00ee\u0003",
+    '\u0003\u0002\u0002\u0002 \u00ec\u0003\u0002\u0002\u0002"\u00ee\u0003',
     "\u0002\u0002\u0002$\u00fa\u0003\u0002\u0002\u0002&\u00ff\u0003\u0002",
     "\u0002\u0002(\u0108\u0003\u0002\u0002\u0002*\u0113\u0003\u0002\u0002",
     "\u0002,\u0115\u0003\u0002\u0002\u0002.\u011d\u0003\u0002\u0002\u0002",
@@ -108,7 +109,7 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0002\u0002\u0002mk\u0003\u0002\u0002\u0002mn\u0003\u0002\u0002\u0002",
     "n\u0003\u0003\u0002\u0002\u0002om\u0003\u0002\u0002\u0002p|\u0005> ",
     "\u0002q|\u0005D#\u0002r|\u0005H%\u0002s|\u0005\u000e\b\u0002t|\u0005",
-    "\u0012\n\u0002u|\u0005,\u0017\u0002v|\u0005\u0010\t\u0002w|\u0005\"",
+    '\u0012\n\u0002u|\u0005,\u0017\u0002v|\u0005\u0010\t\u0002w|\u0005"',
     "\u0012\u0002x|\u0005.\u0018\u0002y|\u00054\u001b\u0002z|\u00056\u001c",
     "\u0002{p\u0003\u0002\u0002\u0002{q\u0003\u0002\u0002\u0002{r\u0003\u0002",
     "\u0002\u0002{s\u0003\u0002\u0002\u0002{t\u0003\u0002\u0002\u0002{u\u0003",
@@ -146,7 +147,7 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0002\u0002\u0002\u00ae\u00af\u0003\u0002\u0002\u0002\u00af\u00b1\u0003",
     "\u0002\u0002\u0002\u00b0\u00a2\u0003\u0002\u0002\u0002\u00b0\u00ab\u0003",
     "\u0002\u0002\u0002\u00b1\u0011\u0003\u0002\u0002\u0002\u00b2\u00b3\u0007",
-    "\'\u0002\u0002\u00b3\u00b4\u00074\u0002\u0002\u00b4\u00b6\u0007\t\u0002",
+    "'\u0002\u0002\u00b3\u00b4\u00074\u0002\u0002\u00b4\u00b6\u0007\t\u0002",
     "\u0002\u00b5\u00b7\u0005\u0006\u0004\u0002\u00b6\u00b5\u0003\u0002\u0002",
     "\u0002\u00b6\u00b7\u0003\u0002\u0002\u0002\u00b7\u00b8\u0003\u0002\u0002",
     "\u0002\u00b8\u00b9\u0007\n\u0002\u0002\u00b9\u00bb\u0007\u000b\u0002",
@@ -191,7 +192,7 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0002\u0002\u0002\u00f9#\u0003\u0002\u0002\u0002\u00fa\u00fb\u0007",
     "(\u0002\u0002\u00fb\u00fc\u0007)\u0002\u0002\u00fc\u00fd\u0005(\u0015",
     "\u0002\u00fd\u00fe\u0005J&\u0002\u00fe%\u0003\u0002\u0002\u0002\u00ff",
-    "\u0100\u0007(\u0002\u0002\u0100\u0101\u0005J&\u0002\u0101\'\u0003\u0002",
+    "\u0100\u0007(\u0002\u0002\u0100\u0101\u0005J&\u0002\u0101'\u0003\u0002",
     "\u0002\u0002\u0102\u0105\u0005*\u0016\u0002\u0103\u0104\u0007\u0006",
     "\u0002\u0002\u0104\u0106\u0005(\u0015\u0002\u0105\u0103\u0003\u0002",
     "\u0002\u0002\u0105\u0106\u0003\u0002\u0002\u0002\u0106\u0109\u0003\u0002",
@@ -242,7 +243,7 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0002\u0159\u015b\u0005b2\u0002\u015a\u0158\u0003\u0002\u0002\u0002",
     "\u015a\u015b\u0003\u0002\u0002\u0002\u015b=\u0003\u0002\u0002\u0002",
     "\u015c\u015d\u0007/\u0002\u0002\u015d\u015f\u0005@!\u0002\u015e\u0160",
-    "\u0005B\"\u0002\u015f\u015e\u0003\u0002\u0002\u0002\u015f\u0160\u0003",
+    '\u0005B"\u0002\u015f\u015e\u0003\u0002\u0002\u0002\u015f\u0160\u0003',
     "\u0002\u0002\u0002\u0160\u0161\u0003\u0002\u0002\u0002\u0161\u0162\u0007",
     "\u0013\u0002\u0002\u0162?\u0003\u0002\u0002\u0002\u0163\u0168\u0007",
     "5\u0002\u0002\u0164\u0165\u0007 \u0002\u0002\u0165\u0166\u0007<\u0002",
@@ -253,7 +254,7 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0002\u016d\u0170\u0003\u0002\u0002\u0002\u016e\u016c\u0003\u0002\u0002",
     "\u0002\u016e\u016f\u0003\u0002\u0002\u0002\u016fC\u0003\u0002\u0002",
     "\u0002\u0170\u016e\u0003\u0002\u0002\u0002\u0171\u0172\u0007\u0017\u0002",
-    "\u0002\u0172\u0173\u0005F$\u0002\u0173\u0174\u0005L\'\u0002\u0174\u0175",
+    "\u0002\u0172\u0173\u0005F$\u0002\u0173\u0174\u0005L'\u0002\u0174\u0175",
     "\u0007\u000b\u0002\u0002\u0175\u0176\u0005\u0002\u0002\u0002\u0176\u0177",
     "\u0007\f\u0002\u0002\u0177E\u0003\u0002\u0002\u0002\u0178\u017c\t\u0004",
     "\u0002\u0002\u0179\u017b\u00074\u0002\u0002\u017a\u0179\u0003\u0002",
@@ -263,7 +264,7 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "+\u0002\u0180\u017f\u0003\u0002\u0002\u0002\u0181\u0184\u0003\u0002",
     "\u0002\u0002\u0182\u0180\u0003\u0002\u0002\u0002\u0182\u0183\u0003\u0002",
     "\u0002\u0002\u0183G\u0003\u0002\u0002\u0002\u0184\u0182\u0003\u0002",
-    "\u0002\u0002\u0185\u0186\u0005L\'\u0002\u0186\u0187\u0005J&\u0002\u0187",
+    "\u0002\u0002\u0185\u0186\u0005L'\u0002\u0186\u0187\u0005J&\u0002\u0187",
     "I\u0003\u0002\u0002\u0002\u0188\u018f\u0007\u000b\u0002\u0002\u0189",
     "\u018a\u0005`1\u0002\u018a\u018b\u0007\u0013\u0002\u0002\u018b\u018e",
     "\u0003\u0002\u0002\u0002\u018c\u018e\u0005\u0004\u0003\u0002\u018d\u0189",
@@ -340,53 +341,192 @@ var serializedATN = ["\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u00ec\u00f4\u00f8\u0105\u0108\u010d\u0113\u0119\u0133\u013f\u0147\u014a",
     "\u0152\u015a\u015f\u0167\u016e\u017c\u0182\u018d\u018f\u0193\u019c\u01a2",
     "\u01a9\u01af\u01b3\u01be\u01c4\u01cb\u01d5\u01de\u01e1\u01e8\u01f6\u01ff",
-    "\u0204"].join("");
-
+    "\u0204"
+].join("");
 
 var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
-var decisionsToDFA = atn.decisionToState.map( function(ds, index) { return new antlr4.dfa.DFA(ds, index); });
+var decisionsToDFA = atn.decisionToState.map(function(ds, index) {
+    return new antlr4.dfa.DFA(ds, index);
+});
 
 var sharedContextCache = new antlr4.PredictionContextCache();
 
-var literalNames = [ null, "'null'", "'in'", null, null, "'...'", null, 
-                     "'('", "')'", "'{'", "'}'", "'['", "']'", "'>'", "'~'", 
-                     "'<'", "':'", "';'", "','", "'.'", "'$'", "'@'", "'&'", 
-                     "'#'", "'::'", "'+'", "'*'", "'/'", "'-'", "'%'", null, 
-                     "'=='", "'!='", "'='", "'|='", "'~='", "'@mixin'", 
-                     "'@function'", "'@else'", "'if'", "'@if'", "'@for'", 
-                     "'@while'", "'@each'", "'@include'", "'@import'", "'@return'", 
-                     "'from'", "'through'", "'!default'" ];
+var literalNames = [
+    null,
+    "'null'",
+    "'in'",
+    null,
+    null,
+    "'...'",
+    null,
+    "'('",
+    "')'",
+    "'{'",
+    "'}'",
+    "'['",
+    "']'",
+    "'>'",
+    "'~'",
+    "'<'",
+    "':'",
+    "';'",
+    "','",
+    "'.'",
+    "'$'",
+    "'@'",
+    "'&'",
+    "'#'",
+    "'::'",
+    "'+'",
+    "'*'",
+    "'/'",
+    "'-'",
+    "'%'",
+    null,
+    "'=='",
+    "'!='",
+    "'='",
+    "'|='",
+    "'~='",
+    "'@mixin'",
+    "'@function'",
+    "'@else'",
+    "'if'",
+    "'@if'",
+    "'@for'",
+    "'@while'",
+    "'@each'",
+    "'@include'",
+    "'@import'",
+    "'@return'",
+    "'from'",
+    "'through'",
+    "'!default'"
+];
 
-var symbolicNames = [ null, "NULL", "IN", "Unit", "COMBINE_COMPARE", "Ellipsis", 
-                      "InterpolationStart", "LPAREN", "RPAREN", "BlockStart", 
-                      "BlockEnd", "LBRACK", "RBRACK", "GT", "TIL", "LT", 
-                      "COLON", "SEMI", "COMMA", "DOT", "DOLLAR", "AT", "AND", 
-                      "HASH", "COLONCOLON", "PLUS", "TIMES", "DIV", "MINUS", 
-                      "PERC", "UrlStart", "EQEQ", "NOTEQ", "EQ", "PIPE_EQ", 
-                      "TILD_EQ", "MIXIN", "FUNCTION", "AT_ELSE", "IF", "AT_IF", 
-                      "AT_FOR", "AT_WHILE", "AT_EACH", "INCLUDE", "IMPORT", 
-                      "RETURN", "FROM", "THROUGH", "POUND_DEFAULT", "Identifier", 
-                      "StringLiteral", "Number", "Color", "WS", "SL_COMMENT", 
-                      "COMMENT", "UrlEnd", "Url", "SPACE", "InterpolationStartAfter", 
-                      "IdentifierAfter" ];
+var symbolicNames = [
+    null,
+    "NULL",
+    "IN",
+    "Unit",
+    "COMBINE_COMPARE",
+    "Ellipsis",
+    "InterpolationStart",
+    "LPAREN",
+    "RPAREN",
+    "BlockStart",
+    "BlockEnd",
+    "LBRACK",
+    "RBRACK",
+    "GT",
+    "TIL",
+    "LT",
+    "COLON",
+    "SEMI",
+    "COMMA",
+    "DOT",
+    "DOLLAR",
+    "AT",
+    "AND",
+    "HASH",
+    "COLONCOLON",
+    "PLUS",
+    "TIMES",
+    "DIV",
+    "MINUS",
+    "PERC",
+    "UrlStart",
+    "EQEQ",
+    "NOTEQ",
+    "EQ",
+    "PIPE_EQ",
+    "TILD_EQ",
+    "MIXIN",
+    "FUNCTION",
+    "AT_ELSE",
+    "IF",
+    "AT_IF",
+    "AT_FOR",
+    "AT_WHILE",
+    "AT_EACH",
+    "INCLUDE",
+    "IMPORT",
+    "RETURN",
+    "FROM",
+    "THROUGH",
+    "POUND_DEFAULT",
+    "Identifier",
+    "StringLiteral",
+    "Number",
+    "Color",
+    "WS",
+    "SL_COMMENT",
+    "COMMENT",
+    "UrlEnd",
+    "Url",
+    "SPACE",
+    "InterpolationStartAfter",
+    "IdentifierAfter"
+];
 
-var ruleNames =  [ "stylesheet", "statement", "params", "param", "variableName", 
-                   "paramOptionalValue", "mixinDeclaration", "includeDeclaration", 
-                   "functionDeclaration", "functionBody", "functionReturn", 
-                   "functionStatement", "commandStatement", "mathCharacter", 
-                   "mathStatement", "expression", "ifDeclaration", "elseIfStatement", 
-                   "elseStatement", "conditions", "condition", "variableDeclaration", 
-                   "forDeclaration", "fromNumber", "throughNumber", "whileDeclaration", 
-                   "eachDeclaration", "eachValueList", "identifierListOrMap", 
-                   "identifierValue", "importDeclaration", "referenceUrl", 
-                   "mediaTypes", "nested", "nest", "ruleset", "block", "selectors", 
-                   "selector", "selectorPrefix", "element", "pseudo", "attrib", 
-                   "attribRelate", "identifier", "identifierPart", "identifierVariableName", 
-                   "property", "values", "url", "measurement", "functionCall" ];
+var ruleNames = [
+    "stylesheet",
+    "statement",
+    "params",
+    "param",
+    "variableName",
+    "paramOptionalValue",
+    "mixinDeclaration",
+    "includeDeclaration",
+    "functionDeclaration",
+    "functionBody",
+    "functionReturn",
+    "functionStatement",
+    "commandStatement",
+    "mathCharacter",
+    "mathStatement",
+    "expression",
+    "ifDeclaration",
+    "elseIfStatement",
+    "elseStatement",
+    "conditions",
+    "condition",
+    "variableDeclaration",
+    "forDeclaration",
+    "fromNumber",
+    "throughNumber",
+    "whileDeclaration",
+    "eachDeclaration",
+    "eachValueList",
+    "identifierListOrMap",
+    "identifierValue",
+    "importDeclaration",
+    "referenceUrl",
+    "mediaTypes",
+    "nested",
+    "nest",
+    "ruleset",
+    "block",
+    "selectors",
+    "selector",
+    "selectorPrefix",
+    "element",
+    "pseudo",
+    "attrib",
+    "attribRelate",
+    "identifier",
+    "identifierPart",
+    "identifierVariableName",
+    "property",
+    "values",
+    "url",
+    "measurement",
+    "functionCall"
+];
 
-function ScssParser (input) {
-	antlr4.Parser.call(this, input);
+function ScssParser(input) {
+    antlr4.Parser.call(this, input);
     this._interp = new antlr4.atn.ParserATNSimulator(this, atn, decisionsToDFA, sharedContextCache);
     this.ruleNames = ruleNames;
     this.literalNames = literalNames;
@@ -398,9 +538,9 @@ ScssParser.prototype = Object.create(antlr4.Parser.prototype);
 ScssParser.prototype.constructor = ScssParser;
 
 Object.defineProperty(ScssParser.prototype, "atn", {
-	get : function() {
-		return atn;
-	}
+    get: function() {
+        return atn;
+    }
 });
 
 ScssParser.EOF = antlr4.Token.EOF;
@@ -520,13 +660,13 @@ ScssParser.RULE_measurement = 50;
 ScssParser.RULE_functionCall = 51;
 
 function StylesheetContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_stylesheet;
     return this;
@@ -536,35 +676,31 @@ StylesheetContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 StylesheetContext.prototype.constructor = StylesheetContext;
 
 StylesheetContext.prototype.statement = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(StatementContext);
     } else {
-        return this.getTypedRuleContext(StatementContext,i);
+        return this.getTypedRuleContext(StatementContext, i);
     }
 };
 
 StylesheetContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterStylesheet(this);
-	}
+    }
 };
 
 StylesheetContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitStylesheet(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.StylesheetContext = StylesheetContext;
 
 ScssParser.prototype.stylesheet = function() {
-
     var localctx = new StylesheetContext(this, this._ctx, this.state);
     this.enterRule(localctx, 0, ScssParser.RULE_stylesheet);
     var _la = 0; // Token type
@@ -573,7 +709,30 @@ ScssParser.prototype.stylesheet = function() {
         this.state = 107;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.InterpolationStart) | (1 << ScssParser.DOT) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.AT) | (1 << ScssParser.AND) | (1 << ScssParser.HASH) | (1 << ScssParser.TIMES))) !== 0) || ((((_la - 36)) & ~0x1f) == 0 && ((1 << (_la - 36)) & ((1 << (ScssParser.MIXIN - 36)) | (1 << (ScssParser.FUNCTION - 36)) | (1 << (ScssParser.AT_IF - 36)) | (1 << (ScssParser.AT_FOR - 36)) | (1 << (ScssParser.AT_WHILE - 36)) | (1 << (ScssParser.AT_EACH - 36)) | (1 << (ScssParser.INCLUDE - 36)) | (1 << (ScssParser.IMPORT - 36)) | (1 << (ScssParser.Identifier - 36)))) !== 0)) {
+        while (
+            ((_la & ~0x1f) == 0 &&
+                ((1 << _la) &
+                    ((1 << ScssParser.InterpolationStart) |
+                        (1 << ScssParser.DOT) |
+                        (1 << ScssParser.DOLLAR) |
+                        (1 << ScssParser.AT) |
+                        (1 << ScssParser.AND) |
+                        (1 << ScssParser.HASH) |
+                        (1 << ScssParser.TIMES))) !==
+                    0) ||
+            (((_la - 36) & ~0x1f) == 0 &&
+                ((1 << (_la - 36)) &
+                    ((1 << (ScssParser.MIXIN - 36)) |
+                        (1 << (ScssParser.FUNCTION - 36)) |
+                        (1 << (ScssParser.AT_IF - 36)) |
+                        (1 << (ScssParser.AT_FOR - 36)) |
+                        (1 << (ScssParser.AT_WHILE - 36)) |
+                        (1 << (ScssParser.AT_EACH - 36)) |
+                        (1 << (ScssParser.INCLUDE - 36)) |
+                        (1 << (ScssParser.IMPORT - 36)) |
+                        (1 << (ScssParser.Identifier - 36)))) !==
+                    0)
+        ) {
             this.state = 104;
             this.statement();
             this.state = 109;
@@ -581,13 +740,13 @@ ScssParser.prototype.stylesheet = function() {
             _la = this._input.LA(1);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -595,13 +754,13 @@ ScssParser.prototype.stylesheet = function() {
 };
 
 function StatementContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_statement;
     return this;
@@ -611,144 +770,140 @@ StatementContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 StatementContext.prototype.constructor = StatementContext;
 
 StatementContext.prototype.importDeclaration = function() {
-    return this.getTypedRuleContext(ImportDeclarationContext,0);
+    return this.getTypedRuleContext(ImportDeclarationContext, 0);
 };
 
 StatementContext.prototype.nested = function() {
-    return this.getTypedRuleContext(NestedContext,0);
+    return this.getTypedRuleContext(NestedContext, 0);
 };
 
 StatementContext.prototype.ruleset = function() {
-    return this.getTypedRuleContext(RulesetContext,0);
+    return this.getTypedRuleContext(RulesetContext, 0);
 };
 
 StatementContext.prototype.mixinDeclaration = function() {
-    return this.getTypedRuleContext(MixinDeclarationContext,0);
+    return this.getTypedRuleContext(MixinDeclarationContext, 0);
 };
 
 StatementContext.prototype.functionDeclaration = function() {
-    return this.getTypedRuleContext(FunctionDeclarationContext,0);
+    return this.getTypedRuleContext(FunctionDeclarationContext, 0);
 };
 
 StatementContext.prototype.variableDeclaration = function() {
-    return this.getTypedRuleContext(VariableDeclarationContext,0);
+    return this.getTypedRuleContext(VariableDeclarationContext, 0);
 };
 
 StatementContext.prototype.includeDeclaration = function() {
-    return this.getTypedRuleContext(IncludeDeclarationContext,0);
+    return this.getTypedRuleContext(IncludeDeclarationContext, 0);
 };
 
 StatementContext.prototype.ifDeclaration = function() {
-    return this.getTypedRuleContext(IfDeclarationContext,0);
+    return this.getTypedRuleContext(IfDeclarationContext, 0);
 };
 
 StatementContext.prototype.forDeclaration = function() {
-    return this.getTypedRuleContext(ForDeclarationContext,0);
+    return this.getTypedRuleContext(ForDeclarationContext, 0);
 };
 
 StatementContext.prototype.whileDeclaration = function() {
-    return this.getTypedRuleContext(WhileDeclarationContext,0);
+    return this.getTypedRuleContext(WhileDeclarationContext, 0);
 };
 
 StatementContext.prototype.eachDeclaration = function() {
-    return this.getTypedRuleContext(EachDeclarationContext,0);
+    return this.getTypedRuleContext(EachDeclarationContext, 0);
 };
 
 StatementContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterStatement(this);
-	}
+    }
 };
 
 StatementContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitStatement(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.StatementContext = StatementContext;
 
 ScssParser.prototype.statement = function() {
-
     var localctx = new StatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 2, ScssParser.RULE_statement);
     try {
         this.state = 121;
-        switch(this._input.LA(1)) {
-        case ScssParser.IMPORT:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 110;
-            this.importDeclaration();
-            break;
-        case ScssParser.AT:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 111;
-            this.nested();
-            break;
-        case ScssParser.InterpolationStart:
-        case ScssParser.DOT:
-        case ScssParser.AND:
-        case ScssParser.HASH:
-        case ScssParser.TIMES:
-        case ScssParser.Identifier:
-            this.enterOuterAlt(localctx, 3);
-            this.state = 112;
-            this.ruleset();
-            break;
-        case ScssParser.MIXIN:
-            this.enterOuterAlt(localctx, 4);
-            this.state = 113;
-            this.mixinDeclaration();
-            break;
-        case ScssParser.FUNCTION:
-            this.enterOuterAlt(localctx, 5);
-            this.state = 114;
-            this.functionDeclaration();
-            break;
-        case ScssParser.DOLLAR:
-            this.enterOuterAlt(localctx, 6);
-            this.state = 115;
-            this.variableDeclaration();
-            break;
-        case ScssParser.INCLUDE:
-            this.enterOuterAlt(localctx, 7);
-            this.state = 116;
-            this.includeDeclaration();
-            break;
-        case ScssParser.AT_IF:
-            this.enterOuterAlt(localctx, 8);
-            this.state = 117;
-            this.ifDeclaration();
-            break;
-        case ScssParser.AT_FOR:
-            this.enterOuterAlt(localctx, 9);
-            this.state = 118;
-            this.forDeclaration();
-            break;
-        case ScssParser.AT_WHILE:
-            this.enterOuterAlt(localctx, 10);
-            this.state = 119;
-            this.whileDeclaration();
-            break;
-        case ScssParser.AT_EACH:
-            this.enterOuterAlt(localctx, 11);
-            this.state = 120;
-            this.eachDeclaration();
-            break;
-        default:
-            throw new antlr4.error.NoViableAltException(this);
+        switch (this._input.LA(1)) {
+            case ScssParser.IMPORT:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 110;
+                this.importDeclaration();
+                break;
+            case ScssParser.AT:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 111;
+                this.nested();
+                break;
+            case ScssParser.InterpolationStart:
+            case ScssParser.DOT:
+            case ScssParser.AND:
+            case ScssParser.HASH:
+            case ScssParser.TIMES:
+            case ScssParser.Identifier:
+                this.enterOuterAlt(localctx, 3);
+                this.state = 112;
+                this.ruleset();
+                break;
+            case ScssParser.MIXIN:
+                this.enterOuterAlt(localctx, 4);
+                this.state = 113;
+                this.mixinDeclaration();
+                break;
+            case ScssParser.FUNCTION:
+                this.enterOuterAlt(localctx, 5);
+                this.state = 114;
+                this.functionDeclaration();
+                break;
+            case ScssParser.DOLLAR:
+                this.enterOuterAlt(localctx, 6);
+                this.state = 115;
+                this.variableDeclaration();
+                break;
+            case ScssParser.INCLUDE:
+                this.enterOuterAlt(localctx, 7);
+                this.state = 116;
+                this.includeDeclaration();
+                break;
+            case ScssParser.AT_IF:
+                this.enterOuterAlt(localctx, 8);
+                this.state = 117;
+                this.ifDeclaration();
+                break;
+            case ScssParser.AT_FOR:
+                this.enterOuterAlt(localctx, 9);
+                this.state = 118;
+                this.forDeclaration();
+                break;
+            case ScssParser.AT_WHILE:
+                this.enterOuterAlt(localctx, 10);
+                this.state = 119;
+                this.whileDeclaration();
+                break;
+            case ScssParser.AT_EACH:
+                this.enterOuterAlt(localctx, 11);
+                this.state = 120;
+                this.eachDeclaration();
+                break;
+            default:
+                throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -756,13 +911,13 @@ ScssParser.prototype.statement = function() {
 };
 
 function ParamsContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_params;
     return this;
@@ -772,51 +927,46 @@ ParamsContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 ParamsContext.prototype.constructor = ParamsContext;
 
 ParamsContext.prototype.param = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(ParamContext);
     } else {
-        return this.getTypedRuleContext(ParamContext,i);
+        return this.getTypedRuleContext(ParamContext, i);
     }
 };
 
 ParamsContext.prototype.COMMA = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.COMMA);
     } else {
         return this.getToken(ScssParser.COMMA, i);
     }
 };
 
-
 ParamsContext.prototype.Ellipsis = function() {
     return this.getToken(ScssParser.Ellipsis, 0);
 };
 
 ParamsContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterParams(this);
-	}
+    }
 };
 
 ParamsContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitParams(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ParamsContext = ParamsContext;
 
 ScssParser.prototype.params = function() {
-
     var localctx = new ParamsContext(this, this._ctx, this.state);
     this.enterRule(localctx, 4, ScssParser.RULE_params);
     var _la = 0; // Token type
@@ -827,7 +977,7 @@ ScssParser.prototype.params = function() {
         this.state = 128;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===ScssParser.COMMA) {
+        while (_la === ScssParser.COMMA) {
             this.state = 124;
             this.match(ScssParser.COMMA);
             this.state = 125;
@@ -838,19 +988,18 @@ ScssParser.prototype.params = function() {
         }
         this.state = 132;
         _la = this._input.LA(1);
-        if(_la===ScssParser.Ellipsis) {
+        if (_la === ScssParser.Ellipsis) {
             this.state = 131;
             this.match(ScssParser.Ellipsis);
         }
-
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -858,13 +1007,13 @@ ScssParser.prototype.params = function() {
 };
 
 function ParamContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_param;
     return this;
@@ -874,32 +1023,28 @@ ParamContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 ParamContext.prototype.constructor = ParamContext;
 
 ParamContext.prototype.variableName = function() {
-    return this.getTypedRuleContext(VariableNameContext,0);
+    return this.getTypedRuleContext(VariableNameContext, 0);
 };
 
 ParamContext.prototype.paramOptionalValue = function() {
-    return this.getTypedRuleContext(ParamOptionalValueContext,0);
+    return this.getTypedRuleContext(ParamOptionalValueContext, 0);
 };
 
 ParamContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterParam(this);
-	}
+    }
 };
 
 ParamContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitParam(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ParamContext = ParamContext;
 
 ScssParser.prototype.param = function() {
-
     var localctx = new ParamContext(this, this._ctx, this.state);
     this.enterRule(localctx, 6, ScssParser.RULE_param);
     var _la = 0; // Token type
@@ -909,19 +1054,18 @@ ScssParser.prototype.param = function() {
         this.variableName();
         this.state = 136;
         _la = this._input.LA(1);
-        if(_la===ScssParser.COLON) {
+        if (_la === ScssParser.COLON) {
             this.state = 135;
             this.paramOptionalValue();
         }
-
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -929,13 +1073,13 @@ ScssParser.prototype.param = function() {
 };
 
 function VariableNameContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_variableName;
     return this;
@@ -953,24 +1097,20 @@ VariableNameContext.prototype.Identifier = function() {
 };
 
 VariableNameContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterVariableName(this);
-	}
+    }
 };
 
 VariableNameContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitVariableName(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.VariableNameContext = VariableNameContext;
 
 ScssParser.prototype.variableName = function() {
-
     var localctx = new VariableNameContext(this, this._ctx, this.state);
     this.enterRule(localctx, 8, ScssParser.RULE_variableName);
     try {
@@ -980,13 +1120,13 @@ ScssParser.prototype.variableName = function() {
         this.state = 139;
         this.match(ScssParser.Identifier);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -994,13 +1134,13 @@ ScssParser.prototype.variableName = function() {
 };
 
 function ParamOptionalValueContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_paramOptionalValue;
     return this;
@@ -1014,35 +1154,31 @@ ParamOptionalValueContext.prototype.COLON = function() {
 };
 
 ParamOptionalValueContext.prototype.expression = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(ExpressionContext);
     } else {
-        return this.getTypedRuleContext(ExpressionContext,i);
+        return this.getTypedRuleContext(ExpressionContext, i);
     }
 };
 
 ParamOptionalValueContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterParamOptionalValue(this);
-	}
+    }
 };
 
 ParamOptionalValueContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitParamOptionalValue(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ParamOptionalValueContext = ParamOptionalValueContext;
 
 ScssParser.prototype.paramOptionalValue = function() {
-
     var localctx = new ParamOptionalValueContext(this, this._ctx, this.state);
     this.enterRule(localctx, 10, ScssParser.RULE_paramOptionalValue);
     var _la = 0; // Token type
@@ -1050,24 +1186,28 @@ ScssParser.prototype.paramOptionalValue = function() {
         this.enterOuterAlt(localctx, 1);
         this.state = 141;
         this.match(ScssParser.COLON);
-        this.state = 143; 
+        this.state = 143;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         do {
             this.state = 142;
             this.expression();
-            this.state = 145; 
+            this.state = 145;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
-        } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.UrlStart))) !== 0) || ((((_la - 50)) & ~0x1f) == 0 && ((1 << (_la - 50)) & ((1 << (ScssParser.Identifier - 50)) | (1 << (ScssParser.StringLiteral - 50)) | (1 << (ScssParser.Number - 50)) | (1 << (ScssParser.Color - 50)))) !== 0));
+        } while (
+            ((_la & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.UrlStart))) !== 0) ||
+            (((_la - 50) & ~0x1f) == 0 &&
+                ((1 << (_la - 50)) & ((1 << (ScssParser.Identifier - 50)) | (1 << (ScssParser.StringLiteral - 50)) | (1 << (ScssParser.Number - 50)) | (1 << (ScssParser.Color - 50)))) !== 0)
+        );
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1075,13 +1215,13 @@ ScssParser.prototype.paramOptionalValue = function() {
 };
 
 function MixinDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_mixinDeclaration;
     return this;
@@ -1095,7 +1235,7 @@ MixinDeclarationContext.prototype.Identifier = function() {
 };
 
 MixinDeclarationContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 MixinDeclarationContext.prototype.LPAREN = function() {
@@ -1107,28 +1247,24 @@ MixinDeclarationContext.prototype.RPAREN = function() {
 };
 
 MixinDeclarationContext.prototype.params = function() {
-    return this.getTypedRuleContext(ParamsContext,0);
+    return this.getTypedRuleContext(ParamsContext, 0);
 };
 
 MixinDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterMixinDeclaration(this);
-	}
+    }
 };
 
 MixinDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitMixinDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.MixinDeclarationContext = MixinDeclarationContext;
 
 ScssParser.prototype.mixinDeclaration = function() {
-
     var localctx = new MixinDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 12, ScssParser.RULE_mixinDeclaration);
     var _la = 0; // Token type
@@ -1140,12 +1276,12 @@ ScssParser.prototype.mixinDeclaration = function() {
         this.match(ScssParser.Identifier);
         this.state = 154;
         _la = this._input.LA(1);
-        if(_la===ScssParser.LPAREN) {
+        if (_la === ScssParser.LPAREN) {
             this.state = 149;
             this.match(ScssParser.LPAREN);
             this.state = 151;
             _la = this._input.LA(1);
-            if(_la===ScssParser.DOLLAR) {
+            if (_la === ScssParser.DOLLAR) {
                 this.state = 150;
                 this.params();
             }
@@ -1157,13 +1293,13 @@ ScssParser.prototype.mixinDeclaration = function() {
         this.state = 156;
         this.block();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1171,13 +1307,13 @@ ScssParser.prototype.mixinDeclaration = function() {
 };
 
 function IncludeDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_includeDeclaration;
     return this;
@@ -1203,32 +1339,28 @@ IncludeDeclarationContext.prototype.RPAREN = function() {
 };
 
 IncludeDeclarationContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 IncludeDeclarationContext.prototype.values = function() {
-    return this.getTypedRuleContext(ValuesContext,0);
+    return this.getTypedRuleContext(ValuesContext, 0);
 };
 
 IncludeDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterIncludeDeclaration(this);
-	}
+    }
 };
 
 IncludeDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitIncludeDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.IncludeDeclarationContext = IncludeDeclarationContext;
 
 ScssParser.prototype.includeDeclaration = function() {
-
     var localctx = new IncludeDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 14, ScssParser.RULE_includeDeclaration);
     var _la = 0; // Token type
@@ -1239,79 +1371,83 @@ ScssParser.prototype.includeDeclaration = function() {
         this.state = 159;
         this.match(ScssParser.Identifier);
         this.state = 174;
-        switch(this._input.LA(1)) {
-        case ScssParser.SEMI:
-            this.state = 160;
-            this.match(ScssParser.SEMI);
-            break;
-        case ScssParser.NULL:
-        case ScssParser.InterpolationStart:
-        case ScssParser.LPAREN:
-        case ScssParser.BlockStart:
-        case ScssParser.BlockEnd:
-        case ScssParser.DOT:
-        case ScssParser.DOLLAR:
-        case ScssParser.AT:
-        case ScssParser.AND:
-        case ScssParser.HASH:
-        case ScssParser.TIMES:
-        case ScssParser.UrlStart:
-        case ScssParser.MIXIN:
-        case ScssParser.FUNCTION:
-        case ScssParser.AT_IF:
-        case ScssParser.AT_FOR:
-        case ScssParser.AT_WHILE:
-        case ScssParser.AT_EACH:
-        case ScssParser.INCLUDE:
-        case ScssParser.IMPORT:
-        case ScssParser.RETURN:
-        case ScssParser.Identifier:
-        case ScssParser.StringLiteral:
-        case ScssParser.Number:
-        case ScssParser.Color:
-            this.state = 169;
-            this._errHandler.sync(this);
-            var la_ = this._interp.adaptivePredict(this._input,10,this._ctx);
-            if(la_===1) {
-                this.state = 161;
-                this.match(ScssParser.LPAREN);
-                this.state = 163;
+        switch (this._input.LA(1)) {
+            case ScssParser.SEMI:
+                this.state = 160;
+                this.match(ScssParser.SEMI);
+                break;
+            case ScssParser.NULL:
+            case ScssParser.InterpolationStart:
+            case ScssParser.LPAREN:
+            case ScssParser.BlockStart:
+            case ScssParser.BlockEnd:
+            case ScssParser.DOT:
+            case ScssParser.DOLLAR:
+            case ScssParser.AT:
+            case ScssParser.AND:
+            case ScssParser.HASH:
+            case ScssParser.TIMES:
+            case ScssParser.UrlStart:
+            case ScssParser.MIXIN:
+            case ScssParser.FUNCTION:
+            case ScssParser.AT_IF:
+            case ScssParser.AT_FOR:
+            case ScssParser.AT_WHILE:
+            case ScssParser.AT_EACH:
+            case ScssParser.INCLUDE:
+            case ScssParser.IMPORT:
+            case ScssParser.RETURN:
+            case ScssParser.Identifier:
+            case ScssParser.StringLiteral:
+            case ScssParser.Number:
+            case ScssParser.Color:
+                this.state = 169;
+                this._errHandler.sync(this);
+                var la_ = this._interp.adaptivePredict(this._input, 10, this._ctx);
+                if (la_ === 1) {
+                    this.state = 161;
+                    this.match(ScssParser.LPAREN);
+                    this.state = 163;
+                    _la = this._input.LA(1);
+                    if (
+                        ((_la & ~0x1f) == 0 &&
+                            ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.LPAREN) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.UrlStart))) !== 0) ||
+                        (((_la - 50) & ~0x1f) == 0 &&
+                            ((1 << (_la - 50)) & ((1 << (ScssParser.Identifier - 50)) | (1 << (ScssParser.StringLiteral - 50)) | (1 << (ScssParser.Number - 50)) | (1 << (ScssParser.Color - 50)))) !==
+                                0)
+                    ) {
+                        this.state = 162;
+                        this.values();
+                    }
+
+                    this.state = 165;
+                    this.match(ScssParser.RPAREN);
+                    this.state = 167;
+                    _la = this._input.LA(1);
+                    if (_la === ScssParser.SEMI) {
+                        this.state = 166;
+                        this.match(ScssParser.SEMI);
+                    }
+                }
+                this.state = 172;
                 _la = this._input.LA(1);
-                if((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.LPAREN) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.UrlStart))) !== 0) || ((((_la - 50)) & ~0x1f) == 0 && ((1 << (_la - 50)) & ((1 << (ScssParser.Identifier - 50)) | (1 << (ScssParser.StringLiteral - 50)) | (1 << (ScssParser.Number - 50)) | (1 << (ScssParser.Color - 50)))) !== 0)) {
-                    this.state = 162;
-                    this.values();
+                if (_la === ScssParser.BlockStart) {
+                    this.state = 171;
+                    this.block();
                 }
 
-                this.state = 165;
-                this.match(ScssParser.RPAREN);
-                this.state = 167;
-                _la = this._input.LA(1);
-                if(_la===ScssParser.SEMI) {
-                    this.state = 166;
-                    this.match(ScssParser.SEMI);
-                }
-
-
-            }
-            this.state = 172;
-            _la = this._input.LA(1);
-            if(_la===ScssParser.BlockStart) {
-                this.state = 171;
-                this.block();
-            }
-
-            break;
-        default:
-            throw new antlr4.error.NoViableAltException(this);
+                break;
+            default:
+                throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1319,13 +1455,13 @@ ScssParser.prototype.includeDeclaration = function() {
 };
 
 function FunctionDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_functionDeclaration;
     return this;
@@ -1355,32 +1491,28 @@ FunctionDeclarationContext.prototype.BlockEnd = function() {
 };
 
 FunctionDeclarationContext.prototype.params = function() {
-    return this.getTypedRuleContext(ParamsContext,0);
+    return this.getTypedRuleContext(ParamsContext, 0);
 };
 
 FunctionDeclarationContext.prototype.functionBody = function() {
-    return this.getTypedRuleContext(FunctionBodyContext,0);
+    return this.getTypedRuleContext(FunctionBodyContext, 0);
 };
 
 FunctionDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterFunctionDeclaration(this);
-	}
+    }
 };
 
 FunctionDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitFunctionDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.FunctionDeclarationContext = FunctionDeclarationContext;
 
 ScssParser.prototype.functionDeclaration = function() {
-
     var localctx = new FunctionDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 16, ScssParser.RULE_functionDeclaration);
     var _la = 0; // Token type
@@ -1394,7 +1526,7 @@ ScssParser.prototype.functionDeclaration = function() {
         this.match(ScssParser.LPAREN);
         this.state = 180;
         _la = this._input.LA(1);
-        if(_la===ScssParser.DOLLAR) {
+        if (_la === ScssParser.DOLLAR) {
             this.state = 179;
             this.params();
         }
@@ -1405,7 +1537,37 @@ ScssParser.prototype.functionDeclaration = function() {
         this.match(ScssParser.BlockStart);
         this.state = 185;
         _la = this._input.LA(1);
-        if((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.LPAREN) | (1 << ScssParser.DOT) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.AT) | (1 << ScssParser.AND) | (1 << ScssParser.HASH) | (1 << ScssParser.TIMES) | (1 << ScssParser.UrlStart))) !== 0) || ((((_la - 36)) & ~0x1f) == 0 && ((1 << (_la - 36)) & ((1 << (ScssParser.MIXIN - 36)) | (1 << (ScssParser.FUNCTION - 36)) | (1 << (ScssParser.AT_IF - 36)) | (1 << (ScssParser.AT_FOR - 36)) | (1 << (ScssParser.AT_WHILE - 36)) | (1 << (ScssParser.AT_EACH - 36)) | (1 << (ScssParser.INCLUDE - 36)) | (1 << (ScssParser.IMPORT - 36)) | (1 << (ScssParser.RETURN - 36)) | (1 << (ScssParser.Identifier - 36)) | (1 << (ScssParser.StringLiteral - 36)) | (1 << (ScssParser.Number - 36)) | (1 << (ScssParser.Color - 36)))) !== 0)) {
+        if (
+            ((_la & ~0x1f) == 0 &&
+                ((1 << _la) &
+                    ((1 << ScssParser.NULL) |
+                        (1 << ScssParser.InterpolationStart) |
+                        (1 << ScssParser.LPAREN) |
+                        (1 << ScssParser.DOT) |
+                        (1 << ScssParser.DOLLAR) |
+                        (1 << ScssParser.AT) |
+                        (1 << ScssParser.AND) |
+                        (1 << ScssParser.HASH) |
+                        (1 << ScssParser.TIMES) |
+                        (1 << ScssParser.UrlStart))) !==
+                    0) ||
+            (((_la - 36) & ~0x1f) == 0 &&
+                ((1 << (_la - 36)) &
+                    ((1 << (ScssParser.MIXIN - 36)) |
+                        (1 << (ScssParser.FUNCTION - 36)) |
+                        (1 << (ScssParser.AT_IF - 36)) |
+                        (1 << (ScssParser.AT_FOR - 36)) |
+                        (1 << (ScssParser.AT_WHILE - 36)) |
+                        (1 << (ScssParser.AT_EACH - 36)) |
+                        (1 << (ScssParser.INCLUDE - 36)) |
+                        (1 << (ScssParser.IMPORT - 36)) |
+                        (1 << (ScssParser.RETURN - 36)) |
+                        (1 << (ScssParser.Identifier - 36)) |
+                        (1 << (ScssParser.StringLiteral - 36)) |
+                        (1 << (ScssParser.Number - 36)) |
+                        (1 << (ScssParser.Color - 36)))) !==
+                    0)
+        ) {
             this.state = 184;
             this.functionBody();
         }
@@ -1413,13 +1575,13 @@ ScssParser.prototype.functionDeclaration = function() {
         this.state = 187;
         this.match(ScssParser.BlockEnd);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1427,13 +1589,13 @@ ScssParser.prototype.functionDeclaration = function() {
 };
 
 function FunctionBodyContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_functionBody;
     return this;
@@ -1443,39 +1605,35 @@ FunctionBodyContext.prototype = Object.create(antlr4.ParserRuleContext.prototype
 FunctionBodyContext.prototype.constructor = FunctionBodyContext;
 
 FunctionBodyContext.prototype.functionReturn = function() {
-    return this.getTypedRuleContext(FunctionReturnContext,0);
+    return this.getTypedRuleContext(FunctionReturnContext, 0);
 };
 
 FunctionBodyContext.prototype.functionStatement = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(FunctionStatementContext);
     } else {
-        return this.getTypedRuleContext(FunctionStatementContext,i);
+        return this.getTypedRuleContext(FunctionStatementContext, i);
     }
 };
 
 FunctionBodyContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterFunctionBody(this);
-	}
+    }
 };
 
 FunctionBodyContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitFunctionBody(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.FunctionBodyContext = FunctionBodyContext;
 
 ScssParser.prototype.functionBody = function() {
-
     var localctx = new FunctionBodyContext(this, this._ctx, this.state);
     this.enterRule(localctx, 18, ScssParser.RULE_functionBody);
     var _la = 0; // Token type
@@ -1484,7 +1642,36 @@ ScssParser.prototype.functionBody = function() {
         this.state = 192;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.LPAREN) | (1 << ScssParser.DOT) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.AT) | (1 << ScssParser.AND) | (1 << ScssParser.HASH) | (1 << ScssParser.TIMES) | (1 << ScssParser.UrlStart))) !== 0) || ((((_la - 36)) & ~0x1f) == 0 && ((1 << (_la - 36)) & ((1 << (ScssParser.MIXIN - 36)) | (1 << (ScssParser.FUNCTION - 36)) | (1 << (ScssParser.AT_IF - 36)) | (1 << (ScssParser.AT_FOR - 36)) | (1 << (ScssParser.AT_WHILE - 36)) | (1 << (ScssParser.AT_EACH - 36)) | (1 << (ScssParser.INCLUDE - 36)) | (1 << (ScssParser.IMPORT - 36)) | (1 << (ScssParser.Identifier - 36)) | (1 << (ScssParser.StringLiteral - 36)) | (1 << (ScssParser.Number - 36)) | (1 << (ScssParser.Color - 36)))) !== 0)) {
+        while (
+            ((_la & ~0x1f) == 0 &&
+                ((1 << _la) &
+                    ((1 << ScssParser.NULL) |
+                        (1 << ScssParser.InterpolationStart) |
+                        (1 << ScssParser.LPAREN) |
+                        (1 << ScssParser.DOT) |
+                        (1 << ScssParser.DOLLAR) |
+                        (1 << ScssParser.AT) |
+                        (1 << ScssParser.AND) |
+                        (1 << ScssParser.HASH) |
+                        (1 << ScssParser.TIMES) |
+                        (1 << ScssParser.UrlStart))) !==
+                    0) ||
+            (((_la - 36) & ~0x1f) == 0 &&
+                ((1 << (_la - 36)) &
+                    ((1 << (ScssParser.MIXIN - 36)) |
+                        (1 << (ScssParser.FUNCTION - 36)) |
+                        (1 << (ScssParser.AT_IF - 36)) |
+                        (1 << (ScssParser.AT_FOR - 36)) |
+                        (1 << (ScssParser.AT_WHILE - 36)) |
+                        (1 << (ScssParser.AT_EACH - 36)) |
+                        (1 << (ScssParser.INCLUDE - 36)) |
+                        (1 << (ScssParser.IMPORT - 36)) |
+                        (1 << (ScssParser.Identifier - 36)) |
+                        (1 << (ScssParser.StringLiteral - 36)) |
+                        (1 << (ScssParser.Number - 36)) |
+                        (1 << (ScssParser.Color - 36)))) !==
+                    0)
+        ) {
             this.state = 189;
             this.functionStatement();
             this.state = 194;
@@ -1494,13 +1681,13 @@ ScssParser.prototype.functionBody = function() {
         this.state = 195;
         this.functionReturn();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1508,13 +1695,13 @@ ScssParser.prototype.functionBody = function() {
 };
 
 function FunctionReturnContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_functionReturn;
     return this;
@@ -1524,28 +1711,24 @@ FunctionReturnContext.prototype = Object.create(antlr4.ParserRuleContext.prototy
 FunctionReturnContext.prototype.constructor = FunctionReturnContext;
 
 FunctionReturnContext.prototype.commandStatement = function() {
-    return this.getTypedRuleContext(CommandStatementContext,0);
+    return this.getTypedRuleContext(CommandStatementContext, 0);
 };
 
 FunctionReturnContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterFunctionReturn(this);
-	}
+    }
 };
 
 FunctionReturnContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitFunctionReturn(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.FunctionReturnContext = FunctionReturnContext;
 
 ScssParser.prototype.functionReturn = function() {
-
     var localctx = new FunctionReturnContext(this, this._ctx, this.state);
     this.enterRule(localctx, 20, ScssParser.RULE_functionReturn);
     try {
@@ -1557,13 +1740,13 @@ ScssParser.prototype.functionReturn = function() {
         this.state = 199;
         this.match(ScssParser.SEMI);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1571,13 +1754,13 @@ ScssParser.prototype.functionReturn = function() {
 };
 
 function FunctionStatementContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_functionStatement;
     return this;
@@ -1587,62 +1770,57 @@ FunctionStatementContext.prototype = Object.create(antlr4.ParserRuleContext.prot
 FunctionStatementContext.prototype.constructor = FunctionStatementContext;
 
 FunctionStatementContext.prototype.commandStatement = function() {
-    return this.getTypedRuleContext(CommandStatementContext,0);
+    return this.getTypedRuleContext(CommandStatementContext, 0);
 };
 
 FunctionStatementContext.prototype.statement = function() {
-    return this.getTypedRuleContext(StatementContext,0);
+    return this.getTypedRuleContext(StatementContext, 0);
 };
 
 FunctionStatementContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterFunctionStatement(this);
-	}
+    }
 };
 
 FunctionStatementContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitFunctionStatement(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.FunctionStatementContext = FunctionStatementContext;
 
 ScssParser.prototype.functionStatement = function() {
-
     var localctx = new FunctionStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 22, ScssParser.RULE_functionStatement);
     try {
         this.state = 205;
         this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,16,this._ctx);
-        switch(la_) {
-        case 1:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 201;
-            this.commandStatement();
-            this.state = 202;
-            this.match(ScssParser.SEMI);
-            break;
+        var la_ = this._interp.adaptivePredict(this._input, 16, this._ctx);
+        switch (la_) {
+            case 1:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 201;
+                this.commandStatement();
+                this.state = 202;
+                this.match(ScssParser.SEMI);
+                break;
 
-        case 2:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 204;
-            this.statement();
-            break;
-
+            case 2:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 204;
+                this.statement();
+                break;
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1650,13 +1828,13 @@ ScssParser.prototype.functionStatement = function() {
 };
 
 function CommandStatementContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_commandStatement;
     return this;
@@ -1666,95 +1844,94 @@ CommandStatementContext.prototype = Object.create(antlr4.ParserRuleContext.proto
 CommandStatementContext.prototype.constructor = CommandStatementContext;
 
 CommandStatementContext.prototype.commandStatement = function() {
-    return this.getTypedRuleContext(CommandStatementContext,0);
+    return this.getTypedRuleContext(CommandStatementContext, 0);
 };
 
 CommandStatementContext.prototype.mathStatement = function() {
-    return this.getTypedRuleContext(MathStatementContext,0);
+    return this.getTypedRuleContext(MathStatementContext, 0);
 };
 
 CommandStatementContext.prototype.expression = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(ExpressionContext);
     } else {
-        return this.getTypedRuleContext(ExpressionContext,i);
+        return this.getTypedRuleContext(ExpressionContext, i);
     }
 };
 
 CommandStatementContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterCommandStatement(this);
-	}
+    }
 };
 
 CommandStatementContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitCommandStatement(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.CommandStatementContext = CommandStatementContext;
 
 ScssParser.prototype.commandStatement = function() {
-
     var localctx = new CommandStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 24, ScssParser.RULE_commandStatement);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
         this.state = 216;
-        switch(this._input.LA(1)) {
-        case ScssParser.NULL:
-        case ScssParser.InterpolationStart:
-        case ScssParser.DOLLAR:
-        case ScssParser.UrlStart:
-        case ScssParser.Identifier:
-        case ScssParser.StringLiteral:
-        case ScssParser.Number:
-        case ScssParser.Color:
-            this.state = 208; 
-            this._errHandler.sync(this);
-            _la = this._input.LA(1);
-            do {
-                this.state = 207;
-                this.expression();
-                this.state = 210; 
+        switch (this._input.LA(1)) {
+            case ScssParser.NULL:
+            case ScssParser.InterpolationStart:
+            case ScssParser.DOLLAR:
+            case ScssParser.UrlStart:
+            case ScssParser.Identifier:
+            case ScssParser.StringLiteral:
+            case ScssParser.Number:
+            case ScssParser.Color:
+                this.state = 208;
                 this._errHandler.sync(this);
                 _la = this._input.LA(1);
-            } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.UrlStart))) !== 0) || ((((_la - 50)) & ~0x1f) == 0 && ((1 << (_la - 50)) & ((1 << (ScssParser.Identifier - 50)) | (1 << (ScssParser.StringLiteral - 50)) | (1 << (ScssParser.Number - 50)) | (1 << (ScssParser.Color - 50)))) !== 0));
-            break;
-        case ScssParser.LPAREN:
-            this.state = 212;
-            this.match(ScssParser.LPAREN);
-            this.state = 213;
-            this.commandStatement();
-            this.state = 214;
-            this.match(ScssParser.RPAREN);
-            break;
-        default:
-            throw new antlr4.error.NoViableAltException(this);
+                do {
+                    this.state = 207;
+                    this.expression();
+                    this.state = 210;
+                    this._errHandler.sync(this);
+                    _la = this._input.LA(1);
+                } while (
+                    ((_la & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.UrlStart))) !== 0) ||
+                    (((_la - 50) & ~0x1f) == 0 &&
+                        ((1 << (_la - 50)) & ((1 << (ScssParser.Identifier - 50)) | (1 << (ScssParser.StringLiteral - 50)) | (1 << (ScssParser.Number - 50)) | (1 << (ScssParser.Color - 50)))) !== 0)
+                );
+                break;
+            case ScssParser.LPAREN:
+                this.state = 212;
+                this.match(ScssParser.LPAREN);
+                this.state = 213;
+                this.commandStatement();
+                this.state = 214;
+                this.match(ScssParser.RPAREN);
+                break;
+            default:
+                throw new antlr4.error.NoViableAltException(this);
         }
         this.state = 219;
         _la = this._input.LA(1);
-        if((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.PLUS) | (1 << ScssParser.TIMES) | (1 << ScssParser.DIV) | (1 << ScssParser.MINUS) | (1 << ScssParser.PERC))) !== 0)) {
+        if ((_la & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.PLUS) | (1 << ScssParser.TIMES) | (1 << ScssParser.DIV) | (1 << ScssParser.MINUS) | (1 << ScssParser.PERC))) !== 0) {
             this.state = 218;
             this.mathStatement();
         }
-
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1762,13 +1939,13 @@ ScssParser.prototype.commandStatement = function() {
 };
 
 function MathCharacterContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_mathCharacter;
     return this;
@@ -1798,24 +1975,20 @@ MathCharacterContext.prototype.PERC = function() {
 };
 
 MathCharacterContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterMathCharacter(this);
-	}
+    }
 };
 
 MathCharacterContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitMathCharacter(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.MathCharacterContext = MathCharacterContext;
 
 ScssParser.prototype.mathCharacter = function() {
-
     var localctx = new MathCharacterContext(this, this._ctx, this.state);
     this.enterRule(localctx, 26, ScssParser.RULE_mathCharacter);
     var _la = 0; // Token type
@@ -1823,20 +1996,19 @@ ScssParser.prototype.mathCharacter = function() {
         this.enterOuterAlt(localctx, 1);
         this.state = 221;
         _la = this._input.LA(1);
-        if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.PLUS) | (1 << ScssParser.TIMES) | (1 << ScssParser.DIV) | (1 << ScssParser.MINUS) | (1 << ScssParser.PERC))) !== 0))) {
-        this._errHandler.recoverInline(this);
-        }
-        else {
+        if (!((_la & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.PLUS) | (1 << ScssParser.TIMES) | (1 << ScssParser.DIV) | (1 << ScssParser.MINUS) | (1 << ScssParser.PERC))) !== 0)) {
+            this._errHandler.recoverInline(this);
+        } else {
             this.consume();
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1844,13 +2016,13 @@ ScssParser.prototype.mathCharacter = function() {
 };
 
 function MathStatementContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_mathStatement;
     return this;
@@ -1860,32 +2032,28 @@ MathStatementContext.prototype = Object.create(antlr4.ParserRuleContext.prototyp
 MathStatementContext.prototype.constructor = MathStatementContext;
 
 MathStatementContext.prototype.mathCharacter = function() {
-    return this.getTypedRuleContext(MathCharacterContext,0);
+    return this.getTypedRuleContext(MathCharacterContext, 0);
 };
 
 MathStatementContext.prototype.commandStatement = function() {
-    return this.getTypedRuleContext(CommandStatementContext,0);
+    return this.getTypedRuleContext(CommandStatementContext, 0);
 };
 
 MathStatementContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterMathStatement(this);
-	}
+    }
 };
 
 MathStatementContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitMathStatement(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.MathStatementContext = MathStatementContext;
 
 ScssParser.prototype.mathStatement = function() {
-
     var localctx = new MathStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 28, ScssParser.RULE_mathStatement);
     try {
@@ -1895,13 +2063,13 @@ ScssParser.prototype.mathStatement = function() {
         this.state = 224;
         this.commandStatement();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -1909,13 +2077,13 @@ ScssParser.prototype.mathStatement = function() {
 };
 
 function ExpressionContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_expression;
     return this;
@@ -1925,11 +2093,11 @@ ExpressionContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 ExpressionContext.prototype.constructor = ExpressionContext;
 
 ExpressionContext.prototype.measurement = function() {
-    return this.getTypedRuleContext(MeasurementContext,0);
+    return this.getTypedRuleContext(MeasurementContext, 0);
 };
 
 ExpressionContext.prototype.identifier = function() {
-    return this.getTypedRuleContext(IdentifierContext,0);
+    return this.getTypedRuleContext(IdentifierContext, 0);
 };
 
 ExpressionContext.prototype.Color = function() {
@@ -1945,100 +2113,95 @@ ExpressionContext.prototype.NULL = function() {
 };
 
 ExpressionContext.prototype.url = function() {
-    return this.getTypedRuleContext(UrlContext,0);
+    return this.getTypedRuleContext(UrlContext, 0);
 };
 
 ExpressionContext.prototype.variableName = function() {
-    return this.getTypedRuleContext(VariableNameContext,0);
+    return this.getTypedRuleContext(VariableNameContext, 0);
 };
 
 ExpressionContext.prototype.functionCall = function() {
-    return this.getTypedRuleContext(FunctionCallContext,0);
+    return this.getTypedRuleContext(FunctionCallContext, 0);
 };
 
 ExpressionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterExpression(this);
-	}
+    }
 };
 
 ExpressionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitExpression(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ExpressionContext = ExpressionContext;
 
 ScssParser.prototype.expression = function() {
-
     var localctx = new ExpressionContext(this, this._ctx, this.state);
     this.enterRule(localctx, 30, ScssParser.RULE_expression);
     try {
         this.state = 234;
         this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,20,this._ctx);
-        switch(la_) {
-        case 1:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 226;
-            this.measurement();
-            break;
+        var la_ = this._interp.adaptivePredict(this._input, 20, this._ctx);
+        switch (la_) {
+            case 1:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 226;
+                this.measurement();
+                break;
 
-        case 2:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 227;
-            this.identifier();
-            break;
+            case 2:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 227;
+                this.identifier();
+                break;
 
-        case 3:
-            this.enterOuterAlt(localctx, 3);
-            this.state = 228;
-            this.match(ScssParser.Color);
-            break;
+            case 3:
+                this.enterOuterAlt(localctx, 3);
+                this.state = 228;
+                this.match(ScssParser.Color);
+                break;
 
-        case 4:
-            this.enterOuterAlt(localctx, 4);
-            this.state = 229;
-            this.match(ScssParser.StringLiteral);
-            break;
+            case 4:
+                this.enterOuterAlt(localctx, 4);
+                this.state = 229;
+                this.match(ScssParser.StringLiteral);
+                break;
 
-        case 5:
-            this.enterOuterAlt(localctx, 5);
-            this.state = 230;
-            this.match(ScssParser.NULL);
-            break;
+            case 5:
+                this.enterOuterAlt(localctx, 5);
+                this.state = 230;
+                this.match(ScssParser.NULL);
+                break;
 
-        case 6:
-            this.enterOuterAlt(localctx, 6);
-            this.state = 231;
-            this.url();
-            break;
+            case 6:
+                this.enterOuterAlt(localctx, 6);
+                this.state = 231;
+                this.url();
+                break;
 
-        case 7:
-            this.enterOuterAlt(localctx, 7);
-            this.state = 232;
-            this.variableName();
-            break;
+            case 7:
+                this.enterOuterAlt(localctx, 7);
+                this.state = 232;
+                this.variableName();
+                break;
 
-        case 8:
-            this.enterOuterAlt(localctx, 8);
-            this.state = 233;
-            this.functionCall();
-            break;
-
+            case 8:
+                this.enterOuterAlt(localctx, 8);
+                this.state = 233;
+                this.functionCall();
+                break;
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2046,13 +2209,13 @@ ScssParser.prototype.expression = function() {
 };
 
 function IfDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_ifDeclaration;
     return this;
@@ -2066,47 +2229,43 @@ IfDeclarationContext.prototype.AT_IF = function() {
 };
 
 IfDeclarationContext.prototype.conditions = function() {
-    return this.getTypedRuleContext(ConditionsContext,0);
+    return this.getTypedRuleContext(ConditionsContext, 0);
 };
 
 IfDeclarationContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 IfDeclarationContext.prototype.elseIfStatement = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(ElseIfStatementContext);
     } else {
-        return this.getTypedRuleContext(ElseIfStatementContext,i);
+        return this.getTypedRuleContext(ElseIfStatementContext, i);
     }
 };
 
 IfDeclarationContext.prototype.elseStatement = function() {
-    return this.getTypedRuleContext(ElseStatementContext,0);
+    return this.getTypedRuleContext(ElseStatementContext, 0);
 };
 
 IfDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterIfDeclaration(this);
-	}
+    }
 };
 
 IfDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitIfDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.IfDeclarationContext = IfDeclarationContext;
 
 ScssParser.prototype.ifDeclaration = function() {
-
     var localctx = new IfDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 32, ScssParser.RULE_ifDeclaration);
     var _la = 0; // Token type
@@ -2120,32 +2279,31 @@ ScssParser.prototype.ifDeclaration = function() {
         this.block();
         this.state = 242;
         this._errHandler.sync(this);
-        var _alt = this._interp.adaptivePredict(this._input,21,this._ctx)
-        while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
-            if(_alt===1) {
+        var _alt = this._interp.adaptivePredict(this._input, 21, this._ctx);
+        while (_alt != 2 && _alt != antlr4.atn.ATN.INVALID_ALT_NUMBER) {
+            if (_alt === 1) {
                 this.state = 239;
-                this.elseIfStatement(); 
+                this.elseIfStatement();
             }
             this.state = 244;
             this._errHandler.sync(this);
-            _alt = this._interp.adaptivePredict(this._input,21,this._ctx);
+            _alt = this._interp.adaptivePredict(this._input, 21, this._ctx);
         }
 
         this.state = 246;
         _la = this._input.LA(1);
-        if(_la===ScssParser.AT_ELSE) {
+        if (_la === ScssParser.AT_ELSE) {
             this.state = 245;
             this.elseStatement();
         }
-
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2153,13 +2311,13 @@ ScssParser.prototype.ifDeclaration = function() {
 };
 
 function ElseIfStatementContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_elseIfStatement;
     return this;
@@ -2177,32 +2335,28 @@ ElseIfStatementContext.prototype.IF = function() {
 };
 
 ElseIfStatementContext.prototype.conditions = function() {
-    return this.getTypedRuleContext(ConditionsContext,0);
+    return this.getTypedRuleContext(ConditionsContext, 0);
 };
 
 ElseIfStatementContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 ElseIfStatementContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterElseIfStatement(this);
-	}
+    }
 };
 
 ElseIfStatementContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitElseIfStatement(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ElseIfStatementContext = ElseIfStatementContext;
 
 ScssParser.prototype.elseIfStatement = function() {
-
     var localctx = new ElseIfStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 34, ScssParser.RULE_elseIfStatement);
     try {
@@ -2216,13 +2370,13 @@ ScssParser.prototype.elseIfStatement = function() {
         this.state = 251;
         this.block();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2230,13 +2384,13 @@ ScssParser.prototype.elseIfStatement = function() {
 };
 
 function ElseStatementContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_elseStatement;
     return this;
@@ -2250,28 +2404,24 @@ ElseStatementContext.prototype.AT_ELSE = function() {
 };
 
 ElseStatementContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 ElseStatementContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterElseStatement(this);
-	}
+    }
 };
 
 ElseStatementContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitElseStatement(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ElseStatementContext = ElseStatementContext;
 
 ScssParser.prototype.elseStatement = function() {
-
     var localctx = new ElseStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 36, ScssParser.RULE_elseStatement);
     try {
@@ -2281,13 +2431,13 @@ ScssParser.prototype.elseStatement = function() {
         this.state = 254;
         this.block();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2295,13 +2445,13 @@ ScssParser.prototype.elseStatement = function() {
 };
 
 function ConditionsContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_conditions;
     return this;
@@ -2311,7 +2461,7 @@ ConditionsContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 ConditionsContext.prototype.constructor = ConditionsContext;
 
 ConditionsContext.prototype.condition = function() {
-    return this.getTypedRuleContext(ConditionContext,0);
+    return this.getTypedRuleContext(ConditionContext, 0);
 };
 
 ConditionsContext.prototype.COMBINE_COMPARE = function() {
@@ -2319,7 +2469,7 @@ ConditionsContext.prototype.COMBINE_COMPARE = function() {
 };
 
 ConditionsContext.prototype.conditions = function() {
-    return this.getTypedRuleContext(ConditionsContext,0);
+    return this.getTypedRuleContext(ConditionsContext, 0);
 };
 
 ConditionsContext.prototype.NULL = function() {
@@ -2327,62 +2477,56 @@ ConditionsContext.prototype.NULL = function() {
 };
 
 ConditionsContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterConditions(this);
-	}
+    }
 };
 
 ConditionsContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitConditions(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ConditionsContext = ConditionsContext;
 
 ScssParser.prototype.conditions = function() {
-
     var localctx = new ConditionsContext(this, this._ctx, this.state);
     this.enterRule(localctx, 38, ScssParser.RULE_conditions);
     try {
         this.state = 262;
         this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,24,this._ctx);
-        switch(la_) {
-        case 1:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 256;
-            this.condition();
-            this.state = 259;
-            this._errHandler.sync(this);
-            var la_ = this._interp.adaptivePredict(this._input,23,this._ctx);
-            if(la_===1) {
-                this.state = 257;
-                this.match(ScssParser.COMBINE_COMPARE);
-                this.state = 258;
-                this.conditions();
+        var la_ = this._interp.adaptivePredict(this._input, 24, this._ctx);
+        switch (la_) {
+            case 1:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 256;
+                this.condition();
+                this.state = 259;
+                this._errHandler.sync(this);
+                var la_ = this._interp.adaptivePredict(this._input, 23, this._ctx);
+                if (la_ === 1) {
+                    this.state = 257;
+                    this.match(ScssParser.COMBINE_COMPARE);
+                    this.state = 258;
+                    this.conditions();
+                }
+                break;
 
-            }
-            break;
-
-        case 2:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 261;
-            this.match(ScssParser.NULL);
-            break;
-
+            case 2:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 261;
+                this.match(ScssParser.NULL);
+                break;
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2390,13 +2534,13 @@ ScssParser.prototype.conditions = function() {
 };
 
 function ConditionContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_condition;
     return this;
@@ -2406,11 +2550,11 @@ ConditionContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 ConditionContext.prototype.constructor = ConditionContext;
 
 ConditionContext.prototype.commandStatement = function() {
-    return this.getTypedRuleContext(CommandStatementContext,0);
+    return this.getTypedRuleContext(CommandStatementContext, 0);
 };
 
 ConditionContext.prototype.conditions = function() {
-    return this.getTypedRuleContext(ConditionsContext,0);
+    return this.getTypedRuleContext(ConditionsContext, 0);
 };
 
 ConditionContext.prototype.LT = function() {
@@ -2426,72 +2570,74 @@ ConditionContext.prototype.LPAREN = function() {
 };
 
 ConditionContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterCondition(this);
-	}
+    }
 };
 
 ConditionContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitCondition(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ConditionContext = ConditionContext;
 
 ScssParser.prototype.condition = function() {
-
     var localctx = new ConditionContext(this, this._ctx, this.state);
     this.enterRule(localctx, 40, ScssParser.RULE_condition);
     var _la = 0; // Token type
     try {
         this.state = 273;
         this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,26,this._ctx);
-        switch(la_) {
-        case 1:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 264;
-            this.commandStatement();
-            this.state = 267;
-            _la = this._input.LA(1);
-            if(((((_la - 13)) & ~0x1f) == 0 && ((1 << (_la - 13)) & ((1 << (ScssParser.GT - 13)) | (1 << (ScssParser.LT - 13)) | (1 << (ScssParser.EQEQ - 13)) | (1 << (ScssParser.NOTEQ - 13)))) !== 0)) {
-                this.state = 265;
+        var la_ = this._interp.adaptivePredict(this._input, 26, this._ctx);
+        switch (la_) {
+            case 1:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 264;
+                this.commandStatement();
+                this.state = 267;
                 _la = this._input.LA(1);
-                if(!(((((_la - 13)) & ~0x1f) == 0 && ((1 << (_la - 13)) & ((1 << (ScssParser.GT - 13)) | (1 << (ScssParser.LT - 13)) | (1 << (ScssParser.EQEQ - 13)) | (1 << (ScssParser.NOTEQ - 13)))) !== 0))) {
-                this._errHandler.recoverInline(this);
+                if (
+                    ((_la - 13) & ~0x1f) == 0 &&
+                    ((1 << (_la - 13)) & ((1 << (ScssParser.GT - 13)) | (1 << (ScssParser.LT - 13)) | (1 << (ScssParser.EQEQ - 13)) | (1 << (ScssParser.NOTEQ - 13)))) !== 0
+                ) {
+                    this.state = 265;
+                    _la = this._input.LA(1);
+                    if (
+                        !(
+                            ((_la - 13) & ~0x1f) == 0 &&
+                            ((1 << (_la - 13)) & ((1 << (ScssParser.GT - 13)) | (1 << (ScssParser.LT - 13)) | (1 << (ScssParser.EQEQ - 13)) | (1 << (ScssParser.NOTEQ - 13)))) !== 0
+                        )
+                    ) {
+                        this._errHandler.recoverInline(this);
+                    } else {
+                        this.consume();
+                    }
+                    this.state = 266;
+                    this.conditions();
                 }
-                else {
-                    this.consume();
-                }
-                this.state = 266;
+
+                break;
+
+            case 2:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 269;
+                this.match(ScssParser.LPAREN);
+                this.state = 270;
                 this.conditions();
-            }
-
-            break;
-
-        case 2:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 269;
-            this.match(ScssParser.LPAREN);
-            this.state = 270;
-            this.conditions();
-            this.state = 271;
-            this.match(ScssParser.RPAREN);
-            break;
-
+                this.state = 271;
+                this.match(ScssParser.RPAREN);
+                break;
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2499,13 +2645,13 @@ ScssParser.prototype.condition = function() {
 };
 
 function VariableDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_variableDeclaration;
     return this;
@@ -2515,7 +2661,7 @@ VariableDeclarationContext.prototype = Object.create(antlr4.ParserRuleContext.pr
 VariableDeclarationContext.prototype.constructor = VariableDeclarationContext;
 
 VariableDeclarationContext.prototype.variableName = function() {
-    return this.getTypedRuleContext(VariableNameContext,0);
+    return this.getTypedRuleContext(VariableNameContext, 0);
 };
 
 VariableDeclarationContext.prototype.COLON = function() {
@@ -2523,28 +2669,24 @@ VariableDeclarationContext.prototype.COLON = function() {
 };
 
 VariableDeclarationContext.prototype.values = function() {
-    return this.getTypedRuleContext(ValuesContext,0);
+    return this.getTypedRuleContext(ValuesContext, 0);
 };
 
 VariableDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterVariableDeclaration(this);
-	}
+    }
 };
 
 VariableDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitVariableDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.VariableDeclarationContext = VariableDeclarationContext;
 
 ScssParser.prototype.variableDeclaration = function() {
-
     var localctx = new VariableDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 42, ScssParser.RULE_variableDeclaration);
     var _la = 0; // Token type
@@ -2558,7 +2700,7 @@ ScssParser.prototype.variableDeclaration = function() {
         this.values();
         this.state = 279;
         _la = this._input.LA(1);
-        if(_la===ScssParser.POUND_DEFAULT) {
+        if (_la === ScssParser.POUND_DEFAULT) {
             this.state = 278;
             this.match(ScssParser.POUND_DEFAULT);
         }
@@ -2566,13 +2708,13 @@ ScssParser.prototype.variableDeclaration = function() {
         this.state = 281;
         this.match(ScssParser.SEMI);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2580,13 +2722,13 @@ ScssParser.prototype.variableDeclaration = function() {
 };
 
 function ForDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_forDeclaration;
     return this;
@@ -2600,40 +2742,36 @@ ForDeclarationContext.prototype.AT_FOR = function() {
 };
 
 ForDeclarationContext.prototype.variableName = function() {
-    return this.getTypedRuleContext(VariableNameContext,0);
+    return this.getTypedRuleContext(VariableNameContext, 0);
 };
 
 ForDeclarationContext.prototype.fromNumber = function() {
-    return this.getTypedRuleContext(FromNumberContext,0);
+    return this.getTypedRuleContext(FromNumberContext, 0);
 };
 
 ForDeclarationContext.prototype.throughNumber = function() {
-    return this.getTypedRuleContext(ThroughNumberContext,0);
+    return this.getTypedRuleContext(ThroughNumberContext, 0);
 };
 
 ForDeclarationContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 ForDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterForDeclaration(this);
-	}
+    }
 };
 
 ForDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitForDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ForDeclarationContext = ForDeclarationContext;
 
 ScssParser.prototype.forDeclaration = function() {
-
     var localctx = new ForDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 44, ScssParser.RULE_forDeclaration);
     try {
@@ -2653,13 +2791,13 @@ ScssParser.prototype.forDeclaration = function() {
         this.state = 289;
         this.block();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2667,13 +2805,13 @@ ScssParser.prototype.forDeclaration = function() {
 };
 
 function FromNumberContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_fromNumber;
     return this;
@@ -2687,24 +2825,20 @@ FromNumberContext.prototype.Number = function() {
 };
 
 FromNumberContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterFromNumber(this);
-	}
+    }
 };
 
 FromNumberContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitFromNumber(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.FromNumberContext = FromNumberContext;
 
 ScssParser.prototype.fromNumber = function() {
-
     var localctx = new FromNumberContext(this, this._ctx, this.state);
     this.enterRule(localctx, 46, ScssParser.RULE_fromNumber);
     try {
@@ -2712,13 +2846,13 @@ ScssParser.prototype.fromNumber = function() {
         this.state = 291;
         this.match(ScssParser.Number);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2726,13 +2860,13 @@ ScssParser.prototype.fromNumber = function() {
 };
 
 function ThroughNumberContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_throughNumber;
     return this;
@@ -2746,24 +2880,20 @@ ThroughNumberContext.prototype.Number = function() {
 };
 
 ThroughNumberContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterThroughNumber(this);
-	}
+    }
 };
 
 ThroughNumberContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitThroughNumber(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ThroughNumberContext = ThroughNumberContext;
 
 ScssParser.prototype.throughNumber = function() {
-
     var localctx = new ThroughNumberContext(this, this._ctx, this.state);
     this.enterRule(localctx, 48, ScssParser.RULE_throughNumber);
     try {
@@ -2771,13 +2901,13 @@ ScssParser.prototype.throughNumber = function() {
         this.state = 293;
         this.match(ScssParser.Number);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2785,13 +2915,13 @@ ScssParser.prototype.throughNumber = function() {
 };
 
 function WhileDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_whileDeclaration;
     return this;
@@ -2805,32 +2935,28 @@ WhileDeclarationContext.prototype.AT_WHILE = function() {
 };
 
 WhileDeclarationContext.prototype.conditions = function() {
-    return this.getTypedRuleContext(ConditionsContext,0);
+    return this.getTypedRuleContext(ConditionsContext, 0);
 };
 
 WhileDeclarationContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 WhileDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterWhileDeclaration(this);
-	}
+    }
 };
 
 WhileDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitWhileDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.WhileDeclarationContext = WhileDeclarationContext;
 
 ScssParser.prototype.whileDeclaration = function() {
-
     var localctx = new WhileDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 50, ScssParser.RULE_whileDeclaration);
     try {
@@ -2842,13 +2968,13 @@ ScssParser.prototype.whileDeclaration = function() {
         this.state = 297;
         this.block();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2856,13 +2982,13 @@ ScssParser.prototype.whileDeclaration = function() {
 };
 
 function EachDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_eachDeclaration;
     return this;
@@ -2876,13 +3002,13 @@ EachDeclarationContext.prototype.AT_EACH = function() {
 };
 
 EachDeclarationContext.prototype.variableName = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(VariableNameContext);
     } else {
-        return this.getTypedRuleContext(VariableNameContext,i);
+        return this.getTypedRuleContext(VariableNameContext, i);
     }
 };
 
@@ -2891,44 +3017,39 @@ EachDeclarationContext.prototype.IN = function() {
 };
 
 EachDeclarationContext.prototype.eachValueList = function() {
-    return this.getTypedRuleContext(EachValueListContext,0);
+    return this.getTypedRuleContext(EachValueListContext, 0);
 };
 
 EachDeclarationContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 EachDeclarationContext.prototype.COMMA = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.COMMA);
     } else {
         return this.getToken(ScssParser.COMMA, i);
     }
 };
 
-
 EachDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterEachDeclaration(this);
-	}
+    }
 };
 
 EachDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitEachDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.EachDeclarationContext = EachDeclarationContext;
 
 ScssParser.prototype.eachDeclaration = function() {
-
     var localctx = new EachDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 52, ScssParser.RULE_eachDeclaration);
     var _la = 0; // Token type
@@ -2941,7 +3062,7 @@ ScssParser.prototype.eachDeclaration = function() {
         this.state = 305;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===ScssParser.COMMA) {
+        while (_la === ScssParser.COMMA) {
             this.state = 301;
             this.match(ScssParser.COMMA);
             this.state = 302;
@@ -2957,13 +3078,13 @@ ScssParser.prototype.eachDeclaration = function() {
         this.state = 310;
         this.block();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -2971,13 +3092,13 @@ ScssParser.prototype.eachDeclaration = function() {
 };
 
 function EachValueListContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_eachValueList;
     return this;
@@ -2987,110 +3108,104 @@ EachValueListContext.prototype = Object.create(antlr4.ParserRuleContext.prototyp
 EachValueListContext.prototype.constructor = EachValueListContext;
 
 EachValueListContext.prototype.Identifier = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.Identifier);
     } else {
         return this.getToken(ScssParser.Identifier, i);
     }
 };
 
-
 EachValueListContext.prototype.COMMA = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.COMMA);
     } else {
         return this.getToken(ScssParser.COMMA, i);
     }
 };
 
-
 EachValueListContext.prototype.identifierListOrMap = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(IdentifierListOrMapContext);
     } else {
-        return this.getTypedRuleContext(IdentifierListOrMapContext,i);
+        return this.getTypedRuleContext(IdentifierListOrMapContext, i);
     }
 };
 
 EachValueListContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterEachValueList(this);
-	}
+    }
 };
 
 EachValueListContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitEachValueList(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.EachValueListContext = EachValueListContext;
 
 ScssParser.prototype.eachValueList = function() {
-
     var localctx = new EachValueListContext(this, this._ctx, this.state);
     this.enterRule(localctx, 54, ScssParser.RULE_eachValueList);
     var _la = 0; // Token type
     try {
         this.state = 328;
-        switch(this._input.LA(1)) {
-        case ScssParser.Identifier:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 312;
-            this.match(ScssParser.Identifier);
-            this.state = 317;
-            this._errHandler.sync(this);
-            _la = this._input.LA(1);
-            while(_la===ScssParser.COMMA) {
-                this.state = 313;
-                this.match(ScssParser.COMMA);
-                this.state = 314;
+        switch (this._input.LA(1)) {
+            case ScssParser.Identifier:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 312;
                 this.match(ScssParser.Identifier);
-                this.state = 319;
+                this.state = 317;
                 this._errHandler.sync(this);
                 _la = this._input.LA(1);
-            }
-            break;
-        case ScssParser.LPAREN:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 320;
-            this.identifierListOrMap();
-            this.state = 325;
-            this._errHandler.sync(this);
-            _la = this._input.LA(1);
-            while(_la===ScssParser.COMMA) {
-                this.state = 321;
-                this.match(ScssParser.COMMA);
-                this.state = 322;
+                while (_la === ScssParser.COMMA) {
+                    this.state = 313;
+                    this.match(ScssParser.COMMA);
+                    this.state = 314;
+                    this.match(ScssParser.Identifier);
+                    this.state = 319;
+                    this._errHandler.sync(this);
+                    _la = this._input.LA(1);
+                }
+                break;
+            case ScssParser.LPAREN:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 320;
                 this.identifierListOrMap();
-                this.state = 327;
+                this.state = 325;
                 this._errHandler.sync(this);
                 _la = this._input.LA(1);
-            }
-            break;
-        default:
-            throw new antlr4.error.NoViableAltException(this);
+                while (_la === ScssParser.COMMA) {
+                    this.state = 321;
+                    this.match(ScssParser.COMMA);
+                    this.state = 322;
+                    this.identifierListOrMap();
+                    this.state = 327;
+                    this._errHandler.sync(this);
+                    _la = this._input.LA(1);
+                }
+                break;
+            default:
+                throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3098,13 +3213,13 @@ ScssParser.prototype.eachValueList = function() {
 };
 
 function IdentifierListOrMapContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_identifierListOrMap;
     return this;
@@ -3118,13 +3233,13 @@ IdentifierListOrMapContext.prototype.LPAREN = function() {
 };
 
 IdentifierListOrMapContext.prototype.identifierValue = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(IdentifierValueContext);
     } else {
-        return this.getTypedRuleContext(IdentifierValueContext,i);
+        return this.getTypedRuleContext(IdentifierValueContext, i);
     }
 };
 
@@ -3133,36 +3248,31 @@ IdentifierListOrMapContext.prototype.RPAREN = function() {
 };
 
 IdentifierListOrMapContext.prototype.COMMA = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.COMMA);
     } else {
         return this.getToken(ScssParser.COMMA, i);
     }
 };
 
-
 IdentifierListOrMapContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterIdentifierListOrMap(this);
-	}
+    }
 };
 
 IdentifierListOrMapContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitIdentifierListOrMap(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.IdentifierListOrMapContext = IdentifierListOrMapContext;
 
 ScssParser.prototype.identifierListOrMap = function() {
-
     var localctx = new IdentifierListOrMapContext(this, this._ctx, this.state);
     this.enterRule(localctx, 56, ScssParser.RULE_identifierListOrMap);
     var _la = 0; // Token type
@@ -3175,7 +3285,7 @@ ScssParser.prototype.identifierListOrMap = function() {
         this.state = 336;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===ScssParser.COMMA) {
+        while (_la === ScssParser.COMMA) {
             this.state = 332;
             this.match(ScssParser.COMMA);
             this.state = 333;
@@ -3187,13 +3297,13 @@ ScssParser.prototype.identifierListOrMap = function() {
         this.state = 339;
         this.match(ScssParser.RPAREN);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3201,13 +3311,13 @@ ScssParser.prototype.identifierListOrMap = function() {
 };
 
 function IdentifierValueContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_identifierValue;
     return this;
@@ -3217,7 +3327,7 @@ IdentifierValueContext.prototype = Object.create(antlr4.ParserRuleContext.protot
 IdentifierValueContext.prototype.constructor = IdentifierValueContext;
 
 IdentifierValueContext.prototype.identifier = function() {
-    return this.getTypedRuleContext(IdentifierContext,0);
+    return this.getTypedRuleContext(IdentifierContext, 0);
 };
 
 IdentifierValueContext.prototype.COLON = function() {
@@ -3225,28 +3335,24 @@ IdentifierValueContext.prototype.COLON = function() {
 };
 
 IdentifierValueContext.prototype.values = function() {
-    return this.getTypedRuleContext(ValuesContext,0);
+    return this.getTypedRuleContext(ValuesContext, 0);
 };
 
 IdentifierValueContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterIdentifierValue(this);
-	}
+    }
 };
 
 IdentifierValueContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitIdentifierValue(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.IdentifierValueContext = IdentifierValueContext;
 
 ScssParser.prototype.identifierValue = function() {
-
     var localctx = new IdentifierValueContext(this, this._ctx, this.state);
     this.enterRule(localctx, 58, ScssParser.RULE_identifierValue);
     var _la = 0; // Token type
@@ -3256,21 +3362,20 @@ ScssParser.prototype.identifierValue = function() {
         this.identifier();
         this.state = 344;
         _la = this._input.LA(1);
-        if(_la===ScssParser.COLON) {
+        if (_la === ScssParser.COLON) {
             this.state = 342;
             this.match(ScssParser.COLON);
             this.state = 343;
             this.values();
         }
-
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3278,13 +3383,13 @@ ScssParser.prototype.identifierValue = function() {
 };
 
 function ImportDeclarationContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_importDeclaration;
     return this;
@@ -3294,32 +3399,28 @@ ImportDeclarationContext.prototype = Object.create(antlr4.ParserRuleContext.prot
 ImportDeclarationContext.prototype.constructor = ImportDeclarationContext;
 
 ImportDeclarationContext.prototype.referenceUrl = function() {
-    return this.getTypedRuleContext(ReferenceUrlContext,0);
+    return this.getTypedRuleContext(ReferenceUrlContext, 0);
 };
 
 ImportDeclarationContext.prototype.mediaTypes = function() {
-    return this.getTypedRuleContext(MediaTypesContext,0);
+    return this.getTypedRuleContext(MediaTypesContext, 0);
 };
 
 ImportDeclarationContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterImportDeclaration(this);
-	}
+    }
 };
 
 ImportDeclarationContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitImportDeclaration(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ImportDeclarationContext = ImportDeclarationContext;
 
 ScssParser.prototype.importDeclaration = function() {
-
     var localctx = new ImportDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 60, ScssParser.RULE_importDeclaration);
     var _la = 0; // Token type
@@ -3331,7 +3432,7 @@ ScssParser.prototype.importDeclaration = function() {
         this.referenceUrl();
         this.state = 349;
         _la = this._input.LA(1);
-        if(_la===ScssParser.Identifier) {
+        if (_la === ScssParser.Identifier) {
             this.state = 348;
             this.mediaTypes();
         }
@@ -3339,13 +3440,13 @@ ScssParser.prototype.importDeclaration = function() {
         this.state = 351;
         this.match(ScssParser.SEMI);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3353,13 +3454,13 @@ ScssParser.prototype.importDeclaration = function() {
 };
 
 function ReferenceUrlContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_referenceUrl;
     return this;
@@ -3385,54 +3486,50 @@ ReferenceUrlContext.prototype.UrlEnd = function() {
 };
 
 ReferenceUrlContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterReferenceUrl(this);
-	}
+    }
 };
 
 ReferenceUrlContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitReferenceUrl(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ReferenceUrlContext = ReferenceUrlContext;
 
 ScssParser.prototype.referenceUrl = function() {
-
     var localctx = new ReferenceUrlContext(this, this._ctx, this.state);
     this.enterRule(localctx, 62, ScssParser.RULE_referenceUrl);
     try {
         this.state = 357;
-        switch(this._input.LA(1)) {
-        case ScssParser.StringLiteral:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 353;
-            this.match(ScssParser.StringLiteral);
-            break;
-        case ScssParser.UrlStart:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 354;
-            this.match(ScssParser.UrlStart);
-            this.state = 355;
-            this.match(ScssParser.Url);
-            this.state = 356;
-            this.match(ScssParser.UrlEnd);
-            break;
-        default:
-            throw new antlr4.error.NoViableAltException(this);
+        switch (this._input.LA(1)) {
+            case ScssParser.StringLiteral:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 353;
+                this.match(ScssParser.StringLiteral);
+                break;
+            case ScssParser.UrlStart:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 354;
+                this.match(ScssParser.UrlStart);
+                this.state = 355;
+                this.match(ScssParser.Url);
+                this.state = 356;
+                this.match(ScssParser.UrlEnd);
+                break;
+            default:
+                throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3440,13 +3537,13 @@ ScssParser.prototype.referenceUrl = function() {
 };
 
 function MediaTypesContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_mediaTypes;
     return this;
@@ -3456,48 +3553,42 @@ MediaTypesContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 MediaTypesContext.prototype.constructor = MediaTypesContext;
 
 MediaTypesContext.prototype.Identifier = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.Identifier);
     } else {
         return this.getToken(ScssParser.Identifier, i);
     }
 };
 
-
 MediaTypesContext.prototype.COMMA = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.COMMA);
     } else {
         return this.getToken(ScssParser.COMMA, i);
     }
 };
 
-
 MediaTypesContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterMediaTypes(this);
-	}
+    }
 };
 
 MediaTypesContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitMediaTypes(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.MediaTypesContext = MediaTypesContext;
 
 ScssParser.prototype.mediaTypes = function() {
-
     var localctx = new MediaTypesContext(this, this._ctx, this.state);
     this.enterRule(localctx, 64, ScssParser.RULE_mediaTypes);
     var _la = 0; // Token type
@@ -3508,7 +3599,7 @@ ScssParser.prototype.mediaTypes = function() {
         this.state = 364;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===ScssParser.COMMA) {
+        while (_la === ScssParser.COMMA) {
             this.state = 360;
             this.match(ScssParser.COMMA);
             this.state = 361;
@@ -3518,13 +3609,13 @@ ScssParser.prototype.mediaTypes = function() {
             _la = this._input.LA(1);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3532,13 +3623,13 @@ ScssParser.prototype.mediaTypes = function() {
 };
 
 function NestedContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_nested;
     return this;
@@ -3548,11 +3639,11 @@ NestedContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 NestedContext.prototype.constructor = NestedContext;
 
 NestedContext.prototype.nest = function() {
-    return this.getTypedRuleContext(NestContext,0);
+    return this.getTypedRuleContext(NestContext, 0);
 };
 
 NestedContext.prototype.selectors = function() {
-    return this.getTypedRuleContext(SelectorsContext,0);
+    return this.getTypedRuleContext(SelectorsContext, 0);
 };
 
 NestedContext.prototype.BlockStart = function() {
@@ -3560,7 +3651,7 @@ NestedContext.prototype.BlockStart = function() {
 };
 
 NestedContext.prototype.stylesheet = function() {
-    return this.getTypedRuleContext(StylesheetContext,0);
+    return this.getTypedRuleContext(StylesheetContext, 0);
 };
 
 NestedContext.prototype.BlockEnd = function() {
@@ -3568,24 +3659,20 @@ NestedContext.prototype.BlockEnd = function() {
 };
 
 NestedContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterNested(this);
-	}
+    }
 };
 
 NestedContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitNested(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.NestedContext = NestedContext;
 
 ScssParser.prototype.nested = function() {
-
     var localctx = new NestedContext(this, this._ctx, this.state);
     this.enterRule(localctx, 66, ScssParser.RULE_nested);
     try {
@@ -3603,13 +3690,13 @@ ScssParser.prototype.nested = function() {
         this.state = 372;
         this.match(ScssParser.BlockEnd);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3617,13 +3704,13 @@ ScssParser.prototype.nested = function() {
 };
 
 function NestContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_nest;
     return this;
@@ -3633,47 +3720,42 @@ NestContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 NestContext.prototype.constructor = NestContext;
 
 NestContext.prototype.Identifier = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.Identifier);
     } else {
         return this.getToken(ScssParser.Identifier, i);
     }
 };
 
-
 NestContext.prototype.pseudo = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(PseudoContext);
     } else {
-        return this.getTypedRuleContext(PseudoContext,i);
+        return this.getTypedRuleContext(PseudoContext, i);
     }
 };
 
 NestContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterNest(this);
-	}
+    }
 };
 
 NestContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitNest(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.NestContext = NestContext;
 
 ScssParser.prototype.nest = function() {
-
     var localctx = new NestContext(this, this._ctx, this.state);
     this.enterRule(localctx, 68, ScssParser.RULE_nest);
     var _la = 0; // Token type
@@ -3681,29 +3763,28 @@ ScssParser.prototype.nest = function() {
         this.enterOuterAlt(localctx, 1);
         this.state = 374;
         _la = this._input.LA(1);
-        if(!(_la===ScssParser.AND || _la===ScssParser.Identifier)) {
-        this._errHandler.recoverInline(this);
-        }
-        else {
+        if (!(_la === ScssParser.AND || _la === ScssParser.Identifier)) {
+            this._errHandler.recoverInline(this);
+        } else {
             this.consume();
         }
         this.state = 378;
         this._errHandler.sync(this);
-        var _alt = this._interp.adaptivePredict(this._input,37,this._ctx)
-        while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
-            if(_alt===1) {
+        var _alt = this._interp.adaptivePredict(this._input, 37, this._ctx);
+        while (_alt != 2 && _alt != antlr4.atn.ATN.INVALID_ALT_NUMBER) {
+            if (_alt === 1) {
                 this.state = 375;
-                this.match(ScssParser.Identifier); 
+                this.match(ScssParser.Identifier);
             }
             this.state = 380;
             this._errHandler.sync(this);
-            _alt = this._interp.adaptivePredict(this._input,37,this._ctx);
+            _alt = this._interp.adaptivePredict(this._input, 37, this._ctx);
         }
 
         this.state = 384;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===ScssParser.COLON || _la===ScssParser.COLONCOLON) {
+        while (_la === ScssParser.COLON || _la === ScssParser.COLONCOLON) {
             this.state = 381;
             this.pseudo();
             this.state = 386;
@@ -3711,13 +3792,13 @@ ScssParser.prototype.nest = function() {
             _la = this._input.LA(1);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3725,13 +3806,13 @@ ScssParser.prototype.nest = function() {
 };
 
 function RulesetContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_ruleset;
     return this;
@@ -3741,32 +3822,28 @@ RulesetContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 RulesetContext.prototype.constructor = RulesetContext;
 
 RulesetContext.prototype.selectors = function() {
-    return this.getTypedRuleContext(SelectorsContext,0);
+    return this.getTypedRuleContext(SelectorsContext, 0);
 };
 
 RulesetContext.prototype.block = function() {
-    return this.getTypedRuleContext(BlockContext,0);
+    return this.getTypedRuleContext(BlockContext, 0);
 };
 
 RulesetContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterRuleset(this);
-	}
+    }
 };
 
 RulesetContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitRuleset(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.RulesetContext = RulesetContext;
 
 ScssParser.prototype.ruleset = function() {
-
     var localctx = new RulesetContext(this, this._ctx, this.state);
     this.enterRule(localctx, 70, ScssParser.RULE_ruleset);
     try {
@@ -3776,13 +3853,13 @@ ScssParser.prototype.ruleset = function() {
         this.state = 388;
         this.block();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3790,13 +3867,13 @@ ScssParser.prototype.ruleset = function() {
 };
 
 function BlockContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_block;
     return this;
@@ -3814,46 +3891,42 @@ BlockContext.prototype.BlockEnd = function() {
 };
 
 BlockContext.prototype.property = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(PropertyContext);
     } else {
-        return this.getTypedRuleContext(PropertyContext,i);
+        return this.getTypedRuleContext(PropertyContext, i);
     }
 };
 
 BlockContext.prototype.statement = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(StatementContext);
     } else {
-        return this.getTypedRuleContext(StatementContext,i);
+        return this.getTypedRuleContext(StatementContext, i);
     }
 };
 
 BlockContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterBlock(this);
-	}
+    }
 };
 
 BlockContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitBlock(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.BlockContext = BlockContext;
 
 ScssParser.prototype.block = function() {
-
     var localctx = new BlockContext(this, this._ctx, this.state);
     this.enterRule(localctx, 72, ScssParser.RULE_block);
     var _la = 0; // Token type
@@ -3863,35 +3936,34 @@ ScssParser.prototype.block = function() {
         this.match(ScssParser.BlockStart);
         this.state = 397;
         this._errHandler.sync(this);
-        var _alt = this._interp.adaptivePredict(this._input,40,this._ctx)
-        while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
-            if(_alt===1) {
+        var _alt = this._interp.adaptivePredict(this._input, 40, this._ctx);
+        while (_alt != 2 && _alt != antlr4.atn.ATN.INVALID_ALT_NUMBER) {
+            if (_alt === 1) {
                 this.state = 395;
                 this._errHandler.sync(this);
-                var la_ = this._interp.adaptivePredict(this._input,39,this._ctx);
-                switch(la_) {
-                case 1:
-                    this.state = 391;
-                    this.property();
-                    this.state = 392;
-                    this.match(ScssParser.SEMI);
-                    break;
+                var la_ = this._interp.adaptivePredict(this._input, 39, this._ctx);
+                switch (la_) {
+                    case 1:
+                        this.state = 391;
+                        this.property();
+                        this.state = 392;
+                        this.match(ScssParser.SEMI);
+                        break;
 
-                case 2:
-                    this.state = 394;
-                    this.statement();
-                    break;
-
-                } 
+                    case 2:
+                        this.state = 394;
+                        this.statement();
+                        break;
+                }
             }
             this.state = 399;
             this._errHandler.sync(this);
-            _alt = this._interp.adaptivePredict(this._input,40,this._ctx);
+            _alt = this._interp.adaptivePredict(this._input, 40, this._ctx);
         }
 
         this.state = 401;
         _la = this._input.LA(1);
-        if(_la===ScssParser.InterpolationStart || _la===ScssParser.Identifier) {
+        if (_la === ScssParser.InterpolationStart || _la === ScssParser.Identifier) {
             this.state = 400;
             this.property();
         }
@@ -3899,13 +3971,13 @@ ScssParser.prototype.block = function() {
         this.state = 403;
         this.match(ScssParser.BlockEnd);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -3913,13 +3985,13 @@ ScssParser.prototype.block = function() {
 };
 
 function SelectorsContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_selectors;
     return this;
@@ -3929,47 +4001,42 @@ SelectorsContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 SelectorsContext.prototype.constructor = SelectorsContext;
 
 SelectorsContext.prototype.selector = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(SelectorContext);
     } else {
-        return this.getTypedRuleContext(SelectorContext,i);
+        return this.getTypedRuleContext(SelectorContext, i);
     }
 };
 
 SelectorsContext.prototype.COMMA = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.COMMA);
     } else {
         return this.getToken(ScssParser.COMMA, i);
     }
 };
 
-
 SelectorsContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterSelectors(this);
-	}
+    }
 };
 
 SelectorsContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitSelectors(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.SelectorsContext = SelectorsContext;
 
 ScssParser.prototype.selectors = function() {
-
     var localctx = new SelectorsContext(this, this._ctx, this.state);
     this.enterRule(localctx, 74, ScssParser.RULE_selectors);
     var _la = 0; // Token type
@@ -3980,7 +4047,7 @@ ScssParser.prototype.selectors = function() {
         this.state = 410;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===ScssParser.COMMA) {
+        while (_la === ScssParser.COMMA) {
             this.state = 406;
             this.match(ScssParser.COMMA);
             this.state = 407;
@@ -3990,13 +4057,13 @@ ScssParser.prototype.selectors = function() {
             _la = this._input.LA(1);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4004,13 +4071,13 @@ ScssParser.prototype.selectors = function() {
 };
 
 function SelectorContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_selector;
     return this;
@@ -4020,80 +4087,79 @@ SelectorContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 SelectorContext.prototype.constructor = SelectorContext;
 
 SelectorContext.prototype.element = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(ElementContext);
     } else {
-        return this.getTypedRuleContext(ElementContext,i);
+        return this.getTypedRuleContext(ElementContext, i);
     }
 };
 
 SelectorContext.prototype.selectorPrefix = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(SelectorPrefixContext);
     } else {
-        return this.getTypedRuleContext(SelectorPrefixContext,i);
+        return this.getTypedRuleContext(SelectorPrefixContext, i);
     }
 };
 
 SelectorContext.prototype.attrib = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(AttribContext);
     } else {
-        return this.getTypedRuleContext(AttribContext,i);
+        return this.getTypedRuleContext(AttribContext, i);
     }
 };
 
 SelectorContext.prototype.pseudo = function() {
-    return this.getTypedRuleContext(PseudoContext,0);
+    return this.getTypedRuleContext(PseudoContext, 0);
 };
 
 SelectorContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterSelector(this);
-	}
+    }
 };
 
 SelectorContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitSelector(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.SelectorContext = SelectorContext;
 
 ScssParser.prototype.selector = function() {
-
     var localctx = new SelectorContext(this, this._ctx, this.state);
     this.enterRule(localctx, 76, ScssParser.RULE_selector);
     var _la = 0; // Token type
     try {
         this.enterOuterAlt(localctx, 1);
-        this.state = 414; 
+        this.state = 414;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
         do {
             this.state = 413;
             this.element();
-            this.state = 416; 
+            this.state = 416;
             this._errHandler.sync(this);
             _la = this._input.LA(1);
-        } while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.InterpolationStart) | (1 << ScssParser.DOT) | (1 << ScssParser.AND) | (1 << ScssParser.HASH) | (1 << ScssParser.TIMES))) !== 0) || _la===ScssParser.Identifier);
+        } while (
+            ((_la & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.InterpolationStart) | (1 << ScssParser.DOT) | (1 << ScssParser.AND) | (1 << ScssParser.HASH) | (1 << ScssParser.TIMES))) !== 0) ||
+            _la === ScssParser.Identifier
+        );
         this.state = 423;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.GT) | (1 << ScssParser.TIL) | (1 << ScssParser.PLUS))) !== 0)) {
+        while ((_la & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.GT) | (1 << ScssParser.TIL) | (1 << ScssParser.PLUS))) !== 0) {
             this.state = 418;
             this.selectorPrefix();
             this.state = 419;
@@ -4105,7 +4171,7 @@ ScssParser.prototype.selector = function() {
         this.state = 429;
         this._errHandler.sync(this);
         _la = this._input.LA(1);
-        while(_la===ScssParser.LBRACK) {
+        while (_la === ScssParser.LBRACK) {
             this.state = 426;
             this.attrib();
             this.state = 431;
@@ -4114,19 +4180,18 @@ ScssParser.prototype.selector = function() {
         }
         this.state = 433;
         _la = this._input.LA(1);
-        if(_la===ScssParser.COLON || _la===ScssParser.COLONCOLON) {
+        if (_la === ScssParser.COLON || _la === ScssParser.COLONCOLON) {
             this.state = 432;
             this.pseudo();
         }
-
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4134,13 +4199,13 @@ ScssParser.prototype.selector = function() {
 };
 
 function SelectorPrefixContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_selectorPrefix;
     return this;
@@ -4162,24 +4227,20 @@ SelectorPrefixContext.prototype.TIL = function() {
 };
 
 SelectorPrefixContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterSelectorPrefix(this);
-	}
+    }
 };
 
 SelectorPrefixContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitSelectorPrefix(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.SelectorPrefixContext = SelectorPrefixContext;
 
 ScssParser.prototype.selectorPrefix = function() {
-
     var localctx = new SelectorPrefixContext(this, this._ctx, this.state);
     this.enterRule(localctx, 78, ScssParser.RULE_selectorPrefix);
     var _la = 0; // Token type
@@ -4187,20 +4248,19 @@ ScssParser.prototype.selectorPrefix = function() {
         this.enterOuterAlt(localctx, 1);
         this.state = 435;
         _la = this._input.LA(1);
-        if(!((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.GT) | (1 << ScssParser.TIL) | (1 << ScssParser.PLUS))) !== 0))) {
-        this._errHandler.recoverInline(this);
-        }
-        else {
+        if (!((_la & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.GT) | (1 << ScssParser.TIL) | (1 << ScssParser.PLUS))) !== 0)) {
+            this._errHandler.recoverInline(this);
+        } else {
             this.consume();
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4208,13 +4268,13 @@ ScssParser.prototype.selectorPrefix = function() {
 };
 
 function ElementContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_element;
     return this;
@@ -4224,74 +4284,70 @@ ElementContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 ElementContext.prototype.constructor = ElementContext;
 
 ElementContext.prototype.identifier = function() {
-    return this.getTypedRuleContext(IdentifierContext,0);
+    return this.getTypedRuleContext(IdentifierContext, 0);
 };
 
 ElementContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterElement(this);
-	}
+    }
 };
 
 ElementContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitElement(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ElementContext = ElementContext;
 
 ScssParser.prototype.element = function() {
-
     var localctx = new ElementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 80, ScssParser.RULE_element);
     try {
         this.state = 444;
-        switch(this._input.LA(1)) {
-        case ScssParser.InterpolationStart:
-        case ScssParser.Identifier:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 437;
-            this.identifier();
-            break;
-        case ScssParser.HASH:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 438;
-            this.match(ScssParser.HASH);
-            this.state = 439;
-            this.identifier();
-            break;
-        case ScssParser.DOT:
-            this.enterOuterAlt(localctx, 3);
-            this.state = 440;
-            this.match(ScssParser.DOT);
-            this.state = 441;
-            this.identifier();
-            break;
-        case ScssParser.AND:
-            this.enterOuterAlt(localctx, 4);
-            this.state = 442;
-            this.match(ScssParser.AND);
-            break;
-        case ScssParser.TIMES:
-            this.enterOuterAlt(localctx, 5);
-            this.state = 443;
-            this.match(ScssParser.TIMES);
-            break;
-        default:
-            throw new antlr4.error.NoViableAltException(this);
+        switch (this._input.LA(1)) {
+            case ScssParser.InterpolationStart:
+            case ScssParser.Identifier:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 437;
+                this.identifier();
+                break;
+            case ScssParser.HASH:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 438;
+                this.match(ScssParser.HASH);
+                this.state = 439;
+                this.identifier();
+                break;
+            case ScssParser.DOT:
+                this.enterOuterAlt(localctx, 3);
+                this.state = 440;
+                this.match(ScssParser.DOT);
+                this.state = 441;
+                this.identifier();
+                break;
+            case ScssParser.AND:
+                this.enterOuterAlt(localctx, 4);
+                this.state = 442;
+                this.match(ScssParser.AND);
+                break;
+            case ScssParser.TIMES:
+                this.enterOuterAlt(localctx, 5);
+                this.state = 443;
+                this.match(ScssParser.TIMES);
+                break;
+            default:
+                throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4299,13 +4355,13 @@ ScssParser.prototype.element = function() {
 };
 
 function PseudoContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_pseudo;
     return this;
@@ -4327,73 +4383,66 @@ PseudoContext.prototype.COLONCOLON = function() {
 };
 
 PseudoContext.prototype.functionCall = function() {
-    return this.getTypedRuleContext(FunctionCallContext,0);
+    return this.getTypedRuleContext(FunctionCallContext, 0);
 };
 
 PseudoContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterPseudo(this);
-	}
+    }
 };
 
 PseudoContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitPseudo(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.PseudoContext = PseudoContext;
 
 ScssParser.prototype.pseudo = function() {
-
     var localctx = new PseudoContext(this, this._ctx, this.state);
     this.enterRule(localctx, 82, ScssParser.RULE_pseudo);
     var _la = 0; // Token type
     try {
         this.state = 450;
         this._errHandler.sync(this);
-        var la_ = this._interp.adaptivePredict(this._input,48,this._ctx);
-        switch(la_) {
-        case 1:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 446;
-            _la = this._input.LA(1);
-            if(!(_la===ScssParser.COLON || _la===ScssParser.COLONCOLON)) {
-            this._errHandler.recoverInline(this);
-            }
-            else {
-                this.consume();
-            }
-            this.state = 447;
-            this.match(ScssParser.Identifier);
-            break;
+        var la_ = this._interp.adaptivePredict(this._input, 48, this._ctx);
+        switch (la_) {
+            case 1:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 446;
+                _la = this._input.LA(1);
+                if (!(_la === ScssParser.COLON || _la === ScssParser.COLONCOLON)) {
+                    this._errHandler.recoverInline(this);
+                } else {
+                    this.consume();
+                }
+                this.state = 447;
+                this.match(ScssParser.Identifier);
+                break;
 
-        case 2:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 448;
-            _la = this._input.LA(1);
-            if(!(_la===ScssParser.COLON || _la===ScssParser.COLONCOLON)) {
-            this._errHandler.recoverInline(this);
-            }
-            else {
-                this.consume();
-            }
-            this.state = 449;
-            this.functionCall();
-            break;
-
+            case 2:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 448;
+                _la = this._input.LA(1);
+                if (!(_la === ScssParser.COLON || _la === ScssParser.COLONCOLON)) {
+                    this._errHandler.recoverInline(this);
+                } else {
+                    this.consume();
+                }
+                this.state = 449;
+                this.functionCall();
+                break;
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4401,13 +4450,13 @@ ScssParser.prototype.pseudo = function() {
 };
 
 function AttribContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_attrib;
     return this;
@@ -4417,19 +4466,18 @@ AttribContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 AttribContext.prototype.constructor = AttribContext;
 
 AttribContext.prototype.Identifier = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.Identifier);
     } else {
         return this.getToken(ScssParser.Identifier, i);
     }
 };
 
-
 AttribContext.prototype.attribRelate = function() {
-    return this.getTypedRuleContext(AttribRelateContext,0);
+    return this.getTypedRuleContext(AttribRelateContext, 0);
 };
 
 AttribContext.prototype.StringLiteral = function() {
@@ -4437,24 +4485,20 @@ AttribContext.prototype.StringLiteral = function() {
 };
 
 AttribContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterAttrib(this);
-	}
+    }
 };
 
 AttribContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitAttrib(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.AttribContext = AttribContext;
 
 ScssParser.prototype.attrib = function() {
-
     var localctx = new AttribContext(this, this._ctx, this.state);
     this.enterRule(localctx, 84, ScssParser.RULE_attrib);
     var _la = 0; // Token type
@@ -4466,15 +4510,14 @@ ScssParser.prototype.attrib = function() {
         this.match(ScssParser.Identifier);
         this.state = 457;
         _la = this._input.LA(1);
-        if(((((_la - 33)) & ~0x1f) == 0 && ((1 << (_la - 33)) & ((1 << (ScssParser.EQ - 33)) | (1 << (ScssParser.PIPE_EQ - 33)) | (1 << (ScssParser.TILD_EQ - 33)))) !== 0)) {
+        if (((_la - 33) & ~0x1f) == 0 && ((1 << (_la - 33)) & ((1 << (ScssParser.EQ - 33)) | (1 << (ScssParser.PIPE_EQ - 33)) | (1 << (ScssParser.TILD_EQ - 33)))) !== 0) {
             this.state = 454;
             this.attribRelate();
             this.state = 455;
             _la = this._input.LA(1);
-            if(!(_la===ScssParser.Identifier || _la===ScssParser.StringLiteral)) {
-            this._errHandler.recoverInline(this);
-            }
-            else {
+            if (!(_la === ScssParser.Identifier || _la === ScssParser.StringLiteral)) {
+                this._errHandler.recoverInline(this);
+            } else {
                 this.consume();
             }
         }
@@ -4482,13 +4525,13 @@ ScssParser.prototype.attrib = function() {
         this.state = 459;
         this.match(ScssParser.RBRACK);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4496,13 +4539,13 @@ ScssParser.prototype.attrib = function() {
 };
 
 function AttribRelateContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_attribRelate;
     return this;
@@ -4511,26 +4554,21 @@ function AttribRelateContext(parser, parent, invokingState) {
 AttribRelateContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 AttribRelateContext.prototype.constructor = AttribRelateContext;
 
-
 AttribRelateContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterAttribRelate(this);
-	}
+    }
 };
 
 AttribRelateContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitAttribRelate(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.AttribRelateContext = AttribRelateContext;
 
 ScssParser.prototype.attribRelate = function() {
-
     var localctx = new AttribRelateContext(this, this._ctx, this.state);
     this.enterRule(localctx, 86, ScssParser.RULE_attribRelate);
     var _la = 0; // Token type
@@ -4538,20 +4576,19 @@ ScssParser.prototype.attribRelate = function() {
         this.enterOuterAlt(localctx, 1);
         this.state = 461;
         _la = this._input.LA(1);
-        if(!(((((_la - 33)) & ~0x1f) == 0 && ((1 << (_la - 33)) & ((1 << (ScssParser.EQ - 33)) | (1 << (ScssParser.PIPE_EQ - 33)) | (1 << (ScssParser.TILD_EQ - 33)))) !== 0))) {
-        this._errHandler.recoverInline(this);
-        }
-        else {
+        if (!(((_la - 33) & ~0x1f) == 0 && ((1 << (_la - 33)) & ((1 << (ScssParser.EQ - 33)) | (1 << (ScssParser.PIPE_EQ - 33)) | (1 << (ScssParser.TILD_EQ - 33)))) !== 0)) {
+            this._errHandler.recoverInline(this);
+        } else {
             this.consume();
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4559,13 +4596,13 @@ ScssParser.prototype.attribRelate = function() {
 };
 
 function IdentifierContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_identifier;
     return this;
@@ -4579,13 +4616,13 @@ IdentifierContext.prototype.Identifier = function() {
 };
 
 IdentifierContext.prototype.identifierPart = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(IdentifierPartContext);
     } else {
-        return this.getTypedRuleContext(IdentifierPartContext,i);
+        return this.getTypedRuleContext(IdentifierPartContext, i);
     }
 };
 
@@ -4594,7 +4631,7 @@ IdentifierContext.prototype.InterpolationStart = function() {
 };
 
 IdentifierContext.prototype.identifierVariableName = function() {
-    return this.getTypedRuleContext(IdentifierVariableNameContext,0);
+    return this.getTypedRuleContext(IdentifierVariableNameContext, 0);
 };
 
 IdentifierContext.prototype.BlockEnd = function() {
@@ -4602,75 +4639,71 @@ IdentifierContext.prototype.BlockEnd = function() {
 };
 
 IdentifierContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterIdentifier(this);
-	}
+    }
 };
 
 IdentifierContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitIdentifier(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.IdentifierContext = IdentifierContext;
 
 ScssParser.prototype.identifier = function() {
-
     var localctx = new IdentifierContext(this, this._ctx, this.state);
     this.enterRule(localctx, 88, ScssParser.RULE_identifier);
     var _la = 0; // Token type
     try {
         this.state = 479;
-        switch(this._input.LA(1)) {
-        case ScssParser.Identifier:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 463;
-            this.match(ScssParser.Identifier);
-            this.state = 467;
-            this._errHandler.sync(this);
-            _la = this._input.LA(1);
-            while(_la===ScssParser.InterpolationStartAfter || _la===ScssParser.IdentifierAfter) {
-                this.state = 464;
-                this.identifierPart();
-                this.state = 469;
+        switch (this._input.LA(1)) {
+            case ScssParser.Identifier:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 463;
+                this.match(ScssParser.Identifier);
+                this.state = 467;
                 this._errHandler.sync(this);
                 _la = this._input.LA(1);
-            }
-            break;
-        case ScssParser.InterpolationStart:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 470;
-            this.match(ScssParser.InterpolationStart);
-            this.state = 471;
-            this.identifierVariableName();
-            this.state = 472;
-            this.match(ScssParser.BlockEnd);
-            this.state = 476;
-            this._errHandler.sync(this);
-            _la = this._input.LA(1);
-            while(_la===ScssParser.InterpolationStartAfter || _la===ScssParser.IdentifierAfter) {
-                this.state = 473;
-                this.identifierPart();
-                this.state = 478;
+                while (_la === ScssParser.InterpolationStartAfter || _la === ScssParser.IdentifierAfter) {
+                    this.state = 464;
+                    this.identifierPart();
+                    this.state = 469;
+                    this._errHandler.sync(this);
+                    _la = this._input.LA(1);
+                }
+                break;
+            case ScssParser.InterpolationStart:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 470;
+                this.match(ScssParser.InterpolationStart);
+                this.state = 471;
+                this.identifierVariableName();
+                this.state = 472;
+                this.match(ScssParser.BlockEnd);
+                this.state = 476;
                 this._errHandler.sync(this);
                 _la = this._input.LA(1);
-            }
-            break;
-        default:
-            throw new antlr4.error.NoViableAltException(this);
+                while (_la === ScssParser.InterpolationStartAfter || _la === ScssParser.IdentifierAfter) {
+                    this.state = 473;
+                    this.identifierPart();
+                    this.state = 478;
+                    this._errHandler.sync(this);
+                    _la = this._input.LA(1);
+                }
+                break;
+            default:
+                throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4678,13 +4711,13 @@ ScssParser.prototype.identifier = function() {
 };
 
 function IdentifierPartContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_identifierPart;
     return this;
@@ -4698,7 +4731,7 @@ IdentifierPartContext.prototype.InterpolationStartAfter = function() {
 };
 
 IdentifierPartContext.prototype.identifierVariableName = function() {
-    return this.getTypedRuleContext(IdentifierVariableNameContext,0);
+    return this.getTypedRuleContext(IdentifierVariableNameContext, 0);
 };
 
 IdentifierPartContext.prototype.BlockEnd = function() {
@@ -4710,54 +4743,50 @@ IdentifierPartContext.prototype.IdentifierAfter = function() {
 };
 
 IdentifierPartContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterIdentifierPart(this);
-	}
+    }
 };
 
 IdentifierPartContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitIdentifierPart(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.IdentifierPartContext = IdentifierPartContext;
 
 ScssParser.prototype.identifierPart = function() {
-
     var localctx = new IdentifierPartContext(this, this._ctx, this.state);
     this.enterRule(localctx, 90, ScssParser.RULE_identifierPart);
     try {
         this.state = 486;
-        switch(this._input.LA(1)) {
-        case ScssParser.InterpolationStartAfter:
-            this.enterOuterAlt(localctx, 1);
-            this.state = 481;
-            this.match(ScssParser.InterpolationStartAfter);
-            this.state = 482;
-            this.identifierVariableName();
-            this.state = 483;
-            this.match(ScssParser.BlockEnd);
-            break;
-        case ScssParser.IdentifierAfter:
-            this.enterOuterAlt(localctx, 2);
-            this.state = 485;
-            this.match(ScssParser.IdentifierAfter);
-            break;
-        default:
-            throw new antlr4.error.NoViableAltException(this);
+        switch (this._input.LA(1)) {
+            case ScssParser.InterpolationStartAfter:
+                this.enterOuterAlt(localctx, 1);
+                this.state = 481;
+                this.match(ScssParser.InterpolationStartAfter);
+                this.state = 482;
+                this.identifierVariableName();
+                this.state = 483;
+                this.match(ScssParser.BlockEnd);
+                break;
+            case ScssParser.IdentifierAfter:
+                this.enterOuterAlt(localctx, 2);
+                this.state = 485;
+                this.match(ScssParser.IdentifierAfter);
+                break;
+            default:
+                throw new antlr4.error.NoViableAltException(this);
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4765,13 +4794,13 @@ ScssParser.prototype.identifierPart = function() {
 };
 
 function IdentifierVariableNameContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_identifierVariableName;
     return this;
@@ -4793,24 +4822,20 @@ IdentifierVariableNameContext.prototype.IdentifierAfter = function() {
 };
 
 IdentifierVariableNameContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterIdentifierVariableName(this);
-	}
+    }
 };
 
 IdentifierVariableNameContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitIdentifierVariableName(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.IdentifierVariableNameContext = IdentifierVariableNameContext;
 
 ScssParser.prototype.identifierVariableName = function() {
-
     var localctx = new IdentifierVariableNameContext(this, this._ctx, this.state);
     this.enterRule(localctx, 92, ScssParser.RULE_identifierVariableName);
     var _la = 0; // Token type
@@ -4820,20 +4845,19 @@ ScssParser.prototype.identifierVariableName = function() {
         this.match(ScssParser.DOLLAR);
         this.state = 489;
         _la = this._input.LA(1);
-        if(!(_la===ScssParser.Identifier || _la===ScssParser.IdentifierAfter)) {
-        this._errHandler.recoverInline(this);
-        }
-        else {
+        if (!(_la === ScssParser.Identifier || _la === ScssParser.IdentifierAfter)) {
+            this._errHandler.recoverInline(this);
+        } else {
             this.consume();
         }
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4841,13 +4865,13 @@ ScssParser.prototype.identifierVariableName = function() {
 };
 
 function PropertyContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_property;
     return this;
@@ -4857,7 +4881,7 @@ PropertyContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 PropertyContext.prototype.constructor = PropertyContext;
 
 PropertyContext.prototype.identifier = function() {
-    return this.getTypedRuleContext(IdentifierContext,0);
+    return this.getTypedRuleContext(IdentifierContext, 0);
 };
 
 PropertyContext.prototype.COLON = function() {
@@ -4865,28 +4889,24 @@ PropertyContext.prototype.COLON = function() {
 };
 
 PropertyContext.prototype.values = function() {
-    return this.getTypedRuleContext(ValuesContext,0);
+    return this.getTypedRuleContext(ValuesContext, 0);
 };
 
 PropertyContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterProperty(this);
-	}
+    }
 };
 
 PropertyContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitProperty(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.PropertyContext = PropertyContext;
 
 ScssParser.prototype.property = function() {
-
     var localctx = new PropertyContext(this, this._ctx, this.state);
     this.enterRule(localctx, 94, ScssParser.RULE_property);
     try {
@@ -4898,13 +4918,13 @@ ScssParser.prototype.property = function() {
         this.state = 493;
         this.values();
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -4912,13 +4932,13 @@ ScssParser.prototype.property = function() {
 };
 
 function ValuesContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_values;
     return this;
@@ -4928,47 +4948,42 @@ ValuesContext.prototype = Object.create(antlr4.ParserRuleContext.prototype);
 ValuesContext.prototype.constructor = ValuesContext;
 
 ValuesContext.prototype.commandStatement = function(i) {
-    if(i===undefined) {
+    if (i === undefined) {
         i = null;
     }
-    if(i===null) {
+    if (i === null) {
         return this.getTypedRuleContexts(CommandStatementContext);
     } else {
-        return this.getTypedRuleContext(CommandStatementContext,i);
+        return this.getTypedRuleContext(CommandStatementContext, i);
     }
 };
 
 ValuesContext.prototype.COMMA = function(i) {
-	if(i===undefined) {
-		i = null;
-	}
-    if(i===null) {
+    if (i === undefined) {
+        i = null;
+    }
+    if (i === null) {
         return this.getTokens(ScssParser.COMMA);
     } else {
         return this.getToken(ScssParser.COMMA, i);
     }
 };
 
-
 ValuesContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterValues(this);
-	}
+    }
 };
 
 ValuesContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitValues(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.ValuesContext = ValuesContext;
 
 ScssParser.prototype.values = function() {
-
     var localctx = new ValuesContext(this, this._ctx, this.state);
     this.enterRule(localctx, 96, ScssParser.RULE_values);
     try {
@@ -4977,27 +4992,26 @@ ScssParser.prototype.values = function() {
         this.commandStatement();
         this.state = 500;
         this._errHandler.sync(this);
-        var _alt = this._interp.adaptivePredict(this._input,54,this._ctx)
-        while(_alt!=2 && _alt!=antlr4.atn.ATN.INVALID_ALT_NUMBER) {
-            if(_alt===1) {
+        var _alt = this._interp.adaptivePredict(this._input, 54, this._ctx);
+        while (_alt != 2 && _alt != antlr4.atn.ATN.INVALID_ALT_NUMBER) {
+            if (_alt === 1) {
                 this.state = 496;
                 this.match(ScssParser.COMMA);
                 this.state = 497;
-                this.commandStatement(); 
+                this.commandStatement();
             }
             this.state = 502;
             this._errHandler.sync(this);
-            _alt = this._interp.adaptivePredict(this._input,54,this._ctx);
+            _alt = this._interp.adaptivePredict(this._input, 54, this._ctx);
         }
-
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -5005,13 +5019,13 @@ ScssParser.prototype.values = function() {
 };
 
 function UrlContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_url;
     return this;
@@ -5033,24 +5047,20 @@ UrlContext.prototype.UrlEnd = function() {
 };
 
 UrlContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterUrl(this);
-	}
+    }
 };
 
 UrlContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitUrl(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.UrlContext = UrlContext;
 
 ScssParser.prototype.url = function() {
-
     var localctx = new UrlContext(this, this._ctx, this.state);
     this.enterRule(localctx, 98, ScssParser.RULE_url);
     try {
@@ -5062,13 +5072,13 @@ ScssParser.prototype.url = function() {
         this.state = 505;
         this.match(ScssParser.UrlEnd);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -5076,13 +5086,13 @@ ScssParser.prototype.url = function() {
 };
 
 function MeasurementContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_measurement;
     return this;
@@ -5100,24 +5110,20 @@ MeasurementContext.prototype.Unit = function() {
 };
 
 MeasurementContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterMeasurement(this);
-	}
+    }
 };
 
 MeasurementContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitMeasurement(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.MeasurementContext = MeasurementContext;
 
 ScssParser.prototype.measurement = function() {
-
     var localctx = new MeasurementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 100, ScssParser.RULE_measurement);
     var _la = 0; // Token type
@@ -5127,19 +5133,18 @@ ScssParser.prototype.measurement = function() {
         this.match(ScssParser.Number);
         this.state = 509;
         _la = this._input.LA(1);
-        if(_la===ScssParser.Unit) {
+        if (_la === ScssParser.Unit) {
             this.state = 508;
             this.match(ScssParser.Unit);
         }
-
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
@@ -5147,13 +5152,13 @@ ScssParser.prototype.measurement = function() {
 };
 
 function FunctionCallContext(parser, parent, invokingState) {
-	if(parent===undefined) {
-	    parent = null;
-	}
-	if(invokingState===undefined || invokingState===null) {
-		invokingState = -1;
-	}
-	antlr4.ParserRuleContext.call(this, parent, invokingState);
+    if (parent === undefined) {
+        parent = null;
+    }
+    if (invokingState === undefined || invokingState === null) {
+        invokingState = -1;
+    }
+    antlr4.ParserRuleContext.call(this, parent, invokingState);
     this.parser = parser;
     this.ruleIndex = ScssParser.RULE_functionCall;
     return this;
@@ -5175,28 +5180,24 @@ FunctionCallContext.prototype.RPAREN = function() {
 };
 
 FunctionCallContext.prototype.values = function() {
-    return this.getTypedRuleContext(ValuesContext,0);
+    return this.getTypedRuleContext(ValuesContext, 0);
 };
 
 FunctionCallContext.prototype.enterRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.enterFunctionCall(this);
-	}
+    }
 };
 
 FunctionCallContext.prototype.exitRule = function(listener) {
-    if(listener instanceof ScssParserListener ) {
+    if (listener instanceof ScssParserListener) {
         listener.exitFunctionCall(this);
-	}
+    }
 };
-
-
-
 
 ScssParser.FunctionCallContext = FunctionCallContext;
 
 ScssParser.prototype.functionCall = function() {
-
     var localctx = new FunctionCallContext(this, this._ctx, this.state);
     this.enterRule(localctx, 102, ScssParser.RULE_functionCall);
     var _la = 0; // Token type
@@ -5208,7 +5209,12 @@ ScssParser.prototype.functionCall = function() {
         this.match(ScssParser.LPAREN);
         this.state = 514;
         _la = this._input.LA(1);
-        if((((_la) & ~0x1f) == 0 && ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.LPAREN) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.UrlStart))) !== 0) || ((((_la - 50)) & ~0x1f) == 0 && ((1 << (_la - 50)) & ((1 << (ScssParser.Identifier - 50)) | (1 << (ScssParser.StringLiteral - 50)) | (1 << (ScssParser.Number - 50)) | (1 << (ScssParser.Color - 50)))) !== 0)) {
+        if (
+            ((_la & ~0x1f) == 0 &&
+                ((1 << _la) & ((1 << ScssParser.NULL) | (1 << ScssParser.InterpolationStart) | (1 << ScssParser.LPAREN) | (1 << ScssParser.DOLLAR) | (1 << ScssParser.UrlStart))) !== 0) ||
+            (((_la - 50) & ~0x1f) == 0 &&
+                ((1 << (_la - 50)) & ((1 << (ScssParser.Identifier - 50)) | (1 << (ScssParser.StringLiteral - 50)) | (1 << (ScssParser.Number - 50)) | (1 << (ScssParser.Color - 50)))) !== 0)
+        ) {
             this.state = 513;
             this.values();
         }
@@ -5216,18 +5222,17 @@ ScssParser.prototype.functionCall = function() {
         this.state = 516;
         this.match(ScssParser.RPAREN);
     } catch (re) {
-    	if(re instanceof antlr4.error.RecognitionException) {
-	        localctx.exception = re;
-	        this._errHandler.reportError(this, re);
-	        this._errHandler.recover(this, re);
-	    } else {
-	    	throw re;
-	    }
+        if (re instanceof antlr4.error.RecognitionException) {
+            localctx.exception = re;
+            this._errHandler.reportError(this, re);
+            this._errHandler.recover(this, re);
+        } else {
+            throw re;
+        }
     } finally {
         this.exitRule();
     }
     return localctx;
 };
-
 
 exports.ScssParser = ScssParser;

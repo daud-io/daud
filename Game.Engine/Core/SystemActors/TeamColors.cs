@@ -6,8 +6,8 @@
         {
             if (World.Hook.TeamMode)
             {
-                foreach(var player in Player.GetWorldPlayers(World))
-                    switch(player.ShipSprite)
+                foreach (var player in Player.GetWorldPlayers(World))
+                    switch (player.ShipSprite)
                     {
                         case API.Common.Sprites.ship0:
                         case API.Common.Sprites.ship_green:

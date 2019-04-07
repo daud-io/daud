@@ -6,13 +6,13 @@ import { spriteModeMapRules } from "./models/spriteModeMap";
 import { textureCache } from "./models/textureCache";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
-var sass = require('sass');
-var Buffer = require('buffer').Buffer;
+var sass = require("sass");
+var Buffer = require("buffer").Buffer;
 var textureMapRulesLen = textureMapRules[0].length;
 var spriteModeMapRulesLen = spriteModeMapRules[0].length;
 
 // in case your code is isomorphic
-if (typeof window !== 'undefined') (<any>window).Buffer = Buffer;
+if (typeof window !== "undefined") (<any>window).Buffer = Buffer;
 
 import { queryProperties, parseScssIntoRules } from "./parser/parseTheme.js";
 
@@ -37,7 +37,7 @@ export const Settings = {
     background: "on",
     mipmapping: true,
     updatesVersion: 0,
-    mouseOneButton: 0,
+    mouseOneButton: 0
 };
 const themeSelector = <HTMLInputElement>document.getElementById("settingsThemeSelector");
 const themeSelectorCustom = <HTMLInputElement>document.getElementById("settingsThemeSelectorCustom");
@@ -140,45 +140,45 @@ function load() {
     nameSize.value = String(Settings.nameSize);
     background.value = Settings.background;
 }
-function oldTextureKeyEntToNew(key,entry){
-    var newEntList=[];
-    if(key=="animationSpeed"){
-        newEntList=[["animation-speed",entry]];
-    }else if(key=="scale"){
-        newEntList=[["size",(parseFloat(entry)*100)+"%"]];
-    }else if(key=="tileSize"){
-        newEntList=[["tile-size",entry]];
-    }else if(key=="tileWidth"){
-        newEntList=[["tile-width",entry]];
-    }else if(key=="tileHeight"){
-        newEntList=[["tile-height",entry]];
-    }else if(key=="tileCount"){
-        newEntList=[["tile-count",entry]];
-    }else if(key=="imageWidth"){
-        newEntList=[["image-width",entry]];
-    }else if(key=="imageHeight"){
-        newEntList=[["image-height",entry]];
-    }else if(key=="tileSpaceHeight"){
-        newEntList=[["tile-space-height",entry]];
-    }else if(key=="tileSpaceWidth"){
-        newEntList=[["tile-space-width",entry]];
-    }else if(key=="offset"){
-        newEntList=[["offset-x",entry.x],["offset-y",entry.y]];
-    }else if(key=="animationSpeed"){
-        newEntList=[["animation-speed",entry]];
-    }else{
-        newEntList=[[key,entry]];
+function oldTextureKeyEntToNew(key, entry) {
+    var newEntList = [];
+    if (key == "animationSpeed") {
+        newEntList = [["animation-speed", entry]];
+    } else if (key == "scale") {
+        newEntList = [["size", parseFloat(entry) * 100 + "%"]];
+    } else if (key == "tileSize") {
+        newEntList = [["tile-size", entry]];
+    } else if (key == "tileWidth") {
+        newEntList = [["tile-width", entry]];
+    } else if (key == "tileHeight") {
+        newEntList = [["tile-height", entry]];
+    } else if (key == "tileCount") {
+        newEntList = [["tile-count", entry]];
+    } else if (key == "imageWidth") {
+        newEntList = [["image-width", entry]];
+    } else if (key == "imageHeight") {
+        newEntList = [["image-height", entry]];
+    } else if (key == "tileSpaceHeight") {
+        newEntList = [["tile-space-height", entry]];
+    } else if (key == "tileSpaceWidth") {
+        newEntList = [["tile-space-width", entry]];
+    } else if (key == "offset") {
+        newEntList = [["offset-x", entry.x], ["offset-y", entry.y]];
+    } else if (key == "animationSpeed") {
+        newEntList = [["animation-speed", entry]];
+    } else {
+        newEntList = [[key, entry]];
     }
     return newEntList;
 }
-function oldTextureEntryToNew(entry){
-    var newEnt={};
+function oldTextureEntryToNew(entry) {
+    var newEnt = {};
     for (const mapKey in entry) {
-        var toMake=oldTextureKeyEntToNew(mapKey,entry[mapKey]);
-        for(var i=0;i<toMake.length;i++){
-            newEnt[toMake[i][0]]=[JSON.stringify(toMake[i][1])];
-            if(toMake[i][0]=="size"){
-                newEnt[toMake[i][0]]=[toMake[i][1]];
+        var toMake = oldTextureKeyEntToNew(mapKey, entry[mapKey]);
+        for (var i = 0; i < toMake.length; i++) {
+            newEnt[toMake[i][0]] = [JSON.stringify(toMake[i][1])];
+            if (toMake[i][0] == "size") {
+                newEnt[toMake[i][0]] = [toMake[i][1]];
             }
         }
     }
@@ -194,269 +194,256 @@ async function theme(v) {
     const zip = await fetch(link)
         .then(response => response.blob())
         .then(JSZip.loadAsync);
-    var baseFiles=[];
-    zip.folder("daudmod").forEach(function (relativePath, file) {
-    if (!file.dir) {
-        baseFiles.push(file.name);
-    }
-});
-var hasInfo=baseFiles.includes("daudmod/info.json");
-var hasSpriteModeMap=baseFiles.includes("daudmod/spriteModeMap.scss");
-var hasTextureMap=baseFiles.includes("daudmod/textureMap.scss");
-var hasStylesScss=baseFiles.includes("daudmod/styles.scss");
-if(hasStylesScss&&hasSpriteModeMap&&hasStylesScss){//new theme
-    zip.file("daudmod/spriteModeMap.scss")
-        .async("string")
-        .then(text => {
-            zip.file("daudmod/textureMap.scss")
-                .async("string")
-                .then(text2 => {
-                    zip.file("daudmod/styles.scss")
-                        .async("string")
-                        .then(text3 => {
+    var baseFiles = [];
+    zip.folder("daudmod").forEach(function(relativePath, file) {
+        if (!file.dir) {
+            baseFiles.push(file.name);
+        }
+    });
+    var hasInfo = baseFiles.includes("daudmod/info.json");
+    var hasSpriteModeMap = baseFiles.includes("daudmod/spriteModeMap.scss");
+    var hasTextureMap = baseFiles.includes("daudmod/textureMap.scss");
+    var hasStylesScss = baseFiles.includes("daudmod/styles.scss");
+    if (hasStylesScss && hasSpriteModeMap && hasStylesScss) {
+        //new theme
+        zip.file("daudmod/spriteModeMap.scss")
+            .async("string")
+            .then(text => {
+                zip.file("daudmod/textureMap.scss")
+                    .async("string")
+                    .then(text2 => {
+                        zip.file("daudmod/styles.scss")
+                            .async("string")
+                            .then(text3 => {
+                                textureMapRules[0] = textureMapRules[0].slice(0, textureMapRulesLen);
+                                spriteModeMapRules[0] = spriteModeMapRules[0].slice(0, spriteModeMapRulesLen);
 
-
-                            textureMapRules[0] = textureMapRules[0].slice(0, textureMapRulesLen);
-                            spriteModeMapRules[0] = spriteModeMapRules[0].slice(0, spriteModeMapRulesLen);
-
-                            if (text) {
-
-                                var spriteModeMapR = parseScssIntoRules(text);
-                                spriteModeMapRules[0] = spriteModeMapRules[0].concat(spriteModeMapR);
-                            }
-
-                            if (text2) {
-                                var textureMapR = parseScssIntoRules(text2);
-
-
-                                const promises = [];
-                                for (var entry of textureMapR) {
-                                    (function (ent) {
-                                        if (ent.obj.file) {
-                                            var file = JSON.parse(ent.obj.file[0]) + "";
-
-                                            promises.push(
-                                                zip
-                                                    .file(`daudmod/${file}.png`)
-                                                    .async("arraybuffer")
-                                                    .then(ab => {
-
-                                                        var key = ent.selector + "";
-                                                        const arrayBufferView = new Uint8Array(ab);
-                                                        const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                                        const urlCreator = window.URL;
-                                                        const url = urlCreator.createObjectURL(blob);
-
-                                                        if (key == "shield") {
-                                                            console.log("breakpoint");
-                                                            (<any>ent.obj).flag = ["true"];
-                                                        }
-
-                                                        if (debug) console.log(`textureMap.${key}.url: set to blob for file ${file}`);
-                                                        ent.obj.url = [`"${url}"`];
-                                                    })
-                                            );
-
-                                        }
-
-                                        if (ent.obj.emitter) {
-                                            var emitter = JSON.parse(ent.obj.emitter[0]) + "";
-
-                                            promises.push(
-                                                zip
-                                                    .file(`daudmod/${emitter}.json`)
-                                                    .async("string")
-                                                    .then(json => {
-                                                        ent.obj.emitter = [JSON.parse(json)];
-                                                    })
-                                            );
-
-                                        }
-
-                                    })(entry);
+                                if (text) {
+                                    var spriteModeMapR = parseScssIntoRules(text);
+                                    spriteModeMapRules[0] = spriteModeMapRules[0].concat(spriteModeMapR);
                                 }
-                                textureMapRules[0] = textureMapRules[0].concat(textureMapR);
 
-                                if (text3) {
-                                    try {
-                                        var ab = sass.renderSync({ data: text3 }).css.toString('utf8');
-                                        var imagePromises = [];
-                                        var cleansed = ab;
-                                        var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
-                                        images = images ? images : [];
-                                        var fixed = [];
-                                        var fixedMap = [];
-                                        var replacePairs = [];
-                                        for (var imagen = 0; imagen < images.length; imagen++) {
-                                            var imocc = images[imagen];
-                                            var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
-                                            var imgurl = m[1] + "";
-                                            if (debug) console.log(`theme css imagesss ${imgurl}`);
-                                            if (fixed.indexOf(imgurl) > 0) {
-                                                replacePairs.push([imocc, fixed.indexOf(imgurl)]);
-                                            } else {
-                                                fixed.push(imgurl);
-                                                fixedMap.push("");
-                                                replacePairs.push([imocc, fixed.indexOf(imgurl)]);
-                                                imagePromises.push(
-                                                    (function (loo) {
-                                                        return zip
-                                                            .file(`daudmod/${imgurl}`)
-                                                            .async("arraybuffer")
-                                                            .then(ab => {
-                                                                const arrayBufferView = new Uint8Array(ab);
-                                                                const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                                                const urlCreator = window.URL;
-                                                                const url = urlCreator.createObjectURL(blob);
-                                                                fixedMap[fixed.indexOf(loo)] = url;
+                                if (text2) {
+                                    var textureMapR = parseScssIntoRules(text2);
 
-                                                                if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
-                                                            });
-                                                    })(imgurl)
+                                    const promises = [];
+                                    for (var entry of textureMapR) {
+                                        (function(ent) {
+                                            if (ent.obj.file) {
+                                                var file = JSON.parse(ent.obj.file[0]) + "";
+
+                                                promises.push(
+                                                    zip
+                                                        .file(`daudmod/${file}.png`)
+                                                        .async("arraybuffer")
+                                                        .then(ab => {
+                                                            var key = ent.selector + "";
+                                                            const arrayBufferView = new Uint8Array(ab);
+                                                            const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                            const urlCreator = window.URL;
+                                                            const url = urlCreator.createObjectURL(blob);
+
+                                                            if (key == "shield") {
+                                                                console.log("breakpoint");
+                                                                (<any>ent.obj).flag = ["true"];
+                                                            }
+
+                                                            if (debug) console.log(`textureMap.${key}.url: set to blob for file ${file}`);
+                                                            ent.obj.url = [`"${url}"`];
+                                                        })
                                                 );
                                             }
-                                        }
-                                        Promise.all(imagePromises).then(() => {
-                                            for (var k = 0; k < replacePairs.length; k++) {
-                                                cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
+
+                                            if (ent.obj.emitter) {
+                                                var emitter = JSON.parse(ent.obj.emitter[0]) + "";
+
+                                                promises.push(
+                                                    zip
+                                                        .file(`daudmod/${emitter}.json`)
+                                                        .async("string")
+                                                        .then(json => {
+                                                            ent.obj.emitter = [JSON.parse(json)];
+                                                        })
+                                                );
                                             }
-                                            const blob = new Blob([cleansed], { type: "text/css" });
+                                        })(entry);
+                                    }
+                                    textureMapRules[0] = textureMapRules[0].concat(textureMapR);
+
+                                    if (text3) {
+                                        try {
+                                            var ab = sass.renderSync({ data: text3 }).css.toString("utf8");
+                                            var imagePromises = [];
+                                            var cleansed = ab;
+                                            var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
+                                            images = images ? images : [];
+                                            var fixed = [];
+                                            var fixedMap = [];
+                                            var replacePairs = [];
+                                            for (var imagen = 0; imagen < images.length; imagen++) {
+                                                var imocc = images[imagen];
+                                                var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
+                                                var imgurl = m[1] + "";
+                                                if (debug) console.log(`theme css imagesss ${imgurl}`);
+                                                if (fixed.indexOf(imgurl) > 0) {
+                                                    replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                                } else {
+                                                    fixed.push(imgurl);
+                                                    fixedMap.push("");
+                                                    replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                                    imagePromises.push(
+                                                        (function(loo) {
+                                                            return zip
+                                                                .file(`daudmod/${imgurl}`)
+                                                                .async("arraybuffer")
+                                                                .then(ab => {
+                                                                    const arrayBufferView = new Uint8Array(ab);
+                                                                    const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                                    const urlCreator = window.URL;
+                                                                    const url = urlCreator.createObjectURL(blob);
+                                                                    fixedMap[fixed.indexOf(loo)] = url;
+
+                                                                    if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
+                                                                });
+                                                        })(imgurl)
+                                                    );
+                                                }
+                                            }
+                                            Promise.all(imagePromises).then(() => {
+                                                for (var k = 0; k < replacePairs.length; k++) {
+                                                    cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
+                                                }
+                                                const blob = new Blob([cleansed], { type: "text/css" });
+                                                const urlCreator = window.URL;
+                                                const url = urlCreator.createObjectURL(blob);
+
+                                                var link = document.createElement("link");
+                                                link.setAttribute("rel", "stylesheet");
+                                                link.setAttribute("type", "text/css");
+                                                link.setAttribute("href", url);
+                                                var m = document.getElementById("theme-styles").children.length;
+                                                for (var l = 0; l < m; l++) {
+                                                    document.getElementById("theme-styles").removeChild(document.getElementById("theme-styles").children[l]);
+                                                }
+                                                document.getElementById("theme-styles").appendChild(link);
+                                            });
+                                        } catch (e) {
+                                            console.log("ERROR IN CUSTOM THEME STYLES (STEP 3):", e);
+                                        }
+                                    }
+
+                                    Promise.all(promises).then(() => {
+                                        if (window.Game && window.Game.cache) {
+                                            if (debug) console.log(`theme loading complete`);
+                                            (<any>window).textureMapRules = textureMapRules;
+                                            (<any>window).spriteModeMapRules = spriteModeMapRules;
+                                            textureCache.clear();
+                                            window.Game.cache.refreshSprites();
+                                            window.Game.reinitializeWorld();
+                                            //Controls.addSecretShips(window.discordData);
+                                        }
+                                    });
+                                }
+                            });
+                    });
+            });
+    } else if (hasInfo) {
+        //old theme
+        zip.file("daudmod/info.json")
+            .async("string")
+            .then(text => {
+                const promises = [];
+                const info = JSON.parse(text);
+
+                const version = info.version || 1;
+                textureMapRules[0] = textureMapRules[0].slice(0, textureMapRulesLen);
+                spriteModeMapRules[0] = spriteModeMapRules[0].slice(0, spriteModeMapRulesLen);
+
+                var changesBk = false;
+                if (info.spriteModeMap) {
+                    changesBk = changesBk || info.spriteModeMap.hasOwnProperty("bg");
+                }
+                if (info.textureMap) {
+                    changesBk = changesBk || info.textureMap.hasOwnProperty("bg");
+                }
+                if (changesBk) {
+                    //spriteModeMap["bg"].additionalLayers = [];
+                }
+
+                if (info.spriteModeMap) {
+                    for (let key in info.spriteModeMap) {
+                        const modeMap = info.spriteModeMap[key];
+
+                        var hasModes = modeMap["modes"] !== undefined && modeMap["modes"] !== null;
+                        var baseSelector = key.split("_").join(".") + "";
+                        var baseRuleObj = {};
+                        for (const mapKey in modeMap) {
+                            if (mapKey != "modes") {
+                                baseRuleObj[mapKey] = [JSON.stringify(modeMap[mapKey])];
+                            }
+                        }
+                        var moreRules = [];
+                        if (modeMap.modes) {
+                            if (modeMap.modes["default"]) {
+                                baseRuleObj["textures"] = [`"${modeMap.modes["default"][0]}"`];
+                            }
+                            for (const mapKey in modeMap.modes) {
+                                if (mapKey != "default") {
+                                    moreRules.push({ selector: baseSelector + "." + mapKey, obj: { textures: ["inherit", `"${modeMap.modes[mapKey][0]}"`] } });
+                                }
+                            }
+                            var spriteModeMapR = [{ selector: baseSelector, obj: baseRuleObj }].concat(moreRules);
+                            spriteModeMapRules[0] = spriteModeMapRules[0].concat(spriteModeMapR);
+                        }
+                    }
+                }
+                if (info.textureMap) {
+                    var textureMapR = [];
+                    for (let key in info.textureMap) {
+                        const map = info.textureMap[key];
+                        textureMapR.push({ selector: key + "", obj: oldTextureEntryToNew(map) });
+                    }
+
+                    for (var entry of textureMapR) {
+                        (function(ent) {
+                            if (ent.obj.file) {
+                                var file = "";
+                                try {
+                                    file = JSON.parse(ent.obj.file[0]) + "";
+                                } catch (e) {
+                                    console.log("fdhsaush", e, ent.obj.file);
+                                }
+
+                                promises.push(
+                                    zip
+                                        .file(`daudmod/${file}.png`)
+                                        .async("arraybuffer")
+                                        .then(ab => {
+                                            var key = ent.selector + "";
+                                            const arrayBufferView = new Uint8Array(ab);
+                                            const blob = new Blob([arrayBufferView], { type: "image/png" });
                                             const urlCreator = window.URL;
                                             const url = urlCreator.createObjectURL(blob);
 
-                                            var link = document.createElement("link");
-                                            link.setAttribute("rel", "stylesheet");
-                                            link.setAttribute("type", "text/css");
-                                            link.setAttribute("href", url);
-                                            var m = document.getElementById("theme-styles").children.length;
-                                            for (var l = 0; l < m; l++) {
-                                                document.getElementById("theme-styles").removeChild(document.getElementById("theme-styles").children[l]);
-                                            };
-                                            document.getElementById("theme-styles").appendChild(link);
-                                        });
-                                    } catch (e) {
-                                        console.log("ERROR IN CUSTOM THEME STYLES (STEP 3):", e);
-                                    }
-                                }
-
-                                Promise.all(promises).then(() => {
-                                    if (window.Game && window.Game.cache) {
-                                        if (debug) console.log(`theme loading complete`);
-                                        (<any>window).textureMapRules=textureMapRules;
-                                        (<any>window).spriteModeMapRules=spriteModeMapRules;
-                                        textureCache.clear();
-                                        window.Game.cache.refreshSprites();
-                                        window.Game.reinitializeWorld();
-                                        //Controls.addSecretShips(window.discordData);
-                                    }
-                                });
-                            }
-                        });
-                });
-        });
-    }else if(hasInfo){//old theme
-        zip.file("daudmod/info.json")
-        .async("string")
-        .then(text => {
-            const promises = [];
-            const info = JSON.parse(text);
-
-            const version = info.version || 1;
-            textureMapRules[0] = textureMapRules[0].slice(0, textureMapRulesLen);
-                            spriteModeMapRules[0] = spriteModeMapRules[0].slice(0, spriteModeMapRulesLen);
-
-            var changesBk = false;
-            if (info.spriteModeMap) {
-                changesBk = changesBk || info.spriteModeMap.hasOwnProperty("bg");
-            }
-            if (info.textureMap) {
-                changesBk = changesBk || info.textureMap.hasOwnProperty("bg");
-            }
-            if (changesBk) {
-                //spriteModeMap["bg"].additionalLayers = [];
-            }
-
-            if (info.spriteModeMap) {
-                for (let key in info.spriteModeMap) {
-                    const modeMap = info.spriteModeMap[key];
-
-                    var hasModes=modeMap["modes"]!==undefined && modeMap["modes"]!==null;
-                    var baseSelector=key.split("_").join(".")+"";
-                    var baseRuleObj={};
-                    for (const mapKey in modeMap) {
-                        if (mapKey != "modes") {
-                            baseRuleObj[mapKey] = [JSON.stringify(modeMap[mapKey])];
-                        }
-                    }
-                    var moreRules=[];
-                    if (modeMap.modes){
-                        
-                        if(modeMap.modes["default"]){
-                            baseRuleObj["textures"]=[`"${modeMap.modes["default"][0]}"`];
-                        }
-                        for (const mapKey in modeMap.modes) {
-                            if(mapKey!="default"){
-moreRules.push({ selector: baseSelector+"."+mapKey, obj: {textures:["inherit",`"${modeMap.modes[mapKey][0]}"`]} });
-                            }
-                            
-                    }
-                    var spriteModeMapR = [{selector:baseSelector,obj:baseRuleObj}].concat(moreRules);
-                                spriteModeMapRules[0] = spriteModeMapRules[0].concat(spriteModeMapR);
-
-                    
-                }
-            }
-        }
-            if (info.textureMap) {
-                var textureMapR = [];
-                for (let key in info.textureMap) {
-                    const map = info.textureMap[key];
-                    textureMapR.push({selector:key+"",obj:oldTextureEntryToNew(map)})
-                    
-                }
-
-                                for (var entry of textureMapR) {
-                                    (function (ent) {
-                                        if (ent.obj.file) {
-                                            var file="";
-                                            try{
-                                            file = JSON.parse(ent.obj.file[0]) + "";
-                                            }catch(e){
-                                                console.log('fdhsaush',e,ent.obj.file)
+                                            if (key == "shield") {
+                                                console.log("breakpoint");
+                                                (<any>ent.obj).flag = ["true"];
                                             }
 
-                                            promises.push(
-                                                zip
-                                                    .file(`daudmod/${file}.png`)
-                                                    .async("arraybuffer")
-                                                    .then(ab => {
-                                                        var key = ent.selector + "";
-                                                        const arrayBufferView = new Uint8Array(ab);
-                                                        const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                                        const urlCreator = window.URL;
-                                                        const url = urlCreator.createObjectURL(blob);
-
-                                                        if (key == "shield") {
-                                                            console.log("breakpoint");
-                                                            (<any>ent.obj).flag = ["true"];
-                                                        }
-
-                                                        if (debug) console.log(`OLD textureMap.${key}.url: set to blob for file ${file},BLOB:${url}`);
-                                                        ent.obj.url = [url];
-                                                    })
-                                            );
-                                        }
-                                    })(entry);
-                                }
-                                textureMapRules[0] = textureMapRules[0].concat(textureMapR);
-                
+                                            if (debug) console.log(`OLD textureMap.${key}.url: set to blob for file ${file},BLOB:${url}`);
+                                            ent.obj.url = [url];
+                                        })
+                                );
+                            }
+                        })(entry);
+                    }
+                    textureMapRules[0] = textureMapRules[0].concat(textureMapR);
                 }
                 if (info.styles) {
-                    
                     var m = document.getElementById("theme-styles").children.length;
-                                            for (var l = 0; l < m; l++) {
-                                                document.getElementById("theme-styles").removeChild(document.getElementById("theme-styles").children[l]);
-                                            };
+                    for (var l = 0; l < m; l++) {
+                        document.getElementById("theme-styles").removeChild(document.getElementById("theme-styles").children[l]);
+                    }
                     for (var i = 0; i < info.styles.length; i++) {
                         const css = info.styles[i];
 
@@ -465,67 +452,65 @@ moreRules.push({ selector: baseSelector+"."+mapKey, obj: {textures:["inherit",`"
                                 .file(`daudmod/${css}`)
                                 .async("string")
                                 .then(ab => {
-                                    
-                                        var imagePromises = [];
-                                        var cleansed = ab;
-                                        var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
-                                        images = images ? images : [];
-                                        var fixed = [];
-                                        var fixedMap = [];
-                                        var replacePairs = [];
-                                        for (var imagen = 0; imagen < images.length; imagen++) {
-                                            var imocc = images[imagen];
-                                            var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
-                                            var imgurl = m[1] + "";
-                                            if (debug) console.log(`theme css imagesss ${imgurl}`);
-                                            if (fixed.indexOf(imgurl) > 0) {
-                                                replacePairs.push([imocc, fixed.indexOf(imgurl)]);
-                                            } else {
-                                                fixed.push(imgurl);
-                                                fixedMap.push("");
-                                                replacePairs.push([imocc, fixed.indexOf(imgurl)]);
-                                                imagePromises.push(
-                                                    (function (loo) {
-                                                        return zip
-                                                            .file(`daudmod/${imgurl}`)
-                                                            .async("arraybuffer")
-                                                            .then(ab => {
-                                                                const arrayBufferView = new Uint8Array(ab);
-                                                                const blob = new Blob([arrayBufferView], { type: "image/png" });
-                                                                const urlCreator = window.URL;
-                                                                const url = urlCreator.createObjectURL(blob);
-                                                                fixedMap[fixed.indexOf(loo)] = url;
+                                    var imagePromises = [];
+                                    var cleansed = ab;
+                                    var images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
+                                    images = images ? images : [];
+                                    var fixed = [];
+                                    var fixedMap = [];
+                                    var replacePairs = [];
+                                    for (var imagen = 0; imagen < images.length; imagen++) {
+                                        var imocc = images[imagen];
+                                        var m = /url\("\.\/?(.*?\.png)"\)/g.exec(imocc);
+                                        var imgurl = m[1] + "";
+                                        if (debug) console.log(`theme css imagesss ${imgurl}`);
+                                        if (fixed.indexOf(imgurl) > 0) {
+                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                        } else {
+                                            fixed.push(imgurl);
+                                            fixedMap.push("");
+                                            replacePairs.push([imocc, fixed.indexOf(imgurl)]);
+                                            imagePromises.push(
+                                                (function(loo) {
+                                                    return zip
+                                                        .file(`daudmod/${imgurl}`)
+                                                        .async("arraybuffer")
+                                                        .then(ab => {
+                                                            const arrayBufferView = new Uint8Array(ab);
+                                                            const blob = new Blob([arrayBufferView], { type: "image/png" });
+                                                            const urlCreator = window.URL;
+                                                            const url = urlCreator.createObjectURL(blob);
+                                                            fixedMap[fixed.indexOf(loo)] = url;
 
-                                                                if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
-                                                            });
-                                                    })(imgurl)
-                                                );
-                                            }
+                                                            if (debug) console.log(`theme css image ${loo}: set to blob url ${url}`);
+                                                        });
+                                                })(imgurl)
+                                            );
                                         }
-                                        Promise.all(imagePromises).then(() => {
-                                            for (var k = 0; k < replacePairs.length; k++) {
-                                                cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
-                                            }
-                                            const blob = new Blob([cleansed], { type: "text/css" });
-                                            const urlCreator = window.URL;
-                                            const url = urlCreator.createObjectURL(blob);
+                                    }
+                                    Promise.all(imagePromises).then(() => {
+                                        for (var k = 0; k < replacePairs.length; k++) {
+                                            cleansed = cleansed.replace(replacePairs[k][0], "url(" + fixedMap[replacePairs[k][1]] + ")");
+                                        }
+                                        const blob = new Blob([cleansed], { type: "text/css" });
+                                        const urlCreator = window.URL;
+                                        const url = urlCreator.createObjectURL(blob);
 
-                                            var link = document.createElement("link");
-                                            link.setAttribute("rel", "stylesheet");
-                                            link.setAttribute("type", "text/css");
-                                            link.setAttribute("href", url);
-                                            
-                                            document.getElementById("theme-styles").appendChild(link);
-                                        });
-                                    
+                                        var link = document.createElement("link");
+                                        link.setAttribute("rel", "stylesheet");
+                                        link.setAttribute("type", "text/css");
+                                        link.setAttribute("href", url);
+
+                                        document.getElementById("theme-styles").appendChild(link);
+                                    });
                                 })
                         );
                     }
                 }
                 Promise.all(promises).then(() => {
                     if (window.Game && window.Game.cache) {
-                        (<any>window).textureMapRules=textureMapRules;
-                        (<any>window).spriteModeMapRules=spriteModeMapRules;
+                        (<any>window).textureMapRules = textureMapRules;
+                        (<any>window).spriteModeMapRules = spriteModeMapRules;
                         if (debug) console.log(`old theme loading complete`);
                         textureCache.clear();
                         window.Game.cache.refreshSprites();
@@ -533,14 +518,15 @@ moreRules.push({ selector: baseSelector+"."+mapKey, obj: {textures:["inherit",`"
                         //Controls.addSecretShips(window.discordData);
                     }
                 });
-            
-        });
-        
+            });
     }
-    
 }
-(<any>window).getTextureMapRules=function(){return textureMapRules};
-(<any>window).getModeMapRules=function(){return spriteModeMapRules};
+(<any>window).getTextureMapRules = function() {
+    return textureMapRules;
+};
+(<any>window).getModeMapRules = function() {
+    return spriteModeMapRules;
+};
 load();
 
 // override settins from querystring values
@@ -578,14 +564,14 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 let minimapChanged = false;
-window.addEventListener("keydown", function (e) {
+window.addEventListener("keydown", function(e) {
     if (e.keyCode == 77 && !minimapChanged && (document.body.classList.contains("alive") || document.body.classList.contains("spectating"))) {
         Settings.displayMinimap = !Settings.displayMinimap;
         minimapChanged = true;
     }
 });
 
-window.addEventListener("keyup", function (e) {
+window.addEventListener("keyup", function(e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
 

@@ -3,7 +3,7 @@
     using Game.Engine.Core.Pickups;
 
     public class FleetWeaponPickupCannon<T> : IFleetWeapon
-        where T: PickupBase, new()
+        where T : PickupBase, new()
     {
         public bool IsOffense => false;
         public bool IsDefense => true;

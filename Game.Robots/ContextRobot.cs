@@ -13,7 +13,7 @@
     public class ContextRobot : Robot
     {
         protected readonly List<ISense> Sensors = new List<ISense>();
-        public List<ContextBehavior> ContextBehaviors { get; private set;} = new List<ContextBehavior>();
+        public List<ContextBehavior> ContextBehaviors { get; private set; } = new List<ContextBehavior>();
         public readonly SensorBullets SensorBullets;
         public readonly SensorFleets SensorFleets;
         public readonly SensorTeam SensorTeam;

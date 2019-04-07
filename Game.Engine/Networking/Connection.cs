@@ -466,9 +466,9 @@ namespace Game.Engine.Networking
 
                     Sprites shipSprite = Sprites.ship_red;
 
-					player.Connection = this;
+                    player.Connection = this;
                     Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score} Roles: {player.Roles}");
-					
+
                     switch (spawn.Ship)
                     {
                         case "ship0":
@@ -476,7 +476,7 @@ namespace Game.Engine.Networking
                             color = "green";
                             break;
                         case "ship_secret":
-							if (player?.Roles?.Contains("Player") ?? false)
+                            if (player?.Roles?.Contains("Player") ?? false)
                             {
                                 shipSprite = Sprites.ship_secret;
                                 color = "yellow";
@@ -485,13 +485,13 @@ namespace Game.Engine.Networking
                             {
                                 shipSprite = Sprites.ship_yellow;
                                 color = "yellow";
-							}
-							break;
-							/*
-							shipSprite = Sprites.ship_secret;
-                            color = "yellow";
+                            }
                             break;
-							*/
+                        /*
+                        shipSprite = Sprites.ship_secret;
+                        color = "yellow";
+                        break;
+                        */
                         case "ship_zed":
                             if (player?.Roles?.Contains("Old Guard") ?? false)
                             {
@@ -502,13 +502,13 @@ namespace Game.Engine.Networking
                             {
                                 shipSprite = Sprites.ship_red;
                                 color = "red";
-							}
-							break;
-							/*
-							shipSprite = Sprites.ship_zed;
-                            color = "red";
+                            }
                             break;
-							*/
+                        /*
+                        shipSprite = Sprites.ship_zed;
+                        color = "red";
+                        break;
+                        */
                         case "ship_green":
                             shipSprite = Sprites.ship_green;
                             color = "green";
@@ -529,7 +529,7 @@ namespace Game.Engine.Networking
                             shipSprite = Sprites.ship_cyan;
                             color = "cyan";
                             break;
-						case "ship_blue":
+                        case "ship_blue":
                             shipSprite = Sprites.ship_blue;
                             color = "blue";
                             break;
@@ -579,7 +579,7 @@ namespace Game.Engine.Networking
                         var next =
                             Player.GetWorldPlayers(world)
                                 .Where(p => p.IsAlive)
-                                .Where(p => p?.Fleet?.ID  == fleetID)
+                                .Where(p => p?.Fleet?.ID == fleetID)
                                 .FirstOrDefault()?.Fleet;
 
                         SpectatingFleet = next;
