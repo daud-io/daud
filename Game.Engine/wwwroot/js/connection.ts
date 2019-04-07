@@ -79,7 +79,6 @@ export class Connection {
         }
     }
     connect(worldKey? : string) {
-
         let url:string;
 
         if (window.location.protocol === "https:") {
@@ -279,16 +278,23 @@ export class Connection {
         this.sendPing();
         this.onConnected();
 
-        if (this.reloading) window.location.reload();
+
+        if (this.reloading) {
+        	window.location.reload();
+        	this.reloading=false;
+        } 
     }
 
     onClose(event) {
         console.log("disconnected");
         this.connected = false;
-        
-        if (!this.disconnecting && this.autoReload)
-        {
-            this.reloading = true;
+
+        if (!this.disconnecting && this.autoReload) {	
+
+        	if (event.reason != "Normal closure") {
+            	this.reloading = true;
+            }
+
             this.connect();
         }
         this.disconnecting = false;
