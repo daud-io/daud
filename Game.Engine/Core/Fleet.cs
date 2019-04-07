@@ -270,7 +270,7 @@
                         var ship2 = Ships[Sorter[j]];
                         var shipTargetVector2 = FleetCenter + AimTarget - ship2.Position;
                         var shipDistance2 = shipTargetVector2.X * shipTargetVector2.X + shipTargetVector2.Y * shipTargetVector2.Y;
-                        if (shipDistance <= shipDistance2)
+                        if (shipDistance >= shipDistance2)
                         {
                             Sorter.Insert(j, i);
                             added = true;
@@ -286,8 +286,12 @@
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
                 for (int i = 0; i < shipLoss; i++)
                 {
-                    var ship = Ships[Sorter[i]];
-                    AbandonShip(ship);
+                    try {
+                        var ship = Ships[Sorter[i]];
+                        AbandonShip(ship);
+                    }
+                    catch {
+                    }
                 }
             }
 
