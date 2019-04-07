@@ -22,9 +22,11 @@
         public float Drag { get; set; }
 
         public bool Abandoned { get; set; }
+        public Fleet AbandonedByFleet { get; set; }
 
         protected bool IsOOB = false;
         private long TimeDeath = 0;
+
 
         public Ship()
         {
@@ -52,7 +54,6 @@
                 }
             }
         }
-
 
         public override void Init(World world)
         {
