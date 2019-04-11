@@ -170,7 +170,11 @@
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
 
-            Momentum = (Momentum + thrust) * Drag;
+            Momentum = (Momentum + thrust) * Drag;/*
+            var BoostVector = Fleet.isBoosting
+                ? Momentum * ThrustAmount
+                : 0;
+            Momentum = (Momentum + thrust + BoostVector) * Drag;*/
 
         }
 
