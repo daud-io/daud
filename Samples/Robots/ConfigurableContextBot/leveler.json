@@ -71,8 +71,8 @@
       },
       {
         "Name": "level3",
-        "Sprite": "ship_red",
-        "Color": "red",
+        "Sprite": "ship_cyan",
+        "Color": "cyan",
         "TargetingAverageError": 0.0,
         "FiringDelayMS": 100,
         "ShootingTime": 100,
@@ -90,8 +90,8 @@
       },
       {
         "Name": "level4",
-        "Sprite": "ship_red",
-        "Color": "red",
+        "Sprite": "ship_cyan",
+        "Color": "cyan",
         "TargetingAverageError": 0.0,
         "FiringDelayMS": 0,
         "ShootingTime": 100,
@@ -109,8 +109,8 @@
       },
       {
         "Name": "level5(max)",
-        "Sprite": "ship_red",
-        "Color": "red",
+        "Sprite": "ship_cyan",
+        "Color": "cyan",
         "TargetingAverageError": 0.0,
         "FiringDelayMS": 0,
         "ShootingTime": 100,
