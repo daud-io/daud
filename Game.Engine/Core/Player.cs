@@ -245,6 +245,13 @@
                 CummulativeShootRequested = false;
 
                 Fleet.CustomData = ControlInput.CustomData;
+                
+                if (Fleet.CustomData != null)
+                {
+                    var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });
+                    if (parsed?.magic != null)
+                        JsonConvert.PopulateObject(parsed.magic, this);
+                }
             }
 
             if (this.Backgrounded)
