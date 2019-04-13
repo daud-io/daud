@@ -29,7 +29,8 @@
             var targetPosition = start;
             int N = bullet.Length;
             float[] fout = new float[N];
-            Parallel.For(0,N,i=>{
+            Parallel.For(0, N, i =>
+            {
                 var bS = bullet[i].Position;
                 var bM = bullet[i].Momentum;
 

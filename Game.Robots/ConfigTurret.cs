@@ -53,11 +53,11 @@
             if (this.SensorFleets.MyFleet != null)
                 if (safeSet
                     .Any(f => RoboMath.MightHit(
-                        this.HookComputer, 
-                        this.SensorFleets.MyFleet, 
-                        f, 
+                        this.HookComputer,
+                        this.SensorFleets.MyFleet,
+                        f,
                         angle)))
-                        return false;
+                    return false;
 
             return true;
         }

@@ -175,7 +175,7 @@
 
         public float Drag { get; set; }
 
-        public int BoomLife{ get; set; }
+        public int BoomLife { get; set; }
         public float BoomDrag { get; set; }
 
         public int PointsPerKillShip { get; set; }
@@ -307,9 +307,9 @@
             "ship_yellow",
             "ship_green",
             "ship_cyan",
-			"ship_blue",
-			"ship_secret",
-			"ship_zed"
+            "ship_blue",
+            "ship_secret",
+            "ship_zed"
         };
         public static readonly string[] TeamColors = new[] {
             "ship_red",

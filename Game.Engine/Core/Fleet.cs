@@ -201,7 +201,7 @@
                 FiringWeapon = false;
             }
 
-            while(EarnedShips.Any() && EarnedShips.Peek() < World.Time)
+            while (EarnedShips.Any() && EarnedShips.Peek() < World.Time)
             {
                 AddShip();
                 EarnedShips.Dequeue();

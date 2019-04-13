@@ -148,11 +148,12 @@
                 try
                 {
                     ((IDisposable)this.Connection).Dispose();
-                } catch (Exception) { }
+                }
+                catch (Exception) { }
             this.Connection = null;
 
             World.Actors.Remove(this);
-            
+
             var worldPlayers = GetWorldPlayers(World);
             worldPlayers.Remove(this);
         }
@@ -245,7 +246,7 @@
                 CummulativeShootRequested = false;
 
                 Fleet.CustomData = ControlInput.CustomData;
-                
+
                 if (Fleet.CustomData != null)
                 {
                     var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });

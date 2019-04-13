@@ -23,7 +23,8 @@
             if (World.Hook.AutoRemoveOnEmptyThreshold > 0
                 && EmptySince > 0
                 && (World.Time - EmptySince) > World.Hook.AutoRemoveOnEmptyThreshold
-            ) {
+            )
+            {
                 Worlds.Destroy(World.WorldKey);
                 EmptySince = 0;
             }

@@ -70,7 +70,7 @@
                 if (ship.Fleet.Ships.Count > 1)
                     noise = ((float)r.NextDouble() - 0.5f) * World.Hook.PrecisionBulletsNoise;
 
-                this.Angle = MathF.Atan2(toTarget.Y, toTarget.X) 
+                this.Angle = MathF.Atan2(toTarget.Y, toTarget.X)
                     + noise;
             }
             else

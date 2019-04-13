@@ -4,7 +4,7 @@
 
     public class AuditModelPlayer
     {
-        public ulong LoginID { get; set;  }
+        public ulong LoginID { get; set; }
         public string LoginName { get; set; }
 
         public string PlayerID { get; set; }
@@ -21,6 +21,6 @@
         public int KillStreak { get; set; }
 
         public Vector2? Position { get; set; }
-        public Vector2? Momentum {get; set;}
+        public Vector2? Momentum { get; set; }
     }
 }

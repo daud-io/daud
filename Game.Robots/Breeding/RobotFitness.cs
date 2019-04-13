@@ -83,7 +83,7 @@ namespace Game.Robots.Breeding
             */
 
             c.Fitness = score;
-            
+
             return score;
         }
     }
