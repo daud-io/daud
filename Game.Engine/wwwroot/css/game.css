@@ -268,15 +268,6 @@ a {
     display: none;
 }
 
-.spectating .button1 {
-    opacity: 0.2;
-    transition: opacity 1s;
-}
-
-.spectating #spectatecontrols:hover .button1 {
-    opacity: 1;
-}
-
 .button1 {
     border: 1px solid #9d9d9d;
     border-radius: 5px;
