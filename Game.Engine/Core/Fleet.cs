@@ -282,6 +282,7 @@
 
                 ship.IsBoosting = isBoosting;
                 ship.ThrustAmount = (BaseThrustA / (Ships.Count + BaseThrustB) + BaseThrustC) * (1 - Burden);
+                ship.ThrustAmount += isBoosting ? BoostThrust * World.Hook.BoostControl : 0;
                 ship.BoostThrustAmount = BoostThrust * (1 - Burden);
                     
                 if (isBoostInitial) { ship.BoostAngle = ship.Angle; }
