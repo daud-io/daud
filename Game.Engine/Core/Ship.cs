@@ -173,7 +173,7 @@
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
             var boostThrust = IsBoosting
-                ? new Vector2(MathF.Cos(BoostAngle), MathF.Sin(BoostAngle)) * BoostThrustAmount
+                ? new Vector2(MathF.Cos(BoostAngle), MathF.Sin(BoostAngle)) * BoostThrustAmount * (1 - World.Hook.BoostControl)
                 : new Vector2(0, 0);
 
             Momentum = (Momentum + thrust + boostThrust) * Drag;
