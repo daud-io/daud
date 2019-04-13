@@ -19,7 +19,10 @@
         public int SizeMaximum { get; set; }
 
         public float ThrustAmount { get; set; }
+        public float BoostThrustAmount { get; set; }
         public float Drag { get; set; }
+        public float BoostAngle { get; set; }
+        public bool IsBoosting { get; set; } = false;
 
         public bool Abandoned { get; set; }
 
@@ -169,12 +172,15 @@
             DoOutOfBoundsRules();
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
+            var boostThrust = IsBoosting
+                ? new Vector2(MathF.Cos(BoostAngle), MathF.Sin(BoostAngle)) * BoostThrustAmount
+                : new Vector2(0, 0);
 
-            Momentum = (Momentum + thrust) * Drag;/*
-            var BoostVector = Fleet.isBoosting
-                ? Momentum * ThrustAmount
-                : 0;
-            Momentum = (Momentum + thrust + BoostVector) * Drag;*/
+            Momentum = (Momentum + thrust + boostThrust) * Drag;
+            /*
+            var BoostVector = Momentum * ThrustAmount;
+            Momentum = (Momentum + thrust + BoostVector) * Drag;
+            */
 
         }
 

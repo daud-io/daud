@@ -68,7 +68,7 @@
                     WormholesDestination = null,
 
                     Obstacles = 10, // ignored if WorldResizeEnabled = true
-                    ObstaclesMultiplier = 0.0005, // used when WorldResizeEnabled = true
+                    ObstaclesMultiplier = 0.0003, // used when WorldResizeEnabled = true
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
                     ObstacleMinSize = 300,

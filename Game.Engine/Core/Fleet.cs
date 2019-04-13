@@ -280,9 +280,11 @@
                 Snaking.Snake(ship);
                 Ringing.Ring(ship);
 
-                ship.ThrustAmount = isBoosting
-                    ? BoostThrust * (1 - Burden)
-                    : (BaseThrustA / (Ships.Count + BaseThrustB) + BaseThrustC) * (1 - Burden);
+                ship.IsBoosting = isBoosting;
+                ship.ThrustAmount = (BaseThrustA / (Ships.Count + BaseThrustB) + BaseThrustC) * (1 - Burden);
+                ship.BoostThrustAmount = BoostThrust * (1 - Burden);
+                    
+                if (isBoostInitial) { ship.BoostAngle = ship.Angle; }
 
                 ship.Drag = isBoosting
                     ? 1.0f
