@@ -10,27 +10,22 @@ import * as particles from "pixi-particles";
 import { compressionOptions } from "jszip/lib/defaults";
 import { CustomContainer } from "../CustomContainer";
 import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
-import { readFileSync } from 'fs';
+import { readFileSync } from "fs";
 import { Sprite } from "pixi.js";
 
-class GroupParticle extends particles.Particle
-{
+class GroupParticle extends particles.Particle {
     body: any;
 
-    constructor(emitter: particles.Emitter)
-    {
+    constructor(emitter: particles.Emitter) {
         super(emitter);
         this.parentGroup = emitter.parent.parentGroup;
         this.body = (<any>emitter).renderedObject.body;
-
     }
 
-    update(delta: number): number
-    {
+    update(delta: number): number {
         var ret = super.update(delta);
 
-        if (this.body)
-            this.scaleMultiplier = this.body.Size;
+        if (this.body) this.scaleMultiplier = this.body.Size;
 
         return ret;
     }
@@ -101,11 +96,10 @@ export class RenderedObject {
                     const sy = 0;
                     const sw = tileSize;
                     const sh = tileSize;
-                    var tex=new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0);
-                    (<any>tex).daudScale=RenderedObject.getScaleWithHeight(textureDefinition,tileSize);
+                    var tex = new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0);
+                    (<any>tex).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, tileSize);
                     textures.push(tex);
                 }
-                
             } else if (textureDefinition.map) {
                 let imageWidth = textureDefinition["image-width"];
                 let imageHeight = textureDefinition["image-height"];
@@ -121,20 +115,18 @@ export class RenderedObject {
                         let y = Math.floor(row * tileHeight);
 
                         var texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
-                        
+
                         texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-                        (<any>texture).daudScale=RenderedObject.getScaleWithHeight(textureDefinition,tileHeight);
+                        (<any>texture).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, tileHeight);
                         //texture.scaleMode = PIXI.SCALE_MODES.LINEAR;
                         textures.push(texture);
                     }
             } else if (textureDefinition.emitter) {
-                
             } else {
-                var texture=new PIXI.Texture(baseTexture);
-                (<any>texture).daudScale=RenderedObject.getScaleWithHeight(textureDefinition,baseTexture.realHeight);
+                var texture = new PIXI.Texture(baseTexture);
+                (<any>texture).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, baseTexture.realHeight);
                 textures.push(texture);
             }
-
 
             textureCache[textureName] = textures;
         }
@@ -150,7 +142,7 @@ export class RenderedObject {
         try {
             textureDefinition = queryProperties({ element: textureName }, textureMapRules[0]);
             for (var i in textureDefinition) {
-                textureDefinition[i] = textureDefinition[i].map(function (x) {
+                textureDefinition[i] = textureDefinition[i].map(function(x) {
                     var k = x;
                     try {
                         var m = JSON.parse(x);
@@ -158,7 +150,6 @@ export class RenderedObject {
                     } finally {
                         return k;
                     }
-
                 });
                 if (textureDefinition[i].length < 2) {
                     textureDefinition[i] = textureDefinition[i][0];
@@ -219,10 +210,10 @@ export class RenderedObject {
         pixiSprite.pivot.y = pixiSprite.height / 2;
         pixiSprite.x = 0;
         pixiSprite.y = 0;
-        
+
         pixiSprite.baseScale = (<any>textures[0]).daudScale;
-        pixiSprite.scale =(<any>textures[0]).daudScale;
-        (<any>pixiSprite).textureDefinition=textureDefinition;
+        pixiSprite.scale = (<any>textures[0]).daudScale;
+        (<any>pixiSprite).textureDefinition = textureDefinition;
 
         pixiSprite.baseOffset = textureDefinition["offset-x"] ? { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] } : { x: 0, y: 0 };
 
@@ -230,25 +221,25 @@ export class RenderedObject {
 
         return pixiSprite;
     }
-    static getScale(textureDefinition,pixiTex):number{
-        var spriteSize=1;
-        if(textureDefinition["size"]){
-        var spriteSizeIsPercent=((typeof textureDefinition["size"]=="string")&&textureDefinition["size"][textureDefinition["size"].length-1]=="%");
-        spriteSize=spriteSizeIsPercent?parseFloat(textureDefinition["size"].slice(0,textureDefinition["size"].length-1))/100:parseFloat(textureDefinition["size"])/pixiTex.height;
+    static getScale(textureDefinition, pixiTex): number {
+        var spriteSize = 1;
+        if (textureDefinition["size"]) {
+            var spriteSizeIsPercent = typeof textureDefinition["size"] == "string" && textureDefinition["size"][textureDefinition["size"].length - 1] == "%";
+            spriteSize = spriteSizeIsPercent ? parseFloat(textureDefinition["size"].slice(0, textureDefinition["size"].length - 1)) / 100 : parseFloat(textureDefinition["size"]) / pixiTex.height;
         }
-        if(textureDefinition["scale"]){
-            spriteSize=parseFloat(textureDefinition["scale"]);
+        if (textureDefinition["scale"]) {
+            spriteSize = parseFloat(textureDefinition["scale"]);
         }
         return spriteSize;
     }
-    static getScaleWithHeight(textureDefinition,height):number{
-        var spriteSize=1;
-        if(textureDefinition["size"]){
-        var spriteSizeIsPercent=((typeof textureDefinition["size"]=="string")&&textureDefinition["size"][textureDefinition["size"].length-1]=="%");
-        spriteSize=spriteSizeIsPercent?parseFloat(textureDefinition["size"].slice(0,textureDefinition["size"].length-1))/100:parseFloat(textureDefinition["size"])/height;
+    static getScaleWithHeight(textureDefinition, height): number {
+        var spriteSize = 1;
+        if (textureDefinition["size"]) {
+            var spriteSizeIsPercent = typeof textureDefinition["size"] == "string" && textureDefinition["size"][textureDefinition["size"].length - 1] == "%";
+            spriteSize = spriteSizeIsPercent ? parseFloat(textureDefinition["size"].slice(0, textureDefinition["size"].length - 1)) / 100 : parseFloat(textureDefinition["size"]) / height;
         }
-        if(textureDefinition["scale"]){
-            spriteSize=parseFloat(textureDefinition["scale"]);
+        if (textureDefinition["scale"]) {
+            spriteSize = parseFloat(textureDefinition["scale"]);
         }
         return spriteSize;
     }
@@ -262,7 +253,7 @@ export class RenderedObject {
         try {
             spriteDefinition = queryProperties({ element: spriteName.split("_")[0], class: spriteName.split("_").join(" ") + " " + additional.join(" ") }, spriteModeMapRules[0]);
             for (var i in spriteDefinition) {
-                spriteDefinition[i] = spriteDefinition[i].map(function (x) {
+                spriteDefinition[i] = spriteDefinition[i].map(function(x) {
                     var k = x;
                     try {
                         var m = JSON.parse(x);
@@ -270,12 +261,10 @@ export class RenderedObject {
                     } finally {
                         return k;
                     }
-
                 });
-                if (i !== "textures" && i !== "layer-textures" &&i !== "layer-cpu-levels"&&i !== "layer-speeds" && spriteDefinition[i].length < 2) {
+                if (i !== "textures" && i !== "layer-textures" && i !== "layer-cpu-levels" && i !== "layer-speeds" && spriteDefinition[i].length < 2) {
                     spriteDefinition[i] = spriteDefinition[i][0];
                 }
-
             }
         } catch (e) {
             console.log("SPRITE FAILED:", e);
@@ -309,8 +298,7 @@ export class RenderedObject {
                     spriteLayer = this.buildSprite(textureName, spriteName);
                 }
 
-                if (spriteLayer != null)
-                {
+                if (spriteLayer != null) {
                     if (zIndex == 0) zIndex = 250;
 
                     spriteLayer.zOrder = zIndex - i + this.body.ID / 100000;
@@ -347,28 +335,22 @@ export class RenderedObject {
                 else {
                     const textureDefinition = RenderedObject.getTextureDefinition(textureName);
 
-                    if (textureDefinition.emitter)
-                    {
+                    if (textureDefinition.emitter) {
                         let particleTextureName = textureDefinition.particle;
                         const particleTextures = RenderedObject.loadTexture(RenderedObject.getTextureDefinition(particleTextureName), particleTextureName);
-                        
-                        if (typeof textureDefinition.emitter == "string")
-                            textureDefinition.emitter = emitters[textureDefinition.emitter];
 
-                        emitterLayer = new particles.Emitter(
-                            this.container.emitterContainer,
-                            particleTextures,
-                            textureDefinition.emitter);
+                        if (typeof textureDefinition.emitter == "string") textureDefinition.emitter = emitters[textureDefinition.emitter];
+
+                        emitterLayer = new particles.Emitter(this.container.emitterContainer, particleTextures, textureDefinition.emitter);
                         emitterLayer.emit = true;
                         emitterLayer.renderedObject = this;
-                        
+
                         let self = this;
                         emitterLayer.particleConstructor = GroupParticle;
                     }
                 }
 
-                if (emitterLayer != null)
-                {
+                if (emitterLayer != null) {
                     if (zIndex == 0) zIndex = 250;
 
                     emitterLayer.zOrder = zIndex - i + this.body.ID / 100000;
@@ -406,8 +388,7 @@ export class RenderedObject {
             this.activeTextures = {};
         }
 
-        if (this.emitterLayers)
-        {
+        if (this.emitterLayers) {
             for (const layer of this.emitterLayers) {
                 this.container.removeChild(layer);
                 layer.destroy();
@@ -433,7 +414,7 @@ export class RenderedObject {
 
             this.spriteLayers = this.buildSpriteLayers(spriteName, mode, zIndex);
 
-            this.foreachLayer(function (layer, index) {
+            this.foreachLayer(function(layer, index) {
                 this.container.addChildAt(layer, 2);
             });
 
@@ -441,10 +422,9 @@ export class RenderedObject {
             this.emitterLayers = this.buildEmitterLayers(spriteName, mode, zIndex);
         }
     }
-    fixLoadingTextureScales(){
-        this.foreachLayer(function (layer, index) {
-            if((<any>layer).textureDefinition)
-            layer.baseScale=RenderedObject.getScaleWithHeight((<any>layer).textureDefinition,layer.texture.height);
+    fixLoadingTextureScales() {
+        this.foreachLayer(function(layer, index) {
+            if ((<any>layer).textureDefinition) layer.baseScale = RenderedObject.getScaleWithHeight((<any>layer).textureDefinition, layer.texture.height);
         });
     }
     preRender(time, interpolator) {
@@ -454,13 +434,11 @@ export class RenderedObject {
             this.moveSprites(newPosition, this.body.Size);
         }
 
-        if (this.lastTime > 0)
-        {
+        if (this.lastTime > 0) {
             //console.log(`update emitters (${time}-${this.lastTime} = ${time - this.lastTime}) * 0.001 = ${(time - this.lastTime) * 0.001}) `);
-            
+
             this.foreachEmitter(e => {
-                
-                e.update((time-this.lastTime) * 0.001);
+                e.update((time - this.lastTime) * 0.001);
             });
         }
 
@@ -470,7 +448,7 @@ export class RenderedObject {
     moveSprites(interpolatedPosition, size) {
         const angle = interpolatedPosition.Angle;
 
-        this.foreachLayer(function (layer, index) {
+        this.foreachLayer(function(layer, index) {
             layer.pivot.x = Math.floor(layer.texture.width / 2);
             layer.pivot.y = Math.floor(layer.texture.height / 2);
 
@@ -483,10 +461,10 @@ export class RenderedObject {
             layer.scale.set(size * layer.baseScale, size * layer.baseScale);
         });
 
-        this.foreachEmitter(function(emitter){
+        this.foreachEmitter(function(emitter) {
             //console.log(`updating emitter ${interpolatedPosition.x},${interpolatedPosition.y}`);
-            emitter.updateOwnerPos(interpolatedPosition.x,interpolatedPosition.y);
-        })
+            emitter.updateOwnerPos(interpolatedPosition.x, interpolatedPosition.y);
+        });
     }
 
     update(updateData) {
@@ -508,5 +486,5 @@ export class RenderedObject {
             this.emitterLayers.forEach((layer, i) => {
                 action.apply(this, [layer, i]);
             });
-    }    
+    }
 }

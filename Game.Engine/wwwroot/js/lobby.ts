@@ -72,26 +72,25 @@ let showing = false;
 let firstLoad = true;
 var hostName = window.location.hash;
 var worldConnect = "default";
-var manualHostSet = false; 
+var manualHostSet = false;
 var manualWorldSet = false;
 
-if (firstLoad) {      
+if (firstLoad) {
     var url = new URL(window.location.href);
-    var hostParam = url.searchParams.get('host');
-
+    var hostParam = url.searchParams.get("host");
 
     if (hostParam != null) {
         manualHostSet = true;
         hostName = hostParam;
-    }  else {
+    } else {
         hostName = "us.daud.io";
     }
-    
-    var worldParam = url.searchParams.get('world');
 
-    if (worldParam != null) { 
+    var worldParam = url.searchParams.get("world");
+
+    if (worldParam != null) {
         manualWorldSet = true;
-        worldConnect = worldParam; 
+        worldConnect = worldParam;
     }
 }
 
@@ -128,48 +127,37 @@ function refreshList(autoJoinWorld) {
                 }
 
                 buildList(response);
-                
-                if (autoJoin) 
-                {
+
+                if (autoJoin) {
                     var worldKey = hostName + "/" + world;
-                    
-                    if (!autoJoinWorld)
-                    {   
+
+                    if (!autoJoinWorld) {
                         if (manualHostSet) {
                             //If user manually sets a particular host via params
                             manualHostSet = false;
                             joinWorld(worldKey);
                             return;
-                        } 
+                        }
 
                         const router = new Router();
 
                         if (router.savedBestServer) {
                             // If there is no cookie saved with the best server.
                             joinWorld(router.savedBestServer + world);
-                        }
-
-                        else {
+                        } else {
                             // if there is no best server cached cookie or the cookie expired then find the best server for user.
-                            router.findBestServer([
-                                "us.daud.io/default",
-                                "de.daud.io/default"
-                            ], best => {
+                            router.findBestServer(["us.daud.io/default", "de.daud.io/default"], best => {
                                 if (allWorlds[best]) {
                                     best = best = best.split("/")[0] + "/";
                                     router.save(best);
-                                    
+
                                     joinWorld(best + world);
-                                    
-                                }
-                                else {
+                                } else {
                                     joinWorld(worldKey);
                                 }
                             });
                         }
-                    }
-                    else
-                        joinWorld(autoJoinWorld || worldKey);
+                    } else joinWorld(autoJoinWorld || worldKey);
                 }
             }
         });
@@ -216,5 +204,3 @@ document.getElementById("arenas").addEventListener("click", e => {
 
 refreshList(false);
 setInterval(refreshList, 1000);
-
-

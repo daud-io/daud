@@ -8,7 +8,6 @@ export class Ship extends RenderedObject {
     constructor(container: CustomContainer) {
         super(container);
         this.fleet = null;
-        
     }
 
     decodeModes(mode) {

@@ -1,483 +1,326 @@
 // Generated from ScssParser.g4 by ANTLR 4.5.3
 // jshint ignore: start
-var antlr4 = require('antlr4/index');
+var antlr4 = require("antlr4/index");
 
 // This class defines a complete listener for a parse tree produced by ScssParser.
 function ScssParserListener() {
-	antlr4.tree.ParseTreeListener.call(this);
-	return this;
+    antlr4.tree.ParseTreeListener.call(this);
+    return this;
 }
 
 ScssParserListener.prototype = Object.create(antlr4.tree.ParseTreeListener.prototype);
 ScssParserListener.prototype.constructor = ScssParserListener;
 
 // Enter a parse tree produced by ScssParser#stylesheet.
-ScssParserListener.prototype.enterStylesheet = function(ctx) {
-};
+ScssParserListener.prototype.enterStylesheet = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#stylesheet.
-ScssParserListener.prototype.exitStylesheet = function(ctx) {
-};
-
+ScssParserListener.prototype.exitStylesheet = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#statement.
-ScssParserListener.prototype.enterStatement = function(ctx) {
-};
+ScssParserListener.prototype.enterStatement = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#statement.
-ScssParserListener.prototype.exitStatement = function(ctx) {
-};
-
+ScssParserListener.prototype.exitStatement = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#params.
-ScssParserListener.prototype.enterParams = function(ctx) {
-};
+ScssParserListener.prototype.enterParams = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#params.
-ScssParserListener.prototype.exitParams = function(ctx) {
-};
-
+ScssParserListener.prototype.exitParams = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#param.
-ScssParserListener.prototype.enterParam = function(ctx) {
-};
+ScssParserListener.prototype.enterParam = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#param.
-ScssParserListener.prototype.exitParam = function(ctx) {
-};
-
+ScssParserListener.prototype.exitParam = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#variableName.
-ScssParserListener.prototype.enterVariableName = function(ctx) {
-};
+ScssParserListener.prototype.enterVariableName = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#variableName.
-ScssParserListener.prototype.exitVariableName = function(ctx) {
-};
-
+ScssParserListener.prototype.exitVariableName = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#paramOptionalValue.
-ScssParserListener.prototype.enterParamOptionalValue = function(ctx) {
-};
+ScssParserListener.prototype.enterParamOptionalValue = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#paramOptionalValue.
-ScssParserListener.prototype.exitParamOptionalValue = function(ctx) {
-};
-
+ScssParserListener.prototype.exitParamOptionalValue = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#mixinDeclaration.
-ScssParserListener.prototype.enterMixinDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterMixinDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#mixinDeclaration.
-ScssParserListener.prototype.exitMixinDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitMixinDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#includeDeclaration.
-ScssParserListener.prototype.enterIncludeDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterIncludeDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#includeDeclaration.
-ScssParserListener.prototype.exitIncludeDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitIncludeDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#functionDeclaration.
-ScssParserListener.prototype.enterFunctionDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterFunctionDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#functionDeclaration.
-ScssParserListener.prototype.exitFunctionDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitFunctionDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#functionBody.
-ScssParserListener.prototype.enterFunctionBody = function(ctx) {
-};
+ScssParserListener.prototype.enterFunctionBody = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#functionBody.
-ScssParserListener.prototype.exitFunctionBody = function(ctx) {
-};
-
+ScssParserListener.prototype.exitFunctionBody = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#functionReturn.
-ScssParserListener.prototype.enterFunctionReturn = function(ctx) {
-};
+ScssParserListener.prototype.enterFunctionReturn = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#functionReturn.
-ScssParserListener.prototype.exitFunctionReturn = function(ctx) {
-};
-
+ScssParserListener.prototype.exitFunctionReturn = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#functionStatement.
-ScssParserListener.prototype.enterFunctionStatement = function(ctx) {
-};
+ScssParserListener.prototype.enterFunctionStatement = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#functionStatement.
-ScssParserListener.prototype.exitFunctionStatement = function(ctx) {
-};
-
+ScssParserListener.prototype.exitFunctionStatement = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#commandStatement.
-ScssParserListener.prototype.enterCommandStatement = function(ctx) {
-};
+ScssParserListener.prototype.enterCommandStatement = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#commandStatement.
-ScssParserListener.prototype.exitCommandStatement = function(ctx) {
-};
-
+ScssParserListener.prototype.exitCommandStatement = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#mathCharacter.
-ScssParserListener.prototype.enterMathCharacter = function(ctx) {
-};
+ScssParserListener.prototype.enterMathCharacter = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#mathCharacter.
-ScssParserListener.prototype.exitMathCharacter = function(ctx) {
-};
-
+ScssParserListener.prototype.exitMathCharacter = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#mathStatement.
-ScssParserListener.prototype.enterMathStatement = function(ctx) {
-};
+ScssParserListener.prototype.enterMathStatement = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#mathStatement.
-ScssParserListener.prototype.exitMathStatement = function(ctx) {
-};
-
+ScssParserListener.prototype.exitMathStatement = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#expression.
-ScssParserListener.prototype.enterExpression = function(ctx) {
-};
+ScssParserListener.prototype.enterExpression = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#expression.
-ScssParserListener.prototype.exitExpression = function(ctx) {
-};
-
+ScssParserListener.prototype.exitExpression = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#ifDeclaration.
-ScssParserListener.prototype.enterIfDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterIfDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#ifDeclaration.
-ScssParserListener.prototype.exitIfDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitIfDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#elseIfStatement.
-ScssParserListener.prototype.enterElseIfStatement = function(ctx) {
-};
+ScssParserListener.prototype.enterElseIfStatement = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#elseIfStatement.
-ScssParserListener.prototype.exitElseIfStatement = function(ctx) {
-};
-
+ScssParserListener.prototype.exitElseIfStatement = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#elseStatement.
-ScssParserListener.prototype.enterElseStatement = function(ctx) {
-};
+ScssParserListener.prototype.enterElseStatement = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#elseStatement.
-ScssParserListener.prototype.exitElseStatement = function(ctx) {
-};
-
+ScssParserListener.prototype.exitElseStatement = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#conditions.
-ScssParserListener.prototype.enterConditions = function(ctx) {
-};
+ScssParserListener.prototype.enterConditions = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#conditions.
-ScssParserListener.prototype.exitConditions = function(ctx) {
-};
-
+ScssParserListener.prototype.exitConditions = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#condition.
-ScssParserListener.prototype.enterCondition = function(ctx) {
-};
+ScssParserListener.prototype.enterCondition = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#condition.
-ScssParserListener.prototype.exitCondition = function(ctx) {
-};
-
+ScssParserListener.prototype.exitCondition = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#variableDeclaration.
-ScssParserListener.prototype.enterVariableDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterVariableDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#variableDeclaration.
-ScssParserListener.prototype.exitVariableDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitVariableDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#forDeclaration.
-ScssParserListener.prototype.enterForDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterForDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#forDeclaration.
-ScssParserListener.prototype.exitForDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitForDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#fromNumber.
-ScssParserListener.prototype.enterFromNumber = function(ctx) {
-};
+ScssParserListener.prototype.enterFromNumber = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#fromNumber.
-ScssParserListener.prototype.exitFromNumber = function(ctx) {
-};
-
+ScssParserListener.prototype.exitFromNumber = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#throughNumber.
-ScssParserListener.prototype.enterThroughNumber = function(ctx) {
-};
+ScssParserListener.prototype.enterThroughNumber = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#throughNumber.
-ScssParserListener.prototype.exitThroughNumber = function(ctx) {
-};
-
+ScssParserListener.prototype.exitThroughNumber = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#whileDeclaration.
-ScssParserListener.prototype.enterWhileDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterWhileDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#whileDeclaration.
-ScssParserListener.prototype.exitWhileDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitWhileDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#eachDeclaration.
-ScssParserListener.prototype.enterEachDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterEachDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#eachDeclaration.
-ScssParserListener.prototype.exitEachDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitEachDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#eachValueList.
-ScssParserListener.prototype.enterEachValueList = function(ctx) {
-};
+ScssParserListener.prototype.enterEachValueList = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#eachValueList.
-ScssParserListener.prototype.exitEachValueList = function(ctx) {
-};
-
+ScssParserListener.prototype.exitEachValueList = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#identifierListOrMap.
-ScssParserListener.prototype.enterIdentifierListOrMap = function(ctx) {
-};
+ScssParserListener.prototype.enterIdentifierListOrMap = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#identifierListOrMap.
-ScssParserListener.prototype.exitIdentifierListOrMap = function(ctx) {
-};
-
+ScssParserListener.prototype.exitIdentifierListOrMap = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#identifierValue.
-ScssParserListener.prototype.enterIdentifierValue = function(ctx) {
-};
+ScssParserListener.prototype.enterIdentifierValue = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#identifierValue.
-ScssParserListener.prototype.exitIdentifierValue = function(ctx) {
-};
-
+ScssParserListener.prototype.exitIdentifierValue = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#importDeclaration.
-ScssParserListener.prototype.enterImportDeclaration = function(ctx) {
-};
+ScssParserListener.prototype.enterImportDeclaration = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#importDeclaration.
-ScssParserListener.prototype.exitImportDeclaration = function(ctx) {
-};
-
+ScssParserListener.prototype.exitImportDeclaration = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#referenceUrl.
-ScssParserListener.prototype.enterReferenceUrl = function(ctx) {
-};
+ScssParserListener.prototype.enterReferenceUrl = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#referenceUrl.
-ScssParserListener.prototype.exitReferenceUrl = function(ctx) {
-};
-
+ScssParserListener.prototype.exitReferenceUrl = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#mediaTypes.
-ScssParserListener.prototype.enterMediaTypes = function(ctx) {
-};
+ScssParserListener.prototype.enterMediaTypes = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#mediaTypes.
-ScssParserListener.prototype.exitMediaTypes = function(ctx) {
-};
-
+ScssParserListener.prototype.exitMediaTypes = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#nested.
-ScssParserListener.prototype.enterNested = function(ctx) {
-};
+ScssParserListener.prototype.enterNested = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#nested.
-ScssParserListener.prototype.exitNested = function(ctx) {
-};
-
+ScssParserListener.prototype.exitNested = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#nest.
-ScssParserListener.prototype.enterNest = function(ctx) {
-};
+ScssParserListener.prototype.enterNest = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#nest.
-ScssParserListener.prototype.exitNest = function(ctx) {
-};
-
+ScssParserListener.prototype.exitNest = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#ruleset.
-ScssParserListener.prototype.enterRuleset = function(ctx) {
-};
+ScssParserListener.prototype.enterRuleset = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#ruleset.
-ScssParserListener.prototype.exitRuleset = function(ctx) {
-};
-
+ScssParserListener.prototype.exitRuleset = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#block.
-ScssParserListener.prototype.enterBlock = function(ctx) {
-};
+ScssParserListener.prototype.enterBlock = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#block.
-ScssParserListener.prototype.exitBlock = function(ctx) {
-};
-
+ScssParserListener.prototype.exitBlock = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#selectors.
-ScssParserListener.prototype.enterSelectors = function(ctx) {
-};
+ScssParserListener.prototype.enterSelectors = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#selectors.
-ScssParserListener.prototype.exitSelectors = function(ctx) {
-};
-
+ScssParserListener.prototype.exitSelectors = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#selector.
-ScssParserListener.prototype.enterSelector = function(ctx) {
-};
+ScssParserListener.prototype.enterSelector = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#selector.
-ScssParserListener.prototype.exitSelector = function(ctx) {
-};
-
+ScssParserListener.prototype.exitSelector = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#selectorPrefix.
-ScssParserListener.prototype.enterSelectorPrefix = function(ctx) {
-};
+ScssParserListener.prototype.enterSelectorPrefix = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#selectorPrefix.
-ScssParserListener.prototype.exitSelectorPrefix = function(ctx) {
-};
-
+ScssParserListener.prototype.exitSelectorPrefix = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#element.
-ScssParserListener.prototype.enterElement = function(ctx) {
-};
+ScssParserListener.prototype.enterElement = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#element.
-ScssParserListener.prototype.exitElement = function(ctx) {
-};
-
+ScssParserListener.prototype.exitElement = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#pseudo.
-ScssParserListener.prototype.enterPseudo = function(ctx) {
-};
+ScssParserListener.prototype.enterPseudo = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#pseudo.
-ScssParserListener.prototype.exitPseudo = function(ctx) {
-};
-
+ScssParserListener.prototype.exitPseudo = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#attrib.
-ScssParserListener.prototype.enterAttrib = function(ctx) {
-};
+ScssParserListener.prototype.enterAttrib = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#attrib.
-ScssParserListener.prototype.exitAttrib = function(ctx) {
-};
-
+ScssParserListener.prototype.exitAttrib = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#attribRelate.
-ScssParserListener.prototype.enterAttribRelate = function(ctx) {
-};
+ScssParserListener.prototype.enterAttribRelate = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#attribRelate.
-ScssParserListener.prototype.exitAttribRelate = function(ctx) {
-};
-
+ScssParserListener.prototype.exitAttribRelate = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#identifier.
-ScssParserListener.prototype.enterIdentifier = function(ctx) {
-};
+ScssParserListener.prototype.enterIdentifier = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#identifier.
-ScssParserListener.prototype.exitIdentifier = function(ctx) {
-};
-
+ScssParserListener.prototype.exitIdentifier = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#identifierPart.
-ScssParserListener.prototype.enterIdentifierPart = function(ctx) {
-};
+ScssParserListener.prototype.enterIdentifierPart = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#identifierPart.
-ScssParserListener.prototype.exitIdentifierPart = function(ctx) {
-};
-
+ScssParserListener.prototype.exitIdentifierPart = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#identifierVariableName.
-ScssParserListener.prototype.enterIdentifierVariableName = function(ctx) {
-};
+ScssParserListener.prototype.enterIdentifierVariableName = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#identifierVariableName.
-ScssParserListener.prototype.exitIdentifierVariableName = function(ctx) {
-};
-
+ScssParserListener.prototype.exitIdentifierVariableName = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#property.
-ScssParserListener.prototype.enterProperty = function(ctx) {
-};
+ScssParserListener.prototype.enterProperty = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#property.
-ScssParserListener.prototype.exitProperty = function(ctx) {
-};
-
+ScssParserListener.prototype.exitProperty = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#values.
-ScssParserListener.prototype.enterValues = function(ctx) {
-};
+ScssParserListener.prototype.enterValues = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#values.
-ScssParserListener.prototype.exitValues = function(ctx) {
-};
-
+ScssParserListener.prototype.exitValues = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#url.
-ScssParserListener.prototype.enterUrl = function(ctx) {
-};
+ScssParserListener.prototype.enterUrl = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#url.
-ScssParserListener.prototype.exitUrl = function(ctx) {
-};
-
+ScssParserListener.prototype.exitUrl = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#measurement.
-ScssParserListener.prototype.enterMeasurement = function(ctx) {
-};
+ScssParserListener.prototype.enterMeasurement = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#measurement.
-ScssParserListener.prototype.exitMeasurement = function(ctx) {
-};
-
+ScssParserListener.prototype.exitMeasurement = function(ctx) {};
 
 // Enter a parse tree produced by ScssParser#functionCall.
-ScssParserListener.prototype.enterFunctionCall = function(ctx) {
-};
+ScssParserListener.prototype.enterFunctionCall = function(ctx) {};
 
 // Exit a parse tree produced by ScssParser#functionCall.
-ScssParserListener.prototype.exitFunctionCall = function(ctx) {
-};
-
-
+ScssParserListener.prototype.exitFunctionCall = function(ctx) {};
 
 exports.ScssParserListener = ScssParserListener;
