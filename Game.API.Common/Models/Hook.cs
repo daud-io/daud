@@ -31,6 +31,11 @@
                     BoostThrustB = 0.23f,
                     BoostThrustM = -0.0013f,
                     BoostControl = 0f,
+                    
+                    EarnedShipDelay = 0,
+
+                    BoomDrag = 0.92f,
+                    BoomLife = 500,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
@@ -42,6 +47,8 @@
 
                     ShotCooldownTimeM = 28,
                     ShotCooldownTimeB = 470,
+
+                    AbandonBuffer = 120,
 
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
@@ -179,6 +186,9 @@
 
         public float Drag { get; set; }
 
+        public int BoomLife { get; set; }
+        public float BoomDrag { get; set; }
+
         public int PointsPerKillShip { get; set; }
         public int PointsPerUniverseDeath { get; set; }
         public float PointsMultiplierDeath { get; set; }
@@ -283,8 +293,8 @@
 
         public int StepTime { get; set; }
         public float OutOfBoundsDeathLine { get; set; } = 800;
-        public float OutOfBoundsBorder { get; set; } = 300;
-        public float OutOfBoundsDecayDistance { get; set; } = 900;
+        public float OutOfBoundsBorder { get; set; } = 0;
+        public float OutOfBoundsDecayDistance { get; set; } = 4000;
         public int BotRespawnDelay { get; set; }
         public int PickupShields { get; set; }
         public int ShieldStrength { get; set; }
@@ -309,9 +319,9 @@
             "ship_yellow",
             "ship_green",
             "ship_cyan",
-			"ship_blue",
-			"ship_secret",
-			"ship_zed"
+            "ship_blue",
+            "ship_secret",
+            "ship_zed"
         };
         public static readonly string[] TeamColors = new[] {
             "ship_red",
@@ -329,8 +339,10 @@
         public int MaxNameLength { get; set; }
         public string GearheadName { get; set; }
         public float GearheadRegen { get; set; }
-        public bool PromiscuousMode { get; set; }
         public int AutoRemoveOnEmptyThreshold { get; set; }
+        public uint ExplosionTime { get; set; }
+        public int AbandonBuffer { get; set; }
+        public int EarnedShipDelay { get; set; }
 
         public Hook Clone()
         {

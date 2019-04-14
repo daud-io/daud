@@ -37,17 +37,20 @@
             var angle = MathF.Atan2(target.Y, target.X);
             var canShoot = true;
             if (this.firstRow != null)
-            {   
-                var ddd=(int)MathF.Floor(((angle+360.0f)%360.0f)/360.0f*(firstRow.Count-1.0f));
-                if(ddd<0){
-                    ddd=0;
+            {
+                var ddd = (int)MathF.Floor(((angle + 360.0f) % 360.0f) / 360.0f * (firstRow.Count - 1.0f));
+                if (ddd < 0)
+                {
+                    ddd = 0;
                 }
-                if(ddd<firstRow.Count-1){
-                (var d,var c)=firstRow[ddd].bestChildScorePath();
-                
-                if(d[d.Count-1].Fleet.Ships.Count<1){
-                    canShoot=false;
-                }
+                if (ddd < firstRow.Count - 1)
+                {
+                    (var d, var c) = firstRow[ddd].bestChildScorePath();
+
+                    if (d[d.Count - 1].Fleet.Ships.Count < 1)
+                    {
+                        canShoot = false;
+                    }
                 }
             }
             var mag = target.Length();

@@ -115,7 +115,8 @@
             var team = new Team
             {
                 BaseLocation = basePosition,
-                ColorName = teamName
+                ColorName = teamName,
+                CaptureTheFlag = this
             };
 
             Teams.Add(team);
@@ -171,6 +172,17 @@
                 World.LeaderboardGenerator = null;
             }
 
+        }
+
+        public void TeamScored(Team team)
+        {
+            var players = Player.GetWorldPlayers(World);
+            var message = (team.Score == 5)
+                ? $"CTF: GAME OVER --- {team.ColorName} wins!!!"
+                : $"CTF: {team.ColorName} scored!";
+
+            foreach (var player in players)
+                player.SendMessage(message);
         }
 
         protected override void CycleThink()

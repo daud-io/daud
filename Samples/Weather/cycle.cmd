@@ -22,6 +22,9 @@ for /l %%x in (1, 1, 100000) do (
 	call apply shields-standard
 	sleep 300
 
+	call apply obstacles-none
+	sleep 1
+	call apply obstacles-standard
 	call apply obstacles-fast
 	sleep 300
 	call apply obstacles-extra

@@ -6,7 +6,7 @@
     {
         public override void ShipDied(Player killer, Player victim, Ship ship)
         {
-            if (killer != null && !(ship is Fish))
+            if (killer != null && !(ship is Fish) && ship.AbandonedByFleet != killer.Fleet)
                 killer.Score += killer.World.Hook.PointsPerKillShip;
         }
 

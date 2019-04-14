@@ -60,6 +60,8 @@
         public Vector2? SpawnLocation { get; set; } = null;
         public int ShipSize { get; set; } = 70;
 
+        public Queue<long> EarnedShips = new Queue<long>();
+
         [Flags]
         public enum ShipModeEnum
         {
@@ -120,7 +122,9 @@
             var threshold = Ships.Count * World.Hook.ShipGainBySizeM + World.Hook.ShipGainBySizeB;
             if (random.NextDouble() < threshold)
                 if (Ships?.Any() ?? false)
-                    AddShip(killedShip?.Sprite);
+                {
+                    EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay);
+                }
         }
 
         public void AddShip(Sprites? sprite = null)
@@ -139,9 +143,7 @@
             var ship = new Ship()
             {
                 Fleet = this,
-                Sprite = World.Hook.PromiscuousMode
-                    ? sprite ?? this.Owner.ShipSprite
-                    : this.Owner.ShipSprite,
+                Sprite = this.Owner.ShipSprite,
                 Color = this.Owner.Color,
                 Size = ShipSize
             };
@@ -202,6 +204,12 @@
                 FiringWeapon = false;
             }
 
+            while (EarnedShips.Any() && EarnedShips.Peek() < World.Time)
+            {
+                AddShip();
+                EarnedShips.Dequeue();
+            }
+
             foreach (var ship in NewShips)
             {
                 ship.Init(World);
@@ -231,6 +239,9 @@
             ship.Abandoned = true;
             ship.Group = null;
             ship.ThrustAmount = 0;
+            ship.Mode = 0;
+            ship.AbandonedByFleet = this;
+            ship.AbandonedTime = World.Time;
 
             if (Ships.Contains(ship))
                 Ships.Remove(ship);

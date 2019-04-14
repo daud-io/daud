@@ -45,6 +45,7 @@
         public long TimeDeath { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
+        public bool Backgrounded { get; internal set; }
         public bool IsShielded { get; set; } = false;
 
         public long SpawnTime;
@@ -147,11 +148,12 @@
                 try
                 {
                     ((IDisposable)this.Connection).Dispose();
-                } catch (Exception) { }
+                }
+                catch (Exception) { }
             this.Connection = null;
 
             World.Actors.Remove(this);
-            
+
             var worldPlayers = GetWorldPlayers(World);
             worldPlayers.Remove(this);
         }
@@ -229,12 +231,14 @@
                     Fleet.AddShip();
             }
 
+
             if (this.IsControlNew)
             {
                 if (float.IsNaN(ControlInput.Position.X))
                     ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
                 Fleet.AimTarget = ControlInput.Position;
+
                 Fleet.BoostRequested = CummulativeBoostRequested;
                 Fleet.ShootRequested = CummulativeShootRequested;
 
@@ -242,7 +246,17 @@
                 CummulativeShootRequested = false;
 
                 Fleet.CustomData = ControlInput.CustomData;
+
+                if (Fleet.CustomData != null)
+                {
+                    var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });
+                    if (parsed?.magic != null)
+                        JsonConvert.PopulateObject(parsed.magic, this);
+                }
             }
+
+            if (this.Backgrounded)
+                Fleet.AimTarget = Vector2.Zero;
 
             this.IsControlNew = false;
 

@@ -76,7 +76,7 @@
         }
 
         public static T FireFrom<T>(Fleet fleet)
-            where T: PickupBase, new()
+            where T : PickupBase, new()
         {
 
             var pickup = new T

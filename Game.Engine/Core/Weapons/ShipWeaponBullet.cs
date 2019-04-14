@@ -66,8 +66,12 @@
                 else
                     toTarget = (ship.Fleet.FleetCenter + ship.Fleet.AimTarget) - ship.Position;
 
-                this.Angle = MathF.Atan2(toTarget.Y, toTarget.X) 
-                    + ((float)r.NextDouble() - 0.5f) * World.Hook.PrecisionBulletsNoise;
+                var noise = 0f;
+                if (ship.Fleet.Ships.Count > 1)
+                    noise = ((float)r.NextDouble() - 0.5f) * World.Hook.PrecisionBulletsNoise;
+
+                this.Angle = MathF.Atan2(toTarget.Y, toTarget.X)
+                    + noise;
             }
             else
                 this.Angle = ship.Angle;

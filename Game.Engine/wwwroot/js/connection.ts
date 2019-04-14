@@ -47,7 +47,6 @@ export class Connection {
         this.statBytesUpPerSecond = 0;
         this.statPongCount = 0;
 
-
         const self = this;
         this.fb = Game.Engine.Networking.FlatBuffers;
         this.latency = 0;
@@ -71,16 +70,13 @@ export class Connection {
         }, 1000);
     }
     disconnect() {
-
-        if (this.socket)
-        {
+        if (this.socket) {
             this.disconnecting = true;
             this.socket.close();
         }
     }
-    connect(worldKey? : string) {
-
-        let url:string;
+    connect(worldKey?: string) {
+        let url: string;
 
         if (window.location.protocol === "https:") {
             url = "wss:";
@@ -106,7 +102,7 @@ export class Connection {
         url += "/api/v1/connect?";
 
         if (worldKey) url += `world=${encodeURIComponent(worldKey)}&`;
-        
+
         if (this.socket) {
             this.socket.onclose = () => {};
             this.socket.close();
@@ -126,13 +122,11 @@ export class Connection {
         };
 
         this.socket.onerror = error => {
-            if (self.connectionStatusReporting)
-                document.body.classList.add("connectionerror");
+            if (self.connectionStatusReporting) document.body.classList.add("connectionerror");
         };
 
         this.socket.onopen = event => {
-            if (self.connectionStatusReporting)
-                document.body.classList.remove("connectionerror");
+            if (self.connectionStatusReporting) document.body.classList.remove("connectionerror");
             self.onOpen(event);
         };
         this.socket.onclose = event => {
@@ -279,16 +273,21 @@ export class Connection {
         this.sendPing();
         this.onConnected();
 
-        if (this.reloading) window.location.reload();
+        if (this.reloading) {
+            window.location.reload();
+            this.reloading = false;
+        }
     }
 
     onClose(event) {
         console.log("disconnected");
         this.connected = false;
-        
-        if (!this.disconnecting && this.autoReload)
-        {
-            this.reloading = true;
+
+        if (!this.disconnecting && this.autoReload) {
+            if (event.reason != "Normal closure") {
+                this.reloading = true;
+            }
+
             this.connect();
         }
         this.disconnecting = false;

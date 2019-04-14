@@ -25,6 +25,8 @@
         public bool IsBoosting { get; set; } = false;
 
         public bool Abandoned { get; set; }
+        public Fleet AbandonedByFleet { get; set; }
+        public long AbandonedTime { get; set; }
 
         protected bool IsOOB = false;
         private long TimeDeath = 0;
@@ -56,7 +58,6 @@
             }
         }
 
-
         public override void Init(World world)
         {
             base.Init(world);
@@ -69,7 +70,13 @@
 
         public override void Destroy()
         {
+            if (!(this is Fish)
+                && !(this.Sprite == Sprites.ship_gray)
+            )
+                Boom.FromShip(this);
+
             base.Destroy();
+
             if (Fleet?.Ships?.Contains(this) ?? false)
                 Fleet.Ships.Remove(this);
         }
@@ -132,6 +139,11 @@
 
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.Fleet)
+                    return false;
+
+                // if it came from this fleet
+                if (bullet.OwnedByFleet == this?.AbandonedByFleet
+                    && World.Time < (this.AbandonedTime + World.Hook.AbandonBuffer))
                     return false;
 
                 // team mode ensures that bullets of like colors do no harm

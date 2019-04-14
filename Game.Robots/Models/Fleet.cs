@@ -47,24 +47,27 @@
                     return Vector2.Zero;
             }
         }
-        public void SetMomentumAndPos(Vector2 po,Vector2 mo)
+        public void SetMomentumAndPos(Vector2 po, Vector2 mo)
         {
-            Vector2 curpo=po-this.Center;
-            Vector2 curmo=mo-this.Momentum;
-            foreach(var s in this.Ships){
-                s.Momentum=s.Momentum+curmo;
-                s.Position=s.Position+curpo;
+            Vector2 curpo = po - this.Center;
+            Vector2 curmo = mo - this.Momentum;
+            foreach (var s in this.Ships)
+            {
+                s.Momentum = s.Momentum + curmo;
+                s.Position = s.Position + curpo;
             }
         }
-        public Fleet Clone(){
-            Fleet nf=new Fleet();
-            nf.Name=this.Name;
-            nf.ID=this.ID;
-            nf.Sprite=this.Sprite;
-            nf.Color=this.Color;
-            nf.PendingDestruction=this.PendingDestruction;
-            nf.Ships=new List<Ship>();
-            foreach(var s in this.Ships){
+        public Fleet Clone()
+        {
+            Fleet nf = new Fleet();
+            nf.Name = this.Name;
+            nf.ID = this.ID;
+            nf.Sprite = this.Sprite;
+            nf.Color = this.Color;
+            nf.PendingDestruction = this.PendingDestruction;
+            nf.Ships = new List<Ship>();
+            foreach (var s in this.Ships)
+            {
                 nf.Ships.Add(s.Clone());
             }
             return nf;

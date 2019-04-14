@@ -133,21 +133,21 @@
             // if(maxD>pLen){
             //     Console.Write("Switch");
             // }
-            return fromPosition + path * (1.0f / pLen) * MathF.Min(pLen-10.0f, maxD);
+            return fromPosition + path * (1.0f / pLen) * MathF.Min(pLen - 10.0f, maxD);
 
         }
-        public static float ProjectClosestIntersectionDist(HookComputer hook, API.Client.Body bullet,Vector2 start, Vector2 destination, float maxTime,Robot r)
+        public static float ProjectClosestIntersectionDist(HookComputer hook, API.Client.Body bullet, Vector2 start, Vector2 destination, float maxTime, Robot r)
         {
             var path = destination - start;
             var pLen = path.Length();
-            var bS=bullet.Position;
-            var bM=bullet.Momentum;
-            var targetPosition=start;
-            var fromPosition=bS;
+            var bS = bullet.Position;
+            var bM = bullet.Momentum;
+            var targetPosition = start;
+            var fromPosition = bS;
             var toTarget = targetPosition - fromPosition;
 
             var bulletSpeed = bullet.Momentum.Length();
-            var targetMomentum=(destination-start)/((float)maxTime);
+            var targetMomentum = (destination - start) / ((float)maxTime);
 
             var a = Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);
             var b = 2 * Vector2.Dot(targetMomentum, toTarget);
@@ -164,21 +164,24 @@
                 t = t2;
             else
                 t = t1;
-            t=MathF.Max(MathF.Min(maxTime+10.0f,t),0.0f);
+            t = MathF.Max(MathF.Min(maxTime + 10.0f, t), 0.0f);
 
             var aimSpot = targetPosition + targetMomentum * t;
-            var aimMinusS=aimSpot-start;
-            var desMinusS=destination-start;
-            var willHit=false;
-            var disss=float.MaxValue;
+            var aimMinusS = aimSpot - start;
+            var desMinusS = destination - start;
+            var willHit = false;
+            var disss = float.MaxValue;
             var bulletPath = aimSpot - fromPosition;
             var timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            
-            
-            if (timeToImpact > hook.Hook.BulletLife||(timeToImpact>maxTime+10)){
+
+            if (timeToImpact > hook.Hook.BulletLife || (timeToImpact > maxTime + 10))
+            {
                 timeToImpact = int.MaxValue;
-            }else{
-                var themS=start+targetMomentum*((float)timeToImpact);
-                disss=(themS-aimSpot).Length();
+            }
+            else
+            {
+                var themS = start + targetMomentum * ((float)timeToImpact);
+                disss = (themS - aimSpot).Length();
             }
 
             return disss;

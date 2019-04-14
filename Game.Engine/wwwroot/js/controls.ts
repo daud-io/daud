@@ -238,15 +238,23 @@ export var Controls = {
     ship: "ship_green",
 
     addSecretShips: function(discord) {
-        if (discord
-            && discord.data
-            && discord.data.roles) {
-            if (discord.data.roles.includes("Player")) {
-                shipSelectorSwitch.querySelector("[data-color=ship_secret]").style.display = "inline-block";
+        try {
+            if (discord && discord.data && discord.data.roles) {
+                if (discord.data.roles.includes("Player")) {
+                    if (shipSelectorSwitch) {
+                        var ship = shipSelectorSwitch.querySelector("[data-color=ship_secret]");
+                        if (ship) (<any>ship).style.display = "inline-block";
+                    }
+                }
+                if (discord.data.roles.includes("Old Guard")) {
+                    if (shipSelectorSwitch) {
+                        var ship = shipSelectorSwitch.querySelector("[data-color=ship_zed]");
+                        if (ship) (<any>ship).style.display = "inline-block";
+                    }
+                }
             }
-            if (discord.data.roles.includes("Old Guard")) {
-                shipSelectorSwitch.querySelector("[data-color=ship_zed]").style.display = "inline-block";
-            }
+        } catch (e) {
+            console.log("exception in addSecretShips: ", e);
         }
     }
 };
