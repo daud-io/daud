@@ -88,11 +88,11 @@
                     SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
-                    Fishes = 60, // ignored if WorldResizeEnabled = true
-                    FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
-                    FishThrust = 0.06f,
+                    Fishes = 45, // ignored if WorldResizeEnabled = true
+                    FishesMultiplier = 0.0075, // used when WorldResizeEnabled = true
+                    FishThrust = 0.03f,
                     FishFlockAlignment = 10f,
-                    FishFlockCohesion = 0.008f,
+                    FishFlockCohesion = 0.004f,
                     FishFlockCohesionMaximumDistance = 1000,
                     FishFlockSeparation = 80,
                     FishFlockSeparationMinimumDistance = 200,
