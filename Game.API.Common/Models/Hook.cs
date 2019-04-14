@@ -11,7 +11,7 @@
             {
                 return new Hook
                 {
-                    WorldSize = 8000,
+                    WorldSize = 12000,
                     WorldResizeEnabled = true,
                     WorldSizeBasic = 12000,
                     WorldSizeDeltaPerPlayer = 400,
