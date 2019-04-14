@@ -38,7 +38,7 @@
                             ring.Angle(i),
                             LookAheadMS
                         );
-                        var momentumBoost = momentum / momentum.Length() * Robot.HookComputer.Hook.BoostThrust;
+                        var momentumBoost = momentum / momentum.Length() * (Robot.HookComputer.Hook.BoostThrustM *  Robot.SensorFleets.MyFleet.Ships.Count + Robot.HookComputer.Hook.BoostThrustB);
                         var positionBoost = RoboMath.ShipThrustProjection(Robot.HookComputer,
                             position,
                             ref momentumBoost,

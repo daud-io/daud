@@ -19,7 +19,8 @@
         public virtual float BaseThrustA { get => World.Hook.BaseThrustA; }
         public virtual float BaseThrustB { get => World.Hook.BaseThrustB; }
         public virtual float BaseThrustC { get => World.Hook.BaseThrustC; }
-        public virtual float BoostThrust { get => World.Hook.BoostThrust; }
+        public virtual float BoostThrustB { get => World.Hook.BoostThrustB; }
+        public virtual float BoostThrustM { get => World.Hook.BoostThrustM; }
 
         public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
 
@@ -279,11 +280,13 @@
                 Flocking.Flock(ship);
                 Snaking.Snake(ship);
                 Ringing.Ring(ship);
+                
+                var BoostThrustCalc = BoostThrustM * Ships.Count + BoostThrustB;
 
                 ship.IsBoosting = isBoosting;
                 ship.ThrustAmount = (BaseThrustA / (Ships.Count + BaseThrustB) + BaseThrustC) * (1 - Burden);
-                ship.ThrustAmount = isBoosting ? ship.ThrustAmount * (1 - World.Hook.BoostControl) + BoostThrust * World.Hook.BoostControl : ship.ThrustAmount;
-                ship.BoostThrustAmount = BoostThrust * (1 - Burden);
+                ship.ThrustAmount = isBoosting ? ship.ThrustAmount * (1 - World.Hook.BoostControl) + BoostThrustCalc * World.Hook.BoostControl : ship.ThrustAmount;
+                ship.BoostThrustAmount = BoostThrustCalc * (1 - Burden);
                     
                 if (isBoostInitial) { ship.BoostAngle = ship.Angle; }
 

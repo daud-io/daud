@@ -125,7 +125,7 @@
         }
         public static Vector2 ProjectClosest(HookComputer hook, Vector2 fromPosition, Vector2 targetPosition, float maxTime, int fleetSize)
         {
-            var boostSpeed = hook.Hook.BoostThrust;
+            var boostSpeed = hook.Hook.BoostThrustM * fleetSize + hook.Hook.BoostThrustB;
             var bulletSpeed = hook.ShotThrust(fleetSize) * 10;
             var path = targetPosition - fromPosition;
             var pLen = path.Length();

@@ -28,7 +28,8 @@
 
                     Drag = 0.92f,
 
-                    BoostThrust = 0.25f,
+                    BoostThrustB = 0.23f,
+                    BoostThrustM = -0.0013f,
                     BoostControl = 0f,
 
                     BoostCooldownTimeM = 14.0f,
@@ -165,7 +166,8 @@
         public float BaseThrustB { get; set; }
         public float BaseThrustC { get; set; }
 
-        public float BoostThrust { get; set; }
+        public float BoostThrustB { get; set; }
+        public float BoostThrustM { get; set; }
         public float BoostControl { get; set; }
 
         public float BoostCooldownTimeM { get; set; }
