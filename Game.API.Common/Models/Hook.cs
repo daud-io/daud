@@ -64,6 +64,7 @@
                     BotPerXPoints = 500,
                     BotBase = 1,
                     BotRespawnDelay = 10000,
+                    BotMaxRespawnDelay = 60000,
 
                     StepTime = 40,
                     Wormholes = 0,
@@ -284,6 +285,7 @@
         public float OutOfBoundsBorder { get; set; } = 0;
         public float OutOfBoundsDecayDistance { get; set; } = 4000;
         public int BotRespawnDelay { get; set; }
+        public int BotMaxRespawnDelay { get; set; }
         public int PickupShields { get; set; }
         public int ShieldStrength { get; set; }
 
