@@ -99,40 +99,21 @@ body {
     height: 20vw;
     image-rendering: pixelated;
     display: block;
-    margin: auto;
+    margin: 4vh auto 0;
 }
 
 #hintbox {
     font-size: 14pt;
-    margin: auto;
+    margin: 0 auto 5%;
     display: block;
     width: 50vw;
     text-align: center;
+	color: #6464b6;
 }
 
 a:visited,
 a {
     color: white;
-}
-
-@media only screen and (max-width: 1200px) {
-    #changelog {
-        transform: scale(0.6);
-        transform-origin: bottom left;
-    }
-    #controls_instructions {
-        transform: scale(0.6);
-        transform-origin: center;
-    }
-}
-
-@media only screen and (max-width: 1000px) {
-    #changelog,
-    #hintbox,
-    #socialMediaContainer,
-    #controls_instructions {
-        visibility: hidden;
-    }
 }
 
 #socialMediaContainer {
@@ -145,9 +126,10 @@ a {
     left: 0;
     position: absolute;
     /*top: calc(-100vh+10px);*/
-    bottom: 50px;
+    bottom: 80px;
     width: 500px;
     background-color: rgba(32, 32, 32, 0.85);
+    margin-left: -1%;
     padding: 0.5em;
     border-radius: 5px;
     height: 1em;
@@ -175,12 +157,15 @@ a {
 #changelog .date {
     color: #aaaaaa;
     padding-right: 2em;
+    line-height: 1.2em;
 }
 
 #controls_instructions {
-    width: 240px;
+    width: 250px;
     position: absolute;
-    left: 0;
+    left: 1%;
+    top: 50%;
+    z-index: -1;
 }
 
 .spawnscreen .social {
@@ -237,15 +222,16 @@ a {
 }
 
 .spawnscreen .controls {
-    margin: 3vmin;
+    /*margin: 3vmin;*/
     position: relative;
     z-index: 2;
+    height: 100%;
 }
 
 #spectate_container {
     position: absolute;
     right: 0;
-    bottom: 3vh;
+    bottom: 40px;
     z-index: 2;
 }
 
@@ -281,7 +267,7 @@ a {
     color: #9d9d9d;
     background: none;
     padding: 10px;
-    margin: 0.5vh 0.5vh;
+    margin: 0.5vh;
     font-size: 0.75rem;
     color: white;
     text-transform: uppercase;
@@ -304,17 +290,19 @@ a {
     color: white;
     margin: 0 0 10px 0;
     transition: border-bottom 1s;
-    width: 20rem;
+    width: 30vw;
     font-family: var(--font);
 }
 
 #shipSelectorSwitch {
-    margin: 0 0 20px 0;
+    margin: 1%;
+    max-height: 100%;
+    overflow: none;
 }
 
 #shipSelectorSwitch .circle {
-    max-width: 8vh;
-    max-height: 8vh;
+    width: 6%;
+    height: 6%;
     margin: 0 5px 0 5px;
     cursor: pointer;
     border-radius: 0%;
@@ -655,6 +643,7 @@ input:checked + .slider:before {
 .dead.spectating #hud,
 .dead.spectating #record {
     visibility: visible;
+    opacity: 0.4;
 }
 
 .dead #hud,
@@ -677,11 +666,17 @@ input:checked + .slider:before {
     position: absolute;
     bottom: 15px;
     left: 15px;
+    width: 200px;
+    overflow:hidden;
+	white-space:nowrap;  
+    text-overflow: ellipsis;
+    text-align: left;
 }
 
 :root {
-    --leaderboard-width: 260px;
+    --leaderboard-width: 250px;
     --font: "Exo 2", NotoColorEmoji, sans-serif, system-ui;
+    --font-size: 15px;
 }
 
 #leaderboard {
@@ -691,7 +686,8 @@ input:checked + .slider:before {
     width: var(--leaderboard-width);
     padding: 0;
     margin: 0;
-    font-size: 12pt;
+    font-size: var(--font-size);
+    table-layout: fixed;
 }
 
 #leaderboard-left {
@@ -701,7 +697,8 @@ input:checked + .slider:before {
     width: var(--leaderboard-width);
     padding: 0;
     margin: 0;
-    font-size: 12pt;
+    font-size: var(--font-size);
+    table-layout: fixed;
 }
 
 #leaderboard-center {
@@ -712,7 +709,8 @@ input:checked + .slider:before {
     width: var(--leaderboard-width);
     padding: 0;
     margin: 0;
-    font-size: 12pt;
+    font-size: var(--font-size);
+    table-layout: fixed;
 }
 
 #leaderboard td,
@@ -743,9 +741,8 @@ input:checked + .slider:before {
     color: cyan;
 }
 .score {
-    float: right;
     right: 0px;
-    text-align: right;
+    text-align: center;
     width: 40px;
 }
 td.flag {
@@ -755,6 +752,9 @@ td.flag {
 }
 .name {
     width: calc(var(--leaderboard-width) - 56px);
+    overflow:hidden;
+	white-space:nowrap;  
+    text-overflow: ellipsis;
 }
 table {
     border-spacing: 0;
@@ -794,6 +794,7 @@ table {
     bottom: 3vh;
     left: 50%;
     width: 30%;
+    height: 2vh;
     transform: translateX(-50%);
 }
 
@@ -822,7 +823,7 @@ option {
 progress {
     display: block; /* default: inline-block */
     width: 300px;
-    margin: 2em auto;
+    margin: 3% auto;
     padding: 4px;
     border: 0 none;
     background: rgba(4, 4, 4, 0.5);
@@ -1056,4 +1057,150 @@ progress::-webkit-progress-value {
 
 #linksDropdown:hover {
     height: 155px;
+}
+
+@media only screen and (max-width: 1200px) {
+    #changelog {
+        transform: scale(0.6);
+        transform-origin: bottom left;
+        font-size: 20px;
+    }
+    #controls_instructions {
+        /*transform: scale(0.6);*/
+        /*transform-origin: center;*/
+        width: 200px;
+    }
+}
+
+@media only screen and (max-width: 1000px) {
+	#hintbox,
+    #socialMediaContainer {
+        visibility: hidden;
+    }
+
+    #changelog {
+        transform: scale(0.6);
+        transform-origin: bottom left;
+        font-size: 15px;
+    }
+    #controls_instructions {
+        /*transform: scale(0.6);*/
+        /*transform-origin: center;*/
+        width: 150px;
+    }
+
+    #nick {
+    	width: 40vw;
+    }
+}
+
+@media only screen and (max-width: 760px){
+	#changelog,
+    #controls_instructions {
+        visibility: hidden;
+    }
+
+    #logo {
+    	height: 15vh;
+    }
+
+    #nick, #emoji-trigger {
+    	font-size: 1.5rem;
+    }
+
+    .button1 {
+    	font-size: 1.25vw;
+    }
+
+    #leaderboard, .name {
+		font-size: 12px;
+		width: 120px;
+	}
+
+    #log, 
+    #bigLog,
+    #hintbox,
+    #deathScreen table {
+		font-size: 12px;
+	} 
+
+	.plusScore {
+		font-size: 20px;
+	}
+}
+
+@media only screen and (max-width: 600px){	
+    #nick, #emoji-trigger {
+    	font-size: 1rem;
+    }
+
+    .button1, #hintbox {
+    	font-size: 9px;
+    }
+
+    .dead.spectating #hud,
+	.dead.spectating #record {
+	    opacity: 0.2;
+	    font-size: 9px;
+	}
+
+	#leaderboard, .name {
+		font-size: 10px;
+		width: 90px;
+	}
+
+	.arrow {
+	    width: 15px;
+	    height: 5px;
+	}
+
+	#log, #bigLog {
+		font-size: 10px;
+	} 
+
+	#deathScreen table {
+		font-size: 10px;
+	}
+
+	.plusScore{
+		font-size: 15px;
+	}
+}
+
+@media only screen and (max-width: 450px){
+	#logo {
+    	height: 8vh;
+    }
+
+	#settings, #spectate {
+		font-size: 0;
+	}
+
+	#settings i {
+		font-size: 2.3vh;
+	}
+
+	#spectate i {
+		font-size: 2.0vh;
+	}
+
+
+	#leaderboard, .name {
+		font-size: 8px;
+		width: 70px;
+	}
+
+	#log, #bigLog {
+		font-size: 8px;
+	} 
+
+	#deathScreen table {
+		font-size: 8px;
+	}
+
+	.plusScore{
+		font-size: 10px;
+	}
+
+	
 }
