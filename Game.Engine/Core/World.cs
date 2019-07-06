@@ -48,6 +48,8 @@
 
         // most recent leaderboard available
         public Leaderboard Leaderboard = null;
+        public bool ArenaRecordHasReset { get; set; } = false;
+        public long ArenaRecordResetTime { get; set; } = 0;
 
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
