@@ -10,12 +10,14 @@
 
         public string ACMEStateDirectory { get; set; }
 
-        public string DiscordToken {get; set;} = null;
+        public string DiscordToken { get; set; } = null;
         public ulong? DiscordGuildID { get; set; } = null;
 
         public bool ForceHTTPS { get; set; } = false;
 
         public bool AllowCORS { get; set; } = true;
+
+        public bool NoWorlds { get; set; } = false;
 
         public bool RegistryEnabled { get; set; }
         public string RegistryUri { get; set; }
@@ -25,5 +27,7 @@
         public bool LetsEncryptEnabled { get; set; }
 
         public string PublicURL { get; set; }
+
+        public string DuelBotURL { get; set; } = "https://daud-discord.glitch.me/";
     }
 }

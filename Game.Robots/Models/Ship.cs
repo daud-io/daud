@@ -11,13 +11,14 @@
         public float Angle { get; set; }
 
         public bool PendingDestruction { get; set; }
-        public Ship Clone(){
-            Ship ns=new Ship();
-            ns.ID=this.ID;
-            ns.Size=this.Size;
-            ns.Position=new Vector2(this.Position.X,this.Position.Y);
-            ns.Momentum=new Vector2(this.Momentum.X,this.Momentum.Y);
-            ns.Angle=this.Angle;
+        public Ship Clone()
+        {
+            Ship ns = new Ship();
+            ns.ID = this.ID;
+            ns.Size = this.Size;
+            ns.Position = new Vector2(this.Position.X, this.Position.Y);
+            ns.Momentum = new Vector2(this.Momentum.X, this.Momentum.Y);
+            ns.Angle = this.Angle;
             return ns;
         }
     }

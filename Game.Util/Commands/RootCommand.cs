@@ -14,7 +14,6 @@
     [Subcommand("registry", typeof(RegistryCommand))]
     public class RootCommand : CommandBase
     {
-
         [Option("--context", Description = "override the default, saved context and use the mentioned one")]
         public string UseContext { get; }
 
@@ -92,7 +91,7 @@
             (var config, var context) = Configuration.Load(this);
 
             if (!Uri.TryCreate(RegistryServer ?? context.RegistryUri ?? string.Empty, UriKind.Absolute, out Uri serverUri))
-                throw new Exception("Config Server URI missing/invalid");
+                throw new Exception("Registry Config Server URI missing/invalid");
 
             var connection = new RegistryClient(serverUri);
 

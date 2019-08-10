@@ -26,7 +26,7 @@ namespace Game.Engine.Core.Steering
             var shipIndex = fleet.Ships.IndexOf(ship);
             var innerAngle = (shipIndex - RingThreshold) / (float)(fleet.Ships.Count - RingThreshold) * 2 * MathF.PI;
             var angle = (shipIndex - RingThreshold) / (float)(fleet.Ships.Count - RingThreshold) * 2 * MathF.PI;
-            if (shipIndex > (RingThreshold-1))
+            if (shipIndex > (RingThreshold - 1))
             {
                 ship.Position = center / RingThreshold +
                     new Vector2(

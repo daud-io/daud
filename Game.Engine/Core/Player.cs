@@ -2,7 +2,8 @@
 {
     using Game.API.Common;
     using Game.API.Common.Models;
-    using Game.Engine.Core.Auditing;
+    using Game.API.Common.Models.Auditing;
+    using Game.Engine.Auditing;
     using Game.Engine.Core.Weapons;
     using Game.Engine.Networking;
     using Newtonsoft.Json;
@@ -14,10 +15,10 @@
 
     public class Player : IActor
     {
-        private static readonly HttpClient HttpClient = new HttpClient();
-
         public World World = null;
         public Fleet Fleet = null;
+
+        public string PlayerID { get; set; }
 
         public Connection Connection { get; set; }
 
@@ -44,6 +45,7 @@
         public long TimeDeath { get; set; } = 0;
 
         public bool IsInvulnerable { get; set; } = false;
+        public bool Backgrounded { get; internal set; }
         public bool IsShielded { get; set; } = false;
 
         public long SpawnTime;
@@ -72,6 +74,11 @@
 
         private bool IsGearhead = false;
 
+        public Player()
+        {
+            PlayerID = Guid.NewGuid().ToString().Replace("-", "");
+        }
+
         public void SetControl(ControlInput input)
         {
             if (input.BoostRequested)
@@ -95,6 +102,11 @@
 
                 Fleet.SpawnLocation = SpawnLocation;
                 Fleet.Init(World);
+
+                RemoteEventLog.SendEvent(new AuditEventSpawn
+                {
+                    Player = this.ToAuditModelPlayer()
+                }, World);
 
                 if (World.Hook.GearheadName != null && this.Name == World.Hook.GearheadName)
                 {
@@ -132,6 +144,14 @@
                 Fleet = null;
             }
 
+            if (this.Connection != null)
+                try
+                {
+                    ((IDisposable)this.Connection).Dispose();
+                }
+                catch (Exception) { }
+            this.Connection = null;
+
             World.Actors.Remove(this);
 
             var worldPlayers = GetWorldPlayers(World);
@@ -149,6 +169,7 @@
         }
 
         public string Name { get; set; }
+        public ulong LoginID { get; set; }
 
         public static List<Player> GetTeam(World world, string color)
         {
@@ -210,12 +231,14 @@
                     Fleet.AddShip();
             }
 
+
             if (this.IsControlNew)
             {
                 if (float.IsNaN(ControlInput.Position.X))
                     ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
                 Fleet.AimTarget = ControlInput.Position;
+
                 Fleet.BoostRequested = CummulativeBoostRequested;
                 Fleet.ShootRequested = CummulativeShootRequested;
 
@@ -223,7 +246,17 @@
                 CummulativeShootRequested = false;
 
                 Fleet.CustomData = ControlInput.CustomData;
+
+                if (Fleet.CustomData != null)
+                {
+                    var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });
+                    if (parsed?.magic != null)
+                        JsonConvert.PopulateObject(parsed.magic, this);
+                }
             }
+
+            if (this.Backgrounded)
+                Fleet.AimTarget = Vector2.Zero;
 
             this.IsControlNew = false;
 
@@ -301,7 +334,7 @@
                 Connection.SpectatingFleet = player.Fleet;
 
             if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(player?.Token))
-                RemoteEventLog.SendEvent(new
+                RemoteEventLog.SendEvent(new OnDeath
                 {
                     token = this.Token,
                     name = this.Name,
@@ -327,7 +360,6 @@
                 Fleet = null;
                 IsAlive = false;
             }
-
         }
 
         public void Die(Player player = null)
@@ -366,6 +398,29 @@
             }
             else
                 return null;
+        }
+
+        public AuditModelPlayer ToAuditModelPlayer()
+        {
+            return new AuditModelPlayer
+            {
+                LoginID = this.LoginID,
+                LoginName = this.LoginName,
+                PlayerID = this.PlayerID,
+                FleetID = this.Fleet?.ID ?? 0,
+                FleetName = this.Name,
+                FleetSize = this.Fleet?.Ships?.Count ?? 0,
+                Score = this.Score,
+                AliveSince = this.AliveSince,
+                Latency = this.Connection?.Latency ?? 0,
+                KillCount = this.KillCount,
+                KillStreak = this.KillStreak,
+                ComboCounter = this.ComboCounter,
+                MaxCombo = this.MaxCombo,
+
+                Position = this.Fleet?.FleetCenter,
+                Momentum = this.Fleet?.FleetMomentum
+            };
         }
     }
 }

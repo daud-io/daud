@@ -10,6 +10,7 @@ export class Connection {
     onLeaderboard: (leaderboard: any) => void;
     onConnected: () => void;
     reloading: boolean;
+    disconnecting: boolean;
     connected: boolean;
     framesPerSecond: number;
     viewsPerSecond: number;
@@ -18,23 +19,33 @@ export class Connection {
     statBytesDown: number;
     statBytesDownPerSecond: number;
     statBytesUpPerSecond: number;
+    isBackgrounded: boolean;
     fb: any;
     latency: number;
     minLatency: number;
     simulateLatency: number;
     socket: WebSocket;
     pingSent: number;
+    bandwidthThrottle: number;
+    autoReload: boolean;
+    statPongCount: number;
+    connectionStatusReporting: boolean;
+
     constructor() {
         this.onView = view => {};
         this.onLeaderboard = leaderboard => {};
         this.onConnected = () => {};
         this.reloading = false;
+        this.disconnecting = false;
         this.connected = false;
+        this.autoReload = true;
+        this.connectionStatusReporting = true;
 
         this.statBytesUp = 0;
         this.statBytesDown = 0;
         this.statBytesDownPerSecond = 0;
         this.statBytesUpPerSecond = 0;
+        this.statPongCount = 0;
 
         const self = this;
         this.fb = Game.Engine.Networking.FlatBuffers;
@@ -42,11 +53,15 @@ export class Connection {
         this.minLatency = 999;
         this.simulateLatency = 0;
 
+        this.bandwidthThrottle = Settings.bandwidth;
+
         setInterval(() => {
             if (self.connected) {
                 self.sendPing();
             }
+        }, 250);
 
+        setInterval(() => {
             self.statBytesDownPerSecond = self.statBytesDown;
             self.statBytesUpPerSecond = self.statBytesUp;
 
@@ -55,10 +70,14 @@ export class Connection {
         }, 1000);
     }
     disconnect() {
-        if (this.socket) this.socket.close();
+        if (this.socket) {
+            this.disconnecting = true;
+            this.socket.close();
+        }
     }
-    connect(world?) {
-        let url;
+    connect(worldKey?: string) {
+        let url: string;
+
         if (window.location.protocol === "https:") {
             url = "wss:";
         } else {
@@ -71,18 +90,18 @@ export class Connection {
             hostname = "daud.io";
         }
 
-        if (world) {
-            var worldKeyParse = world.match(/^(.*?)\/(.*)$/);
+        if (worldKey) {
+            var worldKeyParse = worldKey.match(/^(.*?)\/(.*)$/);
             if (worldKeyParse) {
                 hostname = worldKeyParse[1];
-                world = worldKeyParse[2];
+                worldKey = worldKeyParse[2];
             }
         }
 
         url += `//${hostname}`;
         url += "/api/v1/connect?";
 
-        if (world) url += `world=${encodeURIComponent(world)}&`;
+        if (worldKey) url += `world=${encodeURIComponent(worldKey)}&`;
 
         if (this.socket) {
             this.socket.onclose = () => {};
@@ -103,11 +122,11 @@ export class Connection {
         };
 
         this.socket.onerror = error => {
-            document.body.classList.add("connectionerror");
+            if (self.connectionStatusReporting) document.body.classList.add("connectionerror");
         };
 
         this.socket.onopen = event => {
-            document.body.classList.remove("connectionerror");
+            if (self.connectionStatusReporting) document.body.classList.remove("connectionerror");
             self.onOpen(event);
         };
         this.socket.onclose = event => {
@@ -118,7 +137,6 @@ export class Connection {
         const builder = new (<any>flatbuffers).Builder(0);
 
         this.fb.NetPing.startNetPing(builder);
-
         this.pingSent = performance.now();
 
         //this.fb.Ping.addTime(builder, this.pingSent);
@@ -127,8 +145,8 @@ export class Connection {
         this.fb.NetPing.addUps(builder, this.updatesPerSecond);
         this.fb.NetPing.addFps(builder, this.framesPerSecond);
         this.fb.NetPing.addCs(builder, Cache.count);
-        this.fb.NetPing.addBackgrounded(builder, this.isBackgrounded);
-        this.fb.NetPing.addBandwidthThrottle(builder, Settings.bandwidth);
+        this.fb.NetPing.addBackgrounded(builder, this.framesPerSecond < 1);
+        this.fb.NetPing.addBandwidthThrottle(builder, this.bandwidthThrottle);
 
         const ping = this.fb.NetPing.endNetPing(builder);
 
@@ -140,9 +158,6 @@ export class Connection {
         builder.finish(quantum);
 
         this.send(builder.asUint8Array());
-    }
-    isBackgrounded(builder: any, isBackgrounded: any): any {
-        throw new Error("Method not implemented.");
     }
 
     sendExit() {
@@ -255,16 +270,27 @@ export class Connection {
     onOpen(event) {
         this.connected = true;
         console.log("connected");
+        this.sendPing();
         this.onConnected();
 
-        if (this.reloading) window.location.reload();
+        if (this.reloading) {
+            window.location.reload();
+            this.reloading = false;
+        }
     }
 
     onClose(event) {
         console.log("disconnected");
         this.connected = false;
-        this.reloading = true;
-        this.connect();
+
+        if (!this.disconnecting && this.autoReload) {
+            if (event.reason != "Normal closure") {
+                this.reloading = true;
+            }
+
+            this.connect();
+        }
+        this.disconnecting = false;
     }
 
     onMessage(event) {
@@ -286,6 +312,7 @@ export class Connection {
                 break;
             case this.fb.AllMessages.NetPing: // Ping
                 if (this.pingSent) {
+                    this.statPongCount++;
                     this.latency = performance.now() - this.pingSent;
                     if (this.latency > 0 && this.latency < this.minLatency) this.minLatency = this.latency;
                 }

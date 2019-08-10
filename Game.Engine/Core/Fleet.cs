@@ -57,6 +57,8 @@
         public Vector2? SpawnLocation { get; set; } = null;
         public int ShipSize { get; set; } = 70;
 
+        public Queue<long> EarnedShips = new Queue<long>();
+
         [Flags]
         public enum ShipModeEnum
         {
@@ -75,7 +77,7 @@
                 switch (Owner.ShipSprite)
                 {
                     case Sprites.ship_cyan: return Sprites.bullet_cyan;
-					case Sprites.ship_blue: return Sprites.bullet_blue;
+                    case Sprites.ship_blue: return Sprites.bullet_blue;
                     case Sprites.ship_green: return Sprites.bullet_green;
                     case Sprites.ship_orange: return Sprites.bullet_orange;
                     case Sprites.ship_pink: return Sprites.bullet_pink;
@@ -111,16 +113,18 @@
                 Die(player);
         }
 
-        public void KilledShip()
+        public void KilledShip(Ship killedShip)
         {
             var random = new Random();
             var threshold = Ships.Count * World.Hook.ShipGainBySizeM + World.Hook.ShipGainBySizeB;
             if (random.NextDouble() < threshold)
                 if (Ships?.Any() ?? false)
-                    AddShip();
+                {
+                    EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay);
+                }
         }
 
-        public void AddShip()
+        public void AddShip(Sprites? sprite = null)
         {
             if (!this.Owner.IsAlive || this.PendingDestruction)
                 return;
@@ -197,6 +201,12 @@
                 FiringWeapon = false;
             }
 
+            while (EarnedShips.Any() && EarnedShips.Peek() < World.Time)
+            {
+                AddShip();
+                EarnedShips.Dequeue();
+            }
+
             foreach (var ship in NewShips)
             {
                 ship.Init(World);
@@ -226,6 +236,9 @@
             ship.Abandoned = true;
             ship.Group = null;
             ship.ThrustAmount = 0;
+            ship.Mode = 0;
+            ship.AbandonedByFleet = this;
+            ship.AbandonedTime = World.Time;
 
             if (Ships.Contains(ship))
                 Ships.Remove(ship);
@@ -254,9 +267,9 @@
                 BoostUntil = World.Time + World.Hook.BoostDuration;
                 isBoostInitial = true;
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
-                for (int i = 0; i < shipLoss; i++)
+                var Sorter = Ships.OrderByDescending((ship) => Vector2.DistanceSquared(FleetCenter + AimTarget, ship.Position)).Take(shipLoss);
+                foreach (Ship ship in Sorter)
                 {
-                    var ship = Ships.First();
                     AbandonShip(ship);
                 }
             }

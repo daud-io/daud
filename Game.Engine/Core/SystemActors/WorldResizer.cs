@@ -14,8 +14,8 @@
             var hook = World.Hook;
             if (World.Hook.WorldResizeEnabled)
             {
-                int resizeCount = (World.AdvertisedPlayerCount < hook.WorldMinPlayersToResize) 
-                    ? 0 
+                int resizeCount = (World.AdvertisedPlayerCount < hook.WorldMinPlayersToResize)
+                    ? 0
                     : World.AdvertisedPlayerCount - hook.WorldMinPlayersToResize + 1;
 
                 int newSize = hook.WorldSizeBasic + resizeCount * hook.WorldSizeDeltaPerPlayer;

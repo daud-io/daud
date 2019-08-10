@@ -57,6 +57,11 @@ container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
 container.tiles.parentGroup = tileGroup;
 container.addChild(container.tiles);
 
+container.emitterContainer = new PIXI.particles.ParticleContainer();
+container.emitterContainer.parentGroup = bodyGroup;
+container.zOrder = 128;
+container.addChild(container.emitterContainer);
+
 const renderer = new Renderer(container);
 const background = new Background(container);
 const border = new Border(container);
@@ -209,9 +214,9 @@ connection.onView = newView => {
         interval = setInterval(updateButton, 1000);
     }
 
-    lastOffset = view.time - performance.now() + Math.random();
+    lastOffset = view.time + connection.latency / 2 - performance.now();
     if (!serverTimeOffset) serverTimeOffset = lastOffset;
-    serverTimeOffset = 0.99 * serverTimeOffset + 0.01 * lastOffset;
+    serverTimeOffset = 0.95 * serverTimeOffset + 0.05 * lastOffset;
 
     const groupsLength = newView.groupsLength();
     const groups = [];
@@ -338,6 +343,7 @@ LobbyCallbacks.onLobbyClose = function() {
 
 var spawnOnView = false;
 LobbyCallbacks.onWorldJoin = function(worldKey, world) {
+    console.log(`onWorldJoin: ${worldKey} ${world}`);
     if (joiningWorld) {
         joiningWorld = false;
         spawnOnView = true;
@@ -458,7 +464,7 @@ let spotSprites = [];
 // Game Loop
 app.ticker.add(() => {
     const latency = connection.minLatency || 0;
-    gameTime = performance.now() + serverTimeOffset - latency / 2;
+    gameTime = performance.now() + serverTimeOffset;
     frameCounter++;
 
     let position = new Vector2(0, 0);
@@ -481,10 +487,8 @@ app.ticker.add(() => {
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
     background.updateFocus(new Vector2(position.x, position.y));
-    background.draw(cache, interpolator, gameTime);
+    background.draw();
     minimap.checkDisplay();
-    border.draw(cache, interpolator, gameTime);
-    overlay.draw(cache, interpolator, gameTime);
 
     lastPosition = position;
 

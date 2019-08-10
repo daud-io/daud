@@ -5,6 +5,7 @@
     using Newtonsoft.Json.Linq;
     using System;
     using System.IO;
+    using System.Net;
     using System.Threading;
     using System.Threading.Tasks;
     using static Game.Robots.ConfigurableContextBotConfig;
@@ -13,50 +14,75 @@
     {
         protected FileSystemWatcher Watcher;
 
-        public string ConfigurationFileName { get; set; } = "config.json";
+        public string ConfigurationFileName { get; set; } = null;
+        public string ConfigurationFileUrl { get; set; } = null;
 
         protected long ReloadConfigAfter = 0;
+        public int ReloadUrlCycle { get; set; } = 0;
 
         protected int CurrentLevel { get; set; } = 0;
         public LevelingConfig Leveling { get; set; }
         private bool DownLeveling = false;
+        private bool Initialized = false;
 
         public override Task StartAsync(PlayerConnection connection, CancellationToken cancellationToken = default)
         {
-            InitializeConfiguration();
+            if (!Initialized)
+                InitializeConfiguration();
+
             return base.StartAsync(connection, cancellationToken);
         }
 
-        private void InitializeConfiguration()
+        public void InitializeConfiguration()
         {
-            var fileName = Path.GetFullPath(ConfigurationFileName);
-
-            Watcher = new FileSystemWatcher
+            Initialized = true;
+            if (ConfigurationFileName != null)
             {
-                Path = Path.GetDirectoryName(fileName),
-                Filter = Path.GetFileName(fileName)
-            };
-            Watcher.Changed += Watcher_Changed;
-            Watcher.Created += Watcher_Changed;
-            Watcher.NotifyFilter = NotifyFilters.Attributes |
-                NotifyFilters.CreationTime |
-                NotifyFilters.FileName |
-                NotifyFilters.LastAccess |
-                NotifyFilters.LastWrite |
-                NotifyFilters.Size |
-                NotifyFilters.Security;
-            Watcher.EnableRaisingEvents = true;
-            LoadConfig();
+                var fileName = Path.GetFullPath(ConfigurationFileName);
+
+                Watcher = new FileSystemWatcher
+                {
+                    Path = Path.GetDirectoryName(fileName),
+                    Filter = Path.GetFileName(fileName)
+                };
+                Watcher.Changed += Watcher_Changed;
+                Watcher.Created += Watcher_Changed;
+                Watcher.NotifyFilter = NotifyFilters.Attributes |
+                    NotifyFilters.CreationTime |
+                    NotifyFilters.FileName |
+                    NotifyFilters.LastAccess |
+                    NotifyFilters.LastWrite |
+                    NotifyFilters.Size |
+                    NotifyFilters.Security;
+                Watcher.EnableRaisingEvents = true;
+                LoadConfig();
+            }
+            else if (ConfigurationFileUrl != null)
+                LoadConfig();
         }
 
         protected void LoadConfig()
         {
             try
             {
-                var text = File.ReadAllText(ConfigurationFileName);
-                var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
+                string text = null;
+                if (ConfigurationFileName != null)
+                {
+                    text = File.ReadAllText(ConfigurationFileName);
+                    ReloadConfigAfter = 0;
+                }
 
+                if (ConfigurationFileUrl != null)
+                {
+                    using (var webClient = new WebClient())
+                        text = webClient.DownloadString(ConfigurationFileUrl);
+                }
+
+                var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
                 SetBehaviors(config.Behaviors);
+                if (config.Allies != null)
+                    SensorAllies.AlliedNames = config.Allies;
+
                 JsonConvert.PopulateObject(text, this);
 
                 LoadLevel();
@@ -66,6 +92,8 @@
             {
                 this.Log("Failed to read configuration: " + e);
             }
+
+
         }
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
@@ -114,10 +142,14 @@
 
         protected async override Task AliveAsync()
         {
+            if (ConfigurationFileUrl != null && ReloadUrlCycle > 0 && ReloadConfigAfter == 0)
+                ReloadConfigAfter = GameTime + ReloadUrlCycle;
+
             if (ReloadConfigAfter > 0 && ReloadConfigAfter < GameTime)
             {
+                if (ReloadUrlCycle > 0)
+                    ReloadConfigAfter = GameTime + ReloadUrlCycle;
                 LoadConfig();
-                ReloadConfigAfter = 0;
             }
 
 
@@ -132,6 +164,32 @@
             }
 
             await base.AliveAsync();
+        }
+
+
+
+        public static async Task<ConfigurableContextBot> Load(string path)
+        {
+            Uri uri = new Uri(path);
+
+            Type robotType = typeof(ConfigurableContextBot);
+            //var text = await UriTools.LoadStringAsync(uri);
+            //var config = JsonConvert.DeserializeObject<ConfigurableContextBotConfig>(text);
+
+            var config = await UriTools.LoadAsync<ConfigurableContextBotConfig>(path);
+            if (config.RobotType != null)
+                robotType = Type.GetType(config.RobotType);
+
+            var robot = Activator.CreateInstance(robotType) as ConfigurableContextBot;
+
+            if (uri.Scheme == "file")
+                robot.ConfigurationFileName = uri.LocalPath;
+            else
+                robot.ConfigurationFileUrl = uri.ToString();
+
+            robot.InitializeConfiguration();
+
+            return robot;
         }
     }
 }

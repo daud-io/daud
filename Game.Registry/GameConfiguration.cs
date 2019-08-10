@@ -9,5 +9,8 @@
         public string AdministratorPassword { get; set; }
 
         public bool AllowCORS { get; set; } = true;
+        public string ElasticSearchURI { get; set; }
+
+        public bool DisableSuggestionLookup { get; set; } = false;
     }
 }

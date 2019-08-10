@@ -1,6 +1,8 @@
 import { Container } from "pixi.js";
 import { CustomContainer } from "./CustomContainer";
 import { RenderedObject } from "./models/renderedObject";
+import { hexToRGB } from "./hexColor";
+const worldDefinition = RenderedObject.getSpriteDefinition("world");
 
 export class Border extends RenderedObject {
     graphics: PIXI.Graphics;
@@ -18,18 +20,17 @@ export class Border extends RenderedObject {
     updateWorldSize(size) {
         const edgeWidth = 4000;
         this.graphics.clear();
-        this.graphics.beginFill(0xff0000, 0.1);
+        var v = hexToRGB(worldDefinition["danger-color"], 1);
+        this.graphics.beginFill(v[0] * 256 * 256 + v[1] * 256 + v[2], v[3]);
         this.graphics.drawRect(-size - edgeWidth, -size - edgeWidth, 2 * size + 2 * edgeWidth, edgeWidth);
         this.graphics.drawRect(-size - edgeWidth, -size, edgeWidth, 2 * size);
         this.graphics.drawRect(+size, -size, edgeWidth, 2 * size);
         this.graphics.drawRect(-size - edgeWidth, +size, 2 * size + 2 * edgeWidth, edgeWidth);
         this.graphics.endFill();
-
-        this.graphics.lineStyle(40, 0x0000ff);
+        var v2 = hexToRGB(worldDefinition["edge-color"], 1);
+        this.graphics.lineStyle(worldDefinition["edge-width"], v2[0] * 256 * 256 + v2[1] * 256 + v2[2], v2[3]);
         this.graphics.drawRect(-size, -size, size * 2, size * 2);
 
         this.worldSize = size;
     }
-
-    draw(cache, interpolator, currentTime) {}
 }

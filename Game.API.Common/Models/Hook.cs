@@ -13,18 +13,23 @@
                 {
                     WorldSize = 8000,
                     WorldResizeEnabled = true,
-                    WorldSizeBasic = 4000,
+                    WorldSizeBasic = 8000,
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
-                    WorldMinPlayersToResize = 2,
+                    WorldMinPlayersToResize = 4,
 
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
+
+                    EarnedShipDelay = 0,
 
                     BaseThrustM = -0.0035f,
                     BaseThrustB = 0.15f,
 
                     Drag = 0.92f,
+
+                    BoomDrag = 0.92f,
+                    BoomLife = 500,
 
                     BoostThrust = 0.15f,
 
@@ -34,6 +39,8 @@
 
                     BoostSpeed = 1f,
                     BoostDuration = 420,
+
+                    AbandonBuffer = 120,
 
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 550,
@@ -57,13 +64,14 @@
                     BotPerXPoints = 500,
                     BotBase = 1,
                     BotRespawnDelay = 10000,
+                    BotMaxRespawnDelay = 60000,
 
                     StepTime = 40,
                     Wormholes = 0,
                     WormholesDestination = null,
 
-                    Obstacles = 10,
-                    ObstaclesMultiplier = 0.0005,
+                    Obstacles = 10, // ignored if WorldResizeEnabled = true
+                    ObstaclesMultiplier = 0.0005, // used when WorldResizeEnabled = true
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
                     ObstacleMinSize = 300,
@@ -128,7 +136,7 @@
                     PointsPerKillFleetMax = 55,
                     PointsPerKillFleetStep = 5,
                     PointsPerKillFleetPerStep = 50,
-                    ComboDelay = 3000,
+                    ComboDelay = 4000,
                     ComboPointsStep = 5,
 
                     PlayerCountGracePeriodMS = 15000,
@@ -140,7 +148,9 @@
                     AllowedColors = AllColors,
                     Name = "FFA",
 
-                    LeaderboardRefresh = 750
+                    LeaderboardRefresh = 750,
+
+                    MaxNameLength = 17
                 };
             }
         }
@@ -165,6 +175,9 @@
         public float BoostSpeed { get; set; }
 
         public float Drag { get; set; }
+
+        public int BoomLife { get; set; }
+        public float BoomDrag { get; set; }
 
         public int PointsPerKillShip { get; set; }
         public int PointsPerUniverseDeath { get; set; }
@@ -269,9 +282,10 @@
 
         public int StepTime { get; set; }
         public float OutOfBoundsDeathLine { get; set; } = 800;
-        public float OutOfBoundsBorder { get; set; } = 300;
-        public float OutOfBoundsDecayDistance { get; set; } = 900;
+        public float OutOfBoundsBorder { get; set; } = 0;
+        public float OutOfBoundsDecayDistance { get; set; } = 4000;
         public int BotRespawnDelay { get; set; }
+        public int BotMaxRespawnDelay { get; set; }
         public int PickupShields { get; set; }
         public int ShieldStrength { get; set; }
 
@@ -295,9 +309,9 @@
             "ship_yellow",
             "ship_green",
             "ship_cyan",
-			"ship_blue",
-			"ship_secret",
-			"ship_zed"
+            "ship_blue",
+            "ship_secret",
+            "ship_zed"
         };
         public static readonly string[] TeamColors = new[] {
             "ship_red",
@@ -312,9 +326,13 @@
         public string[] AllowedColors { get; set; }
 
         public int Weight { get; set; }
-        public int MaxNameLength { get; set; } = 15;
+        public int MaxNameLength { get; set; }
         public string GearheadName { get; set; }
         public float GearheadRegen { get; set; }
+        public int AutoRemoveOnEmptyThreshold { get; set; }
+        public uint ExplosionTime { get; set; }
+        public int AbandonBuffer { get; set; }
+        public int EarnedShipDelay { get; set; }
 
         public Hook Clone()
         {

@@ -15,7 +15,7 @@ export class Background extends RenderedObject {
         this.refreshSprite();
     }
 
-    draw(cache, interpolator, currentTime) {
+    draw() {
         if (this.backgroundSprites) {
             for (var i = 0; i < this.backgroundSprites.length; i++) {
                 var backgroundSprite = this.backgroundSprites[i];
@@ -37,14 +37,15 @@ export class Background extends RenderedObject {
     refreshSprite() {
         const spriteDefinition = RenderedObject.getSpriteDefinition("bg");
 
-        var additionalLayers = spriteDefinition.additionalLayers;
-        if (!additionalLayers) {
-            additionalLayers = [];
+        var layerSpeeds = spriteDefinition["layer-speeds"];
+        var layerTextures = spriteDefinition["layer-textures"];
+        if (!layerSpeeds || !layerTextures) {
+            layerSpeeds = [];
+            layerTextures = [];
         }
-        var speeds = [spriteDefinition.speed ? spriteDefinition.speed : 1].concat(additionalLayers.map(x => x.speed));
+        var speeds = layerSpeeds;
         this.speeds = speeds;
-        var layers = [spriteDefinition].concat(additionalLayers);
-        var allLayersTextureNames = layers.map(x => x.texture);
+        var allLayersTextureNames = layerTextures;
         var allLayersTextures = allLayersTextureNames.map(x => RenderedObject.getTextureDefinition(x));
         if (!this.backgroundSprites) {
             this.backgroundSprites = [];
@@ -60,7 +61,7 @@ export class Background extends RenderedObject {
                     backgroundSprite = new PIXI.extras.TilingSprite(textures[0], 200000, 200000);
                     backgroundSprite.parentGroup = this.container.backgroundGroup;
                     this.container.addChild(backgroundSprite);
-                    backgroundSprite.tileScale.set(allLayersTextures[i].scale, allLayersTextures[i].scale);
+                    backgroundSprite.tileScale.set(RenderedObject.getScale(allLayersTextures[i], textures[0]), RenderedObject.getScale(allLayersTextures[i], textures[0]));
                     backgroundSprite.rotation = Math.random() - 0.5;
                     backgroundSprite.position.x = -100000 * (Math.cos(backgroundSprite.rotation) - Math.sin(backgroundSprite.rotation));
                     backgroundSprite.position.y = -100000 * (Math.sin(backgroundSprite.rotation) + Math.cos(backgroundSprite.rotation));

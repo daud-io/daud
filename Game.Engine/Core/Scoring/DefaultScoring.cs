@@ -6,7 +6,7 @@
     {
         public override void ShipDied(Player killer, Player victim, Ship ship)
         {
-            if (killer != null && !(ship is Fish))
+            if (killer != null && !(ship is Fish) && ship.AbandonedByFleet != killer.Fleet)
                 killer.Score += killer.World.Hook.PointsPerKillShip;
         }
 
@@ -98,6 +98,11 @@
             {
                 if (victim != null)
                 {
+                    victim.Score += hook.PointsPerUniverseDeath;
+                    victim.KillStreak = 0;
+                    victim.Score = (int)Math.Max(victim.Score * hook.PointsMultiplierDeath, 0);
+                    victim.DeathCount++;
+                    victim.MaxCombo = 0;
                     victim.SendMessage($"Killed by the universe", "universeDeath", hook.PointsPerUniverseDeath,
                         new
                         {
@@ -112,11 +117,10 @@
                             }
                         }
                     );
-                    victim.Score += hook.PointsPerUniverseDeath;
-                    victim.KillStreak = 0;
-                    victim.MaxCombo = 0;
                 }
             }
+
+            base.FleetDied(killer, victim, fleet);
         }
     }
 }

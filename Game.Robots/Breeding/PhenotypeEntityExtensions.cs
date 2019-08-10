@@ -9,6 +9,4 @@
             return entity.Phenotypes.Sum(p => p.Length);
         }
     }
-
-
 }

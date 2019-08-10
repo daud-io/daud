@@ -1,11 +1,14 @@
 ﻿namespace Game.Registry
 {
+    using Elasticsearch.Net;
     using Game.API.Common.Security;
     using Game.Registry.API.Authentication;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.DependencyInjection;
+    using Nest;
+    using Nest.JsonNetSerializer;
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;
@@ -42,6 +45,19 @@
 
             services
                 .AddSingleton<HttpClient>();
+
+            if (config.ElasticSearchURI != null)
+            {
+
+                // choose the appropriate IConnectionPool for your use case
+                var pool = new SingleNodeConnectionPool(new Uri(config.ElasticSearchURI));
+                var connectionSettings =
+                    new ConnectionSettings(pool, JsonNetSerializer.Default)
+                    .DefaultIndex("daud");
+                services.AddSingleton(new ElasticClient(connectionSettings));
+            }
+            else
+                services.AddSingleton(null as ElasticClient);
         }
 
         private GameConfiguration LoadConfiguration(IServiceCollection services)

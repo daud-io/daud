@@ -7,6 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="NEST" Version="6.5.1" />
+    <PackageReference Include="NEST.JsonNetSerializer" Version="6.5.1" />
   </ItemGroup>
 
   <ItemGroup>

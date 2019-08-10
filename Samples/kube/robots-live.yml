@@ -23,7 +23,7 @@ spec:
           args: ["/app/Game.Util/bin/Release/netcoreapp2.1/publish/Game.Util.dll",
             "--server", "https://us.daud.io/", 
             "player", "robots",
-            "--world", "duel", 
+            "--world", "robo", 
             "--file", "/mnt/q/leveler.json"
             ]
           volumeMounts:

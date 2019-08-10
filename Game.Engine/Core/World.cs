@@ -16,6 +16,8 @@
     public class World : IDisposable
     {
         public string WorldKey { get; set; }
+        public string GameID { get; set; }
+
         public int AdvertisedPlayerCount { get; set; }
 
         // the canonical game time, in milliseconds, from world start
@@ -46,6 +48,8 @@
 
         // most recent leaderboard available
         public Leaderboard Leaderboard = null;
+        public bool ArenaRecordHasReset { get; set; } = false;
+        public long ArenaRecordResetTime { get; set; } = 0;
 
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
@@ -63,6 +67,7 @@
             this.GameConfiguration = gameConfiguration;
             OffsetTicks = DateTime.Now.Ticks;
             Hook = hook ?? Hook.Default;
+            GameID = Guid.NewGuid().ToString().Replace("-", "");
 
             Console.WriteLine($"Initializing World: {this.Hook.Name}");
 
@@ -253,7 +258,7 @@
                 if (disposing)
                 {
 
-                    foreach (var player in Player.GetWorldPlayers(this))
+                    foreach (var player in Player.GetWorldPlayers(this).ToList())
                         try
                         {
                             player.Destroy();

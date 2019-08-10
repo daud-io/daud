@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using Game.API.Common;
     using Game.Engine.Core.Pickups;
     using Game.Engine.Core.Weapons;
     using System;
@@ -21,6 +22,8 @@
         public float Drag { get; set; }
 
         public bool Abandoned { get; set; }
+        public Fleet AbandonedByFleet { get; set; }
+        public long AbandonedTime { get; set; }
 
         protected bool IsOOB = false;
         private long TimeDeath = 0;
@@ -31,6 +34,26 @@
         }
 
         public int ShieldStrength { get; set; }
+
+        public Sprites BulletSprite
+        {
+            get
+            {
+                switch (Sprite)
+                {
+                    case Sprites.ship_cyan: return Sprites.bullet_cyan;
+                    case Sprites.ship_blue: return Sprites.bullet_blue;
+                    case Sprites.ship_green: return Sprites.bullet_green;
+                    case Sprites.ship_orange: return Sprites.bullet_orange;
+                    case Sprites.ship_pink: return Sprites.bullet_pink;
+                    case Sprites.ship_red: return Sprites.bullet_red;
+                    case Sprites.ship_yellow: return Sprites.bullet_yellow;
+                    case Sprites.ship_secret: return Sprites.bullet_yellow;
+                    case Sprites.ship_zed: return Sprites.bullet_red;
+                    default: return Sprites.bullet;
+                }
+            }
+        }
 
         public override void Init(World world)
         {
@@ -44,7 +67,13 @@
 
         public override void Destroy()
         {
+            if (!(this is Fish)
+                && !(this.Sprite == Sprites.ship_gray)
+            )
+                Boom.FromShip(this);
+
             base.Destroy();
+
             if (Fleet?.Ships?.Contains(this) ?? false)
                 Fleet.Ships.Remove(this);
         }
@@ -54,7 +83,7 @@
             if (player != null)
                 World.Scoring.ShipDied(player, this.Fleet?.Owner, this);
 
-            fleet?.KilledShip();
+            fleet?.KilledShip(this);
 
             PendingDestruction = true;
 
@@ -107,6 +136,11 @@
 
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.Fleet)
+                    return false;
+
+                // if it came from this fleet
+                if (bullet.OwnedByFleet == this?.AbandonedByFleet
+                    && World.Time < (this.AbandonedTime + World.Hook.AbandonBuffer))
                     return false;
 
                 // team mode ensures that bullets of like colors do no harm

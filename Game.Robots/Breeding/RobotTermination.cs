@@ -8,10 +8,10 @@ namespace Game.Robots.Breeding
     {
         private double m_lastFitness;
         private int m_stagnantGenerationsCount;
-    
-		protected override bool PerformHasReached(IGeneticAlgorithm geneticAlgorithm)
-		{
-            var ga = geneticAlgorithm as GeneticAlgorithm;
+
+        protected override bool PerformHasReached(IGeneticAlgorithm geneticAlgorithm)
+        {
+            /*var ga = geneticAlgorithm as GeneticAlgorithm;
 
             var bestFitness = geneticAlgorithm.BestChromosome.Fitness.Value;
 
@@ -33,7 +33,9 @@ namespace Game.Robots.Breeding
                 c.Fitness = null;
             }
 
-            return m_stagnantGenerationsCount >= 50;
-		}
-	}
+            return m_stagnantGenerationsCount >= 50;*/
+
+            return false;
+        }
+    }
 }

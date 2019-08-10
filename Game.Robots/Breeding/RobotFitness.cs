@@ -4,8 +4,6 @@ namespace Game.Robots.Breeding
     using GeneticSharp.Domain.Chromosomes;
     using GeneticSharp.Domain.Fitnesses;
     using System;
-    using System.Collections.Generic;
-    using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -23,7 +21,9 @@ namespace Game.Robots.Breeding
         public double Evaluate(IChromosome chromosome)
         {
             var c = chromosome as RobotChromosome;
-            double score = 0;
+            double score = 1;
+
+            /*
 
             Task.Run(async () =>
             {
@@ -39,9 +39,13 @@ namespace Game.Robots.Breeding
                         contest.TestRobot.ContextBehaviors[i].BehaviorWeight = phenotypes[i].BehaviorWeight;
                         contest.TestRobot.ContextBehaviors[i].LookAheadMS = phenotypes[i].LookAheadMS;
                     }
-
                     contest.ChallengeRobot.Name = "challenge";
                     Console.WriteLine($"name: {contest.TestRobot.Name} vs. {contest.ChallengeRobot.Name}");
+
+                    contest.ChallengeRobot.DuelingProtocol = true;
+                    contest.ChallengeRobot.RespawnFalloffMS = 2000;
+                    contest.TestRobot.DuelingProtocol = true;
+                    contest.TestRobot.RespawnFalloffMS = 2000;
 
                     var cts = new CancellationTokenSource();
                     cts.CancelAfter(RobotEvolutionConfiguration.FitnessDuration);
@@ -66,12 +70,19 @@ namespace Game.Robots.Breeding
                     Console.WriteLine($"kills:{contest.TestRobot.StatsKills}\tdeaths:{contest.TestRobot.StatsDeaths}");
                     Console.WriteLine($"score:{score}");
                 }
+                catch (Exception)
+                {
+
+                }
                 finally
                 {
                     await contest.FinishedAsync();
                 }
 
             }).Wait();
+            */
+
+            c.Fitness = score;
 
             return score;
         }

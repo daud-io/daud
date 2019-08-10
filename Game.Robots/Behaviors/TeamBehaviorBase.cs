@@ -21,19 +21,30 @@
             LocalTeammates = new List<Fleet>();
             RemoteTeamMates = new List<Vector2>();
 
-            if (this.Robot.HookComputer.Hook.TeamMode)
+            if (this.Robot.HookComputer.Hook.TeamMode || this.Robot.SensorAllies.HasAllies)
             {
-                foreach (var entry in this.Robot.Leaderboard.Entries.Skip(2))
+                var leaderboardEntries = this.Robot.HookComputer.Hook.TeamMode
+                    ? this.Robot.Leaderboard.Entries.Skip(2)
+                    : this.Robot.Leaderboard.Entries;
+
+                foreach (var entry in leaderboardEntries)
                 {
+                    var fleet = this.Robot.SensorFleets.ByID(entry.FleetID);
+
                     if (this.Robot.SensorTeam.IsSameTeam(entry.Color)
                         && entry.FleetID != this.Robot.FleetID)
                     {
-                        var fleet = this.Robot.SensorFleets.ByID(entry.FleetID);
                         if (fleet != null)
                             LocalTeammates.Add(fleet);
                         else
                             RemoteTeamMates.Add(entry.Position);
                     }
+
+                    if (fleet != null && this.Robot.SensorAllies.IsAlly(fleet))
+                        LocalTeammates.Add(fleet);
+
+                    if (fleet == null && this.Robot.SensorAllies.IsAlly(entry))
+                        RemoteTeamMates.Add(entry.Position);
                 }
 
                 Active = true;

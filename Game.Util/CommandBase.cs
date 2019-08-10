@@ -83,15 +83,29 @@
             if (rows.Any())
             {
                 var type = rows.First().GetType();
-                var properties = type.GetProperties();
 
-                var dt = new DataTable();
-                foreach (var property in properties)
-                    dt.Columns.Add(property.Name);
+                DataTable dt = new DataTable();
 
-                foreach (var row in rows)
-                    dt.Rows.Add(properties.Select(p => Truncate(p.GetValue(row)?.ToString(), 75)).ToArray());
+                if (type == typeof(Dictionary<string, object>))
+                {
+                    var first = rows.First() as Dictionary<string, object>;
 
+                    foreach (var key in first.Keys)
+                        dt.Columns.Add(key);
+
+                    foreach (var row in rows.Cast<Dictionary<string, object>>())
+                        dt.Rows.Add(first.Keys.Select(p => Truncate(row[p]?.ToString(), 75)).ToArray());
+                }
+                else
+                {
+                    var properties = type.GetProperties();
+
+                    foreach (var property in properties)
+                        dt.Columns.Add(property.Name);
+
+                    foreach (var row in rows)
+                        dt.Rows.Add(properties.Select(p => Truncate(p.GetValue(row)?.ToString(), 75)).ToArray());
+                }
 
                 Console.WriteLine($"==== {name} ====");
                 ConsoleTableBuilder

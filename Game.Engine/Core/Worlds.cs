@@ -15,13 +15,16 @@
         public static void Initialize(GameConfiguration gameConfiguration)
         {
             GameConfiguration = gameConfiguration;
-            Default = WorldDefault();
-            AddWorld("default", Default);
-            AddWorld("duel", WorldDuel());
-            AddWorld("team", WorldTeam());
-            AddWorld("ctf", WorldCTF());
-            //AddWorld("other", WorldOther());
 
+            if (!gameConfiguration.NoWorlds)
+            {
+                Default = WorldDefault();
+                AddWorld("default", Default);
+                AddWorld("duel", WorldDuel());
+                AddWorld("team", WorldTeam());
+                AddWorld("ctf", WorldCTF());
+                AddWorld("robo", RoboTrainer());
+            }
             /*
             AddWorld("sharks", WorldSharks());
             AddWorld("sumo", WorldSumo());
@@ -66,7 +69,6 @@
             AllWorlds.Add(world.WorldKey, world);
         }
 
-
         private static World WorldDefault()
         {
             var hook = Hook.Default;
@@ -90,6 +92,20 @@
             hook.Description = "AAAAAHHH! Run!";
             hook.AllowedColors = Hook.AllColors.Append("ship0").ToArray();
             hook.Weight = 100;
+
+            hook.WorldResizeEnabled = false;
+
+            return new World(hook, GameConfiguration);
+        }
+
+        private static World RoboTrainer()
+        {
+            var hook = Hook.Default;
+            hook.Name = "Robo Trainer";
+            hook.Description = "Battle against bots of different difficulty levels";
+            hook.AllowedColors = Hook.AllColors;
+            hook.Weight = 100;
+            hook.BotBase = 0;
 
             hook.WorldResizeEnabled = false;
 
@@ -195,6 +211,7 @@
             hook.PointsPerUniverseDeath = -1;
             hook.PointsMultiplierDeath = 1.0f;
             hook.Weight = 20;
+            hook.SpawnLocationMode = "CTF";
 
             hook.Name = "Capture the Flag";
             hook.Description = "Cyan vs. Red - Capture the Flag. First to 5 wins!";

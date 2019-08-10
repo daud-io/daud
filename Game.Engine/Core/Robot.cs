@@ -15,7 +15,7 @@
         public bool OneLifeOnly { get; set; } = false;
         public bool AttackRobots { get; set; } = false;
         public int ShipSize { get; set; } = 70;
-        
+
         public Robot() : base()
         {
         }
@@ -47,10 +47,13 @@
         {
             base.OnDeath(player);
 
-            if (OneLifeOnly)
+            if (OneLifeOnly) { 
                 PendingDestruction = true;
-            else
-                SpawnTimeAfter = World.Time + World.Hook.BotRespawnDelay;
+            } else { 
+                var delay = (World.Hook.BotRespawnDelay * World.AdvertisedPlayerCount) + 1;
+                delay = delay < World.Hook.BotMaxRespawnDelay ? delay : World.Hook.BotMaxRespawnDelay;
+                SpawnTimeAfter = World.Time + delay;
+            }
         }
 
         public override void Think()
