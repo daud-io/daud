@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core.SystemActors
 {
     using Game.API.Common;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
@@ -47,7 +48,21 @@
 
             var firstPlace = leaderboard.Entries.FirstOrDefault();
             if (World.Leaderboard != null && firstPlace?.Score > World.Leaderboard.ArenaRecord.Score)
+            {
                 leaderboard.ArenaRecord = firstPlace;
+                World.ArenaRecordResetTime = World.Time + 86400000;
+                World.ArenaRecordHasReset = false;
+            }
+
+
+            if (World.Leaderboard != null && !World.ArenaRecordHasReset && World.Time >= World.ArenaRecordResetTime)
+            {
+                Console.WriteLine("Arena Record Score Reseting.");
+                leaderboard.ArenaRecord.Score = 0;
+                leaderboard.ArenaRecord.Name = "";
+                leaderboard.ArenaRecord.FleetID = 0;
+                World.ArenaRecordHasReset = true;
+            }
 
             return leaderboard;
         }
@@ -87,6 +102,7 @@
                 })
                 .ToList());
 
+            
             return new Leaderboard
             {
                 Entries = entries,

@@ -289,7 +289,7 @@ namespace Game.Engine.Networking
                             CustomData = followFleet?.CustomData;
 
                             var players = Player.GetWorldPlayers(world);
-                            NetWorldView.AddPlayerCount(builder, (uint)players.Count(p => p.IsAlive || p.IsStillPlaying));
+                            NetWorldView.AddPlayerCount(builder, (uint)world.AdvertisedPlayerCount);
                             NetWorldView.AddSpectatorCount(builder, (uint)players.Count(p => p.Connection?.IsSpectating ?? false));
 
                             NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
