@@ -14,7 +14,7 @@
                     WorldSize = 8000,
                     WorldResizeEnabled = true,
                     WorldSizeBasic = 12000,
-                    WorldSizeDeltaPerPlayer = 400,
+                    WorldSizeDeltaPerPlayer = 600,
                     WorldResizeSpeed = 5,
                     WorldMinPlayersToResize = 5,
 
@@ -41,12 +41,12 @@
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeedB = 0.4f,
-                    BoostSpeedM = -0.003f,
+                    BoostSpeedB = 0.2f,
+                    BoostSpeedM = -0.0039f,
                     BoostDuration = 420,
 
-                    ShotCooldownTimeM = 28,
-                    ShotCooldownTimeB = 470,
+                    ShotCooldownTimeM = 30,
+                    ShotCooldownTimeB = 486,
 
                     AbandonBuffer = 120,
 
@@ -116,8 +116,8 @@
                     SnakeWeight = 0f,
                     BossMode = false,
 
-                    ShipGainBySizeM = -0.011f,
-                    ShipGainBySizeB = 1.1f,
+                    ShipGainBySizeM = -0.024f,
+                    ShipGainBySizeB = 1.2f,
 
                     FlockSpeed = 0,
 
