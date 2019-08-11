@@ -12,11 +12,11 @@
                 return new Hook
                 {
                     WorldSize = 20000,
-                    WorldResizeEnabled = false,
-                    WorldSizeBasic = 12000,
-                    WorldSizeDeltaPerPlayer = 600,
+                    WorldResizeEnabled = true,
+                    WorldSizeBasic = 20000,
+                    WorldSizeDeltaPerPlayer = 500,
                     WorldResizeSpeed = 5,
-                    WorldMinPlayersToResize = 5,
+                    WorldMinPlayersToResize = 40,
 
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
@@ -30,7 +30,7 @@
 
                     BoostThrustB = 0.23f,
                     BoostThrustM = -0.0013f,
-                    BoostControl = 0f,
+                    BoostControl = 0.5f,
                     
                     EarnedShipDelay = 0,
 
@@ -96,7 +96,7 @@
                     SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
-                    Fishes = 45, // ignored if WorldResizeEnabled = true
+                    Fishes = 60, // ignored if WorldResizeEnabled = true
                     FishesMultiplier = 0.0075, // used when WorldResizeEnabled = true
                     FishThrust = 0.03f,
                     FishFlockAlignment = 10f,
