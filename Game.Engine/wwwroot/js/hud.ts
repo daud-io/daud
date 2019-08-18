@@ -70,11 +70,11 @@ function lagLevelDescription(lagLevel) {
             return "very low";
         } else if (lagLevel <= 35) {
             return "low";
-        } else if (lagLevel <= 90) {
+        } else if (lagLevel <= 50) {
             return "medium";
-        } else if (lagLevel <= 150) {
+        } else if (lagLevel <= 100) {
             return "high";
-        } else if (lagLevel <= 250) {
+        } else if (lagLevel <= 200) {
             return "very high";
         } else {
             return "extreme";
