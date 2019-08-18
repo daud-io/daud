@@ -8,7 +8,7 @@ var pingValues = [];
 // lag measurement system settings
 const pingValuesLength = 3;
 const lagSysSet = {
-    mult: 0.65,
+    mult: 0.7,
     expo: 0.4,
     base: 2.7
 };
