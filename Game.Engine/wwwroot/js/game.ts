@@ -652,3 +652,5 @@ function mergeSet(a0, a, i) {
     }
     return ret;
 }
+
+setInterval(doSpawn, 500);
