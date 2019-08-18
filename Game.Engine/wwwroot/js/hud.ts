@@ -8,8 +8,8 @@ var pingValues = [];
 // lag measurement system settings
 const pingValuesLength = 3;
 const lagSysSet = {
-    mult: 0.3,
-    expo: 0.6,
+    mult: 0.5,
+    expo: 0.4,
     base: 2.7
 };
 
@@ -68,9 +68,9 @@ function lagLevelDescription(lagLevel) {
     if (typeof(lagLevel) !== "undefined") {
         if (lagLevel <= 15) {
             return "very low";
-        } else if (lagLevel <= 40) {
+        } else if (lagLevel <= 35) {
             return "low";
-        } else if (lagLevel <= 100) {
+        } else if (lagLevel <= 90) {
             return "medium";
         } else if (lagLevel <= 150) {
             return "high";
