@@ -1,8 +1,17 @@
 ﻿import { Settings } from "./settings";
 
 const hudh = document.getElementById("hud");
+
+// for lag measurement system
 var pingValues = [];
-const pingValuesLength = 5;
+
+// lag measurement system settings
+const pingValuesLength = 3;
+const lagSysSet = {
+    mult: 0.3,
+    expo: 0.6,
+    base: 2.7
+};
 
 export class HUD {
     _latency: number;
@@ -16,11 +25,35 @@ export class HUD {
     update() {
         if (Settings.hudEnabled) hudh.style.visibility = "visible";
         else hudh.style.visibility = "hidden";
+        
+        // calculate lag level
+        if (this._latency !== 0) {
+            if (typeof(pingValues[0]) == "undefined") {
+                for (var i = 0; i < pingValuesLength; i++) {
+                    pingValues.push(this._latency);
+                }
+            } else {
+                pingValues.shift();
+                pingValues.push(this._latency);
+            }
+            var pingSum = 0;
+            for (var i = 0; i < pingValues.length; i++) {
+                pingSum += pingValues[i];
+            }
+            var pingMean = pingSum / pingValues.length,
+                pingDevSum = 0;
+            for (var i = 0; i < pingValues.length; i++) {
+                pingDevSum += Math.abs(pingValues[i] - pingMean);
+            }
+            var pingDevMean = pingDevSum / pingValues.length,
+                lagLevel = Math.round((pingDevMean + lagSysSet.base) * Math.pow(pingMean, lagSysSet.expo) * lagSysSet.mult);
+        }
 
         hudh.innerHTML = `fps: ${this.framesPerSecond || 0} - \
                           players: ${this.playerCount || 0} - \
                           spectators: ${this.spectatorCount || 0} - \
-                          ping: ${Math.floor(this._latency || 0)}`;
+                          ping: ${Math.floor(this._latency || 0)} - \
+                          lag level: ${lagLevel || 0}`;
         hudh.style.fontFamily = Settings.font;
 
         if (this.playerCount > 0)
