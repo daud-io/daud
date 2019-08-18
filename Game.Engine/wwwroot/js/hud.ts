@@ -46,19 +46,38 @@ export class HUD {
                 pingDevSum += Math.abs(pingValues[i] - pingMean);
             }
             var pingDevMean = pingDevSum / pingValues.length,
-                lagLevel = Math.round((pingDevMean + lagSysSet.base) * Math.pow(pingMean, lagSysSet.expo) * lagSysSet.mult);
+                lagLevel = Math.round((pingDevMean + lagSysSet.base) * Math.pow(pingMean, lagSysSet.expo) * lagSysSet.mult),
+                lagLevelDes = lagLevelDescription(lagLevel);
         }
 
         hudh.innerHTML = `fps: ${this.framesPerSecond || 0} - \
                           players: ${this.playerCount || 0} - \
                           spectators: ${this.spectatorCount || 0} - \
                           ping: ${Math.floor(this._latency || 0)} - \
-                          lag level: ${lagLevel || 0}`;
+                          lag level: ${lagLevel || 0} (${lagLevelDes})`;
         hudh.style.fontFamily = Settings.font;
 
         if (this.playerCount > 0)
             window.document.title = `Daud.io (${this.playerCount})`;
         else
             window.document.title = `Daud.io`;
+    }
+}
+
+function lagLevelDescription(lagLevel) {
+    if (typeof(lagLevel) !== "undefined") {
+        if (lagLevel <= 15) {
+            return "very low";
+        } else if (lagLevel <= 40) {
+            return "low";
+        } else if (lagLevel <= 100) {
+            return "medium";
+        } else if (lagLevel <= 150) {
+            return "high";
+        } else if (lagLevel <= 250) {
+            return "very high";
+        } else {
+            return "extreme";
+        }
     }
 }
