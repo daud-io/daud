@@ -1,6 +1,9 @@
 ﻿import { Settings } from "./settings";
 
 const hudh = document.getElementById("hud");
+var pingValues = [];
+const pingValuesLength = 5;
+
 export class HUD {
     _latency: number;
     framesPerSecond: number;
