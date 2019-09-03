@@ -193,7 +193,7 @@ connection.onView = newView => {
             document.body.classList.add("spectating");
             document.body.classList.add("dead");
             $(".visibility").fadeIn(2000);
-        }, 500);
+        }, 1000);
 
         Events.Death((gameTime - aliveSince) / 1000);
 
