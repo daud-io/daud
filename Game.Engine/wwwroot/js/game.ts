@@ -183,6 +183,8 @@ connection.onView = newView => {
         document.body.classList.remove("dead");
         document.body.classList.remove("spectating");
         document.body.classList.add("alive");
+        canvas.style.visibility = "initial";
+        $(".visibility").hide();
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
 
@@ -190,6 +192,7 @@ connection.onView = newView => {
             document.body.classList.remove("alive");
             document.body.classList.add("spectating");
             document.body.classList.add("dead");
+            $(".visibility").fadeIn(2000);
         }, 500);
 
         Events.Death((gameTime - aliveSince) / 1000);

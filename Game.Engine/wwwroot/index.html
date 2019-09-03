@@ -11,29 +11,30 @@
     </script>
 
     <meta charset="utf-8" />
-    <title>Daud.io</title>
+    <title>SPACEONE.io</title>
     <link rel="stylesheet" type="text/css" href="css/game.css" />
     <link rel="shortcut icon" type="image/png" href="favicon.ico" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
 
-<body class="loading dead">
-    <div id="container" class="aspectratio">
+<body class="loading dead static_background">
+    <div class="container" class="aspectratio">
 
-        <div id="error">
+        <div id="error" hidden>
             <h4 id="error_message">
                 Unable to connect to the server! Please check your internet connection or the server maybe under maintenance.
             </h4>
         </div>
 
         <div id="gameArea" class="noselect aspectratio">
-            <canvas id="gameCanvas" style="width: 100%;" width="1000" height="500"></canvas>
+            <canvas id="gameCanvas" style="width:100%;visibility:hidden" width="1000" height="500"></canvas>
 
             <div id="plusScoreContainer">
             </div>
 
             <div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
-            <small id="minimapTip">Press M to toggle the minimap</small>
+            <small id="minimapTip" hidden>Press M to toggle the minimap</small>
 
             <div id="bigLog"></div>
             <div id="comboMessage"></div>
@@ -54,7 +55,7 @@
             </div>
 
             <div id="spectatecontrols">
-                <div id="deathScreen">
+                <div id="deathScreen" hidden>
                     <table>
                         <tr>
                             <td>High score:</td>
@@ -92,13 +93,13 @@
 
             <div id="plotly"></div>
 
-            <table id="leaderboard" cellspacing="0"></table>
-            <table id="leaderboard-left" cellspacing="0"></table>
-            <table id="leaderboard-center" cellspacing="0"></table>
+            <table id="leaderboard" cellspacing="0" hidden></table>
+            <table id="leaderboard-left" cellspacing="0" hidden></table>
+            <table id="leaderboard-center" cellspacing="0" hidden></table>
             <div id="log"></div>
             <progress id="cooldown" value="0" max="255"></progress>
 
-            <table id="chat">
+            <table id="chat" hidden>
                 <tr>
                     <th>⏰</th>
                     <th>waiting</th>
@@ -116,26 +117,32 @@
             </div>
         </div>
         <div class="spawnscreen">
-            <div class="controls">
-                <div>
-                    <div>
-                        <img id="logo" src="img/header.png" draggable="false">
+            <div class="controls visibility">
+                <div id="container" class="container" style="position:absolute;top:0;width:100%;text-align:center">
+                    <div id="logo">
                     </div>
-                    <img id="controls_instructions" src="img/controls.png">
-
-                    <div id="shipSelectorSwitch">
+                    <div id="selection-container">
+                        <div id="left-arrow" class="arrow"> <img src="img/main_menu/Color_Selector_Arrow_left.png" alt="Left Arrow"> </div>
+                        <div id="right-arrow" class="arrow"> <img src="img/main_menu/Color_Selector_Arrow_right.png" alt="Right Arrow"> </div>
+                        <div style="position:relative;top:12px">
+                            <div id="shipSelectorSwitch"></div>
+                            <div id="selection"></div>
+                        </div>
                     </div>
-                    <button id="emoji-trigger" class="button1">👋</button>
-                    <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
-                    <div id="emoji-container"></div>
-                    <div id="launch-container">
-                        <input type="button" id="spawn" class="button1" value="Launch as guest!">
-                        <input type="button" id="dauth" class="button1" value="Login with Discord">
+                    <button id="emoji-trigger" class="button1" hidden>👋</button>
+                    <div class="main-ui">
+                        <div id="high-score"> High Score: <span>4096</span> </div>
+                        <input placeholder="Your fleet name" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
+                        <div id="emoji-container" hidden></div>
+                        <div id="launch-container">
+                            <input type="button" id="spawn" class="button1" value="PLAY">
+                            <input type="button" id="dauth" class="button1" value="Login with Discord" hidden>
+                        </div>
                     </div>
-                    <input type="button" id="arenas" class="button1" value="Game Modes" />
+                    <input type="button" id="arenas" class="button1" value="Game Modes" hidden />
                 </div>
             </div>
-            <div id="worlds" class="closed">
+            <div id="worlds" hidden>
                 <div id="topbar">
                     <span>Arenas</span>
                     <div class="close-button" id="wcancel"><img src="img/whiteX.png"></div>
@@ -145,7 +152,7 @@
                 </div>
             </div>
 
-            <div id="links">
+            <div id="links" hidden>
                 <a href="https://discord.gg/5ak5FsU" target="_blank">
                     <div class="link">
                         <div class="linkLogo">
@@ -198,7 +205,7 @@
                 </div>
             </div>
 
-            <div id="gear" class="closed">
+            <div id="gear" hidden>
                 <div id="settingsContainer">
                     <h1>Settings</h1>
 
@@ -427,7 +434,7 @@
                 </div>
 
                 <div id="spectate_container">
-                    <button id="settings" class="button1">
+                    <button id="settings" class="button1" hidden>
                         <i class="fas fa-cog"></i> Settings
                     </button>
                     <br>
@@ -450,6 +457,10 @@
 
     <script type="text/javascript" src="js/flatbuffers.js"></script>
     <script type="text/javascript" src="js/game.ts"></script>
+    
+    <script>
+        $(".visibility").fadeIn(1000);
+    </script>
 
 </body>
 

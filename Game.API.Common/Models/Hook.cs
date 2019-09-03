@@ -12,7 +12,7 @@
                 return new Hook
                 {
                     WorldSize = 8000,
-                    WorldResizeEnabled = true,
+                    WorldResizeEnabled = false,
                     WorldSizeBasic = 8000,
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
@@ -62,7 +62,7 @@
                     PrecisionBullets = false,
                     BulletLife = 1500,
                     BotPerXPoints = 500,
-                    BotBase = 1,
+                    BotBase = 0,
                     BotRespawnDelay = 10000,
                     BotMaxRespawnDelay = 60000,
 
@@ -70,7 +70,7 @@
                     Wormholes = 0,
                     WormholesDestination = null,
 
-                    Obstacles = 10, // ignored if WorldResizeEnabled = true
+                    Obstacles = 0, // ignored if WorldResizeEnabled = true
                     ObstaclesMultiplier = 0.0005, // used when WorldResizeEnabled = true
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
@@ -86,7 +86,7 @@
                     SumoMode = false,
                     SumoRingSize = 1000,
 
-                    SpawnShipCount = 5,
+                    SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
                     Fishes = 60, // ignored if WorldResizeEnabled = true
@@ -115,7 +115,7 @@
 
                     FlockSpeed = 0,
 
-                    PickupShields = 4,
+                    PickupShields = 0,
                     PickupShieldsMultiplier = 0.0004,
                     ShieldStrength = 3,
 

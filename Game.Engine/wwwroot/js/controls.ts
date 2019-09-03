@@ -216,8 +216,9 @@ export var Controls = {
         const colors = world.allowedColors;
         const selector = document.getElementById("shipSelectorSwitch");
         while (selector.firstChild) selector.removeChild(selector.firstChild);
-
+        
         for (let i = 0; i < colors.length; i++) {
+            
             const selectorImage = Ship.getSelectorImage(colors[i]);
 
             if (selectorImage) {
@@ -405,4 +406,23 @@ if (savedColor != undefined) {
 if (savedEmoji != undefined) {
     Controls.emoji = savedEmoji;
     emojiTrigger.innerText = savedEmoji;
+}
+
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
 }
