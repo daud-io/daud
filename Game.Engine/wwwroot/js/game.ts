@@ -655,3 +655,6 @@ function mergeSet(a0, a, i) {
     }
     return ret;
 }
+
+canvas.width = document.body.clientWidth;
+canvas.height = document.body.clientWidth/2;
