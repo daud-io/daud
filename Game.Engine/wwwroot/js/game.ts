@@ -412,7 +412,7 @@ document.addEventListener("keydown", ({ keyCode, which }) => {
 const sizeCanvas = () => {
     let width;
     let height;
-    if ((window.innerWidth * 9) / 16 < window.innerHeight) {
+    if ((window.innerWidth * 9) / 16 >= window.innerHeight) {
         width = window.innerWidth;
         height = (width * 9) / 16;
     } else {
@@ -655,6 +655,3 @@ function mergeSet(a0, a, i) {
     }
     return ret;
 }
-
-canvas.width = document.body.clientWidth;
-canvas.height = document.body.clientWidth/2;
