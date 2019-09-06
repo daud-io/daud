@@ -11,9 +11,9 @@
             {
                 return new Hook
                 {
-                    WorldSize = 8000,
+                    WorldSize = 5500,
                     WorldResizeEnabled = false,
-                    WorldSizeBasic = 8000,
+                    WorldSizeBasic = 5500,
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
                     WorldMinPlayersToResize = 4,
@@ -23,8 +23,8 @@
 
                     EarnedShipDelay = 0,
 
-                    BaseThrustM = -0.0035f,
-                    BaseThrustB = 0.15f,
+                    BaseThrustM = -0.0007f,
+                    BaseThrustB = 0.03f,
 
                     Drag = 0.92f,
 
@@ -116,11 +116,11 @@
                     FlockSpeed = 0,
 
                     PickupShields = 0,
-                    PickupShieldsMultiplier = 0.0004,
+                    PickupShieldsMultiplier = 0,
                     ShieldStrength = 3,
 
-                    PickupSeekers = 6,
-                    PickupSeekersMultiplier = 0.0006,
+                    PickupSeekers = 0,
+                    PickupSeekersMultiplier = 0,
                     SeekerRange = 2100,
                     SeekerCycle = 250,
                     SeekerLead = 150,

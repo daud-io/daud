@@ -32,6 +32,7 @@ window.Game = window.Game || {};
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
+const zoom = 1000;
 
 //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
@@ -424,7 +425,7 @@ const sizeCanvas = () => {
     size.height = Math.floor(height);
     minimap.size(size);
     app.renderer.resize(width, height);
-    container.scale.set(width / 5500, width / 5500);
+    container.scale.set(width / zoom, width / zoom);
 };
 
 sizeCanvas();
@@ -481,10 +482,10 @@ app.ticker.add(() => {
         lastCamera = position;
 
         camera.moveTo(position);
-        camera.zoomTo(5500);
+        camera.zoomTo(zoom);
     }
-    container.pivot.x = Math.floor(position.x - 5500 / 2);
-    container.pivot.y = Math.floor(position.y - (5500 / 2) * (9 / 16));
+    container.pivot.x = Math.floor(position.x - zoom / 2);
+    container.pivot.y = Math.floor(position.y - (zoom / 2) * (9 / 16));
     container.position.x = Math.floor(container.position.x);
     container.position.y = Math.floor(container.position.y);
 
