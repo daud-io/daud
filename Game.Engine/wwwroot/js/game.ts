@@ -198,7 +198,7 @@ connection.onView = newView => {
 
         Events.Death((gameTime - aliveSince) / 1000);
 
-        let countDown = 3;
+        /*let countDown = 3;
         let interval = null;
         const updateButton = function() {
             const button = document.getElementById("spawn") as HTMLButtonElement;
@@ -213,7 +213,7 @@ connection.onView = newView => {
                 clearInterval(interval);
             }
         };
-        updateButton();
+        updateButton();*/
 
         interval = setInterval(updateButton, 1000);
     }

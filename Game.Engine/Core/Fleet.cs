@@ -55,7 +55,7 @@
         public bool FiringWeapon { get; private set; } = false;
 
         public Vector2? SpawnLocation { get; set; } = null;
-        public int ShipSize { get; set; } = 70;
+        public int ShipSize { get; set; } = 10;
 
         public Queue<long> EarnedShips = new Queue<long>();
 

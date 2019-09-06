@@ -30,7 +30,7 @@
 
         public Ship()
         {
-            Size = 70;
+            Size = 10;
         }
 
         public int ShieldStrength { get; set; }

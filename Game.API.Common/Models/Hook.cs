@@ -23,8 +23,8 @@
 
                     EarnedShipDelay = 0,
 
-                    BaseThrustM = -0.0007f,
-                    BaseThrustB = 0.03f,
+                    BaseThrustM = -0.0005f,
+                    BaseThrustB = 0.02f,
 
                     Drag = 0.92f,
 
@@ -48,8 +48,8 @@
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
 
-                    ShotThrustM = -0.006f,
-                    ShotThrustB = 0.22f,
+                    ShotThrustM = -0.001f,
+                    ShotThrustB = 0.03f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
