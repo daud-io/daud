@@ -106,16 +106,16 @@
                     FishCycle = 500, // how often do they think
 
                     FlockAlignment = .35f,
-                    FlockCohesion = 0.0001f,
+                    FlockCohesion = 0.0005f,
                     FlockCohesionMaximumDistance = 1000,
                     FlockSeparation = 1f,
-                    FlockSeparationMinimumDistance = 100,
+                    FlockSeparationMinimumDistance = 16,
                     FlockWeight = 0.5f,
                     SnakeWeight = 0f,
                     BossMode = false,
 
-                    ShipGainBySizeM = -0.034f,
-                    ShipGainBySizeB = 1.03f,
+                    ShipGainBySizeM = -0.015f,
+                    ShipGainBySizeB = 1.5f,
 
                     FlockSpeed = 0,
 
