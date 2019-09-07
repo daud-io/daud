@@ -33,7 +33,7 @@ export const Settings = {
     showOwnName: true,
     allowDarkblueShips: true,
     showHints: true,
-    nameSize: 48,
+    nameSize: 12,
     background: "on",
     mipmapping: true,
     updatesVersion: 0,
@@ -92,7 +92,7 @@ function save() {
     Settings.showKeyboardHints = showKeyboardHints.checked;
     Settings.showOwnName = showOwnName.checked;
     Settings.allowDarkblueShips = allowDarkblueShips.checked;
-    Settings.nameSize = Number(nameSize.value);
+    // Settings.nameSize = Number(nameSize.value);
     Settings.background = background.value;
 
     Cookies.set("settings", Settings, cookieOptions);

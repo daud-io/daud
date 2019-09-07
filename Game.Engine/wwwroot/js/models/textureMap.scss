@@ -24,34 +24,7 @@
 
 bg {
   file: "bg";
-  size: 400%;
-}
-
-bg2,
-bg3,
-bg4,
-bg5,
-bg6,
-bg7 {
-  file: "bg2";
-}
-bg2 {
-  size: 500%;
-}
-bg3 {
-  size: 600%;
-}
-bg4 {
-  size: 700%;
-}
-bg5 {
-  size: 800%;
-}
-bg6 {
-  size: 900%;
-}
-bg7 {
-  size: 1000%;
+  size: 50%;
 }
 
 // fish
@@ -78,7 +51,7 @@ ship_red,
 ship_yellow,
 ship_secret,
 ship_zed {
-  size: 2.56;
+  size: 2;
 }
 // daudelins
 ship0 {

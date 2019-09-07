@@ -17,6 +17,10 @@
                     WorldSizeDeltaPerPlayer = 400,
                     WorldResizeSpeed = 5,
                     WorldMinPlayersToResize = 4,
+                    
+                    // sizes
+                    BulletSize = 5,
+                    // ShipSize = 10,
 
                     FollowFirstShip = false,
                     FiringSequenceDelay = 0,
@@ -49,7 +53,7 @@
                     ShotCooldownTimeBotB = 1100,
 
                     ShotThrustM = -0.001f,
-                    ShotThrustB = 0.03f,
+                    ShotThrustB = 0.045f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -102,11 +106,11 @@
                     FishCycle = 500, // how often do they think
 
                     FlockAlignment = .35f,
-                    FlockCohesion = 0.006f,
-                    FlockCohesionMaximumDistance = 600,
-                    FlockSeparation = 80f,
-                    FlockSeparationMinimumDistance = 200,
-                    FlockWeight = 0.14f,
+                    FlockCohesion = 0.0001f,
+                    FlockCohesionMaximumDistance = 1000,
+                    FlockSeparation = 1f,
+                    FlockSeparationMinimumDistance = 100,
+                    FlockWeight = 0.5f,
                     SnakeWeight = 0f,
                     BossMode = false,
 
@@ -162,6 +166,9 @@
         public int WorldSizeBasic { get; set; }
         public int WorldSizeDeltaPerPlayer { get; set; }
         public int WorldMinPlayersToResize { get; set; }
+        
+        public int BulletSize { get; set; }
+        // public int ShipSize { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }

@@ -279,7 +279,7 @@
 
             foreach (var ship in Ships)
             {
-                var shipTargetVector = FleetCenter + AimTarget - ship.Position;
+                var shipTargetVector = AimTarget;
 
                 // todo: this dirties the ship body every cycle
                 ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);

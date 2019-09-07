@@ -78,7 +78,7 @@
 
             this.OwnedByFleet = ship.Fleet;
             this.Sprite = ship.BulletSprite;
-            this.Size = 20;
+            this.Size = World.Hook.BulletSize;
             this.Color = ship.Color;
             this.ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB;
             this.TimeBirth = World.Time;
@@ -93,7 +93,7 @@
             this.Position = tile.Position;
             this.Angle = angle;
             this.Sprite = API.Common.Sprites.bullet;
-            this.Size = 20;
+            this.Size = World.Hook.BulletSize;
             this.Color = "green";
             this.ThrustAmount = 1 * World.Hook.ShotThrustM + World.Hook.ShotThrustB;
             this.TimeBirth = World.Time;
