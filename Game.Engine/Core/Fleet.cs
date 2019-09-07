@@ -133,8 +133,8 @@
 
             var offset = new Vector2
             (
-                random.Next(-20, 20),
-                random.Next(-20, 20)
+                random.Next(-5, 5),
+                random.Next(-5, 5)
             );
 
             var ship = new Ship()

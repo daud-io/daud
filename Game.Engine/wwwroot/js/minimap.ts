@@ -31,7 +31,7 @@ export class Minimap {
         if (Settings.displayMinimap != this.ctx.visible) this.ctx.visible = Settings.displayMinimap;
     }
     update(data, worldSize, fleetID) {
-        this.worldSize = worldSize;
+        /*this.worldSize = worldSize;
         const startIndex = data.Type === "Team" ? 2 : 0;
         const isCTF = data.Type === "CTF";
         this.ctx.clear();
@@ -48,9 +48,10 @@ export class Minimap {
                 const entryIsSelf = entry.FleetID == fleetID;
                 this.drawMinimap(new Vector2(entry.Position.x, entry.Position.y), entry.Color, entryIsSelf, i, isCTF);
             }
-        }
+        }*/
     }
     drawMinimap(position: Vector2, color, self, rank, isCTF) {
+        /*
         const minimapX = ((position.x + this.worldSize) / 2 / this.worldSize) * minimapSize;
         const minimapY = ((position.y + this.worldSize) / 2 / this.worldSize) * minimapSize;
 
@@ -94,5 +95,6 @@ export class Minimap {
                 .drawRect(minimapX - 2, minimapY - 2, 4, 4)
                 .endFill();
         }
+        */
     }
 }

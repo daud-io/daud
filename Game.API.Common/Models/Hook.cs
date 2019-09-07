@@ -27,7 +27,7 @@
 
                     EarnedShipDelay = 0,
 
-                    BaseThrustM = -0.0005f,
+                    BaseThrustM = -0.0002f,
                     BaseThrustB = 0.02f,
 
                     Drag = 0.92f,
@@ -35,13 +35,13 @@
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.15f,
+                    BoostThrust = 0.0001f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeed = 1f,
+                    BoostSpeed = 0.3f,
                     BoostDuration = 420,
 
                     AbandonBuffer = 120,
@@ -93,9 +93,9 @@
                     SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
-                    Fishes = 60, // ignored if WorldResizeEnabled = true
+                    Fishes = 256, // ignored if WorldResizeEnabled = true
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
-                    FishThrust = 0.06f,
+                    FishThrust = 0.005f,
                     FishFlockAlignment = 10f,
                     FishFlockCohesion = 0.008f,
                     FishFlockCohesionMaximumDistance = 1000,
@@ -105,7 +105,7 @@
                     FishOOBWeight = 0.8f,
                     FishCycle = 500, // how often do they think
 
-                    FlockAlignment = .35f,
+                    FlockAlignment = 0.5f,
                     FlockCohesion = 0.0005f,
                     FlockCohesionMaximumDistance = 1000,
                     FlockSeparation = 1f,
@@ -154,7 +154,7 @@
 
                     LeaderboardRefresh = 750,
 
-                    MaxNameLength = 17
+                    MaxNameLength = 15
                 };
             }
         }

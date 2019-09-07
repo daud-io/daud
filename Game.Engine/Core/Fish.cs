@@ -12,7 +12,7 @@
 
         public Fish()
         {
-            Size = 70;
+            Size = 10;
             Sprite = Sprites.fish;
         }
 
