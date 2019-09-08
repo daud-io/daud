@@ -67,7 +67,7 @@
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                     },
-                    ShotThrustConverter = 0.001f,
+                    ShotThrustConverter = 0.0015f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -78,6 +78,8 @@
 
                     MaxHealthBot = 50,
                     BulletLife = 1500,
+                    BulletLifeB = 750,
+                    BulletLifeM = 20,
                     BotPerXPoints = 500,
                     BotBase = 0,
                     BotRespawnDelay = 10000,
@@ -238,6 +240,8 @@
 
         public int ShieldCannonballLife { get; set; }
         public int BulletLife { get; set; }
+        public int BulletLifeB { get; set; }
+        public int BulletLifeM { get; set; }
         public float SeekerLifeMultiplier { get; set; }
         public int BotBase { get; set; }
         public int BotPerXPoints { get; set; }
