@@ -28,29 +28,29 @@
             </h4>
         </div>
         
-        <div id="arena-link" class="blue-box-border visibility" data-state="open" style="z-index:1">
-			<img id="arena-link-close" src="img/main_menu/Arena_Link_Close.png" alt="Close Arena Link" style="display: none;">
-			<span id="arena-link-span">Play with your friends!<br>Share this link:</span>
-			<input id="arena-link-input" type="text" readonly="readonly">
-			<div id="generate-link-button">
-				COPY LINK
-			</div>
-			<img id="arena-link-success" src="img/main_menu/Arena_Link_Success.png" alt="Success Arena Link" style="display: none;">
-		</div>
-        
         <div id="settings" class="blue-box-border visibility" style="z-index:1">
 			<div id="settings-text">
 				<span>Graphics:</span><span id="graphics-high" class="setting-selected">HIGH</span>/<span id="graphics-medium">MEDIUM</span>/<span id="graphics-low">LOW</span>
 			</div>
 		</div>
 
-        <div id="gameArea" class="noselect aspectratio">
+        <div id="gameArea" class="noselect aspectratio" style="z-index:-1">
             <canvas id="gameCanvas" class="centered" style="visibility:hidden" width="1000" height="500"></canvas>
+            
+            <div id="leaderboard-container" class="visibility2">
+                <h2 id="leaderboard-header">Leaderboard</h2>
+                <table id="leaderboard" cellspacing="0"></table>
+            </div>
+            
+            <div id="record" class="visibility2">
+                Arena record: <span id="record-score">0</span><br/>
+                Fleet: <span id="record-fleet">Unknown Squadron #0</span>
+            </div>
 
             <div id="plusScoreContainer">
             </div>
 
-            <div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
+            <div id="autofireContainer visibility2">Autofire (E): <span id="autofireToggle">OFF</span></div>
             <small id="minimapTip" style="display:none">Press M to toggle the minimap</small>
 
             <div id="bigLog"></div>
@@ -110,7 +110,6 @@
 
             <div id="plotly"></div>
 
-            <table id="leaderboard" cellspacing="0" hidden></table>
             <table id="leaderboard-left" cellspacing="0" hidden></table>
             <table id="leaderboard-center" cellspacing="0" hidden></table>
             <div id="log"></div>
@@ -124,7 +123,6 @@
             </table>
 
             <div id="hud" hidden>fps: 0 - players: 0 - ping: 0</div>
-            <div id="record">record: - 0</div>
             <div id="nipple-controls">
                 <div id="nipple-zone"></div>
                 <div id="niple-buttons">
@@ -133,7 +131,17 @@
                 </div>
             </div>
         </div>
-        <div class="spawnscreen">
+        <div id="overlay"></div>
+        <div class="spawnscreen" style="z-index:1">
+            <div id="arena-link" class="blue-box-border visibility" data-state="open">
+                <img id="arena-link-close" src="img/main_menu/Arena_Link_Close.png" alt="Close Arena Link" style="display: none;">
+                <span id="arena-link-span">Play with your friends!<br>Share this link:</span>
+                <input id="arena-link-input" type="text" readonly="readonly">
+                <div id="generate-link-button">
+                    COPY LINK
+                </div>
+                <img id="arena-link-success" src="img/main_menu/Arena_Link_Success.png" alt="Success Arena Link" style="display: none;">
+            </div>
             <div class="controls visibility">
                 <div id="container" class="container" style="position:absolute;top:0;width:100%;text-align:center">
                     <div id="logo">

@@ -186,6 +186,8 @@ connection.onView = newView => {
         document.body.classList.add("alive");
         canvas.style.visibility = "initial";
         $(".visibility").hide();
+        $(".visibility2").show();
+        $("#overlay").css("opacity", "0");
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
 
@@ -194,6 +196,7 @@ connection.onView = newView => {
             document.body.classList.add("spectating");
             document.body.classList.add("dead");
             $(".visibility").fadeIn(2000);
+            $("#overlay").animate({"opacity":"0.5"}, 2000);
         }, 1000);
 
         Events.Death((gameTime - aliveSince) / 1000);

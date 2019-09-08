@@ -2,7 +2,8 @@
 import { RenderedObject } from "./models/renderedObject";
 import arrow from "../img/arrow.png";
 import { Vector2 } from "./Vector2";
-const record = document.getElementById("record");
+const recordScore = document.getElementById("record-score");
+const recordFleet = document.getElementById("record-fleet");
 const leaderboard = document.getElementById("leaderboard");
 const leaderboardLeft = document.getElementById("leaderboard-left");
 const leaderboardCenter = document.getElementById("leaderboard-center");
@@ -28,21 +29,21 @@ function getOut(entry, position: Vector2, rank, entryIsSelf) {
     } else {
         rank += ".";
     }
-
-    var begin;
-    if (!entryIsSelf) {
-        begin = `<tr>`;
-    } else if (rank <= 10) {
-        begin = `<tr style="background-color:rgba(255,255,255,0.1)">`;
-    } else {
-        begin = `<tr style="background-color:rgba(255,255,255,0.1);transform:translateY(7px)">`;
-    }
-
+    
     var color;
     if (entry.Color === "blue") {
         color = "#2255ff";
     } else {
         color = entry.Color;
+    }
+
+    var begin;
+    if (!entryIsSelf) {
+        begin = `<tr>`;
+    } else if (rank <= 10) {
+        begin = `<tr style="color:${color}">`;
+    } else {
+        begin = `<tr style="color:${color};transform:translateY(7px)">`;
     }
 
     return (
@@ -72,7 +73,8 @@ export class Leaderboard {
 
         if (data.Record) {
             record.style.fontFamily = Settings.font;
-            record.innerHTML = `record: ${escapeHtml(data.Record.Name) || "Unknown Fleet"} - ${data.Record.Score}`;
+            recordScore.innerHTML = `${data.Record.Score}`;
+            recordFleet.innerHTML = `${escapeHtml(data.Record.Name) || "Unknown Squadron"}`;
         }
 
         //Hide or show elements based on Arena.
