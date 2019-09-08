@@ -80,7 +80,7 @@
             this.Sprite = ship.BulletSprite;
             this.Size = World.Hook.BulletSize;
             this.Color = ship.Color;
-            this.ThrustAmount = World.Hook.ShotThrust[ship.Fleet.Ships.Count()];
+            this.ThrustAmount = World.Hook.ShotThrust[ship.Fleet.Ships.Count()]; // this line causes error
             this.TimeBirth = World.Time;
             this.Group = group;
         }

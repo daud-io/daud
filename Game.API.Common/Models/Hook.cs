@@ -27,8 +27,8 @@
 
                     EarnedShipDelay = 0,
 
-                    BaseThrustM = -0.0002f,
-                    BaseThrustB = 0.02f,
+                    BaseThrustM = -0.00015f,
+                    BaseThrustB = 0.015f,
 
                     Drag = 0.92f,
 
@@ -54,6 +54,11 @@
 
                     ShotThrustM = -0.001f,
                     ShotThrustB = 0.045f,
+                    ShotThrust = new[] {
+                        0f,
+                        0.045f, 0.045f, 0.036f, 0.036f, 0.036f, 0.036f, 0.036f, 0.027f, 0.027f, 0.027f,
+                        0.027f, 0.027f, 0.027f, 0.022f, 0.022f, 0.022f, 0.020f, 0.020f, 0.018f, 0.018f
+                    },
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -212,11 +217,7 @@
 
         public float ShotThrustM { get; set; }
         public float ShotThrustB { get; set; }
-        public static readonly float[] ShotThrust = {
-            0f,
-            0.045f, 0.045f, 0.036f, 0.036f, 0.036f, 0.036f, 0.036f, 0.027f, 0.027f, 0.027f,
-            0.027f, 0.027f, 0.027f, 0.022f, 0.022f, 0.022f, 0.020f, 0.020f, 0.018f, 0.018f
-        };
+        public float[] ShotThrust { get; set; }
 
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }
