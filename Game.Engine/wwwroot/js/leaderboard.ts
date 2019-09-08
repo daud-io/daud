@@ -31,8 +31,12 @@ function getOut(entry, position: Vector2, rank, entryIsSelf) {
     }
     
     var color;
-    if (entry.Color === "blue") {
-        color = "#2255ff";
+    if (entry.Color === "pink") {
+        color = "fuchsia";
+    } else if (entry.Color === "green") {
+        color = "lime";
+    } else if (entry.Color === "blue") {
+        color = "#0022ee";
     } else {
         color = entry.Color;
     }

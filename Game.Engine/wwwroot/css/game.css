@@ -384,7 +384,7 @@ body {
         white-space: nowrap;
         display: inline-block;
         width: 48px;
-        transform: rotate(-90deg);
+        transform: rotate(-90deg) scale(1.5, 1.5);
         margin: 0 18px; }
   .container #high-score {
     font-size: 1.6em;
@@ -663,6 +663,10 @@ footer {
     margin: 0;
     padding: 0;
     border: none;
+}
+
+#leaderboard td:nth-child(1) {
+    width: 4px;
 }
 
 #leaderboard td:nth-child(2) {

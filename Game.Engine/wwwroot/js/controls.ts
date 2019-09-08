@@ -224,7 +224,7 @@ export var Controls = {
             if (selectorImage) {
                 selector.appendChild(selectorImage);
                 selectorImage.setAttribute("data-color", colors[i]);
-                selectorImage.classList.add("circle");
+                //selectorImage.classList.add("circle");
                 if (secretShips.includes(colors[i])) {
                     selectorImage.style.display = "none";
                 }
