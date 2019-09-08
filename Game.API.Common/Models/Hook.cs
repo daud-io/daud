@@ -112,10 +112,10 @@
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
                     FishThrust = 0.005f,
                     FishFlockAlignment = 10f,
-                    FishFlockCohesion = 0.008f,
-                    FishFlockCohesionMaximumDistance = 1000,
+                    FishFlockCohesion = 0.001f,
+                    FishFlockCohesionMaximumDistance = 3000,
                     FishFlockSeparation = 80,
-                    FishFlockSeparationMinimumDistance = 200,
+                    FishFlockSeparationMinimumDistance = 300,
                     FishFlockWeight = 0.9f,
                     FishOOBWeight = 0.8f,
                     FishCycle = 500, // how often do they think

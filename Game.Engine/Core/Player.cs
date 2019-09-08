@@ -297,6 +297,8 @@
             if (name != null
                 && name.Length > World.Hook.MaxNameLength)
                 name = name.Substring(0, World.Hook.MaxNameLength);
+                
+            if (name == "") { name = "Unknown Squadron #0"; }
 
             CummulativeBoostRequested = false;
             CummulativeShootRequested = false;
