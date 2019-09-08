@@ -55,10 +55,19 @@
                     ShotThrustM = -0.001f,
                     ShotThrustB = 0.045f,
                     ShotThrust = new[] {
-                        0f,
-                        0.045f, 0.045f, 0.036f, 0.036f, 0.036f, 0.036f, 0.036f, 0.027f, 0.027f, 0.027f,
-                        0.027f, 0.027f, 0.027f, 0.022f, 0.022f, 0.022f, 0.020f, 0.020f, 0.018f, 0.018f
+                        0,
+                        45, 45, 36, 36, 36, 36, 36, 36, 27, 27,
+                        27, 27, 27, 22, 22, 22, 20, 20, 20, 18,
+                        18, 18, 18, 17, 17, 17, 17, 17, 16, 16,
+                        15, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                        0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     },
+                    ShotThrustConverter = 0.025, // 1/40
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -217,7 +226,8 @@
 
         public float ShotThrustM { get; set; }
         public float ShotThrustB { get; set; }
-        public float[] ShotThrust { get; set; }
+        public int[] ShotThrust { get; set; }
+        public float ShotThrustConverter { get; set; }
 
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }
