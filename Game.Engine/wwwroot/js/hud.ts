@@ -14,15 +14,15 @@ export class HUD {
         if (Settings.hudEnabled) hudh.style.visibility = "visible";
         else hudh.style.visibility = "hidden";
 
-        hudh.innerHTML = `fps: ${this.framesPerSecond || 0} - \
+        /* hudh.innerHTML = `fps: ${this.framesPerSecond || 0} - \
                           players: ${this.playerCount || 0} - \
                           spectators: ${this.spectatorCount || 0} - \
-                          ping: ${Math.floor(this._latency || 0)}`;
+                          ping: ${Math.floor(this._latency || 0)}`;*/
         hudh.style.fontFamily = Settings.font;
 
         if (this.playerCount > 0)
-            window.document.title = `Daud.io (${this.playerCount})`;
+            window.document.title = `SPACEONE.io (${this.playerCount})`;
         else
-            window.document.title = `Daud.io`;
+            window.document.title = `SPACEONE.io`;
     }
 }

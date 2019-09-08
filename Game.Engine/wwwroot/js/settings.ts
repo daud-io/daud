@@ -578,13 +578,13 @@ window.addEventListener("keyup", function(e) {
 keyboardHints();
 
 function keyboardHints() {
-    if (Settings.showKeyboardHints) {
+    /*if (Settings.showKeyboardHints) {
         document.getElementById("minimapTip").style.display = "block";
         document.getElementById("autofireContainer").style.display = "block";
     } else {
         document.getElementById("minimapTip").style.display = "none";
         document.getElementById("autofireContainer").style.display = "none";
-    }
+    }*/
 }
 
 shipBlue();
