@@ -338,9 +338,7 @@
             "ship_yellow",
             "ship_green",
             "ship_cyan",
-            "ship_blue",
-            "ship_secret",
-            "ship_zed"
+            "ship_blue"
         };
         public static readonly string[] TeamColors = new[] {
             "ship_red",

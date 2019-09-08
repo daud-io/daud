@@ -688,4 +688,8 @@ footer {
     bottom: 4px;
     left: 4px;
 }
+
+#shipSelectorSwitch img {
+    cursor: pointer;
+}
 /*# sourceMappingURL=styles.css.map */

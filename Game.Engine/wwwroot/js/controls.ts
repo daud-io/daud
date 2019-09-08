@@ -35,6 +35,8 @@ const secretShips = ["ship_secret", "ship_zed"];
 const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
 const emojiTrigger = document.getElementById("emoji-trigger");
+const selector = document.getElementById("shipSelectorSwitch");
+var colors;
 
 emojiTrigger.addEventListener("click", () => {
     document.getElementById("emoji-container").classList.toggle("open");
@@ -63,10 +65,14 @@ const refreshSelectedStyle = function() {
     Controls.addSecretShips(window.discordData);
 };
 
-shipSelectorSwitch.addEventListener("click", function(e) {
-    Controls.ship = e.srcElement.getAttribute("data-color");
-    save();
-    refreshSelectedStyle();
+document.getElementById("left-arrow").addEventListener("click", function() {
+    Controls.ship = colors[2];
+    drawColorSelector();
+});
+
+document.getElementById("right-arrow").addEventListener("click", function() {
+    Controls.ship = colors[4];
+    drawColorSelector();
 });
 
 const nick: HTMLInputElement = document.querySelector("#nick");
@@ -213,28 +219,9 @@ export var Controls = {
         Controls.canvas = canvas;
     },
     initializeWorld: function(world) {
-        const colors = world.allowedColors;
-        const selector = document.getElementById("shipSelectorSwitch");
-        while (selector.firstChild) selector.removeChild(selector.firstChild);
-        
-        for (let i = 0; i < colors.length; i++) {
-            
-            const selectorImage = Ship.getSelectorImage(colors[i]);
-
-            if (selectorImage) {
-                selector.appendChild(selectorImage);
-                selectorImage.setAttribute("data-color", colors[i]);
-                //selectorImage.classList.add("circle");
-                if (secretShips.includes(colors[i])) {
-                    selectorImage.style.display = "none";
-                }
-            }
-        }
-
-        const shipIndex = Math.floor(Math.random() * colors.length);
-
-        Controls.ship = colors[shipIndex];
-        refreshSelectedStyle();
+        colors = shuffle(world.allowedColors);
+        Controls.ship = colors[3];
+        drawColorSelector();
     },
     ship: "ship_green",
 
@@ -425,4 +412,35 @@ function shuffle(array) {
   }
 
   return array;
+}
+
+function drawColorSelector() {
+    while (colors[3] !== Controls.ship) {
+        colors.push(colors[0]);
+        colors.shift();
+    }
+    
+    while (selector.firstChild) selector.removeChild(selector.firstChild);
+        
+    for (let i = 0; i < colors.length; i++) {
+        
+        const selectorImage = Ship.getSelectorImage(colors[i]);
+
+        if (selectorImage) {
+            selector.appendChild(selectorImage);
+            selectorImage.setAttribute("data-color", colors[i]);
+            //selectorImage.classList.add("circle");
+            if (secretShips.includes(colors[i])) {
+                selectorImage.style.display = "none";
+            }
+        }
+    }
+    
+    $("#shipSelectorSwitch img").click(function() {
+        Controls.ship = $(this).attr("data-color");
+        drawColorSelector();
+    });
+    
+    save();
+    refreshSelectedStyle();
 }
