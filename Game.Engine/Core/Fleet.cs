@@ -279,10 +279,11 @@
 
             foreach (var ship in Ships)
             {
-                var shipTargetVector = AimTarget;
+                var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
                 // todo: this dirties the ship body every cycle
-                ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
+                // ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
+                ship.Angle = MathF.Atan2(AimTarget.Y, AimTarget.X);
 
                 Flocking.Flock(ship);
                 Snaking.Snake(ship);

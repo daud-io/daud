@@ -63,7 +63,6 @@
                     MaxHealth = 100,
 
                     MaxHealthBot = 50,
-                    PrecisionBullets = false,
                     BulletLife = 1500,
                     BotPerXPoints = 500,
                     BotBase = 0,
@@ -154,7 +153,10 @@
 
                     LeaderboardRefresh = 750,
 
-                    MaxNameLength = 15
+                    MaxNameLength = 15,
+                    
+                    PrecisionBullets = true,
+                    PrecisionBulletsMinimumRange = 16384f
                 };
             }
         }
@@ -210,6 +212,11 @@
 
         public float ShotThrustM { get; set; }
         public float ShotThrustB { get; set; }
+        public static readonly float[] ShotThrust = {
+            0f,
+            0.045f, 0.045f, 0.036f, 0.036f, 0.036f, 0.036f, 0.036f, 0.027f, 0.027f, 0.027f,
+            0.027f, 0.027f, 0.027f, 0.022f, 0.022f, 0.022f, 0.020f, 0.020f, 0.018f, 0.018f
+        };
 
         public int MaxHealth { get; set; }
         public int MaxHealthBot { get; set; }

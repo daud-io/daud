@@ -80,7 +80,7 @@
             this.Sprite = ship.BulletSprite;
             this.Size = World.Hook.BulletSize;
             this.Color = ship.Color;
-            this.ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB;
+            this.ThrustAmount = World.Hook.ShotThrust[ship.Fleet.Ships.Count()];
             this.TimeBirth = World.Time;
             this.Group = group;
         }
