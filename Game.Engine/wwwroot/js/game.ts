@@ -186,7 +186,6 @@ connection.onView = newView => {
         document.body.classList.add("alive");
         canvas.style.visibility = "initial";
         $(".visibility").hide();
-        $(".visibility2").show();
         $("#overlay").css("opacity", "0");
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
@@ -370,6 +369,7 @@ function doSpawn() {
     aliveSince = gameTime;
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
     $("#overlay").css("opacity", "0");
+    $(".visibility2").show();
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
