@@ -369,6 +369,7 @@ function doSpawn() {
     Events.Spawn();
     aliveSince = gameTime;
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
+    $("#overlay").css("opacity", "0");
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
