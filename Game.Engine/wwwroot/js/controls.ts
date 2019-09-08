@@ -118,7 +118,7 @@ export var Controls = {
     shoot: false,
     autofire: false,
     downSince: null,
-    customData: false,
+    customData: null,
     mouseX: 0,
     mouseY: 0,
     angle: 0,
@@ -282,19 +282,61 @@ window.addEventListener(
                 Controls.numUpRight = true;
                 break;
             case 102: // numpad 6
-                Controls.numRight = true;
+                Controls.customData = JSON.stringify({
+                    magic: JSON.stringify({
+                        Fleet: {
+                            Shark: true
+                        }
+                    })
+                });
+
+                break;
+                break;
+            case 101: // numpad 5
+                Controls.customData = JSON.stringify({
+                    magic: JSON.stringify({
+                        Fleet: {
+                            //Burden: -0.5
+                            EarnedShips: [0]
+                        }
+                    })
+                });
+
                 break;
             case 99: // numpad 3
-                Controls.numDownRight = true;
+                Controls.customData = JSON.stringify({
+                    magic: JSON.stringify({
+                        Fleet: {
+                            Burden: -0.8
+                        }
+                    })
+                });
                 break;
             case 98: // numpad 2
-                Controls.numDown = true;
+                Controls.customData = JSON.stringify({
+                    magic: JSON.stringify({
+                        Fleet: {
+                            Burden: -0.5
+                        }
+                    })
+                });
                 break;
             case 97: // numpad 1
-                Controls.numDownLeft = true;
+                Controls.customData = JSON.stringify({
+                    magic: JSON.stringify({
+                        Fleet: {
+                            Burden: 0,
+                            Shark: false
+                        }
+                    })
+                });
                 break;
             case 100: // numpad 4
-                Controls.numLeft = true;
+                Controls.customData = JSON.stringify({
+                    magic: JSON.stringify({
+                        IsShielded: true
+                    })
+                });
                 break;
             case 103: // numpad 7
                 Controls.numUpLeft = true;
@@ -364,6 +406,12 @@ window.addEventListener(
                 break;
             case 100: // numpad 4
                 Controls.numLeft = false;
+                break;
+            case 101: // numpad 5
+                Controls.customData = {
+                    magic: {}
+                };
+
                 break;
             case 103: // numpad 7
                 Controls.numUpLeft = false;

@@ -1,91 +1,80 @@
 {
-    "RingDebugEnabled": false,
-    "AttackFleets": false,
-    "AttackAbandoned": false,
-    "AttackFish": false,
-    "BoostThreshold": 16,
-    "Steps": 16,
-    "BlendingConfig":
+  "RingDebugEnabled": false,
+  "AttackFleets": false,
+  "AttackAbandoned": false,
+  "AttackFish": false,
+  "Name": "swarmy",
+  "Color": "cyan",
+  "Sprite": "ship_cyan",
+  "BoostThreshold": 16,
+  "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
+  "Steps": 16,
+  "BlendingConfig": {
+    "BlurSteps": 10,
+    "BlurAmount": 0.1,
+    "BlurResolutionMultiplier": 8
+  },
+  "Behaviors": [
     {
-        "BlurSteps": 10,
-        "BlurAmount": 0.1,
-        "BlurResolutionMultiplier": 8
+      "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
+      "LookAheadMS": 100,
+      "BehaviorWeight": 0.0001,
+      "Cycle": 100,
+      "Plot": 500
     },
-    "Behaviors": [
-        {
-            "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
-            "LookAheadMS": 100,
-            "BehaviorWeight": 0.03,
-            "Cycle": 100,
-            "Plot": 500
-        },
-        {
-            "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
-            "LookAheadMS": 250,
-            "BehaviorWeight": 0.7,
-            "Cycle": 0,
-            "Plot": true,
-            "Config": {
-                "DistanceFromCenterThreshold": 500
-            }
-        },
-        {
-            "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
-            "LookAheadMS": 750,
-            "BehaviorWeight": 0.5,
-            "Cycle": 120,
-            "Plot": false,
-            "Config": {
-                "DistanceFromCenterThreshold": 500
-            }
-        },
-        {
-            "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
-            "LookAheadMS": 1250,
-            "BehaviorWeight": 0.25,
-            "Cycle": 360,
-            "Plot": false,
-            "Config": {
-                "DistanceFromCenterThreshold": 500
-            }
-        },
-        {
-            "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
-            "LookAheadMS": 100,
-            "BehaviorWeight": 10000.0,
-            "Cycle": 0,
-            "Plot": false,
-            "Config": {
-                "ActiveRange": 1200
-            }
-        },
-        {
-            "BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
-            "LookAheadMS": 100,
-            "BehaviorWeight": 0.0,
-            "Cycle": 0,
-            "Plot": false
-        },
-        {
-            "BehaviorTypeName": "Game.Robots.Behaviors.StayInBounds,Game.Robots",
-            "LookAheadMS": 800,
-            "BehaviorWeight": 1.0,
-            "Cycle": 400,
-            "Plot": false
-        },
-        {"BehaviorTypeName": "Game.Robots.Behaviors.TeamCohesion,Game.Robots",
-            "LookAheadMS": 500, "BehaviorWeight": 0.4, "Cycle": 250,
-            "Plot": true,
-            "Config": {
-                "Normalize": true,
-                "MaxFleets": 5,
-                "MaximumRange": 1000
-            }
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
+      "LookAheadMS": 250,
+      "BehaviorWeight": 0.7,
+      "Cycle": 0,
+      "Plot": true,
+      "Config": {
+        "DistanceFromCenterThreshold": 500
+      }
+    },
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
+      "LookAheadMS": 100,
+      "BehaviorWeight": 800.0,
+      "Cycle": 0,
+      "Plot": false,
+      "Config": {
+        "ActiveRange": 1200
+      }
+    },
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
+      "LookAheadMS": 100,
+      "BehaviorWeight": 0.1,
+      "Cycle": 0,
+      "Plot": false
+    },
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.StayInBounds,Game.Robots",
+      "LookAheadMS": 800,
+      "BehaviorWeight": 1.0,
+      "Cycle": 400,
+      "Plot": false
+    },
+    {
 
-        },
-        {"BehaviorTypeName": "Game.Robots.Behaviors.TeamAlignment,Game.Robots",
-            "LookAheadMS": 200, "BehaviorWeight": 0.1, "Cycle": 0,
-            "Plot": true
-        }
-    ]
+      "BehaviorTypeName": "Game.Robots.Behaviors.TeamCohesion,Game.Robots",
+      "LookAheadMS": 500,
+      "BehaviorWeight": 0.01,
+      "Cycle": 250,
+      "Plot": false,
+      "Config": {
+        "Normalize": false,
+        "MaxFleets": 5,
+        "MaximumRange": 100
+      }
+
+    },
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.TeamAlignment,Game.Robots",
+      "LookAheadMS": 200,
+      "BehaviorWeight": 0.05,
+      "Cycle": 0
+    }
+  ]
 }

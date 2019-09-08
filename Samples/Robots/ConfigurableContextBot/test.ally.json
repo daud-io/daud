@@ -6,7 +6,7 @@
     "BoostThreshold": 16,
 
     "DuelingProtocol": false,
-    "Safe": false,
+    "Safe": true,
 
     "Name": "⚙️",
     "Color": "ship_secret",

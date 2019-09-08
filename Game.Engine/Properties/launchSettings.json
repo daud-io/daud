@@ -2,7 +2,10 @@
   "profiles": {
     "Game.Engine": {
       "commandName": "Project",
-      "applicationUrl": "http://localhost:5000"
+      "environmentVariables": {
+        "PORT": "5100"
+      },
+      "applicationUrl": "http://localhost:5100"
     }
   }
 }

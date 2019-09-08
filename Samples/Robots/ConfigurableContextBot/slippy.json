@@ -8,8 +8,8 @@
     "DuelingProtocol": false,
 
     "Name": "slippy",
-    "Color": "yellow",
-    "Sprite": "ship_secret",
+    "Color": "cyan",
+    "Sprite": "ship_cyan",
     "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
 
     "BlendingConfig":
