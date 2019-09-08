@@ -631,9 +631,9 @@ footer {
 }
 
 #autofireContainer {
-    position: absolute;
+    position: fixed;
     right: 4px;
-    bottom: 4px;
+    bottom: 14px;
     font-size: 14pt;
 }
 
@@ -684,8 +684,8 @@ footer {
 }
 
 #record {
-    position: absolute;
-    bottom: 4px;
+    position: fixed;
+    bottom: 14px;
     left: 4px;
 }
 
