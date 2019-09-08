@@ -19,5 +19,10 @@ export class HUD {
                           spectators: ${this.spectatorCount || 0} - \
                           ping: ${Math.floor(this._latency || 0)}`;
         hudh.style.fontFamily = Settings.font;
+
+        if (this.playerCount > 0)
+            window.document.title = `Daud.io (${this.playerCount})`;
+        else
+            window.document.title = `Daud.io`;
     }
 }
