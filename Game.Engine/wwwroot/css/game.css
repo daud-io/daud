@@ -99,7 +99,8 @@ body {
 }
 
 #logo {
-    height: 20vw;
+    height: 10vw;
+    padding: 5vw;
     image-rendering: pixelated;
     display: block;
     margin: auto;

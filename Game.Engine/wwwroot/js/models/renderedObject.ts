@@ -7,10 +7,8 @@ import { spriteModeMapRules } from "./spriteModeMap";
 import "pixi.js";
 import "pixi-layers";
 import * as particles from "pixi-particles";
-import { compressionOptions } from "jszip/lib/defaults";
 import { CustomContainer } from "../CustomContainer";
-import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
-import { readFileSync } from "fs";
+import { queryProperties } from "../parser/parseTheme.js";
 import { Sprite } from "pixi.js";
 
 class GroupParticle extends particles.Particle {
