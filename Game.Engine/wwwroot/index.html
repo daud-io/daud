@@ -45,7 +45,7 @@
 				Want to be featured here?<br />
 				Contact: spaceoneiogame@gmail.com
 			</div>
-			<div id="player"><iframe width="336" height="189" src="https://www.youtube.com/embed/VEqF-15QaHw" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+			<div id="player"></div>
 			<!--<script src="js/videoutils.js" charset="utf-8"></script>
 			<div id="cross-promo">
 				<a href="//bit.ly/2vJl9Dx" target="_blank">
@@ -628,6 +628,14 @@
     <script type="text/javascript" src="js/game.ts"></script>
     
     <script>
+        var featuredVideosURLs = [
+            "https://www.youtube.com/embed/VEqF-15QaHw",
+            "https://www.youtube.com/embed/C5tp00l_3Is",
+            "https://www.youtube.com/embed/LPutbtJ2UVM"
+        ];
+        var index = Math.floor(featuredVideosURLs.length * Math.random());
+        $("#player").html('<iframe id="playerIframe" width="336" height="189" src="'+featuredVideosURLs[index]+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+    
         $(".visibility").fadeIn(500);
         
         $("#changelogButton").click(function(){
@@ -637,6 +645,15 @@
         $("#changelogClose, #changelogBack").click(function(){
             $("#popupChangelog").fadeOut(500);
         });
+        
+        function loadIframe(iframeName, url) {
+            var $iframe = $('#' + iframeName);
+            if ( $iframe.length ) {
+                $iframe.attr('src',url);   
+                return false;
+            }
+            return true;
+        }
         
         document.getElementById("arena-link-input").value = "http://spaceone.io/123456"; // display arena nick - temporary solution here
         
