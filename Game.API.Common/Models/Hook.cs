@@ -29,6 +29,21 @@
 
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
+                    // values below probably need to be adjusted
+                    BaseThrust = new[] {
+                        0,
+                        14, 17, 16, 15, 15, 14, 14, 14, 14, 13, 13,
+                        13, 13, 13, 13, 12, 12, 12, 12, 12, 12, 12,
+                        12, 12, 12, 12, 12, 11, 11, 11, 11, 11, 11,
+                        11, 11, 11, 11, 11, 11, 11, 11, 11, 10, 10,
+                        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
+                        10, 10, 9, 9, 9, 9, 9, 9, 9, 9,
+                        9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
+                        9, 9, 9, 9, 9, 9, 9, 9, 8, 8,
+                        8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
+                        8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+                    },
+                    BaseThrustConverter = 0.001f,
 
                     Drag = 0.92f,
 
@@ -78,8 +93,10 @@
 
                     MaxHealthBot = 50,
                     BulletLife = 1500,
-                    BulletLifeB = 750,
-                    BulletLifeM = 25,
+                    
+                    BulletLifeB = 1000,
+                    BulletLifeM = 20,
+                    
                     BotPerXPoints = 500,
                     BotBase = 0,
                     BotRespawnDelay = 10000,
@@ -190,6 +207,8 @@
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
+        public int[] BaseThrust { get; set; }
+        public float BaseThrustConverter { get; set; }
 
         public float BoostThrust { get; set; }
 
