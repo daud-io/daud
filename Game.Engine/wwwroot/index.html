@@ -167,6 +167,121 @@
                     <input type="button" id="arenas" class="button1" value="Game Modes" hidden />
                 </div>
             </div>
+            <div class="visibility">
+                <a id="changelogButton" class="change-log-button">
+                    <h4>CAPTAIN'S LOG</h4>
+                    <span>22 May 2017</span><br>
+                    <span>- Arena highscore</span><br>
+                </a>
+            </div>
+            <div id="popupChangelog" class="change-log-overlay" style="z-index:5">
+                <div id="changelogBack" class="invisible-change-log-back"></div>
+                <div class="change-log-popup">
+                    <div class="header">
+                        <div id="changelogClose" class="close">✕</div>
+                        <div class="title">Captain's Log History</div>
+                        <div id="button-iluminati-container">
+                            <!--<a class="social-button" id="iluminati-button" href="http://bit.ly/2qvVKNK" target="_blank"><img src="img/illuminati.png" alt="reddit logo"></a>-->
+                        </div>
+                    </div>
+                    <span>
+                        <br><br><br>
+                        
+                        <span>17 May 2017</span><br>
+                        <span>- Autofire improvement</span><br>
+                        <span>- ?</span><br><br>
+                        
+                        <span>12 May 2017</span><br>
+                        <span>- Server improvements</span><br><br>
+                        
+                        <span>11 May 2017</span><br>
+                        <span>- Fix autofire bug</span><br><br>
+                        
+                        <span>5 May 2017</span><br>
+                        <span>- Improved youtube featured system</span><br><br>
+                        
+                        <span>2 May 2017</span><br>
+                        <span>- Improved flocking algorithm</span><br><br>
+                        
+                        <span>28 April 2017</span><br>
+                        <span>- Ship selection fixed (left)</span><br><br>
+                        
+                        <span>27 April 2017</span><br>
+                        <span>- Graphic Settings</span><br>
+                        <span>- Instructions Popup</span><br>
+                        <span>- Food spawn animation</span><br>
+                        <span>- Score announcements</span><br>
+                        <span>- Official Twitter account</span><br><br>
+
+                        <span>21 April 2017</span><br>
+                        <span>- Revamp visuals</span><br>
+                        <span>- Dash and shoot mechanic</span><br>
+                        <span>- Change log history</span><br>
+                        <span>- Bug fixing</span><br>
+                        <span>- Improvement in overall performance</span><br><br>
+                        
+                        <span>6 April 2017</span><br>
+                        <span>- Rotating Instruction text</span><br>
+                        <span>- Fixed bullets starting velocity</span><br>
+                        <span>- Fix soft lock when getting AFK</span><br><br>
+                        
+                        <span>31 March 2017</span><br>
+                        <span>- Fixed invisible bullets bug</span><br><br>
+                        
+                        <span>28 March 2017</span><br>
+                        <span>- Bullets are now displayed more accurately</span><br>
+                        <span>- Unknown fleets each have a number</span><br>
+                        <span>- Improved feedback when failing to connect with Arena Link</span><br>
+                        <span>- Added message warning of server shutdown</span><br><br>
+                        
+                        <span>17 March 2017</span><br>
+                        <span>- Fixed score bug when dying in the Danger Zone</span><br>
+                        <span>- Fixed some visual bugs</span><br><br>
+                        
+                        <span>16 March 2017</span><br>
+                        <span>- Fixed some bugs from previous updates</span><br><br>
+                        
+                        <span>14 March 2017</span><br>
+                        <span>- Bandwitdh optimisations</span><br>
+                        <span>- New Split and Dash Mechanic ('S' key)</span><br>
+                        <span>- Arena Links</span><br>
+                        <span>- Check the official subreddit for more info</span><br><br>
+                        
+                        <span>17 February 2017</span><br>
+                        <span>- Added official Discord server link</span><br>
+                        <span>- Last name used is now saved</span><br><br>
+                        
+                        <span>14 February 2017</span><br>
+                        <span>- Client upgrade mechanism</span><br>
+                        <span>- Fixed issue with adblock users not being able to play</span><br><br>
+                        
+                        <span>13 February 2017</span><br>
+                        <span>- Client upgrade mechanism</span><br><br>
+                        
+                        <span>9 February 2017</span><br>
+                        <span>- Fixed score bug when dying in the Danger Zone</span><br><br>
+                        
+                        <span>7 February 2017</span><br>
+                        <span>- Improved ship selection</span><br>
+                        <span>- Added high score display</span><br>
+                        <span>- Fixed bugs</span><br><br>
+                        
+                        <span>7 February 2017</span><br>
+                        <span>- Improved ship selection</span><br>
+                        <span>- Added high score display</span><br>
+                        <span>- Fixed bugs</span><br><br>
+                        
+                        <span>3 February 2017</span><br>
+                        <span>- Improved mouse deadzone</span><br>
+                        <span>- Changed background</span><br>
+                        <span>- Added high score display</span><br><br>
+                        
+                        <span>3 February 2017</span><br>
+                        <span>- Improved mouse deadzone</span><br>
+                        <span>- Changed background</span>
+                    </span>
+                </div>
+            </div>
             <div id="worlds" hidden>
                 <div id="topbar">
                     <span>Arenas</span>
@@ -484,7 +599,15 @@
     <script type="text/javascript" src="js/game.ts"></script>
     
     <script>
-        $(".visibility").fadeIn(1000);
+        $(".visibility").fadeIn(500);
+        
+        $("#changelogButton").click(function(){
+            $("#popupChangelog").fadeIn(500);
+        });
+        
+        $("#changelogClose, #changelogBack").click(function(){
+            $("#popupChangelog").fadeOut(500);
+        });
         
         document.getElementById("arena-link-input").value = "http://spaceone.io/123456"; // display arena nick - temporary solution here
         
