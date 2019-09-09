@@ -186,6 +186,7 @@ connection.onView = newView => {
         document.body.classList.add("alive");
         canvas.style.visibility = "initial";
         $(".visibility").hide();
+        $(".visibility3").show();
         $("#overlay").css("opacity", "0");
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
@@ -195,6 +196,7 @@ connection.onView = newView => {
             document.body.classList.add("spectating");
             document.body.classList.add("dead");
             $(".visibility").fadeIn(2000);
+            $(".visibility3").hide();
             $("#overlay").animate({"opacity":"0.5"}, 2000);
         }, 1000);
 
@@ -370,6 +372,7 @@ function doSpawn() {
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
     $("#overlay").css("opacity", "0");
     $(".visibility2").show();
+    $(".visibility3").show();    
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);

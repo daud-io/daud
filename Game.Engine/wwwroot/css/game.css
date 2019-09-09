@@ -149,7 +149,7 @@ body {
   user-select: none; /* Standard syntax */
 }
 
-.visibility, .visibility2 {
+.visibility, .visibility2, .visibility3 {
   display: none; }
 
 .static_background {
@@ -691,5 +691,33 @@ footer {
 
 #shipSelectorSwitch img {
     cursor: pointer;
+}
+
+progress[value]::-webkit-progress-bar {
+    background-color: #00000099;
+    border-radius: 2px;
+}
+
+progress[value]::-webkit-progress-value {
+    background-color: red;
+    border-radius: 2px;
+    box-shadow: 0 0 7px 3px #ff000099;
+}
+
+progress[value="255"]::-webkit-progress-value {
+    background-color: lime;
+    box-shadow: 0 0 7px 3px #00ff0099;
+}
+
+#cooldown[value] {
+    position: absolute;
+    bottom: 3vh;
+    left: 50%;
+    width: 30%;
+    height: 6px;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    background-color: black;
+    box-shadow: none;
 }
 /*# sourceMappingURL=styles.css.map */
