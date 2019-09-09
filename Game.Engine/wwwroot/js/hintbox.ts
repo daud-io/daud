@@ -1,16 +1,11 @@
 import { Settings } from "./settings";
 
-const hintbox = document.getElementById("hintbox");
+const hintbox = document.getElementById("instructions-text");
 
 const texts = [
-    'Controls: Mouse to aim, click to fire, press "s" to boost!',
-    "Tip: Larger fleets move, shoot, and reload slower than small fleets.",
-    "Tip: The particles flying around are fish. Shoot them to grow bigger.",
-    "Tip: Chat with other players, arrange duels, and more using the Chat link.",
-    "Tip: Trouble focusing your fire? Try adjusting mouse-sensitivity option in settings.",
-    "Tip: Fire before you boost, boost before your shots hit your opponent.",
-    "Tip: Arrows on the leaderboard point to the players.",
-    "Tip: Daud.io is open source and changing quickly. Join Discord to help."
+    "MOVE MOUSE to steer fleet",
+    "CLICK or SPACE to shoot",
+    "'S' to Split & Dash"
 ];
 
 let index = 0;
