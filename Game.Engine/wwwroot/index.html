@@ -628,13 +628,13 @@
     <script type="text/javascript" src="js/game.ts"></script>
     
     <script>
-        var featuredVideosURLs = [
-            "https://www.youtube.com/embed/VEqF-15QaHw",
-            "https://www.youtube.com/embed/C5tp00l_3Is",
-            "https://www.youtube.com/embed/LPutbtJ2UVM"
+        var featuredVideosIDs = [
+            "VEqF-15QaHw",
+            "C5tp00l_3Is",
+            "LPutbtJ2UVM"
         ];
-        var index = Math.floor(featuredVideosURLs.length * Math.random());
-        $("#player").html('<iframe id="playerIframe" width="336" height="189" src="'+featuredVideosURLs[index]+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+        var index = Math.floor(featuredVideosIDs.length * Math.random());
+        $("#player").html('<iframe id="playerIframe" width="336" height="189" src="https://www.youtube.com/embed/'+featuredVideosURLs[index]+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
     
         $(".visibility").fadeIn(500);
         
