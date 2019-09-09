@@ -133,7 +133,7 @@
         </div>
         <div id="overlay"></div>
         <div class="spawnscreen" style="z-index:1">
-            <div id="arena-link" class="blue-box-border visibility" data-state="open">
+            <div id="arena-link" class="blue-box-border visibility" data-state="open" style="z-index:4">
                 <img id="arena-link-close" src="img/main_menu/Arena_Link_Close.png" alt="Close Arena Link" style="display: none;">
                 <span id="arena-link-span">Play with your friends!<br>Share this link:</span>
                 <input id="arena-link-input" type="text" readonly="readonly">
@@ -485,6 +485,27 @@
     
     <script>
         $(".visibility").fadeIn(1000);
+        
+        document.getElementById("arena-link-input").value = "http://spaceone.io/123456"; // display arena nick - temporary solution here
+        
+        document.getElementById("generate-link-button").addEventListener("click", function() {
+            var copyText = document.getElementById("arena-link-input");
+
+            // Select the text field
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); // For mobile devices
+
+            // Copy the text inside the text field
+            document.execCommand("copy");
+            
+            // remove selection
+            copyText.setSelectionRange(0, 0);
+            
+            $("#arena-link-success").show();
+            setTimeout(function(){
+                $("#arena-link-success").fadeOut(1000);
+            }, 3000)
+        });
     </script>
 
 </body>
