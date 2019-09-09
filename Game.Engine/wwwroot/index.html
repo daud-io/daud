@@ -126,9 +126,6 @@
 
                 <input type="button" id="stop_spectating" class="button1" value="Menu" hidden />
                 <input type="button" id="spawnSpectate" class="button1" value="Launch" hidden />
-
-                <div id="hintbox" hidden></div>
-
             </div>
 
             <div id="plotly"></div>
@@ -186,6 +183,7 @@
                             <input type="button" id="spawn" class="button1" value="PLAY">
                             <input type="button" id="dauth" class="button1" value="Login with Discord" hidden>
                         </div>
+                        <div id="hintbox"></div>
                     </div>
                     <input type="button" id="arenas" class="button1" value="Game Modes" hidden />
                 </div>
@@ -634,7 +632,7 @@
             "LPutbtJ2UVM"
         ];
         var index = Math.floor(featuredVideosIDs.length * Math.random());
-        $("#player").html('<iframe id="playerIframe" width="336" height="189" src="https://www.youtube.com/embed/'+featuredVideosURLs[index]+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
+        $("#player").html('<iframe id="playerIframe" width="336" height="189" src="https://www.youtube.com/embed/'+featuredVideosIDs[index]+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
     
         $(".visibility").fadeIn(500);
         
