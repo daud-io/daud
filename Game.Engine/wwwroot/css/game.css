@@ -3,6 +3,12 @@
     font-family: NotoColorEmoji;
     src: url("../font/NotoColorEmoji.ttf");
 }
+
+:root {
+    --leaderboard-width: 260px;
+    --font: "Exo 2", "NotoColorEmoji", sans-serif, system-ui;
+}
+
 html,
 body {
     width: 100%;
@@ -671,11 +677,6 @@ input:checked + .slider:before {
     position: absolute;
     bottom: 15px;
     left: 15px;
-}
-
-:root {
-    --leaderboard-width: 260px;
-    --font: "Exo 2", NotoColorEmoji, sans-serif, system-ui;
 }
 
 #leaderboard {
