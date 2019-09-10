@@ -185,7 +185,24 @@
                             <input type="button" id="spawn" class="button1" value="PLAY">
                             <input type="button" id="dauth" class="button1" value="Login with Discord" hidden>
                         </div>
-                        <div id="instructions-text">MOVE MOUSE to steer fleet</div>
+                        <div id="instructions" class="visibility">
+                            <p id="instructions-text">MOVE MOUSE to steer fleet</p>
+                        </div>
+                        <div id="popupInstructions" class="change-log-overlay" hidden>
+                            <div id="instructionsBack" class="invisible-change-log-back"></div>
+                            <div id="instructionsPopup" class="change-log-popup">
+                                <div class="header">
+                                    <div id="instructionsClose" class="close">✕</div>
+                                    <div class="title">Instructions</div>
+                                </div>
+                                <span id="instructionsContent">
+                                    <br>
+                                    <span>MOVE MOUSE to steer fleet</span><br><br>
+                                    <span>CLICK or SPACE to shoot</span><br><br>
+                                    <span>'S' to Split &amp; Dash</span>
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <input type="button" id="arenas" class="button1" value="Game Modes" hidden />
                 </div>
