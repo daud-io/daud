@@ -1,4 +1,5 @@
-﻿import { Settings } from "./settings";
+﻿import Cookies from "js-cookie";
+import { Settings } from "./settings";
 import { escapeHtml } from "./leaderboard";
 const log = document.getElementById("log");
 const bigLog = document.getElementById("bigLog");
@@ -93,6 +94,7 @@ export class Log {
 function deathStats(lastData) {
     document.getElementById("deathScreen").style.visibility = "visible";
     document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
+    updateHighscore(lastData.extraData.score);
     document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
     var gameTimeInSeconds = Math.round(lastData.extraData.gameTime / 1000),
         gameTimeMinutes = Math.floor(gameTimeInSeconds / 60),
@@ -103,4 +105,15 @@ function deathStats(lastData) {
         document.getElementById("deathScreenGameTime").innerHTML = gameTimeMinutes + "min " + gameTimeSeconds + "sec";
     }
     document.getElementById("deathScreenMaxKillStreak").innerHTML = lastData.extraData.maxCombo;
+}
+
+updateHighscore(0);
+
+function updateHighscore(score) {
+    var currentHighscore = Cookies.get("highscore") || 0;
+    if (score >= currentHighscore) {
+        Cookies.set("highscore", score);
+    }
+    if (score > currentHighscore) { console.log("New personal highscore!"); }
+    document.getElementById("high-score-num").innerHTML = Cookies.get("highscore");
 }
