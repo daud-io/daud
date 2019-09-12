@@ -127,7 +127,7 @@
 
                     Fishes = 256, // ignored if WorldResizeEnabled = true
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
-                    FishThrust = 0.005f,
+                    FishThrust = 0.003f,
                     FishFlockAlignment = 10f,
                     FishFlockCohesion = 0.001f,
                     FishFlockCohesionMaximumDistance = 3000,
@@ -140,8 +140,8 @@
                     FlockAlignment = 0.5f,
                     FlockCohesion = 0.0005f,
                     FlockCohesionMaximumDistance = 1000,
-                    FlockSeparation = 1f,
-                    FlockSeparationMinimumDistance = 16,
+                    FlockSeparation = 2f,
+                    FlockSeparationMinimumDistance = 12,
                     FlockWeight = 0.5f,
                     SnakeWeight = 0f,
                     BossMode = false,
