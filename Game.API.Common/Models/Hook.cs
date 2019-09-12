@@ -43,7 +43,7 @@
                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8
                     },
-                    BaseThrustConverter = 0.0008f,
+                    BaseThrustConverter = 0.0010f,
 
                     Drag = 0.92f,
 
@@ -98,7 +98,7 @@
                     BulletLifeM = 20,
                     
                     BotPerXPoints = 500,
-                    BotBase = 0,
+                    BotBase = 1,
                     BotRespawnDelay = 10000,
                     BotMaxRespawnDelay = 60000,
 

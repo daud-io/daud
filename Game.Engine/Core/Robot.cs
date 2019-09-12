@@ -14,7 +14,7 @@
         private long SpawnTimeAfter = 0;
         public bool OneLifeOnly { get; set; } = false;
         public bool AttackRobots { get; set; } = false;
-        public int ShipSize { get; set; } = 70;
+        public int ShipSize { get; set; } = 10;
 
         public Robot() : base()
         {
