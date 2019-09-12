@@ -70,7 +70,7 @@
                 + World.Hook.FishFlockWeight * flockingVector
                 + oobVector;
 
-            Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            // Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
         }
     }
 }
