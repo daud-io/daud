@@ -43,7 +43,7 @@
                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8
                     },
-                    BaseThrustConverter = 0.001f,
+                    BaseThrustConverter = 0.0008f,
 
                     Drag = 0.92f,
 
@@ -82,7 +82,7 @@
                         9, 9, 9, 8, 8, 8, 8, 8, 8, 8, // 81 - 90 size
                         8, 8, 8, 8, 8, 8, 8, 7, 7, 7 // 91 - 100 size
                     },
-                    ShotThrustConverter = 0.0015f,
+                    ShotThrustConverter = 0.0016f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -141,7 +141,7 @@
                     FlockCohesion = 0.0005f,
                     FlockCohesionMaximumDistance = 1000,
                     FlockSeparation = 2f,
-                    FlockSeparationMinimumDistance = 12,
+                    FlockSeparationMinimumDistance = 14,
                     FlockWeight = 0.5f,
                     SnakeWeight = 0f,
                     BossMode = false,
