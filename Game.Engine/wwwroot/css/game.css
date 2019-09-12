@@ -720,4 +720,49 @@ progress[value="255"]::-webkit-progress-value {
     background-color: black;
     box-shadow: none;
 }
+
+#bigLog {
+    position: absolute;
+    top: 4em;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+    font-size: 32px;
+    font-weight: 700;
+}
+
+#plusScoreContainer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
+}
+
+.plusScore {
+    font-size: 40px;
+    opacity: 0;
+    animation: plusScore 2.5s;
+    -webkit-animation: plusScore 2.5s;
+    position: absolute;
+}
+
+@keyframes plusScore {
+    0% {
+        opacity: 0;
+        -webkit-transform: translate(-100%,-75%);
+        transform: translate(-100%,-75%);
+    }
+    25% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        -webkit-transform: translate(-100%,calc(-75% - 200px));
+        transform: translate(-100%,calc(-75% - 200px));
+    }
+}
 /*# sourceMappingURL=styles.css.map */
