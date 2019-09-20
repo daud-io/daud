@@ -27,7 +27,7 @@ export function escapeHtml(str) {
 function getOut(entry, position: Vector2, rank, entryIsSelf) {
     const angle = Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
     
-    if (rank == 1 && !entryIsSelf) {
+    if (rank == 1) {
         drawLeaderArrow(entry.Position, position);
     }
 
