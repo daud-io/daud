@@ -765,4 +765,10 @@ progress[value="255"]::-webkit-progress-value {
         transform: translate(-100%,calc(-75% - 200px));
     }
 }
+
+#leader-arrow {
+    position: fixed;
+    width: 160px;
+    filter: hue-rotate(235deg);
+}
 /*# sourceMappingURL=styles.css.map */

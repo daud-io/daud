@@ -184,7 +184,7 @@
                     AllowedColors = AllColors,
                     Name = "FFA",
 
-                    LeaderboardRefresh = 750,
+                    LeaderboardRefresh = 30,
 
                     MaxNameLength = 15,
                     

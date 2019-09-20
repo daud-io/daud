@@ -7,6 +7,7 @@ const recordFleet = document.getElementById("record-fleet");
 const leaderboard = document.getElementById("leaderboard");
 const leaderboardLeft = document.getElementById("leaderboard-left");
 const leaderboardCenter = document.getElementById("leaderboard-center");
+const leaderArrow = document.getElementById("leader-arrow");
 
 export function clear() {
     leaderboard.innerHTML = "";
@@ -23,6 +24,10 @@ export function escapeHtml(str) {
 }
 function getOut(entry, position: Vector2, rank, entryIsSelf) {
     const angle = Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
+    
+    if (rank == 1 && !entryIsSelf) {
+        drawLeaderArrow(angle);
+    }
 
     if (rank === undefined) {
         rank = "";
@@ -195,3 +200,39 @@ export class Leaderboard {
         }
     }
 }
+
+function drawLeaderArrow(angle) {
+    const criticalAngle = Math.atan2(window.innerHeight, window.innerWidth);
+    // console.log(criticalAngle / Math.PI * 180);
+    if (angle < 0) { angle += 2*Math.PI); }
+    // console.log(angle / Math.PI * 180);
+    if (angle > 2*Math.PI-criticalAngle || angle <= criticalAngle) {
+        // right
+        leaderArrow.style.bottom = "";
+        leaderArrow.style.top = (window.innerHeight-leaderArrow.height)/2+window.innerWidth/2*Math.tan(angle)*(1-leaderArrow.height/window.innerHeight) + "px";
+        leaderArrow.style.right = 0;
+        leaderArrow.style.left = "";
+    } else if (angle > criticalAngle && angle <= Math.PI-criticalAngle) {
+        // bottom
+        leaderArrow.style.bottom = 0;
+        leaderArrow.style.top = "";
+        leaderArrow.style.right = "";
+        leaderArrow.style.left = (window.innerWidth-leaderArrow.width)/2+window.innerHeight/2/Math.tan(angle)*(1-leaderArrow.width/window.innerWidth) + "px";
+    } else if (angle > Math.PI-criticalAngle && angle <= Math.PI+criticalAngle) {
+        // left
+        leaderArrow.style.bottom = "";
+        leaderArrow.style.top = (window.innerHeight-leaderArrow.height)/2-window.innerWidth/2*Math.tan(angle)*(1-leaderArrow.height/window.innerHeight) + "px";
+        leaderArrow.style.left = 0;
+        leaderArrow.style.right = "";
+    } else {
+        // top
+        leaderArrow.style.top = 0;
+        leaderArrow.style.bottom = "";
+        leaderArrow.style.right = "";
+        leaderArrow.style.left = (window.innerWidth-leaderArrow.width)/2-window.innerHeight/2/Math.tan(angle)*(1-leaderArrow.width/window.innerWidth) + "px";
+    }
+    angle += Math.PI/2;
+    leaderArrow.style.transform = "rotate(" + angle + "rad)";
+}
+
+
