@@ -206,8 +206,12 @@ export class Leaderboard {
 function drawLeaderArrow(selfPosition, position) {
     var angle = Math.atan2(selfPosition.y - position.y, selfPosition.x - position.x);
     var dist = Math.sqrt(Math.pow(selfPosition.y - position.y, 2) + Math.pow(selfPosition.x - position.x, 2));
-    if (dist >= leaderArrowFadeZoneDist && dist <= leaderArrowFadeZoneDist + leaderArrowFadeZoneWidth) {
+    if (dist > leaderArrowFadeZoneDist + leaderArrowFadeZoneWidth) {
+        leaderArrow.opacity = 1;
+    } else if (dist >= leaderArrowFadeZoneDist && dist <= leaderArrowFadeZoneDist + leaderArrowFadeZoneWidth) {
         leaderArrow.style.opacity = (dist - leaderArrowFadeZoneDist) / leaderArrowFadeZoneWidth;
+    }  else {
+        leaderArrow.opacity = 0;
     }
     const criticalAngle = Math.atan2(window.innerHeight, window.innerWidth);
     // console.log(criticalAngle / Math.PI * 180);
