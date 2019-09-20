@@ -370,7 +370,7 @@ function doSpawn() {
     Events.Spawn();
     aliveSince = gameTime;
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
-    $("#overlay").css("opacity", "0");
+    document.getElementById("overlay").style.opacity = 0;
     $(".visibility2").show();
     $(".visibility3").show();    
 }
