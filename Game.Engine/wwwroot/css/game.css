@@ -673,6 +673,10 @@ footer {
     display: none;
 }
 
+#leaderboard td:last-child {
+    text-align: right;
+}
+
 #overlay {
     position: absolute;
     top: 0;
