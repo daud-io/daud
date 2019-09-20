@@ -8,6 +8,8 @@ const leaderboard = document.getElementById("leaderboard");
 const leaderboardLeft = document.getElementById("leaderboard-left");
 const leaderboardCenter = document.getElementById("leaderboard-center");
 const leaderArrow = document.getElementById("leader-arrow");
+const leaderArrowFadeZoneDist = 600;
+const leaderArrowFadeZoneWidth = 200;
 
 export function clear() {
     leaderboard.innerHTML = "";
@@ -26,7 +28,7 @@ function getOut(entry, position: Vector2, rank, entryIsSelf) {
     const angle = Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
     
     if (rank == 1 && !entryIsSelf) {
-        drawLeaderArrow(angle);
+        drawLeaderArrow(entry.Position, position);
     }
 
     if (rank === undefined) {
@@ -201,7 +203,12 @@ export class Leaderboard {
     }
 }
 
-function drawLeaderArrow(angle) {
+function drawLeaderArrow(selfPosition, position) {
+    var angle = Math.atan2(selfPosition.y - position.y, selfPosition.x - position.x);
+    var dist = Math.sqrt(Math.pow(selfPosition.y - position.y, 2) + Math.pow(selfPosition.x - position.x, 2));
+    if (dist >= leaderArrowFadeZoneDist && dist <= leaderArrowFadeZoneDist + leaderArrowFadeZoneWidth) {
+        leaderArrow.style.opacity = (dist - leaderArrowFadeZoneDist) / leaderArrowFadeZoneWidth;
+    }
     const criticalAngle = Math.atan2(window.innerHeight, window.innerWidth);
     // console.log(criticalAngle / Math.PI * 180);
     if (angle < 0) { angle += 2*Math.PI); }
