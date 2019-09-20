@@ -10,6 +10,8 @@ const leaderboardCenter = document.getElementById("leaderboard-center");
 const leaderArrow = document.getElementById("leader-arrow");
 const leaderArrowFadeZoneDist = 600;
 const leaderArrowFadeZoneWidth = 200;
+const leaderArrowTranslate = 50;
+const leaderArrowDefaultOpacity = 0.7;
 
 export function clear() {
     leaderboard.innerHTML = "";
@@ -207,9 +209,9 @@ function drawLeaderArrow(selfPosition, position) {
     var angle = Math.atan2(selfPosition.y - position.y, selfPosition.x - position.x);
     var dist = Math.sqrt(Math.pow(selfPosition.y - position.y, 2) + Math.pow(selfPosition.x - position.x, 2));
     if (dist > leaderArrowFadeZoneDist + leaderArrowFadeZoneWidth) {
-        leaderArrow.style.opacity = 1;
+        leaderArrow.style.opacity = leaderArrowDefaultOpacity;
     } else if (dist >= leaderArrowFadeZoneDist && dist <= leaderArrowFadeZoneDist + leaderArrowFadeZoneWidth) {
-        leaderArrow.style.opacity = (dist - leaderArrowFadeZoneDist) / leaderArrowFadeZoneWidth;
+        leaderArrow.style.opacity = (dist - leaderArrowFadeZoneDist) / leaderArrowFadeZoneWidth * leaderArrowDefaultOpacity;
     }  else {
         leaderArrow.style.opacity = 0;
     }
@@ -219,28 +221,28 @@ function drawLeaderArrow(selfPosition, position) {
     // console.log(angle / Math.PI * 180);
     if (angle > 2*Math.PI-criticalAngle || angle <= criticalAngle) {
         // right
+        leaderArrow.style.top = (window.innerHeight-leaderArrow.height)/2+window.innerWidth/2*Math.tan(angle)*(1-(leaderArrow.height-2*leaderArrowTranslate)/window.innerHeight) + "px";
+        leaderArrow.style.right = -leaderArrowTranslate + "px";
         leaderArrow.style.bottom = "";
-        leaderArrow.style.top = (window.innerHeight-leaderArrow.height)/2+window.innerWidth/2*Math.tan(angle)*(1-leaderArrow.height/window.innerHeight) + "px";
-        leaderArrow.style.right = 0;
         leaderArrow.style.left = "";
     } else if (angle > criticalAngle && angle <= Math.PI-criticalAngle) {
         // bottom
-        leaderArrow.style.bottom = 0;
         leaderArrow.style.top = "";
         leaderArrow.style.right = "";
-        leaderArrow.style.left = (window.innerWidth-leaderArrow.width)/2+window.innerHeight/2/Math.tan(angle)*(1-leaderArrow.width/window.innerWidth) + "px";
+        leaderArrow.style.bottom = -leaderArrowTranslate + "px";
+        leaderArrow.style.left = (window.innerWidth-leaderArrow.width)/2+window.innerHeight/2/Math.tan(angle)*(1-(leaderArrow.width-2*leaderArrowTranslate)/window.innerWidth) + "px";
     } else if (angle > Math.PI-criticalAngle && angle <= Math.PI+criticalAngle) {
         // left
-        leaderArrow.style.bottom = "";
-        leaderArrow.style.top = (window.innerHeight-leaderArrow.height)/2-window.innerWidth/2*Math.tan(angle)*(1-leaderArrow.height/window.innerHeight) + "px";
-        leaderArrow.style.left = 0;
+        leaderArrow.style.top = (window.innerHeight-leaderArrow.height)/2-window.innerWidth/2*Math.tan(angle)*(1-(leaderArrow.height-2*leaderArrowTranslate)/window.innerHeight) + "px";
         leaderArrow.style.right = "";
+        leaderArrow.style.bottom = "";
+        leaderArrow.style.left = -leaderArrowTranslate + "px";
     } else {
         // top
-        leaderArrow.style.top = 0;
-        leaderArrow.style.bottom = "";
+        leaderArrow.style.top = -leaderArrowTranslate + "px";
         leaderArrow.style.right = "";
-        leaderArrow.style.left = (window.innerWidth-leaderArrow.width)/2-window.innerHeight/2/Math.tan(angle)*(1-leaderArrow.width/window.innerWidth) + "px";
+        leaderArrow.style.bottom = "";
+        leaderArrow.style.left = (window.innerWidth-leaderArrow.width)/2-window.innerHeight/2/Math.tan(angle)*(1-(leaderArrow.width-2*leaderArrowTranslate)/window.innerWidth) + "px";
     }
     angle += Math.PI/2;
     leaderArrow.style.transform = "rotate(" + angle + "rad)";
