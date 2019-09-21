@@ -73,8 +73,7 @@
                 Fleet: <span id="record-fleet">Unknown Squadron #0</span>
             </div>
 
-            <div id="plusScoreContainer">
-            </div>
+            <div id="plusScoreContainer"></div>
             
             <img src="img/Leader_Arrow.png" id="leader-arrow" class="visibility2" />
 
@@ -185,7 +184,7 @@
                         <input placeholder="Your fleet name" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
                         <div id="emoji-container" hidden></div>
                         <div id="launch-container">
-                            <input type="button" id="spawn" class="button1" value="PLAY">
+                            <input type="button" id="spawn" class="button1" value="PLAY" onclick="document.getElementById('overlay').style.display = 'none'">
                             <input type="button" id="dauth" class="button1" value="Login with Discord" hidden>
                         </div>
                         <div id="instructions" class="visibility">
