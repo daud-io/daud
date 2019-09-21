@@ -39,9 +39,9 @@
                         10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
                         10, 10, 9, 9, 9, 9, 9, 9, 9, 9,
                         9, 9, 9, 9, 9, 9, 9, 9, 9, 9,
-                        9, 9, 9, 9, 9, 9, 9, 9, 8, 8,
+                        9, 9, 9, 9, 8, 8, 8, 8, 8, 8,
                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
-                        8, 8, 8, 8, 8, 8, 8, 8, 8, 8
+                        7, 7, 7, 7, 7, 7, 7, 7, 7, 7
                     },
                     BaseThrustConverter = 0.00113f,
 
@@ -50,14 +50,14 @@
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.0001f,
+                    BoostThrust = 0.0004f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 0.3f,
-                    BoostDuration = 420,
+                    BoostDuration = 300,
 
                     AbandonBuffer = 120,
 

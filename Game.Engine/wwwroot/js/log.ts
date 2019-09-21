@@ -50,20 +50,18 @@ export class Log {
         }*/
 
         var lastMsg = "";
-        if (Settings.bigKillMessage) {
-            if (lastData.type == "kill") {
-                lastMsg = escapeHtml(lastData.text) + "!";
-                scoreCon.insertAdjacentHTML("beforeend", "<div class='plusScore'>+" + lastData.pointsDelta + "</div>");
-            } else if (lastData.type == "killed") {
+        if (lastData.type == "kill") {
+            lastMsg = escapeHtml(lastData.text) + "!";
+            scoreCon.insertAdjacentHTML("beforeend", "<div class='plusScore'>+" + lastData.pointsDelta + "</div>");
+        } else if (lastData.type == "killed") {
+            deathStats(lastData);
+        } else {
+            if (lastData.type === "universeDeath") {
                 deathStats(lastData);
-            } else {
-                if (lastData.type === "universeDeath") {
-                    deathStats(lastData);
-                }
-                return;
             }
-            bigLog.innerHTML = lastMsg;
+            return;
         }
+        bigLog.innerHTML = lastMsg;
 
         if (lastData.extraData.combo !== undefined && lastData.extraData.combo.text !== "") {
             comboMsg.innerHTML = lastData.extraData.combo.text + " +" + lastData.extraData.combo.score;
