@@ -45,7 +45,7 @@ function getOut(entry, position: Vector2, rank, entryIsSelf) {
     } else if (entry.Color === "green") {
         color = "lime";
     } else if (entry.Color === "blue") {
-        color = "#0022ee";
+        color = "#2255ff";
     } else {
         color = entry.Color;
     }
@@ -59,8 +59,7 @@ function getOut(entry, position: Vector2, rank, entryIsSelf) {
 
     return (
         begin +
-        `<td style="width:25px">${rank}</td>` +
-        `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
+        `<td class="name">${rank} ${escapeHtml(entry.Name) || "Unknown Squadron"}</td>` +
         `<td class="score">${entry.Score}</td>` +
         `</tr>`
     );
