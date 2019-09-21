@@ -42,7 +42,7 @@
                     int plusScore = 5;
                     for (var i = 0; i < entries.Count; i++) {
                         if (entries[i]?.FleetID == victim?.Fleet?.ID && i < 10) {
-                            plusScore = (Math.Min(entries.Count, 10) - i + 1) * 5;
+                            plusScore = (Math.Min(entries.Count - 1, 10) - i + 1) * 5;
                         }
                     }
                     
