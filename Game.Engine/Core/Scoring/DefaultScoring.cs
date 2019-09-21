@@ -36,9 +36,18 @@
 
                     var PreviousKillTime = killer.LastKillTime;
                     killer.LastKillTime = time;
-
-                    int plusScore = (int)(hook.PointsPerKillFleetStep * (MathF.Floor(victim.Score / hook.PointsPerKillFleetPerStep) + 1));
-                    plusScore = (plusScore < hook.PointsPerKillFleetMax) ? plusScore : hook.PointsPerKillFleetMax;
+                    
+                    var entries =  killer.World.Leaderboard.Entries;
+                    
+                    int plusScore = 5;
+                    for (var i = 0; i < entries.Count; i++) {
+                        if (entries[i]?.FleetID == victim?.Fleet?.ID && i < 10) {
+                            plusScore = 55 - 5 * i;
+                        }
+                    }
+                    
+                    /*int plusScore = (int)(hook.PointsPerKillFleetStep * (MathF.Floor(victim.Score / hook.PointsPerKillFleetPerStep) + 1));
+                    plusScore = (plusScore < hook.PointsPerKillFleetMax) ? plusScore : hook.PointsPerKillFleetMax;*/
                     killer.Score += plusScore;
                     killer.KillStreak++;
                     killer.KillCount++;
