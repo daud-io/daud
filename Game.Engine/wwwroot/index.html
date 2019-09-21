@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="css/game.css" />
     <link rel="shortcut icon" type="image/png" href="img/ship_icon.png" />
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" >
     <link href="https://fonts.googleapis.com/css?family=Exo+2&display=swap" rel="stylesheet"> 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 </head>
@@ -209,6 +210,7 @@
                     <input type="button" id="arenas" class="button1" value="Game Modes" hidden />
                 </div>
             </div>
+            <div id="toast-container" class="toast-bottom-left" hidden><div class="toast toast-error" aria-live="assertive"><div class="toast-message">Couldn't connect to an arena. Please try again</div></div></div>
             <div class="visibility">
                 <a id="changelogButton" class="change-log-button">
                     <h4>CAPTAIN'S LOG</h4>

@@ -49,7 +49,7 @@ export class Log {
             scoreCon.insertAdjacentHTML("beforeend", "<div class='plusScore'>" + score + "</div>");
         }*/
 
-        var lastMsg;
+        var lastMsg = "";
         if (Settings.bigKillMessage) {
             if (lastData.type == "kill") {
                 lastMsg = escapeHtml(lastData.text) + "!";

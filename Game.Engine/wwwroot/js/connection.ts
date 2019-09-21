@@ -122,11 +122,17 @@ export class Connection {
         };
 
         this.socket.onerror = error => {
-            if (self.connectionStatusReporting) document.body.classList.add("connectionerror");
+            if (self.connectionStatusReporting) {
+                document.body.classList.add("connectionerror");
+                $("#toast-container").fadeIn(300);
+            }
         };
 
         this.socket.onopen = event => {
-            if (self.connectionStatusReporting) document.body.classList.remove("connectionerror");
+            if (self.connectionStatusReporting) {
+                document.body.classList.remove("connectionerror");
+                $("#toast-container").fadeOut(0);
+            }
             self.onOpen(event);
         };
         this.socket.onclose = event => {
