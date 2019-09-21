@@ -639,9 +639,9 @@ footer {
 
 #leaderboard-container {
     position: absolute;
-    top: 10px;
-    right: 30px;
-    width: 300px;
+    top: 20px;
+    right: 20px;
+    width: 240px;
     z-index: 0;
 }
 
@@ -649,31 +649,24 @@ footer {
     width: 100%;
     padding: 0;
     margin: 0;
-    font-size: 16pt;
+    font-size: 14pt;
 }
 
 #leaderboard-header {
     text-align: center;
-    font-size: 20pt;
+    font-size: 22pt;
+    font-weight: lighter;
 }
 
 #leaderboard td,
 #leaderboard tr {
-    height: 28px;
+    height: 24px;
     margin: 0;
     padding: 0;
     border: none;
 }
 
-#leaderboard td:nth-child(1) {
-    width: 4px;
-}
-
-#leaderboard td:nth-child(2) {
-    display: none;
-}
-
-#leaderboard td:last-child {
+#leaderboard tr td:last-child {
     text-align: right;
 }
 

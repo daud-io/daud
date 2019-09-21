@@ -98,7 +98,7 @@
                     BulletLifeM = 20,
                     
                     BotPerXPoints = 500,
-                    BotBase = 1,
+                    BotBase = 10,
                     BotRespawnDelay = 10000,
                     BotMaxRespawnDelay = 60000,
 
