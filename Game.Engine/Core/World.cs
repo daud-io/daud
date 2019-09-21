@@ -131,13 +131,13 @@
         {
             if (Time > 10000) // lets not get too excited if things slow down when initialized
             {
-                var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
+                /*var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
                 if (elapsed > Hook.StepTime)
                     Console.WriteLine($"**** 100% processing time warning: {elapsed}");
                 else if (elapsed > Hook.StepTime * 0.8f)
                     Console.WriteLine($"*** 80% processing time warning: {elapsed}");
                 else if (elapsed > Hook.StepTime * 0.5f)
-                    Console.WriteLine($"** 50% processing time warning: {elapsed}");
+                    Console.WriteLine($"** 50% processing time warning: {elapsed}");*/
             }
         }
 
