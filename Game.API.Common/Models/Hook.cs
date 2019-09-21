@@ -43,7 +43,7 @@
                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8,
                         8, 8, 8, 8, 8, 8, 8, 8, 8, 8
                     },
-                    BaseThrustConverter = 0.0010f,
+                    BaseThrustConverter = 0.00113f,
 
                     Drag = 0.92f,
 
@@ -78,11 +78,11 @@
                         15, 13, 13, 12, 12, 12, 12, 12, 12, 12, // 41 - 50 size
                         12, 11, 11, 11, 11, 11, 11, 11, 10, 10, // 51 - 60 size
                         10, 10, 10, 10, 10, 10, 10, 10, 10, 10, // 61 - 70 size
-                        10, 9, 9, 9, 9, 9, 9, 9, 9, 9, // 71 - 80 size
-                        9, 9, 9, 8, 8, 8, 8, 8, 8, 8, // 81 - 90 size
-                        8, 8, 8, 8, 8, 8, 8, 7, 7, 7 // 91 - 100 size
+                        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, // 71 - 80 size
+                        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, // 81 - 90 size
+                        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, // 91 - 100 size
                     },
-                    ShotThrustConverter = 0.0016f,
+                    ShotThrustConverter = 0.00113f,
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
@@ -95,7 +95,7 @@
                     BulletLife = 1500,
                     
                     BulletLifeB = 1000,
-                    BulletLifeM = 20,
+                    BulletLifeM = 25,
                     
                     BotPerXPoints = 500,
                     BotBase = 10,
