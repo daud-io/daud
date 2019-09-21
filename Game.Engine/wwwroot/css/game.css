@@ -707,7 +707,7 @@ progress[value="255"]::-webkit-progress-value {
 
 #cooldown[value] {
     position: absolute;
-    bottom: 3vh;
+    bottom: 4vh;
     left: 50%;
     width: 30%;
     height: 6px;
@@ -715,6 +715,15 @@ progress[value="255"]::-webkit-progress-value {
     transform: translateX(-50%);
     background-color: black;
     box-shadow: none;
+}
+
+#selfNickContainer {
+    position: absolute;
+    bottom: calc(4vh + 14px);
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    font-size: 14pt;
 }
 
 #bigLog {

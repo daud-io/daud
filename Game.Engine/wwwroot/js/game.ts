@@ -371,6 +371,7 @@ function doSpawn() {
     aliveSince = gameTime;
     connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
     document.getElementById("overlay").style.opacity = 0;
+    document.getElementById("selfNickContainer").innerHTML = Controls.nick;
     $(".visibility2").show();
     $(".visibility3").show();    
 }
