@@ -776,4 +776,10 @@ progress[value="255"]::-webkit-progress-value {
     width: 160px;
     filter: hue-rotate(235deg);
 }
+
+#fleetSizeContainer {
+    position: absolute;
+    top: 14px;
+    left: 4px;
+}
 /*# sourceMappingURL=styles.css.map */
