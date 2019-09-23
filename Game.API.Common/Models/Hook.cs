@@ -30,6 +30,7 @@
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
                     // values below probably need to be adjusted
+                    // source: https://cdn.discordapp.com/attachments/357878752446906378/357892120427626498/uptodate_-_Sheet1.pdf
                     BaseThrust = new[] {
                         0.000f, // 0 size
                         13.600f, 11.799f, 10.857f, 10.236f, 9.778f, 9.419f, 9.126f, 8.880f, 8.668f, 8.483f, // 1 - 10 size
@@ -61,14 +62,15 @@
 
                     AbandonBuffer = 120,
 
-                    ShotCooldownTimeM = 20,
-                    ShotCooldownTimeB = 550,
+                    ShotCooldownTimeM = 10,
+                    ShotCooldownTimeB = 610,
 
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
 
                     ShotThrustM = -0.001f,
                     ShotThrustB = 0.045f,
+                    // source: https://cdn.discordapp.com/attachments/357878752446906378/357892120427626498/uptodate_-_Sheet1.pdf
                     ShotThrust = new[] {
                         0.000f, // 0 size
                         41.000f, 34.167f, 30.711f, 28.474f, 26.851f, 25.594f, 24.577f, 23.729f, 23.005f, 22.376f, // 1 - 10 size
@@ -77,10 +79,10 @@
                         16.617f, 16.479f, 16.346f, 16.218f, 16.095f, 15.976f, 15.862f, 15.751f, 15.643f, 15.540f, // 31 - 40 size
                         15.439f, 15.342f, 15.247f, 15.155f, 15.066f, 14.979f, 14.894f, 14.812f, 14.732f, 14.654f, // 41 - 50 size
                         14.578f, 14.504f, 14.431f, 14.360f, 14.291f, 14.224f, 14.158f, 14.093f, 14.030f, 13.968f, // 51 - 60 size
-                        13.907f, 13.848f, 13.790f, 13.733f, 13.677f, 13.622f, 13.568f, 12.000f, 12.000f, 12.000f, // 61 - 70 size
-                        11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, // 71 - 80 size
-                        11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, 11.000f, // 81 - 90 size
-                        11.000f, 11.000f, 10.000f, 10.000f, 10.000f, 10.000f, 10.000f, 10.000f, 10.000f, 10.000f // 91 - 100 size
+                        13.907f, 13.848f, 13.790f, 13.733f, 13.677f, 13.622f, 13.568f, 13.516f, 13.464f, 13.413f, // 61 - 70 size
+                        13.363f, 13.314f, 13.266f, 13.218f, 13.172f, 13.126f, 13.081f, 13.037f, 12.993f, 12.950f, // 71 - 80 size
+                        12.908f, 12.866f, 12.825f, 12.785f, 12.745f, 12.706f, 12.667f, 12.629f, 12.592f, 12.555f, // 81 - 90 size
+                        12.519f, 12.483f, 12.447f, 12.412f, 12.378f, 12.344f, 12.011f, 12.067f, 12.033f, 12.000f // 91 - 100 size
                     },
                     ShotThrustConverter = 0.0016f,
 
