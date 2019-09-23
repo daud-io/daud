@@ -479,6 +479,12 @@ app.ticker.add(() => {
     gameTime = performance.now() + serverTimeOffset;
     frameCounter++;
 
+    for (var key in cache.groups) {
+        if (cache.groups[key].Caption == Controls.nick) {
+            document.getElementById("fleetSize").innerHTML = cache.groups[key].renderer.ships.length;
+        }
+    }
+
     let position = new Vector2(0, 0);
 
     if (view) {
