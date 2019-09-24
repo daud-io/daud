@@ -781,5 +781,6 @@ progress[value="255"]::-webkit-progress-value {
     position: absolute;
     top: 14px;
     left: 4px;
+    font-size: 14pt;
 }
 /*# sourceMappingURL=styles.css.map */
