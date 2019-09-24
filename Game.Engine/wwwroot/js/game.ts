@@ -470,6 +470,8 @@ setInterval(doPing, 1000);
 const graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
+const fleetSizeDisplay = document.getElementById("fleetSize");
+
 let lastCustomData = false;
 let spotSprites = [];
 
@@ -480,8 +482,8 @@ app.ticker.add(() => {
     frameCounter++;
 
     for (var key in cache.groups) {
-        if (cache.groups[key].Caption == Controls.nick) {
-            document.getElementById("fleetSize").innerHTML = cache.groups[key].renderer.ships.length;
+        if (cache.groups[key].ID == fleetID) {
+             fleetSizeDisplay.innerHTML = cache.groups[key].renderer.ships.length;
         }
     }
 
