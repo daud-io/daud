@@ -146,6 +146,9 @@
                     FlockWeight = 0.5f,
                     SnakeWeight = 0f,
                     BossMode = false,
+                    
+                    OutOufBoundsDecayStart = 5000,
+                    OutOufBoundsDecayInterval = 300,
 
                     ShipGainBySizeM = -0.015f,
                     ShipGainBySizeB = 1.5f,
@@ -333,8 +336,8 @@
         public float OutOfBoundsDeathLine { get; set; } = 800;
         public float OutOfBoundsBorder { get; set; } = 0;
         public float OutOfBoundsDecayDistance { get; set; } = 4000;
-        public uint OutOufBoundsDecayStart { get; set; } = 3000;
-        public uint OutOufBoundsDecayInterval { get; set; } = 400;
+        public uint OutOufBoundsDecayStart { get; set; }
+        public uint OutOufBoundsDecayInterval { get; set; }
         public int BotRespawnDelay { get; set; }
         public int BotMaxRespawnDelay { get; set; }
         public int PickupShields { get; set; }

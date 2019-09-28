@@ -471,6 +471,7 @@ const graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
 const fleetSizeDisplay = document.getElementById("fleetSize");
+const dangerZoneWarning = document.getElementById("dangerZoneWarning");
 
 let lastCustomData = false;
 let spotSprites = [];
@@ -511,6 +512,12 @@ app.ticker.add(() => {
     minimap.checkDisplay();
 
     lastPosition = position;
+    
+    if (Math.abs(position.x) > worldSize || Math.abs(position.y) > worldSize) {
+        dangerZoneWarning.style.display = "block";
+    } else {
+        dangerZoneWarning.style.display = "none";
+    }
 
     log.check();
     // cooldown.draw();
