@@ -641,20 +641,21 @@ footer {
     position: absolute;
     top: 20px;
     right: 20px;
-    width: 240px;
+    width: 250px;
 }
 
 #leaderboard {
     width: 100%;
     padding: 0;
     margin: 0;
-    font-size: 14pt;
+    font-size: 15pt;
 }
 
 #leaderboard-header {
     text-align: center;
     font-size: 22pt;
     font-weight: lighter;
+    margin-bottom: 6px;
 }
 
 #leaderboard td,
