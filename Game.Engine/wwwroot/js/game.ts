@@ -513,7 +513,7 @@ app.ticker.add(() => {
 
     lastPosition = position;
     
-    if (Math.abs(position.x) > worldSize || Math.abs(position.y) > worldSize) {
+    if ((Math.abs(position.x) > worldSize || Math.abs(position.y) > worldSize) && document.body.classList.contains("alive")) {
         dangerZoneWarning.style.display = "block";
     } else {
         dangerZoneWarning.style.display = "none";
