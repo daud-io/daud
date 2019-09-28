@@ -95,8 +95,8 @@
                     MaxHealthBot = 50,
                     BulletLife = 1500,
                     
-                    BulletLifeB = 1954,
-                    BulletLifeM = 23,
+                    BulletLifeB = 1900,
+                    BulletLifeM = 25,
                     
                     BotPerXPoints = 500,
                     BotBase = 0,
