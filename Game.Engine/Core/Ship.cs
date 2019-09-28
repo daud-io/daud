@@ -188,18 +188,33 @@
 
         private void DoOutOfBoundsRules()
         {
-            var oob = World.DistanceOutOfBounds(Position);
+            if (this.Fleet != null) {
+                var oob = World.DistanceOutOfBounds(this.Fleet.FleetCenter);
 
-            IsOOB = oob > 0;
+                IsOOB = oob > 0;
+                
+                if (IsOOB && this.Fleet.DangerSince == 0) {
+                    this.Fleet.DangerSince = World.Time;
+                } else if (!IsOOB) {
+                    this.Fleet.DangerSince = 0;
+                }
+                
+                if (this.Fleet.DangerSince != 0 && this.Fleet.DangerSince + World.Hook.OutOufBoundsDecayStart < World.Time) {
+                    Die(null, null, null);
+                }
+                
+                //Console.WriteLine(this.Fleet.DangerSince + ", " + (World.Time + 5000));
+                
+                /*if (oob > World.Hook.OutOfBoundsBorder)
+                    this.Momentum *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
 
-            if (oob > World.Hook.OutOfBoundsBorder)
-                this.Momentum *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
-
-            if (oob > World.Hook.OutOfBoundsDeathLine)
-            {
-                //Console.WriteLine("ship dying oob");
-                Die(null, null, null);
+                if (oob > World.Hook.OutOfBoundsDeathLine)
+                {
+                    //Console.WriteLine("ship dying oob");
+                    Die(null, null, null);
+                }*/
             }
+            // catch (Exception e) {}
         }
     }
 }

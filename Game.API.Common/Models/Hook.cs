@@ -333,6 +333,7 @@
         public float OutOfBoundsDeathLine { get; set; } = 800;
         public float OutOfBoundsBorder { get; set; } = 0;
         public float OutOfBoundsDecayDistance { get; set; } = 4000;
+        public uint OutOufBoundsDecayStart { get; set; } = 3000;
         public int BotRespawnDelay { get; set; }
         public int BotMaxRespawnDelay { get; set; }
         public int PickupShields { get; set; }

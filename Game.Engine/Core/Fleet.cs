@@ -55,6 +55,8 @@
         public bool Shark { get; set; } = false;
         public bool LastTouchedLeft { get; set; } = false;
         public bool FiringWeapon { get; private set; } = false;
+        
+        public uint DangerSince { get; set; } = 0;
 
         public Vector2? SpawnLocation { get; set; } = null;
         public int ShipSize { get; set; } = 10;
