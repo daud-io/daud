@@ -57,6 +57,7 @@
         public bool FiringWeapon { get; private set; } = false;
         
         public uint DangerSince { get; set; } = 0;
+        public uint DangerDecayCounter { get; set; } = 0;
 
         public Vector2? SpawnLocation { get; set; } = null;
         public int ShipSize { get; set; } = 10;

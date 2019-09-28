@@ -199,8 +199,12 @@
                     this.Fleet.DangerSince = 0;
                 }
                 
-                if (this.Fleet.DangerSince != 0 && this.Fleet.DangerSince + World.Hook.OutOufBoundsDecayStart < World.Time) {
-                    Die(null, null, null);
+                if (this.Fleet.DangerSince != 0 &&
+                    World.Time > this.Fleet.DangerSince + World.Hook.OutOufBoundsDecayStart &&
+                    Math.Floor((decimal)(World.Time - this.Fleet.DangerSince - World.Hook.OutOufBoundsDecayStart) / World.Hook.OutOufBoundsDecayInterval) != this.Fleet.DangerDecayCounter)
+                {
+                    this.Fleet?.Ships[this.Fleet.Ships.Count - 1]?.Die(null, null, null);
+                    this.Fleet.DangerDecayCounter++;
                 }
                 
                 //Console.WriteLine(this.Fleet.DangerSince + ", " + (World.Time + 5000));
