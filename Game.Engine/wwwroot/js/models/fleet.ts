@@ -81,7 +81,7 @@ export class Fleet {
 
     preRender(time, interpolator, myFleetID) {
         //console.log(`Group: ${this.ID} ${this.caption} ${this.ships.length}`);
-        if (this.ships.length > 0 && (this.ID != myFleetID || Settings.showOwnName || document.body.classList.contains("spectating"))) {
+        if (this.ships.length > 0 && (this.ID != myFleetID || document.body.classList.contains("spectating"))) {
             if (this.text.visible != Settings.namesEnabled) this.text.visible = Settings.namesEnabled;
 
             if (Settings.nameSize) {
