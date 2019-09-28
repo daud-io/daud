@@ -689,37 +689,35 @@ footer {
     cursor: pointer;
 }
 
-progress[value]::-webkit-progress-bar {
-    background-color: #00000099;
-    border-radius: 2px;
-}
-
-progress[value]::-webkit-progress-value {
-    background-color: red;
-    border-radius: 2px;
-    box-shadow: 0 0 7px 3px #ff000099;
-}
-
-progress[value="255"]::-webkit-progress-value {
-    background-color: lime;
-    box-shadow: 0 0 7px 3px #00ff0099;
-}
-
-#cooldown[value] {
+#cooldown {
     position: absolute;
-    bottom: 4vh;
+    bottom: 5vh;
     left: 50%;
-    width: 30%;
-    height: 6px;
+    width: 22%;
+    height: 8px;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
     background-color: black;
-    box-shadow: none;
+    border-radius: 4px;
+    padding: 0;
+}
+
+#cooldownValue {
+    margin: 0;
+    background-color: red;
+    height: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 15px 10px #ff00003a;
+}
+
+#cooldownValue[style="width: 100%;"] {
+    background-color: lime;
+    box-shadow: 0 0 15px 10px #00ff003a;
 }
 
 #selfNickContainer {
     position: absolute;
-    bottom: calc(4vh + 14px);
+    bottom: calc(5vh + 30px);
     left: 50%;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
