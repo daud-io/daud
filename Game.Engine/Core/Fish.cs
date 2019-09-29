@@ -43,6 +43,7 @@
 
         private void Flock()
         {
+            /*
             var oobVectorWeight = 0.8f;
             var ships = World.BodiesNear(Position, World.Hook.FishFlockCohesionMaximumDistance)
                 .OfType<Ship>();
@@ -70,7 +71,7 @@
                 + World.Hook.FishFlockWeight * flockingVector
                 + oobVector;
 
-            // Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);*/
         }
     }
 }

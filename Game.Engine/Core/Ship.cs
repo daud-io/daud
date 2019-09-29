@@ -217,6 +217,19 @@
                     //Console.WriteLine("ship dying oob");
                     Die(null, null, null);
                 }*/
+            } else if (this.Sprite == Sprites.fish) {
+                var oob = World.DistanceOutOfBounds(Position);
+
+                IsOOB = oob > 0;
+
+                /*if (oob > World.Hook.OutOfBoundsBorder)
+                    this.Momentum *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);*/
+
+                if (oob > World.Hook.OutOfBoundsDeathLine)
+                {
+                    //Console.WriteLine("ship dying oob");
+                    Die(null, null, null);
+                }
             }
             // catch (Exception e) {}
         }
