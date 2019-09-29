@@ -196,7 +196,12 @@
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
 
-            Momentum = (Momentum + thrust) * Drag;
+            if (!Abandoned) {
+                Momentum = (Momentum + thrust) * Drag;
+            } else {
+                Momentum = Momentum * World.Hook.DragAbandoned;
+            }
+                
 
         }
 

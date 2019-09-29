@@ -46,6 +46,7 @@
                     BaseThrustConverter = 0.0014f,
 
                     Drag = 0.92f,
+                    DragAbandoned = 0.97f,
 
                     BoomDrag = 0.92f,
                     BoomLife = 500,
@@ -223,6 +224,7 @@
         public float BoostSpeed { get; set; }
 
         public float Drag { get; set; }
+        public float DragAbandoned { get; set; }
 
         public int BoomLife { get; set; }
         public float BoomDrag { get; set; }
