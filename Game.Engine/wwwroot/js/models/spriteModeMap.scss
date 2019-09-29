@@ -14,7 +14,27 @@ world {
 }
 
 fish {
-    textures: 'fish';
+    &.cyan {
+        textures: 'fish_cyan';
+    }
+    &.blue {
+        textures: 'fish_blue';
+    }
+    &.green {
+        textures: 'fish_green';
+    }
+    &.pink {
+        textures: 'fish_pink';
+    }
+    &.orange {
+        textures: 'fish_orange';
+    }
+    &.red {
+        textures: 'fish_red';
+    }
+    &.yellow {
+        textures: 'fish_yellow';
+    }
 }
 
 ship {
@@ -100,40 +120,42 @@ ship {
         }
     }
     
-    &.ab_cyan {
-        textures: 'ship_ab_cyan';
-        selector: 'ship_ab_cyan';
-    }
-    
-    &.ab_blue {
-        textures: 'ship_ab_blue';
-        selector: 'ship_ab_blue';
-    }
+    &.ab {
+        &.cyan {
+            textures: 'ship_ab_cyan';
+            selector: 'ship_ab_cyan';
+        }
+        
+        &.blue {
+            textures: 'ship_ab_blue';
+            selector: 'ship_ab_blue';
+        }
 
-    &.ab_green {
-        textures: 'ship_ab_green';
-        selector: 'ship_ab_green';
-    }
+        &.green {
+            textures: 'ship_ab_green';
+            selector: 'ship_ab_green';
+        }
 
-    &.ab_orange {
-        textures: 'ship_ab_orange';
-        selector: 'ship_ab_orange';
+        &.orange {
+            textures: 'ship_ab_orange';
+            selector: 'ship_ab_orange';
 
-    }
+        }
 
-    &.ab_pink {
-        textures: 'ship_ab_pink';
-        selector: 'ship_ab_pink';
-    }
+        &.pink {
+            textures: 'ship_ab_pink';
+            selector: 'ship_ab_pink';
+        }
 
-    &.ab_red {
-        textures: 'ship_ab_red';
-        selector: 'ship_ab_red';
-    }
+        &.red {
+            textures: 'ship_ab_red';
+            selector: 'ship_ab_red';
+        }
 
-    &.ab_yellow {
-        textures: 'ship_ab_yellow';
-        selector: 'ship_ab_yellow';
+        &.yellow {
+            textures: 'ship_ab_yellow';
+            selector: 'ship_ab_yellow';
+        }
     }
 
     &.offenseupgrade {

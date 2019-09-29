@@ -27,10 +27,37 @@ bg {
   size: 50%;
 }
 
+fish_blue,
+fish_cyan,
+fish_green,
+fish_orange,
+fish_pink,
+fish_red,
+fish_yellow {
+    size: 3;
+}
+
 // fish
-fish {
-  file: "fish";
-  size: 3;
+fish_cyan {
+  file: "ship_cyan";
+}
+fish_blue {
+  file: "ship_blue";
+}
+fish_green {
+  file: "ship_green";
+}
+fish_orange {
+  file: "ship_orange";
+}
+fish_pink {
+  file: "ship_pink";
+}
+fish_red {
+  file: "ship_red";
+}
+fish_yellow {
+  file: "ship_yellow";
 }
 
 // boom emitter
@@ -49,6 +76,13 @@ ship_orange,
 ship_pink,
 ship_red,
 ship_yellow,
+ship_ab_cyan,
+ship_ab_blue,
+ship_ab_green,
+ship_ab_orange,
+ship_ab_pink,
+ship_ab_red,
+ship_ab_yellow,
 ship_secret,
 ship_zed {
   size: 3.1;

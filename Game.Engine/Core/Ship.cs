@@ -236,7 +236,13 @@
                     //Console.WriteLine("ship dying oob");
                     Die(null, null, null);
                 }*/
-            } else if (this.Sprite == Sprites.fish) {
+            } else if (this.Sprite == Sprites.fish_blue ||
+                       this.Sprite == Sprites.fish_cyan ||
+                       this.Sprite == Sprites.fish_green ||
+                       this.Sprite == Sprites.fish_orange ||
+                       this.Sprite == Sprites.fish_pink ||
+                       this.Sprite == Sprites.fish_red ||
+                       this.Sprite == Sprites.fish_yellow) {
                 var oob = World.DistanceOutOfBounds(Position);
 
                 IsOOB = oob > 0;
