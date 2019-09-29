@@ -175,6 +175,7 @@
             for (var i = 0; i < entries.Count; i++) {
                 if (entries[i]?.FleetID == AbandonedByFleet?.ID) {
                     ownerDead = false;
+                    break;
                 }
             }
 
