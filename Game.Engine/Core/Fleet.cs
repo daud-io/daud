@@ -236,7 +236,18 @@
         public void AbandonShip(Ship ship)
         {
             ship.Fleet = null;
-            ship.Sprite = Sprites.ship_gray;
+            switch (Owner.ShipSprite)
+            {
+                case Sprites.ship_cyan: ship.Sprite = Sprites.ship_ab_cyan; break;
+                case Sprites.ship_blue: ship.Sprite = Sprites.ship_ab_blue; break;
+                case Sprites.ship_green: ship.Sprite = Sprites.ship_ab_green; break;
+                case Sprites.ship_orange: ship.Sprite = Sprites.ship_ab_orange; break;
+                case Sprites.ship_pink: ship.Sprite = Sprites.ship_ab_pink; break;
+                case Sprites.ship_red: ship.Sprite = Sprites.ship_ab_red; break;
+                case Sprites.ship_yellow: ship.Sprite = Sprites.ship_ab_yellow; break;
+                case Sprites.ship_zed: ship.Sprite = Sprites.ship_ab_red; break;
+                default: ship.Sprite = Sprites.ship_gray; break;
+            }
             ship.Color = "gray";
             ship.Abandoned = true;
             ship.Group = null;
