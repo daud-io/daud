@@ -168,12 +168,25 @@
         public override void Think()
         {
             base.Think();
+            
+            var entries =  World.Leaderboard.Entries;
+            
+            bool ownerDead = true;
+            for (var i = 0; i < entries.Count; i++) {
+                if (entries[i]?.FleetID == AbandonedByFleet?.ID) {
+                    ownerDead = false;
+                }
+            }
 
+            if (Abandoned && ownerDead) {
+                Die(null, null, null);
+            }
+            /*
             if (Abandoned && TimeDeath == 0)
                 TimeDeath = World.Time + 20000;
 
             if (TimeDeath > 0 && World.Time > TimeDeath)
-                Die(null, null, null);
+                Die(null, null, null);*/
 
             Health = Math.Max(Math.Min(Health, MaxHealth), 0) + HealthRegenerationPerFrame;
             //Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum - SizeMinimum));
