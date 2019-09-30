@@ -58,6 +58,8 @@
         
         public uint DangerSince { get; set; } = 0;
         public uint DangerDecayCounter { get; set; } = 0;
+        
+        public uint ShipGainCounter { get; set; } = 0;
 
         public Vector2? SpawnLocation { get; set; } = null;
         public int ShipSize { get; set; } = 10;
@@ -120,12 +122,24 @@
 
         public void KilledShip(Ship killedShip)
         {
-            var random = new Random();
-            var threshold = Ships.Count * World.Hook.ShipGainBySizeM + World.Hook.ShipGainBySizeB;
-            if (random.NextDouble() < threshold)
+            uint threshold;
+            if (Ships.Count <= 30) {
+                threshold = 1;
+            } else if (Ships.Count <= 60) {
+                threshold = 2;
+            } else if (Ships.Count <= 80) {
+                threshold = 3;
+            } else if (Ships.Count <= 90) {
+                threshold = 4;
+            } else {
+                threshold = 5;
+            }
+            this.ShipGainCounter += 1;
+            if (threshold <= this.ShipGainCounter)
                 if (Ships?.Any() ?? false)
                 {
                     EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay);
+                    this.ShipGainCounter = 0;
                 }
         }
 

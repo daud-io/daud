@@ -4,6 +4,9 @@ import { Cache } from "./cache";
 import { Settings } from "./settings";
 import { Vector2 } from "./Vector2";
 import { Controls } from "./controls";
+import { ArenaLink } from "./arenalink";
+
+const arenaLink = new ArenaLink();
 
 export class Connection {
     onView: (view: any) => void;
@@ -76,6 +79,12 @@ export class Connection {
         }
     }
     connect(worldKey?: string) {
+        if (!arenaLink.generated) {
+            arenaLink.generate(worldKey);
+        }
+        
+        arenaLink.getLinkFromURL();
+        
         let url: string;
 
         if (window.location.protocol === "https:") {

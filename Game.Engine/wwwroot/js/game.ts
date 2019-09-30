@@ -19,6 +19,7 @@ import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
+import { ArenaLink } from "./arenalink";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
 import * as PIXI from "pixi.js";
 import "pixi-tilemap";
@@ -113,6 +114,10 @@ window.Game.reinitializeWorld = function() {
 
     background.refreshSprite();
 };
+
+document.getElementById("generate-link-button").addEventListener("click", function() {
+    arenaLink.copy();
+});
 
 const bodyFromServer = (cache: Cache, body) => {
     const originalPosition = body.originalPosition();

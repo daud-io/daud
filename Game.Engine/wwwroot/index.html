@@ -681,27 +681,6 @@
             }
             return true;
         }
-        
-        document.getElementById("arena-link-input").value = "http://spaceone.io/123456"; // display arena nick - temporary solution here
-        
-        document.getElementById("generate-link-button").addEventListener("click", function() {
-            var copyText = document.getElementById("arena-link-input");
-
-            // Select the text field
-            copyText.select();
-            copyText.setSelectionRange(0, 99999); // For mobile devices
-
-            // Copy the text inside the text field
-            document.execCommand("copy");
-            
-            // remove selection
-            copyText.setSelectionRange(0, 0);
-            
-            $("#arena-link-success").show();
-            setTimeout(function(){
-                $("#arena-link-success").fadeOut(1000);
-            }, 3000)
-        });
     </script>
 
 </body>
