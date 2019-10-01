@@ -136,7 +136,7 @@
             }
             this.ShipGainCounter += 1;
             if (threshold <= this.ShipGainCounter)
-                if (Ships?.Any() ?? false)
+                if ((Ships?.Any() ?? false) && Ships.Count <= 100)
                 {
                     EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay);
                     this.ShipGainCounter = 0;

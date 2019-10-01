@@ -6,6 +6,7 @@ const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.spl
 const chars = "0123456789abcdefghijklmnopqrstuwvxyzABCDEFGHIJKLMNOPQRSTUWVXYZ";
 const base = chars.length;
 const arenas = ["us.daud.io/default", "de.daud.io/default", "localhost:5000/default"];
+const timeZero = 1400000000;
 
 export class ArenaLink {
     constructor() {
@@ -16,7 +17,7 @@ export class ArenaLink {
         if (typeof(worldKey) != "undefined") {
             console.log("World key: " + worldKey);
             var d = new Date(),
-                time = Math.floor(d.getTime() / 1000),
+                time = Math.floor(d.getTime() / 1000) - timeZero,
                 arenaIndex = arenas.indexOf(worldKey);    
             if (arenaIndex !== -1) {
                 var arenaLink = baseUrl + "#" + this.encode(time + "" + arenaIndex);
@@ -88,10 +89,16 @@ export class ArenaLink {
             linkInURL = this.readArenaLinkFromURL(actualWindow.location.hash);
 
             console.log('Arena Link from URL: ' + linkInURL);
-            console.log(this.decode(linkInURL));
         }
 
-        return linkInURL;
+        return this.decode(linkInURL).toString();
+    }
+    
+    getArena() {
+        var link = this.getLinkFromURL(),
+            arena = arenas[link.substring(link.length - 1, link.length)];
+        console.log("Arena from link: " + arena);
+        return arena;
     }
     
     readArenaLinkFromURL(hashUrl) {

@@ -83,7 +83,7 @@ export class Connection {
             arenaLink.generate(worldKey);
         }
         
-        arenaLink.getLinkFromURL();
+        worldKey = arenaLink.getArena();
         
         let url: string;
 

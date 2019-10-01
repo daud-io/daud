@@ -115,6 +115,8 @@ window.Game.reinitializeWorld = function() {
     background.refreshSprite();
 };
 
+const arenaLink = new ArenaLink();
+
 document.getElementById("generate-link-button").addEventListener("click", function() {
     arenaLink.copy();
 });
