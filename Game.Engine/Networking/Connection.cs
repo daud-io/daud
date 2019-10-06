@@ -159,7 +159,7 @@ namespace Game.Engine.Networking
 
                             var updateBodies = updates.Take((int)this.Bandwidth);
 
-                            float VELOCITY_SCALE_FACTOR = 5000;
+                            float VELOCITY_SCALE_FACTOR = 50000;
 
                             var updatedGroups = BodyCache.GroupsByError().ToList();
 

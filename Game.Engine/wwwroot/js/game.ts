@@ -125,7 +125,7 @@ const bodyFromServer = (cache: Cache, body) => {
     const originalPosition = body.originalPosition();
     const momentum = body.velocity();
     const groupID = body.group();
-    const VELOCITY_SCALE_FACTOR = 5000.0;
+    const VELOCITY_SCALE_FACTOR = 50000.0;
 
     var spriteIndex = body.sprite();
     var spriteName = null;
