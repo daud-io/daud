@@ -5,7 +5,7 @@ const getUrl = window.location;
 const baseUrl = getUrl.protocol + "//" + getUrl.host + "/" + getUrl.pathname.split('/')[1];
 const chars = "0123456789abcdefghijklmnopqrstuwvxyzABCDEFGHIJKLMNOPQRSTUWVXYZ";
 const base = chars.length;
-const arenas = ["us.daud.io/default", "de.daud.io/default", "localhost:5000/default"];
+const arenas = ["us.daud.io/default", "de.daud.io/default", "localhost:5000/default", "de.daud.io:81/default"];
 const timeZero = 1400000000;
 
 export class ArenaLink {
