@@ -36,7 +36,7 @@ const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
 const emojiTrigger = document.getElementById("emoji-trigger");
 const selector = document.getElementById("shipSelectorSwitch");
-var colors = ["blue", "cyan", "green", "yellow", "orange", "red", "pink"]; // to fix secret ships bug
+var colors = ["ship_blue", "ship_cyan", "ship_green", "ship_yellow", "ship_orange", "ship_red", "ship_pink"]; // to fix secret ships bug
 
 emojiTrigger.addEventListener("click", () => {
     document.getElementById("emoji-container").classList.toggle("open");
