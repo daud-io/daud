@@ -36,7 +36,7 @@ const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
 const emojiTrigger = document.getElementById("emoji-trigger");
 const selector = document.getElementById("shipSelectorSwitch");
-var colors;
+var colors = ["blue", "cyan", "green", "yellow", "orange", "red", "pink"]; // to fix secret ships bug
 
 emojiTrigger.addEventListener("click", () => {
     document.getElementById("emoji-container").classList.toggle("open");
@@ -219,7 +219,7 @@ export var Controls = {
         Controls.canvas = canvas;
     },
     initializeWorld: function(world) {
-        colors = shuffle(world.allowedColors);
+        colors = shuffle(colors); // shuffle(world.allowedColors); - ignored for secret ships bug fix
         Controls.ship = colors[3];
         drawColorSelector();
     },
