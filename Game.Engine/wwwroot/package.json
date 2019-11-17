@@ -4,15 +4,16 @@
   "description": "",
   "main": "game.html",
   "scripts": {
-    "build": "parcel build game.html changes.html",
-    "watch": "parcel watch index.html --out-dir dist",
-    "watch2": "parcel watch --no-hmr index.html --out-dir dist",
+    "build": "brunch build --production",
+    "watch": "brunch watch --server",
     "format": "prettier --tab-width 4 --print-width 200 --write \"**/*.{ts,js,css}\""
   },
   "author": "modderme123",
   "license": "ISC",
   "dependencies": {
+    "@types/es6-promise": "^3.3.0",
     "@types/flatbuffers": "^1.9.1",
+    "@types/pixi.js": "4.8.7",
     "@types/sass": "^1.16.0",
     "antlr4": "^4.7.2",
     "babel-polyfill": "^6.26.0",
@@ -30,16 +31,30 @@
     "pixi-tilemap": "^1.2.4",
     "pixi.js": "^4.8.7",
     "plotly.js": "^1.47.1",
-    "prettier": "^1.17.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "sass": "^1.18.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.7.1",
+    "@typescript-eslint/eslint-plugin": "^2.7.0",
+    "@typescript-eslint/parser": "^2.7.0",
+    "auto-reload-brunch": "^2",
     "autoprefixer": "^9.5.1",
+    "babel-brunch": "^7.0.1",
+    "babel-preset-env": "^1.7.0",
+    "brunch": "^2",
+    "clean-css-brunch": "^2",
     "cssnano": "^4.1.10",
-    "parcel-bundler": "^1.12.3",
-    "typescript": "^3.4.3"
+    "eslint": "^6.6.0",
+    "eslint-brunch": "^3.12.0",
+    "eslint-config-prettier": "^6.6.0",
+    "eslint-plugin-prettier": "^3.1.1",
+    "jsony-brunch": "*",
+    "prettier": "^1.19.1",
+    "terser-brunch": "^3.0.0",
+    "typescript": "^3.4.3",
+    "typescript-brunch": "^2.3.0"
   }
 }
