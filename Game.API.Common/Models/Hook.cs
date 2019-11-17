@@ -45,8 +45,8 @@
                     ShotCooldownTimeM = 20,
                     ShotCooldownTimeB = 550,
 
-                    ShotCooldownTimeBotM = 22,
-                    ShotCooldownTimeBotB = 1100,
+                    ShotCooldownTimeBotM = 14,
+                    ShotCooldownTimeBotB = 1080,
 
                     ShotThrustM = -0.006f,
                     ShotThrustB = 0.22f,
@@ -62,7 +62,7 @@
                     PrecisionBullets = false,
                     BulletLife = 1500,
                     BotPerXPoints = 500,
-                    BotBase = 1,
+                    BotBase = 15,
                     BotRespawnDelay = 10000,
                     BotMaxRespawnDelay = 60000,
 
