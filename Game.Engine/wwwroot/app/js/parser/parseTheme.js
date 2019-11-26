@@ -13,18 +13,18 @@ function parseScssIntoRules(scss) {
 }
 
 function parseCssIntoRules(css) {
-    var chars = new antlr4.InputStream(css);
-    var lexer = new ScssLexer(chars);
-    var tokens = new antlr4.CommonTokenStream(lexer);
-    var parser = new ScssParser(tokens);
-    var tree = parser.stylesheet();
+    const chars = new antlr4.InputStream(css);
+    const lexer = new ScssLexer(chars);
+    const tokens = new antlr4.CommonTokenStream(lexer);
+    const parser = new ScssParser(tokens);
+    const tree = parser.stylesheet();
 
-    var ruleList = [];
+    const ruleList = [];
     function addRulesFromStatement(statement, rules) {
-        var selectors = statement.ruleset().selectors();
-        var block = statement.ruleset().block();
+        const selectors = statement.ruleset().selectors();
+        const block = statement.ruleset().block();
 
-        var blockProps = block.property().map((x, i) => {
+        const blockProps = block.property().map((x, i) => {
             return [
                 block
                     .property(i)
@@ -38,12 +38,12 @@ function parseCssIntoRules(css) {
             ];
         });
 
-        var blockOBJ = {};
+        const blockOBJ = {};
 
-        for (var i = 0; i < blockProps.length; i++) {
+        for (let i = 0; i < blockProps.length; i++) {
             blockOBJ[blockProps[i][0]] = blockProps[i][1];
         }
-        for (var i = 0; i < selectors.children.length; i++) {
+        for (let i = 0; i < selectors.children.length; i++) {
             if (selectors.selector(i)) {
                 rules.push({ selector: selectors.selector(i).getText(), obj: blockOBJ });
             }
@@ -51,15 +51,15 @@ function parseCssIntoRules(css) {
     }
 
     //nested select is still broken but should be an easy fix ( or could just compile to css)
-    for (var i = 0; i < tree.children.length; i++) {
+    for (let i = 0; i < tree.children.length; i++) {
         addRulesFromStatement(tree.children[i], ruleList);
     }
     return ruleList;
 }
 
-// var ruleList = parseCssIntoRules(input);
+// let ruleList = parseCssIntoRules(input);
 function selectorMatches(selector, selectProps) {
-    var thing = {
+    const thing = {
         type: "tag",
         name: selectProps.element,
         attribs: {
@@ -71,10 +71,10 @@ function selectorMatches(selector, selectProps) {
 }
 
 function queryProperties(element, ruleList) {
-    var res = {};
-    for (var i = 0; i < ruleList.length; i++) {
+    const res = {};
+    for (let i = 0; i < ruleList.length; i++) {
         if (selectorMatches(ruleList[i].selector, element)) {
-            for (var p in ruleList[i].obj) {
+            for (const p in ruleList[i].obj) {
                 if (res[p] == undefined) {
                     res[p] = [];
                 }

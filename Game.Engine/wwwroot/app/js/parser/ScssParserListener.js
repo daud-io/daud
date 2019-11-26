@@ -1,6 +1,8 @@
 // Generated from ScssParser.g4 by ANTLR 4.5.3
 // jshint ignore: start
-var antlr4 = require("antlr4/index");
+/* eslint-disable */
+
+const antlr4 = require("antlr4/index");
 
 // This class defines a complete listener for a parse tree produced by ScssParser.
 function ScssParserListener() {

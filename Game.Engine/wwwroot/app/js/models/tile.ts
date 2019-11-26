@@ -20,14 +20,14 @@ export class Tile extends RenderedObject {
         if (!this.body) return;
 
         if (this.container.tiles.isRefreshing) {
-            var tiles = this.container.tiles;
-            var mapKey = RenderedObject.parseMapKey(this.body.Sprite);
+            const tiles = this.container.tiles;
+            const mapKey = RenderedObject.parseMapKey(this.body.Sprite);
 
             if (!mapKey) console.log(`non-map key used to reference map texture: ${this.body.Sprite}`);
             else {
                 const textureDefinition = RenderedObject.getTextureDefinition(this.body.Sprite);
                 const textures = RenderedObject.loadTexture(textureDefinition, mapKey.name);
-                var texture = textures[mapKey.mapID];
+                const texture = textures[mapKey.mapID];
 
                 tiles.addFrame(
                     texture,

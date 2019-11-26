@@ -3,12 +3,13 @@ import { textureCache } from "./textureCache";
 import { textureMapRules } from "./textureMap";
 import { spriteModeMapRules } from "./spriteModeMap";
 import emitters from "../../emitters.json";
-import "pixi.js";
-import "pixi-layers";
-import * as particles from "pixi-particles";
+import PIXI = require("pixi.js");
+window.PIXI = PIXI;
+import particles = require("pixi-particles");
 import { CustomContainer } from "../CustomContainer";
 import { queryProperties } from "../parser/parseTheme.js";
 import { Sprite } from "pixi.js";
+import "pixi-layers";
 
 class GroupParticle extends particles.Particle {
     body: any;
@@ -20,7 +21,7 @@ class GroupParticle extends particles.Particle {
     }
 
     update(delta: number): number {
-        var ret = super.update(delta);
+        const ret = super.update(delta);
 
         if (this.body) this.scaleMultiplier = this.body.Size;
 
@@ -93,23 +94,23 @@ export class RenderedObject {
                     const sy = 0;
                     const sw = tileSize;
                     const sh = tileSize;
-                    var tex = new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0);
+                    const tex = new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0);
                     (<any>tex).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, tileSize);
                     textures.push(tex);
                 }
             } else if (textureDefinition.map) {
-                let imageWidth = textureDefinition["image-width"];
-                let imageHeight = textureDefinition["image-height"];
-                let tileWidth = textureDefinition["tile-width"];
-                let tileHeight = textureDefinition["tile-height"];
+                const imageWidth = textureDefinition["image-width"];
+                const imageHeight = textureDefinition["image-height"];
+                const tileWidth = textureDefinition["tile-width"];
+                const tileHeight = textureDefinition["tile-height"];
 
-                let tilesWide = Math.floor(imageWidth / tileWidth);
-                let tilesHigh = Math.floor(imageHeight / tileHeight);
+                const tilesWide = Math.floor(imageWidth / tileWidth);
+                const tilesHigh = Math.floor(imageHeight / tileHeight);
 
-                for (var row = 0; row < tilesHigh; row++)
-                    for (var col = 0; col < tilesWide; col++) {
-                        let x = Math.floor(col * tileWidth);
-                        let y = Math.floor(row * tileHeight);
+                for (let row = 0; row < tilesHigh; row++)
+                    for (let col = 0; col < tilesWide; col++) {
+                        const x = Math.floor(col * tileWidth);
+                        const y = Math.floor(row * tileHeight);
 
                         var texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
 
@@ -132,17 +133,17 @@ export class RenderedObject {
     }
 
     static getTextureDefinition(textureName) {
-        var mapKey = this.parseMapKey(textureName);
+        const mapKey = this.parseMapKey(textureName);
         if (mapKey) textureName = mapKey.name;
 
-        var textureDefinition = null;
+        let textureDefinition = null;
         try {
             textureDefinition = queryProperties({ element: textureName }, textureMapRules[0]);
-            for (var i in textureDefinition) {
+            for (const i in textureDefinition) {
                 textureDefinition[i] = textureDefinition[i].map(function(x) {
-                    var k = x;
+                    let k = x;
                     try {
-                        var m = JSON.parse(x);
+                        const m = JSON.parse(x);
                         k = m;
                     } finally {
                         return k;
@@ -163,7 +164,7 @@ export class RenderedObject {
     static parseMapKey(mapKey) {
         if (!mapKey) return false;
 
-        var mapKeyMatches = mapKey.match(/^(.*)\[(\d*)\]/);
+        const mapKeyMatches = mapKey.match(/^(.*)\[(\d*)\]/);
 
         if (mapKeyMatches)
             return {
@@ -176,11 +177,11 @@ export class RenderedObject {
     buildSprite(textureName, spriteName): Sprite {
         const textureDefinition = RenderedObject.getTextureDefinition(textureName);
         const textures = RenderedObject.loadTexture(textureDefinition, textureName);
-        var pixiSprite = null;
+        let pixiSprite = null;
 
         if (textureDefinition.animated) {
-            pixiSprite = new PIXI.extras.AnimatedSprite(textures);
-            if (pixiSprite instanceof PIXI.extras.AnimatedSprite) {
+            pixiSprite = new PIXI.AnimatedSprite(textures);
+            if (pixiSprite instanceof PIXI.AnimatedSprite) {
                 pixiSprite.loop = textureDefinition.loop;
                 pixiSprite.animationSpeed = textureDefinition["animation-speed"];
             }
@@ -214,14 +215,14 @@ export class RenderedObject {
 
         pixiSprite.baseOffset = textureDefinition["offset-x"] ? { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] } : { x: 0, y: 0 };
 
-        if (textureDefinition.animated && pixiSprite instanceof PIXI.extras.AnimatedSprite) pixiSprite.play();
+        if (textureDefinition.animated && pixiSprite instanceof PIXI.AnimatedSprite) pixiSprite.play();
 
         return pixiSprite;
     }
     static getScale(textureDefinition, pixiTex): number {
-        var spriteSize = 1;
+        let spriteSize = 1;
         if (textureDefinition["size"]) {
-            var spriteSizeIsPercent = typeof textureDefinition["size"] == "string" && textureDefinition["size"][textureDefinition["size"].length - 1] == "%";
+            const spriteSizeIsPercent = typeof textureDefinition["size"] == "string" && textureDefinition["size"][textureDefinition["size"].length - 1] == "%";
             spriteSize = spriteSizeIsPercent ? parseFloat(textureDefinition["size"].slice(0, textureDefinition["size"].length - 1)) / 100 : parseFloat(textureDefinition["size"]) / pixiTex.height;
         }
         if (textureDefinition["scale"]) {
@@ -230,9 +231,9 @@ export class RenderedObject {
         return spriteSize;
     }
     static getScaleWithHeight(textureDefinition, height): number {
-        var spriteSize = 1;
+        let spriteSize = 1;
         if (textureDefinition["size"]) {
-            var spriteSizeIsPercent = typeof textureDefinition["size"] == "string" && textureDefinition["size"][textureDefinition["size"].length - 1] == "%";
+            const spriteSizeIsPercent = typeof textureDefinition["size"] == "string" && textureDefinition["size"][textureDefinition["size"].length - 1] == "%";
             spriteSize = spriteSizeIsPercent ? parseFloat(textureDefinition["size"].slice(0, textureDefinition["size"].length - 1)) / 100 : parseFloat(textureDefinition["size"]) / height;
         }
         if (textureDefinition["scale"]) {
@@ -245,15 +246,15 @@ export class RenderedObject {
         if (!additional) {
             additional = [];
         }
-        var mapKey = this.parseMapKey(spriteName);
+        const mapKey = this.parseMapKey(spriteName);
         if (mapKey) spriteName = mapKey.name;
         try {
             spriteDefinition = queryProperties({ element: spriteName.split("_")[0], class: spriteName.split("_").join(" ") + " " + additional.join(" ") }, spriteModeMapRules[0]);
-            for (var i in spriteDefinition) {
+            for (const i in spriteDefinition) {
                 spriteDefinition[i] = spriteDefinition[i].map(function(x) {
-                    var k = x;
+                    let k = x;
                     try {
-                        var m = JSON.parse(x);
+                        const m = JSON.parse(x);
                         k = m;
                     } finally {
                         return k;
@@ -272,7 +273,7 @@ export class RenderedObject {
     }
 
     getModeMap(spriteName, mode) {
-        let layers = [];
+        const layers = [];
         const modes = this.decodeModes(mode);
 
         const spriteDefinition = RenderedObject.getSpriteDefinition(spriteName, modes);
@@ -287,7 +288,7 @@ export class RenderedObject {
             const spriteLayers = [];
             for (let i = 0; i < layers.length; i++) {
                 let spriteLayer = null;
-                var textureName = layers[i];
+                const textureName = layers[i];
 
                 if (this.activeTextures[textureName]) spriteLayer = this.activeTextures[textureName];
                 else {
@@ -305,9 +306,9 @@ export class RenderedObject {
                 }
             }
 
-            for (var key in this.activeTextures) {
+            for (const key in this.activeTextures) {
                 if (layers.indexOf(key) == -1) {
-                    let layer = this.activeTextures[key];
+                    const layer = this.activeTextures[key];
                     this.container.removeChild(layer);
                     layer.destroy();
                     //console.log(`delete sprite layer ${spriteName}:${key}`);
@@ -326,14 +327,14 @@ export class RenderedObject {
             const emitterLayers = [];
             for (let i = 0; i < layers.length; i++) {
                 let emitterLayer = null;
-                var textureName = layers[i];
+                const textureName = layers[i];
 
                 if (this.activeEmitters[textureName]) emitterLayer = this.activeEmitters[textureName];
                 else {
                     const textureDefinition = RenderedObject.getTextureDefinition(textureName);
 
                     if (textureDefinition.emitter) {
-                        let particleTextureName = textureDefinition.particle;
+                        const particleTextureName = textureDefinition.particle;
                         const particleTextures = RenderedObject.loadTexture(RenderedObject.getTextureDefinition(particleTextureName), particleTextureName);
 
                         if (typeof textureDefinition.emitter == "string") textureDefinition.emitter = emitters[textureDefinition.emitter];
@@ -342,7 +343,7 @@ export class RenderedObject {
                         emitterLayer.emit = true;
                         emitterLayer.renderedObject = this;
 
-                        let self = this;
+                        const self = this;
                         emitterLayer.particleConstructor = GroupParticle;
                     }
                 }
@@ -357,9 +358,9 @@ export class RenderedObject {
                 }
             }
 
-            for (var key in this.activeEmitters) {
+            for (const key in this.activeEmitters) {
                 if (layers.indexOf(key) == -1) {
-                    let layer = this.activeEmitters[key];
+                    const layer = this.activeEmitters[key];
                     this.container.removeChild(layer);
                     layer.destroy();
                     delete this.activeEmitters[key];

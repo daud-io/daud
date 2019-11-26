@@ -11,7 +11,7 @@ export class Ship extends RenderedObject {
     }
 
     decodeModes(mode) {
-        var modes = [];
+        const modes = [];
 
         if ((mode & 4) != 0) modes.push("defenseupgrade");
 

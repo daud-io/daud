@@ -1,8 +1,10 @@
 // Generated from ScssLexer.g4 by ANTLR 4.5.3
 // jshint ignore: start
-var antlr4 = require("antlr4/index");
+/* eslint-disable */
 
-var serializedATN = [
+const antlr4 = require("antlr4/index");
+
+const serializedATN = [
     "\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0002?\u022f\b\u0001\b\u0001\b\u0001\u0004\u0002\t\u0002\u0004\u0003",
     "\t\u0003\u0004\u0004\t\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006",
@@ -364,9 +366,9 @@ var serializedATN = [
     "\u0002\t\t\u0002\t\n\u0002\t\u0012\u0002\t\u0014\u0002\t\u0013\u0002"
 ].join("");
 
-var atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
+const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
-var decisionsToDFA = atn.decisionToState.map(function(ds, index) {
+const decisionsToDFA = atn.decisionToState.map(function(ds, index) {
     return new antlr4.dfa.DFA(ds, index);
 });
 

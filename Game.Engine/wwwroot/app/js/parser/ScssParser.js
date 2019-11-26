@@ -1,10 +1,12 @@
 // Generated from ScssParser.g4 by ANTLR 4.5.3
 // jshint ignore: start
-let antlr4 = require("antlr4/index");
-let ScssParserListener = require("./ScssParserListener").ScssParserListener;
-let grammarFileName = "ScssParser.g4";
+/* eslint-disable */
 
-let serializedATN = [
+const antlr4 = require("antlr4/index");
+const ScssParserListener = require("./ScssParserListener").ScssParserListener;
+const grammarFileName = "ScssParser.g4";
+
+const serializedATN = [
     "\u0003\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd",
     "\u0003?\u0209\u0004\u0002\t\u0002\u0004\u0003\t\u0003\u0004\u0004\t",
     "\u0004\u0004\u0005\t\u0005\u0004\u0006\t\u0006\u0004\u0007\t\u0007\u0004",
@@ -344,15 +346,15 @@ let serializedATN = [
     "\u0204"
 ].join("");
 
-let atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
+const atn = new antlr4.atn.ATNDeserializer().deserialize(serializedATN);
 
-let decisionsToDFA = atn.decisionToState.map(function(ds, index) {
+const decisionsToDFA = atn.decisionToState.map(function(ds, index) {
     return new antlr4.dfa.DFA(ds, index);
 });
 
-let sharedContextCache = new antlr4.PredictionContextCache();
+const sharedContextCache = new antlr4.PredictionContextCache();
 
-let literalNames = [
+const literalNames = [
     null,
     "'null'",
     "'in'",
@@ -405,7 +407,7 @@ let literalNames = [
     "'!default'"
 ];
 
-let symbolicNames = [
+const symbolicNames = [
     null,
     "NULL",
     "IN",
@@ -470,7 +472,7 @@ let symbolicNames = [
     "IdentifierAfter"
 ];
 
-let ruleNames = [
+const ruleNames = [
     "stylesheet",
     "statement",
     "params",
@@ -701,7 +703,7 @@ StylesheetContext.prototype.exitRule = function(listener) {
 ScssParser.StylesheetContext = StylesheetContext;
 
 ScssParser.prototype.stylesheet = function() {
-    let localctx = new StylesheetContext(this, this._ctx, this.state);
+    const localctx = new StylesheetContext(this, this._ctx, this.state);
     this.enterRule(localctx, 0, ScssParser.RULE_stylesheet);
     let _la = 0; // Token type
     try {
@@ -828,7 +830,7 @@ StatementContext.prototype.exitRule = function(listener) {
 ScssParser.StatementContext = StatementContext;
 
 ScssParser.prototype.statement = function() {
-    let localctx = new StatementContext(this, this._ctx, this.state);
+    const localctx = new StatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 2, ScssParser.RULE_statement);
     try {
         this.state = 121;
@@ -967,7 +969,7 @@ ParamsContext.prototype.exitRule = function(listener) {
 ScssParser.ParamsContext = ParamsContext;
 
 ScssParser.prototype.params = function() {
-    let localctx = new ParamsContext(this, this._ctx, this.state);
+    const localctx = new ParamsContext(this, this._ctx, this.state);
     this.enterRule(localctx, 4, ScssParser.RULE_params);
     let _la = 0; // Token type
     try {
@@ -1045,7 +1047,7 @@ ParamContext.prototype.exitRule = function(listener) {
 ScssParser.ParamContext = ParamContext;
 
 ScssParser.prototype.param = function() {
-    let localctx = new ParamContext(this, this._ctx, this.state);
+    const localctx = new ParamContext(this, this._ctx, this.state);
     this.enterRule(localctx, 6, ScssParser.RULE_param);
     let _la = 0; // Token type
     try {
@@ -1111,7 +1113,7 @@ VariableNameContext.prototype.exitRule = function(listener) {
 ScssParser.VariableNameContext = VariableNameContext;
 
 ScssParser.prototype.variableName = function() {
-    let localctx = new VariableNameContext(this, this._ctx, this.state);
+    const localctx = new VariableNameContext(this, this._ctx, this.state);
     this.enterRule(localctx, 8, ScssParser.RULE_variableName);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -1179,7 +1181,7 @@ ParamOptionalValueContext.prototype.exitRule = function(listener) {
 ScssParser.ParamOptionalValueContext = ParamOptionalValueContext;
 
 ScssParser.prototype.paramOptionalValue = function() {
-    let localctx = new ParamOptionalValueContext(this, this._ctx, this.state);
+    const localctx = new ParamOptionalValueContext(this, this._ctx, this.state);
     this.enterRule(localctx, 10, ScssParser.RULE_paramOptionalValue);
     let _la = 0; // Token type
     try {
@@ -1265,7 +1267,7 @@ MixinDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.MixinDeclarationContext = MixinDeclarationContext;
 
 ScssParser.prototype.mixinDeclaration = function() {
-    let localctx = new MixinDeclarationContext(this, this._ctx, this.state);
+    const localctx = new MixinDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 12, ScssParser.RULE_mixinDeclaration);
     let _la = 0; // Token type
     try {
@@ -1361,7 +1363,7 @@ IncludeDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.IncludeDeclarationContext = IncludeDeclarationContext;
 
 ScssParser.prototype.includeDeclaration = function() {
-    let localctx = new IncludeDeclarationContext(this, this._ctx, this.state);
+    const localctx = new IncludeDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 14, ScssParser.RULE_includeDeclaration);
     let _la = 0; // Token type
     try {
@@ -1403,7 +1405,7 @@ ScssParser.prototype.includeDeclaration = function() {
             case ScssParser.Color:
                 this.state = 169;
                 this._errHandler.sync(this);
-                let la_ = this._interp.adaptivePredict(this._input, 10, this._ctx);
+                const la_ = this._interp.adaptivePredict(this._input, 10, this._ctx);
                 if (la_ === 1) {
                     this.state = 161;
                     this.match(ScssParser.LPAREN);
@@ -1513,7 +1515,7 @@ FunctionDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.FunctionDeclarationContext = FunctionDeclarationContext;
 
 ScssParser.prototype.functionDeclaration = function() {
-    let localctx = new FunctionDeclarationContext(this, this._ctx, this.state);
+    const localctx = new FunctionDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 16, ScssParser.RULE_functionDeclaration);
     let _la = 0; // Token type
     try {
@@ -1634,7 +1636,7 @@ FunctionBodyContext.prototype.exitRule = function(listener) {
 ScssParser.FunctionBodyContext = FunctionBodyContext;
 
 ScssParser.prototype.functionBody = function() {
-    let localctx = new FunctionBodyContext(this, this._ctx, this.state);
+    const localctx = new FunctionBodyContext(this, this._ctx, this.state);
     this.enterRule(localctx, 18, ScssParser.RULE_functionBody);
     let _la = 0; // Token type
     try {
@@ -1729,7 +1731,7 @@ FunctionReturnContext.prototype.exitRule = function(listener) {
 ScssParser.FunctionReturnContext = FunctionReturnContext;
 
 ScssParser.prototype.functionReturn = function() {
-    let localctx = new FunctionReturnContext(this, this._ctx, this.state);
+    const localctx = new FunctionReturnContext(this, this._ctx, this.state);
     this.enterRule(localctx, 20, ScssParser.RULE_functionReturn);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -1792,12 +1794,12 @@ FunctionStatementContext.prototype.exitRule = function(listener) {
 ScssParser.FunctionStatementContext = FunctionStatementContext;
 
 ScssParser.prototype.functionStatement = function() {
-    let localctx = new FunctionStatementContext(this, this._ctx, this.state);
+    const localctx = new FunctionStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 22, ScssParser.RULE_functionStatement);
     try {
         this.state = 205;
         this._errHandler.sync(this);
-        let la_ = this._interp.adaptivePredict(this._input, 16, this._ctx);
+        const la_ = this._interp.adaptivePredict(this._input, 16, this._ctx);
         switch (la_) {
             case 1:
                 this.enterOuterAlt(localctx, 1);
@@ -1877,7 +1879,7 @@ CommandStatementContext.prototype.exitRule = function(listener) {
 ScssParser.CommandStatementContext = CommandStatementContext;
 
 ScssParser.prototype.commandStatement = function() {
-    let localctx = new CommandStatementContext(this, this._ctx, this.state);
+    const localctx = new CommandStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 24, ScssParser.RULE_commandStatement);
     let _la = 0; // Token type
     try {
@@ -1989,7 +1991,7 @@ MathCharacterContext.prototype.exitRule = function(listener) {
 ScssParser.MathCharacterContext = MathCharacterContext;
 
 ScssParser.prototype.mathCharacter = function() {
-    let localctx = new MathCharacterContext(this, this._ctx, this.state);
+    const localctx = new MathCharacterContext(this, this._ctx, this.state);
     this.enterRule(localctx, 26, ScssParser.RULE_mathCharacter);
     let _la = 0; // Token type
     try {
@@ -2054,7 +2056,7 @@ MathStatementContext.prototype.exitRule = function(listener) {
 ScssParser.MathStatementContext = MathStatementContext;
 
 ScssParser.prototype.mathStatement = function() {
-    let localctx = new MathStatementContext(this, this._ctx, this.state);
+    const localctx = new MathStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 28, ScssParser.RULE_mathStatement);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -2139,12 +2141,12 @@ ExpressionContext.prototype.exitRule = function(listener) {
 ScssParser.ExpressionContext = ExpressionContext;
 
 ScssParser.prototype.expression = function() {
-    let localctx = new ExpressionContext(this, this._ctx, this.state);
+    const localctx = new ExpressionContext(this, this._ctx, this.state);
     this.enterRule(localctx, 30, ScssParser.RULE_expression);
     try {
         this.state = 234;
         this._errHandler.sync(this);
-        let la_ = this._interp.adaptivePredict(this._input, 20, this._ctx);
+        const la_ = this._interp.adaptivePredict(this._input, 20, this._ctx);
         switch (la_) {
             case 1:
                 this.enterOuterAlt(localctx, 1);
@@ -2266,7 +2268,7 @@ IfDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.IfDeclarationContext = IfDeclarationContext;
 
 ScssParser.prototype.ifDeclaration = function() {
-    let localctx = new IfDeclarationContext(this, this._ctx, this.state);
+    const localctx = new IfDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 32, ScssParser.RULE_ifDeclaration);
     let _la = 0; // Token type
     try {
@@ -2357,7 +2359,7 @@ ElseIfStatementContext.prototype.exitRule = function(listener) {
 ScssParser.ElseIfStatementContext = ElseIfStatementContext;
 
 ScssParser.prototype.elseIfStatement = function() {
-    let localctx = new ElseIfStatementContext(this, this._ctx, this.state);
+    const localctx = new ElseIfStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 34, ScssParser.RULE_elseIfStatement);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -2422,7 +2424,7 @@ ElseStatementContext.prototype.exitRule = function(listener) {
 ScssParser.ElseStatementContext = ElseStatementContext;
 
 ScssParser.prototype.elseStatement = function() {
-    let localctx = new ElseStatementContext(this, this._ctx, this.state);
+    const localctx = new ElseStatementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 36, ScssParser.RULE_elseStatement);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -2491,12 +2493,12 @@ ConditionsContext.prototype.exitRule = function(listener) {
 ScssParser.ConditionsContext = ConditionsContext;
 
 ScssParser.prototype.conditions = function() {
-    let localctx = new ConditionsContext(this, this._ctx, this.state);
+    const localctx = new ConditionsContext(this, this._ctx, this.state);
     this.enterRule(localctx, 38, ScssParser.RULE_conditions);
     try {
         this.state = 262;
         this._errHandler.sync(this);
-        let la_ = this._interp.adaptivePredict(this._input, 24, this._ctx);
+        const la_ = this._interp.adaptivePredict(this._input, 24, this._ctx);
         switch (la_) {
             case 1:
                 this.enterOuterAlt(localctx, 1);
@@ -2504,7 +2506,7 @@ ScssParser.prototype.conditions = function() {
                 this.condition();
                 this.state = 259;
                 this._errHandler.sync(this);
-                let la_ = this._interp.adaptivePredict(this._input, 23, this._ctx);
+                const la_ = this._interp.adaptivePredict(this._input, 23, this._ctx);
                 if (la_ === 1) {
                     this.state = 257;
                     this.match(ScssParser.COMBINE_COMPARE);
@@ -2584,13 +2586,13 @@ ConditionContext.prototype.exitRule = function(listener) {
 ScssParser.ConditionContext = ConditionContext;
 
 ScssParser.prototype.condition = function() {
-    let localctx = new ConditionContext(this, this._ctx, this.state);
+    const localctx = new ConditionContext(this, this._ctx, this.state);
     this.enterRule(localctx, 40, ScssParser.RULE_condition);
     let _la = 0; // Token type
     try {
         this.state = 273;
         this._errHandler.sync(this);
-        let la_ = this._interp.adaptivePredict(this._input, 26, this._ctx);
+        const la_ = this._interp.adaptivePredict(this._input, 26, this._ctx);
         switch (la_) {
             case 1:
                 this.enterOuterAlt(localctx, 1);
@@ -2687,7 +2689,7 @@ VariableDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.VariableDeclarationContext = VariableDeclarationContext;
 
 ScssParser.prototype.variableDeclaration = function() {
-    let localctx = new VariableDeclarationContext(this, this._ctx, this.state);
+    const localctx = new VariableDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 42, ScssParser.RULE_variableDeclaration);
     let _la = 0; // Token type
     try {
@@ -2772,7 +2774,7 @@ ForDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.ForDeclarationContext = ForDeclarationContext;
 
 ScssParser.prototype.forDeclaration = function() {
-    let localctx = new ForDeclarationContext(this, this._ctx, this.state);
+    const localctx = new ForDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 44, ScssParser.RULE_forDeclaration);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -2839,7 +2841,7 @@ FromNumberContext.prototype.exitRule = function(listener) {
 ScssParser.FromNumberContext = FromNumberContext;
 
 ScssParser.prototype.fromNumber = function() {
-    let localctx = new FromNumberContext(this, this._ctx, this.state);
+    const localctx = new FromNumberContext(this, this._ctx, this.state);
     this.enterRule(localctx, 46, ScssParser.RULE_fromNumber);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -2894,7 +2896,7 @@ ThroughNumberContext.prototype.exitRule = function(listener) {
 ScssParser.ThroughNumberContext = ThroughNumberContext;
 
 ScssParser.prototype.throughNumber = function() {
-    let localctx = new ThroughNumberContext(this, this._ctx, this.state);
+    const localctx = new ThroughNumberContext(this, this._ctx, this.state);
     this.enterRule(localctx, 48, ScssParser.RULE_throughNumber);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -2957,7 +2959,7 @@ WhileDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.WhileDeclarationContext = WhileDeclarationContext;
 
 ScssParser.prototype.whileDeclaration = function() {
-    let localctx = new WhileDeclarationContext(this, this._ctx, this.state);
+    const localctx = new WhileDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 50, ScssParser.RULE_whileDeclaration);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -3050,7 +3052,7 @@ EachDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.EachDeclarationContext = EachDeclarationContext;
 
 ScssParser.prototype.eachDeclaration = function() {
-    let localctx = new EachDeclarationContext(this, this._ctx, this.state);
+    const localctx = new EachDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 52, ScssParser.RULE_eachDeclaration);
     let _la = 0; // Token type
     try {
@@ -3155,7 +3157,7 @@ EachValueListContext.prototype.exitRule = function(listener) {
 ScssParser.EachValueListContext = EachValueListContext;
 
 ScssParser.prototype.eachValueList = function() {
-    let localctx = new EachValueListContext(this, this._ctx, this.state);
+    const localctx = new EachValueListContext(this, this._ctx, this.state);
     this.enterRule(localctx, 54, ScssParser.RULE_eachValueList);
     let _la = 0; // Token type
     try {
@@ -3273,7 +3275,7 @@ IdentifierListOrMapContext.prototype.exitRule = function(listener) {
 ScssParser.IdentifierListOrMapContext = IdentifierListOrMapContext;
 
 ScssParser.prototype.identifierListOrMap = function() {
-    let localctx = new IdentifierListOrMapContext(this, this._ctx, this.state);
+    const localctx = new IdentifierListOrMapContext(this, this._ctx, this.state);
     this.enterRule(localctx, 56, ScssParser.RULE_identifierListOrMap);
     let _la = 0; // Token type
     try {
@@ -3353,7 +3355,7 @@ IdentifierValueContext.prototype.exitRule = function(listener) {
 ScssParser.IdentifierValueContext = IdentifierValueContext;
 
 ScssParser.prototype.identifierValue = function() {
-    let localctx = new IdentifierValueContext(this, this._ctx, this.state);
+    const localctx = new IdentifierValueContext(this, this._ctx, this.state);
     this.enterRule(localctx, 58, ScssParser.RULE_identifierValue);
     let _la = 0; // Token type
     try {
@@ -3421,7 +3423,7 @@ ImportDeclarationContext.prototype.exitRule = function(listener) {
 ScssParser.ImportDeclarationContext = ImportDeclarationContext;
 
 ScssParser.prototype.importDeclaration = function() {
-    let localctx = new ImportDeclarationContext(this, this._ctx, this.state);
+    const localctx = new ImportDeclarationContext(this, this._ctx, this.state);
     this.enterRule(localctx, 60, ScssParser.RULE_importDeclaration);
     let _la = 0; // Token type
     try {
@@ -3500,7 +3502,7 @@ ReferenceUrlContext.prototype.exitRule = function(listener) {
 ScssParser.ReferenceUrlContext = ReferenceUrlContext;
 
 ScssParser.prototype.referenceUrl = function() {
-    let localctx = new ReferenceUrlContext(this, this._ctx, this.state);
+    const localctx = new ReferenceUrlContext(this, this._ctx, this.state);
     this.enterRule(localctx, 62, ScssParser.RULE_referenceUrl);
     try {
         this.state = 357;
@@ -3589,7 +3591,7 @@ MediaTypesContext.prototype.exitRule = function(listener) {
 ScssParser.MediaTypesContext = MediaTypesContext;
 
 ScssParser.prototype.mediaTypes = function() {
-    let localctx = new MediaTypesContext(this, this._ctx, this.state);
+    const localctx = new MediaTypesContext(this, this._ctx, this.state);
     this.enterRule(localctx, 64, ScssParser.RULE_mediaTypes);
     let _la = 0; // Token type
     try {
@@ -3673,7 +3675,7 @@ NestedContext.prototype.exitRule = function(listener) {
 ScssParser.NestedContext = NestedContext;
 
 ScssParser.prototype.nested = function() {
-    let localctx = new NestedContext(this, this._ctx, this.state);
+    const localctx = new NestedContext(this, this._ctx, this.state);
     this.enterRule(localctx, 66, ScssParser.RULE_nested);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -3756,7 +3758,7 @@ NestContext.prototype.exitRule = function(listener) {
 ScssParser.NestContext = NestContext;
 
 ScssParser.prototype.nest = function() {
-    let localctx = new NestContext(this, this._ctx, this.state);
+    const localctx = new NestContext(this, this._ctx, this.state);
     this.enterRule(localctx, 68, ScssParser.RULE_nest);
     let _la = 0; // Token type
     try {
@@ -3844,7 +3846,7 @@ RulesetContext.prototype.exitRule = function(listener) {
 ScssParser.RulesetContext = RulesetContext;
 
 ScssParser.prototype.ruleset = function() {
-    let localctx = new RulesetContext(this, this._ctx, this.state);
+    const localctx = new RulesetContext(this, this._ctx, this.state);
     this.enterRule(localctx, 70, ScssParser.RULE_ruleset);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -3927,7 +3929,7 @@ BlockContext.prototype.exitRule = function(listener) {
 ScssParser.BlockContext = BlockContext;
 
 ScssParser.prototype.block = function() {
-    let localctx = new BlockContext(this, this._ctx, this.state);
+    const localctx = new BlockContext(this, this._ctx, this.state);
     this.enterRule(localctx, 72, ScssParser.RULE_block);
     let _la = 0; // Token type
     try {
@@ -3941,7 +3943,7 @@ ScssParser.prototype.block = function() {
             if (_alt === 1) {
                 this.state = 395;
                 this._errHandler.sync(this);
-                let la_ = this._interp.adaptivePredict(this._input, 39, this._ctx);
+                const la_ = this._interp.adaptivePredict(this._input, 39, this._ctx);
                 switch (la_) {
                     case 1:
                         this.state = 391;
@@ -4037,7 +4039,7 @@ SelectorsContext.prototype.exitRule = function(listener) {
 ScssParser.SelectorsContext = SelectorsContext;
 
 ScssParser.prototype.selectors = function() {
-    let localctx = new SelectorsContext(this, this._ctx, this.state);
+    const localctx = new SelectorsContext(this, this._ctx, this.state);
     this.enterRule(localctx, 74, ScssParser.RULE_selectors);
     let _la = 0; // Token type
     try {
@@ -4138,7 +4140,7 @@ SelectorContext.prototype.exitRule = function(listener) {
 ScssParser.SelectorContext = SelectorContext;
 
 ScssParser.prototype.selector = function() {
-    let localctx = new SelectorContext(this, this._ctx, this.state);
+    const localctx = new SelectorContext(this, this._ctx, this.state);
     this.enterRule(localctx, 76, ScssParser.RULE_selector);
     let _la = 0; // Token type
     try {
@@ -4241,7 +4243,7 @@ SelectorPrefixContext.prototype.exitRule = function(listener) {
 ScssParser.SelectorPrefixContext = SelectorPrefixContext;
 
 ScssParser.prototype.selectorPrefix = function() {
-    let localctx = new SelectorPrefixContext(this, this._ctx, this.state);
+    const localctx = new SelectorPrefixContext(this, this._ctx, this.state);
     this.enterRule(localctx, 78, ScssParser.RULE_selectorPrefix);
     let _la = 0; // Token type
     try {
@@ -4302,7 +4304,7 @@ ElementContext.prototype.exitRule = function(listener) {
 ScssParser.ElementContext = ElementContext;
 
 ScssParser.prototype.element = function() {
-    let localctx = new ElementContext(this, this._ctx, this.state);
+    const localctx = new ElementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 80, ScssParser.RULE_element);
     try {
         this.state = 444;
@@ -4401,13 +4403,13 @@ PseudoContext.prototype.exitRule = function(listener) {
 ScssParser.PseudoContext = PseudoContext;
 
 ScssParser.prototype.pseudo = function() {
-    let localctx = new PseudoContext(this, this._ctx, this.state);
+    const localctx = new PseudoContext(this, this._ctx, this.state);
     this.enterRule(localctx, 82, ScssParser.RULE_pseudo);
     let _la = 0; // Token type
     try {
         this.state = 450;
         this._errHandler.sync(this);
-        let la_ = this._interp.adaptivePredict(this._input, 48, this._ctx);
+        const la_ = this._interp.adaptivePredict(this._input, 48, this._ctx);
         switch (la_) {
             case 1:
                 this.enterOuterAlt(localctx, 1);
@@ -4499,7 +4501,7 @@ AttribContext.prototype.exitRule = function(listener) {
 ScssParser.AttribContext = AttribContext;
 
 ScssParser.prototype.attrib = function() {
-    let localctx = new AttribContext(this, this._ctx, this.state);
+    const localctx = new AttribContext(this, this._ctx, this.state);
     this.enterRule(localctx, 84, ScssParser.RULE_attrib);
     let _la = 0; // Token type
     try {
@@ -4569,7 +4571,7 @@ AttribRelateContext.prototype.exitRule = function(listener) {
 ScssParser.AttribRelateContext = AttribRelateContext;
 
 ScssParser.prototype.attribRelate = function() {
-    let localctx = new AttribRelateContext(this, this._ctx, this.state);
+    const localctx = new AttribRelateContext(this, this._ctx, this.state);
     this.enterRule(localctx, 86, ScssParser.RULE_attribRelate);
     let _la = 0; // Token type
     try {
@@ -4653,7 +4655,7 @@ IdentifierContext.prototype.exitRule = function(listener) {
 ScssParser.IdentifierContext = IdentifierContext;
 
 ScssParser.prototype.identifier = function() {
-    let localctx = new IdentifierContext(this, this._ctx, this.state);
+    const localctx = new IdentifierContext(this, this._ctx, this.state);
     this.enterRule(localctx, 88, ScssParser.RULE_identifier);
     let _la = 0; // Token type
     try {
@@ -4757,7 +4759,7 @@ IdentifierPartContext.prototype.exitRule = function(listener) {
 ScssParser.IdentifierPartContext = IdentifierPartContext;
 
 ScssParser.prototype.identifierPart = function() {
-    let localctx = new IdentifierPartContext(this, this._ctx, this.state);
+    const localctx = new IdentifierPartContext(this, this._ctx, this.state);
     this.enterRule(localctx, 90, ScssParser.RULE_identifierPart);
     try {
         this.state = 486;
@@ -4836,7 +4838,7 @@ IdentifierVariableNameContext.prototype.exitRule = function(listener) {
 ScssParser.IdentifierVariableNameContext = IdentifierVariableNameContext;
 
 ScssParser.prototype.identifierVariableName = function() {
-    let localctx = new IdentifierVariableNameContext(this, this._ctx, this.state);
+    const localctx = new IdentifierVariableNameContext(this, this._ctx, this.state);
     this.enterRule(localctx, 92, ScssParser.RULE_identifierVariableName);
     let _la = 0; // Token type
     try {
@@ -4907,7 +4909,7 @@ PropertyContext.prototype.exitRule = function(listener) {
 ScssParser.PropertyContext = PropertyContext;
 
 ScssParser.prototype.property = function() {
-    let localctx = new PropertyContext(this, this._ctx, this.state);
+    const localctx = new PropertyContext(this, this._ctx, this.state);
     this.enterRule(localctx, 94, ScssParser.RULE_property);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -4984,7 +4986,7 @@ ValuesContext.prototype.exitRule = function(listener) {
 ScssParser.ValuesContext = ValuesContext;
 
 ScssParser.prototype.values = function() {
-    let localctx = new ValuesContext(this, this._ctx, this.state);
+    const localctx = new ValuesContext(this, this._ctx, this.state);
     this.enterRule(localctx, 96, ScssParser.RULE_values);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -5061,7 +5063,7 @@ UrlContext.prototype.exitRule = function(listener) {
 ScssParser.UrlContext = UrlContext;
 
 ScssParser.prototype.url = function() {
-    let localctx = new UrlContext(this, this._ctx, this.state);
+    const localctx = new UrlContext(this, this._ctx, this.state);
     this.enterRule(localctx, 98, ScssParser.RULE_url);
     try {
         this.enterOuterAlt(localctx, 1);
@@ -5124,7 +5126,7 @@ MeasurementContext.prototype.exitRule = function(listener) {
 ScssParser.MeasurementContext = MeasurementContext;
 
 ScssParser.prototype.measurement = function() {
-    let localctx = new MeasurementContext(this, this._ctx, this.state);
+    const localctx = new MeasurementContext(this, this._ctx, this.state);
     this.enterRule(localctx, 100, ScssParser.RULE_measurement);
     let _la = 0; // Token type
     try {
@@ -5198,7 +5200,7 @@ FunctionCallContext.prototype.exitRule = function(listener) {
 ScssParser.FunctionCallContext = FunctionCallContext;
 
 ScssParser.prototype.functionCall = function() {
-    let localctx = new FunctionCallContext(this, this._ctx, this.state);
+    const localctx = new FunctionCallContext(this, this._ctx, this.state);
     this.enterRule(localctx, 102, ScssParser.RULE_functionCall);
     let _la = 0; // Token type
     try {

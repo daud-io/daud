@@ -20,7 +20,8 @@ import { getToken } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
-import * as PIXI from "pixi.js";
+import PIXI = require("pixi.js");
+window.PIXI = PIXI;
 import "pixi-tilemap";
 import "./changelog";
 
@@ -36,9 +37,9 @@ const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
 //PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
-const app = new PIXI.Application(<PIXI.ApplicationOptions>{ view: canvas, transparent: true });
+const app = new PIXI.Application({ view: canvas, transparent: true });
 app.stage = new PIXI.display.Stage();
-(<PIXI.display.Stage>app.stage).group.enableSort = true;
+(app.stage as PIXI.display.Stage).group.enableSort = true;
 const container = new CustomContainer();
 app.stage.addChild(container);
 
@@ -57,7 +58,7 @@ container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
 container.tiles.parentGroup = tileGroup;
 container.addChild(container.tiles);
 
-container.emitterContainer = new PIXI.particles.ParticleContainer();
+container.emitterContainer = new PIXI.ParticleContainer();
 container.emitterContainer.parentGroup = bodyGroup;
 container.zOrder = 128;
 container.addChild(container.emitterContainer);
