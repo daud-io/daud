@@ -1,6 +1,5 @@
 ﻿import { fetch } from "whatwg-fetch";
 import { Router } from "./router";
-import { __esModule } from "pixi.js/lib/core";
 
 const worlds = document.getElementById("worlds");
 const worldList = document.getElementById("worldList");
