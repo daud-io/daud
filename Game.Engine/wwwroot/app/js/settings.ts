@@ -3,8 +3,6 @@ import JSZip from "jszip";
 import { textureMapRules } from "./models/textureMap";
 import { spriteModeMapRules } from "./models/spriteModeMap";
 import { textureCache } from "./models/textureCache";
-import { Controls } from "./controls";
-import { Connection } from "./connection";
 import Cookies = require("js-cookie");
 import sass = require("sass");
 const Buffer = require("buffer").Buffer;
@@ -14,7 +12,7 @@ const spriteModeMapRulesLen = spriteModeMapRules[0].length;
 // in case your code is isomorphic
 if (typeof window !== "undefined") (window as any).Buffer = Buffer;
 
-import { queryProperties, parseScssIntoRules } from "./parser/parseTheme.js";
+import { parseScssIntoRules } from "./parser/parseTheme.js";
 
 export const Settings = {
     theme: "",

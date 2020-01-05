@@ -125,7 +125,7 @@ export class Cache {
                     group = this.groups[`g-${update.Group}`];
                     if (group) {
                         switch (group.Type) {
-                            case 1:
+                            case 1: {
                                 let ship = update.renderer;
                                 if (!ship) ship = new Ship(this.container);
                                 update.renderer = ship;
@@ -136,19 +136,20 @@ export class Cache {
 
                                 if (fleet) fleet.addShip(ship);
                                 break;
-
+                            }
                             case 3:
-                            case 4:
+                            case 4: {
                                 let bullet = update.renderer;
                                 if (!bullet) bullet = new Bullet(this.container, this);
                                 update.renderer = bullet;
                                 break;
-
-                            case 6:
+                            }
+                            case 6: {
                                 let tile = update.renderer;
                                 if (!tile) tile = new Tile(this.container, this);
                                 update.renderer = tile;
                                 break;
+                            }
                         }
                     }
                 }

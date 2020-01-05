@@ -41,6 +41,7 @@ const app = new PIXI.Application({ view: canvas, transparent: true });
 app.stage = new PIXI.display.Stage();
 (app.stage as PIXI.display.Stage).group.enableSort = true;
 const container = new CustomContainer();
+container.sortableChildren = true;
 app.stage.addChild(container);
 
 const backgroundGroup = new PIXI.display.Group(0, true);
@@ -60,7 +61,7 @@ container.addChild(container.tiles);
 
 container.emitterContainer = new PIXI.ParticleContainer();
 container.emitterContainer.parentGroup = bodyGroup;
-container.zOrder = 128;
+container.zIndex = -128;
 container.addChild(container.emitterContainer);
 
 const renderer = new Renderer(container);
@@ -322,9 +323,13 @@ setInterval(() => {
             else spectateControl = "spectating";
         }
 
-        let customData = null;
+        let customData = Controls.customData;
 
         if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
+        if ((window as any).magic) {
+            customData = JSON.stringify(Object.assign(JSON.parse(customData || "{}"), { magic: (window as any).magic }));
+            (window as any).magic = undefined;
+        }
 
         connection.sendControl(angle, Controls.boost, Controls.shoot, aimTarget.x, aimTarget.y, spectateControl, customData);
 
@@ -608,7 +613,7 @@ function parseQuery(queryString) {
 }
 
 const query = parseQuery(window.location.search);
-if ((<any>query).spectate && (<any>query).spectate !== "0") {
+if ((query as any).spectate && (query as any).spectate !== "0") {
     startSpectate(true);
 }
 

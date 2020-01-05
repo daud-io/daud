@@ -134,7 +134,7 @@ export class Connection {
         };
     }
     sendPing() {
-        const builder = new (<any>flatbuffers).Builder(0);
+        const builder = new (flatbuffers as any).Builder(0);
 
         this.fb.NetPing.startNetPing(builder);
         this.pingSent = performance.now();
@@ -161,7 +161,7 @@ export class Connection {
     }
 
     sendExit() {
-        const builder = new (<any>flatbuffers).Builder(0);
+        const builder = new (flatbuffers as any).Builder(0);
 
         this.fb.NetExit.startNetExit(builder);
 
@@ -179,7 +179,7 @@ export class Connection {
     }
 
     sendAuthenticate(token) {
-        const builder = new (<any>flatbuffers).Builder(0);
+        const builder = new (flatbuffers as any).Builder(0);
 
         const stringToken = builder.createString(token || "");
 
@@ -199,7 +199,7 @@ export class Connection {
     }
 
     sendSpawn(name, color, ship, token) {
-        const builder = new (<any>flatbuffers).Builder(0);
+        const builder = new (flatbuffers as any).Builder(0);
 
         const stringColor = builder.createString(color || "gray");
         const stringName = builder.createString(name || "unknown");
@@ -225,7 +225,7 @@ export class Connection {
     }
 
     sendControl(angle, boost, shoot, x, y, spectateControl, customDataJson) {
-        const builder = new (<any>flatbuffers).Builder(0);
+        const builder = new (flatbuffers as any).Builder(0);
 
         let spectateString = false;
         let customDataJsonString = false;
@@ -295,7 +295,7 @@ export class Connection {
 
     onMessage(event) {
         const data = new Uint8Array(event.data);
-        const buf = new (<any>flatbuffers).ByteBuffer(data);
+        const buf = new (flatbuffers as any).ByteBuffer(data);
 
         this.statBytesDown += data.byteLength;
 

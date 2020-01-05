@@ -1,4 +1,4 @@
-export var message = {
+export const message = {
     txt: "",
     time: Date.now()
 };

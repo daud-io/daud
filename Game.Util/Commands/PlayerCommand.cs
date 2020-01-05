@@ -111,7 +111,7 @@
                 if (Color == null)
                     Color = "red";
 
-                async Task<Robot> CreateRobot(Type innerRobotType = null, string worldKey = null, APIClient apiClient = null)
+                async Task<Robot> CreateRobot(int i = 0, Type innerRobotType = null, string worldKey = null, APIClient apiClient = null)
                 {
                     var robot = Activator.CreateInstance(innerRobotType ?? robotType) as Robot;
                     robot.AutoSpawn = true;
@@ -128,7 +128,7 @@
 
                     robot.AutoFire = Firing;
                     robot.Color = Color;
-                    robot.Name = Name;
+                    robot.Name = Name+i.ToString();
                     robot.Target = Target;
                     robot.Sprite = Sprite;
 
@@ -205,7 +205,7 @@
                     var tasks = new List<Task>();
                     for (int i = 0; i < Replicas; i++)
                     {
-                        var robot = await CreateRobot();
+                        var robot = await CreateRobot(i);
                         tasks.Add(robot.StartAsync());
                     };
 

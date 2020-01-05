@@ -38,7 +38,7 @@ export class Router {
             let best: any = false;
 
             self.allResults.forEach(result => {
-                if (!best || (<any>result).latency < best.latency) best = result;
+                if (!best || (result as any).latency < best.latency) best = result;
             });
 
             next(best.worldKey);

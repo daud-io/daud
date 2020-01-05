@@ -389,4 +389,4 @@ map {
 export function getDefaultTextureMapRules() {
     return parseScssIntoRules(text);
 }
-export var textureMapRules = [parseScssIntoRules(text)];
+export const textureMapRules = [parseScssIntoRules(text)];
