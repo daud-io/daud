@@ -62,7 +62,7 @@
                     PrecisionBullets = false,
                     BulletLife = 1500,
                     BotPerXPoints = 500,
-                    BotBase = 15,
+                    BotBase = 0,
                     BotRespawnDelay = 10000,
                     BotMaxRespawnDelay = 60000,
 

@@ -218,4 +218,4 @@ boom {
 export function getDefaultSpriteModeMapRules() {
     return parseScssIntoRules(text);
 }
-export var spriteModeMapRules = [parseScssIntoRules(text)];
+export const spriteModeMapRules = [parseScssIntoRules(text)];

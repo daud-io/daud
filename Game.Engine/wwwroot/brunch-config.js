@@ -11,6 +11,12 @@ module.exports = {
         },
         stylesheets: { joinTo: "game.css" }
     },
+    npm: {
+        enabled: true,
+        styles: {
+            "emoji-mart": ["css/emoji-mart.css"]
+        }
+    },
     plugins: {
         babel: {
             presets: [

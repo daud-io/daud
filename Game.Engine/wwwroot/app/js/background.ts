@@ -68,7 +68,6 @@ export class Background extends RenderedObject {
 
                     this.backgroundSprites[i] = backgroundSprite;
                 } else backgroundSprite.texture = textures[0];
-            } else {
             }
         }
     }

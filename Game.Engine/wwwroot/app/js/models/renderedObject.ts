@@ -17,7 +17,7 @@ class GroupParticle extends particles.Particle {
     constructor(emitter: particles.Emitter) {
         super(emitter);
         this.parentGroup = emitter.parent.parentGroup;
-        this.body = (<any>emitter).renderedObject.body;
+        this.body = (emitter as any).renderedObject.body;
     }
 
     update(delta: number): number {
@@ -95,7 +95,7 @@ export class RenderedObject {
                     const sw = tileSize;
                     const sh = tileSize;
                     const tex = new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh), null, null, textureDefinition.rotate || 0);
-                    (<any>tex).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, tileSize);
+                    (tex as any).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, tileSize);
                     textures.push(tex);
                 }
             } else if (textureDefinition.map) {
@@ -112,17 +112,17 @@ export class RenderedObject {
                         const x = Math.floor(col * tileWidth);
                         const y = Math.floor(row * tileHeight);
 
-                        var texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
+                        const texture = new PIXI.Texture(baseTexture, new PIXI.Rectangle(x, y, tileWidth, tileHeight));
 
                         texture.baseTexture.scaleMode = PIXI.SCALE_MODES.NEAREST;
-                        (<any>texture).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, tileHeight);
+                        (texture as any).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, tileHeight);
                         //texture.scaleMode = PIXI.SCALE_MODES.LINEAR;
                         textures.push(texture);
                     }
             } else if (textureDefinition.emitter) {
             } else {
-                var texture = new PIXI.Texture(baseTexture);
-                (<any>texture).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, baseTexture.realHeight);
+                const texture = new PIXI.Texture(baseTexture);
+                (texture as any).daudScale = RenderedObject.getScaleWithHeight(textureDefinition, baseTexture.realHeight);
                 textures.push(texture);
             }
 
@@ -209,9 +209,9 @@ export class RenderedObject {
         pixiSprite.x = 0;
         pixiSprite.y = 0;
 
-        pixiSprite.baseScale = (<any>textures[0]).daudScale;
-        pixiSprite.scale = (<any>textures[0]).daudScale;
-        (<any>pixiSprite).textureDefinition = textureDefinition;
+        pixiSprite.baseScale = (textures as any)[0].daudScale;
+        pixiSprite.scale = (textures as any)[0].daudScale;
+        (pixiSprite as any).textureDefinition = textureDefinition;
 
         pixiSprite.baseOffset = textureDefinition["offset-x"] ? { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] } : { x: 0, y: 0 };
 
@@ -299,7 +299,7 @@ export class RenderedObject {
                 if (spriteLayer != null) {
                     if (zIndex == 0) zIndex = 250;
 
-                    spriteLayer.zOrder = zIndex - i + this.body.ID / 100000;
+                    spriteLayer.zIndex = i - this.body.ID / 100000 - zIndex;
 
                     spriteLayers.push(spriteLayer);
                     this.activeTextures[textureName] = spriteLayer;
@@ -351,7 +351,7 @@ export class RenderedObject {
                 if (emitterLayer != null) {
                     if (zIndex == 0) zIndex = 250;
 
-                    emitterLayer.zOrder = zIndex - i + this.body.ID / 100000;
+                    emitterLayer.zIndex = i - zIndex - this.body.ID / 100000;
 
                     emitterLayers.push(emitterLayer);
                     this.activeEmitters[textureName] = emitterLayer;
@@ -422,7 +422,7 @@ export class RenderedObject {
     }
     fixLoadingTextureScales() {
         this.foreachLayer(function(layer, index) {
-            if ((<any>layer).textureDefinition) layer.baseScale = RenderedObject.getScaleWithHeight((<any>layer).textureDefinition, layer.texture.height);
+            if ((layer as any).textureDefinition) layer.baseScale = RenderedObject.getScaleWithHeight((layer as any).textureDefinition, layer.texture.height);
         });
     }
     preRender(time, interpolator) {

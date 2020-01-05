@@ -1,7 +1,7 @@
 ﻿export class Events {
     static Report(category, action, value?) {
-        (<any>window).dataLayer = (<any>window).dataLayer || [];
-        (<any>window).dataLayer.push("event", action, { event_category: category, value: value });
+        (window as any).dataLayer = (window as any).dataLayer || [];
+        (window as any).dataLayer.push("event", action, { event_category: category, value: value });
     }
     static Spawn() {
         Events.Report("life", "spawn");

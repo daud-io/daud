@@ -243,13 +243,13 @@ export const Controls = {
                 if (discord.data.roles.includes("Player")) {
                     if (shipSelectorSwitch) {
                         const ship = shipSelectorSwitch.querySelector("[data-color=ship_secret]");
-                        if (ship) (<any>ship).style.display = "inline-block";
+                        if (ship) (ship as any).style.display = "inline-block";
                     }
                 }
                 if (discord.data.roles.includes("Old Guard")) {
                     if (shipSelectorSwitch) {
                         const ship = shipSelectorSwitch.querySelector("[data-color=ship_zed]");
-                        if (ship) (<any>ship).style.display = "inline-block";
+                        if (ship) (ship as any).style.display = "inline-block";
                     }
                 }
             }
