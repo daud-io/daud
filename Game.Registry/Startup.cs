@@ -57,7 +57,7 @@
                 services.AddSingleton(new ElasticClient(connectionSettings));
             }
             else
-                services.AddSingleton(null as ElasticClient);
+                services.AddSingleton(new ElasticClient());
         }
 
         private GameConfiguration LoadConfiguration(IServiceCollection services)
