@@ -146,6 +146,9 @@
         ]
         public bool PostEvents([FromBody]IEnumerable<object> events)
         {
+            if (Config.ElasticSearchURI == null)
+                return false;
+
             var waitHandle = new CountdownEvent(1);
 
             var bulkAll = ElasticClient.BulkAll(events, e => e.Size(1000));
