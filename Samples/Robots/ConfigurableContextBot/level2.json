@@ -3,10 +3,11 @@
   "BoostThreshold": 16,
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
   "AttackFleets": true,
-  "Name": "steve",
+  "Name": "leaderhunt",
   "Sprite": "ship_cyan",
   "Color": "cyan",
-
+  "LeaderHuntMode": true,
+  "Safe": true,
   "Steps": 16,
 
   "Leveling": {
@@ -44,7 +45,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
       "LookAheadMS": 100,
-      "BehaviorWeight": 0.01,
+      "BehaviorWeight": 0.2,
       "Cycle": 500,
       "Plot": false
     },

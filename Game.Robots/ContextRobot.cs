@@ -28,6 +28,8 @@
 
         public bool RingDebugEnabled { get; set; } = false;
 
+        public bool LeaderHuntMode { get; set; } = false;
+
         public ContextRobot()
         {
             Steps = 8;

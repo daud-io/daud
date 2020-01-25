@@ -41,6 +41,7 @@
 
                     return new
                     {
+                        IsLeader = f.ID == Robot.Leaderboard.Entries.FirstOrDefault()?.FleetID,
                         Fleet = f,
                         Distance = Vector2.Distance(this.Robot.Position, f.Center),
                         Target = new Target
@@ -51,7 +52,8 @@
                     };
                 })
                 .Where(p => IsInViewport(p.Fleet.Center))
-                .Where(p => IsSafeTarget(p.Target.Position))
+                .Where(p => IsSafeTarget(p.Target.Position) 
+                    || (Robot.LeaderHuntMode && p.IsLeader))
                 .OrderBy(p => p.Time)
                 .FirstOrDefault()
                 ?.Target;
