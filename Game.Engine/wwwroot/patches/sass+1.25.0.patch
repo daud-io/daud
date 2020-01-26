@@ -1,0 +1,13 @@
+diff --git a/node_modules/sass/sass.dart.js b/node_modules/sass/sass.dart.js
+index 0cf5c0e..665ff7c 100644
+--- a/node_modules/sass/sass.dart.js
++++ b/node_modules/sass/sass.dart.js
+@@ -3,7 +3,7 @@
+ 
+ var dartNodePreambleSelf = typeof global !== "undefined" ? global : window;
+ 
+-var self = Object.create(dartNodePreambleSelf);
++var self = dartNodePreambleSelf;
+ 
+ self.scheduleImmediate = self.setImmediate
+     ? function (cb) {

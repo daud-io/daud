@@ -6,7 +6,8 @@
   "scripts": {
     "build": "brunch build --production",
     "watch": "brunch watch --server",
-    "format": "prettier --tab-width 4 --print-width 200 --write \"**/*.{ts,js,css}\""
+    "format": "prettier --tab-width 4 --print-width 200 --write \"**/*.{ts,js,css}\"",
+    "postinstall": "patch-package"
   },
   "author": "modderme123",
   "license": "ISC",
@@ -26,6 +27,7 @@
     "js-cookie": "^2.2.1",
     "jszip": "^3.2.2",
     "nipplejs": "^0.8.4",
+    "patch-package": "^6.2.0",
     "pixi-layers": "^0.2.3",
     "pixi-particles": "^4.2.0",
     "pixi-tilemap": "^2.0.3",
