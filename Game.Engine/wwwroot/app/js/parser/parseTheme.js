@@ -5,8 +5,7 @@ import { ScssParser } from "./ScssParser";
 import { renderSync } from "sass";
 import { Buffer } from "buffer";
 
-// in case your code is isomorphic
-if (typeof window !== "undefined") window.Buffer = Buffer;
+window.Buffer = Buffer;
 
 function parseScssIntoRules(scss) {
     return parseCssIntoRules(renderSync({ data: scss }).css.toString("utf8"));

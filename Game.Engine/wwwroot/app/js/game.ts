@@ -1,4 +1,6 @@
 ﻿import "babel-polyfill";
+import * as BrowserFS from "browserfs";
+BrowserFS.install(window);
 
 import { Renderer } from "./renderer";
 import { Background } from "./background";
