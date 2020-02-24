@@ -75,12 +75,12 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.Advance,Game.Robots",
       "LookAheadMS": 200,
-      "BehaviorWeight": 2,
+      "BehaviorWeight": 0.3,
       "Cycle": 10,
       "Plot": true,
       "Config": {
         "ActiveRange": 3000,
-        "AdvanceThreshold": 0.6
+        "AdvanceThreshold": 2
       }
     },
 
