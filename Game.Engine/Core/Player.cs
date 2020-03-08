@@ -333,7 +333,7 @@
             if (Connection != null && player?.Fleet != null)
                 Connection.SpectatingFleet = player.Fleet;
 
-            if (!string.IsNullOrEmpty(this.Token) && !string.IsNullOrEmpty(player?.Token))
+            if (!string.IsNullOrEmpty(player?.Token))
                 RemoteEventLog.SendEvent(new OnDeath
                 {
                     token = this.Token,
