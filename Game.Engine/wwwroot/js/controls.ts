@@ -246,7 +246,7 @@ export var Controls = {
                         if (ship) (<any>ship).style.display = "inline-block";
                     }
                 }
-                if (discord.data.roles.includes("Old Guard")) {
+                if (discord.data.roles.includes("Old Guard") || discord.data.roles.includes("Legendario")) {
                     if (shipSelectorSwitch) {
                         var ship = shipSelectorSwitch.querySelector("[data-color=ship_zed]");
                         if (ship) (<any>ship).style.display = "inline-block";
