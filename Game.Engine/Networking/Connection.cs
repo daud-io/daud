@@ -496,7 +496,7 @@ namespace Game.Engine.Networking
                         break;
                         */
                         case "ship_zed":
-                            if (player?.Roles?.Contains("Old Guard") ?? false)
+                            if ((player?.Roles?.Contains("Old Guard") ?? false) || (player?.Roles?.Contains("Legendario") ?? false))
                             {
                                 shipSprite = Sprites.ship_zed;
                                 color = "red";
