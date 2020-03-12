@@ -1,25 +1,68 @@
 ﻿namespace Game.Engine.Core.SystemActors
 {
     using Game.API.Common;
-    using System.Collections.Generic;
+    using System;
 
     public class RobotTender : IActor
     {
         private readonly List<Robot> Robots = new List<Robot>();
-        private World World = null;
+        private World World = null; 
+
+        Random rand = new Random();
 
         private void AddRobot()
         {
+            string color;
+            Sprites sprite;
+
+            //Random r = new Random();
+            int rInt = rand.Next(7); //r.Next(0, 6);
+            switch (rInt)
+            {
+                case 0:
+                    color = "red";
+                    sprite = Sprites.ship_red;
+                    break;
+                case 1:
+                    color = "orange";
+                    sprite = Sprites.ship_orange;
+                    break;
+                case 2:
+                    color = "yellow";
+                    sprite = Sprites.ship_yellow;
+                    break;
+                case 3:
+                    color = "green";
+                    sprite = Sprites.ship_green;
+                    break;
+                case 4:
+                    color = "cyan";
+                    sprite = Sprites.ship_cyan;
+                    break;
+                case 5:
+                    color = "blue";
+                    sprite = Sprites.ship_blue;
+                    break;
+                case 6:
+                    color = "pink";
+                    sprite = Sprites.ship_pink;
+                    break;
+                default:
+                    color = "green";
+                    sprite = Sprites.ship0;
+                    break;
+            }
+
             var bot = new Robot()
             {
-                ShipSprite = Sprites.ship0,
+                ShipSprite = sprite,
                 Name = $"🤖Daudelin #{this.Robots.Count}",
                 ControlInput = new ControlInput()
             };
 
             bot.Init(World);
 
-            bot.Spawn(bot.Name, bot.ShipSprite, "green", "");
+            bot.Spawn(bot.Name, bot.ShipSprite, color, "");
 
             this.Robots.Add(bot);
         }
