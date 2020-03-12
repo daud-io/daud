@@ -44,13 +44,9 @@
                     color = "blue";
                     sprite = Sprites.ship_blue;
                     break;
-                case 6:
+                default:
                     color = "pink";
                     sprite = Sprites.ship_pink;
-                    break;
-                default:
-                    color = "green";
-                    sprite = Sprites.ship0;
                     break;
             }
 
