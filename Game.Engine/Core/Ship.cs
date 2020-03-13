@@ -168,8 +168,6 @@
         public override void Think()
         {
             base.Think();
-            
-            var entries =  World.Leaderboard.Entries;
 
             if (Abandoned && AbandonedByFleet.PendingDestruction) {
                 Die(null, null, null);
