@@ -194,6 +194,7 @@ connection.onView = newView => {
         canvas.style.visibility = "initial";
         $(".visibility").hide();
         $(".visibility3").show();
+        $("#overlay").stop();
         $("#overlay").css("opacity", "0");
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
