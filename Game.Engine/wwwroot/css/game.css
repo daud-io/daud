@@ -499,7 +499,7 @@ body {
   #arena-link #arena-link-success {
     margin: 10px auto;
     display: none; }
-  #arena-link #generate-link-button {
+  #arena-link #generate-link-button, #spectate {
     user-select: none;
     cursor: pointer;
     margin: 20px auto;
@@ -792,3 +792,9 @@ footer {
     font-size: 14pt;
 }
 /*# sourceMappingURL=styles.css.map */
+
+#spectate_container {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+}

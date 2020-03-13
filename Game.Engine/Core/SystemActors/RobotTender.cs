@@ -13,8 +13,8 @@
 
         private void AddRobot()
         {
-            string color;
-            Sprites sprite;
+            string color = "";
+            Sprites sprite = new Sprites();
 
             //Random r = new Random();
             int rInt = rand.Next(7); //r.Next(0, 6);
@@ -49,6 +49,8 @@
                     sprite = Sprites.ship_pink;
                     break;
             }
+
+            // Console.WriteLine(rInt + " " + color);
 
             var bot = new Robot()
             {
