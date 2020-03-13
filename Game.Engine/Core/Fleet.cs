@@ -340,7 +340,7 @@
 
                 if (isBoostInitial)
                     if (ship.Momentum != Vector2.Zero)
-                        ship.Momentum += Vector2.Normalize(ship.Momentum) * World.Hook.BoostSpeed;
+                        ship.Momentum += Vector2.Normalize(FleetMomentum) * World.Hook.BoostSpeed;
             }
 
             if (isShooting)
