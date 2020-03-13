@@ -76,10 +76,9 @@ document.getElementById("right-arrow").addEventListener("click", function() {
 });
 
 const nick: HTMLInputElement = document.querySelector("#nick");
-nick.addEventListener("change", e => {
+nick.addEventListener("input", e => {
     Controls.nick = nick.value;
     if (Controls && Controls.canvas) Controls.canvas.focus();
-
     save();
 });
 
