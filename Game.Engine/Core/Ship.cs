@@ -170,18 +170,11 @@
             base.Think();
             
             var entries =  World.Leaderboard.Entries;
-            
-            bool ownerDead = true;
-            for (var i = 0; i < entries.Count; i++) {
-                if (entries[i]?.FleetID == AbandonedByFleet?.ID) {
-                    ownerDead = false;
-                    break;
-                }
-            }
 
-            if (Abandoned && ownerDead) {
+            if (Abandoned && AbandonedByFleet.PendingDestruction) {
                 Die(null, null, null);
             }
+
             /*
             if (Abandoned && TimeDeath == 0)
                 TimeDeath = World.Time + 20000;
