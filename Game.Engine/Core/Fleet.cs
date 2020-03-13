@@ -131,12 +131,14 @@
                 threshold = 3;
             } else if (Ships.Count <= 90) {
                 threshold = 4;
-            } else {
+            } else if (Ships.Count <= 99) {
                 threshold = 5;
+            } else {
+                threshold = 0;
             }
             this.ShipGainCounter += 1;
             if (threshold <= this.ShipGainCounter)
-                if ((Ships?.Any() ?? false) && Ships.Count <= 100)
+                if ((Ships?.Any() ?? false) && Ships.Count <= 99)
                 {
                     EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay);
                     this.ShipGainCounter = 0;
