@@ -29,6 +29,9 @@
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount * 10;
             Momentum = thrust;
 
+            if (OwnedByFleet.PendingDestruction)
+                TimeDeath = World.Time;
+
             if (World.Time >= TimeDeath)
                 PendingDestruction = true;
         }
