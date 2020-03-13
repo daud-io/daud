@@ -84,7 +84,7 @@
                         12.908f, 12.866f, 12.825f, 12.785f, 12.745f, 12.706f, 12.667f, 12.629f, 12.592f, 12.555f, // 81 - 90 size
                         12.519f, 12.483f, 12.447f, 12.412f, 12.378f, 12.344f, 12.011f, 12.067f, 12.033f, 12.000f // 91 - 100 size
                     },
-                    ShotThrustConverter = 0.0014f,
+                    ShotThrustConverter = 0.0014f, // probably should be exacty the same as BaseThrustConverter
 
                     SeekerThrustMultiplier = 1.35f,
                     SeekerLifeMultiplier = 1.15f,
