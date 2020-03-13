@@ -377,9 +377,9 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
 function doSpawn() {
     Events.Spawn();
     aliveSince = gameTime;
-    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
     document.getElementById("overlay").style.opacity = 0;
     document.getElementById("selfNickContainer").innerHTML = Controls.nick;
+    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
     $(".visibility2").show();
     $(".visibility3").show();    
 }
