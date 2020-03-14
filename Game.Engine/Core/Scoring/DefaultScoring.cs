@@ -109,7 +109,6 @@
                 {
                     victim.Score += hook.PointsPerUniverseDeath;
                     victim.KillStreak = 0;
-                    victim.Score = (int)Math.Max(victim.Score * hook.PointsMultiplierDeath, 0);
                     victim.DeathCount++;
                     victim.MaxCombo = 0;
                     victim.SendMessage($"Killed by the universe", "universeDeath", hook.PointsPerUniverseDeath,
@@ -126,6 +125,7 @@
                             }
                         }
                     );
+                    victim.Score = (int)Math.Max(victim.Score * hook.PointsMultiplierDeath, 0);
                 }
             }
 

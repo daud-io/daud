@@ -92,6 +92,7 @@ function deathStats(lastData) {
     document.getElementById("deathScreen").style.visibility = "visible";
     document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
     updateHighscore(lastData.extraData.score);
+    console.log("Died with score " + lastData.extraData.score);
     document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
     var gameTimeInSeconds = Math.round(lastData.extraData.gameTime / 1000),
         gameTimeMinutes = Math.floor(gameTimeInSeconds / 60),
