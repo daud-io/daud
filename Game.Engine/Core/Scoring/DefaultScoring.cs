@@ -94,7 +94,7 @@
                             }
                         }
                     );
-                    victim.Score = (int)Math.Max(victim.Score * hook.PointsMultiplierDeath, 0);
+                    victim.Score = (int)Math.Max(victim.Score * hook.PointsMultiplierDeath + 1, 0);
                     victim.KillStreak = 0;
                     victim.MaxCombo = 0;
                 }
