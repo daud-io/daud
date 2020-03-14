@@ -377,11 +377,11 @@ LobbyCallbacks.onWorldJoin = function(worldKey, world) {
 function doSpawn() {
     Events.Spawn();
     aliveSince = gameTime;
+    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
     document.getElementById("overlay").style.opacity = 0;
     document.getElementById("selfNickContainer").innerHTML = Controls.nick;
-    connection.sendSpawn(Controls.nick, Controls.color, Controls.ship, getToken());
     $(".visibility2").show();
-    $(".visibility3").show();    
+    $(".visibility3").show();
 }
 document.getElementById("spawn").addEventListener("click", doSpawn);
 document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
@@ -389,8 +389,13 @@ document.getElementById("spawnSpectate").addEventListener("click", doSpawn);
 function startSpectate(hideButton = false) {
     isSpectating = true;
     Events.Spectate();
+    document.getElementById("overlay").style.opacity = 0;
     document.body.classList.add("spectating");
     document.body.classList.add("dead");
+    canvas.style.visibility = "initial";
+    $(".visibility").hide();
+    $(".visibility2").show();
+    $(".visibility3").show();   
 
     if (hideButton) {
         document.body.classList.add("spectate_only");
