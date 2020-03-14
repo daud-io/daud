@@ -212,7 +212,7 @@ function drawLeaderArrow(selfPosition, position) {
     }
     const criticalAngle = Math.atan2(window.innerHeight, window.innerWidth);
     // console.log(criticalAngle / Math.PI * 180);
-    if (angle < 0) { angle += 2*Math.PI); }
+    if (angle < 0) { angle += 2*Math.PI; }
     // console.log(angle / Math.PI * 180);
     if (angle > 2*Math.PI-criticalAngle || angle <= criticalAngle) {
         // right

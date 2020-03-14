@@ -1,5 +1,5 @@
 import { Settings } from "./settings";
-import * as PIXI from "pixi.js";
+import PIXI = require("pixi.js");
 import { Vector2 } from "./Vector2";
 import { Dimension2 } from "./Dimension2";
 const minimapSize = 180;

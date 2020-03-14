@@ -1,4 +1,6 @@
 ﻿import "babel-polyfill";
+import PIXI = require("pixi.js");
+window.PIXI = PIXI;
 
 import { Renderer } from "./renderer";
 import { Background } from "./background";
@@ -21,7 +23,6 @@ import { Settings } from "./settings";
 import { Events } from "./events";
 import { ArenaLink } from "./arenalink";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
-import * as PIXI from "pixi.js";
 import "pixi-tilemap";
 import "./changelog";
 
@@ -59,7 +60,7 @@ container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
 container.tiles.parentGroup = tileGroup;
 container.addChild(container.tiles);
 
-container.emitterContainer = new PIXI.particles.ParticleContainer();
+container.emitterContainer = new PIXI.ParticleContainer();
 container.emitterContainer.parentGroup = bodyGroup;
 container.zOrder = 128;
 container.addChild(container.emitterContainer);

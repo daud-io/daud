@@ -1,13 +1,13 @@
 import { Settings } from "./settings";
 import { RenderedObject } from "./models/renderedObject";
-import { Container, extras } from "pixi.js";
+import { Container, TilingSprite } from "pixi.js";
 import { Vector2 } from "./Vector2";
 import { CustomContainer } from "./CustomContainer";
 
 export class Background extends RenderedObject {
     focus: Vector2;
     speeds: number[];
-    backgroundSprites: extras.TilingSprite[];
+    backgroundSprites: TilingSprite[];
     constructor(container: CustomContainer) {
         super(container);
         this.focus = new Vector2(0, 0);
@@ -58,7 +58,7 @@ export class Background extends RenderedObject {
             if (textures.length > 0) {
                 var backgroundSprite = this.backgroundSprites[i];
                 if (!backgroundSprite) {
-                    backgroundSprite = new PIXI.extras.TilingSprite(textures[0], 200000, 200000);
+                    backgroundSprite = new PIXI.TilingSprite(textures[0], 200000, 200000);
                     backgroundSprite.parentGroup = this.container.backgroundGroup;
                     this.container.addChild(backgroundSprite);
                     backgroundSprite.tileScale.set(RenderedObject.getScale(allLayersTextures[i], textures[0]), RenderedObject.getScale(allLayersTextures[i], textures[0]));
