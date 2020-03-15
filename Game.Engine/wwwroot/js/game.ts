@@ -507,18 +507,18 @@ app.ticker.add(() => {
     if (view) {
         var positionA = interpolator.projectObject(view.camera, gameTime);
         position = new Vector2(positionA.x, positionA.y);
-        position.x = Math.floor(position.x * 0.2 + lastCamera.x * 0.8);
-        position.y = Math.floor(position.y * 0.2 + lastCamera.y * 0.8);
+        position.x = (position.x * 0.2 + lastCamera.x * 0.8);
+        position.y = (position.y * 0.2 + lastCamera.y * 0.8);
 
         lastCamera = position;
 
         camera.moveTo(position);
         camera.zoomTo(zoom);
     }
-    container.pivot.x = Math.floor(position.x - zoom / 2);
-    container.pivot.y = Math.floor(position.y - (zoom / 2) * (9 / 16));
-    container.position.x = Math.floor(container.position.x);
-    container.position.y = Math.floor(container.position.y);
+    container.pivot.x = (position.x - zoom / 2);
+    container.pivot.y = (position.y - (zoom / 2) * (9 / 16));
+    container.position.x = (container.position.x);
+    container.position.y = (container.position.y);
 
     renderer.draw(cache, interpolator, gameTime, fleetID);
     background.updateFocus(new Vector2(position.x, position.y));
