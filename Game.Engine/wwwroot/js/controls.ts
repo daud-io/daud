@@ -7,10 +7,6 @@ import { Picker } from "emoji-mart";
 import React from "react";
 import ReactDOM from "react-dom";
 
-const dashEnabled = false;
-
-if (!dashEnabled) { alert("WARNING: DASH DISABLED FOR TEST PURPOSE. IF YOU ARE DEV, MODIFY controls.ts:10 TO ENABLE IT."); }
-
 ReactDOM.render(
     React.createElement(
         Picker,
@@ -158,7 +154,7 @@ export var Controls = {
                 }
             });
             document.getElementById("boost").addEventListener("touchstart", e => {
-                Controls.boost = dashEnabled;
+                Controls.boost = true;
             });
             document.getElementById("boost").addEventListener("touchend", e => {
                 Controls.boost = false;
@@ -178,7 +174,7 @@ export var Controls = {
             window.addEventListener("mousedown", ({ button }) => {
                 if (button == 2)
                     //right click
-                    Controls.boost = dashEnabled;
+                    Controls.boost = true;
                 else {
                     if (Settings.mouseOneButton > 0) {
                         Controls.downSince = new Date().getTime();
@@ -204,7 +200,7 @@ export var Controls = {
                                 }
                             }, 100);
                         } else {
-                            Controls.boost = dashEnabled;
+                            Controls.boost = true;
                             setTimeout(function() {
                                 Controls.boost = false;
                             }, 100);
@@ -291,7 +287,7 @@ window.addEventListener(
                 Controls.numUpLeft = true;
                 break;
             case 83: // s
-                Controls.boost = dashEnabled;
+                Controls.boost = true;
                 break;
             case 32: // space
                 Controls.shoot = true;

@@ -182,8 +182,8 @@ export class RenderedObject {
         var pixiSprite = null;
 
         if (textureDefinition.animated) {
-            pixiSprite = new PIXI.AnimatedSprite(textures);
-            if (pixiSprite instanceof PIXI.AnimatedSprite) {
+            pixiSprite = new PIXI.extras.AnimatedSprite(textures);
+            if (pixiSprite instanceof PIXI.extras.AnimatedSprite) {
                 pixiSprite.loop = textureDefinition.loop;
                 pixiSprite.animationSpeed = textureDefinition["animation-speed"];
             }
@@ -217,7 +217,7 @@ export class RenderedObject {
 
         pixiSprite.baseOffset = textureDefinition["offset-x"] ? { x: textureDefinition["offset-x"], y: textureDefinition["offset-y"] } : { x: 0, y: 0 };
 
-        if (textureDefinition.animated && pixiSprite instanceof PIXI.AnimatedSprite) pixiSprite.play();
+        if (textureDefinition.animated && pixiSprite instanceof PIXI.extras.AnimatedSprite) pixiSprite.play();
 
         return pixiSprite;
     }
