@@ -2,7 +2,7 @@ FROM node:11
 WORKDIR /app
 COPY ./Game.Engine/wwwroot ./
 
-RUN ["npm", "i"]
+RUN ["npm", "i", "--unsafe-perm"]
 RUN ["npm", "run", "build"]
 
 FROM microsoft/dotnet:2.1-sdk
