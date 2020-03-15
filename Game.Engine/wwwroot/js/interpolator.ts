@@ -22,7 +22,7 @@ export class Interpolator {
     projectObject(object, time) {
         const timeShift = time - object.DefinitionTime;
         object.Angle = object.OriginalAngle + timeShift * object.AngularVelocity;
-        object.Position = new Vector2(Math.floor(object.OriginalPosition.x + timeShift * object.Momentum.x), Math.floor(object.OriginalPosition.y + timeShift * object.Momentum.y));
+        object.Position = new Vector2((object.OriginalPosition.x + timeShift * object.Momentum.x), (object.OriginalPosition.y + timeShift * object.Momentum.y));
 
         if (object.previous && object.previous.Position) {
             //var lerpAmount = Math.max(0.0, Math.min((time-object.previous.obsolete) / 400.0, 1.0));

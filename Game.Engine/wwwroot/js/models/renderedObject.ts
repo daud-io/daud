@@ -449,12 +449,12 @@ export class RenderedObject {
         const angle = interpolatedPosition.Angle;
 
         this.foreachLayer(function(layer, index) {
-            layer.pivot.x = Math.floor(layer.texture.width / 2);
-            layer.pivot.y = Math.floor(layer.texture.height / 2);
+            layer.pivot.x = (layer.texture.width / 2);
+            layer.pivot.y = (layer.texture.height / 2);
 
-            layer.position.x = Math.floor(interpolatedPosition.x + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle)));
+            layer.position.x = (interpolatedPosition.x + (layer.baseOffset.x * Math.cos(angle) - layer.baseOffset.y * Math.sin(angle)));
 
-            layer.position.y = Math.floor(interpolatedPosition.y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle)));
+            layer.position.y = (interpolatedPosition.y + (layer.baseOffset.y * Math.cos(angle) + layer.baseOffset.x * Math.sin(angle)));
 
             layer.rotation = angle;
 
