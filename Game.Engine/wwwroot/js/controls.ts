@@ -9,7 +9,7 @@ import ReactDOM from "react-dom";
 
 const dashEnabled = false;
 
-if (!dashEnabled) { alert("WARNING: DASH DISABLED FOR TEST PURPOSE"); }
+if (!dashEnabled) { alert("WARNING: DASH DISABLED FOR TEST PURPOSE. IF YOU ARE DEV, MODIFY controls.ts:10 TO ENABLE IT."); }
 
 ReactDOM.render(
     React.createElement(
