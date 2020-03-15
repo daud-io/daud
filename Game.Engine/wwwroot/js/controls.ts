@@ -7,6 +7,10 @@ import { Picker } from "emoji-mart";
 import React from "react";
 import ReactDOM from "react-dom";
 
+const dashEnabled = false;
+
+if (!dashEnabled) { alert("WARNING: DASH DISABLED FOR TEST PURPOSE"); }
+
 ReactDOM.render(
     React.createElement(
         Picker,
@@ -287,7 +291,7 @@ window.addEventListener(
                 Controls.numUpLeft = true;
                 break;
             case 83: // s
-                Controls.boost = true;
+                Controls.boost = dashEnabled;
                 break;
             case 32: // space
                 Controls.shoot = true;

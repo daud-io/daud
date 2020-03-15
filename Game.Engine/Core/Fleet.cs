@@ -326,7 +326,7 @@
                     : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
 
                 ship.Drag = isBoosting
-                    ? 1.0f
+                    ? World.Hook.DragBoost
                     : World.Hook.Drag;
 
                 ship.Mode = (byte)
