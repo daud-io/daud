@@ -43,9 +43,9 @@
                         5.525f, 5.511f, 5.497f, 5.484f, 5.470f, 5.457f, 5.444f, 5.432f, 5.419f, 5.407f, // 81 - 90 size
                         5.394f, 5.382f, 5.370f, 5.359f, 5.347f, 5.335f, 5.324f, 5.312f, 5.300f, 5.289f // 91 - 100 size
                     },
-                    BaseThrustConverter = 0.0018f,
+                    BaseThrustConverter = 0.005f,
 
-                    Drag = 0.9f,
+                    Drag = 0.765f,
                     DragAbandoned = 0.97f,
 
                     BoomDrag = 0.92f,
