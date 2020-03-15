@@ -158,7 +158,7 @@ export var Controls = {
                 }
             });
             document.getElementById("boost").addEventListener("touchstart", e => {
-                Controls.boost = true;
+                Controls.boost = dashEnabled;
             });
             document.getElementById("boost").addEventListener("touchend", e => {
                 Controls.boost = false;
@@ -178,7 +178,7 @@ export var Controls = {
             window.addEventListener("mousedown", ({ button }) => {
                 if (button == 2)
                     //right click
-                    Controls.boost = true;
+                    Controls.boost = dashEnabled;
                 else {
                     if (Settings.mouseOneButton > 0) {
                         Controls.downSince = new Date().getTime();
@@ -204,7 +204,7 @@ export var Controls = {
                                 }
                             }, 100);
                         } else {
-                            Controls.boost = true;
+                            Controls.boost = dashEnabled;
                             setTimeout(function() {
                                 Controls.boost = false;
                             }, 100);
