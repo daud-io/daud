@@ -21,6 +21,9 @@
         public virtual float BaseThrustConverter { get => World.Hook.BaseThrustConverter; }
         public virtual float BoostThrust { get => World.Hook.BoostThrust; }
 
+        public bool IsBoosting { get; set; }
+        public Vector2 BoostMomentum { get; set; }
+
         public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
 
         public virtual bool BossMode { get => World.Hook.BossMode && World.Hook.BossModeSprites.Contains(this.Owner.ShipSprite); }
@@ -287,14 +290,19 @@
         public override void Think()
         {
             var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
-            var isBoosting = World.Time < BoostUntil;
+            IsBoosting = World.Time < BoostUntil;
             var isBoostInitial = false;
+
+            FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
+            FleetMomentum = FleetMath.FleetMomentum(this.Ships);
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
             {
                 BoostCooldownTime = World.Time + (long)
                     (World.Hook.BoostCooldownTimeM * Ships.Count + World.Hook.BoostCooldownTimeB);
                 BoostCooldownTimeStart = World.Time;
+
+                BoostMomentum = FleetMomentum;
 
                 BoostUntil = World.Time + World.Hook.BoostDuration;
                 isBoostInitial = true;
@@ -305,9 +313,6 @@
                     AbandonShip(ship);
                 }
             }
-
-            FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
-            FleetMomentum = FleetMath.FleetMomentum(this.Ships);
 
             foreach (var ship in Ships)
             {
@@ -321,17 +326,15 @@
                 Snaking.Snake(ship);
                 Ringing.Ring(ship);
 
-                ship.ThrustAmount = isBoosting
-                    ? BoostThrust * (1 - Burden)
-                    : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
+                ship.ThrustAmount = /*IsBoosting ? BoostThrust * (1 - Burden) : */(BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
 
-                ship.Drag = isBoosting
+                ship.Drag = IsBoosting
                     ? World.Hook.DragBoost
                     : World.Hook.Drag;
 
                 ship.Mode = (byte)
                     (
-                        (isBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
+                        (IsBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
                         | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
                         | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
                         | (!Owner.IsShielded && Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
