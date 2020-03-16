@@ -59,11 +59,11 @@
                     ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 0.3f,
-                    BoostDuration = 500,
+                    BoostDuration = 600,
 
                     AbandonBuffer = 120,
 
-                    ShotCooldownTimeM = 10,
+                    ShotCooldownTimeM = 15,
                     ShotCooldownTimeB = 610,
 
                     ShotCooldownTimeBotM = 22,
@@ -128,7 +128,7 @@
                     SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
-                    Fishes = 50, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
+                    Fishes = 35, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
                     FishThrust = 0.0015f,
                     FishFlockAlignment = 10f,

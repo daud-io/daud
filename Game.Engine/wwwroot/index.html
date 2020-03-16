@@ -25,11 +25,11 @@
 <body class="loading dead static_background">
     <div class="container" class="aspectratio">
 
-        <div id="error" hidden>
+        <!--<div id="error" hidden>
             <h4 id="error_message">
                 Unable to connect to the server! Please check your internet connection or the server maybe under maintenance.
             </h4>
-        </div>
+        </div>-->
         
         <div id="settings" class="blue-box-border visibility" style="z-index:1">
 			<div id="settings-text">
@@ -217,7 +217,7 @@
                     <input type="button" id="arenas" class="button1" value="Game Modes" hidden />
                 </div>
             </div>
-            <div id="toast-container" class="toast-bottom-left" hidden><div class="toast toast-error" aria-live="assertive"><div class="toast-message">Couldn't connect to an arena. Please try again</div></div></div>
+            <div id="error" style="visibility:hidden"><div id="toast-container" class="toast-bottom-left"><div class="toast toast-error" aria-live="assertive"><div class="toast-message">Couldn't connect to an arena. Please try again</div></div></div></div>
             <div class="visibility">
                 <a id="changelogButton" class="change-log-button">
                     <h4>CAPTAIN'S LOG</h4>
