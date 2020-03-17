@@ -187,16 +187,12 @@
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
 
-            var boostMomentum = new Vector2(0, 0);
-
-            try {
-                if (this.Fleet.IsBoosting)
-                    boostMomentum = this.Fleet.BoostMomentum;
-            } catch (NullReferenceException e) {}
-
-            Momentum = Abandoned
-                ? Momentum * World.Hook.DragAbandoned
-                : (Momentum + thrust) * Drag + boostMomentum * World.Hook.DragBoost;
+            if (!Abandoned) {
+                Momentum = (Momentum + thrust) * Drag;
+            } else {
+                Momentum = Momentum * World.Hook.DragAbandoned;
+            }
+                
 
         }
 

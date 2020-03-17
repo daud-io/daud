@@ -21,9 +21,6 @@
         public virtual float BaseThrustConverter { get => World.Hook.BaseThrustConverter; }
         public virtual float BoostThrust { get => World.Hook.BoostThrust; }
 
-        public bool IsBoosting { get; set; }
-        public Vector2 BoostMomentum { get; set; }
-
         public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
 
         public virtual bool BossMode { get => World.Hook.BossMode && World.Hook.BossModeSprites.Contains(this.Owner.ShipSprite); }
@@ -40,6 +37,7 @@
         public long BoostCooldownTime { get; set; } = 0;
         public float BoostCooldownStatus { get; set; } = 0;
         public long BoostUntil { get; set; } = 0;
+        public long BoostUntil2 { get; set; } = 0;
 
         public Vector2 AimTarget { get; set; }
 
@@ -290,11 +288,9 @@
         public override void Think()
         {
             var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
-            IsBoosting = World.Time < BoostUntil;
+            var isBoosting = World.Time < BoostUntil;
+            var isBoosting2 = World.Time < BoostUntil2;
             var isBoostInitial = false;
-
-            FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
-            FleetMomentum = FleetMath.FleetMomentum(this.Ships);
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
             {
@@ -302,9 +298,8 @@
                     (World.Hook.BoostCooldownTimeM * Ships.Count + World.Hook.BoostCooldownTimeB);
                 BoostCooldownTimeStart = World.Time;
 
-                BoostMomentum = FleetMomentum;
-
                 BoostUntil = World.Time + World.Hook.BoostDuration;
+                BoostUntil2 = World.Time + World.Hook.BoostDuration2;
                 isBoostInitial = true;
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
                 var Sorter = Ships.OrderByDescending((ship) => Vector2.DistanceSquared(FleetCenter + AimTarget, ship.Position)).Take(shipLoss);
@@ -313,6 +308,9 @@
                     AbandonShip(ship);
                 }
             }
+
+            FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
+            FleetMomentum = FleetMath.FleetMomentum(this.Ships);
 
             foreach (var ship in Ships)
             {
@@ -326,15 +324,17 @@
                 Snaking.Snake(ship);
                 Ringing.Ring(ship);
 
-                ship.ThrustAmount = /*IsBoosting ? BoostThrust * (1 - Burden) : */(BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
+                ship.ThrustAmount = isBoosting
+                    ? BoostThrust * (1 - Burden)
+                    : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
 
-                ship.Drag = IsBoosting
+                ship.Drag = isBoosting2
                     ? World.Hook.DragBoost
                     : World.Hook.Drag;
 
                 ship.Mode = (byte)
                     (
-                        (IsBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
+                        (isBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
                         | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
                         | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
                         | (!Owner.IsShielded && Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
