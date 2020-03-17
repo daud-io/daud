@@ -52,15 +52,14 @@
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0f,
+                    BoostThrust = 0.01f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeed = 0.4f,
-                    BoostDuration = 100,
-                    BoostDuration2 = 600,
+                    BoostSpeed = 0.5f,
+                    BoostDuration = 600,
 
                     AbandonBuffer = 120,
 
@@ -223,7 +222,6 @@
         public float BoostCooldownTimeB { get; set; }
 
         public int BoostDuration { get; set; }
-        public int BoostDuration2 { get; set; }
         public float BoostSpeed { get; set; }
 
         public float Drag { get; set; }

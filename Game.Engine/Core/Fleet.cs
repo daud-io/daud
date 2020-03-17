@@ -37,7 +37,6 @@
         public long BoostCooldownTime { get; set; } = 0;
         public float BoostCooldownStatus { get; set; } = 0;
         public long BoostUntil { get; set; } = 0;
-        public long BoostUntil2 { get; set; } = 0;
 
         public Vector2 AimTarget { get; set; }
 
@@ -289,7 +288,6 @@
         {
             var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
             var isBoosting = World.Time < BoostUntil;
-            var isBoosting2 = World.Time < BoostUntil2;
             var isBoostInitial = false;
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
@@ -299,7 +297,6 @@
                 BoostCooldownTimeStart = World.Time;
 
                 BoostUntil = World.Time + World.Hook.BoostDuration;
-                BoostUntil2 = World.Time + World.Hook.BoostDuration2;
                 isBoostInitial = true;
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
                 var Sorter = Ships.OrderByDescending((ship) => Vector2.DistanceSquared(FleetCenter + AimTarget, ship.Position)).Take(shipLoss);
@@ -328,7 +325,7 @@
                     ? BoostThrust * (1 - Burden)
                     : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
 
-                ship.Drag = isBoosting2
+                ship.Drag = isBoosting
                     ? World.Hook.DragBoost
                     : World.Hook.Drag;
 
