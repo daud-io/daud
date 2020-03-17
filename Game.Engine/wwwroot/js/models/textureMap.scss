@@ -244,12 +244,12 @@ thruster_red,
 thruster_yellow {
   animated: true;
   loop: false;
-  animation-speed: 1;
+  animation-speed: 0.5;
   offset: {
     x: -16;
     y: 0;
   }
-  size: 2.56;
+  size: 2.2;
   rotate: 6;
   tile: {
     size: 64;
