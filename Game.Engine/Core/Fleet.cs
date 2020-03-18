@@ -266,6 +266,7 @@
             }
             ship.Color = "gray";
             ship.Abandoned = true;
+            ship.Momentum = ship.Momentum * World.Hook.AbandonMomentumMultiplier;
             ship.Group = null;
             ship.ThrustAmount = 0;
             ship.Mode = 0;

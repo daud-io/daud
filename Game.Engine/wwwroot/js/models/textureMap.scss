@@ -64,6 +64,7 @@ fish_yellow {
 boom {
   emitter: "emitter1";
   particle: "ctf_arrow_red";
+  size: 0.1;
 }
 
 ship0,
@@ -244,7 +245,7 @@ thruster_red,
 thruster_yellow {
   animated: true;
   loop: false;
-  animation-speed: 0.5;
+  animation-speed: 0.4;
   offset: {
     x: -16;
     y: 0;
