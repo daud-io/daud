@@ -128,7 +128,7 @@
 
                     robot.AutoFire = Firing;
                     robot.Color = Color;
-                    robot.Name = Name+i.ToString();
+                    robot.Name = Name+ (Replicas>1?i.ToString():"");
                     robot.Target = Target;
                     robot.Sprite = Sprite;
 
