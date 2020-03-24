@@ -78,7 +78,13 @@
             else
                 t = t1;
 
-            var aimSpot = targetPosition + targetMomentum * t;
+            Random random = new Random();
+            double angle = 2 * random.NextDouble() * Math.PI;
+            float r = (float)random.NextDouble();
+            float delta = 50f;
+            Vector2 vectorDelta = new Vector2((float)Math.Sin(angle) * delta * r, (float)Math.Cos(angle) * delta * r);
+
+            var aimSpot = targetPosition + targetMomentum * t + vectorDelta;
 
             var bulletPath = aimSpot - fromPosition;
             timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            

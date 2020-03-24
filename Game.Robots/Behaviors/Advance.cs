@@ -27,10 +27,16 @@
                         .Where(f => Vector2.Distance(f.Center, fleet.Center) < ActiveRange)
                         .OrderBy(f => Vector2.DistanceSquared(f.Center, fleet.Center))
                         .FirstOrDefault();
+
                     if (((closestOpponent?.Ships?.Count ?? 0) != 0) && ((fleet.Ships?.Count ?? 0) != 0))
                         if (closestOpponent.Ships.Count / fleet.Ships.Count < AdvanceThreshold)
                         {
-                            TargetPoint = closestOpponent.Center;
+                            Random random = new Random();
+                            double angle = 2 * random.NextDouble() * Math.PI;
+                            float r = (float)random.NextDouble();
+                            float delta = 50f;
+                            Vector2 vectorDelta = new Vector2((float)Math.Sin(angle) * delta * r, (float)Math.Cos(angle) * delta * r);
+                            TargetPoint = closestOpponent.Center + vectorDelta;
                             Active = true;
                         }
                 }
