@@ -327,7 +327,7 @@
                     : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
 
                 ship.Drag = isBoosting
-                    ? World.Hook.DragBoost
+                    ? World.Hook.DragBoost// World.Hook.Drag + (World.Hook.DragBoost - World.Hook.Drag) * (BoostUntil - World.Time) / World.Hook.BoostDuration // interpolate drag during the boost
                     : World.Hook.Drag;
 
                 ship.Mode = (byte)
