@@ -27,6 +27,8 @@
 
                     EarnedShipDelay = 0,
 
+                    QuantizationCount = 36,
+
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
                     // source: https://cdn.discordapp.com/attachments/357878752446906378/357892120427626498/uptodate_-_Sheet1.pdf
@@ -211,6 +213,8 @@
         
         public int BulletSize { get; set; }
         // public int ShipSize { get; set; }
+
+        public int QuantizationCount { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }

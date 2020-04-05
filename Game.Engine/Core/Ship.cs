@@ -185,7 +185,9 @@
 
             DoOutOfBoundsRules();
 
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
+            float AngleQuantized = (float)(Math.Round(Angle / (2 * Math.PI) * World.Hook.QuantizationCount) / World.Hook.QuantizationCount * 2 * Math.PI);
+
+            var thrust = new Vector2(MathF.Cos(AngleQuantized), MathF.Sin(AngleQuantized)) * ThrustAmount;
 
             if (!Abandoned) {
                 Momentum = (Momentum + thrust) * Drag;
