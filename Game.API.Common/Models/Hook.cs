@@ -27,6 +27,7 @@
 
                     EarnedShipDelay = 0,
 
+                    Quantization = true,
                     QuantizationCount = 36,
 
                     BaseThrustM = -0.00015f,
@@ -214,6 +215,7 @@
         public int BulletSize { get; set; }
         // public int ShipSize { get; set; }
 
+        public bool Quantization { get; set; }
         public int QuantizationCount { get; set; }
 
         public float BaseThrustM { get; set; }

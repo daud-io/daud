@@ -185,7 +185,9 @@
 
             DoOutOfBoundsRules();
 
-            float AngleQuantized = (float)(Math.Round(Angle / (2 * Math.PI) * World.Hook.QuantizationCount) / World.Hook.QuantizationCount * 2 * Math.PI);
+            float AngleQuantized = World.Hook.Quantization
+                ? (float)(Math.Round(Angle / (2 * Math.PI) * World.Hook.QuantizationCount) / World.Hook.QuantizationCount * 2 * Math.PI)
+                : Angle;
 
             var thrust = new Vector2(MathF.Cos(AngleQuantized), MathF.Sin(AngleQuantized)) * ThrustAmount;
 
