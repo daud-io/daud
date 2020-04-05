@@ -31,7 +31,7 @@
             </h4>
         </div>-->
         
-        <div id="settings" class="blue-box-border visibility" style="z-index:1">
+        <div id="settings" class="blue-box-border visibility4" style="z-index:1">
 			<div id="settings-text">
 				<span>Graphics:</span><span id="graphics-high" class="setting-selected">HIGH</span>/<span id="graphics-medium">MEDIUM</span>/<span id="graphics-low">LOW</span>
 			</div>
@@ -685,6 +685,7 @@
         $("#player").html('<iframe id="playerIframe" width="336" height="189" src="https://www.youtube.com/embed/'+featuredVideosIDs[index]+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
     
         $(".visibility").fadeIn(500);
+        $(".visibility4").fadeIn(500);
         
         $("#changelogButton").click(function(){
             $("#popupChangelog").fadeIn(500);

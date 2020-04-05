@@ -194,6 +194,7 @@ connection.onView = newView => {
         document.body.classList.add("alive");
         canvas.style.visibility = "initial";
         $(".visibility").hide();
+        $(".visibility4").hide();
         $(".visibility3").show();
         $("#overlay").stop();
         $("#overlay").css("opacity", "0");
@@ -396,7 +397,8 @@ function startSpectate(hideButton = false) {
     canvas.style.visibility = "initial";
     $(".visibility").hide();
     $(".visibility2").show();
-    $(".visibility3").show();   
+    $(".visibility3").show();
+    $(".visibility4").hide();
 
     if (hideButton) {
         document.body.classList.add("spectate_only");

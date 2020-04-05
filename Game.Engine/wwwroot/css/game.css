@@ -149,7 +149,7 @@ body {
   user-select: none; /* Standard syntax */
 }
 
-.visibility, .visibility2, .visibility3 {
+.visibility, .visibility2, .visibility3, .visibility4 {
   display: none; }
 
 .static_background {
