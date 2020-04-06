@@ -148,8 +148,8 @@
                     FlockCohesion = 0.003f,
                     FlockCohesionMaximumDistance = 512,
                     FlockSeparation = 15f,
-                    FlockSeparationMinimumDistance = 24,
-                    FlockWeight = 0.05f,
+                    FlockSeparationMinimumDistance = 30,
+                    FlockWeight = 0.03f,
                     SnakeWeight = 0f,
                     BossMode = false,
                     
