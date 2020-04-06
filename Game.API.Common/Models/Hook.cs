@@ -147,7 +147,7 @@
                     FlockAlignment = 1f,
                     FlockCohesion = 0.003f,
                     FlockCohesionMaximumDistance = 512,
-                    FlockSeparation = 15f,
+                    FlockSeparation = 30f,
                     FlockSeparationMinimumDistance = 30,
                     FlockWeight = 0.03f,
                     SnakeWeight = 0f,
@@ -201,7 +201,7 @@
                     PrecisionBullets = true,
                     PrecisionBulletsMinimumRange = 16384f,
 
-                    MinPointerDistance = 50f
+                    MinPointerDistance = 70f
                 };
             }
         }
