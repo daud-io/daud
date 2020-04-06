@@ -27,8 +27,8 @@
 
                     EarnedShipDelay = 0,
 
-                    Quantization = true,
-                    QuantizationCount = 36,
+                    Quantization = false,
+                    QuantizationCount = 24,
 
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
@@ -46,9 +46,9 @@
                         5.525f, 5.511f, 5.497f, 5.484f, 5.470f, 5.457f, 5.444f, 5.432f, 5.419f, 5.407f, // 81 - 90 size
                         5.394f, 5.382f, 5.370f, 5.359f, 5.347f, 5.335f, 5.324f, 5.312f, 5.300f, 5.289f // 91 - 100 size
                     },
-                    BaseThrustConverter = 0.0028f,
+                    BaseThrustConverter = 0.0029f,
 
-                    Drag = 0.86f,
+                    Drag = 0.85f,
                     DragBoost = 0.96f,
                     DragAbandoned = 0.94f,
 
@@ -145,11 +145,11 @@
                     FishCycle = 500, // how often do they think
 
                     FlockAlignment = 1f,
-                    FlockCohesion = 0.018f,
+                    FlockCohesion = 0.003f,
                     FlockCohesionMaximumDistance = 512,
-                    FlockSeparation = 17f,
-                    FlockSeparationMinimumDistance = 16,
-                    FlockWeight = 0.1f,
+                    FlockSeparation = 15f,
+                    FlockSeparationMinimumDistance = 24,
+                    FlockWeight = 0.05f,
                     SnakeWeight = 0f,
                     BossMode = false,
                     
@@ -199,7 +199,9 @@
                     MaxNameLength = 15,
                     
                     PrecisionBullets = true,
-                    PrecisionBulletsMinimumRange = 16384f
+                    PrecisionBulletsMinimumRange = 16384f,
+
+                    MinPointerDistance = 50f
                 };
             }
         }
@@ -273,6 +275,8 @@
         public float PrecisionBulletsNoise { get; set; }
         public bool PrecisionBullets { get; set; }
         public float PrecisionBulletsMinimumRange { get; set; }
+
+        public float MinPointerDistance { get; set; }
 
         public int ShieldCannonballLife { get; set; }
         public int BulletLife { get; set; }

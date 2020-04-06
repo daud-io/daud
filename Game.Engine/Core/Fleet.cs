@@ -312,15 +312,16 @@
 
             foreach (var ship in Ships)
             {
-                var shipTargetVector = FleetCenter + AimTarget - ship.Position;
+                float c = (float)Math.Max(1f, World.Hook.MinPointerDistance / Math.Sqrt(AimTarget.X * AimTarget.X + AimTarget.Y * AimTarget.Y));
+                Vector2 AimTarget2 = new Vector2(AimTarget.X * c, AimTarget.Y * c);
+
+                var shipTargetVector = FleetCenter + AimTarget2 - ship.Position;
 
                 // todo: this dirties the ship body every cycle
                 // ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
-                ship.Angle = MathF.Atan2(AimTarget.Y, AimTarget.X);
+                ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
 
                 Flocking.Flock(ship);
-                Snaking.Snake(ship);
-                Ringing.Ring(ship);
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
