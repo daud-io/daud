@@ -62,7 +62,7 @@
                     ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 0.33f,
-                    BoostDuration = 700,
+                    BoostDuration = 750,
 
                     AbandonBuffer = 120,
                     AbandonMomentumMultiplier = 0.75f,
