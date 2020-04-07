@@ -50,7 +50,7 @@
 
                     Drag = 0.85f,
                     DragBoost = 0.94f,
-                    DragAbandoned = 0.95f,
+                    DragAbandoned = 0.96f,
 
                     BoomDrag = 0.92f,
                     BoomLife = 500,
