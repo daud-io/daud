@@ -319,7 +319,9 @@
 
                 // todo: this dirties the ship body every cycle
                 // ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
-                ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
+                var angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
+                if (!Double.IsNaN((double)angle))
+                    ship.Angle = angle;
 
                 Flocking.Flock(ship);
 
