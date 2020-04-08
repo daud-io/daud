@@ -203,7 +203,7 @@
                     PrecisionBulletsMinimumRange = 16384f,
 
                     MinPointerDistance = 65f,
-                    MaxPointerDistance = 250f
+                    MaxPointerDistance = 150f
                 };
             }
         }
