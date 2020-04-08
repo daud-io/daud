@@ -68,8 +68,8 @@
                     AbandonBuffer = 120,
                     AbandonMomentumMultiplier = 0.75f,
 
-                    ShotCooldownTimeM = 15,
-                    ShotCooldownTimeB = 610,
+                    ShotCooldownTimeM = 18,
+                    ShotCooldownTimeB = 600,
 
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
@@ -148,8 +148,8 @@
                     FlockAlignment = 0f,
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
-                    FlockSeparation = 2f,
-                    FlockSeparationMinimumDistance = 24,
+                    FlockSeparation = 1.5f,
+                    FlockSeparationMinimumDistance = 30,
                     FlockWeight = 1f,
                     SnakeWeight = 0f,
                     BossMode = false,
