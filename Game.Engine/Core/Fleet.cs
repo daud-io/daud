@@ -318,8 +318,8 @@
 
             foreach (var ship in Ships)
             {
-                var r = Math.Sqrt(AimTarget.X * AimTarget.X + AimTarget.Y * AimTarget.Y);
-                float c = (float)Math.Max(1f, World.Hook.MinPointerDistance / r);
+                float r = (float)Math.Sqrt(AimTarget.X * AimTarget.X + AimTarget.Y * AimTarget.Y);
+                float c = (float)Math.Min(Math.Max(r, World.Hook.MinPointerDistance), World.Hook.MaxPointerDistance) / r;
                 Vector2 AimTarget2 = new Vector2(AimTarget.X * c, AimTarget.Y * c);
 
                 var shipTargetVector = FleetCenter + AimTarget2 - ship.Position;

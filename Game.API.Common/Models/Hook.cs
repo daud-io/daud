@@ -202,7 +202,8 @@
                     PrecisionBullets = true,
                     PrecisionBulletsMinimumRange = 16384f,
 
-                    MinPointerDistance = 65f
+                    MinPointerDistance = 65f,
+                    MaxPointerDistance = 350f
                 };
             }
         }
@@ -278,6 +279,7 @@
         public float PrecisionBulletsMinimumRange { get; set; }
 
         public float MinPointerDistance { get; set; }
+        public float MaxPointerDistance { get; set; }
 
         public int ShieldCannonballLife { get; set; }
         public int BulletLife { get; set; }
@@ -322,7 +324,6 @@
         public float FishOOBWeight { get; set; }
         public int FishCycle { get; set; }
 
-
         public float FlockAlignment { get; set; }
         public float FlockCohesion { get; set; }
         public int FlockCohesionMaximumDistance { get; set; }
@@ -348,7 +349,6 @@
         public float ShipGainBySizeB { get; set; }
 
         public bool MapEnabled { get; set; }
-
 
         public int StepTime { get; set; }
         public float OutOfBoundsDeathLine { get; set; } = 100;
