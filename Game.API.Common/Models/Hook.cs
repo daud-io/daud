@@ -50,7 +50,7 @@
                     BaseThrustConverter = 0.0028f,
 
                     Drag = 0.85f,
-                    DragBoost = 0.94f,
+                    DragBoost = 0.95f,
                     DragAbandoned = 0.96f,
 
                     BoomDrag = 0.92f,
