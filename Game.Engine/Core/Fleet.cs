@@ -116,6 +116,9 @@
 
         public void ShipDeath(Player player, Ship ship, ShipWeaponBullet bullet)
         {
+            this.Owner.LastShipDeathKiller = bullet?.OwnedByFleet?.Owner;
+            this.Owner.LastShipDeathTime = World.Time;
+
             if (!Ships.Where(s => !s.PendingDestruction).Any())
                 Die(player);
         }
@@ -312,7 +315,8 @@
 
             foreach (var ship in Ships)
             {
-                float c = (float)Math.Max(1f, World.Hook.MinPointerDistance / Math.Sqrt(AimTarget.X * AimTarget.X + AimTarget.Y * AimTarget.Y));
+                var r = Math.Sqrt(AimTarget.X * AimTarget.X + AimTarget.Y * AimTarget.Y);
+                float c = (float)Math.Max(1f, World.Hook.MinPointerDistance / r);
                 Vector2 AimTarget2 = new Vector2(AimTarget.X * c, AimTarget.Y * c);
 
                 var shipTargetVector = FleetCenter + AimTarget2 - ship.Position;
@@ -325,8 +329,10 @@
 
                 Flocking.Flock(ship);
 
+                float BoostM = (float)Math.Pow(Ships.Count, -0.205); // 4D Klein Manifold's magical formula
+
                 ship.ThrustAmount = isBoosting
-                    ? BoostThrust * (1 - Burden)
+                    ? BoostThrust * (1 - Burden) * BoostM
                     : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
 
                 ship.Drag = isBoosting
@@ -344,7 +350,7 @@
 
                 if (isBoostInitial)
                     if (ship.Momentum != Vector2.Zero)
-                        ship.Momentum += Vector2.Normalize(FleetMomentum) * World.Hook.BoostSpeed;
+                        ship.Momentum += Vector2.Normalize(FleetMomentum) * World.Hook.BoostSpeed * BoostM;
             }
 
             if (isShooting)

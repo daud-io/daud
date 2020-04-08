@@ -33,6 +33,9 @@
         public long LastKillTime { get; set; } = 0;
         public int ComboCounter { get; set; } = 0;
 
+        public Player LastShipDeathKiller { get; set; }
+        public long LastShipDeathTime { get; set; } = 0;
+
         public ControlInput ControlInput { get; set; }
         private bool IsControlNew = false;
 

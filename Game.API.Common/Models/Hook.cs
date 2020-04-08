@@ -55,13 +55,13 @@
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.025f,
+                    BoostThrust = 0.032f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeed = 0.33f,
+                    BoostSpeed = 0.4f,
                     BoostDuration = 600,
 
                     AbandonBuffer = 120,
@@ -145,10 +145,10 @@
                     FishCycle = 500, // how often do they think
 
                     FlockAlignment = 0.5f,
-                    FlockCohesion = 0.06f,
+                    FlockCohesion = 0.01f,
                     FlockCohesionMaximumDistance = 6,
                     FlockSeparation = 35f,
-                    FlockSeparationMinimumDistance = 20,
+                    FlockSeparationMinimumDistance = 22,
                     FlockWeight = 0.06f,
                     SnakeWeight = 0f,
                     BossMode = false,
