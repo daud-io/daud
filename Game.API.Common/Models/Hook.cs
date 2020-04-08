@@ -145,12 +145,12 @@
                     FishOOBWeight = 0.8f,
                     FishCycle = 500, // how often do they think
 
-                    FlockAlignment = 0.5f,
-                    FlockCohesion = 0.01f,
-                    FlockCohesionMaximumDistance = 6,
-                    FlockSeparation = 35f,
-                    FlockSeparationMinimumDistance = 22,
-                    FlockWeight = 0.06f,
+                    FlockAlignment = 0f,
+                    FlockCohesion = 0f,
+                    FlockCohesionMaximumDistance = 0,
+                    FlockSeparation = 2f,
+                    FlockSeparationMinimumDistance = 24,
+                    FlockWeight = 1f,
                     SnakeWeight = 0f,
                     BossMode = false,
                     
