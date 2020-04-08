@@ -56,13 +56,13 @@
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.032f,
+                    BoostThrust = 0.035f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeed = 0.4f,
+                    BoostSpeed = 0.3f,
                     BoostDuration = 600,
 
                     AbandonBuffer = 120,
