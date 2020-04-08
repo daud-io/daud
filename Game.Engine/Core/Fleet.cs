@@ -141,7 +141,10 @@
             }
             this.ShipGainCounter += 1;
             if (threshold <= this.ShipGainCounter)
-                if ((Ships?.Any() ?? false) && Ships.Count <= 99)
+                if ((Ships?.Any() ?? false)
+                  && Ships.Count <= 99
+                  && !(this.Owner.LastShipDeathKiller == killedShip?.Fleet?.Owner
+                  && World.Time - this.Owner.LastShipDeathTime <= World.Hook.MutualDestructionCooldown))
                 {
                     EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay);
                     this.ShipGainCounter = 0;

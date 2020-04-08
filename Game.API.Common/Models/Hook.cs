@@ -26,6 +26,7 @@
                     FiringSequenceDelay = 0,
 
                     EarnedShipDelay = 0,
+                    MutualDestructionCooldown = 100,
 
                     Quantization = false,
                     QuantizationCount = 24,
@@ -105,7 +106,7 @@
                     BulletLifeM = 25,
                     
                     BotPerXPoints = 500,
-                    BotBase = 0,
+                    BotBase = 1,
                     BotRespawnDelay = 10000,
                     BotMaxRespawnDelay = 60000,
 
@@ -402,6 +403,7 @@
         public uint ExplosionTime { get; set; }
         public int AbandonBuffer { get; set; }
         public int EarnedShipDelay { get; set; }
+        public int MutualDestructionCooldown { get; set; }
 
         public Hook Clone()
         {
