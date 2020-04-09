@@ -148,7 +148,7 @@
                     FlockAlignment = 0f,
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
-                    FlockSeparation = 1.5f,
+                    FlockSeparation = 1.8f,
                     FlockSeparationMinimumDistance = 30,
                     FlockWeight = 1f,
                     SnakeWeight = 0f,
