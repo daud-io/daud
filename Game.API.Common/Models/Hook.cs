@@ -202,10 +202,10 @@
                     PrecisionBullets = true,
                     PrecisionBulletsMinimumRange = 16384f,
 
-                    MinPointerDistanceB = 40f,
-                    MinPointerDistanceM = 0.15f,
-                    MaxPointerDistanceB = 90f,
-                    MaxPointerDistanceM = 0.4f,
+                    MinPointerDistanceB = 30f,
+                    MinPointerDistanceM = 0.5f,
+                    MaxPointerDistanceB = 80f,
+                    MaxPointerDistanceM = 2f,
                 };
             }
         }
