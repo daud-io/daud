@@ -204,8 +204,8 @@
 
                     MinPointerDistanceB = 50f,
                     MinPointerDistanceM = 0.1f,
-                    MaxPointerDistanceB = 150f,
-                    MaxPointerDistanceM = 0.15f,
+                    MaxPointerDistanceB = 130f,
+                    MaxPointerDistanceM = 0.22f,
                 };
             }
         }
