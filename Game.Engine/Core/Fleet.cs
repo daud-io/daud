@@ -37,6 +37,8 @@
         public long BoostCooldownTime { get; set; } = 0;
         public float BoostCooldownStatus { get; set; } = 0;
         public long BoostUntil { get; set; } = 0;
+        public long BoostUntil2 { get; set; } = 0;
+        public float BoostAngle { get; set; } = 0;
 
         public Vector2 AimTarget { get; set; }
 
@@ -295,7 +297,14 @@
         {
             var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
             var isBoosting = World.Time < BoostUntil;
+            var isBoosting2 = World.Time < BoostUntil2;
             var isBoostInitial = false;
+
+            float MinPointerDistance = (float)(World.Hook.MinPointerDistanceM * Ships.Count + World.Hook.MinPointerDistanceB);
+            float MaxPointerDistance = (float)(World.Hook.MaxPointerDistanceM * Ships.Count + World.Hook.MaxPointerDistanceB);
+            float r = (float)Math.Sqrt(AimTarget.X * AimTarget.X + AimTarget.Y * AimTarget.Y);
+            float c = (float)Math.Min(Math.Max(r, MinPointerDistance), MaxPointerDistance) / r;
+            Vector2 AimTarget2 = new Vector2(AimTarget.X * c, AimTarget.Y * c);
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
             {
@@ -304,6 +313,9 @@
                 BoostCooldownTimeStart = World.Time;
 
                 BoostUntil = World.Time + World.Hook.BoostDuration;
+                BoostUntil2 = World.Time + World.Hook.BoostDuration2;
+
+                BoostAngle = MathF.Atan2(AimTarget2.Y, AimTarget2.X);
                 isBoostInitial = true;
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
                 var Sorter = Ships.OrderByDescending((ship) => Vector2.DistanceSquared(FleetCenter + AimTarget, ship.Position)).Take(shipLoss);
@@ -318,12 +330,6 @@
 
             foreach (var ship in Ships)
             {
-                float MinPointerDistance = (float)(World.Hook.MinPointerDistanceM * Ships.Count + World.Hook.MinPointerDistanceB);
-                float MaxPointerDistance = (float)(World.Hook.MaxPointerDistanceM * Ships.Count + World.Hook.MaxPointerDistanceB);
-                float r = (float)Math.Sqrt(AimTarget.X * AimTarget.X + AimTarget.Y * AimTarget.Y);
-                float c = (float)Math.Min(Math.Max(r, MinPointerDistance), MaxPointerDistance) / r;
-                Vector2 AimTarget2 = new Vector2(AimTarget.X * c, AimTarget.Y * c);
-
                 var shipTargetVector = FleetCenter + AimTarget2 - ship.Position;
 
                 // todo: this dirties the ship body every cycle
@@ -339,6 +345,10 @@
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden) * BoostM
                     : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
+                
+                ship.BoostThrustAmount = isBoosting2
+                    ? World.Hook.BoostThrust2 * (1 - Burden) * BoostM
+                    : 0f;
 
                 ship.Drag = isBoosting
                     ? World.Hook.DragBoost// World.Hook.Drag + (World.Hook.DragBoost - World.Hook.Drag) * (BoostUntil - World.Time) / World.Hook.BoostDuration // interpolate drag during the boost
@@ -354,6 +364,7 @@
                     );
 
                 if (isBoostInitial)
+                    //BoostAngle = angle;
                     if (ship.Momentum != Vector2.Zero)
                         ship.Momentum += Vector2.Normalize(FleetMomentum) * World.Hook.BoostSpeed * BoostM;
             }

@@ -19,6 +19,7 @@
         public int SizeMaximum { get; set; }
 
         public float ThrustAmount { get; set; }
+        public float BoostThrustAmount { get; set; } = 0;
         public float Drag { get; set; }
 
         public bool Abandoned { get; set; }
@@ -189,10 +190,11 @@
                 ? (float)(Math.Round(Angle / (2 * Math.PI) * World.Hook.QuantizationCount) / World.Hook.QuantizationCount * 2 * Math.PI)
                 : Angle;
 
-            var thrust = new Vector2(MathF.Cos(AngleQuantized), MathF.Sin(AngleQuantized)) * ThrustAmount;
+            Vector2 thrust = new Vector2(MathF.Cos(AngleQuantized), MathF.Sin(AngleQuantized)) * ThrustAmount;
+            Vector2 thrustBoost = new Vector2(MathF.Cos(this.Fleet?.BoostAngle ?? 0f), MathF.Sin(this.Fleet?.BoostAngle ?? 0f)) * BoostThrustAmount;
 
             if (!Abandoned) {
-                Momentum = (Momentum + thrust) * Drag;
+                Momentum = (Momentum + thrust + thrustBoost) * Drag;
             } else {
                 Momentum = Momentum * World.Hook.DragAbandoned;
             }

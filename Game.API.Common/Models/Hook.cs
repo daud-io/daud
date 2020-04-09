@@ -50,19 +50,21 @@
                     BaseThrustConverter = 0.0028f,
 
                     Drag = 0.85f,
-                    DragBoost = 0.95f,
+                    DragBoost = 0.93f,
                     DragAbandoned = 0.96f,
 
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.035f,
+                    BoostThrust = 0.025f,
+                    BoostThrust2 = 0.2f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
-                    BoostSpeed = 0.3f,
+                    BoostSpeed = 0.1f,
+                    BoostDuration2 = 70,
                     BoostDuration = 600,
 
                     AbandonBuffer = 120,
@@ -230,11 +232,13 @@
         public float BaseThrustConverter { get; set; }
 
         public float BoostThrust { get; set; }
+        public float BoostThrust2 { get; set; }
 
         public float BoostCooldownTimeM { get; set; }
         public float BoostCooldownTimeB { get; set; }
 
         public int BoostDuration { get; set; }
+        public int BoostDuration2 { get; set; }
         public float BoostSpeed { get; set; }
 
         public float Drag { get; set; }
