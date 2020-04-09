@@ -148,7 +148,7 @@
                     FlockAlignment = 0f,
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
-                    FlockSeparation = 1.3f,
+                    FlockSeparation = 2f,
                     FlockSeparationMinimumDistance = 30,
                     FlockWeight = 1f,
                     SnakeWeight = 0f,
@@ -202,8 +202,10 @@
                     PrecisionBullets = true,
                     PrecisionBulletsMinimumRange = 16384f,
 
-                    MinPointerDistance = 65f,
-                    MaxPointerDistance = 200f
+                    MinPointerDistanceB = 50f,
+                    MinPointerDistanceM = 0.1f,
+                    MaxPointerDistanceB = 150f,
+                    MaxPointerDistanceM = 0.15f,
                 };
             }
         }
@@ -278,8 +280,10 @@
         public bool PrecisionBullets { get; set; }
         public float PrecisionBulletsMinimumRange { get; set; }
 
-        public float MinPointerDistance { get; set; }
-        public float MaxPointerDistance { get; set; }
+        public float MinPointerDistanceB { get; set; }
+        public float MinPointerDistanceM { get; set; }
+        public float MaxPointerDistanceB { get; set; }
+        public float MaxPointerDistanceM { get; set; }
 
         public int ShieldCannonballLife { get; set; }
         public int BulletLife { get; set; }
