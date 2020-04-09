@@ -632,7 +632,7 @@ footer {
 
 #autofireContainer {
     position: fixed;
-    right: 4px;
+    right: 8px;
     bottom: 14px;
     font-size: 14pt;
 }
@@ -682,8 +682,9 @@ footer {
 
 #record {
     position: fixed;
-    bottom: 14px;
-    left: 4px;
+    bottom: 16px;
+    left: 16px;
+    font-size: 11pt;
 }
 
 #shipSelectorSwitch img {
@@ -787,8 +788,8 @@ footer {
 
 #fleetSizeContainer {
     position: absolute;
-    top: 14px;
-    left: 4px;
+    top: 32px;
+    left: 16px;
     font-size: 14pt;
 }
 /*# sourceMappingURL=styles.css.map */
@@ -807,5 +808,5 @@ footer {
   bottom: 0;
   left: 0;
   right: 0;
-  box-shadow: 0 0 32px #ff000040 inset;
+  box-shadow: 0 0 32px #ff00002a inset;
 }
