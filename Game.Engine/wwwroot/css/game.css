@@ -689,7 +689,7 @@ footer {
     position: fixed;
     bottom: 16px;
     left: 16px;
-    font-size: 11pt;
+    font-size: 1.6em;
 }
 
 #shipSelectorSwitch img {
@@ -844,3 +844,36 @@ footer {
 :fullscreen #clock {
   display: block;
 }
+
+#spectate {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  margin: 20px 0;
+  box-sizing: border-box;
+  color: #ffffff;
+  border-radius: 15px;
+  border: 3px #368eff solid;
+  width: 200px;
+  font-size: 1.5em;
+  height: 55px;
+  padding: 7px 0;
+  font-weight: 600;
+  text-shadow: 0px 2px 2px #0855f3;
+  background: #055afe;
+  background: -moz-linear-gradient(top, #055afe 50%, #0343f4 50%);
+  background: -webkit-linear-gradient(top, #055afe 50%, #0343f4 50%);
+  background: linear-gradient(to bottom, #055afe 50%, #0343f4 50%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$light-blue', endColorstr='$blue',GradientType=0 );
+  -webkit-box-shadow: 0px 0px 30px 0px #0052ff;
+  -moz-box-shadow: 0px 0px 30px 0px #0052ff;
+  box-shadow: 0px 0px 30px 0px #0052ff;
+  animation: none; }
+  #spectate:hover {
+    -webkit-animation: pulse-blue 2s infinite;
+    -moz-animation: pulse-blue 2s infinite;
+    -ms-animation: pulse-blue 2s infinite;
+    -o-animation: pulse-blue 2s infinite;
+    animation: pulse-blue 2s infinite; }
