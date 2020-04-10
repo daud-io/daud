@@ -50,14 +50,14 @@
                     BaseThrustConverter = 0.0028f,
 
                     Drag = 0.85f,
-                    DragBoost = 0.93f,
+                    DragBoost = 0.91f,
                     DragAbandoned = 0.96f,
 
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.025f,
-                    BoostThrust2 = 0.2f,
+                    BoostThrust = 0.03f,
+                    BoostThrust2 = 0.25f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
