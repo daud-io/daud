@@ -1,3 +1,8 @@
+@font-face {
+  font-family: Alarm Clock;
+  src: url(../font/alarm_clock.ttf);
+}
+
 @-webkit-keyframes pulse-yellow {
   0% {
     -webkit-box-shadow: 0px 0px 30px 0px #fae40b;
@@ -809,4 +814,33 @@ footer {
   left: 0;
   right: 0;
   box-shadow: 0 0 32px #ff00002a inset;
+}
+
+#clock {
+  display: none;
+  color: #b00000c0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  font-family: Alarm Clock, monospace;
+}
+
+/* Chrome, Safari and Opera syntax */
+:-webkit-full-screen #clock {
+  display: block;
+}
+
+/* Firefox syntax */
+:-moz-full-screen #clock {
+  display: block;
+}
+
+/* IE/Edge syntax */
+:-ms-fullscreen #clock {
+  display: block;
+}
+
+/* Standard syntax */
+:fullscreen #clock {
+  display: block;
 }

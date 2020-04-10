@@ -479,3 +479,15 @@ function closeFullscreen() {
       document.msExitFullscreen();
     }
 }
+
+var d = new Date(),
+    n = d.toLocaleTimeString();
+document.getElementById("clock").innerHTML = n;
+
+setTimeout(function(){
+    setInterval(function(){
+        d = new Date();
+        n = d.toLocaleTimeString();
+        document.getElementById("clock").innerHTML = n;
+    },1000);
+}, 1000 - d.getMilliseconds());
