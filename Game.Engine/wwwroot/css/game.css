@@ -402,6 +402,22 @@ body {
   z-index: 1;
 }
 
+#youtube-button > img {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 36px;
+  z-index: 1;
+}
+
+#twitter-button > img {
+  position: absolute;
+  right: 70px;
+  bottom: 10px;
+  height: 36px;
+  z-index: 1;
+}
+
 #change-log {
   position: absolute;
   bottom: 60px;
