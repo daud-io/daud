@@ -69,7 +69,7 @@
 
                     BoostSpeed = 0f,
                     BoostDuration2 = 160,
-                    BoostDuration = 700,
+                    BoostDuration = 750,
 
                     AbandonBuffer = 120,
                     AbandonMomentumMultiplier = 0.75f,
