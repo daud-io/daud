@@ -50,7 +50,7 @@
                     BaseThrustConverter = 0.0028f,
 
                     StretchWeight = 0.002f,
-                    StretchMin = 0.9f,
+                    StretchMin = 0.95f,
                     StretchDeadzone = 0.015f,
 
                     Drag = 0.85f,
