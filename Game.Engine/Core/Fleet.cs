@@ -333,7 +333,7 @@
                 var shipCoords = FleetCenter - ship.Position;
                 var shipTargetVector = shipCoords + AimTarget2;
 
-                float stretchMultipier = Math.Max(1f - Math.Abs(shipCoords.X * AimTarget2.Y - shipCoords.Y * AimTarget2.X) / AimTarget2.Length() * World.Hook.StretchWeight, World.Hook.StretchMin);
+                float stretchMultipier = Math.Min(Math.Max(1f - Math.Abs(shipCoords.X * AimTarget2.Y - shipCoords.Y * AimTarget2.X) / AimTarget2.Length() * World.Hook.StretchWeight + World.Hook.StretchDeadzone, World.Hook.StretchMin), 1f);
 
                 // todo: this dirties the ship body every cycle
                 // ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);

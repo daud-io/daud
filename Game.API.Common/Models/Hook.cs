@@ -51,6 +51,7 @@
 
                     StretchWeight = 0.002f,
                     StretchMin = 0.9f,
+                    StretchDeadzone = 0.015f,
 
                     Drag = 0.85f,
                     DragBoost = 0.93f,
@@ -236,6 +237,7 @@
 
         public float StretchWeight { get; set; }
         public float StretchMin { get; set; }
+        public float StretchDeadzone { get; set; }
 
         public float BoostThrust { get; set; }
         public float BoostThrust2 { get; set; }
