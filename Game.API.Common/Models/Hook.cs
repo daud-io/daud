@@ -49,6 +49,9 @@
                     },
                     BaseThrustConverter = 0.0028f,
 
+                    StretchWeight = 0.002f,
+                    StretchMin = 0.9f,
+
                     Drag = 0.85f,
                     DragBoost = 0.93f,
                     DragAbandoned = 0.96f,
@@ -230,6 +233,9 @@
         public float BaseThrustB { get; set; }
         public float[] BaseThrust { get; set; }
         public float BaseThrustConverter { get; set; }
+
+        public float StretchWeight { get; set; }
+        public float StretchMin { get; set; }
 
         public float BoostThrust { get; set; }
         public float BoostThrust2 { get; set; }

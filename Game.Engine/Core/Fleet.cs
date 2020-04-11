@@ -330,7 +330,10 @@
 
             foreach (var ship in Ships)
             {
-                var shipTargetVector = FleetCenter + AimTarget2 - ship.Position;
+                var shipCoords = FleetCenter - ship.Position;
+                var shipTargetVector = shipCoords + AimTarget2;
+
+                float stretchMultipier = Math.Max(1f - Math.Abs(shipCoords.X * AimTarget2.Y - shipCoords.Y * AimTarget2.X) / AimTarget2.Length() * World.Hook.StretchWeight, World.Hook.StretchMin);
 
                 // todo: this dirties the ship body every cycle
                 // ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
@@ -343,8 +346,8 @@
                 float BoostM = (float)Math.Pow(Ships.Count, -0.205); // 4D Klein Manifold's magical formula
 
                 ship.ThrustAmount = isBoosting
-                    ? BoostThrust * (1 - Burden) * BoostM
-                    : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
+                    ? BoostThrust * (1 - Burden) * BoostM 
+                    : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden) * stretchMultipier;
                 
                 ship.BoostThrustAmount = isBoosting2
                     ? World.Hook.BoostThrust2 * (1 - Burden) * BoostM
