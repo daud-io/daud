@@ -389,14 +389,18 @@ body {
 #reddit-button > img {
   position: absolute;
   left: 10px;
-  bottom: 10px; }
+  bottom: 10px;
+  height: 34px;
+  z-index: 1;
+}
 
 #discord-button > img {
   position: absolute;
   left: 60px;
   bottom: 2px;
   height: 46px;
-  width: 48px; }
+  z-index: 1;
+}
 
 #change-log {
   position: absolute;
