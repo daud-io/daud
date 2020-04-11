@@ -59,15 +59,19 @@
   0% {
     -webkit-box-shadow: 0px 0px 30px 0px #fae40b;
     -moz-box-shadow: 0px 0px 30px 0px #fae40b;
-    box-shadow: 0px 0px 30px 0px #fae40b; }
+    box-shadow: 0px 0px 30px 0px #fae40b;
+  }
   50% {
     -webkit-box-shadow: 0px 0px 30px 0px rgba(250, 228, 11, 0.5);
     -moz-box-shadow: 0px 0px 30px 0px rgba(250, 228, 11, 0.5);
-    box-shadow: 0px 0px 30px 0px rgba(250, 228, 11, 0.5); }
+    box-shadow: 0px 0px 30px 0px rgba(250, 228, 11, 0.5);
+  }
   100% {
     -webkit-box-shadow: 0px 0px 30px 0px #fae40b;
     -moz-box-shadow: 0px 0px 30px 0px #fae40b;
-    box-shadow: 0px 0px 30px 0px #fae40b; } }
+    box-shadow: 0px 0px 30px 0px #fae40b;
+  }
+}
 @-webkit-keyframes pulse-blue {
   0% {
     -webkit-box-shadow: 0px 0px 50px 0px #0052ff;
@@ -133,6 +137,93 @@
     -webkit-box-shadow: 0px 0px 50px 0px #0052ff;
     -moz-box-shadow: 0px 0px 50px 0px #0052ff;
     box-shadow: 0px 0px 50px 0px #0052ff; } }
+
+@-webkit-keyframes pulse-pink {
+  0% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+  50% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    box-shadow: 0px 0px 30px 0px #c21a6e80;
+  }
+  100% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+}
+@-moz-keyframes pulse-pink {
+  0% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+  50% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    box-shadow: 0px 0px 30px 0px #c21a6e80;
+  }
+  100% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+}
+@-ms-keyframes pulse-pink {
+  0% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+  50% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    box-shadow: 0px 0px 30px 0px #c21a6e80;
+  }
+  100% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+}
+@-o-keyframes pulse-pink {
+  0% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+  50% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    box-shadow: 0px 0px 30px 0px #c21a6e80;
+  }
+  100% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+}
+@keyframes pulse-pink {
+  0% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+  50% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6e80;
+    box-shadow: 0px 0px 30px 0px #c21a6e80;
+  }
+  100% {
+    -webkit-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    -moz-box-shadow: 0px 0px 30px 0px #c21a6eff;
+    box-shadow: 0px 0px 30px 0px #c21a6eff;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -418,38 +509,43 @@ body {
         -ms-animation: pulse-blue 2s infinite;
         -o-animation: pulse-blue 2s infinite;
         animation: pulse-blue 2s infinite; }
-    #spawn {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
-      cursor: pointer;
-      margin: 20px 0;
-      box-sizing: border-box;
-      color: #225500;
-      border-radius: 15px;
-      border: 3px #FAE40B solid;
-      width: 350px;
-      font-size: 1.6em;
-      height: 55px;
-      padding: 7px 0;
-      font-weight: 600;
-      text-shadow: 0px 2px 2px #FAE40B;
-      background: #B1FF00;
-      background: -moz-linear-gradient(top, #B1FF00 50%, #71FF00 50%);
-      background: -webkit-linear-gradient(top, #B1FF00 50%, #71FF00 50%);
-      background: linear-gradient(to bottom, #B1FF00 50%, #71FF00 50%);
-      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$light-green', endColorstr='$green',GradientType=0 );
-      -webkit-box-shadow: 0px 0px 30px 0px #fae40b;
-      -moz-box-shadow: 0px 0px 30px 0px #fae40b;
-      box-shadow: 0px 0px 30px 0px #fae40b;
-      animation: none; }
-      #spawn:hover {
-        -webkit-animation: pulse-yellow 2s infinite;
-        -moz-animation: pulse-yellow 2s infinite;
-        -ms-animation: pulse-yellow 2s infinite;
-        -o-animation: pulse-yellow 2s infinite;
-        animation: pulse-yellow 2s infinite; }
+
+#spawn {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  margin: 20px 0;
+  box-sizing: border-box;
+  color: #225500;
+  border-radius: 15px;
+  border: 3px #FAE40B solid;
+  width: 350px;
+  font-size: 1.6em;
+  height: 55px;
+  padding: 7px 0;
+  font-weight: 600;
+  text-shadow: 0px 2px 2px #FAE40B;
+  background: #B1FF00;
+  background: -moz-linear-gradient(top, #B1FF00 50%, #71FF00 50%);
+  background: -webkit-linear-gradient(top, #B1FF00 50%, #71FF00 50%);
+  background: linear-gradient(to bottom, #B1FF00 50%, #71FF00 50%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$light-green', endColorstr='$green',GradientType=0 );
+  -webkit-box-shadow: 0px 0px 30px 0px #fae40b;
+  -moz-box-shadow: 0px 0px 30px 0px #fae40b;
+  box-shadow: 0px 0px 30px 0px #fae40b;
+  animation: none;
+}
+
+#spawn:hover {
+  -webkit-animation: pulse-yellow 2s infinite;
+  -moz-animation: pulse-yellow 2s infinite;
+  -ms-animation: pulse-yellow 2s infinite;
+  -o-animation: pulse-yellow 2s infinite;
+  animation: pulse-yellow 2s infinite;
+}
+
     .container #main-ui p {
       font-size: 1.3em;
       margin: 0;
@@ -459,11 +555,13 @@ body {
   flex: 1;
   text-align: center;
   font-size: 1.5em;
-  cursor: pointer; }
+  cursor: pointer;
+}
 
 #instructionsContent {
   position: relative;
-  top: 60px; }
+  top: 60px;
+}
 
 .blue-box-border {
   background: rgba(61, 120, 255, 0.2);
@@ -471,7 +569,8 @@ body {
   border: 2px #3262d1 solid;
   -webkit-box-shadow: 0px 0px 10px 0px #0052ff;
   -moz-box-shadow: 0px 0px 10px 0px #0052ff;
-  box-shadow: 0px 0px 10px 0px #0052ff; }
+  box-shadow: 0px 0px 10px 0px #0052ff;
+}
 
 #arena-link {
   position: absolute;
@@ -870,10 +969,49 @@ footer {
   -webkit-box-shadow: 0px 0px 30px 0px #0052ff;
   -moz-box-shadow: 0px 0px 30px 0px #0052ff;
   box-shadow: 0px 0px 30px 0px #0052ff;
-  animation: none; }
-  #spectate:hover {
-    -webkit-animation: pulse-blue 2s infinite;
-    -moz-animation: pulse-blue 2s infinite;
-    -ms-animation: pulse-blue 2s infinite;
-    -o-animation: pulse-blue 2s infinite;
-    animation: pulse-blue 2s infinite; }
+  animation: none;
+}
+
+#spectate:hover {
+  -webkit-animation: pulse-blue 2s infinite;
+  -moz-animation: pulse-blue 2s infinite;
+  -ms-animation: pulse-blue 2s infinite;
+  -o-animation: pulse-blue 2s infinite;
+  animation: pulse-blue 2s infinite;
+}
+
+#fullscreenButton {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  margin: 20px 0;
+  box-sizing: border-box;
+  color: #ffffff;
+  border-radius: 15px;
+  border: 3px #e73f93 solid;
+  width: 170px;
+  font-size: 16px;
+  height: 44px;
+  padding: 0 0;
+  font-weight: 600;
+  text-shadow: 0px 2px 2px #c21a6e;
+  background: #c21a6e;
+  background: -moz-linear-gradient(top, #c21a6e 50%, #af1763 50%);
+  background: -webkit-linear-gradient(top, #c21a6e 50%, #af1763 50%);
+  background: linear-gradient(to bottom, #c21a6e 50%, #af1763 50%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$light-pink', endColorstr='$pink',GradientType=0 );
+  -webkit-box-shadow: 0px 0px 30px 0px #c21a6e;
+  -moz-box-shadow: 0px 0px 30px 0px #c0186f;
+  box-shadow: 0px 0px 30px 0px #c0186f;
+  animation: none;
+}
+
+#fullscreenButton:hover {
+  -webkit-animation: pulse-pink 2s infinite;
+  -moz-animation: pulse-pink 2s infinite;
+  -ms-animation: pulse-pink 2s infinite;
+  -o-animation: pulse-pink 2s infinite;
+  animation: pulse-pink 2s infinite;
+}
