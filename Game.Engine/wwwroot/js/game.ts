@@ -207,7 +207,7 @@ connection.onView = newView => {
             document.body.classList.add("dead");
             $(".visibility").fadeIn(2000);
             $(".visibility3").hide();
-            $("#overlay").animate({"opacity":"0.7"}, 2000);
+            $("#overlay").animate({"opacity":"0.75"}, 2000);
         }, 1000);
 
         Events.Death((gameTime - aliveSince) / 1000);
