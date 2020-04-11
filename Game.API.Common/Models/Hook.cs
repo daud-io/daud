@@ -49,9 +49,9 @@
                     },
                     BaseThrustConverter = 0.0028f,
 
-                    StretchWeight = 0.002f,
+                    StretchWeight = 0.003f,
                     StretchMin = 0.95f,
-                    StretchDeadzone = 0.015f,
+                    StretchDeadzone = 0.02f,
 
                     Drag = 0.85f,
                     DragBoost = 0.93f,
