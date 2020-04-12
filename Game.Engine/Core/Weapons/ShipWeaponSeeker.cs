@@ -8,11 +8,13 @@ namespace Game.Engine.Core.Weapons
     {
 
         public Ship DeclaredTarget { get; private set; } = null;
+        public float ExtraTime = 0;
 
         public override void FireFrom(Ship ship, ActorGroup group)
         {
             base.FireFrom(ship, group);
 
+            this.ExtraTime = ship.Fleet.AimTarget.Length() * World.Hook.SeekerCycleM;
             this.Momentum /= 2.0f;
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife * World.Hook.SeekerLifeMultiplier);
             this.Sprite = API.Common.Sprites.seeker;
@@ -27,7 +29,7 @@ namespace Game.Engine.Core.Weapons
             base.Think();
 
             Ship target = null;
-            if (World.Time > TimeBirth + World.Hook.SeekerCycle)
+            if (World.Time > TimeBirth + World.Hook.SeekerCycleB + this.ExtraTime)
             {
                 var targets = World.BodiesNear(this.Position, World.Hook.SeekerRange);
 
