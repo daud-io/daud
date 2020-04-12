@@ -122,7 +122,8 @@
                     PickupSeekers = 6,
                     PickupSeekersMultiplier = 0.0006,
                     SeekerRange = 2100,
-                    SeekerCycle = 250,
+                    SeekerCycleB = 250,
+                    SeekerCycleM = 1.0f/3000.0f,
                     SeekerLead = 150,
                     SeekerNegotiation = true,
 
@@ -272,7 +273,8 @@
         public bool SeekerNegotiation { get; set; }
         public int SeekerLead { get; set; }
         public int SeekerRange { get; set; }
-        public int SeekerCycle { get; set; }
+        public float SeekerCycleM { get; set; }
+        public int SeekerCycleB { get; set; }
 
         public float ShipGainBySizeM { get; set; }
         public float ShipGainBySizeB { get; set; }
