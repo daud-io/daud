@@ -95,16 +95,11 @@ let gameTime = null;
 let lastPosition = null;
 let worldSize = 1000;
 
-const CustomData = null;
-const CustomDataTime = null;
-
 let currentWorld = false;
 
 Controls.registerCanvas(canvas);
 
 const connection = new Connection();
-/*if (window.location.hash) connection.connect(window.location.hash.substring(1));
-else connection.connect();*/
 
 window.Game.primaryConnection = connection;
 window.Game.isBackgrounded = false;
@@ -288,11 +283,6 @@ connection.onView = newView => {
     }
 
     cooldown.setCooldown(newView.cooldownShoot());
-    /*console.log({
-        playerCount: Game.Stats.playerCount,
-        cooldownBoost: newView.cooldownBoost(),
-        cooldownShoot: newView.cooldownShoot()
-    })*/
 
     view.camera = bodyFromServer(cache, newView.camera());
 
@@ -466,12 +456,8 @@ setInterval(doPing, 1000);
 const graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
-let lastCustomData = false;
-let spotSprites = [];
-
 // Game Loop
 app.ticker.add(() => {
-    const latency = connection.minLatency || 0;
     gameTime = performance.now() + serverTimeOffset;
     frameCounter++;
 
@@ -501,42 +487,11 @@ app.ticker.add(() => {
     lastPosition = position;
 
     log.check();
-    // cooldown.draw();
 
     if (Controls.mouseX) {
         let pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
         angle = Controls.angle;
         aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
-    }
-
-    if (CustomData != lastCustomData) {
-        lastCustomData = CustomData;
-
-        for (let i = 0; i < spotSprites.length; i++) container.removeChild(spotSprites[i]);
-
-        spotSprites = [];
-
-        if (CustomData) {
-            const data = JSON.parse(CustomData);
-            /*if (data.spots)
-            {
-                for (let i=0; i<data.spots.length; i++)
-                {
-                    let spot = data.spots[i];
-                    let texture = textures["obstacle"];
-                    if (texture) {
-                        let sprite = new PIXI.Sprite(texture);
-                        sprite.position.x = spot.X;
-                        sprite.position.y = spot.Y;
-                        sprite.scale.set(0.1, 0.1);
-
-                        container.addChild(sprite);
-
-                        spotSprites.push(sprite);
-                    } else console.log("cannot find texture");
-                }
-            }*/
-        }
     }
 });
 
@@ -590,11 +545,3 @@ document.body.addEventListener("keydown", function(e) {
 document.getElementById("wcancel").addEventListener("click", function() {
     worlds.classList.add("closed");
 });
-
-function mergeSet(a0, a, i) {
-    let ret = (a0 * i + a) / (i + 1);
-    if (Math.abs(a - a0) > Math.PI) {
-        ret += Math.PI;
-    }
-    return ret;
-}
