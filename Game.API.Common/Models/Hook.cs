@@ -123,7 +123,7 @@
                     PickupSeekersMultiplier = 0.0006,
                     SeekerRange = 2100,
                     SeekerCycleB = 250,
-                    SeekerCycleM = 1.0f/3000.0f,
+                    SeekerCycleM = 0.3f,
                     SeekerLead = 150,
                     SeekerNegotiation = true,
 
