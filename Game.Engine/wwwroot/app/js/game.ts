@@ -81,7 +81,7 @@ const cooldown = new Cooldown();
 let isSpectating = false;
 
 let angle = 0.0;
-const aimTarget = new Vector2(0, 0);
+let aimTarget = new Vector2(0, 0);
 const d = 500; // for steering with arrows
 
 let keyboardSteering = false;
@@ -467,8 +467,8 @@ setInterval(doPing, 1000);
 const graphics = new PIXI.Graphics();
 container.addChild(graphics);
 
-const lastCustomData = false;
-const spotSprites = [];
+let lastCustomData = false;
+let spotSprites = [];
 
 // Game Loop
 app.ticker.add(() => {
@@ -505,68 +505,9 @@ app.ticker.add(() => {
     // cooldown.draw();
 
     if (Controls.mouseX) {
-        let pos;
-
-        if (
-            Controls.numUp ||
-            Controls.numUpRight ||
-            Controls.numRight ||
-            Controls.numDownRight ||
-            Controls.numDown ||
-            Controls.numDownLeft ||
-            Controls.numLeft ||
-            Controls.numUpLeft ||
-            keyboardSteering
-        ) {
-            let i = 0;
-            if (Controls.numUp) {
-                angle = mergeSet(angle, (3 * Math.PI) / 2, i);
-                i++;
-            }
-            if (Controls.numUpRight) {
-                angle = mergeSet(angle, (7 * Math.PI) / 4, i);
-                i++;
-            }
-            if (Controls.numRight) {
-                angle = mergeSet(angle, 0, i);
-                i++;
-            }
-            if (Controls.numDownRight) {
-                angle = mergeSet(angle, Math.PI / 4, i);
-                i++;
-            }
-            if (Controls.numDown) {
-                angle = mergeSet(angle, Math.PI / 2, i);
-                i++;
-            }
-            if (Controls.numDownLeft) {
-                angle = mergeSet(angle, (3 * Math.PI) / 4, i);
-                i++;
-            }
-            if (Controls.numLeft) {
-                angle = mergeSet(angle, Math.PI, i);
-                i++;
-            }
-            if (Controls.numUpLeft) {
-                angle = mergeSet(angle, (5 * Math.PI) / 4, i);
-                i++;
-            }
-            /*if (Controls.right || Controls.left || Controls.up || Controls.down || keyboardSteering) {
-            if (Controls.right && !Controls.left) {
-                angle += keyboardSteeringSpeed * Math.PI;
-            } else if (Controls.left && !Controls.right) {
-                angle -= keyboardSteeringSpeed * Math.PI;
-            }
-            if (Controls.up) {
-                angle += Math.PI;
-            } // optional
-            aimTarget = Vector2.Polar(angle, d);
-            keyboardSteering = true;
-        } else {
-            pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
-            angle = Controls.angle;
-            aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
-        }
+        let pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
+        angle = Controls.angle;
+        aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
     }
 
     if (CustomData != lastCustomData) {
@@ -575,8 +516,6 @@ app.ticker.add(() => {
         for (let i = 0; i < spotSprites.length; i++) container.removeChild(spotSprites[i]);
 
         spotSprites = [];
-
-        //graphics.clear();
 
         if (CustomData) {
             const data = JSON.parse(CustomData);

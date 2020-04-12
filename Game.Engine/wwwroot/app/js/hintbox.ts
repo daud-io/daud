@@ -31,8 +31,8 @@ if (new Date().getTime() < eventStart.getTime()) {
     }, 1000);
 } else {
     window.setInterval(() => {
-        if (Settings.showHints) hintbox.style.visibility = "visible";
-        else hintbox.style.visibility = "hidden";
+        if (Settings.showHints) hintbox.style.display = "block";
+        else hintbox.style.display = "none";
 
         hintbox.innerText = texts[index % texts.length];
         index++;
