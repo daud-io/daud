@@ -29,7 +29,7 @@
                     MutualDestructionCooldown = 100,
 
                     Quantization = false,
-                    QuantizationCount = 24,
+                    QuantizationCount = 16,
 
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
@@ -49,9 +49,9 @@
                     },
                     BaseThrustConverter = 0.0028f,
 
-                    StretchWeight = 0.003f,
-                    StretchMin = 0.97f,
-                    StretchDeadzone = 0.04f,
+                    StretchWeight = 0f,
+                    StretchMin = 1f,
+                    StretchDeadzone = 0f,
 
                     Drag = 0.85f,
                     DragBoost = 0.93f,
@@ -74,8 +74,8 @@
                     AbandonBuffer = 120,
                     AbandonMomentumMultiplier = 0.75f,
 
-                    ShotCooldownTimeM = 18,
-                    ShotCooldownTimeB = 600,
+                    ShotCooldownTimeM = 45,
+                    ShotCooldownTimeB = 500,
 
                     ShotCooldownTimeBotM = 22,
                     ShotCooldownTimeBotB = 1100,
@@ -151,11 +151,11 @@
                     FishOOBWeight = 0.8f,
                     FishCycle = 500, // how often do they think
 
-                    FlockAlignment = 0f,
+                    FlockAlignment = 1f,
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
-                    FlockSeparation = 1.9f,
-                    FlockSeparationMinimumDistance = 30,
+                    FlockSeparation = 6f,
+                    FlockSeparationMinimumDistance = 18,
                     FlockWeight = 1f,
                     SnakeWeight = 0f,
                     BossMode = false,
@@ -208,10 +208,10 @@
                     PrecisionBullets = true,
                     PrecisionBulletsMinimumRange = 16384f,
 
-                    MinPointerDistanceB = 30f,
+                    MinPointerDistanceB = 10f,
                     MinPointerDistanceM = 0.5f,
-                    MaxPointerDistanceB = 80f,
-                    MaxPointerDistanceM = 2f,
+                    MaxPointerDistanceB = 50f,
+                    MaxPointerDistanceM = 1.8f,
                 };
             }
         }

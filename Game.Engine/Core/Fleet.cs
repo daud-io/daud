@@ -302,8 +302,7 @@
 
             float MinPointerDistance = (float)(World.Hook.MinPointerDistanceM * Ships.Count + World.Hook.MinPointerDistanceB);
             float MaxPointerDistance = (float)(World.Hook.MaxPointerDistanceM * Ships.Count + World.Hook.MaxPointerDistanceB);
-            float r = (float)Math.Sqrt(AimTarget.X * AimTarget.X + AimTarget.Y * AimTarget.Y);
-            float c = (float)Math.Min(Math.Max(r, MinPointerDistance), MaxPointerDistance) / r;
+            float c = (float)Math.Min(Math.Max(AimTarget.Length(), MinPointerDistance), MaxPointerDistance) / AimTarget.Length();
             Vector2 AimTarget2 = new Vector2(AimTarget.X * c, AimTarget.Y * c);
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
@@ -315,7 +314,7 @@
                 BoostUntil = World.Time + World.Hook.BoostDuration;
                 BoostUntil2 = World.Time + World.Hook.BoostDuration2;
 
-                BoostAngle = MathF.Atan2(AimTarget2.Y, AimTarget2.X);
+                BoostAngle = MathF.Atan2(AimTarget.Y, AimTarget.X);
                 isBoostInitial = true;
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
                 var Sorter = Ships.OrderByDescending((ship) => Vector2.DistanceSquared(FleetCenter + AimTarget, ship.Position)).Take(shipLoss);
@@ -333,14 +332,18 @@
                 var shipCoords = FleetCenter - ship.Position;
                 var shipTargetVector = shipCoords + AimTarget2;
 
-                float stretchMultipier = Math.Min(Math.Max(1f - Math.Abs(shipCoords.X * AimTarget2.Y - shipCoords.Y * AimTarget2.X) / AimTarget2.Length() * World.Hook.StretchWeight + World.Hook.StretchDeadzone, World.Hook.StretchMin), 1f);
+                /*float stretchMultipier = Math.Min(Math.Max(1f - Math.Abs(shipCoords.X * AimTarget2.Y - shipCoords.Y * AimTarget2.X) / AimTarget2.Length() * World.Hook.StretchWeight + World.Hook.StretchDeadzone, World.Hook.StretchMin), 1f);
                 if (Double.IsNaN((double)stretchMultipier))
-                    stretchMultipier = 1f;
+                    stretchMultipier = 1f;*/
 
                 // todo: this dirties the ship body every cycle
                 // ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
-                var angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
-                if (!Double.IsNaN((double)angle))
+                float angleMovement = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
+                if (!float.IsNaN(angleMovement))
+                    ship.AngleMovement = angleMovement;
+
+                float angle = MathF.Atan2(AimTarget.Y, AimTarget.X);
+                if (!float.IsNaN(angle))
                     ship.Angle = angle;
 
                 Flocking.Flock(ship);
@@ -349,7 +352,7 @@
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden) * BoostM 
-                    : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden) * stretchMultipier;
+                    : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden) /** stretchMultipier*/;
                 
                 ship.BoostThrustAmount = isBoosting2
                     ? World.Hook.BoostThrust2 * (1 - Burden) * BoostM

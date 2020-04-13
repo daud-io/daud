@@ -88,10 +88,10 @@
                 (hook.FlockCohesion * Flocking.Cohesion(fleet.Ships, ship, hook.FlockCohesionMaximumDistance))
                 + (hook.FlockSeparation * Flocking.Separation(fleet.Ships, ship, hook.FlockSeparationMinimumDistance));
 
-            var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
+            var steeringVector = new Vector2(MathF.Cos(ship.AngleMovement), MathF.Sin(ship.AngleMovement));
             steeringVector += hook.FlockWeight * shipFlockingVector;
 
-            ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            ship.AngleMovement = MathF.Atan2(steeringVector.Y, steeringVector.X);
         }
     }
 }
