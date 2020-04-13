@@ -162,8 +162,8 @@
 
             var offset = new Vector2
             (
-                random.Next(-10, 10),
-                random.Next(-10, 10)
+                random.Next(-World.Hook.ShipAddRadius, World.Hook.ShipAddRadius),
+                random.Next(-World.Hook.ShipAddRadius, World.Hook.ShipAddRadius)
             );
 
             var ship = new Ship()

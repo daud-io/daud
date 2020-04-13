@@ -31,6 +31,8 @@
                     Quantization = false,
                     QuantizationCount = 16,
 
+                    ShipAddRadius = 5,
+
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
                     // source: https://cdn.discordapp.com/attachments/357878752446906378/357892120427626498/uptodate_-_Sheet1.pdf
@@ -151,7 +153,7 @@
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
                     FlockSeparation = 6f,
-                    FlockSeparationMinimumDistance = 18,
+                    FlockSeparationMinimumDistance = 20,
                     FlockWeight = 1f,
                     SnakeWeight = 0f,
                     BossMode = false,
@@ -225,6 +227,8 @@
 
         public bool Quantization { get; set; }
         public int QuantizationCount { get; set; }
+
+        public int ShipAddRadius { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
