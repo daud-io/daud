@@ -1,4 +1,4 @@
-﻿import { parseScssIntoRules } from "../parser/parseTheme.js";
+﻿import { parseScssIntoRules } from "../parser/parseTheme";
 
 const text = `/*export const BLEND_MODES = {
     NORMAL:         0;
@@ -36,6 +36,10 @@ fish {
   scale: 0.002;
 }
 
+boom {
+  emitter: "emitter1";
+  particle: "ctf_arrow_red";
+}
 
 ship0,
 ship_gray,

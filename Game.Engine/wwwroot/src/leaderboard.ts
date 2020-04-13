@@ -130,7 +130,7 @@ export class Leaderboard {
 
             const flagStatus = {
                 cyan: data.Entries[0].ModeData.flagStatus,
-                red: data.Entries[1].ModeData.flagStatus
+                red: data.Entries[1].ModeData.flagStatus,
             };
 
             const cyanFlagStatus = document.getElementById("ctf_cyan").getElementsByClassName("flag_status")[0];
@@ -152,7 +152,7 @@ export class Leaderboard {
                 redFlagStatus.getElementsByClassName("taken")[0].classList.remove("hide");
             }
 
-            const findTeam = teamName => {
+            const findTeam = (teamName) => {
                 for (let i = 0; i < data.Entries.length; i++) {
                     if (data.Entries[i].Name == teamName) return data.Entries[i];
                 }
@@ -165,7 +165,7 @@ export class Leaderboard {
             const cyanScore = Math.min(cyan.Score, 5);
             const redScore = Math.min(red.Score, 5);
 
-            const image = textureName => {
+            const image = (textureName) => {
                 return `<img class="overlap" src="${RenderedObject.getTextureImage(textureName).src}"></img>`;
             };
             const cyanAngle = Math.atan2(cyanFlag.Position.y - position.y, cyanFlag.Position.x - position.x);

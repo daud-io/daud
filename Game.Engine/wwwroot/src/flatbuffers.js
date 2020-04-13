@@ -53,7 +53,7 @@ flatbuffers.FILE_IDENTIFIER_LENGTH = 4;
  */
 flatbuffers.Encoding = {
     UTF8_BYTES: 1,
-    UTF16_STRING: 2
+    UTF16_STRING: 2,
 };
 
 /**
@@ -87,7 +87,7 @@ flatbuffers.isLittleEndian = new Uint16Array(new Uint8Array([1, 0]).buffer)[0] =
  * @param {number} low
  * @param {number} high
  */
-flatbuffers.Long = function(low, high) {
+flatbuffers.Long = function (low, high) {
     /**
      * @type {number}
      * @const
@@ -106,7 +106,7 @@ flatbuffers.Long = function(low, high) {
  * @param {number} high
  * @returns {flatbuffers.Long}
  */
-flatbuffers.Long.create = function(low, high) {
+flatbuffers.Long.create = function (low, high) {
     // Special-case zero to avoid GC overhead for default values
     return low == 0 && high == 0 ? flatbuffers.Long.ZERO : new flatbuffers.Long(low, high);
 };
@@ -114,7 +114,7 @@ flatbuffers.Long.create = function(low, high) {
 /**
  * @returns {number}
  */
-flatbuffers.Long.prototype.toFloat64 = function() {
+flatbuffers.Long.prototype.toFloat64 = function () {
     return (this.low >>> 0) + this.high * 0x100000000;
 };
 
@@ -122,7 +122,7 @@ flatbuffers.Long.prototype.toFloat64 = function() {
  * @param {flatbuffers.Long} other
  * @returns {boolean}
  */
-flatbuffers.Long.prototype.equals = function(other) {
+flatbuffers.Long.prototype.equals = function (other) {
     return this.low == other.low && this.high == other.high;
 };
 
@@ -140,7 +140,7 @@ flatbuffers.Long.ZERO = new flatbuffers.Long(0, 0);
  * @constructor
  * @param {number=} opt_initial_size
  */
-flatbuffers.Builder = function(opt_initial_size) {
+flatbuffers.Builder = function (opt_initial_size) {
     if (!opt_initial_size) {
         var initial_size = 1024;
     } else {
@@ -226,7 +226,7 @@ flatbuffers.Builder = function(opt_initial_size) {
     this.force_defaults = false;
 };
 
-flatbuffers.Builder.prototype.clear = function() {
+flatbuffers.Builder.prototype.clear = function () {
     this.bb.clear();
     this.space = this.bb.capacity();
     this.minalign = 1;
@@ -246,7 +246,7 @@ flatbuffers.Builder.prototype.clear = function() {
  *
  * @param {boolean} forceDefaults true always serializes default values
  */
-flatbuffers.Builder.prototype.forceDefaults = function(forceDefaults) {
+flatbuffers.Builder.prototype.forceDefaults = function (forceDefaults) {
     this.force_defaults = forceDefaults;
 };
 
@@ -257,7 +257,7 @@ flatbuffers.Builder.prototype.forceDefaults = function(forceDefaults) {
  *
  * @returns {flatbuffers.ByteBuffer}
  */
-flatbuffers.Builder.prototype.dataBuffer = function() {
+flatbuffers.Builder.prototype.dataBuffer = function () {
     return this.bb;
 };
 
@@ -267,7 +267,7 @@ flatbuffers.Builder.prototype.dataBuffer = function() {
  *
  * @returns {Uint8Array}
  */
-flatbuffers.Builder.prototype.asUint8Array = function() {
+flatbuffers.Builder.prototype.asUint8Array = function () {
     return this.bb.bytes().subarray(this.bb.position(), this.bb.position() + this.offset());
 };
 
@@ -281,7 +281,7 @@ flatbuffers.Builder.prototype.asUint8Array = function() {
  * @param {number} size This is the of the new element to write
  * @param {number} additional_bytes The padding size
  */
-flatbuffers.Builder.prototype.prep = function(size, additional_bytes) {
+flatbuffers.Builder.prototype.prep = function (size, additional_bytes) {
     // Track the biggest thing we've ever aligned to.
     if (size > this.minalign) {
         this.minalign = size;
@@ -304,7 +304,7 @@ flatbuffers.Builder.prototype.prep = function(size, additional_bytes) {
 /**
  * @param {number} byte_size
  */
-flatbuffers.Builder.prototype.pad = function(byte_size) {
+flatbuffers.Builder.prototype.pad = function (byte_size) {
     for (let i = 0; i < byte_size; i++) {
         this.bb.writeInt8(--this.space, 0);
     }
@@ -313,42 +313,42 @@ flatbuffers.Builder.prototype.pad = function(byte_size) {
 /**
  * @param {number} value
  */
-flatbuffers.Builder.prototype.writeInt8 = function(value) {
+flatbuffers.Builder.prototype.writeInt8 = function (value) {
     this.bb.writeInt8((this.space -= 1), value);
 };
 
 /**
  * @param {number} value
  */
-flatbuffers.Builder.prototype.writeInt16 = function(value) {
+flatbuffers.Builder.prototype.writeInt16 = function (value) {
     this.bb.writeInt16((this.space -= 2), value);
 };
 
 /**
  * @param {number} value
  */
-flatbuffers.Builder.prototype.writeInt32 = function(value) {
+flatbuffers.Builder.prototype.writeInt32 = function (value) {
     this.bb.writeInt32((this.space -= 4), value);
 };
 
 /**
  * @param {flatbuffers.Long} value
  */
-flatbuffers.Builder.prototype.writeInt64 = function(value) {
+flatbuffers.Builder.prototype.writeInt64 = function (value) {
     this.bb.writeInt64((this.space -= 8), value);
 };
 
 /**
  * @param {number} value
  */
-flatbuffers.Builder.prototype.writeFloat32 = function(value) {
+flatbuffers.Builder.prototype.writeFloat32 = function (value) {
     this.bb.writeFloat32((this.space -= 4), value);
 };
 
 /**
  * @param {number} value
  */
-flatbuffers.Builder.prototype.writeFloat64 = function(value) {
+flatbuffers.Builder.prototype.writeFloat64 = function (value) {
     this.bb.writeFloat64((this.space -= 8), value);
 };
 /// @endcond
@@ -357,7 +357,7 @@ flatbuffers.Builder.prototype.writeFloat64 = function(value) {
  * Add an `int8` to the buffer, properly aligned, and grows the buffer (if necessary).
  * @param {number} value The `int8` to add the the buffer.
  */
-flatbuffers.Builder.prototype.addInt8 = function(value) {
+flatbuffers.Builder.prototype.addInt8 = function (value) {
     this.prep(1, 0);
     this.writeInt8(value);
 };
@@ -366,7 +366,7 @@ flatbuffers.Builder.prototype.addInt8 = function(value) {
  * Add an `int16` to the buffer, properly aligned, and grows the buffer (if necessary).
  * @param {number} value The `int16` to add the the buffer.
  */
-flatbuffers.Builder.prototype.addInt16 = function(value) {
+flatbuffers.Builder.prototype.addInt16 = function (value) {
     this.prep(2, 0);
     this.writeInt16(value);
 };
@@ -375,7 +375,7 @@ flatbuffers.Builder.prototype.addInt16 = function(value) {
  * Add an `int32` to the buffer, properly aligned, and grows the buffer (if necessary).
  * @param {number} value The `int32` to add the the buffer.
  */
-flatbuffers.Builder.prototype.addInt32 = function(value) {
+flatbuffers.Builder.prototype.addInt32 = function (value) {
     this.prep(4, 0);
     this.writeInt32(value);
 };
@@ -384,7 +384,7 @@ flatbuffers.Builder.prototype.addInt32 = function(value) {
  * Add an `int64` to the buffer, properly aligned, and grows the buffer (if necessary).
  * @param {flatbuffers.Long} value The `int64` to add the the buffer.
  */
-flatbuffers.Builder.prototype.addInt64 = function(value) {
+flatbuffers.Builder.prototype.addInt64 = function (value) {
     this.prep(8, 0);
     this.writeInt64(value);
 };
@@ -393,7 +393,7 @@ flatbuffers.Builder.prototype.addInt64 = function(value) {
  * Add a `float32` to the buffer, properly aligned, and grows the buffer (if necessary).
  * @param {number} value The `float32` to add the the buffer.
  */
-flatbuffers.Builder.prototype.addFloat32 = function(value) {
+flatbuffers.Builder.prototype.addFloat32 = function (value) {
     this.prep(4, 0);
     this.writeFloat32(value);
 };
@@ -402,7 +402,7 @@ flatbuffers.Builder.prototype.addFloat32 = function(value) {
  * Add a `float64` to the buffer, properly aligned, and grows the buffer (if necessary).
  * @param {number} value The `float64` to add the the buffer.
  */
-flatbuffers.Builder.prototype.addFloat64 = function(value) {
+flatbuffers.Builder.prototype.addFloat64 = function (value) {
     this.prep(8, 0);
     this.writeFloat64(value);
 };
@@ -413,7 +413,7 @@ flatbuffers.Builder.prototype.addFloat64 = function(value) {
  * @param {number} value
  * @param {number} defaultValue
  */
-flatbuffers.Builder.prototype.addFieldInt8 = function(voffset, value, defaultValue) {
+flatbuffers.Builder.prototype.addFieldInt8 = function (voffset, value, defaultValue) {
     if (this.force_defaults || value != defaultValue) {
         this.addInt8(value);
         this.slot(voffset);
@@ -425,7 +425,7 @@ flatbuffers.Builder.prototype.addFieldInt8 = function(voffset, value, defaultVal
  * @param {number} value
  * @param {number} defaultValue
  */
-flatbuffers.Builder.prototype.addFieldInt16 = function(voffset, value, defaultValue) {
+flatbuffers.Builder.prototype.addFieldInt16 = function (voffset, value, defaultValue) {
     if (this.force_defaults || value != defaultValue) {
         this.addInt16(value);
         this.slot(voffset);
@@ -437,7 +437,7 @@ flatbuffers.Builder.prototype.addFieldInt16 = function(voffset, value, defaultVa
  * @param {number} value
  * @param {number} defaultValue
  */
-flatbuffers.Builder.prototype.addFieldInt32 = function(voffset, value, defaultValue) {
+flatbuffers.Builder.prototype.addFieldInt32 = function (voffset, value, defaultValue) {
     if (this.force_defaults || value != defaultValue) {
         this.addInt32(value);
         this.slot(voffset);
@@ -449,7 +449,7 @@ flatbuffers.Builder.prototype.addFieldInt32 = function(voffset, value, defaultVa
  * @param {flatbuffers.Long} value
  * @param {flatbuffers.Long} defaultValue
  */
-flatbuffers.Builder.prototype.addFieldInt64 = function(voffset, value, defaultValue) {
+flatbuffers.Builder.prototype.addFieldInt64 = function (voffset, value, defaultValue) {
     if (this.force_defaults || !value.equals(defaultValue)) {
         this.addInt64(value);
         this.slot(voffset);
@@ -461,7 +461,7 @@ flatbuffers.Builder.prototype.addFieldInt64 = function(voffset, value, defaultVa
  * @param {number} value
  * @param {number} defaultValue
  */
-flatbuffers.Builder.prototype.addFieldFloat32 = function(voffset, value, defaultValue) {
+flatbuffers.Builder.prototype.addFieldFloat32 = function (voffset, value, defaultValue) {
     if (this.force_defaults || value != defaultValue) {
         this.addFloat32(value);
         this.slot(voffset);
@@ -473,7 +473,7 @@ flatbuffers.Builder.prototype.addFieldFloat32 = function(voffset, value, default
  * @param {number} value
  * @param {number} defaultValue
  */
-flatbuffers.Builder.prototype.addFieldFloat64 = function(voffset, value, defaultValue) {
+flatbuffers.Builder.prototype.addFieldFloat64 = function (voffset, value, defaultValue) {
     if (this.force_defaults || value != defaultValue) {
         this.addFloat64(value);
         this.slot(voffset);
@@ -485,7 +485,7 @@ flatbuffers.Builder.prototype.addFieldFloat64 = function(voffset, value, default
  * @param {flatbuffers.Offset} value
  * @param {flatbuffers.Offset} defaultValue
  */
-flatbuffers.Builder.prototype.addFieldOffset = function(voffset, value, defaultValue) {
+flatbuffers.Builder.prototype.addFieldOffset = function (voffset, value, defaultValue) {
     if (this.force_defaults || value != defaultValue) {
         this.addOffset(value);
         this.slot(voffset);
@@ -499,7 +499,7 @@ flatbuffers.Builder.prototype.addFieldOffset = function(voffset, value, defaultV
  * @param {flatbuffers.Offset} value
  * @param {flatbuffers.Offset} defaultValue
  */
-flatbuffers.Builder.prototype.addFieldStruct = function(voffset, value, defaultValue) {
+flatbuffers.Builder.prototype.addFieldStruct = function (voffset, value, defaultValue) {
     if (value != defaultValue) {
         this.nested(value);
         this.slot(voffset);
@@ -513,7 +513,7 @@ flatbuffers.Builder.prototype.addFieldStruct = function(voffset, value, defaultV
  *
  * @param {flatbuffers.Offset} obj The offset of the created object
  */
-flatbuffers.Builder.prototype.nested = function(obj) {
+flatbuffers.Builder.prototype.nested = function (obj) {
     if (obj != this.offset()) {
         throw new Error("FlatBuffers: struct must be serialized inline.");
     }
@@ -523,7 +523,7 @@ flatbuffers.Builder.prototype.nested = function(obj) {
  * Should not be creating any other object, string or vector
  * while an object is being constructed
  */
-flatbuffers.Builder.prototype.notNested = function() {
+flatbuffers.Builder.prototype.notNested = function () {
     if (this.isNested) {
         throw new Error("FlatBuffers: object serialization must not be nested.");
     }
@@ -534,14 +534,14 @@ flatbuffers.Builder.prototype.notNested = function() {
  *
  * @param {number} voffset
  */
-flatbuffers.Builder.prototype.slot = function(voffset) {
+flatbuffers.Builder.prototype.slot = function (voffset) {
     this.vtable[voffset] = this.offset();
 };
 
 /**
  * @returns {flatbuffers.Offset} Offset relative to the end of the buffer.
  */
-flatbuffers.Builder.prototype.offset = function() {
+flatbuffers.Builder.prototype.offset = function () {
     return this.bb.capacity() - this.space;
 };
 
@@ -557,7 +557,7 @@ flatbuffers.Builder.prototype.offset = function() {
  * it a uint8Array we need to suppress the type check:
  * @suppress {checkTypes}
  */
-flatbuffers.Builder.growByteBuffer = function(bb) {
+flatbuffers.Builder.growByteBuffer = function (bb) {
     const old_buf_size = bb.capacity();
 
     // Ensure we don't grow beyond what fits in an int.
@@ -578,7 +578,7 @@ flatbuffers.Builder.growByteBuffer = function(bb) {
  *
  * @param {flatbuffers.Offset} offset The offset to add.
  */
-flatbuffers.Builder.prototype.addOffset = function(offset) {
+flatbuffers.Builder.prototype.addOffset = function (offset) {
     this.prep(flatbuffers.SIZEOF_INT, 0); // Ensure alignment is already done.
     this.writeInt32(this.offset() - offset + flatbuffers.SIZEOF_INT);
 };
@@ -591,7 +591,7 @@ flatbuffers.Builder.prototype.addOffset = function(offset) {
  *
  * @param {number} numfields
  */
-flatbuffers.Builder.prototype.startObject = function(numfields) {
+flatbuffers.Builder.prototype.startObject = function (numfields) {
     this.notNested();
     if (this.vtable == null) {
         this.vtable = [];
@@ -609,7 +609,7 @@ flatbuffers.Builder.prototype.startObject = function(numfields) {
  *
  * @returns {flatbuffers.Offset} The offset to the object inside `dataBuffer`
  */
-flatbuffers.Builder.prototype.endObject = function() {
+flatbuffers.Builder.prototype.endObject = function () {
     if (this.vtable == null || !this.isNested) {
         throw new Error("FlatBuffers: endObject called without startObject");
     }
@@ -676,7 +676,7 @@ flatbuffers.Builder.prototype.endObject = function() {
  * @param {flatbuffers.Offset} root_table
  * @param {string=} opt_file_identifier
  */
-flatbuffers.Builder.prototype.finish = function(root_table, opt_file_identifier) {
+flatbuffers.Builder.prototype.finish = function (root_table, opt_file_identifier) {
     if (opt_file_identifier) {
         const file_identifier = opt_file_identifier;
         this.prep(this.minalign, flatbuffers.SIZEOF_INT + flatbuffers.FILE_IDENTIFIER_LENGTH);
@@ -700,7 +700,7 @@ flatbuffers.Builder.prototype.finish = function(root_table, opt_file_identifier)
  * @param {flatbuffers.Offset} table
  * @param {number} field
  */
-flatbuffers.Builder.prototype.requiredField = function(table, field) {
+flatbuffers.Builder.prototype.requiredField = function (table, field) {
     const table_start = this.bb.capacity() - table;
     const vtable_start = table_start - this.bb.readInt32(table_start);
     const ok = this.bb.readInt16(vtable_start + field) != 0;
@@ -720,7 +720,7 @@ flatbuffers.Builder.prototype.requiredField = function(table, field) {
  * @param {number} num_elems The number of elements in the array
  * @param {number} alignment The alignment of the array
  */
-flatbuffers.Builder.prototype.startVector = function(elem_size, num_elems, alignment) {
+flatbuffers.Builder.prototype.startVector = function (elem_size, num_elems, alignment) {
     this.notNested();
     this.vector_num_elems = num_elems;
     this.prep(flatbuffers.SIZEOF_INT, elem_size * num_elems);
@@ -734,7 +734,7 @@ flatbuffers.Builder.prototype.startVector = function(elem_size, num_elems, align
  * @returns {flatbuffers.Offset} The offset at which the newly created array
  * starts.
  */
-flatbuffers.Builder.prototype.endVector = function() {
+flatbuffers.Builder.prototype.endVector = function () {
     this.writeInt32(this.vector_num_elems);
     return this.offset();
 };
@@ -747,7 +747,7 @@ flatbuffers.Builder.prototype.endVector = function() {
  * @param {string|Uint8Array} s The string to encode
  * @return {flatbuffers.Offset} The offset in the buffer where the encoded string starts
  */
-flatbuffers.Builder.prototype.createString = function(s) {
+flatbuffers.Builder.prototype.createString = function (s) {
     if (s instanceof Uint8Array) {
         var utf8 = s;
     } else {
@@ -801,7 +801,7 @@ flatbuffers.Builder.prototype.createString = function(s) {
  * @param {number} high
  * @returns {flatbuffers.Long}
  */
-flatbuffers.Builder.prototype.createLong = function(low, high) {
+flatbuffers.Builder.prototype.createLong = function (low, high) {
     return flatbuffers.Long.create(low, high);
 };
 ////////////////////////////////////////////////////////////////////////////////
@@ -812,7 +812,7 @@ flatbuffers.Builder.prototype.createLong = function(low, high) {
  * @constructor
  * @param {Uint8Array} bytes
  */
-flatbuffers.ByteBuffer = function(bytes) {
+flatbuffers.ByteBuffer = function (bytes) {
     /**
      * @type {Uint8Array}
      * @private
@@ -832,11 +832,11 @@ flatbuffers.ByteBuffer = function(bytes) {
  * @param {number} byte_size
  * @returns {flatbuffers.ByteBuffer}
  */
-flatbuffers.ByteBuffer.allocate = function(byte_size) {
+flatbuffers.ByteBuffer.allocate = function (byte_size) {
     return new flatbuffers.ByteBuffer(new Uint8Array(byte_size));
 };
 
-flatbuffers.ByteBuffer.prototype.clear = function() {
+flatbuffers.ByteBuffer.prototype.clear = function () {
     this.position_ = 0;
 };
 
@@ -845,7 +845,7 @@ flatbuffers.ByteBuffer.prototype.clear = function() {
  *
  * @returns {Uint8Array}
  */
-flatbuffers.ByteBuffer.prototype.bytes = function() {
+flatbuffers.ByteBuffer.prototype.bytes = function () {
     return this.bytes_;
 };
 
@@ -854,7 +854,7 @@ flatbuffers.ByteBuffer.prototype.bytes = function() {
  *
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.position = function() {
+flatbuffers.ByteBuffer.prototype.position = function () {
     return this.position_;
 };
 
@@ -863,7 +863,7 @@ flatbuffers.ByteBuffer.prototype.position = function() {
  *
  * @param {number} position
  */
-flatbuffers.ByteBuffer.prototype.setPosition = function(position) {
+flatbuffers.ByteBuffer.prototype.setPosition = function (position) {
     this.position_ = position;
 };
 
@@ -872,7 +872,7 @@ flatbuffers.ByteBuffer.prototype.setPosition = function(position) {
  *
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.capacity = function() {
+flatbuffers.ByteBuffer.prototype.capacity = function () {
     return this.bytes_.length;
 };
 
@@ -880,7 +880,7 @@ flatbuffers.ByteBuffer.prototype.capacity = function() {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.readInt8 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readInt8 = function (offset) {
     return (this.readUint8(offset) << 24) >> 24;
 };
 
@@ -888,7 +888,7 @@ flatbuffers.ByteBuffer.prototype.readInt8 = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.readUint8 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readUint8 = function (offset) {
     return this.bytes_[offset];
 };
 
@@ -896,7 +896,7 @@ flatbuffers.ByteBuffer.prototype.readUint8 = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.readInt16 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readInt16 = function (offset) {
     return (this.readUint16(offset) << 16) >> 16;
 };
 
@@ -904,7 +904,7 @@ flatbuffers.ByteBuffer.prototype.readInt16 = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.readUint16 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readUint16 = function (offset) {
     return this.bytes_[offset] | (this.bytes_[offset + 1] << 8);
 };
 
@@ -912,7 +912,7 @@ flatbuffers.ByteBuffer.prototype.readUint16 = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.readInt32 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readInt32 = function (offset) {
     return this.bytes_[offset] | (this.bytes_[offset + 1] << 8) | (this.bytes_[offset + 2] << 16) | (this.bytes_[offset + 3] << 24);
 };
 
@@ -920,7 +920,7 @@ flatbuffers.ByteBuffer.prototype.readInt32 = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.readUint32 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readUint32 = function (offset) {
     return this.readInt32(offset) >>> 0;
 };
 
@@ -928,7 +928,7 @@ flatbuffers.ByteBuffer.prototype.readUint32 = function(offset) {
  * @param {number} offset
  * @returns {flatbuffers.Long}
  */
-flatbuffers.ByteBuffer.prototype.readInt64 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readInt64 = function (offset) {
     return new flatbuffers.Long(this.readInt32(offset), this.readInt32(offset + 4));
 };
 
@@ -936,7 +936,7 @@ flatbuffers.ByteBuffer.prototype.readInt64 = function(offset) {
  * @param {number} offset
  * @returns {flatbuffers.Long}
  */
-flatbuffers.ByteBuffer.prototype.readUint64 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readUint64 = function (offset) {
     return new flatbuffers.Long(this.readUint32(offset), this.readUint32(offset + 4));
 };
 
@@ -944,7 +944,7 @@ flatbuffers.ByteBuffer.prototype.readUint64 = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.readFloat32 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readFloat32 = function (offset) {
     flatbuffers.int32[0] = this.readInt32(offset);
     return flatbuffers.float32[0];
 };
@@ -953,7 +953,7 @@ flatbuffers.ByteBuffer.prototype.readFloat32 = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.readFloat64 = function(offset) {
+flatbuffers.ByteBuffer.prototype.readFloat64 = function (offset) {
     flatbuffers.int32[flatbuffers.isLittleEndian ? 0 : 1] = this.readInt32(offset);
     flatbuffers.int32[flatbuffers.isLittleEndian ? 1 : 0] = this.readInt32(offset + 4);
     return flatbuffers.float64[0];
@@ -963,7 +963,7 @@ flatbuffers.ByteBuffer.prototype.readFloat64 = function(offset) {
  * @param {number} offset
  * @param {number|boolean} value
  */
-flatbuffers.ByteBuffer.prototype.writeInt8 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeInt8 = function (offset, value) {
     this.bytes_[offset] = /** @type {number} */ (value);
 };
 
@@ -971,7 +971,7 @@ flatbuffers.ByteBuffer.prototype.writeInt8 = function(offset, value) {
  * @param {number} offset
  * @param {number} value
  */
-flatbuffers.ByteBuffer.prototype.writeUint8 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeUint8 = function (offset, value) {
     this.bytes_[offset] = value;
 };
 
@@ -979,16 +979,7 @@ flatbuffers.ByteBuffer.prototype.writeUint8 = function(offset, value) {
  * @param {number} offset
  * @param {number} value
  */
-flatbuffers.ByteBuffer.prototype.writeInt16 = function(offset, value) {
-    this.bytes_[offset] = value;
-    this.bytes_[offset + 1] = value >> 8;
-};
-
-/**
- * @param {number} offset
- * @param {number} value
- */
-flatbuffers.ByteBuffer.prototype.writeUint16 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeInt16 = function (offset, value) {
     this.bytes_[offset] = value;
     this.bytes_[offset + 1] = value >> 8;
 };
@@ -997,7 +988,16 @@ flatbuffers.ByteBuffer.prototype.writeUint16 = function(offset, value) {
  * @param {number} offset
  * @param {number} value
  */
-flatbuffers.ByteBuffer.prototype.writeInt32 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeUint16 = function (offset, value) {
+    this.bytes_[offset] = value;
+    this.bytes_[offset + 1] = value >> 8;
+};
+
+/**
+ * @param {number} offset
+ * @param {number} value
+ */
+flatbuffers.ByteBuffer.prototype.writeInt32 = function (offset, value) {
     this.bytes_[offset] = value;
     this.bytes_[offset + 1] = value >> 8;
     this.bytes_[offset + 2] = value >> 16;
@@ -1008,7 +1008,7 @@ flatbuffers.ByteBuffer.prototype.writeInt32 = function(offset, value) {
  * @param {number} offset
  * @param {number} value
  */
-flatbuffers.ByteBuffer.prototype.writeUint32 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeUint32 = function (offset, value) {
     this.bytes_[offset] = value;
     this.bytes_[offset + 1] = value >> 8;
     this.bytes_[offset + 2] = value >> 16;
@@ -1019,7 +1019,7 @@ flatbuffers.ByteBuffer.prototype.writeUint32 = function(offset, value) {
  * @param {number} offset
  * @param {flatbuffers.Long} value
  */
-flatbuffers.ByteBuffer.prototype.writeInt64 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeInt64 = function (offset, value) {
     this.writeInt32(offset, value.low);
     this.writeInt32(offset + 4, value.high);
 };
@@ -1028,7 +1028,7 @@ flatbuffers.ByteBuffer.prototype.writeInt64 = function(offset, value) {
  * @param {number} offset
  * @param {flatbuffers.Long} value
  */
-flatbuffers.ByteBuffer.prototype.writeUint64 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeUint64 = function (offset, value) {
     this.writeUint32(offset, value.low);
     this.writeUint32(offset + 4, value.high);
 };
@@ -1037,7 +1037,7 @@ flatbuffers.ByteBuffer.prototype.writeUint64 = function(offset, value) {
  * @param {number} offset
  * @param {number} value
  */
-flatbuffers.ByteBuffer.prototype.writeFloat32 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeFloat32 = function (offset, value) {
     flatbuffers.float32[0] = value;
     this.writeInt32(offset, flatbuffers.int32[0]);
 };
@@ -1046,7 +1046,7 @@ flatbuffers.ByteBuffer.prototype.writeFloat32 = function(offset, value) {
  * @param {number} offset
  * @param {number} value
  */
-flatbuffers.ByteBuffer.prototype.writeFloat64 = function(offset, value) {
+flatbuffers.ByteBuffer.prototype.writeFloat64 = function (offset, value) {
     flatbuffers.float64[0] = value;
     this.writeInt32(offset, flatbuffers.int32[flatbuffers.isLittleEndian ? 0 : 1]);
     this.writeInt32(offset + 4, flatbuffers.int32[flatbuffers.isLittleEndian ? 1 : 0]);
@@ -1058,7 +1058,7 @@ flatbuffers.ByteBuffer.prototype.writeFloat64 = function(offset, value) {
  * start of a the root vtable).
  * @returns {string}
  */
-flatbuffers.ByteBuffer.prototype.getBufferIdentifier = function() {
+flatbuffers.ByteBuffer.prototype.getBufferIdentifier = function () {
     if (this.bytes_.length < this.position_ + flatbuffers.SIZEOF_INT + flatbuffers.FILE_IDENTIFIER_LENGTH) {
         throw new Error("FlatBuffers: ByteBuffer is too short to contain an identifier.");
     }
@@ -1077,7 +1077,7 @@ flatbuffers.ByteBuffer.prototype.getBufferIdentifier = function() {
  * @param {number} vtable_offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.__offset = function(bb_pos, vtable_offset) {
+flatbuffers.ByteBuffer.prototype.__offset = function (bb_pos, vtable_offset) {
     const vtable = bb_pos - this.readInt32(bb_pos);
     return vtable_offset < this.readInt16(vtable) ? this.readInt16(vtable + vtable_offset) : 0;
 };
@@ -1089,7 +1089,7 @@ flatbuffers.ByteBuffer.prototype.__offset = function(bb_pos, vtable_offset) {
  * @param {number} offset
  * @returns {flatbuffers.Table}
  */
-flatbuffers.ByteBuffer.prototype.__union = function(t, offset) {
+flatbuffers.ByteBuffer.prototype.__union = function (t, offset) {
     t.bb_pos = offset + this.readInt32(offset);
     t.bb = this;
     return t;
@@ -1108,7 +1108,7 @@ flatbuffers.ByteBuffer.prototype.__union = function(t, offset) {
  * @param {flatbuffers.Encoding=} opt_encoding Defaults to UTF16_STRING
  * @returns {string|Uint8Array}
  */
-flatbuffers.ByteBuffer.prototype.__string = function(offset, opt_encoding) {
+flatbuffers.ByteBuffer.prototype.__string = function (offset, opt_encoding) {
     offset += this.readInt32(offset);
 
     const length = this.readInt32(offset);
@@ -1160,7 +1160,7 @@ flatbuffers.ByteBuffer.prototype.__string = function(offset, opt_encoding) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.__indirect = function(offset) {
+flatbuffers.ByteBuffer.prototype.__indirect = function (offset) {
     return offset + this.readInt32(offset);
 };
 
@@ -1170,7 +1170,7 @@ flatbuffers.ByteBuffer.prototype.__indirect = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.__vector = function(offset) {
+flatbuffers.ByteBuffer.prototype.__vector = function (offset) {
     return offset + this.readInt32(offset) + flatbuffers.SIZEOF_INT; // data starts after the length
 };
 
@@ -1180,7 +1180,7 @@ flatbuffers.ByteBuffer.prototype.__vector = function(offset) {
  * @param {number} offset
  * @returns {number}
  */
-flatbuffers.ByteBuffer.prototype.__vector_len = function(offset) {
+flatbuffers.ByteBuffer.prototype.__vector_len = function (offset) {
     return this.readInt32(offset + this.readInt32(offset));
 };
 
@@ -1188,7 +1188,7 @@ flatbuffers.ByteBuffer.prototype.__vector_len = function(offset) {
  * @param {string} ident
  * @returns {boolean}
  */
-flatbuffers.ByteBuffer.prototype.__has_identifier = function(ident) {
+flatbuffers.ByteBuffer.prototype.__has_identifier = function (ident) {
     if (ident.length != flatbuffers.FILE_IDENTIFIER_LENGTH) {
         throw new Error("FlatBuffers: file identifier must be length " + flatbuffers.FILE_IDENTIFIER_LENGTH);
     }
@@ -1207,7 +1207,7 @@ flatbuffers.ByteBuffer.prototype.__has_identifier = function(ident) {
  * @param {number} high
  * @returns {flatbuffers.Long}
  */
-flatbuffers.ByteBuffer.prototype.createLong = function(low, high) {
+flatbuffers.ByteBuffer.prototype.createLong = function (low, high) {
     return flatbuffers.Long.create(low, high);
 };
 

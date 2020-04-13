@@ -1,5 +1,5 @@
 ﻿export class Events {
-    static Report(category, action, value?) {
+    static Report(category: string, action: string, value?: number) {
         (window as any).dataLayer = (window as any).dataLayer || [];
         (window as any).dataLayer.push("event", action, { event_category: category, value: value });
     }
@@ -13,9 +13,5 @@
 
     static Spectate() {
         Events.Report("other", "spectate");
-    }
-
-    static changeRoom(room) {
-        Events.Report("room", room);
     }
 }

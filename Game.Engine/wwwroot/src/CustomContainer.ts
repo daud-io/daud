@@ -1,9 +1,9 @@
 import { Container } from "pixi.js";
 
 export class CustomContainer extends Container {
-    bodyGroup: any;
+    bodyGroup: PIXI.Container;
     plotly: any;
     tiles: any;
-    backgroundGroup: any;
-    emitterContainer: any;
+    backgroundGroup: PIXI.Container;
+    emitterContainer: PIXI.ParticleContainer;
 }

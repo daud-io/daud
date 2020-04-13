@@ -25,15 +25,12 @@ function parseCssIntoRules(css) {
 
         const blockProps = block.property().map((x, i) => {
             return [
-                block
-                    .property(i)
-                    .identifier()
-                    .getText(),
+                block.property(i).identifier().getText(),
                 block
                     .property(i)
                     .values()
-                    .children.map(x => (x.children ? x.children.map(y => y.getText()).join(" ") : x.getText()))
-                    .filter(y => y !== ",")
+                    .children.map((x) => (x.children ? x.children.map((y) => y.getText()).join(" ") : x.getText()))
+                    .filter((y) => y !== ","),
             ];
         });
 
@@ -63,8 +60,8 @@ function selectorMatches(selector, selectProps) {
         name: selectProps.element,
         attribs: {
             id: selectProps.id,
-            class: selectProps.class
-        }
+            class: selectProps.class,
+        },
     };
     return CSSselect.is(thing, selector);
 }
@@ -77,7 +74,7 @@ function queryProperties(element, ruleList) {
                 if (res[p] == undefined) {
                     res[p] = [];
                 }
-                res[p] = ruleList[i].obj[p].map(x => (x == "inherit" ? res[p] : [x])).reduce((a, b) => a.concat(b), []);
+                res[p] = ruleList[i].obj[p].map((x) => (x == "inherit" ? res[p] : [x])).reduce((a, b) => a.concat(b), []);
             }
         }
     }

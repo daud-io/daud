@@ -1,8 +1,8 @@
-const isValidHex: (hex: string) => boolean = hex => /^#([A-Fa-f0-9]{3,4}){1,2}$/.test(hex);
+const isValidHex: (hex: string) => boolean = (hex) => /^#([A-Fa-f0-9]{3,4}){1,2}$/.test(hex);
 
 const getChunksFromString: (str: string, chunkSize: number) => string[] | null = (str, chunkSize) => str.match(new RegExp(`.{${chunkSize}}`, "g"));
 
-const convertHexUnitTo256: (hexStr: string) => number = hexStr => parseInt(hexStr.repeat(2 / hexStr.length), 16);
+const convertHexUnitTo256: (hexStr: string) => number = (hexStr) => parseInt(hexStr.repeat(2 / hexStr.length), 16);
 
 const getAlphafloat: (a?: number, alpha?: number) => number = (a, alpha) => {
     if (a) {

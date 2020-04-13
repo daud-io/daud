@@ -1,4 +1,4 @@
-import Cookies = require("js-cookie");
+import Cookies from "js-cookie";
 
 const changelog = document.getElementById("changelog");
 let currentChangelogVersion = "0";

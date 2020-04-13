@@ -2,16 +2,15 @@ import JSZip from "jszip";
 import { textureMapRules } from "./models/textureMap";
 import { spriteModeMapRules } from "./models/spriteModeMap";
 import { textureCache } from "./models/textureCache";
-import Cookies = require("js-cookie");
-import sass = require("sass");
-const Buffer = require("buffer").Buffer;
+import Cookies from "js-cookie";
+import * as sass from "sass";
+import { Buffer } from "buffer";
 const textureMapRulesLen = textureMapRules[0].length;
 const spriteModeMapRulesLen = spriteModeMapRules[0].length;
 
-// in case your code is isomorphic
-if (typeof window !== "undefined") (window as any).Buffer = Buffer;
+(window as any).Buffer = Buffer;
 
-import { parseScssIntoRules } from "./parser/parseTheme.js";
+import { parseScssIntoRules } from "./parser/parseTheme";
 
 export const Settings = {
     theme: "",
@@ -34,7 +33,7 @@ export const Settings = {
     background: "on",
     mipmapping: true,
     updatesVersion: 0,
-    mouseOneButton: 0
+    mouseOneButton: 0,
 };
 const themeSelector = document.getElementById("settingsThemeSelector") as HTMLInputElement;
 const themeSelectorCustom = document.getElementById("settingsThemeSelectorCustom") as HTMLInputElement;
@@ -162,7 +161,7 @@ function oldTextureKeyEntToNew(key, entry) {
     } else if (key == "offset") {
         newEntList = [
             ["offset-x", entry.x],
-            ["offset-y", entry.y]
+            ["offset-y", entry.y],
         ];
     } else if (key == "animationSpeed") {
         newEntList = [["animation-speed", entry]];
@@ -191,11 +190,12 @@ async function theme(v): Promise<any> {
     document.getElementById("theme-styles").innerHTML = "";
     if (v) v = v.toLowerCase();
     const link = `https://dl.dropboxusercontent.com/s/${v}/daudmod.zip`;
-    const zip = await window.fetch(link)
-        .then(response => response.blob())
+    const zip: any = await window
+        .fetch(link)
+        .then((response) => response.blob())
         .then(JSZip.loadAsync);
     const baseFiles = [];
-    zip.folder("daudmod").forEach(function(relativePath, file) {
+    zip.folder("daudmod").forEach(function (relativePath, file) {
         if (!file.dir) {
             baseFiles.push(file.name);
         }
@@ -208,13 +208,13 @@ async function theme(v): Promise<any> {
         //new theme
         zip.file("daudmod/spriteModeMap.scss")
             .async("string")
-            .then(text => {
+            .then((text) => {
                 zip.file("daudmod/textureMap.scss")
                     .async("string")
-                    .then(text2 => {
+                    .then((text2) => {
                         zip.file("daudmod/styles.scss")
                             .async("string")
-                            .then(text3 => {
+                            .then((text3) => {
                                 textureMapRules[0] = textureMapRules[0].slice(0, textureMapRulesLen);
                                 spriteModeMapRules[0] = spriteModeMapRules[0].slice(0, spriteModeMapRulesLen);
 
@@ -228,7 +228,7 @@ async function theme(v): Promise<any> {
 
                                     const promises = [];
                                     for (const entry of textureMapR) {
-                                        (function(ent) {
+                                        (function (ent) {
                                             if (ent.obj.file) {
                                                 const file = JSON.parse(ent.obj.file[0]) + "";
 
@@ -236,7 +236,7 @@ async function theme(v): Promise<any> {
                                                     zip
                                                         .file(`daudmod/${file}.png`)
                                                         .async("arraybuffer")
-                                                        .then(ab => {
+                                                        .then((ab) => {
                                                             const key = ent.selector + "";
                                                             const arrayBufferView = new Uint8Array(ab);
                                                             const blob = new Blob([arrayBufferView], { type: "image/png" });
@@ -261,7 +261,7 @@ async function theme(v): Promise<any> {
                                                     zip
                                                         .file(`daudmod/${emitter}.json`)
                                                         .async("string")
-                                                        .then(json => {
+                                                        .then((json) => {
                                                             ent.obj.emitter = [JSON.parse(json)];
                                                         })
                                                 );
@@ -292,11 +292,11 @@ async function theme(v): Promise<any> {
                                                     fixedMap.push("");
                                                     replacePairs.push([imocc, fixed.indexOf(imgurl)]);
                                                     imagePromises.push(
-                                                        (function(loo) {
+                                                        (function (loo) {
                                                             return zip
                                                                 .file(`daudmod/${imgurl}`)
                                                                 .async("arraybuffer")
-                                                                .then(ab => {
+                                                                .then((ab) => {
                                                                     const arrayBufferView = new Uint8Array(ab);
                                                                     const blob = new Blob([arrayBufferView], { type: "image/png" });
                                                                     const urlCreator = window.URL;
@@ -351,7 +351,7 @@ async function theme(v): Promise<any> {
         //old theme
         zip.file("daudmod/info.json")
             .async("string")
-            .then(text => {
+            .then((text) => {
                 const promises = [];
                 const info = JSON.parse(text);
 
@@ -405,7 +405,7 @@ async function theme(v): Promise<any> {
                     }
 
                     for (const entry of textureMapR) {
-                        (function(ent) {
+                        (function (ent) {
                             if (ent.obj.file) {
                                 let file = "";
                                 try {
@@ -418,7 +418,7 @@ async function theme(v): Promise<any> {
                                     zip
                                         .file(`daudmod/${file}.png`)
                                         .async("arraybuffer")
-                                        .then(ab => {
+                                        .then((ab) => {
                                             const key = ent.selector + "";
                                             const arrayBufferView = new Uint8Array(ab);
                                             const blob = new Blob([arrayBufferView], { type: "image/png" });
@@ -451,7 +451,7 @@ async function theme(v): Promise<any> {
                             zip
                                 .file(`daudmod/${css}`)
                                 .async("string")
-                                .then(ab => {
+                                .then((ab) => {
                                     const imagePromises = [];
                                     let cleansed = ab;
                                     let images = ab.match(/url\("\.\/?(.*?\.png)"\)/g);
@@ -471,11 +471,11 @@ async function theme(v): Promise<any> {
                                             fixedMap.push("");
                                             replacePairs.push([imocc, fixed.indexOf(imgurl)]);
                                             imagePromises.push(
-                                                (function(loo) {
+                                                (function (loo) {
                                                     return zip
                                                         .file(`daudmod/${imgurl}`)
                                                         .async("arraybuffer")
-                                                        .then(ab => {
+                                                        .then((ab) => {
                                                             const arrayBufferView = new Uint8Array(ab);
                                                             const blob = new Blob([arrayBufferView], { type: "image/png" });
                                                             const urlCreator = window.URL;
@@ -522,10 +522,10 @@ async function theme(v): Promise<any> {
     }
     return Promise.resolve(undefined);
 }
-(window as any).getTextureMapRules = function() {
+(window as any).getTextureMapRules = function () {
     return textureMapRules;
 };
-(window as any).getModeMapRules = function() {
+(window as any).getModeMapRules = function () {
     return spriteModeMapRules;
 };
 load();
@@ -565,14 +565,14 @@ document.getElementById("settingsReset").addEventListener("click", () => {
 });
 
 let minimapChanged = false;
-window.addEventListener("keydown", function(e) {
+window.addEventListener("keydown", function (e) {
     if (e.keyCode == 77 && !minimapChanged && (document.body.classList.contains("alive") || document.body.classList.contains("spectating"))) {
         Settings.displayMinimap = !Settings.displayMinimap;
         minimapChanged = true;
     }
 });
 
-window.addEventListener("keyup", function(e) {
+window.addEventListener("keyup", function (e) {
     if (e.keyCode == 77) minimapChanged = false;
 });
 

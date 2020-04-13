@@ -1,13 +1,13 @@
 export const message = {
     txt: "",
-    time: Date.now()
+    time: Date.now(),
 };
 const chat = document.getElementById("chat");
 const messages = ["✅", "❌", "⁉️", "👋", "☠️", "👑", "👈", "👉", "👆", "👇"];
 for (let i = 0; i < messages.length; i++) {
     chat.innerHTML += `<tr><td>${i < 9 ? 1 + ~~i : 0}</td><td>${messages[i]}</td></tr>`;
 }
-window.addEventListener("keydown", e => {
+window.addEventListener("keydown", (e) => {
     if (e.keyCode == 84 && document.body.classList.contains("alive")) {
         chat.classList.toggle("open");
     }

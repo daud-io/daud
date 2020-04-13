@@ -56,5 +56,5 @@ export const spriteIndices = [
     "shield",
     "shield_pickup",
     "wormhole",
-    "boom"
+    "boom",
 ];

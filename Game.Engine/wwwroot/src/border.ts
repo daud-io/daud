@@ -11,7 +11,6 @@ export class Border extends RenderedObject {
         super(container);
 
         this.graphics = new PIXI.Graphics();
-        this.graphics.parentGroup = this.container.backgroundGroup;
 
         this.updateWorldSize(6000);
         this.container.addChild(this.graphics);

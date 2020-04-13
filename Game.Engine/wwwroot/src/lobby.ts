@@ -17,7 +17,7 @@ function selectRow(selectedWorld) {
 function buildList(response) {
     if (allWorlds != null) {
         let keys = "";
-        response.forEach(w => (keys += ":" + w.world));
+        response.forEach((w) => (keys += ":" + w.world));
 
         if (lastKeys == keys) return updateList(response);
         else lastKeys = keys;
@@ -43,11 +43,11 @@ function buildList(response) {
 
     worldList.innerHTML = `${options}`;
 
-    document.querySelectorAll(".worldrow").forEach(worldRow =>
-        worldRow.addEventListener("click", function(e) {
+    document.querySelectorAll(".worldrow").forEach((worldRow) =>
+        worldRow.addEventListener("click", function (e) {
             const worldKey = this.getAttribute("world");
 
-            if (e.srcElement.tagName == "BUTTON") joinWorld(worldKey);
+            if ((e.srcElement as HTMLElement).tagName == "BUTTON") joinWorld(worldKey);
             else selectRow(worldKey);
         })
     );
@@ -94,10 +94,10 @@ if (firstLoad) {
 export const LobbyCallbacks = {
     onLobbyClose: null,
     onWorldJoin: null,
-    joinWorld: null
+    joinWorld: null,
 };
 
-LobbyCallbacks.joinWorld = function(worldKey) {
+LobbyCallbacks.joinWorld = function (worldKey) {
     refreshList(worldKey);
 };
 
@@ -108,13 +108,14 @@ function refreshList(autoJoinWorld) {
 
     firstLoad = false;
 
-    window.fetch("/api/v1/world/all", {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json; charset=utf-8"
-        }
-    })
-        .then(r => r.json())
+    window
+        .fetch("/api/v1/world/all", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json; charset=utf-8",
+            },
+        })
+        .then((r) => r.json())
         .then(({ success, response }) => {
             const world = worldConnect;
             if (success) {
@@ -143,7 +144,7 @@ function refreshList(autoJoinWorld) {
                             joinWorld(router.savedBestServer + world);
                         } else {
                             // if there is no best server cached cookie or the cookie expired then find the best server for user.
-                            router.findBestServer(["us.daud.io/default", "de.daud.io/default"], best => {
+                            router.findBestServer(["us.daud.io/default", "de.daud.io/default"], (best) => {
                                 if (allWorlds[best]) {
                                     best = best = best.split("/")[0] + "/";
                                     router.save(best);
@@ -187,11 +188,11 @@ export function toggleLobby() {
     else hide();
 }
 
-document.getElementById("wcancel").addEventListener("click", e => {
+document.getElementById("wcancel").addEventListener("click", (e) => {
     if (showing) hide();
 });
 
-document.getElementById("arenas").addEventListener("click", e => {
+document.getElementById("arenas").addEventListener("click", (e) => {
     show();
     refreshList(false);
     worlds.classList.remove("closed");
