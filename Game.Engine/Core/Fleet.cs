@@ -327,10 +327,16 @@
             FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
             FleetMomentum = FleetMath.FleetMomentum(this.Ships);
 
+            Vector2 shipCoords = new Vector2();
+            Vector2 shipTargetVector = new Vector2();
+            float angleMovement = 0f;
+            float angle = 0f;
+            float BoostM = (float)Math.Pow(Ships.Count, -0.205); // 4D Klein Manifold's magical formula
+
             foreach (var ship in Ships)
             {
-                var shipCoords = FleetCenter - ship.Position;
-                var shipTargetVector = shipCoords + AimTarget2;
+                shipCoords = FleetCenter - ship.Position;
+                shipTargetVector = shipCoords + AimTarget2;
 
                 /*float stretchMultipier = Math.Min(Math.Max(1f - Math.Abs(shipCoords.X * AimTarget2.Y - shipCoords.Y * AimTarget2.X) / AimTarget2.Length() * World.Hook.StretchWeight + World.Hook.StretchDeadzone, World.Hook.StretchMin), 1f);
                 if (Double.IsNaN((double)stretchMultipier))
@@ -338,17 +344,15 @@
 
                 // todo: this dirties the ship body every cycle
                 // ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
-                float angleMovement = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
+                angleMovement = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
                 if (!float.IsNaN(angleMovement))
                     ship.AngleMovement = angleMovement;
 
-                float angle = MathF.Atan2(AimTarget.Y, AimTarget.X);
+                angle = MathF.Atan2(AimTarget.Y, AimTarget.X);
                 if (!float.IsNaN(angle))
                     ship.Angle = angle;
 
                 Flocking.Flock(ship);
-
-                float BoostM = (float)Math.Pow(Ships.Count, -0.205); // 4D Klein Manifold's magical formula
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden) * BoostM 
