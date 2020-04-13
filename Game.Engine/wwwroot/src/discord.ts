@@ -27,7 +27,7 @@ if (token) {
 }
 
 if (token) {
-    fetch("https://discordapp.com/api/users/@me", {
+    window.fetch("https://discordapp.com/api/users/@me", {
         method: "GET",
         headers: {
             Authorization: `Bearer ${token}`

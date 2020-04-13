@@ -1,4 +1,3 @@
-import { fetch } from "whatwg-fetch";
 import JSZip from "jszip";
 import { textureMapRules } from "./models/textureMap";
 import { spriteModeMapRules } from "./models/spriteModeMap";
@@ -192,7 +191,7 @@ async function theme(v): Promise<any> {
     document.getElementById("theme-styles").innerHTML = "";
     if (v) v = v.toLowerCase();
     const link = `https://dl.dropboxusercontent.com/s/${v}/daudmod.zip`;
-    const zip = await fetch(link)
+    const zip = await window.fetch(link)
         .then(response => response.blob())
         .then(JSZip.loadAsync);
     const baseFiles = [];
