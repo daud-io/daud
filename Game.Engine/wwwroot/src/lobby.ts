@@ -1,5 +1,4 @@
-﻿import { fetch } from "whatwg-fetch";
-import { Router } from "./router";
+﻿import { Router } from "./router";
 
 const worlds = document.getElementById("worlds");
 const worldList = document.getElementById("worldList");
@@ -109,7 +108,7 @@ function refreshList(autoJoinWorld) {
 
     firstLoad = false;
 
-    fetch("/api/v1/world/all", {
+    window.fetch("/api/v1/world/all", {
         method: "GET",
         headers: {
             "Content-Type": "application/json; charset=utf-8"
