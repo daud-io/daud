@@ -41,6 +41,7 @@
         public float BoostAngle { get; set; } = 0;
 
         public Vector2 AimTarget { get; set; }
+        public Vector2 AimTarget2 { get; set; }
 
         public List<Ship> Ships { get; set; } = new List<Ship>();
         public List<Ship> NewShips { get; set; } = new List<Ship>();
@@ -295,15 +296,24 @@
 
         public override void Think()
         {
-            var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
-            var isBoosting = World.Time < BoostUntil;
-            var isBoosting2 = World.Time < BoostUntil2;
-            var isBoostInitial = false;
+            bool isShooting = ShootRequested && World.Time >= ShootCooldownTime;
+            bool isBoosting = World.Time < BoostUntil;
+            bool isBoosting2 = World.Time < BoostUntil2;
+            bool isBoostInitial = false;
+            bool isSleeping = AimTarget.X == 0 && AimTarget.Y == 0;
 
             float MinPointerDistance = (float)(World.Hook.MinPointerDistanceM * Ships.Count + World.Hook.MinPointerDistanceB);
             float MaxPointerDistance = (float)(World.Hook.MaxPointerDistanceM * Ships.Count + World.Hook.MaxPointerDistanceB);
             float c = (float)Math.Min(Math.Max(AimTarget.Length(), MinPointerDistance), MaxPointerDistance) / AimTarget.Length();
-            Vector2 AimTarget2 = new Vector2(AimTarget.X * c, AimTarget.Y * c);
+            if (!isSleeping) {
+                AimTarget2 = new Vector2(AimTarget.X * c, AimTarget.Y * c);
+            } else {
+                double circlingAngle = (Math.Log10(Ships.Count) + 1) * 0.1;
+                AimTarget2 = new Vector2(
+                    (float)(AimTarget2.X * Math.Cos(circlingAngle) - AimTarget2.Y * Math.Sin(circlingAngle)),
+                    (float)(AimTarget2.X * Math.Sin(circlingAngle) + AimTarget2.Y * Math.Cos(circlingAngle))
+                );
+            }
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
             {
@@ -327,25 +337,22 @@
             FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
             FleetMomentum = FleetMath.FleetMomentum(this.Ships);
 
-            Vector2 shipCoords = new Vector2();
             Vector2 shipTargetVector = new Vector2();
             float angleMovement = 0f;
-            float angle = 0f;
+            float angle = MathF.Atan2(AimTarget.Y, AimTarget.X);
             float BoostM = (float)Math.Pow(Ships.Count, -0.205); // 4D Klein Manifold's magical formula
 
             foreach (var ship in Ships)
             {
-                shipCoords = FleetCenter - ship.Position;
-                shipTargetVector = shipCoords + AimTarget2;
-
                 // todo: this dirties the ship body every cycle
+                if (!isSleeping)
+                    ship.Angle = angle;
+
+                shipTargetVector = FleetCenter - ship.Position + AimTarget2;
+    
                 angleMovement = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
                 if (!float.IsNaN(angleMovement))
                     ship.AngleMovement = angleMovement;
-
-                angle = MathF.Atan2(AimTarget.Y, AimTarget.X);
-                if (!float.IsNaN(angle))
-                    ship.Angle = angle;
 
                 Flocking.Flock(ship);
 
