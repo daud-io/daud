@@ -1,4 +1,4 @@
-import Cookies = require("js-cookie");
+import Cookies from "js-cookie";
 
 const dauth = document.getElementById("dauth");
 dauth.addEventListener("click", () => {
@@ -27,14 +27,16 @@ if (token) {
 }
 
 if (token) {
-    window.fetch("https://discordapp.com/api/users/@me", {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    }).then(r => {
-        if (!r.ok) {
-            Cookies.remove("auth_token");
-        }
-    });
+    window
+        .fetch("https://discordapp.com/api/users/@me", {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        .then((r) => {
+            if (!r.ok) {
+                Cookies.remove("auth_token");
+            }
+        });
 }

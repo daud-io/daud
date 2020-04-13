@@ -16,7 +16,7 @@ export class Camera {
         this.fieldOfView = settings.fieldOfView || Math.PI / 4.0;
         this.viewport = {
             rectangle: new PIXI.Rectangle(0, 0, 0, 0),
-            scale: [1.0, 1.0]
+            scale: [1.0, 1.0],
         };
         this.updateViewport();
     }

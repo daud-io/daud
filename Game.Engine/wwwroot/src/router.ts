@@ -1,4 +1,4 @@
-import Cookies = require("js-cookie");
+import Cookies from "js-cookie";
 import { Connection } from "./connection";
 
 export class Router {
@@ -20,7 +20,7 @@ export class Router {
         return this.bestServer;
     }
 
-    private save(server) {
+    public save(server) {
         //Stores a cookie of the best found server.
         //Set to expire every 7 days.
         Cookies.set("router", { bestServer: server }, { expires: 7 });
@@ -29,15 +29,15 @@ export class Router {
     public findBestServer(servers: string[], next: (bestServer: any) => void) {
         this.allResults = [];
 
-        servers.forEach(server => {
+        servers.forEach((server) => {
             this.pingServer(server);
         });
 
         const self = this;
-        setTimeout(function() {
+        setTimeout(function () {
             let best: any = false;
 
-            self.allResults.forEach(result => {
+            self.allResults.forEach((result) => {
                 if (!best || (result as any).latency < best.latency) best = result;
             });
 
@@ -52,7 +52,7 @@ export class Router {
         connection.connect(worldKey);
 
         const self = this;
-        setTimeout(function() {
+        setTimeout(function () {
             //console.log({ worldKey: worldKey, latency: connection.latency, connected: connection.connected, pongs: connection.statPongCount });
             if (connection.connected && connection.statPongCount > 1) self.allResults.push({ worldKey: worldKey, latency: connection.latency });
 

@@ -1,11 +1,11 @@
-﻿import Cookies = require("js-cookie");
-import * as nipplejs from "nipplejs";
+﻿import Cookies from "js-cookie";
+import nipplejs from "nipplejs";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
-// import "emoji-mart/css/emoji-mart.css";
+import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
-import React = require("react");
-import ReactDOM = require("react-dom");
+import React from "react";
+import ReactDOM from "react-dom";
 
 ReactDOM.render(
     React.createElement(
@@ -14,7 +14,7 @@ ReactDOM.render(
             native: true,
             title: "",
             emoji: "rocket",
-            onClick: e => {
+            onClick: (e) => {
                 console.log(e);
                 Cookies.set("emoji", e.native);
                 const x = e.native;
@@ -23,7 +23,7 @@ ReactDOM.render(
                 Controls.emoji = x;
                 console.log(Controls.emoji);
                 document.getElementById("emoji-container").classList.remove("open");
-            }
+            },
         },
         null
     ),
@@ -42,7 +42,7 @@ emojiTrigger.addEventListener("click", () => {
 
 export const nipple = nipplejs.create({
     zone: document.getElementById("nipple-zone"),
-    restJoystick: false
+    restJoystick: false,
 });
 const isMobile = "ontouchstart" in document.documentElement;
 if (!isMobile) {
@@ -52,7 +52,7 @@ if (!isMobile) {
 
 const shipSelectorSwitch = document.getElementById("shipSelectorSwitch");
 
-const refreshSelectedStyle = function() {
+const refreshSelectedStyle = function () {
     const options = Array.from(document.getElementById("shipSelectorSwitch").children);
 
     for (const option of options) {
@@ -63,14 +63,14 @@ const refreshSelectedStyle = function() {
     Controls.addSecretShips(window.discordData);
 };
 
-shipSelectorSwitch.addEventListener("click", function(e) {
-    Controls.ship = e.srcElement.getAttribute("data-color");
+shipSelectorSwitch.addEventListener("click", function (e) {
+    Controls.ship = (e.srcElement as HTMLElement).getAttribute("data-color");
     save();
     refreshSelectedStyle();
 });
 
 const nick: HTMLInputElement = document.querySelector("#nick");
-nick.addEventListener("change", e => {
+nick.addEventListener("change", (e) => {
     Controls.nick = nick.value;
     if (Controls && Controls.canvas) Controls.canvas.focus();
 
@@ -129,7 +129,7 @@ export const Controls = {
             const rect = canvas.getBoundingClientRect();
             return {
                 x: clientX - rect.left,
-                y: clientY - rect.top
+                y: clientY - rect.top,
             };
         };
         if (isMobile) {
@@ -140,22 +140,22 @@ export const Controls = {
                 Controls.mouseX = Math.cos(angle.radian) * force * window.innerHeight + cx;
                 Controls.mouseY = Math.sin(-angle.radian) * force * window.innerHeight + cy;
             });
-            document.getElementById("shoot").addEventListener("touchstart", e => {
+            document.getElementById("shoot").addEventListener("touchstart", (e) => {
                 Controls.shoot = true;
             });
-            document.getElementById("shoot").addEventListener("touchend", e => {
+            document.getElementById("shoot").addEventListener("touchend", (e) => {
                 if (!Controls.autofire) {
                     Controls.shoot = false;
                 }
             });
-            document.getElementById("boost").addEventListener("touchstart", e => {
+            document.getElementById("boost").addEventListener("touchstart", (e) => {
                 Controls.boost = true;
             });
-            document.getElementById("boost").addEventListener("touchend", e => {
+            document.getElementById("boost").addEventListener("touchend", (e) => {
                 Controls.boost = false;
             });
         } else {
-            window.addEventListener("mousemove", e => {
+            window.addEventListener("mousemove", (e) => {
                 const pos = getMousePos(canvas, e);
                 Controls.mouseX = pos.x;
                 Controls.mouseY = pos.y;
@@ -189,14 +189,14 @@ export const Controls = {
                         Controls.downSince = false;
                         if (timeDelta < Settings.mouseOneButton) {
                             Controls.shoot = true;
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 if (!Controls.autofire) {
                                     Controls.shoot = false;
                                 }
                             }, 100);
                         } else {
                             Controls.boost = true;
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 Controls.boost = false;
                             }, 100);
                         }
@@ -205,14 +205,14 @@ export const Controls = {
                     }
                 }
             });
-            document.getElementById("gameArea").addEventListener("contextmenu", e => {
+            document.getElementById("gameArea").addEventListener("contextmenu", (e) => {
                 e.preventDefault();
                 return false;
             });
         }
         Controls.canvas = canvas;
     },
-    initializeWorld: function(world) {
+    initializeWorld: function (world) {
         const colors = world.allowedColors;
         const selector = document.getElementById("shipSelectorSwitch");
         while (selector.firstChild) selector.removeChild(selector.firstChild);
@@ -237,7 +237,7 @@ export const Controls = {
     },
     ship: "ship_green",
 
-    addSecretShips: function(discord) {
+    addSecretShips: function (discord) {
         try {
             if (discord && discord.data && discord.data.roles) {
                 if (discord.data.roles.includes("Player")) {
@@ -256,7 +256,7 @@ export const Controls = {
         } catch (e) {
             console.log("exception in addSecretShips: ", e);
         }
-    }
+    },
 };
 
 window.addEventListener(
@@ -285,9 +285,9 @@ window.addEventListener(
                 Controls.customData = JSON.stringify({
                     magic: JSON.stringify({
                         Fleet: {
-                            Shark: true
-                        }
-                    })
+                            Shark: true,
+                        },
+                    }),
                 });
 
                 break;
@@ -296,9 +296,9 @@ window.addEventListener(
                     magic: JSON.stringify({
                         Fleet: {
                             //Burden: -0.5
-                            EarnedShips: [0]
-                        }
-                    })
+                            EarnedShips: [0],
+                        },
+                    }),
                 });
 
                 break;
@@ -306,18 +306,18 @@ window.addEventListener(
                 Controls.customData = JSON.stringify({
                     magic: JSON.stringify({
                         Fleet: {
-                            Burden: -0.8
-                        }
-                    })
+                            Burden: -0.8,
+                        },
+                    }),
                 });
                 break;
             case 98: // numpad 2
                 Controls.customData = JSON.stringify({
                     magic: JSON.stringify({
                         Fleet: {
-                            Burden: -0.5
-                        }
-                    })
+                            Burden: -0.5,
+                        },
+                    }),
                 });
                 break;
             case 97: // numpad 1
@@ -325,16 +325,16 @@ window.addEventListener(
                     magic: JSON.stringify({
                         Fleet: {
                             Burden: 0,
-                            Shark: false
-                        }
-                    })
+                            Shark: false,
+                        },
+                    }),
                 });
                 break;
             case 100: // numpad 4
                 Controls.customData = JSON.stringify({
                     magic: JSON.stringify({
-                        IsShielded: true
-                    })
+                        IsShielded: true,
+                    }),
                 });
                 break;
             case 103: // numpad 7
@@ -408,7 +408,7 @@ window.addEventListener(
                 break;
             case 101: // numpad 5
                 Controls.customData = {
-                    magic: {}
+                    magic: {},
                 };
 
                 break;

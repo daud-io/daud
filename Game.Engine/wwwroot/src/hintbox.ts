@@ -10,7 +10,7 @@ const texts = [
     "Tip: Trouble focusing your fire? Try adjusting mouse-sensitivity option in settings.",
     "Tip: Fire before you boost, boost before your shots hit your opponent.",
     "Tip: Arrows on the leaderboard point to the players.",
-    "Tip: Daud.io is open source and changing quickly. Join Discord to help."
+    "Tip: Daud.io is open source and changing quickly. Join Discord to help.",
 ];
 
 let index = 0;

@@ -6,7 +6,7 @@ export class HUD {
     framesPerSecond: number;
     playerCount: number;
     spectatorCount: number;
-    set latency(l) {
+    set latency(l: number) {
         this._latency = l;
         this.update();
     }

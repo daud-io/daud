@@ -13,7 +13,7 @@ const colors = {
     yellow: 0xffff00,
     cyan: 0x00ffff,
     blue: 0x2255ff,
-    green: 0x00ff00
+    green: 0x00ff00,
 };
 
 export class Minimap {
@@ -22,6 +22,7 @@ export class Minimap {
     constructor(stage, size: Dimension2) {
         this.ctx = new PIXI.Graphics();
         this.size(size);
+        this.ctx.zIndex = 11;
         stage.addChild(this.ctx);
     }
     size(size: Dimension2) {
@@ -37,12 +38,7 @@ export class Minimap {
         this.ctx.clear();
 
         if (document.body.classList.contains("alive") || document.body.classList.contains("spectating")) {
-            this.ctx
-                .lineStyle(1, 0x999999)
-                .beginFill(0x000000, 0.5)
-                .drawRect(0, 0, minimapSize, minimapSize)
-                .endFill()
-                .lineStyle(0);
+            this.ctx.lineStyle(1, 0x999999).beginFill(0x000000, 0.5).drawRect(0, 0, minimapSize, minimapSize).endFill().lineStyle(0);
             for (let i = startIndex; i < data.Entries.length; i++) {
                 const entry = data.Entries[i];
                 const entryIsSelf = entry.FleetID == fleetID;

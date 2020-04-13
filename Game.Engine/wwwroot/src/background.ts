@@ -46,7 +46,7 @@ export class Background extends RenderedObject {
         const speeds = layerSpeeds;
         this.speeds = speeds;
         const allLayersTextureNames = layerTextures;
-        const allLayersTextures = allLayersTextureNames.map(x => RenderedObject.getTextureDefinition(x));
+        const allLayersTextures = allLayersTextureNames.map((x) => RenderedObject.getTextureDefinition(x));
         if (!this.backgroundSprites) {
             this.backgroundSprites = [];
         }
@@ -59,7 +59,6 @@ export class Background extends RenderedObject {
                 let backgroundSprite = this.backgroundSprites[i];
                 if (!backgroundSprite) {
                     backgroundSprite = new PIXI.TilingSprite(textures[0], 200000, 200000);
-                    backgroundSprite.parentGroup = this.container.backgroundGroup;
                     this.container.addChild(backgroundSprite);
                     backgroundSprite.tileScale.set(RenderedObject.getScale(allLayersTextures[i], textures[0]), RenderedObject.getScale(allLayersTextures[i], textures[0]));
                     backgroundSprite.rotation = Math.random() - 0.5;

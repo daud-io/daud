@@ -1,6 +1,5 @@
-﻿import "babel-polyfill";
-import * as BrowserFS from "browserfs";
-BrowserFS.install(window);
+﻿import * as PIXI from "pixi.js";
+window.PIXI = PIXI;
 
 import { Renderer } from "./renderer";
 import { Background } from "./background";
@@ -22,49 +21,52 @@ import { getToken } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
 import { LobbyCallbacks, toggleLobby } from "./lobby";
-import PIXI = require("pixi.js");
-window.PIXI = PIXI;
-import "pixi-tilemap";
+
+// import "pixi-tilemap";
 import "./changelog";
 
 import "./hintbox";
 import { Vector2 } from "./Vector2";
 import { CustomContainer } from "./CustomContainer";
-
+declare global {
+    interface Window {
+        Game: any;
+        discordData: any;
+    }
+}
 window.Game = window.Game || {};
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 
-//PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
-PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
-//PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
+PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR; // PIXI.SCALE_MODES.NEAREST
+PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
 const app = new PIXI.Application({ view: canvas, transparent: true });
-app.stage = new PIXI.display.Stage();
-(app.stage as PIXI.display.Stage).group.enableSort = true;
+app.stage.sortableChildren = true;
+
 const container = new CustomContainer();
 container.sortableChildren = true;
+container.zIndex = 3;
 app.stage.addChild(container);
 
-const backgroundGroup = new PIXI.display.Group(0, true);
-const tileGroup = new PIXI.display.Group(1, true);
-const bodyGroup = new PIXI.display.Group(2, true);
+const backgroundGroup = new PIXI.Container();
+backgroundGroup.zIndex = 0;
+const tileGroup = new PIXI.Container();
+tileGroup.zIndex = 1;
+const bodyGroup = new PIXI.Container();
+bodyGroup.zIndex = 2;
 
-app.stage.addChild(new PIXI.display.Layer(backgroundGroup));
-app.stage.addChild(new PIXI.display.Layer(tileGroup));
-app.stage.addChild(new PIXI.display.Layer(bodyGroup));
+app.stage.addChild(backgroundGroup);
+app.stage.addChild(tileGroup);
+app.stage.addChild(bodyGroup);
 
 container.backgroundGroup = backgroundGroup;
 container.bodyGroup = bodyGroup;
 
-container.tiles = new PIXI.tilemap.CompositeRectTileLayer(0);
-container.tiles.parentGroup = tileGroup;
-container.addChild(container.tiles);
-
 container.emitterContainer = new PIXI.ParticleContainer();
-container.emitterContainer.parentGroup = bodyGroup;
-container.zIndex = -128;
+container.emitterContainer.zIndex = 10;
 container.addChild(container.emitterContainer);
+app.stage.sortChildren();
 
 const renderer = new Renderer(container);
 const background = new Background(container);
@@ -82,13 +84,9 @@ let isSpectating = false;
 
 let angle = 0.0;
 let aimTarget = new Vector2(0, 0);
-const d = 500; // for steering with arrows
-
-let keyboardSteering = false;
-const keyboardSteeringSpeed = 0.075;
 
 const cache = new Cache(container);
-let view = null;
+let view: null | { camera?: any; time?: number; isAlive?: boolean } = null;
 let serverTimeOffset = null;
 let lastOffset = null;
 let gameTime = null;
@@ -106,13 +104,13 @@ window.Game.isBackgrounded = false;
 window.Game.cache = cache;
 window.Game.controls = Controls;
 
-window.Game.reinitializeWorld = function() {
+window.Game.reinitializeWorld = function () {
     if (currentWorld) Controls.initializeWorld(currentWorld);
 
     background.refreshSprite();
 };
 
-const bodyFromServer = (cache: Cache, body) => {
+const bodyFromServer = (_cache: Cache, body) => {
     const originalPosition = body.originalPosition();
     const momentum = body.velocity();
     const groupID = body.group();
@@ -134,19 +132,19 @@ const bodyFromServer = (cache: Cache, body) => {
         OriginalAngle: (body.originalAngle() / 127) * Math.PI,
         AngularVelocity: body.angularVelocity() / 10000,
         Momentum: new Vector2(momentum.x() / VELOCITY_SCALE_FACTOR, momentum.y() / VELOCITY_SCALE_FACTOR),
-        OriginalPosition: new Vector2(originalPosition.x(), originalPosition.y())
+        OriginalPosition: new Vector2(originalPosition.x(), originalPosition.y()),
     };
 
     return newBody;
 };
 
-const groupFromServer = (cache, group) => {
+const groupFromServer = (_cache, group) => {
     const newGroup = {
         ID: group.group(),
         Caption: group.caption(),
         Type: group.type(),
         ZIndex: group.zindex(),
-        CustomData: group.customData()
+        CustomData: group.customData(),
     };
 
     if (newGroup.CustomData) newGroup.CustomData = JSON.parse(newGroup.CustomData);
@@ -154,21 +152,21 @@ const groupFromServer = (cache, group) => {
     return newGroup;
 };
 
-connection.onLeaderboard = lb => {
+connection.onLeaderboard = (lb) => {
     leaderboard.update(lb, lastPosition, fleetID);
     minimap.update(lb, worldSize, fleetID);
 };
 
 let fleetID = 0;
-let lastAliveState = null;
-let aliveSince = null;
+let lastAliveState: boolean | null = null;
+let aliveSince: number | null = null;
 let joiningWorld = false;
 
 connection.onConnected = () => {
     connection.sendAuthenticate(getToken());
 };
 
-connection.onView = newView => {
+connection.onView = (newView) => {
     viewCounter++;
 
     view = {};
@@ -185,7 +183,7 @@ connection.onView = newView => {
     } else if (!view.isAlive && lastAliveState) {
         lastAliveState = false;
 
-        setTimeout(function() {
+        setTimeout(function () {
             document.body.classList.remove("alive");
             document.body.classList.add("spectating");
             document.body.classList.add("dead");
@@ -195,7 +193,7 @@ connection.onView = newView => {
 
         let countDown = 3;
         let interval = null;
-        const updateButton = function() {
+        const updateButton = function () {
             const button = document.getElementById("spawn") as HTMLButtonElement;
             const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
 
@@ -255,7 +253,7 @@ connection.onView = newView => {
                     type: announcement.type(),
                     text: announcement.text(),
                     pointsDelta: announcement.pointsDelta(),
-                    extraData: extra
+                    extraData: extra,
                 });
                 break;
         }
@@ -297,7 +295,7 @@ let lastControl = {
     aimTarget: null,
     boost: null,
     shoot: null,
-    chat: null
+    chat: null,
 };
 
 setInterval(() => {
@@ -330,17 +328,17 @@ setInterval(() => {
             aimTarget,
             boost: Controls.boost,
             shoot: Controls.shoot,
-            chat: message.txt
+            chat: message.txt,
         };
     }
 }, 10);
 
-LobbyCallbacks.onLobbyClose = function() {
+LobbyCallbacks.onLobbyClose = function () {
     clearLeaderboards();
 };
 
 let spawnOnView = false;
-LobbyCallbacks.onWorldJoin = function(worldKey, world) {
+LobbyCallbacks.onWorldJoin = function (worldKey, world) {
     console.log(`onWorldJoin: ${worldKey} ${world}`);
     if (joiningWorld) {
         joiningWorld = false;
@@ -405,8 +403,8 @@ document.addEventListener("keydown", ({ keyCode, which }) => {
 });
 
 const sizeCanvas = () => {
-    let width;
-    let height;
+    let width: number;
+    let height: number;
     if ((window.innerWidth * 9) / 16 < window.innerHeight) {
         width = window.innerWidth;
         height = (width * 9) / 16;
@@ -512,19 +510,15 @@ if ((query as any).spectate && (query as any).spectate !== "0") {
     startSpectate(true);
 }
 
-canvas.onmousemove = function() {
-    keyboardSteering = false;
-};
-
 // clicking enter in nick causes fleet spawn
-document.getElementById("nick").addEventListener("keyup", function(e) {
+document.getElementById("nick").addEventListener("keyup", function (e) {
     if (e.keyCode === 13) {
         doSpawn();
     }
 });
 
 // clicking enter in spectate mode causes fleet spawn
-document.body.addEventListener("keydown", function(e) {
+document.body.addEventListener("keydown", function (e) {
     if (document.body.classList.contains("spectating") && e.keyCode === 13) {
         doSpawn();
     }
@@ -532,7 +526,7 @@ document.body.addEventListener("keydown", function(e) {
 
 // toggle worlds with W
 const worlds = document.getElementById("worlds");
-document.body.addEventListener("keydown", function(e) {
+document.body.addEventListener("keydown", function (e) {
     if (document.body.classList.contains("dead") && document.getElementById("nick") !== document.activeElement && e.keyCode === 87) {
         if (worlds.classList.contains("closed")) {
             worlds.classList.remove("closed");
@@ -542,6 +536,6 @@ document.body.addEventListener("keydown", function(e) {
     }
 });
 
-document.getElementById("wcancel").addEventListener("click", function() {
+document.getElementById("wcancel").addEventListener("click", function () {
     worlds.classList.add("closed");
 });

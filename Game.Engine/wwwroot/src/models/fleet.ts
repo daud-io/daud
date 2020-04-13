@@ -1,7 +1,7 @@
 ﻿import { Settings } from "../settings";
 import * as PIXI from "pixi.js";
 import { CustomContainer } from "../CustomContainer";
-import Plotly = require("../plotly-subset");
+import Plotly from "../plotly-subset";
 
 export class Fleet {
     container: CustomContainer;
@@ -21,6 +21,8 @@ export class Fleet {
 
         this.text = new PIXI.Text("", { fontFamily: [Settings.font, "NotoColorEmoji"], fontSize: Settings.nameSize, fill: 0xffffff });
         this.textChat = new PIXI.Text("", { fontFamily: "FontAwesome", fontSize: Settings.nameSize, fill: 0xffffff });
+        this.text.zIndex = 1000;
+        this.textChat.zIndex = 1000;
         this.chat = null;
         this.plotly = null;
         this.text.anchor.set(0.5, 0.5);
@@ -29,8 +31,6 @@ export class Fleet {
         this.text.position.y = 0;
         this.textChat.position.x = 0;
         this.textChat.position.y = 0;
-        this.text.parentGroup = this.container.bodyGroup;
-        this.textChat.parentGroup = this.container.bodyGroup;
         this.container.addChild(this.text);
         this.container.addChild(this.textChat);
     }
@@ -41,7 +41,7 @@ export class Fleet {
     }
 
     removeShip(ship) {
-        this.ships = this.ships.filter(s => s != ship);
+        this.ships = this.ships.filter((s) => s != ship);
     }
 
     update(groupUpdate, myFleetID) {
@@ -64,7 +64,7 @@ export class Fleet {
             }
             Plotly.react(this.container.plotly, this.plotly.data, this.plotly.layout, {
                 displayModeBar: false,
-                staticPlot: true
+                staticPlot: true,
             });
         }
 
@@ -98,7 +98,7 @@ export class Fleet {
                     accY = 0,
                     count = 0;
 
-                this.ships.forEach(ship => {
+                this.ships.forEach((ship) => {
                     const position = interpolator.projectObject(ship.body, time);
                     accX += position.x;
                     accY += position.y;
@@ -115,9 +115,6 @@ export class Fleet {
             this.text.visible = false;
             this.textChat.visible = false;
         }
-
-        //else
-        //  this.container.plotly.style.visibility = "hidden";
     }
 
     destroy() {

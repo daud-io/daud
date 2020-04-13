@@ -1,13 +1,13 @@
-﻿const flatbuffers = require("./flatbuffers").flatbuffers;
-import { Game } from "./game_generated";
+﻿import { flatbuffers } from "./flatbuffers";
+import * as fb from "./game_generated";
 import { Cache } from "./cache";
 import { Settings } from "./settings";
 import { Vector2 } from "./Vector2";
 import { Controls } from "./controls";
 
 export class Connection {
-    onView: (view: any) => void;
-    onLeaderboard: (leaderboard: any) => void;
+    onView: (view: fb.NetWorldView) => void;
+    onLeaderboard: (leaderboard: { Type: any; Entries: any; Record: any }) => void;
     onConnected: () => void;
     reloading: boolean;
     disconnecting: boolean;
@@ -32,8 +32,8 @@ export class Connection {
     connectionStatusReporting: boolean;
 
     constructor() {
-        this.onView = view => {};
-        this.onLeaderboard = leaderboard => {};
+        this.onView = (view) => {};
+        this.onLeaderboard = (leaderboard) => {};
         this.onConnected = () => {};
         this.reloading = false;
         this.disconnecting = false;
@@ -47,7 +47,6 @@ export class Connection {
         this.statBytesUpPerSecond = 0;
         this.statPongCount = 0;
 
-        this.fb = Game.Engine.Networking.FlatBuffers;
         this.latency = 0;
         this.minLatency = 999;
         this.simulateLatency = 0;
@@ -110,7 +109,7 @@ export class Connection {
         this.socket = new WebSocket(url);
         this.socket.binaryType = "arraybuffer";
 
-        this.socket.onmessage = event => {
+        this.socket.onmessage = (event) => {
             if (this.simulateLatency > 0) {
                 setTimeout(() => {
                     this.onMessage(event);
@@ -118,39 +117,39 @@ export class Connection {
             } else this.onMessage(event);
         };
 
-        this.socket.onerror = error => {
+        this.socket.onerror = (error) => {
             if (this.connectionStatusReporting) document.body.classList.add("connectionerror");
         };
 
-        this.socket.onopen = event => {
+        this.socket.onopen = (event) => {
             if (this.connectionStatusReporting) document.body.classList.remove("connectionerror");
             this.onOpen(event);
         };
-        this.socket.onclose = event => {
+        this.socket.onclose = (event) => {
             this.onClose(event);
         };
     }
     sendPing() {
         const builder = new (flatbuffers as any).Builder(0);
 
-        this.fb.NetPing.startNetPing(builder);
+        fb.NetPing.startNetPing(builder);
         this.pingSent = performance.now();
 
-        //this.fb.Ping.addTime(builder, this.pingSent);
-        this.fb.NetPing.addLatency(builder, this.latency);
-        this.fb.NetPing.addVps(builder, this.viewsPerSecond);
-        this.fb.NetPing.addUps(builder, this.updatesPerSecond);
-        this.fb.NetPing.addFps(builder, this.framesPerSecond);
-        this.fb.NetPing.addCs(builder, Cache.count);
-        this.fb.NetPing.addBackgrounded(builder, this.framesPerSecond < 1);
-        this.fb.NetPing.addBandwidthThrottle(builder, this.bandwidthThrottle);
+        //fb.Ping.addTime(builder, this.pingSent);
+        fb.NetPing.addLatency(builder, this.latency);
+        fb.NetPing.addVps(builder, this.viewsPerSecond);
+        fb.NetPing.addUps(builder, this.updatesPerSecond);
+        fb.NetPing.addFps(builder, this.framesPerSecond);
+        fb.NetPing.addCs(builder, Cache.count);
+        fb.NetPing.addBackgrounded(builder, this.framesPerSecond < 1);
+        fb.NetPing.addBandwidthThrottle(builder, this.bandwidthThrottle);
 
-        const ping = this.fb.NetPing.endNetPing(builder);
+        const ping = fb.NetPing.endNetPing(builder);
 
-        this.fb.NetQuantum.startNetQuantum(builder);
-        this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetPing);
-        this.fb.NetQuantum.addMessage(builder, ping);
-        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
+        fb.NetQuantum.startNetQuantum(builder);
+        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetPing);
+        fb.NetQuantum.addMessage(builder, ping);
+        const quantum = fb.NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -160,15 +159,15 @@ export class Connection {
     sendExit() {
         const builder = new (flatbuffers as any).Builder(0);
 
-        this.fb.NetExit.startNetExit(builder);
+        fb.NetExit.startNetExit(builder);
 
-        this.fb.NetExit.addCode(builder, 0);
-        const exitmessage = this.fb.NetExit.endNetExit(builder);
+        fb.NetExit.addCode(builder, 0);
+        const exitmessage = fb.NetExit.endNetExit(builder);
 
-        this.fb.NetQuantum.startNetQuantum(builder);
-        this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetExit);
-        this.fb.NetQuantum.addMessage(builder, exitmessage);
-        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
+        fb.NetQuantum.startNetQuantum(builder);
+        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetExit);
+        fb.NetQuantum.addMessage(builder, exitmessage);
+        const quantum = fb.NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -180,14 +179,14 @@ export class Connection {
 
         const stringToken = builder.createString(token || "");
 
-        this.fb.NetAuthenticate.startNetAuthenticate(builder);
-        this.fb.NetAuthenticate.addToken(builder, stringToken);
-        const auth = this.fb.NetAuthenticate.endNetAuthenticate(builder);
+        fb.NetAuthenticate.startNetAuthenticate(builder);
+        fb.NetAuthenticate.addToken(builder, stringToken);
+        const auth = fb.NetAuthenticate.endNetAuthenticate(builder);
 
-        this.fb.NetQuantum.startNetQuantum(builder);
-        this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetAuthenticate);
-        this.fb.NetQuantum.addMessage(builder, auth);
-        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
+        fb.NetQuantum.startNetQuantum(builder);
+        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetAuthenticate);
+        fb.NetQuantum.addMessage(builder, auth);
+        const quantum = fb.NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -203,17 +202,17 @@ export class Connection {
         const stringShip = builder.createString(ship || "ship_gray");
         const stringToken = builder.createString(token || "");
 
-        this.fb.NetSpawn.startNetSpawn(builder);
-        this.fb.NetSpawn.addColor(builder, stringColor);
-        this.fb.NetSpawn.addName(builder, stringName);
-        this.fb.NetSpawn.addShip(builder, stringShip);
-        this.fb.NetSpawn.addToken(builder, stringToken);
-        const spawn = this.fb.NetSpawn.endNetSpawn(builder);
+        fb.NetSpawn.startNetSpawn(builder);
+        fb.NetSpawn.addColor(builder, stringColor);
+        fb.NetSpawn.addName(builder, stringName);
+        fb.NetSpawn.addShip(builder, stringShip);
+        fb.NetSpawn.addToken(builder, stringToken);
+        const spawn = fb.NetSpawn.endNetSpawn(builder);
 
-        this.fb.NetQuantum.startNetQuantum(builder);
-        this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetSpawn);
-        this.fb.NetQuantum.addMessage(builder, spawn);
-        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
+        fb.NetQuantum.startNetQuantum(builder);
+        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetSpawn);
+        fb.NetQuantum.addMessage(builder, spawn);
+        const quantum = fb.NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -230,21 +229,21 @@ export class Connection {
         if (spectateControl) spectateString = builder.createString(spectateControl);
         if (customDataJson) customDataJsonString = builder.createString(customDataJson);
 
-        this.fb.NetControlInput.startNetControlInput(builder);
-        this.fb.NetControlInput.addAngle(builder, angle);
-        this.fb.NetControlInput.addBoost(builder, boost);
-        this.fb.NetControlInput.addShoot(builder, shoot);
-        this.fb.NetControlInput.addX(builder, x);
-        this.fb.NetControlInput.addY(builder, y);
-        if (spectateControl) this.fb.NetControlInput.addSpectateControl(builder, spectateString);
-        if (customDataJson) this.fb.NetControlInput.addCustomData(builder, customDataJsonString);
+        fb.NetControlInput.startNetControlInput(builder);
+        fb.NetControlInput.addAngle(builder, angle);
+        fb.NetControlInput.addBoost(builder, boost);
+        fb.NetControlInput.addShoot(builder, shoot);
+        fb.NetControlInput.addX(builder, x);
+        fb.NetControlInput.addY(builder, y);
+        if (spectateControl) fb.NetControlInput.addSpectateControl(builder, spectateString);
+        if (customDataJson) fb.NetControlInput.addCustomData(builder, customDataJsonString);
 
-        const input = this.fb.NetControlInput.endNetControlInput(builder);
+        const input = fb.NetControlInput.endNetControlInput(builder);
 
-        this.fb.NetQuantum.startNetQuantum(builder);
-        this.fb.NetQuantum.addMessageType(builder, this.fb.AllMessages.NetControlInput);
-        this.fb.NetQuantum.addMessage(builder, input);
-        const quantum = this.fb.NetQuantum.endNetQuantum(builder);
+        fb.NetQuantum.startNetQuantum(builder);
+        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetControlInput);
+        fb.NetQuantum.addMessage(builder, input);
+        const quantum = fb.NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -296,82 +295,76 @@ export class Connection {
 
         this.statBytesDown += data.byteLength;
 
-        const quantum = this.fb.NetQuantum.getRootAsNetQuantum(buf);
+        const quantum = fb.NetQuantum.getRootAsNetQuantum(buf);
 
         const messageType = quantum.messageType();
-        let message = null;
 
-        switch (messageType) {
-            case this.fb.AllMessages.NetWorldView:
-                message = quantum.message(new this.fb.NetWorldView());
+        if (messageType == fb.AllMessages.NetWorldView) {
+            let message = quantum.message(new fb.NetWorldView());
 
-                this.onView(message);
-                break;
-            case this.fb.AllMessages.NetPing: // Ping
-                if (this.pingSent) {
-                    this.statPongCount++;
-                    this.latency = performance.now() - this.pingSent;
-                    if (this.latency > 0 && this.latency < this.minLatency) this.minLatency = this.latency;
-                }
+            this.onView(message);
+        }
+        if (messageType == fb.AllMessages.NetPing) {
+            if (this.pingSent) {
+                this.statPongCount++;
+                this.latency = performance.now() - this.pingSent;
+                if (this.latency > 0 && this.latency < this.minLatency) this.minLatency = this.latency;
+            }
+        }
+        if (messageType == fb.AllMessages.NetEvent) {
+            let message = quantum.message(new fb.NetEvent());
 
-                break;
-            case this.fb.AllMessages.NetEvent:
-                message = quantum.message(new this.fb.NetEvent());
+            const event = {
+                type: message.type(),
+                data: JSON.parse(message.data()),
+            };
 
-                const event = {
-                    type: message.type(),
-                    data: JSON.parse(message.data())
-                };
+            if (event.data.roles !== undefined) {
+                window.discordData = event;
+            }
+            Controls.addSecretShips(event);
+        }
+        if (messageType == fb.AllMessages.NetLeaderboard) {
+            let message = quantum.message(new fb.NetLeaderboard());
 
-                if (event.data.roles !== undefined) {
-                    window.discordData = event;
-                }
-                Controls.addSecretShips(event);
+            const entriesLength = message.entriesLength();
+            const entries = [];
+            for (let i = 0; i < entriesLength; i++) {
+                const entry = message.entries(i);
 
-                break;
-            case this.fb.AllMessages.NetLeaderboard:
-                message = quantum.message(new this.fb.NetLeaderboard());
-
-                const entriesLength = message.entriesLength();
-                const entries = [];
-                for (let i = 0; i < entriesLength; i++) {
-                    const entry = message.entries(i);
-
-                    entries.push({
-                        FleetID: entry.fleetID(),
-                        Name: entry.name(),
-                        Color: entry.color(),
-                        Score: entry.score(),
-                        Position: new Vector2(entry.position().x(), entry.position().y()),
-                        Token: entry.token(),
-                        ModeData: JSON.parse(entry.modeData()) || { flagStatus: "home" }
-                    });
-                }
-
-                const record = message.record();
-
-                let recordModel = {
-                    Name: "",
-                    Color: "red",
-                    Score: 0,
-                    Token: false
-                };
-
-                if (record) {
-                    recordModel = {
-                        Name: record.name(),
-                        Color: record.color(),
-                        Score: record.score(),
-                        Token: record.token()
-                    };
-                }
-                this.onLeaderboard({
-                    Type: message.type(),
-                    Entries: entries,
-                    Record: recordModel
+                entries.push({
+                    FleetID: entry.fleetID(),
+                    Name: entry.name(),
+                    Color: entry.color(),
+                    Score: entry.score(),
+                    Position: new Vector2(entry.position().x(), entry.position().y()),
+                    Token: entry.token(),
+                    ModeData: JSON.parse(entry.modeData()) || { flagStatus: "home" },
                 });
+            }
 
-                break;
+            const record = message.record();
+
+            let recordModel = {
+                Name: "",
+                Color: "red",
+                Score: 0,
+                Token: false,
+            };
+
+            if (record) {
+                recordModel = {
+                    Name: record.name(),
+                    Color: record.color(),
+                    Score: record.score(),
+                    Token: record.token(),
+                };
+            }
+            this.onLeaderboard({
+                Type: message.type(),
+                Entries: entries,
+                Record: recordModel,
+            });
         }
     }
 }

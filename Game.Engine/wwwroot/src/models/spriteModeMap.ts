@@ -1,4 +1,4 @@
-import { parseScssIntoRules } from "../parser/parseTheme.js";
+import { parseScssIntoRules } from "../parser/parseTheme";
 
 const text = `bg {
     layer-speeds: .4;

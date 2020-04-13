@@ -16,11 +16,11 @@ export class Cache {
     }
 
     clear() {
-        this.foreach(function(body) {
+        this.foreach(function (body) {
             if (body && body.renderer) body.renderer.destroy();
         }, this);
 
-        this.foreachGroup(function(group) {
+        this.foreachGroup(function (group) {
             if (group && group.renderer) group.renderer.destroy();
         });
 
@@ -34,7 +34,7 @@ export class Cache {
     }
 
     refreshSprites() {
-        this.foreach(function(body) {
+        this.foreach(function (body) {
             if (body && body.renderer) body.renderer.refreshSprite();
         }, this);
     }
@@ -126,11 +126,11 @@ export class Cache {
                     if (group) {
                         switch (group.Type) {
                             case 1: {
-                                let ship = update.renderer;
+                                let ship: Ship = update.renderer;
                                 if (!ship) ship = new Ship(this.container);
                                 update.renderer = ship;
 
-                                let fleet = group.renderer;
+                                let fleet: Fleet = group.renderer;
                                 if (!fleet) fleet = new Fleet(this.container, this);
                                 group.renderer = fleet;
 
@@ -167,7 +167,7 @@ export class Cache {
     }
 
     foreach(action, thisObj) {
-        this.foreachGroup(function(group) {
+        this.foreachGroup(function (group) {
             for (const key in this.bodies) {
                 if (key.indexOf("b-") === 0) {
                     const body = this.bodies[key];

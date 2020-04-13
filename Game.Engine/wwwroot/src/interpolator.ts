@@ -42,7 +42,7 @@ export class Interpolator {
             const newPoint = {
                 x: object.previous.Position.x,
                 y: object.previous.Position.y,
-                Angle: object.previous.Angle
+                Angle: object.previous.Angle,
             };
 
             return newPoint;
@@ -50,7 +50,7 @@ export class Interpolator {
             const newPoint = {
                 x: object.Position.x,
                 y: object.Position.y,
-                Angle: object.Angle
+                Angle: object.Angle,
             };
 
             return newPoint;
