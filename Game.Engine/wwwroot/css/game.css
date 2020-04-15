@@ -787,7 +787,7 @@ input#nick:focus {
     margin: 10px auto;
     display: none;
 }
-#arena-link #generate-link-button, #spectate {
+#arena-link #generate-link-button {
     user-select: none;
     cursor: pointer;
     margin: 20px auto;
@@ -1165,27 +1165,31 @@ footer .div_add_blocked {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    position: absolute;
+    top: 45px;
+    right: 10px;
     cursor: pointer;
     margin: 20px 0;
     box-sizing: border-box;
-    color: #ffffff;
+    color: white;
     border-radius: 15px;
-    border: 3px #368eff solid;
-    width: 200px;
-    font-size: 1.5em;
-    height: 55px;
-    padding: 7px 0;
-    font-weight: 600;
-    text-shadow: 0px 2px 2px #0855f3;
-    background: #055afe;
-    background: -moz-linear-gradient(top, #055afe 50%, #0343f4 50%);
-    background: -webkit-linear-gradient(top, #055afe 50%, #0343f4 50%);
-    background: linear-gradient(to bottom, #055afe 50%, #0343f4 50%);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$light-blue', endColorstr='$blue',GradientType=0 );
-    -webkit-box-shadow: 0px 0px 50px 0px #0052ff;
-    -moz-box-shadow: 0px 0px 50px 0px #0052ff;
-    box-shadow: 0px 0px 50px 0px #0052ff;
+    border: 3px #3893F7 solid;
+    width: 180px;
+    font-size: 1.2em;
+    height: 45px;
+    padding: 7px 0px 0px 15px;
+    font-weight: 900;
+    text-shadow: 0px 2px 2px #3893F7;
+    background: #003EF5;
+    background: -moz-linear-gradient(top, #0C5AF5 50%, #003EF5 50%);
+    background: -webkit-linear-gradient(top, #0C5AF5 50%, #003EF5 50%);
+    background: linear-gradient(to bottom, #0C5AF5 50%, #003EF5 50%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$light-discord', endColorstr='$dark-discord',GradientType=0 );
+    -webkit-box-shadow: 0px 0px 50px 0px #005dfe;
+    -moz-box-shadow: 0px 0px 50px 0px #005dfe;
+    box-shadow: 0px 0px 50px 0px #005dfe;
     animation: none;
+    z-index: 1;
 }
 
 #spectate:hover {
@@ -1196,32 +1200,43 @@ footer .div_add_blocked {
     animation: pulse-blue 2s infinite;
 }
 
+#spectate-eye {
+    width: 32px;
+    padding: 0 0 0 20px;
+    position: relative;
+    top: 2px;
+}
+
 #fullscreenButton {
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    position: absolute;
+    top: 100px;
+    right: 10px;
     cursor: pointer;
     margin: 20px 0;
     box-sizing: border-box;
-    color: #ffffff;
+    color: white;
     border-radius: 15px;
     border: 3px #a42ddb solid;
-    width: 170px;
-    font-size: 1em;
-    height: 46px;
-    padding: 0 0;
-    font-weight: 600;
-    text-shadow: 0px 2px 2px #6c1396;
-    background: #8d1ac2;
-    background: -moz-linear-gradient(top, #8d1ac2 50%, #7f17af 50%);
-    background: -webkit-linear-gradient(top, #8d1ac2 50%, #7f17af 50%);
-    background: linear-gradient(to bottom, #8d1ac2 50%, #7f17af 50%);
+    width: 180px;
+    font-size: 1.2em;
+    font-weight: 900;
+    height: 45px;
+    padding: 7px 0px 0px 15px;
+    text-shadow: 0px 2px 2px #ba65e2;
+    background: #8718bb;
+    background: -moz-linear-gradient(top, #8718bb 50%, #70139b 50%);
+    background: -webkit-linear-gradient(top, #8718bb 50%, #70139b 50%);
+    background: linear-gradient(to bottom, #8718bb 50%, #70139b 50%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='$light-purple', endColorstr='$purple',GradientType=0 );
     -webkit-box-shadow: 0px 0px 30px 0px #a24bca;
     -moz-box-shadow: 0px 0px 30px 0px #a24bca;
     box-shadow: 0px 0px 30px 0px #a24bca;
     animation: none;
+    z-index: 2;
 }
 
 #fullscreenButton:hover {
