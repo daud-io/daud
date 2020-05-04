@@ -51,15 +51,15 @@
                     },
                     BaseThrustConverter = 0.0028f,
 
-                    Drag = 0.85f,
+                    Drag = 0.87f,
                     DragBoost = 0.93f,
                     DragAbandoned = 0.96f,
 
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.023f,
-                    BoostThrust2 = 0.11f,
+                    BoostThrust = 0.022f,
+                    BoostThrust2 = 0.1f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
@@ -152,7 +152,7 @@
                     FlockAlignment = 1f,
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
-                    FlockSeparation = 6f,
+                    FlockSeparation = 5f,
                     FlockSeparationMinimumDistance = 20,
                     FlockWeight = 1f,
                     SnakeWeight = 0f,
@@ -206,10 +206,10 @@
                     PrecisionBullets = true,
                     PrecisionBulletsMinimumRange = 16384f,
 
-                    MinPointerDistanceB = 10f,
-                    MinPointerDistanceM = 0.5f,
+                    MinPointerDistanceB = 15f,
+                    MinPointerDistanceM = 0.55f,
                     MaxPointerDistanceB = 50f,
-                    MaxPointerDistanceM = 1.8f,
+                    MaxPointerDistanceM = 1.9f,
                 };
             }
         }
