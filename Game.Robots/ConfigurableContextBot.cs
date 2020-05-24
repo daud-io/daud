@@ -30,8 +30,6 @@
             if (!Initialized)
                 InitializeConfiguration();
 
-            this.Color = "monster";
-
             return base.StartAsync(connection, cancellationToken);
         }
 

@@ -1,6 +1,8 @@
 ﻿namespace Game.Engine.Core
 {
     using Newtonsoft.Json;
+    using System;
+
     public class MonsterFleet : Fleet
     {
 
@@ -14,10 +16,18 @@
         public string[] ShipConfig = null;
         private void DoShipConfig()
         {
-            if (ShipConfig != null && Ships != null)
-                for(int i = 0; i<ShipConfig.Length; i++)
-                    if (Ships.Count > i)
-                        JsonConvert.PopulateObject(ShipConfig[i], Ships[i]);
+            try
+            {
+                if (ShipConfig != null && Ships != null)
+                    for (int i = 0; i < ShipConfig.Length; i++)
+                        if (Ships.Count > i)
+                            if (ShipConfig[i] != null && ShipConfig[i] != "null")
+                                JsonConvert.PopulateObject(ShipConfig[i], Ships[i]);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Bad monster config: " + e);
+            }
         }
     }
 }

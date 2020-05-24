@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "player robots --file c:\\code\\daud\\Samples\\Robots\\ConfigurableContextBot\\level2.json"
+      "commandLineArgs": "--context local player robots --file c:\\code\\daud\\Samples\\Robots\\ConfigurableContextBot\\Monsters\\leveler.json"
     }
   }
 }
