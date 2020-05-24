@@ -472,6 +472,7 @@ namespace Game.Engine.Networking
                     player.Connection = this;
                     Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score} Roles: {player.Roles}");
 
+
                     switch (spawn.Ship)
                     {
                         case "ship0":
@@ -542,7 +543,7 @@ namespace Game.Engine.Networking
                             break;
                     }
 
-                    player.Spawn(spawn.Name, shipSprite, color, spawn.Token);
+                    player.Spawn(spawn.Name, shipSprite, color, spawn.Token, spawn.Color);
 
                     break;
                 case AllMessages.NetControlInput:

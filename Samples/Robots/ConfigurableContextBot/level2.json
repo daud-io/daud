@@ -5,7 +5,7 @@
   "AttackFleets": true,
   "Name": "leaderhunt",
   "Sprite": "ship_cyan",
-  "Color": "cyan",
+  "Color": "monster",
   "LeaderHuntMode": true,
   "Safe": true,
   "Steps": 16,

@@ -123,7 +123,9 @@
             StringOffset customOffset = new StringOffset();
 
             if (CustomData != null)
+            {
                 customOffset = builder.CreateString(CustomData);
+            }
 
             NetControlInput.StartNetControlInput(builder);
 
@@ -134,13 +136,13 @@
             NetControlInput.AddShoot(builder, ControlIsShooting);
             if (CustomData != null)
                 NetControlInput.AddCustomData(builder, customOffset);
-
             var controlInput = NetControlInput.EndNetControlInput(builder);
 
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetControlInput, controlInput.Value);
             builder.Finish(q.Value);
 
             await SendAsync(builder.DataBuffer, default(CancellationToken));
+            CustomData = null;
         }
 
         private Leaderboard.Entry EntryFromNetEntry(NetLeaderboardEntry? entry)

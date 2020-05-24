@@ -73,6 +73,7 @@
         public Vector2? SpawnMomentum { get; set; } = null;
 
         private bool IsGearhead = false;
+        private string UserColor = null;
 
         public Player()
         {
@@ -280,7 +281,14 @@
 
         protected virtual Fleet CreateFleet(string color)
         {
-            if (World.NewFleetGenerator != null)
+            if (UserColor == "monster")
+                return new MonsterFleet
+                {
+                    Owner = this,
+                    Caption = this.Name,
+                    Color = color
+                };
+            else if (World.NewFleetGenerator != null)
                 return World.NewFleetGenerator(this, color);
             else
                 return new Fleet
@@ -291,8 +299,10 @@
                 };
         }
 
-        public void Spawn(string name, Sprites sprite, string color, string token)
+        public void Spawn(string name, Sprites sprite, string color, string token, string userColor = null)
         {
+            UserColor = userColor;
+
             // sanitize the name
             if (name != null
                 && name.Length > World.Hook.MaxNameLength)

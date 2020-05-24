@@ -2,8 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "player robots --type-name Game.Robots.CTFBot,Game.Robots --world superduel",
-      "workingDirectory": "c:\\code\\mods\\bots"
+      "commandLineArgs": "player robots --file c:\\code\\daud\\Samples\\Robots\\ConfigurableContextBot\\level2.json"
     }
   }
 }
