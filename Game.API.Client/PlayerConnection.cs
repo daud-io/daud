@@ -125,7 +125,6 @@
             if (CustomData != null)
             {
                 customOffset = builder.CreateString(CustomData);
-                Console.WriteLine("CustomData");
             }
 
             NetControlInput.StartNetControlInput(builder);

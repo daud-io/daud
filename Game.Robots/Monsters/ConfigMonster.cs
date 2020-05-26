@@ -13,19 +13,21 @@
         {
             if (SensorFleets.MyFleet?.Ships != null)
             {
-                if (Vector2.Distance(Vector2.Zero, SensorFleets.MyFleet.Center) > 1000)
-                {
+                //if (Vector2.Distance(Vector2.Zero, SensorFleets.MyFleet.Center) > 200)
+                //{
                     ShipTemplate = new
                     {
                         Size = 100,
-                        Sprite = 1,
+                        Sprite = 24,
+                        Health = 1000,
+                        ShieldStrength = 1000,
                         Position = new
                         {
                             X = 0,
                             Y = 0
                         }
                     };
-                }
+                //}
             }
 
             if (ShipTemplate != null)
@@ -36,6 +38,9 @@
             else
                 SetShipTemplate(null);
 
+
+            ShootAt(new Vector2(0, 100));
+
             return base.AliveAsync();
         }
 
@@ -45,15 +50,19 @@
             {
                 var ships = new string[SensorFleets.MyFleet.Ships.Count];
                 for (int i = 0; i < ships.Length; i++)
-                    ships[i] = JsonConvert.SerializeObject(template);
+                    ships[i] = template != null
+                        ? JsonConvert.SerializeObject(template)
+                        : null;
 
                 CustomData = JsonConvert.SerializeObject(new
                 {
                     Magic = JsonConvert.SerializeObject(new
                     {
-                        ShipSprite = 1,
+                        IsShielded = true,
+                        ShipSprite = 24,
                         Fleet = new
                         {
+                            Burden = 1,
                             ShipConfig = ships
                         },
                     })
