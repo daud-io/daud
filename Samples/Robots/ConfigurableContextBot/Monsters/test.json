@@ -2,7 +2,7 @@
     "BoostThreshold": 16,
     "RobotType": "Game.Robots.Monsters.ConfigMonster,Game.Robots",
     "AttackFleets": true,
-    "Name": "test",
+    "Name": " ",
     "Sprite": "ship_cyan",
     "Color": "monster",
   
