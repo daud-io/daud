@@ -28,6 +28,9 @@
         protected bool IsOOB = false;
         private long TimeDeath = 0;
 
+        public float? ThrustOverride { get; set; } = null;
+        public float? SteeringOverride { get; set; } = null;
+
         public Ship()
         {
             Size = 70;
@@ -180,7 +183,10 @@
 
             DoOutOfBoundsRules();
 
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
+            if (SteeringOverride != null)
+                Angle = SteeringOverride.Value;
+
+            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * (ThrustOverride ?? ThrustAmount);
 
             Momentum = (Momentum + thrust) * Drag;
 

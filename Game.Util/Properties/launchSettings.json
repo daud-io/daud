@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context us.daud.io player robots --file c:\\code\\daud\\Samples\\Robots\\ConfigurableContextBot\\Monsters\\test.json"
+      "commandLineArgs": "player robots --file c:\\code\\daud\\Samples\\Robots\\ConfigurableContextBot\\Monsters\\test.json"
     }
   }
 }

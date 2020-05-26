@@ -91,7 +91,9 @@
             var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
             steeringVector += hook.FlockWeight * shipFlockingVector;
 
-            ship.Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            var newAngle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            if (!float.IsNaN(newAngle))
+                ship.Angle = newAngle;
         }
     }
 }
