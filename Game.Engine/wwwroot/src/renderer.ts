@@ -1,3 +1,8 @@
+"use strict";
+
+window.process = require("process");
+window.global = window;
+
 import { CustomContainer } from "./CustomContainer";
 import { Interpolator } from "./interpolator";
 import { Cache } from "./cache";

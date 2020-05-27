@@ -1,4 +1,6 @@
-﻿import * as PIXI from "pixi.js";
+﻿"use strict";
+
+import * as PIXI from "pixi.js";
 window.PIXI = PIXI;
 
 import { Renderer } from "./renderer";
@@ -487,7 +489,7 @@ app.ticker.add(() => {
     log.check();
 
     if (Controls.mouseX) {
-        let pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
+        const pos = camera.screenToWorld(new Vector2(Controls.mouseX, Controls.mouseY));
         angle = Controls.angle;
         aimTarget = new Vector2(Settings.mouseScale * (pos.x - position.x), Settings.mouseScale * (pos.y - position.y));
     }
