@@ -4,7 +4,6 @@
   "Sprite": "ship_red",
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
   "Steps": 16,
-  "BoostThreshold": 5,
   "Behaviors": [
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",

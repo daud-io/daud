@@ -1,0 +1,26 @@
+diff --git a/node_modules/antlr4/CharStreams.js b/node_modules/antlr4/CharStreams.js
+index 71c5076..0312b75 100644
+--- a/node_modules/antlr4/CharStreams.js
++++ b/node_modules/antlr4/CharStreams.js
+@@ -8,7 +8,7 @@
+ var InputStream = require('./InputStream').InputStream;
+ 
+ var isNodeJs = typeof window === 'undefined' && typeof importScripts === 'undefined';
+-var fs = isNodeJs ? require("fs") : null;
++var fs = null;
+ 
+ // Utility functions to create InputStreams from various sources.
+ //
+diff --git a/node_modules/antlr4/FileStream.js b/node_modules/antlr4/FileStream.js
+index baf1852..dbbabeb 100644
+--- a/node_modules/antlr4/FileStream.js
++++ b/node_modules/antlr4/FileStream.js
+@@ -11,7 +11,7 @@
+ //
+ var InputStream = require('./InputStream').InputStream;
+ var isNodeJs = typeof window === 'undefined' && typeof importScripts === 'undefined';
+-var fs = isNodeJs ? require("fs") : null;
++var fs = null;
+ 
+ function FileStream(fileName, decodeToUnicodeCodePoints) {
+ 	var data = fs.readFileSync(fileName, "utf8");

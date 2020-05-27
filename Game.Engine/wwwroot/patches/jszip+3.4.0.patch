@@ -1,0 +1,10 @@
+diff --git a/node_modules/jszip/lib/readable-stream-browser.js b/node_modules/jszip/lib/readable-stream-browser.js
+index 49410a4..311b349 100644
+--- a/node_modules/jszip/lib/readable-stream-browser.js
++++ b/node_modules/jszip/lib/readable-stream-browser.js
+@@ -6,4 +6,4 @@
+  * reduce the final size of the bundle (only one stream implementation, not
+  * two).
+  */
+-module.exports = require("stream");
++module.exports = {};

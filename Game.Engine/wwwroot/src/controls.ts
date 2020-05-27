@@ -2,7 +2,7 @@
 import nipplejs from "nipplejs";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
-import "emoji-mart/css/emoji-mart.css";
+// import "emoji-mart/css/emoji-mart.css";
 import { Picker } from "emoji-mart";
 import React from "react";
 import ReactDOM from "react-dom";

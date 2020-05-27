@@ -6,7 +6,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 module.exports = {
     entry: "./src/game.ts",
     mode: "development",
-    devtool: "cheap-source-map",
+    devtool: "source-map",
     module: {
         rules: [
             {
@@ -19,25 +19,16 @@ module.exports = {
                 use: ["style-loader", "css-loader"],
             },
         ],
-        noParse: /browserfs\.js/,
     },
     resolve: {
         extensions: [".ts", ".js"],
-        alias: {
-            fs: "browserfs/dist/shims/fs.js",
-            buffer: "browserfs/dist/shims/buffer.js",
-            path: "browserfs/dist/shims/path.js",
-            processGlobal: "browserfs/dist/shims/process.js",
-            bufferGlobal: "browserfs/dist/shims/bufferGlobal.js",
-            bfsGlobal: require.resolve("browserfs"),
-        },
     },
     output: {
         filename: "[name].js",
         path: path.resolve(__dirname, "dist"),
         pathinfo: false,
     },
-    plugins: [new CopyPlugin([{ from: "public", to: "./" }]), new webpack.ProvidePlugin({ BrowserFS: "bfsGlobal", process: "processGlobal", Buffer: "bufferGlobal", PIXI: "pixi.js" })],
+    plugins: [new CopyPlugin({ patterns: [{ from: "public", to: "./" }] }), new webpack.ProvidePlugin({ PIXI: "pixi.js" })],
     optimization: {
         minimize: true,
         minimizer: [
@@ -65,7 +56,6 @@ module.exports = {
         },
     },
     node: {
-        process: false,
-        Buffer: false,
+        fs: "empty",
     },
 };
