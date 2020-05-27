@@ -3,9 +3,9 @@
   "BoostThreshold": 16,
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
   "AttackFleets": true,
-  "Name": "level0",
-  "Sprite": "ship_cyan",
-  "Color": "cyan",
+  "Name": "🤖Welcome to daud",
+  "Sprite": "ship_green",
+  "Color": "green",
 
   "Steps": 16,
 
@@ -13,9 +13,9 @@
     "DownlevelThresholdMS": 90000,
     "Levels": [
       {
-        "Name": "level0",
-        "Sprite": "ship_cyan",
-        "Color": "cyan",
+        "Name": "🤖Welcome to daud",
+        "Sprite": "ship_green",
+        "Color": "green",
         "TargetingAverageError": 0.5,
         "FiringDelayMS": 1000,
         "ShootingTime": 1000,
@@ -32,9 +32,9 @@
         }
       },
       {
-        "Name": "level1",
-        "Sprite": "ship_cyan",
-        "Color": "cyan",
+        "Name": "🤖Easy peasy",
+        "Sprite": "ship_yellow",
+        "Color": "yellow",
         "TargetingAverageError": 0.2,
         "FiringDelayMS": 750,
         "ShootingTime": 500,
@@ -51,9 +51,9 @@
         }
       },
       {
-        "Name": "level2",
-        "Sprite": "ship_cyan",
-        "Color": "cyan",
+        "Name": "🔥S to dash",
+        "Sprite": "ship_orange",
+        "Color": "orange",
         "TargetingAverageError": 0.1,
         "FiringDelayMS": 250,
         "ShootingTime": 100,
@@ -70,7 +70,7 @@
         }
       },
       {
-        "Name": "level3",
+        "Name": "💧Outta my way",
         "Sprite": "ship_cyan",
         "Color": "cyan",
         "TargetingAverageError": 0.0,
@@ -89,9 +89,9 @@
         }
       },
       {
-        "Name": "level4",
-        "Sprite": "ship_cyan",
-        "Color": "cyan",
+        "Name": "🌎Join discord",
+        "Sprite": "ship_blue",
+        "Color": "blue",
         "TargetingAverageError": 0.0,
         "FiringDelayMS": 0,
         "ShootingTime": 100,
@@ -108,9 +108,9 @@
         }
       },
       {
-        "Name": "level5(max)",
-        "Sprite": "ship_cyan",
-        "Color": "cyan",
+        "Name": "👅Can't touch me",
+        "Sprite": "ship_red",
+        "Color": "red",
         "TargetingAverageError": 0.0,
         "FiringDelayMS": 0,
         "ShootingTime": 100,
@@ -124,6 +124,23 @@
         "BehaviorsModifications": {
           "1": { "BehaviorWeight": 5 },
           "5": { "AdvanceThreshold": 1 }
+        }
+      },
+      {
+        "Name": "🤖Try no shield",
+        "Sprite": "ship0",
+        "Color": "red",
+        "TargetingAverageError": 0.0,
+        "FiringDelayMS": 0,
+        "ShootingTime": 100,
+        "ShootingDelay": 0,
+        "AttackAbandoned": true,
+        "AttackFish": true,
+        "BoostThreshold": 900,
+        "BehaviorsModifications": {
+          "1": { "BehaviorWeight": 4 },
+          "4": { "BehaviorWeight": 1 },
+          "7": { "BehaviorWeight": 2 }
         }
       }
     ]
@@ -203,6 +220,17 @@
       "BehaviorWeight": 0.4,
       "Cycle": 100,
       "Plot": true
+    },
+
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
+      "LookAheadMS": 600,
+      "BehaviorWeight": 0.0,
+      "Cycle": 0,
+      "Plot": true,
+      "Config": {
+        "DistanceFromCenterThreshold": 750
+      }
     }
   ]
 }
