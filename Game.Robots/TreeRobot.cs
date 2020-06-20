@@ -11,7 +11,6 @@
     using System.Threading.Tasks;
     using System.Numerics;
     using Game.Robots.Models;
-    using System.Threading.Tasks;
     public class TreeRobot : ContextRobot
     {
 
@@ -236,7 +235,7 @@
             public string type { get; set; } = "scatter";
         }
 
-        protected void RingDebugExecute()
+        new protected void RingDebugExecute()
         {
             List<Vector2> st = new List<Vector2>();
             if (this.PathV != null)

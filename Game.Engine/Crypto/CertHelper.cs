@@ -378,9 +378,8 @@ namespace Game.Engine.Crypto
 
             var x509 = new System.Security.Cryptography.X509Certificates.X509Certificate2(
                     certificate.GetEncoded());
-
 #pragma warning disable CS0618 // Type or member is obsolete
-            var seq = (Asn1Sequence)Asn1Object.FromByteArray(info.PrivateKey.GetDerEncoded());
+            var seq = (Asn1Sequence)Asn1Object.FromByteArray(info.ParsePrivateKey().GetDerEncoded());
 #pragma warning restore CS0618 // Type or member is obsolete
             if (seq.Count != 9)
                 throw new PemException("malformed sequence in RSA private key");
