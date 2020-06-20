@@ -18,6 +18,7 @@
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;
+    using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 
     public class Startup
     {
@@ -33,8 +34,8 @@
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISecurityContext, TokenSecurityContext>();
-            services.AddMvc().
-                AddJsonOptions(options =>
+            services.AddMvc(options => options.EnableEndpointRouting = false).
+                AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
@@ -47,7 +48,6 @@
                     builder => builder.AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowCredentials()
                 );
             });
 
@@ -75,7 +75,7 @@
 
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             IServiceProvider provider,
             GameConfiguration config,
             RegistryClient registryClient

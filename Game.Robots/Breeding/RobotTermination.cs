@@ -6,8 +6,8 @@ namespace Game.Robots.Breeding
 
     public class RobotTermination : TerminationBase
     {
-        private double m_lastFitness;
-        private int m_stagnantGenerationsCount;
+        // private double m_lastFitness;
+        // private int m_stagnantGenerationsCount;
 
         protected override bool PerformHasReached(IGeneticAlgorithm geneticAlgorithm)
         {

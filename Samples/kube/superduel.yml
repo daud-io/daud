@@ -20,7 +20,7 @@ spec:
           image: iodaud/daud:version-1.32
           resources:
           command: ["dotnet"]
-          args: ["/app/Game.Util/bin/Release/netcoreapp2.1/publish/Game.Util.dll",
+          args: ["/app/Game.Util/bin/Release/netcoreapp3.1/publish/Game.Util.dll",
             "--server", "https://us.daud.io/", 
             "--user-key", "Administrator", 
             "--password", "DaudsEverywhere", 

@@ -5,7 +5,7 @@ https://daud.io
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/daud-io/daud)
 
 # Requirements
-1. Microsoft dotnet core 2.1 SDK - https://dotnet.microsoft.com/download
+1. Microsoft dotnet core 3.1 SDK - https://dotnet.microsoft.com/download
 2. Node js - https://nodejs.org/en/
 
 # Suggestions
