@@ -7,6 +7,7 @@ import { Picker } from "emoji-mart";
 import React from "react";
 import ReactDOM from "react-dom";
 
+const emojiContainer = document.getElementById("emoji-container");
 ReactDOM.render(
     React.createElement(
         Picker,
@@ -15,19 +16,15 @@ ReactDOM.render(
             title: "",
             emoji: "rocket",
             onClick: (e) => {
-                console.log(e);
                 Cookies.set("emoji", e.native);
-                const x = e.native;
                 emojiTrigger.innerText = e.native;
-
-                Controls.emoji = x;
-                console.log(Controls.emoji);
-                document.getElementById("emoji-container").classList.remove("open");
+                Controls.emoji = e.native;
+                emojiContainer.classList.remove("open");
             },
         },
         null
     ),
-    document.getElementById("emoji-container")
+    emojiContainer
 );
 
 const secretShips = ["ship_secret", "ship_zed"];
@@ -36,8 +33,11 @@ const autofCon = document.getElementById("autofireContainer");
 const autofTgg = document.getElementById("autofireToggle");
 const emojiTrigger = document.getElementById("emoji-trigger");
 
-emojiTrigger.addEventListener("click", () => {
-    document.getElementById("emoji-container").classList.toggle("open");
+document.addEventListener("click", (event) => {
+    if (event.target == emojiTrigger) emojiContainer.classList.toggle("open");
+    else if (!emojiContainer.contains(event.target as Node)) {
+        emojiContainer.classList.remove("open");
+    }
 });
 
 export const nipple = nipplejs.create({

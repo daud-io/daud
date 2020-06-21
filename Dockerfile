@@ -1,11 +1,11 @@
-FROM node:11
+FROM node:14
 WORKDIR /app
 COPY ./Game.Engine/wwwroot ./
 
-RUN ["npm", "i"]
+RUN ["npm", "ci"]
 RUN ["npm", "run", "build"]
 
-FROM microsoft/dotnet:3.1-sdk
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1
 WORKDIR /app
 COPY . ./
 COPY --from=0 /app/dist ./Game.Engine/wwwroot/dist
