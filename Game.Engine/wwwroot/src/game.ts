@@ -30,6 +30,7 @@ import "./changelog";
 import "./hintbox";
 import { Vector2 } from "./Vector2";
 import { CustomContainer } from "./CustomContainer";
+
 declare global {
     interface Window {
         Game: any;

@@ -62,6 +62,8 @@
             if (!IsAlive)
                 return;
 
+            this.ControlInput.ShootRequested = World.Time > this.Fleet.ShootCooldownTime;
+
             var player =
                 GetWorldPlayers(World)
                     .Where(p => p.IsAlive)
@@ -72,10 +74,9 @@
                     .OrderBy(p => Vector2.Distance(p.Fleet.FleetCenter, this.Fleet.FleetCenter))
                     .FirstOrDefault();
             var vel = Vector2.Zero;
-            if(this.Fleet.BoostCooldownStatus==1){
-            if(this.Fleet.Ships.Count<6){
+            if(this.Fleet.Ships.Count<5){
                 var nearfish = World.Bodies
-                .Where(b => (b.Group!=null && b.Group.GroupType == GroupTypes.Fish) || b.Sprite == Sprites.fish)
+                .Where(b => (b.Group!=null && b.Group.GroupType == GroupTypes.Fish) || b.Sprite == Sprites.fish || b.Sprite == Sprites.ship_gray)
                 .OrderBy(p => Vector2.Distance(p.Position, this.Fleet.FleetCenter))
                 .FirstOrDefault();
                 if (nearfish != null){
@@ -84,16 +85,17 @@
             }
             else if (player != null)
             {
-                vel = player.Fleet.FleetCenter+player.Fleet.FleetMomentum*2 - this.Fleet.FleetCenter;
-                vel -= Vector2.Normalize(vel) * 800;
+                var fraction = (float)Math.Max(Math.Min((this.Fleet.ShootCooldownStatus>0.1?(1.0-this.Fleet.ShootCooldownStatus):(this.Fleet.ShootCooldownStatus))*10,1.0),0.0);
+                var dist = player.Fleet.FleetCenter - this.Fleet.FleetCenter;
+                if(dist.LengthSquared()>1500*1500) vel = dist * fraction;
+                else vel = new Vector2(-dist.Y,dist.X) * fraction;
+                vel += Intercept(this.Fleet.FleetCenter, player.Fleet.FleetCenter, player.Fleet.FleetMomentum, (this.Fleet.Ships.Count * this.Fleet.ShotThrustM + this.Fleet.ShotThrustB)*10) * 1000.0f * (1.0f-fraction);
             }
             else
             {
                 var angle = (float)((World.Time - SpawnTime) / 3000.0f) * MathF.PI * 2;
                 vel = new Vector2(MathF.Cos(angle), MathF.Sin(angle))*800 - this.Fleet.FleetCenter;
             }
-            }
-            this.ControlInput.ShootRequested = true;
 
             var danger = false;
             var bullets = World.Bodies
@@ -105,15 +107,15 @@
             {
                 var bullet = bullets.First();
 
-                var distance = Vector2.Distance(bullet.Position, this.Fleet.FleetCenter);
-                if (distance < 2000)
+                var distance2 = Vector2.DistanceSquared(bullet.Position, this.Fleet.FleetCenter);
+                if (distance2 < 2000*2000)
                 {
                     var avoid = (this.Fleet.FleetCenter - bullet.Position);
-                    vel += avoid * 40_000 / distance;
+                    vel += avoid * 400_000 / avoid.LengthSquared();
                     var side = IsLeft(bullet.Position, bullet.Position+bullet.Momentum, this.Fleet.FleetCenter)?-1:1;
-                    vel += new Vector2(side*bullet.Momentum.Y, -side*bullet.Momentum.X)*400*distance;
+                    vel += new Vector2(side*bullet.Momentum.Y, -side*bullet.Momentum.X)*4_000_000/distance2;
                 }
-                if (distance < 200)
+                if (distance2 < 200*200)
                 {
                     danger = true;
                 }
@@ -126,48 +128,16 @@
 
             base.Think();
         }
-        public  bool IsLeft(Vector2 a, Vector2 b, Vector2 c) {
+        public bool IsLeft(Vector2 a, Vector2 b, Vector2 c) {
             return ((b.X - a.X)*(c.Y - a.Y) - (b.Y - a.Y)*(c.X - a.X)) > 0;
         }
 
-        public static Vector2 FiringIntercept(
-            Hook hook,
-            Vector2 fromPosition,
-            Vector2 targetPosition,
-            Vector2 targetMomentum,
-            int fleetSize,
-            out int timeToImpact
-        )
-        {
-            var toTarget = targetPosition - fromPosition;
-
-            var bulletSpeed = fleetSize * hook.ShotThrustM + hook.ShotThrustB * 10;
-
-            var a = Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);
-            var b = 2 * Vector2.Dot(targetMomentum, toTarget);
-            var c = Vector2.Dot(toTarget, toTarget);
-
-            var p = -b / (2 * a);
-            var q = MathF.Sqrt((b * b) - 4 * a * c) / (2 * a);
-
-            var t1 = p - q;
-            var t2 = p + q;
-            var t = 0f;
-
-            if (t1 > t2 && t2 > 0)
-                t = t2;
-            else
-                t = t1;
-
-            var aimSpot = targetPosition + targetMomentum * t;
-
-            var bulletPath = aimSpot - fromPosition;
-            timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            
-
-            if (timeToImpact > hook.BulletLife)
-                timeToImpact = int.MaxValue;
-
-            return aimSpot;
+        public static Vector2 Intercept(Vector2 a, Vector2 b, Vector2 u, float v_mag)  {
+            var ab = Vector2.Normalize(b - a);
+            var ui = u - Vector2.Dot(u, ab) * ab;
+            var vj_mag = (float) Math.Sqrt(Math.Max(v_mag * v_mag - ui.LengthSquared(), 0.0));
+            return ab * vj_mag + ui;
         }
+
     }
 }

@@ -26,7 +26,7 @@
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISecurityContext, TokenSecurityContext>();
-            services.AddMvc().
+            services.AddMvc(options => options.EnableEndpointRouting = false).
                 AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
@@ -72,7 +72,7 @@
 
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             IServiceProvider provider,
             GameConfiguration config
         )
