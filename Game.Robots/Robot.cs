@@ -266,7 +266,7 @@
             await Connection.SendExitAsync();
         }
 
-        protected async Task SpawnAsync()
+        public async Task SpawnAsync()
         {
             IsSpawning = true;
             await Connection.SpawnAsync(Name, Sprite, Color);

@@ -12,6 +12,7 @@
     [Subcommand("player", typeof(PlayerCommand))]
     [Subcommand("world", typeof(WorldCommand))]
     [Subcommand("registry", typeof(RegistryCommand))]
+    [Subcommand("herd", typeof(HerdCommand))]
     public class RootCommand : CommandBase
     {
         [Option("--context", Description = "override the default, saved context and use the mentioned one")]

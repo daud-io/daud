@@ -1,12 +1,12 @@
 {
     "BoostThreshold": 16,
-    "RobotType": "Game.Robots.Monsters.SpawnBeast,Game.Robots",
+    "RobotType": "Game.Robots.Monsters.SpawnChild,Game.Robots",
     "Safe": true,
     "Name": " ",
-    "Sprite": "ship_cyan",
+    "Sprite": "ship_pink",
     "Color": "monster",
     "Steps": 16,
-    "AutoSpawn": false,
+
     "MaxShips": 4,
   
     "ContextRingBlending": {

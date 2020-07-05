@@ -26,7 +26,7 @@
         public long AbandonedTime { get; set; }
 
         protected bool IsOOB = false;
-        private long TimeDeath = 0;
+        public long TimeDeath = 0;
 
         public float? ThrustOverride { get; set; } = null;
         public float? SteeringOverride { get; set; } = null;
