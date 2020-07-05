@@ -4,14 +4,18 @@
     using System.Linq;
     using System.Numerics;
 
-    public class Advance : ContextBehavior
+    public class AdvancedAdvance : ContextBehavior
     {
         private bool Active = true;
+        private long ActiveUntil = 0;
+
         public Vector2 TargetPoint = Vector2.Zero;
         public int ActiveRange { get; set; } = 1000;
         public float AdvanceThreshold { get; set; } = 0.5f;
+        public float BoostThreshold { get; set; } = 0;
+        public int BoostMinimum { get; set; } = 0;
 
-        public Advance(ContextRobot robot) : base(robot)
+        public AdvancedAdvance(ContextRobot robot) : base(robot)
         {
         }
 
@@ -28,11 +32,31 @@
                         .OrderBy(f => Vector2.DistanceSquared(f.Center, fleet.Center))
                         .FirstOrDefault();
                     if (((closestOpponent?.Ships?.Count ?? 0) != 0) && ((fleet.Ships?.Count ?? 0) != 0))
-                        if (closestOpponent.Ships.Count / fleet.Ships.Count < AdvanceThreshold)
+                    {
+                        var ratio = (float)(closestOpponent.Ships.Count) / fleet.Ships.Count;
+                        if (ratio > 0 && ratio < AdvanceThreshold)
                         {
-                            TargetPoint = closestOpponent.Center;
+                            TargetPoint = closestOpponent.Center + closestOpponent.Momentum * LookAheadMS;
+
+                            bool isClosing =
+                                Vector2.Distance(fleet.Center + fleet.Momentum * LookAheadMS, TargetPoint)
+                                - Vector2.Distance(fleet.Center, TargetPoint) > 100;
+
+                            if (ratio < BoostThreshold 
+                                && fleet.Ships.Count >= BoostMinimum
+                                && (Robot.GameTime - Robot.LastShot > 500)
+                                //&& isClosing
+                            )
+                            {
+                                Console.WriteLine($"{Robot.GameTime - Robot.LastShot}");
+
+                                Robot.Boost();
+                                ActiveUntil = Robot.GameTime + 400;
+                            }
+
                             Active = true;
                         }
+                    }
                 }
             }
 
@@ -41,7 +65,7 @@
 
         protected override float ScoreAngle(float angle, Vector2 position, Vector2 momentum)
         {
-            if (Active)
+            if (Active || ActiveUntil < Robot.GameTime)
             {
                 var vectorToPoint = Robot.VectorToAbsolutePoint(TargetPoint);
                 var angleToPoint = MathF.Atan2(vectorToPoint.Y, vectorToPoint.X);

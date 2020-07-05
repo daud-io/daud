@@ -5,6 +5,7 @@
     using System;
     using System.Numerics;
     using System.Linq;
+    using Game.Robots.Boost;
 
     public class ConfigTurret : ConfigurableContextBot
     {
@@ -15,20 +16,29 @@
         public bool AttackFish { get; set; } = true;
         public bool Safe { get; set; } = false;
         public bool AttackAbandoned { get; set; } = true;
-        public int BoostThreshold { get; set; } = 16;
 
         public float TargetingAverageError { get; set; } = 0;
         public int FiringDelayMS { get; set; } = 0;
+        public float FiringDelayChance { get; set; } = 1f;
         private long DeferShootUntil = 0;
         private bool LastCanShoot = false;
 
         public int TimeOffset { get; set; } = 0;
+
+        public int BoostThreshold { get => SizeBoost.BoostThreshold; set => SizeBoost.BoostThreshold = value; } // for backwards compatibility
+        public SixMinuteAbs SizeBoost { get; set; }
+
+        public DefensiveBoost DefensiveBoost { get; set; }
+        
 
         public ConfigTurret()
         {
             FleetTargeting = new FleetTargeting(this) { IsSafeShot = this.IsSafeShot };
             AbandonedTargeting = new AbandonedTargeting(this) { IsSafeShot = this.IsSafeShot };
             FishTargeting = new FishTargeting(this) { IsSafeShot = this.IsSafeShot };
+
+            SizeBoost = new SixMinuteAbs(this) { BoostThreshold = 16 };
+            DefensiveBoost = new DefensiveBoost(this);
         }
 
         public override long GameTime => base.GameTime + TimeOffset;
@@ -64,12 +74,17 @@
 
         protected async override Task AliveAsync()
         {
+            var random = new Random();
+
             await base.AliveAsync();
 
             // when shooting becomes available
             // lets see if we should delay
             if (!LastCanShoot && CanShoot)
-                DeferShootUntil = GameTime + FiringDelayMS;
+                DeferShootUntil = GameTime + 
+                    ((random.NextDouble() < FiringDelayChance)
+                        ? FiringDelayMS
+                        : 0);
             LastCanShoot = CanShoot;
 
             if (CanShoot && DeferShootUntil < GameTime)
@@ -82,9 +97,9 @@
                     ShootAt(target.Position);
             }
 
-            if (CanBoost && (this.SensorFleets.MyFleet?.Ships.Count ?? 0) > BoostThreshold)
-                Boost();
 
+            this.SizeBoost.Behave();
+            this.DefensiveBoost.Behave();
         }
     }
 }

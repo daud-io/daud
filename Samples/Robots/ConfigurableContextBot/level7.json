@@ -1,0 +1,104 @@
+{
+  "Name": "🤖",
+  "Color": "ship0",
+  "Sprite": "ship0",
+  "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
+  "Steps": 16,
+  "Safe": false,
+  "FiringDelayMS": 0,
+  "FiringDelayChance": 0.2,
+  "RingDebugEnabled": false,
+  "BoostThreshold": 20,
+  "DefensiveBoost": {
+    "Enabled": false
+  },
+  "Behaviors": [
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.SeparationSimple,Game.Robots",
+      "LookAheadMS": 400,
+      "BehaviorWeight": -1.0,
+      "Cycle": 0,
+      "Plot": true,
+      "Config": {
+        "ActiveRange": 2000
+      }
+    },
+
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.AdvancedAdvance,Game.Robots",
+      "LookAheadMS": 200,
+      "BehaviorWeight": 0.3,
+      "Cycle": 0,
+      "Plot": true,
+      "Config": {
+        "ActiveRange": 3000,
+        "AdvanceThreshold": 0.9,
+        "BoostThreshold": 0.25,
+        "BoostMinimum": 10
+      }
+    },
+
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
+      "LookAheadMS": 100,
+      "BehaviorWeight": 0.1,
+      "Cycle": 500,
+      "Plot": false
+    },
+
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
+      "LookAheadMS": 200,
+      "BehaviorWeight": 8.0,
+      "Cycle": 0,
+      "Plot": false,
+      "Config": {
+        "DistanceFromCenterThreshold": 750
+      }
+    },
+
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
+      "LookAheadMS": 600,
+      "BehaviorWeight": 4.0,
+      "Cycle": 0,
+      "Plot": false,
+      "Config": {
+        "DistanceFromCenterThreshold": 750
+      }
+    },
+
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
+      "LookAheadMS": 100,
+      "BehaviorWeight": 0.05,
+      "Cycle": 0,
+      "Plot": false
+    },
+
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.Slippery,Game.Robots",
+      "LookAheadMS": 200,
+      "BehaviorWeight": 0.3,
+      "Cycle": 600,
+      "Plot": false,
+      "Config": {
+        "MaximumRange": 2000
+      }
+    },
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.StayInBounds,Game.Robots",
+      "LookAheadMS": 400,
+      "BehaviorWeight": 0.6,
+      "Cycle": 100,
+      "Plot": false
+    },
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.StayInBounds,Game.Robots",
+      "LookAheadMS": 1500,
+      "BehaviorWeight": 0.6,
+      "Cycle": 400,
+      "Plot": false
+    }
+  ]
+}

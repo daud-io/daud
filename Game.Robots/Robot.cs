@@ -52,6 +52,7 @@
         public Vector2 ShootingAt { get; private set; }
         public long ShootUntil { get; set; }
         public long ShootAfter { get; set; }
+        public long LastShot { get; set; }
 
         public int ShootingTime { get; set; } = 100;
         public int ShootingDelay { get; set; } = 0;
@@ -218,7 +219,10 @@
             if (!this.Connection.ControlIsShooting
                 && ShootAfter <= GameTime
                 && GameTime < ShootUntil)
+            {
                 Connection.ControlIsShooting = true;
+                LastShot = GameTime;
+            }
 
             if (!this.CanShoot && this.Shooting && GameTime > ShootUntil)
             {
