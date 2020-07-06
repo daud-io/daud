@@ -36,7 +36,21 @@
         {
             Console.WriteLine($"Herd is {Herd.Count} strong");
 
-            if (Herd.Any() && !Herd.Any(r => r.SensorFleets.MyFleet != null))
+            var disconnects = Herd.Where(r => !r.IsAlive && r.DestroyOnDeath).ToList();
+
+            foreach (var disconnect in disconnects)
+            {
+                lock (Herd)
+                    Herd.Remove(disconnect);
+
+                try
+                {
+                    disconnect?.Connection?.Dispose();
+                }
+                catch(Exception) { }
+            }
+
+            if (Herd.Any() && !Herd.Any(r => r.IsAlive))
                 await Herd[0].SpawnAsync();
         }
 

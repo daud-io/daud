@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Numerics;
 
     public class SensorFleets : ISense
     {
@@ -13,6 +14,7 @@
         public List<Fleet> AllVisibleFleets { get; private set; }
 
         public Fleet MyFleet { get; private set; }
+        public Vector2 LastKnownCenter { get; set; }
 
         public SensorFleets(ContextRobot robot)
         {
@@ -85,6 +87,9 @@
             AllVisibleFleets = AllVisibleFleets.Where(f => !f.PendingDestruction).ToList();
 
             MyFleet = AllVisibleFleets.FirstOrDefault(f => f.ID == Robot.FleetID);
+
+            if (MyFleet != null)
+                LastKnownCenter = MyFleet.Center;
         }
 
         public IEnumerable<Fleet> Others

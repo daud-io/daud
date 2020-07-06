@@ -1,13 +1,16 @@
 {
     "BoostThreshold": 16,
     "RobotType": "Game.Robots.Monsters.SpawnBeast,Game.Robots",
-    "Safe": true,
+    "AttackFleets": false,
+    "AttackFish": false,
+    "AttackAbandoned": false,
     "Name": " ",
     "Sprite": "ship_cyan",
     "Color": "monster",
     "Steps": 16,
     "AutoSpawn": false,
     "MaxShips": 4,
+    "ShipSize": 300,
   
     "ContextRingBlending": {
       "BlurSteps": 10,

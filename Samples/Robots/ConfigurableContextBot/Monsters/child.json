@@ -1,13 +1,16 @@
 {
-    "BoostThreshold": 16,
     "RobotType": "Game.Robots.Monsters.SpawnChild,Game.Robots",
-    "Safe": true,
+    "AttackFleets": false,
+    "AttackFish": false,
+    "AttackAbandoned": false,
     "Name": " ",
     "Sprite": "ship_pink",
     "Color": "monster",
     "Steps": 16,
-
-    "MaxShips": 4,
+    "ShipSize": 40,
+    "BoostThreshold": 20,
+    "AutoSpawn": false,
+    "DestroyOnDeath": true,
   
     "ContextRingBlending": {
       "BlurSteps": 10,

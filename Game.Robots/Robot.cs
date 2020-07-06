@@ -19,7 +19,7 @@
         public string Sprite { get; set; } = "ship_cyan";
         public string Color { get; set; } = "cyan";
 
-        private bool IsAlive = false;
+        public bool IsAlive = false;
         public bool AutoSpawn { get; set; } = true;
         public int RespawnFalloffMS { get; set; } = 3000;
 

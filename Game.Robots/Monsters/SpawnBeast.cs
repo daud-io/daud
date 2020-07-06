@@ -12,8 +12,9 @@
 
         protected async override Task OnDeathAsync()
         {
-            await this.SpawnChildAsync<SpawnChild>("child.json");
-            await this.SpawnChildAsync<SpawnChild>("child.json");
+            for (int i=0; i<5; i++)
+                await this.SpawnChildAsync<SpawnChild>("child.json");
+
             await base.OnDeathAsync();
         }
     }

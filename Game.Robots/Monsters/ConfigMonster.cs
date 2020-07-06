@@ -18,9 +18,10 @@
         public int MaxShips { get; set; } = 2;
         public Vector2? NextPosition { get; set; } = null;
 
-        public int ShipSize { get; set; } = 200;
+        public int ShipSize { get; set; } = 80;
 
         public readonly Shepherd Tender;
+        public bool DestroyOnDeath { get; set; }
 
         public ConfigMonster(Shepherd tender = null)
         {
@@ -29,23 +30,13 @@
 
         protected override Task AliveAsync()
         {
-            if (SensorFleets.MyFleet?.Ships != null)
+            if (SensorFleets.MyFleet?.Ships?.Any() == true)
             {
                 SetShipTemplate(ShipTemplate);
+                NextPosition = null;
             }
             else
                 SetShipTemplate(null);
-
-
-            if (SensorFleets?.Others?.Any() == true && GameTime - lastShot > 300)
-
-            {
-                ShootAt(SensorFleets.Others.First().Center);
-                lastShot = GameTime;
-            }
-
-
-            NextPosition = null;
 
             return base.AliveAsync();
         }
@@ -103,12 +94,13 @@
         {
             var child = Activator.CreateInstance(typeof(T), Tender) as T;
             if (this.SensorFleets?.MyFleet != null)
-                child.NextPosition = this.SensorFleets.MyFleet.Center + relativePosition;
+                child.NextPosition = this.SensorFleets.LastKnownCenter + relativePosition;
 
             if (config != null)
                 child.Configure(config);
 
             await Tender.StartRobot(child);
+            await child.SpawnAsync();
 
             return child;
         }
