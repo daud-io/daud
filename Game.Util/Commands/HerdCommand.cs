@@ -21,7 +21,12 @@
 
             var herd = new Shepherd(Root.Connection, "", worldKey: World);
 
-            var parent = new SpawnBeast(herd);
+            var configMonster = new ConfigMonster();
+            configMonster.Configure(File);
+
+            var baseMonsterType = Type.GetType(configMonster.RobotType);
+
+            var parent = Activator.CreateInstance(baseMonsterType, herd) as ConfigMonster;
             if (File != null)
                 parent.Configure(File);
 

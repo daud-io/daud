@@ -13,15 +13,20 @@
     public class ConfigMonster : ConfigTurret
     {
         private object ShipTemplate = null;
-        private long lastShot = 0;
         
-        public int MaxShips { get; set; } = 2;
+        public int MaxShips { get; set; } = 999;
         public Vector2? NextPosition { get; set; } = null;
 
         public int ShipSize { get; set; } = 80;
 
         public readonly Shepherd Tender;
         public bool DestroyOnDeath { get; set; }
+        public float? ThrustOverride { get; set; }
+
+        public string RobotType { get; set; }
+
+        public bool IsShark { get; set; }
+
 
         public ConfigMonster(Shepherd tender = null)
         {
@@ -52,20 +57,22 @@
                             Abandoned = i >= MaxShips,
                             Size = ShipSize,
                             Sprite = Enum.Parse<Sprites>(Sprite),
-                            //ThrustOverride = 0,
-                            Position = NextPosition
-                        });
+                            ThrustOverride = ThrustOverride,
+                            Position = NextPosition,
+                            Color = Sprite
+                    });
 
                 CustomData = JsonConvert.SerializeObject(new
                 {
                     Magic = JsonConvert.SerializeObject(new
                     {
-                        //IsShielded = true,
                         ShipSprite = Enum.Parse<Sprites>(Sprite),
+
                         Fleet = new
                         {
-                            //Burden = 1,
-                            ShipConfig = ships
+                            ShipConfig = ships,
+                            Shark = IsShark,
+                            Color = Sprite
                         },
                     })
                 });
@@ -89,12 +96,15 @@
                 await Tender.OnSheepDeath(this);
         }
 
-        protected  async Task<T> SpawnChildAsync<T>(string config = null, Vector2 relativePosition = default)
-            where T: ConfigMonster
+        protected async Task<T> SpawnChildAsync<T>(string config = null, Vector2 relativePosition = default)
+            where T : ConfigMonster
         {
             var child = Activator.CreateInstance(typeof(T), Tender) as T;
-            if (this.SensorFleets?.MyFleet != null)
+            if (this.SensorFleets != null)
+            {
+                Console.WriteLine($"Spawning Child at : {SensorFleets.LastKnownCenter}");
                 child.NextPosition = this.SensorFleets.LastKnownCenter + relativePosition;
+            }
 
             if (config != null)
                 child.Configure(config);

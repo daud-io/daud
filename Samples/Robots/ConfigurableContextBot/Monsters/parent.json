@@ -10,7 +10,8 @@
     "Steps": 16,
     "AutoSpawn": false,
     "MaxShips": 4,
-    "ShipSize": 300,
+    "ShipSize": 120,
+    "ThrustOverride": 0.15,
   
     "ContextRingBlending": {
       "BlurSteps": 10,
@@ -52,7 +53,7 @@
       {
         "BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
         "LookAheadMS": 100,
-        "BehaviorWeight": 0.05,
+        "BehaviorWeight": 0.5,
         "Cycle": 0,
         "Plot": false
       },

@@ -10,6 +10,13 @@
         { }
 
 
+        protected override Task AliveAsync()
+        {
+            Console.WriteLine($"Beast {FleetID} Alive at : {SensorFleets.LastKnownCenter}");
+
+            return base.AliveAsync();
+        }
+
         protected async override Task OnDeathAsync()
         {
             for (int i=0; i<5; i++)

@@ -1,0 +1,31 @@
+{
+    "BoostThreshold": 50,
+    "RobotType": "Game.Robots.Monsters.Territory,Game.Robots",
+    "AttackFleets": true,
+    "AttackFish": false,
+    "AttackAbandoned": true,
+    "Name": "Territory",
+    "Sprite": "ship_cyan",
+    "Color": "monster",
+    "Steps": 16,
+    "AutoSpawn": true,
+    "ShipSize": 120,
+    "ThrustOverride": 0.01,
+    "IsShark": false,
+  
+    "ContextRingBlending": {
+      "BlurSteps": 10,
+      "BlurAmount": 0.5,
+      "BlurResolutionMultiplier": 1
+    },
+  
+    "Behaviors": [
+      {
+        "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
+        "LookAheadMS": 100,
+        "BehaviorWeight": 0.1,
+        "Cycle": 500,
+        "Plot": false
+      }
+    ]
+  }

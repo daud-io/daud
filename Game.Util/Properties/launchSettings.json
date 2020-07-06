@@ -2,7 +2,7 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "herd --file c:\\code\\iogame\\Samples\\Robots\\ConfigurableContextBot\\Monsters\\test.json"
+      "commandLineArgs": "herd --file c:\\code\\iogame\\Samples\\Robots\\ConfigurableContextBot\\Monsters\\parent.json"
     }
   }
 }
