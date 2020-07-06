@@ -323,7 +323,7 @@
             hook.WorldSizeBasic = 0;
             hook.WorldSizeDeltaPerPlayer = 800;
             hook.WorldResizeSpeed = 20;
-            hook.OutOfBoundsDeathLine = 0;
+            hook.OutOfBoundsDeathLine = 50;
             hook.OutOfBoundsBorder = 0;
 
             hook.Weight = 20;

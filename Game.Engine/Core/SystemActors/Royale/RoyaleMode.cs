@@ -112,7 +112,7 @@
             var playerCount = players
                 .Where(p => p.IsAlive).Count();
 
-            if (playerCount == 10)
+            if (playerCount == 1)
             {
                 // someone won
                 InRoomAnnouncement($"GAME OVER!: {players.First(p => p.IsAlive).Name} wins!");
