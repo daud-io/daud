@@ -390,7 +390,7 @@
             }
         }
 
-        public void SendMessage(string message, string type = "message", int pointsDelta = 0, object extraData = null)
+        public void SendMessage(string message, string type = "announce", int pointsDelta = 0, object extraData = null)
         {
             this.Messages.Add(new PlayerMessage
             {

@@ -56,6 +56,8 @@ export class Log {
             } else if (lastData.type == "killed") {
                 lastMsg = "<span style='color:#ff0000'>[&nbsp;</span>" + escapeHtml(lastData.text) + "<span style='color:#ff0000'>&nbsp;]</span>";
                 deathStats(lastData);
+            } else if (lastData.type == "announce") {
+                lastMsg = "<span style='color:#00ff00'>[&nbsp;</span>" + escapeHtml(lastData.text) + "<span style='color:#00ff00'>&nbsp;]</span>";
             } else {
                 if (lastData.type === "universeDeath") {
                     deathStats(lastData);
