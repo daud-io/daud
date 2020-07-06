@@ -27,6 +27,7 @@
 
         public bool IsShark { get; set; }
 
+        public string PlayerColor { get; set; }
 
         public ConfigMonster(Shepherd tender = null)
         {
@@ -59,7 +60,7 @@
                             Sprite = Enum.Parse<Sprites>(Sprite),
                             ThrustOverride = ThrustOverride,
                             Position = NextPosition,
-                            Color = Sprite
+                            Color = PlayerColor
                     });
 
                 CustomData = JsonConvert.SerializeObject(new
@@ -67,16 +68,19 @@
                     Magic = JsonConvert.SerializeObject(new
                     {
                         ShipSprite = Enum.Parse<Sprites>(Sprite),
-
+                        PlayerColor,
                         Fleet = new
                         {
                             ShipConfig = ships,
                             Shark = IsShark,
-                            Color = Sprite
+                            Color = PlayerColor
                         },
                     })
                 });
             }
+
+            //if (SensorFleets.MyFleet.Color != PlayerColor)
+              //  Connection.CacheClear();
         }
 
         public void Configure(string config)

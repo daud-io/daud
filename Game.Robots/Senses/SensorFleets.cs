@@ -19,7 +19,7 @@
         public SensorFleets(ContextRobot robot)
         {
             this.Robot = robot;
-            this.AllVisibleFleets = new List<Fleet>(); ;
+            this.AllVisibleFleets = new List<Fleet>();
         }
 
         public Fleet ByID(uint fleetID)

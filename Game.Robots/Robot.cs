@@ -36,7 +36,7 @@
 
         public IEnumerable<Body> Bodies { get => Connection.Bodies; }
         public Vector2 Position { get => this.Connection.Position; }
-        public virtual long GameTime { get => this.Connection.GameTime; }
+        public virtual long GameTime { get => this.Connection?.GameTime ?? 0; }
         public ushort WorldSize { get => this.Connection.WorldSize; }
         public uint FleetID { get => this.Connection?.FleetID ?? 0; }
 
@@ -266,7 +266,7 @@
             await Connection.SendExitAsync();
         }
 
-        public async Task SpawnAsync()
+        public virtual async Task SpawnAsync()
         {
             IsSpawning = true;
             await Connection.SpawnAsync(Name, Sprite, Color);

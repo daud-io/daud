@@ -7,6 +7,12 @@
         private readonly Dictionary<uint, Body> _bodies = new Dictionary<uint, Body>();
         private readonly Dictionary<uint, Group> _groups = new Dictionary<uint, Group>();
 
+        public void Clear()
+        {
+            _bodies.Clear();
+            _groups.Clear();
+        }
+
         public void Update(
             IEnumerable<Body> updates,
             IEnumerable<uint> deletes,
@@ -36,7 +42,7 @@
                     existing.AngularVelocity = update.AngularVelocity;
                     existing.OriginalPosition = update.OriginalPosition;
                     existing.Momentum = update.Momentum;
-
+                    
                     existing.Size = update.Size;
                     existing.Sprite = update.Sprite;
                     existing.GroupID = update.GroupID;
@@ -54,6 +60,7 @@
                 else
                 {
                     var existing = _groups[group.ID];
+                    existing.Color = group.Color;
                     existing.Caption = group.Caption;
                     existing.Type = group.Type;
                     existing.ZIndex = group.ZIndex;

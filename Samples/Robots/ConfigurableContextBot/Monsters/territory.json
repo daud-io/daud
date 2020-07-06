@@ -5,13 +5,13 @@
     "AttackFish": false,
     "AttackAbandoned": true,
     "Name": "Territory",
-    "Sprite": "ship_cyan",
+    "Sprite": "ship_red",
     "Color": "monster",
     "Steps": 16,
-    "AutoSpawn": true,
+    "AutoSpawn": false,
     "ShipSize": 120,
     "ThrustOverride": 0.01,
-    "IsShark": false,
+    "IsShark": true,
   
     "ContextRingBlending": {
       "BlurSteps": 10,

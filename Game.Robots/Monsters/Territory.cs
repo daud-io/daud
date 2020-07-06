@@ -11,27 +11,19 @@
 
         public Territory(Shepherd tender) : base(tender)
         {
+            SwapTeams();
         }
 
-        protected override Task OnSpawnAsync()
-        {
-            return base.OnSpawnAsync();
-        }
-
-        protected override Task OnKilledAsync(Announcement announcement)
+        public override Task SpawnAsync()
         {
             SwapTeams();
-            Color = "monster";
-            return base.OnKilledAsync(announcement);
+            return base.SpawnAsync();
         }
 
         protected async override Task AliveAsync()
         {
             if (!IsAlive)
                 return;
-
-            if (Color == "monster")
-                Color = Sprite;
 
             if (Vector2.Distance(SensorFleets.LastKnownCenter, Vector2.Zero) > 200)
             {
@@ -45,10 +37,12 @@
             if (Sprite == "ship_cyan")
             {
                 Sprite = "ship_red";
+                PlayerColor = "red";
             }
             else
             {
                 Sprite = "ship_cyan";
+                PlayerColor = "cyan";
             }
         }
     }

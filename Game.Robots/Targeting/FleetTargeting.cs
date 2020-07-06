@@ -38,6 +38,7 @@
                         fleetSize: this.Robot.SensorFleets.MyFleet?.Ships.Count ?? 0,
                         timeToImpact: out int interceptTime
                     );
+                    Console.WriteLine($"Firing at {f.Color} from {Robot.SensorTeam.MyTeam}");
 
                     return new
                     {

@@ -25,7 +25,7 @@
 
         public void Sense()
         {
-            this.MyTeam = ParseTeam(this.Robot.Color);
+            this.MyTeam = ParseTeam(this.Robot.SensorFleets?.MyFleet?.Color);
             if (MyTeam == Teams.Cyan)
                 TheirTeam = Teams.Red;
             else
@@ -34,7 +34,7 @@
 
         private Teams ParseTeam(string color)
         {
-            if (color == "cyan")
+            if (color?.ToLower() == "cyan")
                 return Teams.Cyan;
             else
                 return Teams.Red;
