@@ -13,6 +13,14 @@
             base.Think();
         }
 
+        public string PlayerColor
+        {
+            set
+            {
+                this.Owner.Color = value;
+            }
+        }
+
         public string[] ShipConfig = null;
         private void DoShipConfig()
         {

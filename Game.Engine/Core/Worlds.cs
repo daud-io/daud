@@ -24,6 +24,8 @@
                 AddWorld("team", WorldTeam());
                 AddWorld("ctf", WorldCTF());
                 AddWorld("robo", RoboTrainer());
+                AddWorld("sharks", WorldSharks());
+                AddWorld("sumo", WorldSumo());
             }
             /*
             AddWorld("sharks", WorldSharks());
