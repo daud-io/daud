@@ -301,6 +301,9 @@
 
         public void Spawn(string name, Sprites sprite, string color, string token, string userColor = null)
         {
+            if (IsAlive)
+                return;
+
             if (!World.CanSpawn)
             {
                 if (World.CanSpawnReason != null)
