@@ -281,63 +281,6 @@ window.addEventListener(
             case 105: // numpad 9
                 Controls.numUpRight = true;
                 break;
-            case 102: // numpad 6
-                Controls.customData = JSON.stringify({
-                    magic: JSON.stringify({
-                        Fleet: {
-                            Shark: true
-                        }
-                    })
-                });
-
-                break;
-                break;
-            case 101: // numpad 5
-                Controls.customData = JSON.stringify({
-                    magic: JSON.stringify({
-                        Fleet: {
-                            //Burden: -0.5
-                            EarnedShips: [0]
-                        }
-                    })
-                });
-
-                break;
-            case 99: // numpad 3
-                Controls.customData = JSON.stringify({
-                    magic: JSON.stringify({
-                        Fleet: {
-                            Burden: -0.8
-                        }
-                    })
-                });
-                break;
-            case 98: // numpad 2
-                Controls.customData = JSON.stringify({
-                    magic: JSON.stringify({
-                        Fleet: {
-                            Burden: -0.5
-                        }
-                    })
-                });
-                break;
-            case 97: // numpad 1
-                Controls.customData = JSON.stringify({
-                    magic: JSON.stringify({
-                        Fleet: {
-                            Burden: 0,
-                            Shark: false
-                        }
-                    })
-                });
-                break;
-            case 100: // numpad 4
-                Controls.customData = JSON.stringify({
-                    magic: JSON.stringify({
-                        IsShielded: true
-                    })
-                });
-                break;
             case 103: // numpad 7
                 Controls.numUpLeft = true;
                 break;
@@ -406,12 +349,6 @@ window.addEventListener(
                 break;
             case 100: // numpad 4
                 Controls.numLeft = false;
-                break;
-            case 101: // numpad 5
-                Controls.customData = {
-                    magic: {}
-                };
-
                 break;
             case 103: // numpad 7
                 Controls.numUpLeft = false;
