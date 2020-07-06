@@ -67,7 +67,7 @@ export class Log {
             bigLog.innerHTML = lastMsg;
         }
 
-        if (lastData.extraData.combo !== undefined && lastData.extraData.combo.text !== "") {
+        if (lastData.extraData != null && lastData.extraData.combo !== undefined && lastData.extraData.combo.text !== "") {
             comboMsg.innerHTML = lastData.extraData.combo.text + " +" + lastData.extraData.combo.score;
         }
 

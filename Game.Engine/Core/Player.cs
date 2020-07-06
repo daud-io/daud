@@ -302,7 +302,10 @@
         public void Spawn(string name, Sprites sprite, string color, string token, string userColor = null)
         {
             if (!World.CanSpawn)
+            {
+                SendMessage(World.CanSpawnReason);
                 return;
+            }
 
             UserColor = userColor;
 
@@ -390,7 +393,7 @@
             }
         }
 
-        public void SendMessage(string message, string type = "announce", int pointsDelta = 0, object extraData = null)
+        public void SendMessage(string message, string type = "message", int pointsDelta = 0, object extraData = null)
         {
             this.Messages.Add(new PlayerMessage
             {

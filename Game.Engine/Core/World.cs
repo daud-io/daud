@@ -64,6 +64,8 @@
         public uint GenerateObjectID() { lock (this) return ++LastObjectID; }
 
         public bool CanSpawn { get; set; } = true;
+        public string CanSpawnReason { get; set; }
+
 
         public World(Hook hook, GameConfiguration gameConfiguration)
         {

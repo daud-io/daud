@@ -319,6 +319,13 @@
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = 0;
             hook.PointsMultiplierDeath = 1.0f;
+
+            hook.WorldSizeBasic = 0;
+            hook.WorldSizeDeltaPerPlayer = 800;
+            hook.WorldResizeSpeed = 20;
+            hook.OutOfBoundsDeathLine = 0;
+            hook.OutOfBoundsBorder = 0;
+
             hook.Weight = 20;
 
             hook.Name = "Battle Royale Mode";
@@ -337,6 +344,7 @@
             hook.Name = "Beach World";
             hook.Description = "Come on in, the water's fine";
             hook.Weight = 1000;
+
 
             hook.WorldResizeEnabled = false;
 

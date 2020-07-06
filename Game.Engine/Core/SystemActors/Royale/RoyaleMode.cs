@@ -68,6 +68,7 @@
                 StartingBlock.Destroy();
                 World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
                 World.CanSpawn = true;
+                World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
                 Initialized = false;
             }
         }
@@ -86,7 +87,7 @@
 
         public void StartCountdown()
         {
-            InRoomAnnouncement("Starting countdown (you need to count... go on, can't do everything for you)");
+            InRoomAnnouncement($"Game Starting in {World.Hook.RoyaleCountdownDurationSeconds} seconds");
             GameState = GameStateEnum.Countdown;
 
             // moving it out of the world
@@ -97,7 +98,7 @@
 
         private void StartGame()
         {
-            InRoomAnnouncement("Starting Game");
+            InRoomAnnouncement("3.. 2.. 1.. GO!!");
             GameState = GameStateEnum.Running;
 
             StartingArenaSize = World.Hook.WorldSize;
@@ -111,10 +112,10 @@
             var playerCount = players
                 .Where(p => p.IsAlive).Count();
 
-            if (playerCount == 1)
+            if (playerCount == 10)
             {
                 // someone won
-                InRoomAnnouncement($"GAME OVER!: {players.First().Name} wins!");
+                InRoomAnnouncement($"GAME OVER!: {players.First(p => p.IsAlive).Name} wins!");
                 GameOver();
             }
             else if (playerCount == 0)
@@ -130,15 +131,13 @@
             GameState = GameStateEnum.Waiting;
             GameRestartTime = (uint)(World.Time + RestartDelayMS);
             World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
-            World.Hook.WorldResizeSpeed = 4;
+            World.Hook.WorldResizeSpeed = World.Hook.WorldResizeSpeed;
         }
-
-
 
         private void InRoomAnnouncement(string message)
         {
             foreach (var player in Player.GetWorldPlayers(World))
-                player.SendMessage(message);
+                player.SendMessage(message, "announce");
         }
 
         protected override void CycleThink()
