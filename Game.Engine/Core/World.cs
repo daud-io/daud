@@ -5,6 +5,7 @@
     using Game.Engine.Core.Scoring;
     using Game.Engine.Core.SystemActors;
     using Game.Engine.Core.SystemActors.CTF;
+    using Game.Engine.Core.SystemActors.Royale;
     using Game.Engine.Networking;
     using RBush;
     using System;
@@ -62,6 +63,8 @@
         private uint LastObjectID = 0;
         public uint GenerateObjectID() { lock (this) return ++LastObjectID; }
 
+        public bool CanSpawn { get; set; } = true;
+
         public World(Hook hook, GameConfiguration gameConfiguration)
         {
             this.GameConfiguration = gameConfiguration;
@@ -113,6 +116,7 @@
             InitializeSystemActor<MapActor>();
             InitializeSystemActor<TeamColors>();
             InitializeSystemActor<RoomReset>();
+            InitializeSystemActor<RoyaleMode>();
         }
 
         public T GetActor<T>()

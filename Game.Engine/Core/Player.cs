@@ -301,6 +301,9 @@
 
         public void Spawn(string name, Sprites sprite, string color, string token, string userColor = null)
         {
+            if (!World.CanSpawn)
+                return;
+
             UserColor = userColor;
 
             // sanitize the name

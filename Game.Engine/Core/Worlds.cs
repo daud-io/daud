@@ -25,7 +25,8 @@
                 AddWorld("ctf", WorldCTF());
                 AddWorld("robo", RoboTrainer());
                 AddWorld("sharks", WorldSharks());
-                AddWorld("sumo", WorldSumo());
+                //AddWorld("sumo", WorldSumo());
+                AddWorld("royale", WorldRoyale());
             }
             /*
             AddWorld("sharks", WorldSharks());
@@ -305,6 +306,24 @@
             hook.Weight = 100;
 
             hook.WorldResizeEnabled = false;
+
+            return new World(hook, GameConfiguration);
+        }
+
+        private static World WorldRoyale()
+        {
+            var hook = Hook.Default;
+            hook.BotBase = 0;
+            hook.RoyaleMode = true;
+            hook.PointsPerKillFleet = 1000;
+            hook.PointsPerKillShip = 0;
+            hook.PointsPerUniverseDeath = 0;
+            hook.PointsMultiplierDeath = 1.0f;
+            hook.Weight = 20;
+
+            hook.Name = "Battle Royale Mode";
+            hook.Description = "Some stuff happens here";
+            hook.Instructions = @"<p>Try not to die</p>";
 
             return new World(hook, GameConfiguration);
         }

@@ -150,7 +150,11 @@
 
                     LeaderboardRefresh = 750,
 
-                    MaxNameLength = 17
+                    MaxNameLength = 17,
+
+
+                    RoyaleMode = false,
+                    RoyaleCountdownDurationSeconds = 15
                 };
             }
         }
@@ -232,6 +236,7 @@
         public int ObstacleBorderBuffer { get; set; }
 
         public bool TeamMode { get; set; }
+        public bool RoyaleMode { get; set; }
         public bool CTFMode { get; set; }
         public float CTFCarryBurden { get; set; }
         public int CTFSpawnDistance { get; set; }
@@ -333,6 +338,7 @@
         public uint ExplosionTime { get; set; }
         public int AbandonBuffer { get; set; }
         public int EarnedShipDelay { get; set; }
+        public int RoyaleCountdownDurationSeconds { get; set; }
 
         public Hook Clone()
         {
