@@ -16,6 +16,7 @@
         private uint CountdownUntil = 0;
         private int RestartDelayMS = 10000;
         private int OriginalWorldsizeDeltaPerPlayer = 0;
+        private int OriginalWorldResizeSpeed = 0;
 
         private GameStateEnum GameState = GameStateEnum.Prestart;
         enum GameStateEnum
@@ -48,6 +49,7 @@
             {
                 // setup
                 OriginalWorldsizeDeltaPerPlayer = World.Hook.WorldSizeDeltaPerPlayer;
+                OriginalWorldResizeSpeed = World.Hook.WorldResizeSpeed;
                 World.Hook.WorldMinPlayersToResize = 0;
                 World.Hook.WorldResizeEnabled = true;
 
@@ -104,7 +106,7 @@
             World.CanSpawn = false;
             World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
             World.Hook.WorldSizeDeltaPerPlayer = 0;
-            World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
+            World.Hook.WorldResizeSpeed = OriginalWorldResizeSpeed;
         }
 
         private void StepGame(List<Player> players)
@@ -121,13 +123,13 @@
             else if (playerCount == 0)
             {
                 // everyone died
+                InRoomAnnouncement($"GAME OVER! Everyone Loses!");
                 GameOver();
             }
         }
 
         private void GameOver()
         {
-            InRoomAnnouncement("Game Over");
             GameState = GameStateEnum.Waiting;
             GameRestartTime = (uint)(World.Time + RestartDelayMS);
             World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;

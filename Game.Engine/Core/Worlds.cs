@@ -319,12 +319,10 @@
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = 0;
             hook.PointsMultiplierDeath = 1.0f;
-
+            
             hook.WorldSizeBasic = 0;
-            hook.WorldSizeDeltaPerPlayer = 800;
-            hook.WorldResizeSpeed = 20;
-            hook.OutOfBoundsDeathLine = 50;
-            hook.OutOfBoundsBorder = 0;
+            hook.WorldSizeDeltaPerPlayer = 1600;
+            hook.WorldResizeSpeed = 50;
 
             hook.Weight = 20;
 

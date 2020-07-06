@@ -154,7 +154,7 @@
 
 
                     RoyaleMode = false,
-                    RoyaleCountdownDurationSeconds = 10,
+                    RoyaleCountdownDurationSeconds = 5,
                     RoyaleResizeSpeed = 4
                 };
             }
