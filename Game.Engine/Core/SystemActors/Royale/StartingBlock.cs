@@ -27,7 +27,8 @@
 
         bool ICollide.IsCollision(Body projectedBody)
         {
-            if (projectedBody is ShipWeaponBullet)
+            if (projectedBody is ShipWeaponBullet
+                && ParentGame.World.AdvertisedPlayerCount > 1)
                 return true;
 
             return false;

@@ -115,7 +115,7 @@
             if (playerCount == 1)
             {
                 // someone won
-                InRoomAnnouncement($"GAME OVER!: {players.First(p => p.IsAlive).Name} wins!");
+                InRoomAnnouncement($"GAME OVER!: {players?.FirstOrDefault(p => p.IsAlive)?.Name} wins!");
                 GameOver();
             }
             else if (playerCount == 0)
@@ -137,7 +137,7 @@
         private void InRoomAnnouncement(string message)
         {
             foreach (var player in Player.GetWorldPlayers(World))
-                player.SendMessage(message, "announce");
+                player.SendMessage(message, type: "announce");
         }
 
         protected override void CycleThink()
