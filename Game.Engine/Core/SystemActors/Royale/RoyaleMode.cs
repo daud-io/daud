@@ -103,7 +103,7 @@
             StartingArenaSize = World.Hook.WorldSize;
             World.CanSpawn = false;
             World.Hook.WorldSizeDeltaPerPlayer = 0;
-            World.Hook.WorldResizeSpeed = 1;
+            World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
         }
 
         private void StepGame(List<Player> players)
@@ -114,7 +114,8 @@
             if (playerCount == 1)
             {
                 // someone won
-                //GameOver();
+                InRoomAnnouncement($"GAME OVER!: {players.First().Name} wins!");
+                GameOver();
             }
             else if (playerCount == 0)
             {

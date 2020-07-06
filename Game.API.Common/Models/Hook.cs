@@ -154,7 +154,8 @@
 
 
                     RoyaleMode = false,
-                    RoyaleCountdownDurationSeconds = 15
+                    RoyaleCountdownDurationSeconds = 15,
+                    RoyaleResizeSpeed = 3
                 };
             }
         }
@@ -339,6 +340,7 @@
         public int AbandonBuffer { get; set; }
         public int EarnedShipDelay { get; set; }
         public int RoyaleCountdownDurationSeconds { get; set; }
+        public int RoyaleResizeSpeed { get; set; }
 
         public Hook Clone()
         {
