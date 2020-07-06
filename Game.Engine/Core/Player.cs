@@ -303,7 +303,8 @@
         {
             if (!World.CanSpawn)
             {
-                SendMessage(World.CanSpawnReason);
+                if (World.CanSpawnReason != null)
+                    SendMessage(World.CanSpawnReason);
                 return;
             }
 
@@ -395,13 +396,14 @@
 
         public void SendMessage(string message, string type = "message", int pointsDelta = 0, object extraData = null)
         {
-            this.Messages.Add(new PlayerMessage
-            {
-                Type = type,
-                Message = message,
-                ExtraData = extraData,
-                PointsDelta = pointsDelta
-            });
+            if (message != null && this.Messages != null)
+                this.Messages.Add(new PlayerMessage
+                {
+                    Type = type,
+                    Message = message,
+                    ExtraData = extraData,
+                    PointsDelta = pointsDelta
+                });
         }
 
         public List<PlayerMessage> GetMessages()

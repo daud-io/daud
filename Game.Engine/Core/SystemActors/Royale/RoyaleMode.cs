@@ -68,7 +68,6 @@
                 StartingBlock.Destroy();
                 World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
                 World.CanSpawn = true;
-                World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
                 Initialized = false;
             }
         }
@@ -103,6 +102,7 @@
 
             StartingArenaSize = World.Hook.WorldSize;
             World.CanSpawn = false;
+            World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
             World.Hook.WorldSizeDeltaPerPlayer = 0;
             World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
         }
