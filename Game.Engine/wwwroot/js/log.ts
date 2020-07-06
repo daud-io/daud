@@ -28,7 +28,7 @@ export class Log {
             else out += "<td></td>";
 
             if (slot.entry.extraData && slot.entry.extraData.stats && slot.entry.extraData.stats.deaths > 0)
-                out += `<td><b style="color:gray">k/d: ${slot.entry.extraData.stats.kills / slot.entry.extraData.stats.deaths}</b></td>`;
+                out += `<td><b style="color:gray">k/d: ${(slot.entry.extraData.stats.kills / slot.entry.extraData.stats.deaths).toFixed(2)}</b></td>`;
             else out += "<td></td>";
 
             out += "</tr>";
