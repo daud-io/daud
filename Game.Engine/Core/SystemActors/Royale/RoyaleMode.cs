@@ -107,6 +107,7 @@
             World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
             World.Hook.WorldSizeDeltaPerPlayer = 0;
             World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
+            
         }
 
         private void StepGame(List<Player> players)
@@ -179,17 +180,11 @@
                 .Where(p => p.IsAlive).Count();
 
             if (playerCount == 0)
-            {
                 if (GameEmptySince == 0)
                     GameEmptySince = World.Time;
-            }
 
             if (playerCount > 0)
-            {
-
                 GameEmptySince = 0;
-            }
-
         }
     }
 }
