@@ -30,21 +30,15 @@
 
         bool ICollide.IsCollision(Body projectedBody)
         {
-            if (projectedBody is ShipWeaponBullet
-                && ParentGame.World.AdvertisedPlayerCount > 1)
-                return true;
-
-            if (projectedBody is Ship ship)
+            if (projectedBody is ShipWeaponBullet bullet)
             {
-                var player = ship?.Fleet?.Owner;
+                if (ParentGame.World.AdvertisedPlayerCount > 1)
+                    return true;
 
-                var closeEnough = Vector2.Distance(projectedBody.Position, this.Position)
-                    < (projectedBody.Size + this.Size);
+                var player = bullet?.OwnedByFleet?.Owner;
 
-                if (player != null && closeEnough)
+                if (player != null)
                     player.SendMessage("Wait for at least 2 players, then shoot this thing to start.");
-
-                return closeEnough;
             }
 
             return false;
