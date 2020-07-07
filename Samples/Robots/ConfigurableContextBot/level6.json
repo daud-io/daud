@@ -1,5 +1,5 @@
 {
-  "Name": "level6-",
+  "Name": "level6",
   "Color": "red",
   "Sprite": "ship_red",
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
