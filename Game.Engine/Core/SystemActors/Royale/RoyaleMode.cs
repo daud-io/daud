@@ -65,7 +65,6 @@
                 StartingBlock.Init(World);
                 ResetGame();
                 Initialized = true;
-
             }
 
             if (!World.Hook.RoyaleMode && Initialized)
