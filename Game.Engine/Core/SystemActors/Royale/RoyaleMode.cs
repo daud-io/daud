@@ -106,7 +106,7 @@
             StartingArenaSize = World.Hook.WorldSize;
             World.CanSpawn = false;
             World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
-            World.Hook.WorldSizeDeltaPerPlayer = 0;
+            World.Hook.WorldSizeDeltaPerPlayer = -2000;
             World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
             
         }
@@ -115,6 +115,11 @@
         {
             var livePlayers = players
                 .Where(p => p.IsAlive);
+
+            if (World.Hook.WorldSize < World.Hook.RoyaleDoubleStep1)
+                World.Hook.RoyaleResizeSpeed /= 2;
+            if (World.Hook.WorldSize < World.Hook.RoyaleDoubleStep2)
+                World.Hook.RoyaleResizeSpeed /= 4;
 
             var playerCount = livePlayers.Count();
 

@@ -155,7 +155,9 @@
 
                     RoyaleMode = false,
                     RoyaleCountdownDurationSeconds = 5,
-                    RoyaleResizeSpeed = 4
+                    RoyaleResizeSpeed = 4,
+                    RoyaleDoubleStep1 = 4200,
+                    RoyaleDoubleStep2 = 1500
                 };
             }
         }
@@ -341,6 +343,8 @@
         public int EarnedShipDelay { get; set; }
         public int RoyaleCountdownDurationSeconds { get; set; }
         public int RoyaleResizeSpeed { get; set; }
+        public int RoyaleDoubleStep1 { get; set; }
+        public int RoyaleDoubleStep2 { get; set; }
 
         public Hook Clone()
         {
