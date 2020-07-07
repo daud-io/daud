@@ -17,6 +17,7 @@
         private int RestartDelayMS = 10000;
         private int OriginalWorldsizeDeltaPerPlayer = 0;
         private int OriginalWorldResizeSpeed = 0;
+        private double OriginalFishesMultiplier = 0;
 
         private GameStateEnum GameState = GameStateEnum.Prestart;
         enum GameStateEnum
@@ -50,12 +51,13 @@
                 // setup
                 OriginalWorldsizeDeltaPerPlayer = World.Hook.WorldSizeDeltaPerPlayer;
                 OriginalWorldResizeSpeed = World.Hook.WorldResizeSpeed;
+                OriginalFishesMultiplier = World.Hook.FishesMultiplier;
                 World.Hook.WorldMinPlayersToResize = 0;
                 World.Hook.WorldResizeEnabled = true;
 
                 World.Hook.PointsPerKillFleet = 0;
                 World.Hook.PointsPerKillShip = 0;
-                World.Hook.PointsPerKillFleetPerStep = 0;
+                World.Hook.PointsPerKillFleetStep = 0;
                 World.Hook.PointsPerUniverseDeath = 0;
                 World.Hook.PointsMultiplierDeath = 1.0f;
 
@@ -84,6 +86,7 @@
             GameRestartTime = 0;
             GameState = GameStateEnum.Prestart;
             World.CanSpawn = true;
+            World.Hook.FishesMultiplier = OriginalFishesMultiplier;
             StartingBlock.Position = Vector2.Zero;
         }
 
@@ -106,7 +109,7 @@
             StartingArenaSize = World.Hook.WorldSize;
             World.CanSpawn = false;
             World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
-            World.Hook.WorldSizeDeltaPerPlayer = -2000;
+            World.Hook.WorldSizeDeltaPerPlayer = 0;
             World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
             
         }
@@ -117,9 +120,16 @@
                 .Where(p => p.IsAlive);
 
             if (World.Hook.WorldSize < World.Hook.RoyaleDoubleStep1)
-                World.Hook.RoyaleResizeSpeed /= 2;
+            {
+                World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed / 2;
+                World.Hook.FishesMultiplier = OriginalFishesMultiplier / 2;
+            }
             if (World.Hook.WorldSize < World.Hook.RoyaleDoubleStep2)
-                World.Hook.RoyaleResizeSpeed /= 4;
+            {
+                World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed / 4;
+                World.Hook.FishesMultiplier = OriginalFishesMultiplier / 4;
+            }
+
 
             var playerCount = livePlayers.Count();
 
