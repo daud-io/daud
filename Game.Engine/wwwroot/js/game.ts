@@ -190,6 +190,7 @@ connection.onView = newView => {
             document.body.classList.remove("alive");
             document.body.classList.add("spectating");
             document.body.classList.add("dead");
+            isSpectating = true;
         }, 500);
 
         Events.Death((gameTime - aliveSince) / 1000);
