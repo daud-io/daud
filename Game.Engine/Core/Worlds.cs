@@ -315,10 +315,6 @@
             var hook = Hook.Default;
             hook.BotBase = 0;
             hook.RoyaleMode = true;
-            hook.PointsPerKillFleet = 1000;
-            hook.PointsPerKillShip = 0;
-            hook.PointsPerUniverseDeath = 0;
-            hook.PointsMultiplierDeath = 1.0f;
             
             hook.WorldSizeBasic = 0;
             hook.WorldSizeDeltaPerPlayer = 1600;

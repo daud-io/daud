@@ -53,6 +53,11 @@
                 World.Hook.WorldMinPlayersToResize = 0;
                 World.Hook.WorldResizeEnabled = true;
 
+                World.Hook.PointsPerKillFleet = 0;
+                World.Hook.PointsPerKillShip = 0;
+                World.Hook.PointsPerUniverseDeath = 0;
+                World.Hook.PointsMultiplierDeath = 1.0f;
+
                 StartingBlock = new StartingBlock
                 {
                     ParentGame = this
@@ -80,10 +85,6 @@
             GameState = GameStateEnum.Prestart;
             World.CanSpawn = true;
             StartingBlock.Position = Vector2.Zero;
-
-            var players = Player.GetWorldPlayers(World).ToList();
-            foreach (var player in players)
-                player.Score = 0;
         }
 
         public void StartCountdown()
@@ -111,13 +112,19 @@
 
         private void StepGame(List<Player> players)
         {
-            var playerCount = players
-                .Where(p => p.IsAlive).Count();
+            var livePlayers = players
+                .Where(p => p.IsAlive);
+
+            var playerCount = livePlayers.Count();
 
             if (playerCount == 1)
             {
-                // someone won
-                InRoomAnnouncement($"GAME OVER!: {players?.FirstOrDefault(p => p.IsAlive)?.Name} wins!");
+                var winner = livePlayers.FirstOrDefault();
+
+                InRoomAnnouncement($"GAME OVER!: {winner?.Name} wins!");
+                if (winner != null)
+                    winner.Score++;
+
                 GameOver();
             }
             else if (playerCount == 0)
