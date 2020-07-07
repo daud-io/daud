@@ -26,14 +26,14 @@ const text = `/*export const BLEND_MODES = {
 
 bg {
   file: "bg";
-  scale: 5;
+  size: 4;
 }
 
 
 // fish
 fish {
   file: "fish";
-  scale: 0.002;
+  size: 2;
 }
 
 boom {
@@ -53,7 +53,7 @@ ship_red,
 ship_yellow,
 ship_secret,
 ship_zed {
-  scale: 0.0025;
+  size: 2.5;
 }
 // daudelins
 ship0 {
@@ -103,7 +103,7 @@ bullet_orange,
 bullet_pink,
 bullet_red,
 bullet_yellow {
-  scale: 0.015625;
+  size: 5;
 }
 bullet {
   file: "bullet";
@@ -132,15 +132,15 @@ bullet_yellow {
 
 obstacle {
   file: "obstacle";
-  scale: 0.0028;
+  size: 2.1;
 }
 seeker {
   file: "seeker";
-  scale: 0.0025;
+  size: 0.64;
 }
 seeker_pickup {
   file: "seeker_pickup";
-  scale: 0.02;
+  size: 1;
 }
 
 shield,
