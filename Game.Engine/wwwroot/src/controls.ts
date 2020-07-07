@@ -2,30 +2,17 @@
 import nipplejs from "nipplejs";
 import { Settings } from "./settings";
 import { Ship } from "./models/ship";
-// import "emoji-mart/css/emoji-mart.css";
-import { Picker } from "emoji-mart";
-import React from "react";
-import ReactDOM from "react-dom";
+import { Picker } from "emoji-picker-element";
 
 const emojiContainer = document.getElementById("emoji-container");
-ReactDOM.render(
-    React.createElement(
-        Picker,
-        {
-            native: true,
-            title: "",
-            emoji: "rocket",
-            onClick: (e) => {
-                Cookies.set("emoji", e.native);
-                emojiTrigger.innerText = e.native;
-                Controls.emoji = e.native;
-                emojiContainer.classList.remove("open");
-            },
-        },
-        null
-    ),
-    emojiContainer
-);
+const picker = new Picker();
+emojiContainer.appendChild(picker);
+picker.addEventListener("emoji-click", (e) => {
+    Cookies.set("emoji", e.detail.unicode);
+    emojiTrigger.innerText = e.detail.unicode;
+    Controls.emoji = e.detail.unicode;
+    emojiContainer.classList.remove("open");
+});
 
 const secretShips = ["ship_secret", "ship_zed"];
 

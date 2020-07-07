@@ -13,7 +13,6 @@
     <meta charset="utf-8" />
     <title>Daud.io</title>
     <link rel="stylesheet" type="text/css" href="/game.css" />
-    <link rel="stylesheet" type="text/css" href="/emoji-mart.css" />
     <link rel="shortcut icon" type="image/png" href="favicon.ico" />
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Exo+2&display=swap">
@@ -32,8 +31,7 @@
         <div id="gameArea" class="noselect aspectratio">
             <canvas id="gameCanvas" style="width: 100%;" width="1000" height="500"></canvas>
 
-            <div id="plusScoreContainer">
-            </div>
+            <div id="plusScoreContainer"></div>
 
             <div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
             <small id="minimapTip">Press M to toggle the minimap</small>
@@ -119,23 +117,16 @@
         </div>
         <div class="spawnscreen">
             <div class="controls">
+                <img id="logo" src="img/header.png" draggable="false">
+                <div id="shipSelectorSwitch"></div>
+                <button id="emoji-trigger" class="button1">👋</button>
+                <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
+                <div id="emoji-container"></div>
                 <div>
-                    <div>
-                        <img id="logo" src="img/header.png" draggable="false">
-                    </div>
-                    <img id="controls_instructions" src="img/controls.png">
-
-                    <div id="shipSelectorSwitch">
-                    </div>
-                    <button id="emoji-trigger" class="button1">👋</button>
-                    <input placeholder="nickname" type="text" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" /><br />
-                    <div id="emoji-container"></div>
-                    <div id="launch-container">
-                        <input type="button" id="spawn" class="button1" value="Launch as guest!">
-                        <input type="button" id="dauth" class="button1" value="Login with Discord">
-                    </div>
-                    <input type="button" id="arenas" class="button1" value="Game Modes" />
+                    <button id="spawn" class="button1">Launch as guest!</button>
+                    <button id="dauth" class="button1">Login with Discord</button>
                 </div>
+                <button id="arenas" class="button1">Game Modes</button>
             </div>
             <div id="worlds" class="closed">
                 <div id="topbar">
@@ -146,58 +137,20 @@
                     <table id="worldList"></table>
                 </div>
             </div>
-
+            <img id="controls_instructions" src="img/controls.png">
             <div id="links">
                 <a href="https://discord.gg/5ak5FsU" target="_blank">
-                    <div class="link">
-                        <div class="linkLogo">
-                            <img src="img/discord-icon.png" />
-                        </div>
-                        <div class="linkText">
-                            Chat
-                        </div>
-                    </div>
+                    <img src="img/discord-icon.png" />
                 </a>
                 <a href="https://new.reddit.com/r/daudio/" target="_blank">
-                    <div class="link">
-                        <div class="linkLogo">
-                            <img src="img/reddit-icon.png" />
-                        </div>
-                        <div class="linkText">
-                            Forum
-                        </div>
-                    </div>
+                    <img src="img/reddit-icon.png" />
                 </a>
-                <div id="linksDropdown">
-                    <div class="link" style="margin-top:6px">
-                        <div class="linkLogo">
-                            <img src="https://ams-nw.com/wp-content/plugins/bb-plugin/img/svg/play.svg" style="width:25px;height:25px" />
-                        </div>
-                        <div class="linkText">
-                            More games
-                        </div>
-                    </div>
-                    <a href="http://iogames.space" target="_blank">
-                        <div class="link">
-                            <div class="linkLogo">
-                                <img src="img/iogames-icon.png" />
-                            </div>
-                            <div class="linkText">
-                                Iogames.space
-                            </div>
-                        </div>
-                    </a>
-                    <a href="http://titotu.io/" target="_blank">
-                        <div class="link">
-                            <div class="linkLogo">
-                                <img src="img/titotu-icon.png" />
-                            </div>
-                            <div class="linkText">
-                                Titotu
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                <a href="http://iogames.space" target="_blank">
+                    <img src="img/iogames-icon.png" />
+                </a>
+                <a href="http://titotu.io/" target="_blank">
+                    <img src="img/titotu-icon.png" />
+                </a>
             </div>
 
             <div id="gear" class="closed">
@@ -398,52 +351,43 @@
                     </button>
                 </div>
             </div>
-            <div class="social">
-                <div id="changelog" data-version='2'>
-                    <h4>Changelog</h4>
-                    <table>
-                        <tr>
-                            <td class="date">
-                                2/23/2019
-                            </td>
-                            <td>
-                                Build a bot: Robot API, sample code,  
-                                <a href="https://new.reddit.com/r/daudio/comments/au1259/build_a_bot_robot_api_sample_code_killing_of/">
-                                    killing of meatbags
-                                </a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="date">
-                                1/17/2019
-                            </td>
-                            <td>integrated pixi.js renderer. mini map.</td>
-                        </tr>
-                        <tr>
-                            <td class="date">
-                                12/05/2018
-                            </td>
-                            <td>Physics and rockets updates, see discord for details.</td>
-                        </tr>
-                    </table>
-                </div>
+            <div id="changelog" data-version='2'>
+                <h4>Changelog</h4>
+                <table>
+                    <tr>
+                        <td class="date">
+                            2/23/2019
+                        </td>
+                        <td>
+                            Build a bot: Robot API, sample code,  
+                            <a href="https://new.reddit.com/r/daudio/comments/au1259/build_a_bot_robot_api_sample_code_killing_of/">
+                                killing of meatbags
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="date">
+                            1/17/2019
+                        </td>
+                        <td>integrated pixi.js renderer. mini map.</td>
+                    </tr>
+                    <tr>
+                        <td class="date">
+                            12/05/2018
+                        </td>
+                        <td>Physics and rockets updates, see discord for details.</td>
+                    </tr>
+                </table>
+            </div>
 
-                <div id="spectate_container">
-                    <button id="settings" class="button1">
-                        <i class="fas fa-cog"></i> Settings
-                    </button>
-                    <br>
-                    <button id="spectate" class="button1">
-                        <i class="fas fa-eye"></i> Watch
-                    </button>
-                </div>
-
-                <div id="socialMediaContainer">
-                    <a href="https://discord.gg/5ak5FsU" target="_blank"><img id="discord" src="img/discord.png" /></a>
-                    <a href="https://reddit.com/r/daudio" target="_blank"><img id="reddit" src="img/reddit.png" /></a>
-                    <a href="https://iogames.space" target="_blank"><img id="iogamesspace" src="img/linkback.iogames.space.png" /></a>
-                    <a href="https://titotu.io" target="_blank"><img id="titotu" src="img/linkback.titotu.io.png" /></a>
-                </div>
+            <div id="spectate_container">
+                <button id="settings" class="button1">
+                    <i class="fas fa-cog"></i> Settings
+                </button>
+                <br>
+                <button id="spectate" class="button1">
+                    <i class="fas fa-eye"></i> Watch
+                </button>
             </div>
         </div>
     </div>

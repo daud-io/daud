@@ -70,9 +70,8 @@ export class RenderedObject {
     static getImageFromTextureDefinition(textureDefinition) {
         const img = new Image();
         if (textureDefinition.url) img.src = textureDefinition.url;
-        else {
-            const src = `/img/${textureDefinition.file}.png`;
-            if (src) img.src = src;
+        else if (textureDefinition.file) {
+            img.src = `/img/${textureDefinition.file}.png`;
         }
 
         return img;
@@ -83,8 +82,8 @@ export class RenderedObject {
         return RenderedObject.getImageFromTextureDefinition(textureDefinition);
     }
 
-    static loadTexture(textureDefinition, textureName) {
-        let textures = textureCache[textureName];
+    static loadTexture(textureDefinition, textureName): PIXI.Texture[] {
+        let textures: PIXI.Texture[] = textureCache[textureName];
 
         if (!textures) {
             textures = [];

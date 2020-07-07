@@ -63,8 +63,7 @@ function updateList(response) {
     }
 }
 
-const controls = document.querySelector(".controls");
-const social = document.querySelector(".social");
+const spawnscreen = document.querySelectorAll(".spawnscreen > *:not(#worlds)");
 let showing = false;
 let firstLoad = true;
 let hostName = window.location.hash;
@@ -163,8 +162,9 @@ function refreshList(autoJoinWorld) {
 
 function hide() {
     worlds.classList.add("closed");
-    controls.classList.remove("blur");
-    social.classList.remove("blur");
+    spawnscreen.forEach((el) => {
+        el.classList.remove("blur");
+    });
     document.body.classList.remove("lobby");
     showing = false;
 
@@ -172,8 +172,9 @@ function hide() {
 }
 
 function show() {
-    controls.classList.add("blur");
-    social.classList.add("blur");
+    spawnscreen.forEach((el) => {
+        el.classList.add("blur");
+    });
     document.body.classList.add("lobby");
     showing = true;
 }

@@ -69,10 +69,13 @@ body {
 }
 
 .spawnscreen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     animation: fadein 2s;
     position: absolute;
     text-align: center;
-    vertical-align: middle;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 45, 0.57);
@@ -104,8 +107,7 @@ body {
 }
 
 #logo {
-    height: 10vw;
-    padding: 5vw;
+    height: 128px;
     image-rendering: pixelated;
     display: block;
     margin: auto;
@@ -113,9 +115,6 @@ body {
 
 #hintbox {
     font-size: 14pt;
-    margin: auto;
-    display: block;
-    width: 50vw;
     text-align: center;
 }
 
@@ -137,7 +136,6 @@ a {
 
 @media only screen and (max-width: 1000px) {
     #changelog,
-    #hintbox,
     #socialMediaContainer,
     #controls_instructions {
         visibility: hidden;
@@ -189,7 +187,9 @@ a {
 #controls_instructions {
     width: 240px;
     position: absolute;
-    left: 0;
+    left: 8px;
+    top: 50%;
+    transform: translate(0, -50%);
 }
 
 .spawnscreen .social {
@@ -246,9 +246,8 @@ a {
 }
 
 .spawnscreen .controls {
-    margin: 3vmin;
-    position: relative;
     z-index: 2;
+    margin-bottom: 64px;
 }
 
 #spectate_container {
@@ -265,9 +264,10 @@ a {
 .spectating #spectatecontrols {
     position: absolute;
     left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 8px;
+    transform: translate(-50%, 0);
     display: block;
+    width: 520px;
 }
 
 .spectate_only #spectatecontrols {
@@ -277,20 +277,18 @@ a {
 .button1 {
     border: 1px solid #9d9d9d;
     border-radius: 5px;
-    color: #9d9d9d;
     background: none;
     padding: 10px;
     margin: 0.5vh 0.5vh;
     font-size: 1rem;
     font-family: var(--font);
     color: white;
-    transition: border 1s, color 1s;
+    transition: border 0.5s;
 }
 
 .button1:hover {
     cursor: pointer;
     border: 1px solid white;
-    color: #fff;
 }
 
 #nick {
@@ -301,14 +299,13 @@ a {
     padding: 5px 0 5px 0;
     font-size: 2rem;
     color: white;
-    margin: 0 0 10px 0;
     transition: border-bottom 1s;
     width: 20rem;
     font-family: var(--font);
 }
 
 #shipSelectorSwitch {
-    margin: 0 0 20px 0;
+    margin-bottom: 8px;
 }
 
 #shipSelectorSwitch .circle {
@@ -975,7 +972,7 @@ progress[value="255"]::-webkit-progress-value {
 
 #links {
     position: absolute;
-    right: 0;
+    right: 8px;
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;
@@ -993,63 +990,19 @@ progress[value="255"]::-webkit-progress-value {
     }
 }
 
-#links .link {
-    width: 170px;
-    height: 40px;
-    border: 2px solid white;
-    border-right: none;
-    border-top-left-radius: 24px;
-    border-bottom-left-radius: 24px;
-    padding: 2px 2px 2px 2px;
-    position: relative;
-    margin: 1px 0 1px 0;
-    opacity: 0.8;
-    transition: opacity 0.6s;
-}
-
-#links .link:hover {
-    opacity: 1;
-}
-
-#links .linkLogo {
-    background-color: white;
-    border-radius: 50%;
+#links a {
+    display: block;
     width: 40px;
     height: 40px;
+    padding: 2px 2px 2px 2px;
     position: relative;
-    transition: transform 0.6s;
 }
 
-#links .link:hover .linkLogo {
-    transform: rotate(360deg);
-}
-
-#linksDropdown:hover > .link > .linkLogo {
-    transform: rotate(90deg);
-}
-
-#links .linkLogo img {
+#links img {
+    background-color: white;
+    border-radius: 8px;
+    width: 40px;
+    height: 40px;
     position: absolute;
-    width: 30px;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#links .linkText {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    text-transform: uppercase;
-}
-
-#linksDropdown {
-    height: 54px;
-    overflow: hidden;
-    transition: height 1s;
-}
-
-#linksDropdown:hover {
-    height: 155px;
+    transform: translate(-50%, 0);
 }

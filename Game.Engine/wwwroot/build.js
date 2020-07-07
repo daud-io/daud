@@ -8,7 +8,7 @@ function runBuild() {
         stdio: "inherit",
         entryPoints: ["./src/game.ts"],
         outfile: "dist/main.js",
-        sourcemap: "external",
+        sourcemap: true,
         bundle: true,
         minifyWhitespace: prod,
         minifySyntax: prod,
@@ -22,7 +22,7 @@ function copy() {
     if (!fs.existsSync("dist")) fs.mkdirSync("dist");
     fs.copy("public", "dist", (err) => {
         if (err) throw err;
-        console.log("Wrote to dist/index.html");
+        console.log("Copied public to dist");
     });
 }
 
@@ -33,4 +33,3 @@ if (!prod) {
 
 runBuild();
 copy();
-fs.copyFileSync("node_modules/emoji-mart/css/emoji-mart.css", "dist/emoji-mart.css");

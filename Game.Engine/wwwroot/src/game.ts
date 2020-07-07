@@ -43,8 +43,7 @@ const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR; // PIXI.SCALE_MODES.NEAREST
-PIXI.settings.RESOLUTION = window.devicePixelRatio || 1;
-const app = new PIXI.Application({ view: canvas, transparent: true });
+const app = new PIXI.Application({ view: canvas, transparent: true, resolution: window.devicePixelRatio || 1 });
 app.stage.sortableChildren = true;
 
 const container = new CustomContainer();
