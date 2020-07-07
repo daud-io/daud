@@ -320,7 +320,7 @@
             hook.WorldSizeDeltaPerPlayer = 1600;
             hook.WorldResizeSpeed = 50;
 
-            hook.Weight = 20;
+            hook.Weight = 11;
 
             hook.Name = "Battle Royale Mode";
             hook.Description = "Some stuff happens here";
