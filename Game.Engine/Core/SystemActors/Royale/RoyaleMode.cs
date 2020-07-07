@@ -55,6 +55,7 @@
 
                 World.Hook.PointsPerKillFleet = 0;
                 World.Hook.PointsPerKillShip = 0;
+                World.Hook.PointsPerKillFleetPerStep = 0;
                 World.Hook.PointsPerUniverseDeath = 0;
                 World.Hook.PointsMultiplierDeath = 1.0f;
 
