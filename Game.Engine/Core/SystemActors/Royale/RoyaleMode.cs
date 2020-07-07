@@ -106,7 +106,7 @@
             World.CanSpawn = false;
             World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
             World.Hook.WorldSizeDeltaPerPlayer = 0;
-            World.Hook.WorldResizeSpeed = OriginalWorldResizeSpeed;
+            World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
         }
 
         private void StepGame(List<Player> players)
@@ -133,7 +133,7 @@
             GameState = GameStateEnum.Waiting;
             GameRestartTime = (uint)(World.Time + RestartDelayMS);
             World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
-            World.Hook.WorldResizeSpeed = World.Hook.WorldResizeSpeed;
+            World.Hook.WorldResizeSpeed = OriginalWorldResizeSpeed;
         }
 
         private void InRoomAnnouncement(string message)
