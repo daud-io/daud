@@ -93,7 +93,7 @@ export class Log {
 }
 
 function deathStats(lastData) {
-    document.getElementById("deathScreen").style.visibility = "visible";
+    document.getElementById("deathScreen").style.display = "block";
     document.getElementById("deathScreenScore").innerHTML = lastData.extraData.score;
     document.getElementById("deathScreenKills").innerHTML = lastData.extraData.kills;
     const gameTimeInSeconds = Math.round(lastData.extraData.gameTime / 1000),

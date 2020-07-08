@@ -83,10 +83,7 @@ body {
 }
 
 #deathScreen {
-    visibility: hidden;
-    background: rgba(0, 0, 50, 0.8);
-    border-radius: 10px;
-    padding: 20px;
+    display: none;
 }
 
 #deathScreen table {
@@ -267,7 +264,10 @@ a {
     bottom: 8px;
     transform: translate(-50%, 0);
     display: block;
-    width: 520px;
+    max-width: 520px;
+    background: rgba(0, 0, 50, 0.8);
+    border-radius: 10px;
+    padding: 20px;
 }
 
 .spectate_only #spectatecontrols {
