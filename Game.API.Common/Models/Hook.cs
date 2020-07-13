@@ -1,6 +1,8 @@
 ﻿namespace Game.API.Common.Models
 {
     using Game.API.Common;
+    using System;
+    using System.Collections.Generic;
     using System.Numerics;
 
     public class Hook
@@ -350,6 +352,277 @@
         public Hook Clone()
         {
             return this.MemberwiseClone() as Hook;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Hook hook &&
+                   WorldSize == hook.WorldSize &&
+                   WorldResizeEnabled == hook.WorldResizeEnabled &&
+                   WorldResizeSpeed == hook.WorldResizeSpeed &&
+                   WorldSizeBasic == hook.WorldSizeBasic &&
+                   WorldSizeDeltaPerPlayer == hook.WorldSizeDeltaPerPlayer &&
+                   WorldMinPlayersToResize == hook.WorldMinPlayersToResize &&
+                   BaseThrustM == hook.BaseThrustM &&
+                   BaseThrustB == hook.BaseThrustB &&
+                   BoostThrust == hook.BoostThrust &&
+                   BoostCooldownTimeM == hook.BoostCooldownTimeM &&
+                   BoostCooldownTimeB == hook.BoostCooldownTimeB &&
+                   BoostDuration == hook.BoostDuration &&
+                   BoostSpeed == hook.BoostSpeed &&
+                   Drag == hook.Drag &&
+                   BoomLife == hook.BoomLife &&
+                   BoomDrag == hook.BoomDrag &&
+                   PointsPerKillShip == hook.PointsPerKillShip &&
+                   PointsPerUniverseDeath == hook.PointsPerUniverseDeath &&
+                   PointsMultiplierDeath == hook.PointsMultiplierDeath &&
+                   PointsPerKillFleet == hook.PointsPerKillFleet &&
+                   PointsPerKillFleetMax == hook.PointsPerKillFleetMax &&
+                   PointsPerKillFleetStep == hook.PointsPerKillFleetStep &&
+                   PointsPerKillFleetPerStep == hook.PointsPerKillFleetPerStep &&
+                   ComboDelay == hook.ComboDelay &&
+                   ComboPointsStep == hook.ComboPointsStep &&
+                   HealthHitCost == hook.HealthHitCost &&
+                   HealthRegenerationPerFrame == hook.HealthRegenerationPerFrame &&
+                   SpawnShipCount == hook.SpawnShipCount &&
+                   ShotCooldownTimeM == hook.ShotCooldownTimeM &&
+                   ShotCooldownTimeB == hook.ShotCooldownTimeB &&
+                   ShotCooldownTimeShark == hook.ShotCooldownTimeShark &&
+                   ShotCooldownTimeBotM == hook.ShotCooldownTimeBotM &&
+                   ShotCooldownTimeBotB == hook.ShotCooldownTimeBotB &&
+                   ShotThrustM == hook.ShotThrustM &&
+                   ShotThrustB == hook.ShotThrustB &&
+                   MaxHealth == hook.MaxHealth &&
+                   MaxHealthBot == hook.MaxHealthBot &&
+                   SeekerThrustMultiplier == hook.SeekerThrustMultiplier &&
+                   PrecisionBulletsNoise == hook.PrecisionBulletsNoise &&
+                   PrecisionBullets == hook.PrecisionBullets &&
+                   PrecisionBulletsMinimumRange == hook.PrecisionBulletsMinimumRange &&
+                   ShieldCannonballLife == hook.ShieldCannonballLife &&
+                   BulletLife == hook.BulletLife &&
+                   SeekerLifeMultiplier == hook.SeekerLifeMultiplier &&
+                   BotBase == hook.BotBase &&
+                   BotPerXPoints == hook.BotPerXPoints &&
+                   Wormholes == hook.Wormholes &&
+                   WormholesDestination == hook.WormholesDestination &&
+                   Obstacles == hook.Obstacles &&
+                   PickupShieldsMultiplier == hook.PickupShieldsMultiplier &&
+                   ObstaclesMultiplier == hook.ObstaclesMultiplier &&
+                   ObstacleMaxMomentum == hook.ObstacleMaxMomentum &&
+                   ObstacleMinSize == hook.ObstacleMinSize &&
+                   ObstacleMaxSize == hook.ObstacleMaxSize &&
+                   ObstacleMaxMomentumWeatherMultiplier == hook.ObstacleMaxMomentumWeatherMultiplier &&
+                   ObstaclesSpawnShieldCannons == hook.ObstaclesSpawnShieldCannons &&
+                   ObstacleBorderBuffer == hook.ObstacleBorderBuffer &&
+                   TeamMode == hook.TeamMode &&
+                   RoyaleMode == hook.RoyaleMode &&
+                   CTFMode == hook.CTFMode &&
+                   CTFCarryBurden == hook.CTFCarryBurden &&
+                   CTFSpawnDistance == hook.CTFSpawnDistance &&
+                   SumoMode == hook.SumoMode &&
+                   SumoRingSize == hook.SumoRingSize &&
+                   LeaderboardRefresh == hook.LeaderboardRefresh &&
+                   Fishes == hook.Fishes &&
+                   FishesMultiplier == hook.FishesMultiplier &&
+                   FishThrust == hook.FishThrust &&
+                   FishFlockAlignment == hook.FishFlockAlignment &&
+                   FishFlockCohesion == hook.FishFlockCohesion &&
+                   FishFlockCohesionMaximumDistance == hook.FishFlockCohesionMaximumDistance &&
+                   FishFlockSeparation == hook.FishFlockSeparation &&
+                   FishFlockSeparationMinimumDistance == hook.FishFlockSeparationMinimumDistance &&
+                   FishFlockWeight == hook.FishFlockWeight &&
+                   FishOOBWeight == hook.FishOOBWeight &&
+                   FishCycle == hook.FishCycle &&
+                   FlockAlignment == hook.FlockAlignment &&
+                   FlockCohesion == hook.FlockCohesion &&
+                   FlockCohesionMaximumDistance == hook.FlockCohesionMaximumDistance &&
+                   FlockSeparation == hook.FlockSeparation &&
+                   FlockSeparationMinimumDistance == hook.FlockSeparationMinimumDistance &&
+                   FlockWeight == hook.FlockWeight &&
+                   SnakeWeight == hook.SnakeWeight &&
+                   BossMode == hook.BossMode &&
+                   EqualityComparer<Sprites[]>.Default.Equals(BossModeSprites, hook.BossModeSprites) &&
+                   FlockSpeed == hook.FlockSpeed &&
+                   PickupSeekers == hook.PickupSeekers &&
+                   PickupRobotGuns == hook.PickupRobotGuns &&
+                   PickupSeekersMultiplier == hook.PickupSeekersMultiplier &&
+                   SeekerNegotiation == hook.SeekerNegotiation &&
+                   SeekerLead == hook.SeekerLead &&
+                   SeekerRange == hook.SeekerRange &&
+                   SeekerCycle == hook.SeekerCycle &&
+                   ShipGainBySizeM == hook.ShipGainBySizeM &&
+                   ShipGainBySizeB == hook.ShipGainBySizeB &&
+                   MapEnabled == hook.MapEnabled &&
+                   StepTime == hook.StepTime &&
+                   OutOfBoundsDeathLine == hook.OutOfBoundsDeathLine &&
+                   OutOfBoundsBorder == hook.OutOfBoundsBorder &&
+                   OutOfBoundsDecayDistance == hook.OutOfBoundsDecayDistance &&
+                   BotRespawnDelay == hook.BotRespawnDelay &&
+                   BotMaxRespawnDelay == hook.BotMaxRespawnDelay &&
+                   PickupShields == hook.PickupShields &&
+                   ShieldStrength == hook.ShieldStrength &&
+                   FollowFirstShip == hook.FollowFirstShip &&
+                   FiringSequenceDelay == hook.FiringSequenceDelay &&
+                   SpawnLocationMode == hook.SpawnLocationMode &&
+                   SpawnLocation.Equals(hook.SpawnLocation) &&
+                   LifecycleDuration == hook.LifecycleDuration &&
+                   PlayerCountGracePeriodMS == hook.PlayerCountGracePeriodMS &&
+                   FleetWeaponStackDepth == hook.FleetWeaponStackDepth &&
+                   SpawnInvulnerabilityTime == hook.SpawnInvulnerabilityTime &&
+                   Name == hook.Name &&
+                   Description == hook.Description &&
+                   Instructions == hook.Instructions &&
+                   Hidden == hook.Hidden &&
+                   EqualityComparer<string[]>.Default.Equals(AllowedColors, hook.AllowedColors) &&
+                   Weight == hook.Weight &&
+                   MaxNameLength == hook.MaxNameLength &&
+                   GearheadName == hook.GearheadName &&
+                   GearheadRegen == hook.GearheadRegen &&
+                   AutoRemoveOnEmptyThreshold == hook.AutoRemoveOnEmptyThreshold &&
+                   ExplosionTime == hook.ExplosionTime &&
+                   AbandonBuffer == hook.AbandonBuffer &&
+                   EarnedShipDelay == hook.EarnedShipDelay &&
+                   RoyaleCountdownDurationSeconds == hook.RoyaleCountdownDurationSeconds &&
+                   RoyaleResizeSpeed == hook.RoyaleResizeSpeed &&
+                   RoyaleDoubleStep1 == hook.RoyaleDoubleStep1 &&
+                   RoyaleDoubleStep2 == hook.RoyaleDoubleStep2 &&
+                   CanSpawn == hook.CanSpawn;
+        }
+
+        public override int GetHashCode()
+        {
+            var hash = new HashCode();
+            hash.Add(WorldSize);
+            hash.Add(WorldResizeEnabled);
+            hash.Add(WorldResizeSpeed);
+            hash.Add(WorldSizeBasic);
+            hash.Add(WorldSizeDeltaPerPlayer);
+            hash.Add(WorldMinPlayersToResize);
+            hash.Add(BaseThrustM);
+            hash.Add(BaseThrustB);
+            hash.Add(BoostThrust);
+            hash.Add(BoostCooldownTimeM);
+            hash.Add(BoostCooldownTimeB);
+            hash.Add(BoostDuration);
+            hash.Add(BoostSpeed);
+            hash.Add(Drag);
+            hash.Add(BoomLife);
+            hash.Add(BoomDrag);
+            hash.Add(PointsPerKillShip);
+            hash.Add(PointsPerUniverseDeath);
+            hash.Add(PointsMultiplierDeath);
+            hash.Add(PointsPerKillFleet);
+            hash.Add(PointsPerKillFleetMax);
+            hash.Add(PointsPerKillFleetStep);
+            hash.Add(PointsPerKillFleetPerStep);
+            hash.Add(ComboDelay);
+            hash.Add(ComboPointsStep);
+            hash.Add(HealthHitCost);
+            hash.Add(HealthRegenerationPerFrame);
+            hash.Add(SpawnShipCount);
+            hash.Add(ShotCooldownTimeM);
+            hash.Add(ShotCooldownTimeB);
+            hash.Add(ShotCooldownTimeShark);
+            hash.Add(ShotCooldownTimeBotM);
+            hash.Add(ShotCooldownTimeBotB);
+            hash.Add(ShotThrustM);
+            hash.Add(ShotThrustB);
+            hash.Add(MaxHealth);
+            hash.Add(MaxHealthBot);
+            hash.Add(SeekerThrustMultiplier);
+            hash.Add(PrecisionBulletsNoise);
+            hash.Add(PrecisionBullets);
+            hash.Add(PrecisionBulletsMinimumRange);
+            hash.Add(ShieldCannonballLife);
+            hash.Add(BulletLife);
+            hash.Add(SeekerLifeMultiplier);
+            hash.Add(BotBase);
+            hash.Add(BotPerXPoints);
+            hash.Add(Wormholes);
+            hash.Add(WormholesDestination);
+            hash.Add(Obstacles);
+            hash.Add(PickupShieldsMultiplier);
+            hash.Add(ObstaclesMultiplier);
+            hash.Add(ObstacleMaxMomentum);
+            hash.Add(ObstacleMinSize);
+            hash.Add(ObstacleMaxSize);
+            hash.Add(ObstacleMaxMomentumWeatherMultiplier);
+            hash.Add(ObstaclesSpawnShieldCannons);
+            hash.Add(ObstacleBorderBuffer);
+            hash.Add(TeamMode);
+            hash.Add(RoyaleMode);
+            hash.Add(CTFMode);
+            hash.Add(CTFCarryBurden);
+            hash.Add(CTFSpawnDistance);
+            hash.Add(SumoMode);
+            hash.Add(SumoRingSize);
+            hash.Add(LeaderboardRefresh);
+            hash.Add(Fishes);
+            hash.Add(FishesMultiplier);
+            hash.Add(FishThrust);
+            hash.Add(FishFlockAlignment);
+            hash.Add(FishFlockCohesion);
+            hash.Add(FishFlockCohesionMaximumDistance);
+            hash.Add(FishFlockSeparation);
+            hash.Add(FishFlockSeparationMinimumDistance);
+            hash.Add(FishFlockWeight);
+            hash.Add(FishOOBWeight);
+            hash.Add(FishCycle);
+            hash.Add(FlockAlignment);
+            hash.Add(FlockCohesion);
+            hash.Add(FlockCohesionMaximumDistance);
+            hash.Add(FlockSeparation);
+            hash.Add(FlockSeparationMinimumDistance);
+            hash.Add(FlockWeight);
+            hash.Add(SnakeWeight);
+            hash.Add(BossMode);
+            hash.Add(BossModeSprites);
+            hash.Add(FlockSpeed);
+            hash.Add(PickupSeekers);
+            hash.Add(PickupRobotGuns);
+            hash.Add(PickupSeekersMultiplier);
+            hash.Add(SeekerNegotiation);
+            hash.Add(SeekerLead);
+            hash.Add(SeekerRange);
+            hash.Add(SeekerCycle);
+            hash.Add(ShipGainBySizeM);
+            hash.Add(ShipGainBySizeB);
+            hash.Add(MapEnabled);
+            hash.Add(StepTime);
+            hash.Add(OutOfBoundsDeathLine);
+            hash.Add(OutOfBoundsBorder);
+            hash.Add(OutOfBoundsDecayDistance);
+            hash.Add(BotRespawnDelay);
+            hash.Add(BotMaxRespawnDelay);
+            hash.Add(PickupShields);
+            hash.Add(ShieldStrength);
+            hash.Add(FollowFirstShip);
+            hash.Add(FiringSequenceDelay);
+            hash.Add(SpawnLocationMode);
+            hash.Add(SpawnLocation);
+            hash.Add(LifecycleDuration);
+            hash.Add(PlayerCountGracePeriodMS);
+            hash.Add(FleetWeaponStackDepth);
+            hash.Add(SpawnInvulnerabilityTime);
+            hash.Add(Name);
+            hash.Add(Description);
+            hash.Add(Instructions);
+            hash.Add(Hidden);
+            hash.Add(AllowedColors);
+            hash.Add(Weight);
+            hash.Add(MaxNameLength);
+            hash.Add(GearheadName);
+            hash.Add(GearheadRegen);
+            hash.Add(AutoRemoveOnEmptyThreshold);
+            hash.Add(ExplosionTime);
+            hash.Add(AbandonBuffer);
+            hash.Add(EarnedShipDelay);
+            hash.Add(RoyaleCountdownDurationSeconds);
+            hash.Add(RoyaleResizeSpeed);
+            hash.Add(RoyaleDoubleStep1);
+            hash.Add(RoyaleDoubleStep2);
+            hash.Add(CanSpawn);
+            return hash.ToHashCode();
         }
     }
 }
