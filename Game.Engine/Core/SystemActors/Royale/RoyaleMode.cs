@@ -14,7 +14,7 @@
         private bool Initialized = false;
 
         private uint CountdownUntil = 0;
-        private int RestartDelayMS = 10000;
+        private int RestartDelayMS = 6000;
         private int OriginalWorldsizeDeltaPerPlayer = 0;
         private int OriginalWorldResizeSpeed = 0;
         private double OriginalFishesMultiplier = 0;
@@ -60,6 +60,7 @@
                 World.Hook.PointsPerKillFleetStep = 0;
                 World.Hook.PointsPerUniverseDeath = 0;
                 World.Hook.PointsMultiplierDeath = 1.0f;
+                World.Hook.ComboPointsStep = 0;
 
                 StartingBlock = new StartingBlock
                 {
