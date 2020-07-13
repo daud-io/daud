@@ -1007,6 +1007,7 @@ progress[value="255"]::-webkit-progress-value {
     transform: translate(-50%, 0);
 }
 
-button:disabled, input[type="button"]:disabled {
-    border-color: red
+button:disabled,
+input[type="button"]:disabled {
+    background: darkred;
 }

@@ -112,6 +112,23 @@ window.Game.reinitializeWorld = function () {
     background.refreshSprite();
 };
 
+const actx = new AudioContext();
+
+function beep() {
+    const duration = 0.1;
+    const v = actx.createOscillator();
+    const u = actx.createGain();
+    v.connect(u);
+    v.frequency.value = 1200;
+    v.type = "square";
+    u.connect(actx.destination);
+    u.gain.value = 0.1;
+    u.gain.setValueAtTime(0.1, actx.currentTime + duration);
+    u.gain.linearRampToValueAtTime(0, actx.currentTime + duration + 0.05);
+    v.start(actx.currentTime);
+    v.stop(actx.currentTime + duration + 0.05);
+}
+
 const bodyFromServer = (_cache: Cache, body) => {
     const originalPosition = body.originalPosition();
     const momentum = body.velocity();
@@ -182,7 +199,7 @@ connection.onView = (newView) => {
         const button = document.getElementById("spawn") as HTMLButtonElement;
         const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
 
-        buttonSpectate.disabled = button.disabled = (connection.hook.CanSpawn === false);
+        buttonSpectate.disabled = button.disabled = connection.hook.CanSpawn === false;
     }
 
     if (view.isAlive && !lastAliveState) {
@@ -261,7 +278,10 @@ connection.onView = (newView) => {
                 let extra = announcement.extraData();
 
                 if (extra) extra = JSON.parse(extra);
-
+                if (announcement.type() == "announce" && announcement.text() == "Launch now to join the next game!") {
+                    actx.resume();
+                    beep();
+                }
                 log.addEntry({
                     type: announcement.type(),
                     text: announcement.text(),
