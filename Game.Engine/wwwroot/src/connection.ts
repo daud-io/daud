@@ -30,6 +30,7 @@ export class Connection {
     autoReload: boolean;
     statPongCount: number;
     connectionStatusReporting: boolean;
+    hook: any;
 
     constructor() {
         this.onView = (view) => {};
@@ -46,6 +47,8 @@ export class Connection {
         this.statBytesDownPerSecond = 0;
         this.statBytesUpPerSecond = 0;
         this.statPongCount = 0;
+
+        this.hook = null;
 
         this.latency = 0;
         this.minLatency = 999;
@@ -100,6 +103,8 @@ export class Connection {
         url += "/api/v1/connect?";
 
         if (worldKey) url += `world=${encodeURIComponent(worldKey)}&`;
+
+        this.hook = null;
 
         if (this.socket) {
             this.socket.onclose = () => {};
@@ -318,6 +323,10 @@ export class Connection {
                 type: message.type(),
                 data: JSON.parse(message.data()),
             };
+
+            if (event.type == "hook") {
+                this.hook = event.data;
+            }
 
             if (event.data.roles !== undefined) {
                 window.discordData = event;

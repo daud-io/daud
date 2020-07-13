@@ -63,7 +63,7 @@
         private uint LastObjectID = 0;
         public uint GenerateObjectID() { lock (this) return ++LastObjectID; }
 
-        public bool CanSpawn { get; set; } = true;
+        public bool CanSpawn { get => Hook.CanSpawn; set => Hook.CanSpawn = value; }
         public string CanSpawnReason { get; set; }
 
 

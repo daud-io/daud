@@ -89,6 +89,7 @@
             World.CanSpawn = true;
             World.Hook.FishesMultiplier = OriginalFishesMultiplier;
             StartingBlock.Position = Vector2.Zero;
+            InRoomAnnouncement($"Launch now to join the next game!");
         }
 
         public void StartCountdown()

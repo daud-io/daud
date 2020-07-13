@@ -177,12 +177,22 @@ connection.onView = (newView) => {
     view.isAlive = newView.isAlive();
 
     fleetID = newView.fleetID();
+
+    if (!view.isAlive && connection.hook != null) {
+        const button = document.getElementById("spawn") as HTMLButtonElement;
+        const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
+
+        buttonSpectate.disabled = button.disabled = connection.hook.CanSpawn;
+    }
+
     if (view.isAlive && !lastAliveState) {
+        // just spawned
         lastAliveState = true;
         document.body.classList.remove("dead");
         document.body.classList.remove("spectating");
         document.body.classList.add("alive");
     } else if (!view.isAlive && lastAliveState) {
+        // just died
         lastAliveState = false;
 
         setTimeout(function () {

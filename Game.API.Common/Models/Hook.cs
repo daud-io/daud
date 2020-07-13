@@ -345,6 +345,7 @@
         public int RoyaleResizeSpeed { get; set; }
         public int RoyaleDoubleStep1 { get; set; }
         public int RoyaleDoubleStep2 { get; set; }
+        public bool CanSpawn { get; set; } = true;
 
         public Hook Clone()
         {
