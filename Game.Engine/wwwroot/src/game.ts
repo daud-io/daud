@@ -182,7 +182,7 @@ connection.onView = (newView) => {
         const button = document.getElementById("spawn") as HTMLButtonElement;
         const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
 
-        buttonSpectate.disabled = button.disabled = connection.hook.CanSpawn;
+        buttonSpectate.disabled = button.disabled = !connection.hook.CanSpawn;
     }
 
     if (view.isAlive && !lastAliveState) {
