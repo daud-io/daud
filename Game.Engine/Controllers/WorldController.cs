@@ -141,6 +141,11 @@
                             {
                                 name = "Dueling Room-Europe";
                             }
+                            if (s.world.WorldKey == "royale" && s.server.URL == "de.daud.io")
+                            {
+                                name = "Battle Royale - EU";
+                            }
+
                             return
                                 new
                                 {
