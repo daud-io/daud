@@ -312,7 +312,7 @@ setInterval(() => {
     ) {
         let spectateControl = null;
         if (isSpectating) {
-            if (Controls.shoot) spectateControl = "action:next";
+            if (Controls.shoot && !lastControl.shoot) spectateControl = "action:next";
             else spectateControl = "spectating";
         }
 
