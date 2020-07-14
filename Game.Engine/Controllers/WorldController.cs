@@ -125,6 +125,7 @@
                             s.server.URL == "us.daud.io"
                             || (s.server.URL == "de.daud.io" && s.world.WorldKey == "default")
                             || (s.server.URL == "de.daud.io" && s.world.WorldKey == "duel")
+                            || (s.server.URL == "de.daud.io" && s.world.WorldKey == "royale")
                         )
                         .OrderBy(s => s.world.Hook.Weight)
                         .Select(s =>
