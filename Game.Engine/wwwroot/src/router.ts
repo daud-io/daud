@@ -1,62 +1,45 @@
 import Cookies from "js-cookie";
 import { Connection } from "./connection";
 
-export class Router {
-    savedBestServer: string;
-    bestServer: string;
-    allResults: any[];
+type Server = { worldKey: string; latency: number };
 
-    public constructor() {
-        this.savedBestServer = this.load();
-    }
+const savedRouterConfig = JSON.parse(Cookies.get("router") || "false");
+export const bestServer: string = savedRouterConfig?.bestServer;
+let allResults: Server[];
 
-    private load() {
-        const savedRouterConfig = Cookies.getJSON("router");
+export function save(server: string): void {
+    //Stores a cookie of the best found server.
+    //Set to expire every 7 days.
+    Cookies.set("router", { bestServer: server }, { expires: 7 });
+}
 
-        if (savedRouterConfig) {
-            this.bestServer = savedRouterConfig.bestServer;
-        }
+export function findBestServer(servers: string[], next: (bestServer: string) => void): void {
+    allResults = [];
 
-        return this.bestServer;
-    }
+    servers.forEach((server) => {
+        pingServer(server);
+    });
 
-    public save(server) {
-        //Stores a cookie of the best found server.
-        //Set to expire every 7 days.
-        Cookies.set("router", { bestServer: server }, { expires: 7 });
-    }
+    setTimeout(() => {
+        let best: Server;
 
-    public findBestServer(servers: string[], next: (bestServer: any) => void) {
-        this.allResults = [];
-
-        servers.forEach((server) => {
-            this.pingServer(server);
+        allResults.forEach((result) => {
+            if (!best || result.latency < best.latency) best = result;
         });
 
-        const self = this;
-        setTimeout(function () {
-            let best: any = false;
+        next(best!.worldKey);
+    }, 2500);
+}
+function pingServer(worldKey: string): void {
+    const connection = new Connection(undefined);
+    connection.bandwidthThrottle = 1;
+    connection.autoReload = false;
+    connection.connect(worldKey);
 
-            self.allResults.forEach((result) => {
-                if (!best || (result as any).latency < best.latency) best = result;
-            });
+    setTimeout(() => {
+        //console.log({ worldKey: worldKey, latency: connection.latency, connected: connection.connected, pongs: connection.statPongCount });
+        if (connection.connected && connection.statPongCount > 1) allResults.push({ worldKey: worldKey, latency: connection.latency });
 
-            next(best.worldKey);
-        }, 2500);
-    }
-
-    public pingServer(worldKey: string) {
-        const connection = new Connection();
-        connection.bandwidthThrottle = 1;
-        connection.autoReload = false;
-        connection.connect(worldKey);
-
-        const self = this;
-        setTimeout(function () {
-            //console.log({ worldKey: worldKey, latency: connection.latency, connected: connection.connected, pongs: connection.statPongCount });
-            if (connection.connected && connection.statPongCount > 1) self.allResults.push({ worldKey: worldKey, latency: connection.latency });
-
-            connection.disconnect();
-        }, 1000);
-    }
+        connection.disconnect();
+    }, 1000);
 }

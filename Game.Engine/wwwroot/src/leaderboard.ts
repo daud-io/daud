@@ -1,41 +1,23 @@
-﻿import { Settings } from "./settings";
-import { RenderedObject } from "./models/renderedObject";
+﻿import { LeaderboardType, LeaderboardEntry } from "./connection";
+import { getDefinition } from "./loader";
 import { Vector2 } from "./Vector2";
-const record = document.getElementById("record");
-const leaderboard = document.getElementById("leaderboard");
-const leaderboardLeft = document.getElementById("leaderboard-left");
-const leaderboardCenter = document.getElementById("leaderboard-center");
+import { html, render, Hole } from "uhtml";
+import bus from "./bus";
+const record = document.getElementById("record")!;
+const leaderboard = document.getElementById("leaderboard")!;
+const leaderboardLeft = document.getElementById("leaderboard-left")!;
+const leaderboardCenter = document.getElementById("leaderboard-center")!;
 
-export function clear() {
-    leaderboard.innerHTML = "";
-    leaderboardLeft.innerHTML = "";
-    leaderboardCenter.innerHTML = "";
-    leaderboardCenter.style.width = null;
-    leaderboardCenter.style.height = null;
-}
+bus.on("worldjoin", () => {
+    render(leaderboard, html``);
+    render(leaderboardLeft, html``);
+    render(leaderboardCenter, html``);
+    leaderboardCenter.style.width = "";
+    leaderboardCenter.style.height = "";
+});
 
-export function escapeHtml(str) {
-    const div = document.createElement("div");
-    div.appendChild(document.createTextNode(str));
-    return div.innerHTML;
-}
-function getOut(entry, position: Vector2, rank?, entryIsSelf?, extra?) {
+function getOut(entry: LeaderboardEntry, position: Vector2, rank?: number, entryIsSelf?: boolean, extra?: string) {
     const angle = Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
-
-    if (rank === undefined) {
-        rank = "";
-    } else {
-        rank += ".";
-    }
-
-    let begin;
-    if (!entryIsSelf) {
-        begin = `<tr>`;
-    } else if (rank <= 10) {
-        begin = `<tr style="background-color:rgba(255,255,255,0.1)">`;
-    } else {
-        begin = `<tr style="background-color:rgba(255,255,255,0.1);transform:translateY(7px)">`;
-    }
 
     let color;
     if (entry.Color === "blue") {
@@ -44,151 +26,179 @@ function getOut(entry, position: Vector2, rank?, entryIsSelf?, extra?) {
         color = entry.Color;
     }
 
-    return (
-        begin +
-        `<td style="width:25px">${rank}</td>` +
-        (extra ? `<td style="width:25px">${extra}</td>` : '') +
-        `<td style="width:28px;height:28px;background:${color}"><img class="arrow" src="/img/arrow.png" style="transform:rotate(${angle}rad)"></img></td>` +
-        `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
-        `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
-        `<td class="score">${entry.Score}</td>` +
-        `</tr>`
-    );
+    const styles = entryIsSelf ? "background-color: rgba(255,255,255,0.1)" : "";
+    return html`
+        <tr style=${styles}>
+            <td style="width:25px">${rank ? rank + "." : ""}</td>
+            ${extra ? html`<td style="width:25px">${extra}</td>` : ""}
+            <td style=${`width:28px;height:28px;background:${color}`}><img class="arrow" src="/img/arrow.png" style=${`transform:rotate(${angle}rad)`}></img></td>
+            <td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>
+            <td class="name">${entry.Name}</td>
+            <td class="score">${entry.Score}</td>
+        </tr>`;
 }
-export class Leaderboard {
-    update(data, position, fleetID) {
-        if (Settings.leaderboardEnabled) {
-            record.style.visibility = "visible";
-            leaderboard.style.visibility = "visible";
-            leaderboardLeft.style.visibility = "visible";
-            leaderboardCenter.style.visibility = "visible";
-        } else {
-            record.style.visibility = "hidden";
-            leaderboard.style.visibility = "hidden";
-            leaderboardLeft.style.visibility = "hidden";
-            leaderboardCenter.style.visibility = "hidden";
-            return;
+
+let recordName: string;
+let recordScore: number;
+export function update(data: LeaderboardType, position: PIXI.Point, fleetID: number): void {
+    if (data.Record && (recordName != data.Record.Name || recordScore != data.Record.Score)) {
+        recordName = data.Record.Name;
+        recordScore = data.Record.Score;
+        record.innerText = `record: ${recordName} - ${recordScore}`;
+    }
+
+    //Hide or show elements based on Arena.
+    if (data.Type == "CTF") {
+        document.getElementById("ctf_arena")!.classList.remove("hide");
+    } else {
+        document.getElementById("ctf_arena")!.classList.add("hide");
+    }
+
+    if (data.Type == "FFA") {
+        const out: Hole[] = [];
+        for (let i = 0; i < data.Entries.length; i++) {
+            const entryIsSelf = data.Entries[i].FleetID == fleetID;
+
+            const extra = (data.Entries[i].ModeData.advance * 10).toFixed(1);
+
+            if (i < 10 || entryIsSelf) {
+                out.push(getOut(data.Entries[i], position, i + 1, entryIsSelf, extra));
+            }
+        }
+        render(
+            leaderboard,
+            html`<tbody>
+                ${out}
+            </tbody>`
+        );
+    } else if (data.Type == "Team") {
+        const outL: Hole[] = [];
+        const outR: Hole[] = [];
+        const outC: Hole[] = [];
+
+        data.Entries.forEach((entry, i) => {
+            const template = getOut(entry, position);
+            if (i == 0 || i == 1) {
+                outC.push(template);
+            } else if (entry.Color == "cyan") {
+                outL.push(template);
+            } else {
+                outR.push(template);
+            }
+        });
+
+        render(
+            leaderboard,
+            html`<tbody>
+                ${outR}
+            </tbody>`
+        );
+        render(
+            leaderboardLeft,
+            html`<tbody>
+                ${outL}
+            </tbody>`
+        );
+        render(
+            leaderboardCenter,
+            html`<tbody>
+                ${outC}
+            </tbody>`
+        );
+    } else if (data.Type == "CTF") {
+        const outL: Hole[] = [];
+        const outR: Hole[] = [];
+        let redFlag: LeaderboardEntry;
+        let cyanFlag: LeaderboardEntry;
+
+        data.Entries.forEach((entry, i) => {
+            const template = getOut(entry, position);
+            if (i == 0) {
+                cyanFlag = entry;
+            } else if (i == 1) {
+                redFlag = entry;
+            } else if (entry.Color == "cyan") {
+                outL.push(template);
+            } else {
+                outR.push(template);
+            }
+        });
+
+        const flagStatus = {
+            cyan: data.Entries[0].ModeData.flagStatus,
+            red: data.Entries[1].ModeData.flagStatus,
+        };
+
+        const cyanFlagStatus = document.getElementById("ctf_cyan")!.getElementsByClassName("flag_status")[0];
+        const redFlagStatus = document.getElementById("ctf_red")!.getElementsByClassName("flag_status")[0];
+
+        if (flagStatus.cyan == "Home") {
+            cyanFlagStatus.getElementsByClassName("home")[0].classList.remove("hide");
+            cyanFlagStatus.getElementsByClassName("taken")[0].classList.add("hide");
+        } else if (flagStatus.cyan == "Taken") {
+            cyanFlagStatus.getElementsByClassName("home")[0].classList.add("hide");
+            cyanFlagStatus.getElementsByClassName("taken")[0].classList.remove("hide");
         }
 
-        if (data.Record) {
-            record.style.fontFamily = Settings.font;
-            record.innerHTML = `record: ${escapeHtml(data.Record.Name) || "Unknown Fleet"} - ${data.Record.Score}`;
+        if (flagStatus.red == "Home") {
+            redFlagStatus.getElementsByClassName("home")[0].classList.remove("hide");
+            redFlagStatus.getElementsByClassName("taken")[0].classList.add("hide");
+        } else if (flagStatus.red == "Taken") {
+            redFlagStatus.getElementsByClassName("home")[0].classList.add("hide");
+            redFlagStatus.getElementsByClassName("taken")[0].classList.remove("hide");
         }
 
-        //Hide or show elements based on Arena.
-        if (data.Type == "CTF") {
-            document.getElementById("ctf_arena").classList.remove("hide");
-        } else {
-            document.getElementById("ctf_arena").classList.add("hide");
-        }
-
-        if (data.Type == "FFA") {
-            let out = "";
+        const findTeam = (teamName: string) => {
             for (let i = 0; i < data.Entries.length; i++) {
-                const entryIsSelf = data.Entries[i].FleetID == fleetID;
-
-                let extra = (data.Entries[i].ModeData.advance * 10).toFixed(1);
-                
-                if (i < 10 || entryIsSelf) {
-                    out += getOut(data.Entries[i], position, i + 1, entryIsSelf, extra);
-                }
+                if (data.Entries[i].Name == teamName) return data.Entries[i];
             }
-            leaderboard.innerHTML = `<tbody>${out}</tbody>`;
-        } else if (data.Type == "Team") {
-            let outL = "";
-            let outR = "";
-            let outC = "";
+            return false;
+        };
 
-            data.Entries.forEach((entry, i) => {
-                const str = getOut(entry, position);
-                if (i == 0 || i == 1) {
-                    outC += str;
-                } else if (entry.Color == "cyan") {
-                    outL += str;
-                } else {
-                    outR += str;
-                }
-            });
+        const cyan = findTeam("cyan") || { Score: 0 };
+        const red = findTeam("red") || { Score: 0 };
 
-            leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
-            leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
-            leaderboardCenter.innerHTML = `<tbody>${outC}</tbody>`;
-        } else if (data.Type == "CTF") {
-            let outL = "";
-            let outR = "";
-            let redFlag = null;
-            let cyanFlag = null;
+        const cyanScore = Math.min(cyan.Score, 5);
+        const redScore = Math.min(red.Score, 5);
 
-            data.Entries.forEach((entry, i) => {
-                const str = getOut(entry, position);
-                if (i == 0) {
-                    cyanFlag = entry;
-                } else if (i == 1) {
-                    redFlag = entry;
-                } else if (entry.Color == "cyan") {
-                    outL += str;
-                } else {
-                    outR += str;
-                }
-            });
+        const cyanAngle = Math.atan2(cyanFlag!.Position.y - position.y, cyanFlag!.Position.x - position.x);
+        const redAngle = Math.atan2(redFlag!.Position.y - position.y, redFlag!.Position.x - position.x);
+        render(
+            leaderboard,
+            html`<tbody>
+                ${outR}
+            </tbody>`
+        );
+        render(
+            leaderboardLeft,
+            html`<tbody>
+                ${outL}
+            </tbody>`
+        );
+        leaderboardCenter.style.width = "372px";
+        leaderboardCenter.style.height = "83px";
 
-            const flagStatus = {
-                cyan: data.Entries[0].ModeData.flagStatus,
-                red: data.Entries[1].ModeData.flagStatus,
-            };
-
-            const cyanFlagStatus = document.getElementById("ctf_cyan").getElementsByClassName("flag_status")[0];
-            const redFlagStatus = document.getElementById("ctf_red").getElementsByClassName("flag_status")[0];
-
-            if (flagStatus.cyan == "Home") {
-                cyanFlagStatus.getElementsByClassName("home")[0].classList.remove("hide");
-                cyanFlagStatus.getElementsByClassName("taken")[0].classList.add("hide");
-            } else if (flagStatus.cyan == "Taken") {
-                cyanFlagStatus.getElementsByClassName("home")[0].classList.add("hide");
-                cyanFlagStatus.getElementsByClassName("taken")[0].classList.remove("hide");
-            }
-
-            if (flagStatus.red == "Home") {
-                redFlagStatus.getElementsByClassName("home")[0].classList.remove("hide");
-                redFlagStatus.getElementsByClassName("taken")[0].classList.add("hide");
-            } else if (flagStatus.red == "Taken") {
-                redFlagStatus.getElementsByClassName("home")[0].classList.add("hide");
-                redFlagStatus.getElementsByClassName("taken")[0].classList.remove("hide");
-            }
-
-            const findTeam = (teamName) => {
-                for (let i = 0; i < data.Entries.length; i++) {
-                    if (data.Entries[i].Name == teamName) return data.Entries[i];
-                }
-                return false;
-            };
-
-            const cyan = findTeam("cyan") || { Score: 0 };
-            const red = findTeam("red") || { Score: 0 };
-
-            const cyanScore = Math.min(cyan.Score, 5);
-            const redScore = Math.min(red.Score, 5);
-
-            const image = (textureName) => {
-                return `<img class="overlap" src="${RenderedObject.getTextureImage(textureName).src}"></img>`;
-            };
-            const cyanAngle = Math.atan2(cyanFlag.Position.y - position.y, cyanFlag.Position.x - position.x);
-            const redAngle = Math.atan2(redFlag.Position.y - position.y, redFlag.Position.x - position.x);
-            leaderboard.innerHTML = `<tbody>${outR}</tbody>`;
-            leaderboardLeft.innerHTML = `<tbody>${outL}</tbody>`;
-            leaderboardCenter.style.width = "372px";
-            leaderboardCenter.style.height = "83px";
-            leaderboardCenter.innerHTML =
-                `<tbody><tr>` +
-                `<td class="flag"><img class="flag-arrow" src="${RenderedObject.getTextureImage("ctf_arrow_blue").src}" style="transform:rotate(${cyanAngle}rad);right:-50px"></img></td>` +
-                `<td style="width:300px;position:relative">` +
-                image("ctf_score_stripes") +
-                image(`ctf_score_left_${Math.min(cyanScore, 4)}`) +
-                image(`ctf_score_right_${Math.min(redScore, 4)}`) +
-                image(`ctf_score_final${cyanScore >= 5 ? "_blue" : redScore >= 5 ? "_red" : ""}`) +
-                `</td>` +
-                `<td class="flag"><img class="flag-arrow" src="${RenderedObject.getTextureImage("ctf_arrow_red").src}" style="transform:rotate(${redAngle}rad);left:-50px"></img></td>` +
-                `</tr></tbody>`;
-        }
+        const image = (textureName: string) => {
+            return html`<img class="overlap" src="${getDefinition(textureName).url}"></img>`;
+        };
+        render(
+            leaderboardCenter,
+            html`<tbody>
+                <tr>
+                    <td class="flag">
+                        <img class="flag-arrow" src=${getDefinition("ctf_arrow_blue").url} style=${`transform:rotate(${cyanAngle}rad);right:-50px`}></img>
+                    </td>
+                    <td style="width:300px;position:relative">
+                        ${image("ctf_score_stripes")}
+                        ${image(`ctf_score_left_${Math.min(cyanScore, 4)}`)}
+                        ${image(`ctf_score_right_${Math.min(redScore, 4)}`)}
+                        ${image(`ctf_score_final${cyanScore >= 5 ? "_blue" : redScore >= 5 ? "_red" : ""}`)}
+                    </td>
+                    <td class="flag">
+                        <img class="flag-arrow" src=${getDefinition("ctf_arrow_red").url} style=${`transform:rotate(${redAngle}rad);left:-50px`}></img>
+                    </td>
+                </tr>
+                </tbody>`
+        );
     }
 }

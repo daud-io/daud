@@ -1,5 +1,5 @@
 rd /s /q game
-flatc --ts game.fbs
+flatc --ts game.fbs --no-fb-import
 flatc --csharp --gen-onefile game.fbs
 copy game_generated.ts ..\Game.Engine\wwwroot\js
 

@@ -1,11 +1,12 @@
 @font-face {
-    font-family: NotoColorEmoji;
+    font-display: swap;
+    font-family: "Noto Color Emoji";
     src: url("./font/NotoColorEmoji.ttf");
 }
 
 :root {
     --leaderboard-width: 260px;
-    --font: "Exo 2", "NotoColorEmoji", sans-serif, system-ui;
+    --font-family: "Exo 2", "Noto Color Emoji", sans-serif, system-ui;
 }
 
 html,
@@ -16,9 +17,11 @@ body {
     background-color: black;
     text-align: center;
     overflow: hidden;
-    font-family: var(--font);
+    font-family: var(--font-family);
     color: white;
-    --bg-color-1: #222;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .aspectratio {
@@ -26,42 +29,37 @@ body {
     height: 56.25vw; /* 100/56.25 = 1.778 */
     max-height: 100vh;
     max-width: 177.78vh; /* 16/9 = 1.778 */
-}
-#container {
-    position: absolute;
     margin: auto;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+}
+#gameArea {
+    position: relative;
+}
+#gameCanvas {
+    width: 100%;
+    height: 100%;
 }
 
 #error {
-    display: none;
-}
-#error.closed {
+    /* Dropdown effect from: https://davidwalsh.name/css-slide*/
     max-height: 0;
-}
-#error_message {
-    color: red;
-    font-weight: bold;
-}
-.connectionerror .aspectratio #error {
-    /* Dropdown effect Learnt From: https://davidwalsh.name/css-slide. Doesnt work as expected */
     overflow-y: hidden;
-    max-height: 500px;
-    transition-property: all;
-    transition-duration: 0.5s;
-    transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-    display: block;
+    transition: all 0.5s cubic-bezier(0, 1, 0.5, 1);
     width: 100%;
     background: rgba(0, 0, 70, 0.8);
     text-align: center;
     position: absolute;
     z-index: 1;
+    top: 0;
+}
+.connectionerror #error {
+    max-height: 62px;
 }
 
-.loading .spawnscreen,
+#error_message {
+    color: red;
+    font-weight: bold;
+}
+
 .dead.spectating .spawnscreen,
 .alive .spawnscreen,
 .dead #minimapTip {
@@ -70,7 +68,6 @@ body {
 
 .spawnscreen {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     animation: fadein 2s;
@@ -78,7 +75,6 @@ body {
     text-align: center;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 45, 0.57);
     top: 0;
 }
 
@@ -97,17 +93,13 @@ body {
     from {
         opacity: 0;
     }
-
     to {
         opacity: 1;
     }
 }
 
 #logo {
-    height: 128px;
-    image-rendering: pixelated;
-    display: block;
-    margin: auto;
+    width: 560px;
 }
 
 #hintbox {
@@ -120,56 +112,16 @@ a {
     color: white;
 }
 
-@media only screen and (max-width: 1200px) {
-    #changelog {
-        transform: scale(0.6);
-        transform-origin: bottom left;
-    }
-    #controls_instructions {
-        transform: scale(0.6);
-        transform-origin: center;
-    }
-}
-
-@media only screen and (max-width: 1000px) {
-    #changelog,
-    #socialMediaContainer,
-    #controls_instructions {
-        visibility: hidden;
-    }
-}
-
-#socialMediaContainer {
-    position: absolute;
-    bottom: 3vh;
-    visibility: hidden;
-}
-
 #changelog {
-    left: 0;
-    position: absolute;
-    /*top: calc(-100vh+10px);*/
-    bottom: 50px;
-    width: 500px;
-    background-color: rgba(32, 32, 32, 0.85);
+    left: 8px;
+    bottom: 8px;
     padding: 0.5em;
-    border-radius: 5px;
-    height: 1em;
-    width: 7em;
-    transition: height 0.5s, width 0.5s;
-    -webkit-transition: height 0.5s, width 0.5s;
-    overflow-y: hidden;
-    overflow-x: hidden;
+    margin: 8px;
+    width: 304px;
 }
 
 #changelog table {
-    width: 35em;
-}
-
-#changelog:hover,
-#changelog.new {
-    height: 6em;
-    width: 35em;
+    width: 304px;
 }
 
 #changelog h4 {
@@ -182,11 +134,8 @@ a {
 }
 
 #controls_instructions {
-    width: 240px;
-    position: absolute;
-    left: 8px;
-    top: 50%;
-    transform: translate(0, -50%);
+    width: 288px;
+    padding: 16px;
 }
 
 .spawnscreen .social {
@@ -199,7 +148,13 @@ a {
 }
 
 #nipple-controls {
+    display: none;
     visibility: hidden;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 .alive #nipple-controls {
@@ -214,44 +169,25 @@ a {
     height: 100%;
 }
 
-.social_divider {
-    margin-top: 5px;
-}
-
-#reddit {
-    height: 6vh;
-    vertical-align: middle;
-}
-
-#discord {
-    height: 6vh;
-    vertical-align: middle;
-}
-
-#iogamesspace {
-    vertical-align: middle;
-    height: 4vh;
-}
-
-#titotu {
-    height: 4vh;
-    vertical-align: middle;
-}
-
-#titotu span {
-    font-size: 15px;
-}
-
 .spawnscreen .controls {
     z-index: 2;
     margin-bottom: 64px;
+    padding: 32px;
+}
+
+.spawnscreen .controls,
+#spectate_container,
+.spectating #spectatecontrols,
+#controls_instructions,
+#links,
+#changelog {
+    background: rgb(16 21 31 / 0.9);
+    border-radius: 10px;
+    margin: 8px;
 }
 
 #spectate_container {
-    position: absolute;
-    right: 0;
-    bottom: 3vh;
-    z-index: 2;
+    padding: 8px;
 }
 
 #spectatecontrols {
@@ -265,53 +201,76 @@ a {
     transform: translate(-50%, 0);
     display: block;
     max-width: 520px;
-    background: rgba(0, 0, 50, 0.8);
-    border-radius: 10px;
     padding: 20px;
+    z-index: 2;
 }
 
 .spectate_only #spectatecontrols {
     display: none;
 }
 
-.button1 {
-    border: 1px solid #9d9d9d;
+button,
+select,
+input[type="text"] {
+    border: 2px solid #2c3a55;
     border-radius: 5px;
     background: none;
     padding: 10px;
-    margin: 0.5vh 0.5vh;
+    margin: 8px;
     font-size: 1rem;
-    font-family: var(--font);
-    color: white;
+    font-family: var(--font-family);
+    font-weight: bold;
+    color: #9d9d9d;
     transition: border 0.5s;
+    -webkit-appearance: none;
 }
 
-.button1:hover {
+button:hover,
+select:hover,
+input[type="text"]:hover {
     cursor: pointer;
-    border: 1px solid white;
+    border: 2px solid #455b87;
 }
 
-#nick {
+#spawn,
+#dauth {
+    width: 177px;
+}
+#arenas {
+    width: 370px;
+}
+#spawn {
+    background: #08a3ff;
     border: none;
-    background: none;
-    border-bottom: 1px solid #9d9d9d;
+    box-shadow: 0px 4px 0px #2e55bb, 0px 0px 20px 3px #2e55bb;
+    color: white;
+}
+#dauth {
+    background: #fe8358;
+    border: none;
+    box-shadow: 0px 4px 0px #e35520;
+    color: white;
+}
+#nick {
+    margin-bottom: 8px;
+    border: none;
     text-align: center;
-    padding: 5px 0 5px 0;
+    padding: 5px 0;
     font-size: 2rem;
     color: white;
-    transition: border-bottom 1s;
     width: 20rem;
-    font-family: var(--font);
+    font-family: var(--font-family);
+    background: #1f2b3d;
+    border-radius: 10px;
 }
 
 #shipSelectorSwitch {
-    margin-bottom: 8px;
+    margin-bottom: 24px;
 }
 
 #shipSelectorSwitch .circle {
-    max-width: 8vh;
-    max-height: 8vh;
-    margin: 0 5px 0 5px;
+    max-width: 72px;
+    max-height: 72px;
     cursor: pointer;
     border-radius: 0%;
     transition: transform 0.6s;
@@ -329,7 +288,6 @@ a {
 }
 
 #nick:focus {
-    border-bottom: 1px solid white;
     outline: none;
 }
 
@@ -464,60 +422,81 @@ table {
 
 #gear {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     padding: 0;
-    width: 100%;
-    height: 100%;
-
-    background: rgba(0, 0, 50, 0.8);
+    width: max(1440px, 100%);
+    height: max(810px, 100%);
+    background: rgba(32, 32, 64, 0.8);
     z-index: 3;
     overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 #gear.closed {
     display: none;
 }
 
 #settingsContainer {
+    position: relative;
     padding: 1em;
+    background: rgba(16, 16, 32, 0.9);
+    border: solid black 2px;
+    border-radius: 10px;
+    text-align: left;
 }
-#settingsContainer table {
-    margin: auto;
+#settingsContainer h1,
+#settingsContainer h4 {
+    text-align: center;
+    margin: 0;
+    margin-bottom: 8px;
 }
-#settingsContainer table td {
-    vertical-align: top;
-    margin: 3em;
+#settingsContainer h1 {
+    margin-bottom: 16px;
 }
 #settingsContainer label {
-    min-width: 10vw;
-    float: left;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
-
-#settingsContainer label.switch {
-    min-width: inherit;
+#settingsContainer input,
+#settingsContainer select {
+    margin: 0;
+    margin-left: 8px;
 }
 
 #worldSelector {
     color: white;
 }
-
-#worlds {
+#worldsWrapper {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 75%;
-    height: 75%;
-    background: rgba(0, 0, 50, 0.8);
+    padding: 0;
+    width: max(1440px, 100%);
+    height: max(810px, 100%);
+    background: rgba(32, 32, 64, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 3;
-    overflow-y: hidden;
+}
+#worlds {
+    background: rgba(16, 16, 32, 0.8);
+    border-radius: 10px;
+    border: 1px solid black;
+    z-index: 3;
     padding: 1em;
-    opacity: 1;
-    transition: 0.5s opacity ease-in-out;
+    position: relative;
 }
 #world-list-scroll {
     overflow-y: auto;
-    height: calc(100% - 44px);
+    max-height: 600px;
 }
 #worlds #topbar {
     margin: -1em -1em 0.5em -1em;
@@ -526,79 +505,84 @@ table {
     padding: 1em;
     font-weight: normal;
     color: #fff;
+    position: relative;
 }
 .close-button {
     position: absolute;
-    right: 1em;
-    top: 1em;
+    right: 8px;
+    top: 8px;
+    cursor: pointer;
+    width: 24px;
 }
-
-#gear .button1,
-#worlds .button1 {
+.text-icon {
+    display: inline-block;
+    width: 1.25em;
+    vertical-align: -0.25em;
+}
+#gear button,
+#worlds button {
     margin: 2px;
+    border: solid 1px #9d9d9d;
+    color: white;
 }
-
+#worlds button:hover {
+    border: solid 1px white;
+}
 #worldList {
     width: 100%;
     background: none;
 }
 
-#gear .button1,
-#worlds .button1 {
-    margin: 2px;
-}
-
-#worldList {
-    width: 100%;
-}
-.blur {
-    filter: blur(10px);
-}
-
-/* The switch - the box around the slider */
-.switch {
+.checkbox {
+    display: block;
     position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 17px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-/* The slider */
-.slider {
-    position: absolute;
+    padding-right: 35px;
     cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.4s;
+    user-select: none;
 }
-
-.slider:before {
+.checkbox input {
     position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+.checkbox:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.checkbox input:checked ~ .checkmark {
+    background-color: #2196f3;
+}
+
+.checkmark:after {
     content: "";
-    height: 13px;
-    width: 13px;
-    left: 4px;
-    bottom: 2px;
-    background-color: white;
-    transition: 0.4s;
+    position: absolute;
+    display: none;
 }
 
-input:checked + .slider {
-    background-color: #0066ff;
+.checkbox input:checked ~ .checkmark:after {
+    display: block;
 }
 
-input:focus + .slider {
-    box-shadow: 0 0 1px #0066ff;
+.checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
 }
 
 #worldList .empty {
@@ -626,21 +610,8 @@ input:focus + .slider {
     margin: 10px;
 }
 
-.closed {
-    opacity: 0 !important;
-    z-index: -2 !important;
-}
-input:checked + .slider:before {
-    transform: translateX(39px);
-}
-
-/* Rounded sliders */
-.slider.round {
-    border-radius: 34px;
-}
-
-.slider.round:before {
-    border-radius: 50%;
+#worldsWrapper.closed {
+    display: none;
 }
 
 .spectating #fullPageCard,
@@ -648,62 +619,47 @@ input:checked + .slider:before {
     display: none;
 }
 
-.dead.spectating #hud,
-.dead.spectating #record {
+.dead.spectating .stats {
     visibility: visible;
 }
 
-.dead #hud,
 .dead #autofireContainer,
-.dead #record {
+.dead .stats {
     visibility: hidden;
 }
-
-#hud {
-    font-family: var(--font);
-    font-size: 8pt;
-    position: absolute;
-    bottom: 30px;
-    left: 15px;
-}
-
-#record {
-    font-family: var(--font);
+.stats {
+    font-family: var(--font-family);
     font-size: 8pt;
     position: absolute;
     bottom: 15px;
     left: 15px;
+    text-align: left;
+}
+
+#leaderboard,
+#leaderboard-left,
+#leaderboard-center {
+    position: absolute;
+    width: var(--leaderboard-width);
+    padding: 0;
+    margin: 0;
+    font-size: 12pt;
 }
 
 #leaderboard {
-    position: absolute;
     top: 10px;
-    right: 30px;
-    width: var(--leaderboard-width);
-    padding: 0;
-    margin: 0;
-    font-size: 12pt;
+    right: 10px;
 }
 
 #leaderboard-left {
-    position: absolute;
     top: 10px;
-    left: 30px;
-    width: var(--leaderboard-width);
-    padding: 0;
-    margin: 0;
-    font-size: 12pt;
+    left: 10px;
 }
 
 #leaderboard-center {
-    position: absolute;
     top: 0px;
     left: 50%;
     transform: translate(-50%, 0);
-    width: var(--leaderboard-width);
-    padding: 0;
-    margin: 0;
-    font-size: 12pt;
 }
 
 #leaderboard td,
@@ -759,18 +715,12 @@ table {
     top: 0;
     bottom: 0;
 }
+
 #log {
-    position: absolute;
-    bottom: 55px;
-    left: 15px;
-    font-size: 12pt;
-    text-align: left;
+    font-size: 16px;
+    padding-bottom: 20px;
 }
-#gameCanvas2 {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
+
 .hide {
     display: none;
 }
@@ -782,32 +732,10 @@ table {
 
 #cooldown {
     position: absolute;
-    bottom: 3vh;
+    bottom: 24px;
     left: 50%;
     width: 30%;
     transform: translateX(-50%);
-}
-
-option {
-    background-color: var(--bg-color-1);
-}
-.cirlce-red {
-    background: red;
-}
-.cirlce-pink {
-    background: pink;
-}
-.cirlce-orange {
-    background: orange;
-}
-.cirlce-yellow {
-    background: yellow;
-}
-.cirlce-cyan {
-    background: cyan;
-}
-.cirlce-green {
-    background: lime;
 }
 
 progress {
@@ -819,10 +747,8 @@ progress {
     background: rgba(4, 4, 4, 0.5);
     border-radius: 14px;
 }
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-    progress {
-        height: 15px;
-    }
+progress {
+    height: 15px;
 }
 progress::-moz-progress-bar {
     border-radius: 12px;
@@ -851,10 +777,6 @@ progress[value="255"]::-webkit-progress-value {
     font-weight: bold;
 }
 
-#settingsTable {
-    margin: 10px auto 10px auto;
-}
-
 #minimapTip {
     display: block;
     position: absolute;
@@ -880,7 +802,6 @@ progress[value="255"]::-webkit-progress-value {
     font-size: 40px;
     opacity: 0;
     animation: plusScore 2.5s;
-    -webkit-animation: plusScore 2.5s;
     position: absolute;
 }
 
@@ -911,22 +832,22 @@ progress[value="255"]::-webkit-progress-value {
     font-weight: bold;
 }
 #emoji-container {
-    width: 400px;
-    height: 300px;
-    visibility: hidden;
+    width: 345px;
+    height: 400px;
+    display: none;
     position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
+    transform: translate(-260px, -50%);
 }
 #emoji-container.open {
-    visibility: visible;
+    display: block;
 }
 #emoji-trigger {
     font-size: 2rem;
-    font-family: var(--font);
-}
-.emoji-mart-emoji-native {
-    font-family: var(--font) !important;
+    font-family: var(--font-family);
+    width: 50px;
+    height: 50px;
+    margin: 0;
+    padding: 0;
 }
 #chat {
     position: absolute;
@@ -971,43 +892,36 @@ progress[value="255"]::-webkit-progress-value {
 }
 
 #links {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 10;
-}
-
-@media only screen and (max-width: 1420px) {
-    #links {
-        transform: translateY(-50%) scale(0.7, 0.7);
-    }
-}
-
-@media only screen and (max-width: 900px) {
-    #links {
-        display: none;
-    }
+    padding: 8px;
 }
 
 #links a {
-    display: block;
+    display: inline-block;
     width: 40px;
     height: 40px;
-    padding: 2px 2px 2px 2px;
+    margin: 4px;
     position: relative;
+    background-color: white;
+    border-radius: 8px;
 }
 
 #links img {
-    background-color: white;
-    border-radius: 8px;
     width: 40px;
-    height: 40px;
     position: absolute;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 50%;
 }
-
 button:disabled,
 input[type="button"]:disabled {
     background: darkred;
+}
+.loading {
+    display: none;
+}
+#loader {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

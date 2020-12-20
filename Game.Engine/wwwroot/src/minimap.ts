@@ -1,4 +1,4 @@
-import { Settings } from "./settings";
+import { LeaderboardType } from "./connection";
 import * as PIXI from "pixi.js";
 import { Vector2 } from "./Vector2";
 import { Dimension2 } from "./Dimension2";
@@ -16,57 +16,58 @@ const colors = {
     green: 0x00ff00,
 };
 
+const ctx = new PIXI.Graphics();
+ctx.zIndex = 11;
+
+let minimapChanged = false;
+window.addEventListener("keydown", (e) => {
+    if (e.code == "KeyM" && !minimapChanged && (document.body.classList.contains("alive") || document.body.classList.contains("spectating"))) {
+        ctx.visible = !ctx.visible;
+        minimapChanged = true;
+    }
+});
+
+window.addEventListener("keyup", (e) => {
+    if (e.code == "KeyM") minimapChanged = false;
+});
+
 export class Minimap {
-    ctx: PIXI.Graphics;
-    worldSize: number;
-    constructor(stage, size: Dimension2) {
-        this.ctx = new PIXI.Graphics();
+    constructor(stage: PIXI.Container, size: Dimension2) {
         this.size(size);
-        this.ctx.zIndex = 11;
-        stage.addChild(this.ctx);
+        stage.addChild(ctx);
     }
-    size(size: Dimension2) {
-        this.ctx.position = new Vector2(size.width - minimapSize - minimapMarginRight, size.height - minimapSize - minimapMarginBottom);
+    size(size: Dimension2): void {
+        ctx.position = new Vector2(size.width - minimapSize - minimapMarginRight, size.height - minimapSize - minimapMarginBottom);
     }
-    checkDisplay() {
-        if (Settings.displayMinimap != this.ctx.visible) this.ctx.visible = Settings.displayMinimap;
-    }
-    update(data, worldSize, fleetID) {
-        this.worldSize = worldSize;
+    update(data: LeaderboardType, worldSize: number, fleetID: number): void {
         const startIndex = data.Type === "Team" ? 2 : 0;
         const isCTF = data.Type === "CTF";
-        this.ctx.clear();
+        ctx.clear();
 
         if (document.body.classList.contains("alive") || document.body.classList.contains("spectating")) {
-            this.ctx.lineStyle(1, 0x999999).beginFill(0x000000, 0.5).drawRect(0, 0, minimapSize, minimapSize).endFill().lineStyle(0);
+            ctx.lineStyle(1, 0x999999).beginFill(0x000000, 0.5).drawRect(0, 0, minimapSize, minimapSize).endFill().lineStyle(0);
             for (let i = startIndex; i < data.Entries.length; i++) {
                 const entry = data.Entries[i];
                 const entryIsSelf = entry.FleetID == fleetID;
-                this.drawMinimap(new Vector2(entry.Position.x, entry.Position.y), entry.Color, entryIsSelf, i, isCTF);
+                this.drawMinimap(new Vector2(entry.Position.x, entry.Position.y), entry.Color as keyof typeof colors, entryIsSelf, i, isCTF, worldSize);
             }
         }
     }
-    drawMinimap(position: Vector2, color, self, rank, isCTF) {
-        const minimapX = ((position.x + this.worldSize) / 2 / this.worldSize) * minimapSize;
-        const minimapY = ((position.y + this.worldSize) / 2 / this.worldSize) * minimapSize;
+    drawMinimap(position: Vector2, color: keyof typeof colors, self: boolean, rank: number, isCTF: boolean, worldSize: number): void {
+        const minimapX = ((position.x + worldSize) / 2 / worldSize) * minimapSize;
+        const minimapY = ((position.y + worldSize) / 2 / worldSize) * minimapSize;
 
         if (self) {
             // mark "self" player
-            this.ctx
-                .beginFill(0xffffff)
+            ctx.beginFill(0xffffff)
                 .lineStyle(1, 0xffffff)
                 .drawRect(minimapX - 3, minimapY - 3, 6, 6)
                 .endFill();
         } else if (rank === 0 && !isCTF) {
             // mark the king
-            //this.ctx.drawImage(crownImg, 0, 0);
-            //.beginFill(0xdaa520)
-            //.drawRect(minimapX - 3, minimapY - 3, 6, 6)
-            //.endFill();
             const x = Math.floor(minimapX - 4);
             const y = Math.floor(minimapY - 2);
-            this.ctx
-                .beginFill(0xdaa520)
+            ctx.beginFill(0xdaa520)
                 .lineStyle(1, 0xdaa520)
                 .moveTo(x, y)
                 .lineTo(2 + x, 2 + y)
@@ -79,13 +80,11 @@ export class Minimap {
                 .endFill();
         } else if (isCTF && rank < 2) {
             // draw flags in CTF mode
-            this.ctx
-                .lineStyle(2, colors[color])
+            ctx.lineStyle(2, colors[color])
                 .drawRect(minimapX - 4, minimapY - 4, 8, 8)
                 .endFill();
         } else {
-            this.ctx
-                .lineStyle(1, colors[color])
+            ctx.lineStyle(1, colors[color])
                 .beginFill(colors[color])
                 .drawRect(minimapX - 2, minimapY - 2, 4, 4)
                 .endFill();

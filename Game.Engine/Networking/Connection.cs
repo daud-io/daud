@@ -5,8 +5,8 @@ namespace Game.Engine.Networking
     using Game.API.Common;
     using Game.Engine.Core;
     using Game.Engine.Core.Steering;
+    using global::FlatBuffers;
     using Game.Engine.Networking.FlatBuffers;
-    using Google.FlatBuffers;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Nito.AsyncEx;

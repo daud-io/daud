@@ -1,61 +1,46 @@
-﻿import { flatbuffers } from "./flatbuffers";
+﻿import { flatbuffers } from "flatbuffers";
 import * as fb from "./game_generated";
-import { Cache } from "./cache";
 import { Settings } from "./settings";
 import { Vector2 } from "./Vector2";
-import { Controls } from "./controls";
+import { addSecretShips } from "./controls";
+import { getToken } from "./discord";
+import bus from "./bus";
 
+export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
+export type LeaderboardType = {
+    Type: string;
+    Entries: LeaderboardEntry[];
+    Record: {
+        Name: string;
+        Color: string;
+        Score: number;
+        Token: boolean;
+    };
+};
 export class Connection {
-    onView: (view: fb.NetWorldView) => void;
-    onLeaderboard: (leaderboard: { Type: any; Entries: any; Record: any }) => void;
-    onConnected: () => void;
-    reloading: boolean;
-    disconnecting: boolean;
-    connected: boolean;
-    framesPerSecond: number;
-    viewsPerSecond: number;
-    updatesPerSecond: number;
-    statBytesUp: number;
-    statBytesDown: number;
-    statBytesDownPerSecond: number;
-    statBytesUpPerSecond: number;
-    isBackgrounded: boolean;
-    fb: any;
-    latency: number;
-    minLatency: number;
-    simulateLatency: number;
-    socket: WebSocket;
-    pingSent: number;
-    bandwidthThrottle: number;
-    autoReload: boolean;
-    statPongCount: number;
-    connectionStatusReporting: boolean;
+    onView?: (view: fb.NetWorldView) => void;
+    reloading = false;
+    disconnecting = false;
+    connected = false;
+    framesPerSecond = 0;
+    viewsPerSecond = 0;
+    updatesPerSecond = 0;
+    statBytesUp = 0;
+    statBytesDown = 0;
+    statBytesDownPerSecond = 0;
+    statBytesUpPerSecond = 0;
+    latency = 0;
+    simulateLatency = 0;
+    socket?: WebSocket;
+    pingSent?: number;
+    bandwidthThrottle = Settings.bandwidth;
+    autoReload = true;
+    statPongCount = 0;
     hook: any;
 
-    constructor() {
-        this.onView = (view) => {};
-        this.onLeaderboard = (leaderboard) => {};
-        this.onConnected = () => {};
-        this.reloading = false;
-        this.disconnecting = false;
-        this.connected = false;
-        this.autoReload = true;
-        this.connectionStatusReporting = true;
-
-        this.statBytesUp = 0;
-        this.statBytesDown = 0;
-        this.statBytesDownPerSecond = 0;
-        this.statBytesUpPerSecond = 0;
-        this.statPongCount = 0;
-
+    constructor(onView?: (view: fb.NetWorldView) => void) {
         this.hook = null;
-
-        this.latency = 0;
-        this.minLatency = 999;
-        this.simulateLatency = 0;
-
-        this.bandwidthThrottle = Settings.bandwidth;
-
+        this.onView = onView;
         setInterval(() => {
             if (this.connected) {
                 this.sendPing();
@@ -70,26 +55,16 @@ export class Connection {
             this.statBytesDown = 0;
         }, 1000);
     }
-    disconnect() {
+    disconnect(): void {
         if (this.socket) {
             this.disconnecting = true;
             this.socket.close();
         }
     }
-    connect(worldKey?: string) {
-        let url: string;
+    connect(worldKey?: string): void {
+        let url: string = window.location.protocol === "https:" ? "wss:" : "ws:";
 
-        if (window.location.protocol === "https:") {
-            url = "wss:";
-        } else {
-            url = "ws:";
-        }
-
-        let hostname = window.location.host;
-
-        if (!hostname) {
-            hostname = "daud.io";
-        }
+        let hostname = "daud.io";
 
         if (worldKey) {
             const worldKeyParse = worldKey.match(/^(.*?)\/(.*)$/);
@@ -99,15 +74,14 @@ export class Connection {
             }
         }
 
-        url += `//${hostname}`;
-        url += "/api/v1/connect?";
+        url += `//${hostname}/api/v1/connect?`;
 
         if (worldKey) url += `world=${encodeURIComponent(worldKey)}&`;
 
         this.hook = null;
 
         if (this.socket) {
-            this.socket.onclose = () => {};
+            this.socket.onclose = null;
             this.socket.close();
         }
 
@@ -122,20 +96,20 @@ export class Connection {
             } else this.onMessage(event);
         };
 
-        this.socket.onerror = (error) => {
-            if (this.connectionStatusReporting) document.body.classList.add("connectionerror");
+        this.socket.onerror = () => {
+            document.body.classList.add("connectionerror");
         };
 
-        this.socket.onopen = (event) => {
-            if (this.connectionStatusReporting) document.body.classList.remove("connectionerror");
-            this.onOpen(event);
+        this.socket.onopen = () => {
+            document.body.classList.remove("connectionerror");
+            this.onOpen();
         };
         this.socket.onclose = (event) => {
             this.onClose(event);
         };
     }
-    sendPing() {
-        const builder = new (flatbuffers as any).Builder(0);
+    sendPing(): void {
+        const builder = new flatbuffers.Builder(0);
 
         fb.NetPing.startNetPing(builder);
         this.pingSent = performance.now();
@@ -145,7 +119,7 @@ export class Connection {
         fb.NetPing.addVps(builder, this.viewsPerSecond);
         fb.NetPing.addUps(builder, this.updatesPerSecond);
         fb.NetPing.addFps(builder, this.framesPerSecond);
-        fb.NetPing.addCs(builder, Cache.count);
+        fb.NetPing.addCs(builder, 0);
         fb.NetPing.addBackgrounded(builder, this.framesPerSecond < 1);
         fb.NetPing.addBandwidthThrottle(builder, this.bandwidthThrottle);
 
@@ -161,8 +135,8 @@ export class Connection {
         this.send(builder.asUint8Array());
     }
 
-    sendExit() {
-        const builder = new (flatbuffers as any).Builder(0);
+    sendExit(): void {
+        const builder = new flatbuffers.Builder(0);
 
         fb.NetExit.startNetExit(builder);
 
@@ -179,8 +153,8 @@ export class Connection {
         this.send(builder.asUint8Array());
     }
 
-    sendAuthenticate(token) {
-        const builder = new (flatbuffers as any).Builder(0);
+    sendAuthenticate(token: string): void {
+        const builder = new flatbuffers.Builder(0);
 
         const stringToken = builder.createString(token || "");
 
@@ -199,8 +173,8 @@ export class Connection {
         console.log("sent auth");
     }
 
-    sendSpawn(name, color, ship, token) {
-        const builder = new (flatbuffers as any).Builder(0);
+    sendSpawn(name?: string, color?: string, ship?: string, token?: string): void {
+        const builder = new flatbuffers.Builder(0);
 
         const stringColor = builder.createString(color || "gray");
         const stringName = builder.createString(name || "unknown");
@@ -225,11 +199,11 @@ export class Connection {
         console.log("spawned");
     }
 
-    sendControl(angle, boost, shoot, x, y, spectateControl, customDataJson) {
-        const builder = new (flatbuffers as any).Builder(0);
+    sendControl(angle: number, boost: boolean, shoot: boolean, x: number, y: number, spectateControl: string, customDataJson: string): void {
+        const builder = new flatbuffers.Builder(0);
 
-        let spectateString = false;
-        let customDataJsonString = false;
+        let spectateString: number | undefined = undefined;
+        let customDataJsonString: number | undefined = undefined;
 
         if (spectateControl) spectateString = builder.createString(spectateControl);
         if (customDataJson) customDataJsonString = builder.createString(customDataJson);
@@ -240,8 +214,8 @@ export class Connection {
         fb.NetControlInput.addShoot(builder, shoot);
         fb.NetControlInput.addX(builder, x);
         fb.NetControlInput.addY(builder, y);
-        if (spectateControl) fb.NetControlInput.addSpectateControl(builder, spectateString);
-        if (customDataJson) fb.NetControlInput.addCustomData(builder, customDataJsonString);
+        if (spectateString) fb.NetControlInput.addSpectateControl(builder, spectateString);
+        if (customDataJsonString) fb.NetControlInput.addCustomData(builder, customDataJsonString);
 
         const input = fb.NetControlInput.endNetControlInput(builder);
 
@@ -255,12 +229,11 @@ export class Connection {
         this.send(builder.asUint8Array());
     }
 
-    send(databuffer) {
+    send(databuffer: Uint8Array): void {
         if (this.socket && this.socket.readyState === 1) {
-            const self = this;
             if (this.simulateLatency > 0) {
                 setTimeout(() => {
-                    self.socket.send(databuffer);
+                    this.socket?.send(databuffer);
                 }, this.simulateLatency);
             } else this.socket.send(databuffer);
 
@@ -268,11 +241,11 @@ export class Connection {
         }
     }
 
-    onOpen(event) {
+    onOpen(): void {
         this.connected = true;
         console.log("connected");
         this.sendPing();
-        this.onConnected();
+        this.sendAuthenticate(getToken());
 
         if (this.reloading) {
             window.location.reload();
@@ -280,7 +253,7 @@ export class Connection {
         }
     }
 
-    onClose(event) {
+    onClose(event: CloseEvent): void {
         console.log("disconnected");
         this.connected = false;
 
@@ -294,9 +267,9 @@ export class Connection {
         this.disconnecting = false;
     }
 
-    onMessage(event) {
+    onMessage(event: MessageEvent): void {
         const data = new Uint8Array(event.data);
-        const buf = new (flatbuffers as any).ByteBuffer(data);
+        const buf = new flatbuffers.ByteBuffer(data);
 
         this.statBytesDown += data.byteLength;
 
@@ -305,50 +278,45 @@ export class Connection {
         const messageType = quantum.messageType();
 
         if (messageType == fb.AllMessages.NetWorldView) {
-            let message = quantum.message(new fb.NetWorldView());
+            const message = quantum.message(new fb.NetWorldView())!;
 
-            this.onView(message);
+            if (this.onView) this.onView(message);
         }
         if (messageType == fb.AllMessages.NetPing) {
             if (this.pingSent) {
                 this.statPongCount++;
                 this.latency = performance.now() - this.pingSent;
-                if (this.latency > 0 && this.latency < this.minLatency) this.minLatency = this.latency;
             }
         }
         if (messageType == fb.AllMessages.NetEvent) {
-            let message = quantum.message(new fb.NetEvent());
+            const message = quantum.message(new fb.NetEvent())!;
 
             const event = {
-                type: message.type(),
-                data: JSON.parse(message.data()),
+                type: message.type()!,
+                data: JSON.parse(message.data()!),
             };
 
             if (event.type == "hook") {
                 this.hook = event.data;
             }
 
-            if (event.data.roles !== undefined) {
-                window.discordData = event;
-            }
-            Controls.addSecretShips(event);
+            if (event.data.roles) addSecretShips(event.data.roles);
         }
         if (messageType == fb.AllMessages.NetLeaderboard) {
-            let message = quantum.message(new fb.NetLeaderboard());
+            const message = quantum.message(new fb.NetLeaderboard())!;
 
             const entriesLength = message.entriesLength();
-            const entries = [];
+            const entries: LeaderboardEntry[] = [];
             for (let i = 0; i < entriesLength; i++) {
-                const entry = message.entries(i);
-
+                const entry = message.entries(i)!;
                 entries.push({
                     FleetID: entry.fleetID(),
-                    Name: entry.name(),
-                    Color: entry.color(),
+                    Name: entry.name()!,
+                    Color: entry.color()!,
                     Score: entry.score(),
-                    Position: new Vector2(entry.position().x(), entry.position().y()),
+                    Position: new Vector2(entry.position()!.x(), entry.position()!.y()),
                     Token: entry.token(),
-                    ModeData: JSON.parse(entry.modeData()) || { flagStatus: "home" },
+                    ModeData: JSON.parse(entry.modeData()!) || { flagStatus: "home" },
                 });
             }
 
@@ -363,14 +331,14 @@ export class Connection {
 
             if (record) {
                 recordModel = {
-                    Name: record.name(),
-                    Color: record.color(),
+                    Name: record.name()!,
+                    Color: record.color()!,
                     Score: record.score(),
                     Token: record.token(),
                 };
             }
-            this.onLeaderboard({
-                Type: message.type(),
+            bus.emit("leaderboard", {
+                Type: message.type()!,
                 Entries: entries,
                 Record: recordModel,
             });

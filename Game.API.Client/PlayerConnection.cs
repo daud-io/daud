@@ -3,7 +3,7 @@
     using Game.API.Common;
     using Game.API.Common.Models;
     using Game.Engine.Networking.FlatBuffers;
-    using Google.FlatBuffers;
+    using FlatBuffers;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
