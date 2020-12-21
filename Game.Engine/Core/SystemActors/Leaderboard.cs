@@ -33,10 +33,11 @@
                     {
                         FleetID = p.Fleet?.ID ?? 0,
                         Name = p.Name,
-                        Score = p.Score,
+                        Score = (int)(p.Advance * 100), //p.Score
                         Color = p.Color,
                         Position = p.Fleet.FleetCenter,
-                        Token = p.Token
+                        Token = p.Token,
+                        ModeData = new { advance = p.Advance }
                     })
                         .OrderByDescending(e => e.Score)
                         .ToList(),

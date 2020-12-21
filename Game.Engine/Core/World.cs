@@ -119,6 +119,7 @@
             InitializeSystemActor<TeamColors>();
             InitializeSystemActor<RoomReset>();
             InitializeSystemActor<RoyaleMode>();
+            InitializeSystemActor<AdvanceRetreat>();
         }
 
         public T GetActor<T>()

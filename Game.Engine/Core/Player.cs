@@ -75,6 +75,8 @@
         private bool IsGearhead = false;
         private string UserColor = null;
 
+        public float Advance = 0f;
+
         public Player()
         {
             PlayerID = Guid.NewGuid().ToString().Replace("-", "");
@@ -328,6 +330,8 @@
             Token = token;
 
             AliveSince = World.Time;
+
+            this.Advance = 0;
 
             IsSpawning = true;
         }

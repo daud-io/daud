@@ -19,7 +19,7 @@ export function escapeHtml(str) {
     div.appendChild(document.createTextNode(str));
     return div.innerHTML;
 }
-function getOut(entry, position: Vector2, rank?, entryIsSelf?) {
+function getOut(entry, position: Vector2, rank?, entryIsSelf?, extra?) {
     const angle = Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
 
     if (rank === undefined) {
@@ -51,6 +51,7 @@ function getOut(entry, position: Vector2, rank?, entryIsSelf?) {
         `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
         `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
         `<td class="score">${entry.Score}</td>` +
+        (extra ? `<td class="score">${extra}</td>` : '') +
         `</tr>`
     );
 }
@@ -85,8 +86,11 @@ export class Leaderboard {
             let out = "";
             for (let i = 0; i < data.Entries.length; i++) {
                 const entryIsSelf = data.Entries[i].FleetID == fleetID;
+
+                let extra = (data.Entries[i].ModeData.advance * 10).toFixed(1);
+                
                 if (i < 10 || entryIsSelf) {
-                    out += getOut(data.Entries[i], position, i + 1, entryIsSelf);
+                    out += getOut(data.Entries[i], position, i + 1, entryIsSelf, extra);
                 }
             }
             leaderboard.innerHTML = `<tbody>${out}</tbody>`;
