@@ -211,7 +211,6 @@
         private async Task StepAliveAsync()
         {
             await AliveAsync();
-            //await AliveAsync();
 
             if (!this.CanBoost && this.Connection.ControlIsBoosting && GameTime > BoostUntil)
                 this.Connection.ControlIsBoosting = false;

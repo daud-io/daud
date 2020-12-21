@@ -73,13 +73,12 @@
                             existingShip.Momentum = ship.Momentum;
                             existingShip.Size = ship.Size;
                             existingShip.Angle = ship.Angle;
-                            ship.PendingDestruction = false;
+                            existingShip.PendingDestruction = false;
                         }
                         else
                             existing.Ships.Add(ship);
-
-                        existing.Ships = existing.Ships.Where(s => !s.PendingDestruction).ToList();
                     }
+                    existing.Ships = existing.Ships.Where(s => !s.PendingDestruction).ToList();
                 }
                 else
                     AllVisibleFleets.Add(fleet);
@@ -87,6 +86,11 @@
             AllVisibleFleets = AllVisibleFleets.Where(f => !f.PendingDestruction).ToList();
 
             MyFleet = AllVisibleFleets.FirstOrDefault(f => f.ID == Robot.FleetID);
+
+            if (AllVisibleFleets.Count(f => f.ID == Robot.FleetID) > 1)
+            {
+                Console.WriteLine($"Multiple fleets with ID: {Robot.FleetID}");
+            }
 
             if (MyFleet != null)
                 LastKnownCenter = MyFleet.Center;
