@@ -20,7 +20,7 @@ namespace Game.Engine.Core.SystemActors
                     foreach (var other in nearby)
                     {
                         var relative = other.Fleet.FleetCenter - player.Fleet.FleetCenter;
-                        var dp = Vector2.Dot(Vector2.Normalize(relative), Vector2.Normalize(player.ControlInput.Position));
+                        var dp = Vector2.Dot(Vector2.Normalize(relative), Vector2.Normalize(player.Fleet.FleetMomentum));
 
                         player.Advance = (99 * player.Advance + dp) / 100f;
                     }

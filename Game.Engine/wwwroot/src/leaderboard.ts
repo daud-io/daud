@@ -47,11 +47,11 @@ function getOut(entry, position: Vector2, rank?, entryIsSelf?, extra?) {
     return (
         begin +
         `<td style="width:25px">${rank}</td>` +
+        (extra ? `<td style="width:25px">${extra}</td>` : '') +
         `<td style="width:28px;height:28px;background:${color}"><img class="arrow" src="/img/arrow.png" style="transform:rotate(${angle}rad)"></img></td>` +
         `<td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>` +
         `<td class="name">${escapeHtml(entry.Name) || "Unknown Fleet"}</td>` +
         `<td class="score">${entry.Score}</td>` +
-        (extra ? `<td class="score">${extra}</td>` : '') +
         `</tr>`
     );
 }
