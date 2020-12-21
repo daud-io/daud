@@ -33,7 +33,7 @@
                     {
                         FleetID = p.Fleet?.ID ?? 0,
                         Name = p.Name,
-                        Score = (int)(p.Advance * 100), //p.Score
+                        Score = p.Score,
                         Color = p.Color,
                         Position = p.Fleet.FleetCenter,
                         Token = p.Token,
