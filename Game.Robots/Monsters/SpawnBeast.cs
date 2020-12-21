@@ -12,14 +12,14 @@
 
         protected override Task AliveAsync()
         {
-            Console.WriteLine($"Beast {FleetID} Alive at : {SensorFleets.LastKnownCenter}");
+            //Console.WriteLine($"Beast {FleetID} Alive at: {SensorFleets.LastKnownCenter}: {SensorFleets.MyFleet?.Ships?.Count ?? 0}");
 
             return base.AliveAsync();
         }
 
         protected async override Task OnDeathAsync()
         {
-            for (int i=0; i<5; i++)
+            for (int i=0; i<3; i++)
                 await this.SpawnChildAsync<SpawnChild>("child.json");
 
             await base.OnDeathAsync();

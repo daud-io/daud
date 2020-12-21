@@ -3,11 +3,11 @@
   "BoostThreshold": 16,
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
   "AttackFleets": true,
-  "Name": "leaderhunt",
+  "Name": "we love you",
   "Sprite": "ship_cyan",
-  "Color": "monster",
-  "LeaderHuntMode": true,
-  "Safe": true,
+  "Color": "cyan",
+  "LeaderHuntMode": false,
+  "Safe": false,
   "Steps": 16,
 
   "Leveling": {
