@@ -18,7 +18,8 @@
                 Ring = new Sumo.RingBody(new Vector2(0, 0), World.Hook.SumoRingSize);
                 Ring.Init(World);
 
-                World.FleetSpawnPositionGenerator = this.FleetSpawnPosition;
+                World.GetActor<SpawnLocationsActor>().GeneratorAdd("sumo", this.FleetSpawnPosition);
+                World.Hook.SpawnLocationMode = "sumo";
             }
 
             if (!World.Hook.SumoMode && Ring != null)
