@@ -21,6 +21,8 @@ namespace Game.Engine.Core.SystemActors
                     {
                         var relative = other.Fleet.FleetCenter - player.Fleet.FleetCenter;
                         var dp = Vector2.Dot(Vector2.Normalize(relative), Vector2.Normalize(player.Fleet.FleetMomentum));
+                        if (float.IsNaN(dp)) // if either vector is zero
+                            dp = 0;
 
                         player.Advance = (99 * player.Advance + dp) / 100f;
                     }
