@@ -217,9 +217,10 @@ export const Controls = {
             }
         }
 
-        const shipIndex = Math.floor(Math.random() * colors.length);
-
-        Controls.ship = colors[shipIndex];
+        if (!colors.includes(Controls.ship)) {
+            const shipIndex = Math.floor(Math.random() * colors.length);
+            Controls.ship = colors[shipIndex];
+        }
         refreshSelectedStyle();
     },
     ship: "ship_green",
