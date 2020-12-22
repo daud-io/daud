@@ -1,0 +1,19 @@
+{
+  "fishes": 0,
+  "fishesMultiplier": 0.01,
+  "fishThrust": 0.08,
+
+  "fishFlockAlignment": 5.0,
+
+  "fishFlockCohesion": 0.01,
+  "fishFlockCohesionMaximumDistance": 1000,
+
+  "fishFlockSeparation": 50.0,
+  "fishFlockSeparationMinimumDistance": 200,
+  
+  "fishFlockWeight": 1,
+  "fishOOBWeight": 10,
+  "fishCycle": 300,
+
+  "botBase": 0,
+}

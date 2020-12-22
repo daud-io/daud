@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.API.Common;
+    using Game.API.Common.Models;
     using Game.Engine.Core.Steering;
     using System;
     using System.Linq;
@@ -43,7 +44,7 @@
 
         private void Flock()
         {
-            var oobVectorWeight = 0.8f;
+            var oobVectorWeight = World.Hook.FishOOBWeight;
             var ships = World.BodiesNear(Position, World.Hook.FishFlockCohesionMaximumDistance)
                 .OfType<Ship>();
 
