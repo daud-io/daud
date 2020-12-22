@@ -1,6 +1,7 @@
 ﻿namespace Game.Util.Commands
 {
     using Game.API.Common.Models;
+    using Google.Cloud.Firestore.V1;
     using McMaster.Extensions.CommandLineUtils;
     using Newtonsoft.Json;
     using System;
@@ -72,11 +73,16 @@
             [Option]
             public string File { get; set; } = null;
 
+            [Option("--default")]
+            public bool Default { get; set; } = false;
+
+
             [Option("--url")]
             public string Url { get; set; } = null;
 
             protected async override Task ExecuteAsync()
             {
+
                 if (Url != null)
                     using (WebClient cln = new WebClient())
                         HookJSON = await cln.DownloadStringTaskAsync(Url);
