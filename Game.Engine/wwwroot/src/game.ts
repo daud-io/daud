@@ -216,6 +216,11 @@ connection.onView = (newView) => {
             document.body.classList.remove("alive");
             document.body.classList.add("spectating");
             document.body.classList.add("dead");
+
+            if (window.Game.primaryConnection.hook.AllowedColors)
+                (<any>currentWorld).allowedColors = window.Game.primaryConnection.hook.AllowedColors;
+            window.Game.reinitializeWorld();
+
             isSpectating = true;
         }, 500);
 

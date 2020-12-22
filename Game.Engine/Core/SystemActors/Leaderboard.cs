@@ -48,7 +48,7 @@
             };
 
             var firstPlace = leaderboard.Entries.FirstOrDefault();
-            if (World.Leaderboard != null && firstPlace?.Score > World.Leaderboard.ArenaRecord.Score)
+            if (World.Leaderboard != null && firstPlace?.Score > World.Leaderboard?.ArenaRecord?.Score)
             {
                 leaderboard.ArenaRecord = firstPlace;
                 World.ArenaRecordResetTime = World.Time + 86400000;
