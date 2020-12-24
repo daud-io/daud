@@ -18,11 +18,21 @@
 
         public LevelingConfig Leveling { get; set; }
 
+        public BlendingConfig Blending { get; set; }
+
         public class LevelingConfig
         {
             public object[] Levels { get; set; }
             public Dictionary<string, object> BehaviorModifications { get; set; }
             public int DownlevelThresholdMS { get; set; }
+        }
+
+        public class BlendingConfig
+        {
+            public int BlurSteps { get; set; } = 10;
+            public float BlurAmount { get; set; } = 0.05f;
+            public int BlurResolutionMultiplier { get; set; } = 1;
+
         }
     }
 }

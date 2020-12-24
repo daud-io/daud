@@ -1,5 +1,4 @@
 {
-  "RingDebugEnabled": false,
   "AttackFleets": false,
   "AttackAbandoned": false,
   "AttackFish": false,
@@ -8,38 +7,22 @@
   "Sprite": "ship_cyan",
   "BoostThreshold": 16,
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
-  "Steps": 16,
-  "BlendingConfig": {
+  "Steps": 32,
+  "RingDebugEnabled": true,
+  "Blending": {
     "BlurSteps": 10,
     "BlurAmount": 0.1,
-    "BlurResolutionMultiplier": 8
+    "BlurResolutionMultiplier": 4
   },
   "Behaviors": [
     {
-      "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
+      "BehaviorTypeName": "Game.Robots.Behaviors.SeparationRel,Game.Robots",
       "LookAheadMS": 100,
-      "BehaviorWeight": 0.0001,
+      "BehaviorWeight": 100.0,
       "Cycle": 100,
-      "Plot": 500
-    },
-    {
-      "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
-      "LookAheadMS": 250,
-      "BehaviorWeight": 0.7,
-      "Cycle": 0,
-      "Plot": true,
-      "Config": {
-        "DistanceFromCenterThreshold": 500
-      }
-    },
-    {
-      "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
-      "LookAheadMS": 100,
-      "BehaviorWeight": 800.0,
-      "Cycle": 0,
       "Plot": false,
       "Config": {
-        "ActiveRange": 1200
+        "ActiveRange": 2200
       }
     },
     {
@@ -52,7 +35,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.StayInBounds,Game.Robots",
       "LookAheadMS": 800,
-      "BehaviorWeight": 1.0,
+      "BehaviorWeight": 100.0,
       "Cycle": 400,
       "Plot": false
     },
@@ -60,20 +43,20 @@
 
       "BehaviorTypeName": "Game.Robots.Behaviors.TeamCohesion,Game.Robots",
       "LookAheadMS": 500,
-      "BehaviorWeight": 0.01,
+      "BehaviorWeight": 1,
       "Cycle": 250,
       "Plot": false,
       "Config": {
         "Normalize": false,
         "MaxFleets": 5,
-        "MaximumRange": 100
+        "MaximumRange": 2000
       }
 
     },
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.TeamAlignment,Game.Robots",
       "LookAheadMS": 200,
-      "BehaviorWeight": 0.05,
+      "BehaviorWeight": 0.02,
       "Cycle": 0
     }
   ]

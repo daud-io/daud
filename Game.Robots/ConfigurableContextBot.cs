@@ -1,6 +1,7 @@
 ﻿namespace Game.Robots
 {
     using Game.API.Client;
+    using Game.Robots.Behaviors.Blending;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
@@ -82,6 +83,14 @@
                 SetBehaviors(config.Behaviors);
                 if (config.Allies != null)
                     SensorAllies.AlliedNames = config.Allies;
+                
+                if (config.Blending != null)
+                {
+                    var ring = ContextRingBlending as ContextRingBlendingWeighted;
+                    ring.BlurSteps = config.Blending.BlurSteps;
+                    ring.BlurAmount = config.Blending.BlurAmount;
+                    ring.BlurResolutionMultiplier = config.Blending.BlurResolutionMultiplier;
+                }
 
                 JsonConvert.PopulateObject(text, this);
 
