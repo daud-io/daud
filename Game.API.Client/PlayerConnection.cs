@@ -18,6 +18,8 @@
         public APIClient APIClient { get; private set; }
         public string WorldKey { get; private set; }
         public long GameTime { get; private set; }
+        public uint Latency { get; set; }
+        public DateTime PingSent { get; set; }
         public ushort WorldSize { get; private set; }
 
         private readonly Timer PingTimer;
@@ -83,6 +85,7 @@
 
         private Task HandleNetPing(NetPing netPing)
         {
+            this.Latency = (uint)DateTime.Now.Subtract(PingSent).TotalMilliseconds;
             return Task.FromResult(true);
         }
 
@@ -109,7 +112,8 @@
         private async Task SendPingAsync()
         {
             var builder = new FlatBufferBuilder(1);
-            var ping = NetPing.CreateNetPing(builder, bandwidthThrottle: 100);
+            PingSent = DateTime.Now;
+            var ping = NetPing.CreateNetPing(builder, bandwidthThrottle: 100, latency: Latency);
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, ping.Value);
             builder.Finish(q.Value);
 
