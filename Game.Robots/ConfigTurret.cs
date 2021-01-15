@@ -56,6 +56,9 @@
 
         public bool IsSafeShot(float angle)
         {
+            if (!Safe)
+                return true;
+
             var safeSet = Safe
                 ? SensorFleets.Others
                 : SensorFleets.Others.Where(f => SensorAllies.IsAlly(f));

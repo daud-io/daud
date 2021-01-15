@@ -17,8 +17,9 @@
         protected override float ScoreAngle(float angle, Vector2 position, Vector2 momentum)
         {
             float accumulator = 0f;
-
+            int count = 0;
             var fleet = Robot.SensorFleets.MyFleet;
+
             if (fleet != null)
             {
                 foreach (var other in Robot.SensorFleets.Others)
@@ -26,11 +27,15 @@
 
                     var dist = Vector2.Distance(other.Center + other.Momentum * LookAheadMS, position + momentum * LookAheadMS);
                     if (dist < ActiveRange)
-                        accumulator -= dist;
+                    {
+                        accumulator = (1 - (dist / ActiveRange));
+                        count++;
+                    }
                 }
+
             }
 
-            return accumulator / ActiveRange;
+            return -accumulator;
         }
 
         protected override void PostSweep(ContextRing ring)

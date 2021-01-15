@@ -1,0 +1,68 @@
+{
+    "RobotType": "Game.Robots.Monsters.SpawnChild,Game.Robots",
+    "AttackFleets": true,
+    "AttackFish": false,
+    "AttackAbandoned": false,
+    "Name": "💠",
+    "Sprite": "ship0",
+    "Color": "monster",
+    "Steps": 16,
+    "BoostThreshold": 20,
+    "AutoSpawn": false,
+    "DestroyOnDeath": false,
+    //"MaxShips": 1,
+    "Safe": false,
+    "TargetingAverageError": 0.1,
+    "FiringDelayMS": 250,
+    "ShootingTime": 100,
+    "ShootingDelay": 0,
+
+    "ContextRingBlending": {
+      "BlurSteps": 10,
+      "BlurAmount": 0.5,
+      "BlurResolutionMultiplier": 1
+    },
+  
+    "Behaviors": [
+      {
+        "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
+        "LookAheadMS": 100,
+        "BehaviorWeight": 2,
+        "Cycle": 500,
+        "Config": {
+          "TargetPoint": {"X": 200000, "Y": 0 },
+        },
+        "Plot": false
+      },
+      {
+        "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
+        "LookAheadMS": 200,
+        "BehaviorWeight": 0,
+        "Cycle": 100,
+        "Plot": true,
+        "Config": {
+          "DistanceFromCenterThreshold": 750
+        }
+      },
+  
+      {
+        "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
+        "LookAheadMS": 100,
+        "BehaviorWeight": 10000.0,
+        "Cycle": 500,
+        "Plot": false,
+        "Config": {
+          "ActiveRange": 400
+        }
+      },
+  
+      {
+        "BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
+        "LookAheadMS": 100,
+        "BehaviorWeight": 0.05,
+        "Cycle": 250,
+        "Plot": false
+      }
+  
+    ]
+  }

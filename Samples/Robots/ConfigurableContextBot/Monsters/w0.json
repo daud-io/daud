@@ -1,0 +1,38 @@
+{
+    "Announce": "Wave Zero",
+    "HookFile": "waveshook.json",
+    "SpawnLocations": [
+        { "x": -3000, "y": -1750 },
+        { "x": -3000, "y": -1250 },
+        { "x": -3000, "y": -750 },
+        { "x": -3000, "y": -250 },
+        { "x": -3000, "y": 250 },
+        { "x": -3000, "y": 750 },
+        { "x": -3000, "y": 1250 },
+        { "x": -3000, "y": 1750 }
+    ],
+    "Paths": {
+        "diag_up": {
+            "type": "cardinal",
+            "pattern": "ENESESENENESESENE"
+        },
+        "diag_down": {
+            "type": "cardinal",
+            "pattern": "ESENENESESENENESE"
+        }
+    },
+    "RobotTypes": {
+        "sneezy": "sneezy.json",
+        "dopey": "dopey.json"
+    },
+    "RowSpeed": 10000,
+    "Rows": [
+        [ null, null, "dopey", null, null, "dopey", null, null ],
+        [ null, null, "dopey", null, null, "dopey", null, null ],
+        [ null, null, "dopey", "dopey", "dopey", "dopey", null, null ],
+        [ null, null, "dopey", "dopey", "dopey", "dopey", null, null ],
+        [ null, null, null, "sneezy", "sneezy", null, null, null ],
+        [ "dopey", null, "dopey", "sneezy", "sneezy", "dopey", null, "dopey" ],
+        [ "dopey", null, "dopey", "sneezy", "sneezy", "dopey", null, "dopey" ]
+    ]
+}

@@ -61,7 +61,7 @@
         "AttackAbandoned": true,
         "AttackFish": true,
         "BoostThreshold": 8,
-        "ContextRingBlending": {
+        "BlendingConfig": {
           "BlurAmount": 0.4
         },
         "BehaviorsModifications": {

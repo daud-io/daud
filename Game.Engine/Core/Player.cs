@@ -331,8 +331,6 @@
 
             AliveSince = World.Time;
 
-            this.Advance = 0;
-
             IsSpawning = true;
         }
 

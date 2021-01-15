@@ -16,10 +16,12 @@
         
         public int MaxShips { get; set; } = 999;
         public Vector2? NextPosition { get; set; } = null;
+        public long NextPositionUntil = 0;
 
         public int ShipSize { get; set; } = 80;
 
         public readonly Shepherd Tender;
+        public bool Lived { get; set; }
         public bool DestroyOnDeath { get; set; }
         public float? ThrustOverride { get; set; }
 
@@ -39,7 +41,8 @@
             if (SensorFleets.MyFleet?.Ships?.Any() == true)
             {
                 SetShipTemplate(ShipTemplate);
-                NextPosition = null;
+                if (GameTime > NextPositionUntil)
+                    NextPosition = null;
             }
             else
                 SetShipTemplate(null);
@@ -92,6 +95,12 @@
 
             InitializeConfiguration();
         }
+        protected override Task OnSpawnAsync()
+        {
+            Lived = true;
+            NextPositionUntil = GameTime + 500;
+            return base.OnSpawnAsync();
+        }
 
         protected async override Task OnDeathAsync()
         {
@@ -108,6 +117,7 @@
             {
                 Console.WriteLine($"Spawning Child at : {SensorFleets.LastKnownCenter}");
                 child.NextPosition = this.SensorFleets.LastKnownCenter + relativePosition;
+                
             }
 
             if (config != null)
@@ -117,6 +127,12 @@
             await child.SpawnAsync();
 
             return child;
+        }
+
+        public Task SpawnAtAsync(Vector2 position)
+        {
+            this.NextPosition = position;
+            return this.SpawnAsync();
         }
     }
 }

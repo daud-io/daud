@@ -1,0 +1,9 @@
+{
+  "worldSize": 3000,
+  "worldResizeEnabled": false,
+  "botBase": 0,
+  "obstacles": 0,
+  "name": "ROBO",
+  "description": "Battle waves of robo-baddies",
+  "weight": 50
+}
