@@ -35,34 +35,18 @@
                 var bM = bullet[i].Momentum;
 
                 var fromPosition = bS;
-                var toTarget = targetPosition - fromPosition;
 
                 var bulletSpeed = bullet[i].Momentum.Length();
                 var targetMomentum = (destination - start) / ((float)maxTime);
 
-                var a = Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);
-                var b = 2 * Vector2.Dot(targetMomentum, toTarget);
-                var c = Vector2.Dot(toTarget, toTarget);
-
-                var p = -b / (2 * a);
-                var q = MathF.Sqrt((b * b) - 4 * a * c) / (2 * a);
-
-                var t1 = p - q;
-                var t2 = p + q;
-                var t = 0f;
-
-                if (t1 > t2 && t2 > 0)
-                    t = t2;
-                else
-                    t = t1;
-                t = MathF.Max(MathF.Min(maxTime + 10.0f, t), 0.0f);
-
-                var aimSpot = targetPosition + targetMomentum * t;
-                var aimMinusS = aimSpot - start;
-                var desMinusS = destination - start;
+                var ab = targetPosition - fromPosition;
+                var dist = ab.Length();
+                var ui = targetMomentum - Vector2.Dot(targetMomentum, ab / dist) * ab / dist;
                 var disss = float.MaxValue;
-                var bulletPath = aimSpot - fromPosition;
-                var timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            
+                var vj_mag2 = bulletSpeed * bulletSpeed - ui.LengthSquared();
+                if (vj_mag2<0.0f){fout[i]=disss;return;}
+                var aimSpot = ab + ui * dist / MathF.Sqrt(vj_mag2);
+                var timeToImpact = (int)(aimSpot.Length() / bulletSpeed);
 
                 if (timeToImpact > hook.Hook.BulletLife || (timeToImpact > maxTime + 10))
                 {

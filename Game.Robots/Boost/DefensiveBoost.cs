@@ -10,7 +10,7 @@
     {
         public bool Enabled { get; set; } = false;
 
-        public DefensiveBoost(ConfigTurret robot): base(robot)
+        public DefensiveBoost(ConfigTurret robot) : base(robot)
         {
         }
 
@@ -23,18 +23,11 @@
 
             if (myCenter == null)
                 return;
-            
-            var bullets = Robot.SensorBullets.VisibleBullets.Where(b => b.Group.Owner != Robot.FleetID)
-                .OrderBy(p => Vector2.Distance(p.Position, Robot.SensorFleets.MyFleet.Center))
-                .ToList();
 
-            if (bullets.Any())
+            if (Robot.SensorBullets.VisibleBullets.Where(b => b.Group.Owner != Robot.FleetID)
+                .Any(b => Vector2.Distance(b.Position, myCenter.Value) < 200))
             {
-                var bullet = bullets.First();
-
-                var distance = Vector2.Distance(bullet.Position, myCenter.Value);
-                if (distance < 200)
-                    Robot.Boost();
+                Robot.Boost();
             }
         }
     }

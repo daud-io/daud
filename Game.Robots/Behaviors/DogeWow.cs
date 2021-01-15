@@ -14,8 +14,8 @@ namespace Game.Robots.Behaviors
         public int DistanceFromCenterThreshold { get; set; } = 316;
 
         private List<Vector2> Projections;
-        private List<Vector2> PhantomProjections;
         public Vector2 ViewportCrop { get; set; } = new Vector2(2000 * 16f / 9f, 2000);
+        private List<Vector2> PhantomProjections = new List<Vector2>();
 
         public DogeWow(ContextRobot robot) : base(robot)
         {
@@ -32,7 +32,7 @@ namespace Game.Robots.Behaviors
                 .ToList();
 
             Projections = DangerousBullets.Select(b => b.ProjectNew(Robot.GameTime + LookAheadMS).Position).ToList();
-            PhantomProjections = new List<Vector2>();
+            PhantomProjections.Clear();
             var muchFleets = Robot.SensorFleets.Others
                     .Select(f => new { Fleet = f, Distance = Vector2.Distance(Robot.Position, f.Center) })
                     .Where(p => MathF.Abs(p.Fleet.Center.X - Robot.Position.X) <= ViewportCrop.X
@@ -45,7 +45,7 @@ namespace Game.Robots.Behaviors
                 foreach (var ship in flet.Fleet.Ships)
                 {
 
-                    PhantomProjections.Append(RoboMath.ProjectClosest(Robot.HookComputer, ship.Position, Robot.Position, LookAheadMS, flet.Fleet.Ships.Count()));
+                    PhantomProjections.Add(RoboMath.ProjectClosest(Robot.HookComputer, ship.Position, Robot.Position, LookAheadMS, flet.Fleet.Ships.Count));
                 }
             }
             ConsideredPoints = new List<Vector2>();

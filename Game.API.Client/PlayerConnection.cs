@@ -312,7 +312,6 @@
 
         public async Task SpawnAsync(string name, string sprite, string color)
         {
-            CacheClear();
             var builder = new FlatBufferBuilder(1);
 
             var stringName = builder.CreateString(name ?? string.Empty);

@@ -81,7 +81,7 @@
 
         public Group GetGroup(uint group)
         {
-            return _groups.ContainsKey(group)
+            return group != 0
                 ? _groups[group]
                 : null;
         }

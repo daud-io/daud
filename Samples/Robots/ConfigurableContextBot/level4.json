@@ -1,40 +1,24 @@
 {
     "RingDebugEnabled": false,
-    "BoostThreshold": 16,
+    "BoostThreshold": 1000,
     "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
     "AttackFleets": true,
-    "Name": "level4-",
+    "Name": "🤖lvl4",
     "Sprite": "ship_orange",
     "Color": "orange",
   
-    "Steps": 16,
-  
-    "Leveling": {
-      "DownlevelThresholdMS": 900000,
-      "Levels": [
-        {
-          "Color": "cyan",
-          "TargetingAverageError": 0.0,
-          "FiringDelayMS": 0,
-          "ShootingTime": 100,
-          "ShootingDelay": 0,
-          "AttackAbandoned": true,
-          "AttackFish": true,
-          "BoostThreshold": 8,
-          "ContextRingBlending": {
-            "BlurAmount": 0.3
-          },
-          "BehaviorsModifications": {
-            "1": { "BehaviorWeight": 5 },
-            "5": { "AdvanceThreshold": 0.8 }
-          }
-        }
-      ]
-    },
+    "Steps": 16,  
+
+    "TargetingAverageError": 0.0,
+    "FiringDelayMS": 0,
+    "ShootingTime": 100,
+    "ShootingDelay": 0,
+    "AttackAbandoned": true,
+    "AttackFish": true,
   
     "ContextRingBlending": {
       "BlurSteps": 10,
-      "BlurAmount": 0.5,
+      "BlurAmount": 0.3,
       "BlurResolutionMultiplier": 1
     },
   
@@ -96,7 +80,7 @@
         "Plot": true,
         "Config": {
           "ActiveRange": 3000,
-          "AdvanceThreshold": 0.6
+          "AdvanceThreshold": 0.8
         }
       },
   

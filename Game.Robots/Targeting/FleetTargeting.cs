@@ -44,7 +44,6 @@
                     {
                         IsLeader = f.ID == Robot.Leaderboard.Entries.FirstOrDefault()?.FleetID,
                         Fleet = f,
-                        Distance = Vector2.Distance(this.Robot.Position, f.Center),
                         Target = new Target
                         {
                             Position = intercept

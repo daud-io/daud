@@ -29,7 +29,7 @@
 
         public void Sense()
         {
-            var newFleets = Robot.Bodies
+            AllVisibleFleets = Robot.Bodies
                 .Where(b => b.Group?.Type == GroupTypes.Fleet) // check the sprite
                 .GroupBy(b => b.Group)
                 .Select(g => new Fleet
@@ -48,42 +48,6 @@
                     }).ToList()
                 })
                 .ToList();
-
-            foreach (var fleet in AllVisibleFleets)
-                fleet.PendingDestruction = true;
-            foreach (var fleet in newFleets)
-            {
-                var existing = AllVisibleFleets.FirstOrDefault(f => f.ID == fleet.ID);
-                if (existing != null)
-                {
-                    existing.Name = fleet.Name;
-                    existing.Sprite = fleet.Sprite;
-                    existing.Color = fleet.Color;
-                    existing.PendingDestruction = false;
-
-                    foreach (var ship in existing.Ships)
-                        ship.PendingDestruction = true;
-
-                    foreach (var ship in fleet.Ships)
-                    {
-                        var existingShip = existing.Ships.FirstOrDefault(s => s.ID == ship.ID);
-                        if (existingShip != null)
-                        {
-                            existingShip.Position = ship.Position;
-                            existingShip.Momentum = ship.Momentum;
-                            existingShip.Size = ship.Size;
-                            existingShip.Angle = ship.Angle;
-                            existingShip.PendingDestruction = false;
-                        }
-                        else
-                            existing.Ships.Add(ship);
-                    }
-                    existing.Ships = existing.Ships.Where(s => !s.PendingDestruction).ToList();
-                }
-                else
-                    AllVisibleFleets.Add(fleet);
-            }
-            AllVisibleFleets = AllVisibleFleets.Where(f => !f.PendingDestruction).ToList();
 
             MyFleet = AllVisibleFleets.FirstOrDefault(f => f.ID == Robot.FleetID);
 

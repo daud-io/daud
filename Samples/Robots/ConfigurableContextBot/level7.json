@@ -4,23 +4,20 @@
   "Sprite": "ship0",
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
   "Steps": 16,
-  "Safe": false,
-  "FiringDelayMS": 0,
-  "FiringDelayChance": 0.2,
   "RingDebugEnabled": false,
-  "BoostThreshold": 20,
+  "BoostThreshold": 100,
   "DefensiveBoost": {
     "Enabled": false
   },
   "Behaviors": [
     {
-      "BehaviorTypeName": "Game.Robots.Behaviors.SeparationSimple,Game.Robots",
-      "LookAheadMS": 400,
-      "BehaviorWeight": -1.0,
+      "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
+      "LookAheadMS": 200,
+      "BehaviorWeight": 2.0,
       "Cycle": 0,
       "Plot": true,
       "Config": {
-        "ActiveRange": 2000
+        "ActiveRange": 700
       }
     },
 
@@ -79,7 +76,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.Slippery,Game.Robots",
       "LookAheadMS": 200,
-      "BehaviorWeight": 0.3,
+      "BehaviorWeight": 1.0,
       "Cycle": 600,
       "Plot": false,
       "Config": {

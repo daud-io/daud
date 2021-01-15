@@ -1,20 +1,14 @@
 {
   "RingDebugEnabled": false,
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
-  "AttackFleets": true,
 
   "Steps": 16,
 
-  "Name": "👺level2+",
+  "Name": "🤖level2+",
   "Sprite": "ship_cyan",
   "Color": "cyan",
-  "TargetingAverageError": 0.0,
-  "FiringDelayMS": 0,
   "ShootingTime": 100,
   "ShootingDelay": 0,
-  "AttackAbandoned": true,
-  "AttackFish": true,
-  "BoostThreshold": 10,
 
   "ContextRingBlending": {
     "BlurSteps": 10,
@@ -34,7 +28,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.DogeWow,Game.Robots",
       "LookAheadMS": 200,
-      "BehaviorWeight": 2.0,
+      "BehaviorWeight": 5.0,
       "Cycle": 0,
       "Plot": true,
       "Config": {
@@ -45,7 +39,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
       "LookAheadMS": 100,
-      "BehaviorWeight": 10000.0,
+      "BehaviorWeight": 1.0,
       "Cycle": 40,
       "Plot": false,
       "Config": {
@@ -56,7 +50,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.Efficiency,Game.Robots",
       "LookAheadMS": 100,
-      "BehaviorWeight": 0.05,
+      "BehaviorWeight": 0.1,
       "Cycle": 0,
       "Plot": false
     },

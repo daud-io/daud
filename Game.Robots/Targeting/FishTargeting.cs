@@ -26,7 +26,6 @@
                     return new
                     {
                         Fish = f,
-                        Distance = Vector2.Distance(this.Robot.Position, f.Position),
                         Target = new Target
                         {
                             Position = intercept

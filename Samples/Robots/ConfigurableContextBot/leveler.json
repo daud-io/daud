@@ -3,140 +3,73 @@
   "BoostThreshold": 16,
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
   "AttackFleets": true,
-  "Name": "🤖Welcome to daud",
+  "Name": "🤖lvl0",
   "Sprite": "ship_green",
   "Color": "green",
-
   "Steps": 16,
-
+  "ShootingTime": 100,
   "Leveling": {
     "DownlevelThresholdMS": 90000,
     "Levels": [
       {
-        "Name": "🤖Welcome to daud",
+        "Name": "🤖lvl0",
         "Sprite": "ship_green",
         "Color": "green",
-        "TargetingAverageError": 0.5,
-        "FiringDelayMS": 1000,
-        "ShootingTime": 1000,
-        "ShootingDelay": 500,
-        "AttackAbandoned": false,
-        "AttackFish": false,
-        "BoostThreshold": 8,
-        "ContextRingBlending": {
-          "BlurAmount": 0.5
-        },
         "BehaviorsModifications": {
           "1": { "BehaviorWeight": 0.5 },
           "5": { "AdvanceThreshold": 2 }
         }
       },
       {
-        "Name": "🤖Easy peasy",
+        "Name": "🤖lvl1",
         "Sprite": "ship_yellow",
         "Color": "yellow",
-        "TargetingAverageError": 0.2,
-        "FiringDelayMS": 750,
-        "ShootingTime": 500,
-        "ShootingDelay": 250,
-        "AttackAbandoned": false,
-        "AttackFish": true,
-        "BoostThreshold": 8,
-        "ContextRingBlending": {
-          "BlurAmount": 0.5
-        },
         "BehaviorsModifications": {
           "1": { "BehaviorWeight": 1 },
           "5": { "AdvanceThreshold": 2 }
         }
       },
       {
-        "Name": "🔥S to dash",
+        "Name": "🤖lvl2",
         "Sprite": "ship_orange",
         "Color": "orange",
-        "TargetingAverageError": 0.1,
-        "FiringDelayMS": 250,
-        "ShootingTime": 100,
-        "ShootingDelay": 0,
-        "AttackAbandoned": true,
-        "AttackFish": true,
-        "BoostThreshold": 8,
-        "BlendingConfig": {
-          "BlurAmount": 0.4
-        },
         "BehaviorsModifications": {
           "1": { "BehaviorWeight": 2 },
           "5": { "AdvanceThreshold": 2 }
         }
       },
       {
-        "Name": "💧Outta my way",
+        "Name": "🤖lvl3",
         "Sprite": "ship_cyan",
         "Color": "cyan",
-        "TargetingAverageError": 0.0,
-        "FiringDelayMS": 100,
-        "ShootingTime": 100,
-        "ShootingDelay": 0,
-        "AttackAbandoned": true,
-        "AttackFish": true,
-        "BoostThreshold": 8,
-        "ContextRingBlending": {
-          "BlurAmount": 0.35
-        },
         "BehaviorsModifications": {
           "1": { "BehaviorWeight": 3 },
           "5": { "AdvanceThreshold": 0.6 }
         }
       },
       {
-        "Name": "🌎Join discord",
+        "Name": "🤖lvl4",
         "Sprite": "ship_blue",
         "Color": "blue",
-        "TargetingAverageError": 0.0,
-        "FiringDelayMS": 0,
-        "ShootingTime": 100,
-        "ShootingDelay": 0,
-        "AttackAbandoned": true,
-        "AttackFish": true,
-        "BoostThreshold": 16,
-        "ContextRingBlending": {
-          "BlurAmount": 0.3
-        },
         "BehaviorsModifications": {
           "1": { "BehaviorWeight": 5 },
           "5": { "AdvanceThreshold": 0.8 }
         }
       },
       {
-        "Name": "👅Can't touch me",
+        "Name": "🤖lvl5",
         "Sprite": "ship_red",
         "Color": "red",
-        "TargetingAverageError": 0.0,
-        "FiringDelayMS": 0,
-        "ShootingTime": 100,
-        "ShootingDelay": 0,
-        "AttackAbandoned": true,
-        "AttackFish": true,
-        "BoostThreshold": 900,
-        "ContextRingBlending": {
-          "BlurAmount": 0.3
-        },
         "BehaviorsModifications": {
           "1": { "BehaviorWeight": 5 },
           "5": { "AdvanceThreshold": 1 }
         }
       },
       {
-        "Name": "🤖Try no shield",
+        "Name": "🤖lvl6",
         "Sprite": "ship0",
         "Color": "red",
-        "TargetingAverageError": 0.0,
-        "FiringDelayMS": 0,
         "ShootingTime": 100,
-        "ShootingDelay": 0,
-        "AttackAbandoned": true,
-        "AttackFish": true,
-        "BoostThreshold": 900,
         "BehaviorsModifications": {
           "1": { "BehaviorWeight": 4 },
           "4": { "BehaviorWeight": 1 },
@@ -148,7 +81,7 @@
 
   "ContextRingBlending": {
     "BlurSteps": 10,
-    "BlurAmount": 0.5,
+    "BlurAmount": 0.3,
     "BlurResolutionMultiplier": 1
   },
 

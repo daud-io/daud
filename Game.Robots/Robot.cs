@@ -46,8 +46,6 @@
         protected virtual Task OnSpawnAsync() => Task.FromResult(0);
         protected virtual Task OnNewLeaderboardAsync() => Task.FromResult(0);
 
-        private bool IsSpawning = false;
-
         public bool Shooting { get; private set; }
         public Vector2 ShootingAt { get; private set; }
         public long ShootUntil { get; set; }
@@ -173,7 +171,6 @@
             {
                 this.SpawnTime = Connection.GameTime;
                 await OnSpawnAsync();
-                IsSpawning = false;
             }
 
             IsAlive = Connection.IsAlive;
@@ -253,11 +250,10 @@
         {
             await DeadAsync();
 
-            if (AutoSpawn && !IsSpawning)
-                if (DeathTime + RespawnFalloffMS < GameTime)
-                {
-                    await SpawnAsync();
-                }
+            if (AutoSpawn && (Connection.Hook?.CanSpawn??true) && DeathTime + RespawnFalloffMS < GameTime)
+            {
+                await SpawnAsync();
+            }
         }
 
         protected async Task Exit()
@@ -267,7 +263,7 @@
 
         public virtual async Task SpawnAsync()
         {
-            IsSpawning = true;
+            DeathTime = GameTime;
             await Connection.SpawnAsync(Name, Sprite, Color);
         }
 
