@@ -84,12 +84,12 @@
                 if (config.Allies != null)
                     SensorAllies.AlliedNames = config.Allies;
                 
-                if (config.Blending != null)
+                if (config.BlendingConfig != null)
                 {
                     var ring = ContextRingBlending as ContextRingBlendingWeighted;
-                    ring.BlurSteps = config.Blending.BlurSteps;
-                    ring.BlurAmount = config.Blending.BlurAmount;
-                    ring.BlurResolutionMultiplier = config.Blending.BlurResolutionMultiplier;
+                    ring.BlurSteps = config.BlendingConfig.BlurSteps;
+                    ring.BlurAmount = config.BlendingConfig.BlurAmount;
+                    ring.BlurResolutionMultiplier = config.BlendingConfig.BlurResolutionMultiplier;
                 }
 
                 JsonConvert.PopulateObject(text, this);

@@ -8,8 +8,8 @@
   "BoostThreshold": 16,
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
   "Steps": 32,
-  "RingDebugEnabled": true,
-  "Blending": {
+  "RingDebugEnabled": false,
+  "BlendingConfig": {
     "BlurSteps": 10,
     "BlurAmount": 0.1,
     "BlurResolutionMultiplier": 4

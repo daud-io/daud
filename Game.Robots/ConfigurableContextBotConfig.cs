@@ -18,7 +18,7 @@
 
         public LevelingConfig Leveling { get; set; }
 
-        public BlendingConfig Blending { get; set; }
+        public BlendingConfigModel BlendingConfig { get; set; }
 
         public class LevelingConfig
         {
@@ -27,7 +27,7 @@
             public int DownlevelThresholdMS { get; set; }
         }
 
-        public class BlendingConfig
+        public class BlendingConfigModel
         {
             public int BlurSteps { get; set; } = 10;
             public float BlurAmount { get; set; } = 0.05f;
