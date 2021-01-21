@@ -34,30 +34,37 @@ fish_orange,
 fish_pink,
 fish_red,
 fish_yellow {
-    size: 3;
+    size: 2.5;
+    animated: true;
+    loop: true;
+    animation-speed: 0.2;
+    tile: {
+      size: 64;
+      count: 40;
+    }
 }
 
 // fish
 fish_cyan {
-  file: "ship_cyan";
+  file: "fish_cyan";
 }
 fish_blue {
-  file: "ship_blue";
+  file: "fish_blue";
 }
 fish_green {
-  file: "ship_green";
+  file: "fish_green";
 }
 fish_orange {
-  file: "ship_orange";
+  file: "fish_orange";
 }
 fish_pink {
-  file: "ship_pink";
+  file: "fish_pink";
 }
 fish_red {
-  file: "ship_red";
+  file: "fish_red";
 }
 fish_yellow {
-  file: "ship_yellow";
+  file: "fish_yellow";
 }
 
 // boom emitter
