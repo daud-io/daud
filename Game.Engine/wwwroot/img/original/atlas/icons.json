@@ -1,0 +1,75 @@
+{"frames": {
+
+"android-chrome-96x96.png":
+{
+	"frame": {"x":210,"y":2,"w":96,"h":96},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":96,"h":96},
+	"sourceSize": {"w":96,"h":96},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"apple-touch-icon.png":
+{
+	"frame": {"x":210,"y":100,"w":76,"h":76},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":76,"h":76},
+	"sourceSize": {"w":76,"h":76},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"favicon-16x16.png":
+{
+	"frame": {"x":2,"y":210,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"favicon-32x32.png":
+{
+	"frame": {"x":260,"y":178,"w":32,"h":32},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":32},
+	"sourceSize": {"w":32,"h":32},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"favicon.ico":
+{
+	"frame": {"x":210,"y":178,"w":48,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
+	"sourceSize": {"w":48,"h":48},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"mstile-150x150.png":
+{
+	"frame": {"x":2,"y":2,"w":206,"h":206},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":206,"h":206},
+	"sourceSize": {"w":206,"h":206},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"safari-pinned-tab.svg":
+{
+	"frame": {"x":20,"y":210,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "icons.png",
+	"format": "RGBA8888",
+	"size": {"w":308,"h":228},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:058343587ec1b9da2738ead469d2cad7:c5912801570c0cb496a0f602d4828665:a73c72aca107c42120aa7eba166486e5$"
+}
+}

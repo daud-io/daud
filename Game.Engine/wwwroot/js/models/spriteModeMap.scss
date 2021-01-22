@@ -63,7 +63,7 @@ ship {
     }
 
     &.boost {
-        textures: inherit, 'thruster_cyan';
+        textures: 'ship_cyan_boost', 'thruster_cyan';
     }
 
     &.blue {
@@ -71,7 +71,7 @@ ship {
         selector: 'ship_blue';
 
         &.boost {
-            textures: inherit, 'thruster_blue';
+            textures: 'ship_blue_boost', 'thruster_blue';
         }
     }
 
@@ -80,7 +80,7 @@ ship {
         selector: 'ship_green';
 
         &.boost {
-            textures: inherit, 'thruster_green';
+            textures: 'ship_green_boost', 'thruster_green';
         }
     }
 
@@ -89,7 +89,7 @@ ship {
         selector: 'ship_orange';
 
         &.boost {
-            textures: inherit, 'thruster_orange';
+            textures: 'ship_orange_boost', 'thruster_orange';
         }
     }
 
@@ -98,7 +98,7 @@ ship {
         selector: 'ship_pink';
 
         &.boost {
-            textures: inherit, 'thruster_pink';
+            textures: 'ship_pink_boost', 'thruster_pink';
         }
     }
 
@@ -107,7 +107,7 @@ ship {
         selector: 'ship_red';
 
         &.boost {
-            textures: inherit, 'thruster_red';
+            textures: 'ship_red_boost', 'thruster_red';
         }
     }
 
@@ -116,7 +116,7 @@ ship {
         selector: 'ship_yellow';
 
         &.boost {
-            textures: inherit, 'thruster_yellow';
+            textures: 'ship_yellow_boost', 'thruster_yellow';
         }
     }
     
