@@ -15,11 +15,16 @@ export class Fleet {
     usingPlotly: boolean;
     constructor(container: CustomContainer, cache) {
         this.container = container;
+        //this.container.sortableChildren = true;
         this.caption = null;
         this.ships = [];
         this.ID = false;
-
-        this.text = new PIXI.Text("", { fontFamily: [Settings.font, "NotoColorEmoji"], fontSize: Settings.nameSize, fill: 0xffffff });
+        this.text = new PIXI.Text("", { fontFamily: [Settings.font, "NotoColorEmoji"], fontSize: Settings.nameSize * 4, fill: 0xffffff });
+        this.text.scale.x = 0.25;
+        this.text.scale.y = 0.25;
+        this.text.style.stroke = "black";
+        this.text.style.strokeThickness = 8;
+        //this.text.zIndex = 100;
         this.textChat = new PIXI.Text("", { fontFamily: "FontAwesome", fontSize: Settings.nameSize, fill: 0xffffff });
         this.chat = null;
         this.plotly = null;
@@ -29,8 +34,8 @@ export class Fleet {
         this.text.position.y = 0;
         this.textChat.position.x = 0;
         this.textChat.position.y = 0;
-        this.text.parentGroup = this.container.bodyGroup;
-        this.textChat.parentGroup = this.container.bodyGroup;
+        /*this.text.parentGroup = this.container.bodyGroup;
+        this.textChat.parentGroup = this.container.bodyGroup;*/
         this.container.addChild(this.text);
         this.container.addChild(this.textChat);
     }

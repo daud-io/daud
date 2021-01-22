@@ -33,7 +33,7 @@ export const Settings = {
     showOwnName: true,
     allowDarkblueShips: true,
     showHints: true,
-    nameSize: 12,
+    nameSize: 14,
     background: "on",
     mipmapping: true,
     updatesVersion: 0,
