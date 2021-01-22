@@ -51,15 +51,15 @@
                     },
                     BaseThrustConverter = 0.0025f,
 
-                    Drag = 0.87f,
-                    DragBoost = 0.96f,
+                    Drag = 0.88f,
+                    DragBoost = 0.95f,
                     DragAbandoned = 0.95f,
 
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
                     BoostThrust = 0.01f,
-                    BoostThrust2 = 0.11f,
+                    BoostThrust2 = 0.10f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
@@ -70,7 +70,7 @@
                     BoostDuration = 750,
 
                     AbandonBuffer = 120,
-                    AbandonMomentumMultiplier = 0.75f,
+                    AbandonMomentumMultiplier = 0.5f,
 
                     ShotCooldownTimeM = 45,
                     ShotCooldownTimeB = 500,
@@ -153,8 +153,8 @@
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
                     FlockSeparation = 1f,
-                    FlockSeparationMinimumDistance = 36,
-                    FlockWeight = 2.1f,
+                    FlockSeparationMinimumDistance = 35,
+                    FlockWeight = 2.2f,
                     SnakeWeight = 0f,
                     BossMode = false,
                     
