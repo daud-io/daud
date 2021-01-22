@@ -31,7 +31,7 @@
                     Quantization = false,
                     QuantizationCount = 16,
 
-                    ShipAddRadius = 5,
+                    ShipAddRadius = 8,
 
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
@@ -152,9 +152,9 @@
                     FlockAlignment = 1f,
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
-                    FlockSeparation = 5f,
-                    FlockSeparationMinimumDistance = 20,
-                    FlockWeight = 1f,
+                    FlockSeparation = 1f,
+                    FlockSeparationMinimumDistance = 36,
+                    FlockWeight = 2.1f,
                     SnakeWeight = 0f,
                     BossMode = false,
                     
