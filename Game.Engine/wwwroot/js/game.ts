@@ -502,7 +502,7 @@ app.ticker.add(() => {
         if (cache.groups[key].ID == fleetID) {
             if (Number(fleetSizeDisplay.innerHTML) !== cache.groups[key].renderer.ships.length) {
                 fleetSizeDisplay.innerText = cache.groups[key].renderer.ships.length;
-                //shake(canvas, 1);
+                //shake(document.body, 3);
             }
         }
     }

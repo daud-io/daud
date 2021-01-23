@@ -53,13 +53,13 @@
 
                     Drag = 0.88f,
                     DragBoost = 0.94f,
-                    DragAbandoned = 0.95f,
+                    DragAbandoned = 0.94f,
 
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
                     BoostThrust = 0.012f,
-                    BoostThrust2 = 0.12f,
+                    BoostThrust2 = 0.1f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
