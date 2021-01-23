@@ -69,9 +69,9 @@ fish_yellow {
 
 // boom emitter
 boom {
-  emitter: "emitter1";
-  particle: "ctf_arrow_red";
-  size: 0.1;
+  emitter: "boom";
+  particle: "ship_cyan_boost";
+  size: 0.01;
 }
 
 ship0,

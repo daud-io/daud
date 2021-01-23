@@ -381,6 +381,10 @@
                     //BoostAngle = angle;
                     if (ship.Momentum != Vector2.Zero)
                         ship.Momentum += Vector2.Normalize(FleetMomentum) * World.Hook.BoostSpeed * BoostM;
+                
+                /*if (ship.Momentum.LengthSquared() != 0) {
+                    ship.Momentum = Vector2.Multiply(Vector2.Normalize(ship.Momentum), (Single)Math.Round(ship.Momentum.Length()*100)/100);
+                }*/
             }
 
             if (isShooting)

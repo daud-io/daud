@@ -49,5 +49,53 @@
 		"particlesPerWave": 10,
 		"particleSpacing": 0,
 		"angleStart": 0
+	},
+	"boom": {
+		"alpha": {
+			"start": 1,
+			"end": 0
+		},
+		"scale": {
+			"start": 0.015,
+			"end": 0,
+			"minimumScaleMultiplier": 0
+		},
+		"color": {
+			"start": "#ffffff",
+			"end": "#ffffff"
+		},
+		"speed": {
+			"start": 10,
+			"end": 0,
+			"minimumSpeedMultiplier": 1
+		},
+		"acceleration": {
+			"x": 0,
+			"y": 0
+		},
+		"maxSpeed": 0,
+		"startRotation": {
+			"min": 0,
+			"max": 360
+		},
+		"noRotation": false,
+		"rotationSpeed": {
+			"min": -180,
+			"max": 180
+		},
+		"lifetime": {
+			"min": 0.5,
+			"max": 0.5
+		},
+		"blendMode": "normal",
+		"frequency": 0.001,
+		"emitterLifetime": -0.5,
+		"maxParticles": 1,
+		"pos": {
+			"x": 0,
+			"y": 0
+		},
+		"addAtBack": false,
+		"spawnType": "point"
 	}
 }
