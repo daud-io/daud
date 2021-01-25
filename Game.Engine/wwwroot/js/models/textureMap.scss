@@ -74,6 +74,28 @@ boom {
   size: 0.01;
 }
 
+bullet_emitter_blue {
+  emitter: "bullet_blue";
+}
+bullet_emitter_cyan {
+  emitter: "bullet_cyan";
+}
+bullet_emitter_green {
+  emitter: "bullet_green";
+}
+bullet_emitter_orange {
+  emitter: "bullet_orange";
+}
+bullet_emitter_pink {
+  emitter: "bullet_pink";
+}
+bullet_emitter_red {
+  emitter: "bullet_red";
+}
+bullet_emitter_yellow {
+  emitter: "bullet_yellow";
+}
+
 ship0,
 ship_gray,
 ship_flash,
@@ -195,31 +217,67 @@ bullet_orange,
 bullet_pink,
 bullet_red,
 bullet_yellow {
-  size: 5.5;
+  size: 2.8;
 }
 bullet {
   file: "bullet";
 }
 bullet_cyan {
-  file: "bullet_cyan";
+  file: "laser_cyan";
 }
 bullet_blue {
-  file: "bullet_blue";
+  file: "laser_blue";
 }
 bullet_green {
-  file: "bullet_green";
+  file: "laser_green";
 }
 bullet_orange {
-  file: "bullet_orange";
+  file: "laser_orange";
 }
 bullet_pink {
-  file: "bullet_pink";
+  file: "laser_pink";
 }
 bullet_red {
-  file: "bullet_red";
+  file: "laser_red";
 }
 bullet_yellow {
-  file: "bullet_yellow";
+  file: "laser_yellow";
+}
+
+laser_blue_trail,
+laser_cyan_trail,
+laser_green_trail,
+laser_orange_trail,
+laser_pink_trail,
+laser_orange_trail,
+laser_red_trail,
+laser_yellow_trail {
+  size: 2.8;
+  offset: {
+    x: -34;
+    y: 0;
+  };
+}
+laser_blue_trail {
+  file: "laser_blue_trail";
+}
+laser_cyan_trail {
+  file: "laser_cyan_trail";
+}
+laser_green_trail {
+  file: "laser_green_trail";
+}
+laser_orange_trail {
+  file: "laser_orange_trail";
+}
+laser_pink_trail {
+  file: "laser_pink_trail";
+}
+laser_red_trail {
+  file: "laser_red_trail";
+}
+laser_yellow_trail {
+  file: "laser_yellow_trail";
 }
 
 obstacle {
