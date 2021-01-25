@@ -124,6 +124,7 @@ ship_secret,
 ship_zed {
   size: 3.1;
 }
+
 // daudelins
 ship0 {
   file: "ship0";
@@ -157,49 +158,80 @@ ship_red {
 ship_yellow {
   file: "ship_yellow";
 }
+
 // boost
+ship_blue_boost,
+ship_cyan_boost,
+ship_green_boost,
+ship_orange_boost,
+ship_pink_boost,
+ship_red_boost,
+ship_yellow_boost {
+  animated: true;
+  loop: false;
+  animation-speed: 0.85;
+  tile: {
+    size: 128;
+    count: 40;
+  }
+}
 ship_cyan_boost {
-  file: "ship_cyan_boost";
+  file: "ship_cyan_boost_ani";
 }
 ship_blue_boost {
-  file: "ship_blue_boost";
+  file: "ship_blue_boost_ani";
 }
 ship_green_boost {
-  file: "ship_green_boost";
+  file: "ship_green_boost_ani";
 }
 ship_orange_boost {
-  file: "ship_orange_boost";
+  file: "ship_orange_boost_ani";
 }
 ship_pink_boost {
-  file: "ship_pink_boost";
+  file: "ship_pink_boost_ani";
 }
 ship_red_boost {
-  file: "ship_red_boost";
+  file: "ship_red_boost_ani";
 }
 ship_yellow_boost {
-  file: "ship_yellow_boost";
+  file: "ship_yellow_boost_ani";
 }
 // abandoned ships
+ship_ab_cyan,
+ship_ab_blue,
+ship_ab_green,
+ship_ab_orange,
+ship_ab_pink,
+ship_ab_red,
+ship_ab_yellow {
+  animated: true;
+  loop: false;
+  animation-speed: 0.3;
+  tile: {
+    size: 128;
+    count: 30;
+  }
+}
 ship_ab_cyan {
-  file: "ship_ab_cyan";
+  file: "ship_ab_cyan_ani";
 }
 ship_ab_blue {
-  file: "ship_ab_blue";
+  file: "ship_ab_blue_ani";
 }
 ship_ab_green {
-  file: "ship_ab_green";
+  file: "ship_ab_green_ani";
 }
 ship_ab_orange {
-  file: "ship_ab_orange";
+  file: "ship_ab_orange_ani";
 }
 ship_ab_pink {
-  file: "ship_ab_pink";
+  file: "ship_ab_pink_ani";
 }
 ship_ab_red {
-  file: "ship_ab_red";
+  file: "ship_ab_red_ani";
 }
 ship_ab_yellow {
-  file: "ship_ab_yellow";
+  file: "ship_ab_yellow_ani";
 }
 // premium ships
 ship_secret {
@@ -337,41 +369,40 @@ thruster_orange,
 thruster_pink,
 thruster_red,
 thruster_yellow {
-  /*animated: true;
+  animated: true;
   loop: false;
-  animation-speed: 0.8;*/
+  animation-speed: 0.85;
   size: 4;
-  /*rotate: 90;*/
   offset: {
-    x: -8;
+    x: -10;
     y: 0;
   }
-  /*tile: {
-    size: 64;
-    count: 29;
-  }*/
+  tile: {
+    size: 128;
+    count: 40;
+  }
 }
 
 thruster_cyan {
-  file: "boost_trail_cyan";
+  file: "boost_trail_cyan_ani";
 }
 thruster_blue {
-  file: "boost_trail_blue";
+  file: "boost_trail_blue_ani";
 }
 thruster_green {
-  file: "boost_trail_green";
+  file: "boost_trail_green_ani";
 }
 thruster_orange {
-  file: "boost_trail_orange";
+  file: "boost_trail_orange_ani";
 }
 thruster_pink {
-  file: "boost_trail_pink";
+  file: "boost_trail_pink_ani";
 }
 thruster_red {
-  file: "boost_trail_red";
+  file: "boost_trail_red_ani";
 }
 thruster_yellow {
-  file: "boost_trail_yellow";
+  file: "boost_trail_yellow_ani";
 }
 offenseupgrade,
 defenseupgrade {

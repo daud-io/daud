@@ -132,11 +132,11 @@
 			"max": 0
 		},
 		"lifetime": {
-			"min": 0.2,
-			"max": 0.2
+			"min": 0.15,
+			"max": 0.15
 		},
 		"blendMode": "normal",
-		"frequency": 0.15,
+		"frequency": 0.1,
 		"emitterLifetime": -0.2,
 		"maxParticles": 1000,
 		"pos": {
@@ -148,7 +148,7 @@
 		"spawnCircle": {
 			"x": 0,
 			"y": 0,
-			"r": 1
+			"r": 2
 		}
 	},
 	"bullet_cyan": {
@@ -185,11 +185,11 @@
 			"max": 0
 		},
 		"lifetime": {
-			"min": 0.2,
-			"max": 0.2
+			"min": 0.15,
+			"max": 0.15
 		},
 		"blendMode": "normal",
-		"frequency": 0.15,
+		"frequency": 0.1,
 		"emitterLifetime": -0.2,
 		"maxParticles": 1000,
 		"pos": {
@@ -201,7 +201,7 @@
 		"spawnCircle": {
 			"x": 0,
 			"y": 0,
-			"r": 1
+			"r": 2
 		}
 	},
 	"bullet_green": {
@@ -238,11 +238,11 @@
 			"max": 0
 		},
 		"lifetime": {
-			"min": 0.2,
-			"max": 0.2
+			"min": 0.15,
+			"max": 0.15
 		},
 		"blendMode": "normal",
-		"frequency": 0.15,
+		"frequency": 0.1,
 		"emitterLifetime": -0.2,
 		"maxParticles": 1000,
 		"pos": {
@@ -254,7 +254,7 @@
 		"spawnCircle": {
 			"x": 0,
 			"y": 0,
-			"r": 1
+			"r": 2
 		}
 	},
 	"bullet_orange": {
@@ -291,11 +291,11 @@
 			"max": 0
 		},
 		"lifetime": {
-			"min": 0.2,
-			"max": 0.2
+			"min": 0.15,
+			"max": 0.15
 		},
 		"blendMode": "normal",
-		"frequency": 0.15,
+		"frequency": 0.1,
 		"emitterLifetime": -0.2,
 		"maxParticles": 1000,
 		"pos": {
@@ -307,7 +307,7 @@
 		"spawnCircle": {
 			"x": 0,
 			"y": 0,
-			"r": 1
+			"r": 2
 		}
 	},
 	"bullet_pink": {
@@ -344,11 +344,11 @@
 			"max": 0
 		},
 		"lifetime": {
-			"min": 0.2,
-			"max": 0.2
+			"min": 0.15,
+			"max": 0.15
 		},
 		"blendMode": "normal",
-		"frequency": 0.15,
+		"frequency": 0.1,
 		"emitterLifetime": -0.2,
 		"maxParticles": 1000,
 		"pos": {
@@ -360,7 +360,7 @@
 		"spawnCircle": {
 			"x": 0,
 			"y": 0,
-			"r": 1
+			"r": 2
 		}
 	},
 	"bullet_red": {
@@ -397,11 +397,11 @@
 			"max": 0
 		},
 		"lifetime": {
-			"min": 0.2,
-			"max": 0.2
+			"min": 0.15,
+			"max": 0.15
 		},
 		"blendMode": "normal",
-		"frequency": 0.15,
+		"frequency": 0.1,
 		"emitterLifetime": -0.2,
 		"maxParticles": 1000,
 		"pos": {
@@ -413,7 +413,7 @@
 		"spawnCircle": {
 			"x": 0,
 			"y": 0,
-			"r": 1
+			"r": 2
 		}
 	},
 	"bullet_yellow": {
@@ -450,11 +450,11 @@
 			"max": 0
 		},
 		"lifetime": {
-			"min": 0.2,
-			"max": 0.2
+			"min": 0.15,
+			"max": 0.15
 		},
 		"blendMode": "normal",
-		"frequency": 0.15,
+		"frequency": 0.1,
 		"emitterLifetime": -0.2,
 		"maxParticles": 1000,
 		"pos": {
@@ -466,7 +466,7 @@
 		"spawnCircle": {
 			"x": 0,
 			"y": 0,
-			"r": 1
+			"r": 2
 		}
 	}
 }
