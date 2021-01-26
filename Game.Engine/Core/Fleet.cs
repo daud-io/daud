@@ -383,7 +383,7 @@
                         ship.Momentum += Vector2.Normalize(FleetMomentum) * World.Hook.BoostSpeed * BoostM;
                 
                 /*if (ship.Momentum.LengthSquared() != 0) {
-                    ship.Momentum = Vector2.Multiply(Vector2.Normalize(ship.Momentum), (Single)Math.Round(ship.Momentum.Length()*100)/100);
+                    ship.Momentum = Vector2.Multiply(Vector2.Normalize(ship.Momentum), (Single)Math.Round(ship.Momentum.Length()*200)/200);
                 }*/
             }
 

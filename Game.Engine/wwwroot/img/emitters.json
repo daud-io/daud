@@ -56,8 +56,8 @@
 			"end": 1
 		},
 		"scale": {
-			"start": 1,
-			"end": 0,
+			"start": 0.01,
+			"end": 0.00,
 			"minimumScaleMultiplier": 1
 		},
 		"color": {
@@ -65,8 +65,8 @@
 			"end": "#ffffff"
 		},
 		"speed": {
-			"start": 10,
-			"end": 0,
+			"start": 100,
+			"end": 100,
 			"minimumSpeedMultiplier": 1
 		},
 		"acceleration": {
@@ -76,30 +76,32 @@
 		"maxSpeed": 0,
 		"startRotation": {
 			"min": 0,
-			"max": 12
+			"max": 360
 		},
 		"noRotation": false,
 		"rotationSpeed": {
-			"min": 0,
-			"max": 22
+			"min": -180,
+			"max": 180
 		},
 		"lifetime": {
 			"min": 0.2,
 			"max": 0.2
 		},
 		"blendMode": "normal",
-		"frequency": 0.1,
-		"emitterLifetime": 0.31,
-		"maxParticles": 1,
+		"frequency": 0.2,
+		"emitterLifetime": -0.31,
+		"maxParticles": 1000,
 		"pos": {
 			"x": 0,
 			"y": 0
 		},
 		"addAtBack": false,
-		"spawnType": "burst",
-		"particlesPerWave": 1,
-		"particleSpacing": 0,
-		"angleStart": 0
+		"spawnType": "circle",
+		"spawnCircle": {
+			"x": 0,
+			"y": 0,
+			"r": 1
+		}
 	},
 	"bullet_blue": {
 		"alpha": {
