@@ -36,12 +36,30 @@ async function themeChange() {
 }
 themeSelector.onchange = themeChange;
 
-mouseScale.onchange = () => (Settings.mouseScale = Number(mouseScale.value)) && save();
-showHints.onchange = () => (Settings.showHints = showHints.checked) && save();
-bandwidth.onchange = () => (Settings.bandwidth = Number(bandwidth.value)) && save();
-logLength.onchange = () => (Settings.logLength = Number(logLength.value)) && save();
-nameSize.onchange = () => (Settings.nameSize = Number(nameSize.value)) && save();
-backgroundEl.onchange = () => (Settings.background = backgroundEl.checked) && save();
+mouseScale.onchange = () => {
+    Settings.mouseScale = Number(mouseScale.value);
+    save();
+};
+showHints.onchange = () => {
+    Settings.showHints = showHints.checked;
+    save();
+};
+bandwidth.onchange = () => {
+    Settings.bandwidth = Number(bandwidth.value);
+    save();
+};
+logLength.onchange = () => {
+    Settings.logLength = Number(logLength.value);
+    save();
+};
+nameSize.onchange = () => {
+    Settings.nameSize = Number(nameSize.value);
+    save();
+};
+backgroundEl.onchange = () => {
+    Settings.background = backgroundEl.checked;
+    save();
+};
 
 function save() {
     bus.emit("settings");

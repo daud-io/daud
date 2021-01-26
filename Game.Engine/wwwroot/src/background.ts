@@ -2,11 +2,12 @@ import { getDefinition } from "./loader";
 import * as PIXI from "pixi.js";
 import { Vector2 } from "./Vector2";
 import bus from "./bus";
+import { Settings } from "./settings";
 
 let container: PIXI.Container | undefined;
 let focus: Vector2 = new Vector2(0, 0);
 let speeds: number[] = [];
-let backgroundSprites: PIXI.TilingSprite[];
+let backgroundSprites: PIXI.TilingSprite[] = [];
 
 export function setContainer(newContainer: PIXI.Container): void {
     container = newContainer;
@@ -33,9 +34,6 @@ bus.on("loaded", () => {
     };
     speeds = spriteDefinition.layerSpeeds;
     const allLayersTextures = spriteDefinition.layerTextures.map((x) => getDefinition(x));
-    if (!backgroundSprites) {
-        backgroundSprites = [];
-    }
     for (let i = 0; i < allLayersTextures.length; i++) {
         const textures = allLayersTextures[i].textures!;
         if (textures.length > 0) {
@@ -53,12 +51,16 @@ bus.on("loaded", () => {
     draw();
 });
 
+bus.on("settings", () => {
+    for (const sprite of backgroundSprites) {
+        sprite.visible = Settings.background;
+    }
+});
+
 export function destroy(): void {
-    if (backgroundSprites) {
-        for (let i = 0; i < backgroundSprites.length; i++) {
-            const backgroundSprite = backgroundSprites[i];
-            if (backgroundSprite && container) container.removeChild(backgroundSprite);
-        }
+    for (let i = 0; i < backgroundSprites.length; i++) {
+        const backgroundSprite = backgroundSprites[i];
+        if (backgroundSprite && container) container.removeChild(backgroundSprite);
     }
 
     backgroundSprites = [];
