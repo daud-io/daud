@@ -25,7 +25,7 @@ const nameSize = document.getElementById("settingsNameSize") as HTMLInputElement
 const backgroundEl = document.getElementById("settingsShowBackground") as HTMLInputElement;
 loadSettings();
 
-themeSelector.onchange = async () => {
+async function themeChange() {
     Settings.theme = themeSelector.value;
     if (Settings.theme) await theme();
     else await load();
@@ -33,7 +33,9 @@ themeSelector.onchange = async () => {
     cache.refreshSprites();
     initializeWorld();
     save();
-};
+}
+themeSelector.onchange = themeChange;
+
 mouseScale.onchange = () => (Settings.mouseScale = Number(mouseScale.value)) && save();
 showHints.onchange = () => (Settings.showHints = showHints.checked) && save();
 bandwidth.onchange = () => (Settings.bandwidth = Number(bandwidth.value)) && save();
@@ -66,6 +68,11 @@ export function loadSettings(): void {
 
 export async function theme(): Promise<void> {
     //`https://dl.dropboxusercontent.com/s/${v.toLowerCase()}/daudmod.zip`;
+    if (!["/themes/daudmod.zip", "/themes/retro.zip"].includes(Settings.theme)) {
+        themeSelector.value = "";
+        await themeChange();
+        return;
+    }
     const zip = await window
         .fetch(Settings.theme)
         .then((response) => response.blob())
