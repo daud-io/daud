@@ -29,15 +29,15 @@
             Angle = (float)r.NextDouble() * MathF.PI * 2;
             ThrustAmount = World.Hook.FishThrust;
             r = new Random();
-            int rInt = r.Next(0, 6); //for ints
+            int rInt = r.Next(0, 7); //for ints
             switch (rInt) {
                 case 0: Sprite = Sprites.fish_red; break;
                 case 1: Sprite = Sprites.fish_cyan; break;
                 case 2: Sprite = Sprites.fish_blue; break;
                 case 3: Sprite = Sprites.fish_green; break;
                 case 4: Sprite = Sprites.fish_pink; break;
-                case 6: Sprite = Sprites.fish_yellow; break;
-                case 7: Sprite = Sprites.fish_orange; break;
+                case 5: Sprite = Sprites.fish_yellow; break;
+                case 6: Sprite = Sprites.fish_orange; break;
                 default: Sprite = Sprites.fish_red; break;
             }
         }
