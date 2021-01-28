@@ -63,6 +63,14 @@ const allowDarkblueShips = <HTMLInputElement>document.getElementById("settingsAl
 const nameSize = <HTMLInputElement>document.getElementById("settingsNameSize");
 const background = <HTMLInputElement>document.getElementById("settingsBackground");
 
+Array.from(document.getElementById("settings-text").children).forEach((elem) => {
+    elem.addEventListener("click", () => {
+        Settings.graphics = elem.id.split("-")[1];
+        Cookies.set("settings", Settings, { expires: 300 });
+        window.location.reload();
+    });
+});
+
 function save() {
     const cookieOptions = { expires: 300 };
     let reload = false;
@@ -144,6 +152,8 @@ function load() {
     allowDarkblueShips.checked = Settings.allowDarkblueShips;
     nameSize.value = String(Settings.nameSize);
     background.value = Settings.background;
+
+    document.getElementById(`graphics-${Settings.graphics}`).classList.add("setting-selected");
 }
 function oldTextureKeyEntToNew(key, entry) {
     var newEntList = [];
