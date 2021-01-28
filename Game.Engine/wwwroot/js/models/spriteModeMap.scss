@@ -15,25 +15,25 @@ world {
 
 fish {
     &.cyan {
-        textures: 'fish_cyan';
+        textures: 'food_cyan_glow', 'fish_cyan';
     }
     &.blue {
-        textures: 'fish_blue';
+        textures: 'food_blue_glow', 'fish_blue';
     }
     &.green {
-        textures: 'fish_green';
+        textures: 'food_green_glow', 'fish_green';
     }
     &.pink {
-        textures: 'fish_pink';
+        textures: 'food_pink_glow', 'fish_pink';
     }
     &.orange {
-        textures: 'fish_orange';
+        textures: 'food_orange_glow', 'fish_orange';
     }
     &.red {
-        textures: 'fish_red';
+        textures: 'food_red_glow', 'fish_red';
     }
     &.yellow {
-        textures: 'fish_yellow';
+        textures: 'food_yellow_glow', 'fish_yellow';
     }
 }
 

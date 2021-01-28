@@ -27,6 +27,7 @@ bg {
   size: 50%;
 }
 
+// fish
 fish_blue,
 fish_cyan,
 fish_green,
@@ -34,37 +35,65 @@ fish_orange,
 fish_pink,
 fish_red,
 fish_yellow {
-    size: 2.5;
+    size: 2;
+}
+fish_cyan {
+  file: "food_cyan";
+}
+fish_blue {
+  file: "food_blue";
+}
+fish_green {
+  file: "food_green";
+}
+fish_orange {
+  file: "food_orange";
+}
+fish_pink {
+  file: "food_pink";
+}
+fish_red {
+  file: "food_red";
+}
+fish_yellow {
+  file: "food_yellow";
+}
+food_blue_glow,
+food_cyan_glow,
+food_green_glow,
+food_orange_glow,
+food_pink_glow,
+food_red_glow,
+food_yellow_glow {
+    size: 4;
     animated: true;
     loop: true;
-    animation-speed: 0.2;
+    animation-speed: 0.4;
     tile: {
       size: 64;
       count: 40;
     }
 }
-
-// fish
-fish_cyan {
-  file: "fish_cyan";
+food_blue_glow {
+  file: "food_blue_glow_ani";
 }
-fish_blue {
-  file: "fish_blue";
+food_cyan_glow {
+  file: "food_cyan_glow_ani";
 }
-fish_green {
-  file: "fish_green";
+food_green_glow {
+  file: "food_green_glow_ani";
 }
-fish_orange {
-  file: "fish_orange";
+food_orange_glow {
+  file: "food_orange_glow_ani";
 }
-fish_pink {
-  file: "fish_pink";
+food_pink_glow {
+  file: "food_pink_glow_ani";
 }
-fish_red {
-  file: "fish_red";
+food_red_glow {
+  file: "food_red_glow_ani";
 }
-fish_yellow {
-  file: "fish_yellow";
+food_yellow_glow {
+  file: "food_yellow_glow_ani";
 }
 
 // boom emitter
