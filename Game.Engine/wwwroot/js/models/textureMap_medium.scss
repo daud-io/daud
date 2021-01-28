@@ -1,0 +1,601 @@
+/*export const BLEND_MODES = {
+    NORMAL:         0;
+    ADD:            1;
+    MULTIPLY:       2;
+    SCREEN:         3;
+    OVERLAY:        4;
+    DARKEN:         5;
+    LIGHTEN:        6;
+    COLOR_DODGE:    7;
+    COLOR_BURN:     8;
+    HARD_LIGHT:     9;
+    SOFT_LIGHT:     10;
+    DIFFERENCE:     11;
+    EXCLUSION:      12;
+    HUE:            13;
+    SATURATION:     14;
+    COLOR:          15;
+    LUMINOSITY:     16;
+    NORMAL_NPM:     17;
+    ADD_NPM:        18;
+    SCREEN_NPM:     19;
+};
+*/
+
+bg {
+  file: "bg";
+  size: 50%;
+}
+
+// fish
+fish_blue,
+fish_cyan,
+fish_green,
+fish_orange,
+fish_pink,
+fish_red,
+fish_yellow {
+    size: 2;
+}
+fish_cyan {
+  file: "food_cyan";
+}
+fish_blue {
+  file: "food_blue";
+}
+fish_green {
+  file: "food_green";
+}
+fish_orange {
+  file: "food_orange";
+}
+fish_pink {
+  file: "food_pink";
+}
+fish_red {
+  file: "food_red";
+}
+fish_yellow {
+  file: "food_yellow";
+}
+food_blue_glow,
+food_cyan_glow,
+food_green_glow,
+food_orange_glow,
+food_pink_glow,
+food_red_glow,
+food_yellow_glow {
+    size: 4;
+    animated: true;
+    loop: true;
+    animation-speed: 0.4;
+    tile: {
+      size: 64;
+      count: 40;
+    }
+}
+food_blue_glow {
+  file: "food_blue_glow_ani";
+}
+food_cyan_glow {
+  file: "food_cyan_glow_ani";
+}
+food_green_glow {
+  file: "food_green_glow_ani";
+}
+food_orange_glow {
+  file: "food_orange_glow_ani";
+}
+food_pink_glow {
+  file: "food_pink_glow_ani";
+}
+food_red_glow {
+  file: "food_red_glow_ani";
+}
+food_yellow_glow {
+  file: "food_yellow_glow_ani";
+}
+
+// boom emitter
+boom {
+  emitter: "boom";
+  particle: "ship_cyan_boost";
+  size: 0.01;
+}
+
+bullet_emitter_blue {
+  emitter: "bullet_blue";
+}
+bullet_emitter_cyan {
+  emitter: "bullet_cyan";
+}
+bullet_emitter_green {
+  emitter: "bullet_green";
+}
+bullet_emitter_orange {
+  emitter: "bullet_orange";
+}
+bullet_emitter_pink {
+  emitter: "bullet_pink";
+}
+bullet_emitter_red {
+  emitter: "bullet_red";
+}
+bullet_emitter_yellow {
+  emitter: "bullet_yellow";
+}
+
+ship0,
+ship_gray,
+ship_flash,
+ship_cyan,
+ship_blue,
+ship_green,
+ship_orange,
+ship_pink,
+ship_red,
+ship_yellow,
+ship_ab_cyan,
+ship_ab_blue,
+ship_ab_green,
+ship_ab_orange,
+ship_ab_pink,
+ship_ab_red,
+ship_ab_yellow,
+ship_blue_boost,
+ship_cyan_boost,
+ship_green_boost,
+ship_orange_boost,
+ship_pink_boost,
+ship_red_boost,
+ship_yellow_boost,
+ship_secret,
+ship_zed {
+  size: 3.1;
+}
+
+// daudelins
+ship0 {
+  file: "ship0";
+}
+// abandoned ships
+ship_gray {
+  file: "ship_gray";
+}
+ship_flash {
+  file: "ship_flash";
+}
+// default selectable ships
+ship_cyan {
+  file: "ship_cyan";
+}
+ship_blue {
+  file: "ship_blue";
+}
+ship_green {
+  file: "ship_green";
+}
+ship_orange {
+  file: "ship_orange";
+}
+ship_pink {
+  file: "ship_pink";
+}
+ship_red {
+  file: "ship_red";
+}
+ship_yellow {
+  file: "ship_yellow";
+}
+
+// boost
+ship_blue_boost,
+ship_cyan_boost,
+ship_green_boost,
+ship_orange_boost,
+ship_pink_boost,
+ship_red_boost,
+ship_yellow_boost {
+  animated: true;
+  loop: false;
+  animation-speed: 0.6;
+  tile: {
+    size: 128;
+    count: 40;
+  }
+}
+ship_cyan_boost {
+  file: "ship_cyan_boost_ani";
+}
+ship_blue_boost {
+  file: "ship_blue_boost_ani";
+}
+ship_green_boost {
+  file: "ship_green_boost_ani";
+}
+ship_orange_boost {
+  file: "ship_orange_boost_ani";
+}
+ship_pink_boost {
+  file: "ship_pink_boost_ani";
+}
+ship_red_boost {
+  file: "ship_red_boost_ani";
+}
+ship_yellow_boost {
+  file: "ship_yellow_boost_ani";
+}
+// abandoned ships
+ship_ab_cyan,
+ship_ab_blue,
+ship_ab_green,
+ship_ab_orange,
+ship_ab_pink,
+ship_ab_red,
+ship_ab_yellow {
+  animated: true;
+  loop: false;
+  animation-speed: 0.3;
+  tile: {
+    size: 128;
+    count: 30;
+  }
+}
+ship_ab_cyan {
+  file: "ship_ab_cyan_ani";
+}
+ship_ab_blue {
+  file: "ship_ab_blue_ani";
+}
+ship_ab_green {
+  file: "ship_ab_green_ani";
+}
+ship_ab_orange {
+  file: "ship_ab_orange_ani";
+}
+ship_ab_pink {
+  file: "ship_ab_pink_ani";
+}
+ship_ab_red {
+  file: "ship_ab_red_ani";
+}
+ship_ab_yellow {
+  file: "ship_ab_yellow_ani";
+}
+// premium ships
+ship_secret {
+  file: "ship_secret";
+}
+ship_zed {
+  file: "ship_zed";
+}
+
+bullet,
+bullet_cyan,
+bullet_blue,
+bullet_green,
+bullet_orange,
+bullet_pink,
+bullet_red,
+bullet_yellow {
+  size: 2.8;
+}
+bullet {
+  file: "bullet";
+}
+bullet_cyan {
+  file: "laser_cyan";
+}
+bullet_blue {
+  file: "laser_blue";
+}
+bullet_green {
+  file: "laser_green";
+}
+bullet_orange {
+  file: "laser_orange";
+}
+bullet_pink {
+  file: "laser_pink";
+}
+bullet_red {
+  file: "laser_red";
+}
+bullet_yellow {
+  file: "laser_yellow";
+}
+
+laser_blue_trail,
+laser_cyan_trail,
+laser_green_trail,
+laser_orange_trail,
+laser_pink_trail,
+laser_orange_trail,
+laser_red_trail,
+laser_yellow_trail {
+  size: 2.8;
+  offset: {
+    x: -34;
+    y: 0;
+  };
+}
+laser_blue_trail {
+  file: "laser_blue_trail";
+}
+laser_cyan_trail {
+  file: "laser_cyan_trail";
+}
+laser_green_trail {
+  file: "laser_green_trail";
+}
+laser_orange_trail {
+  file: "laser_orange_trail";
+}
+laser_pink_trail {
+  file: "laser_pink_trail";
+}
+laser_red_trail {
+  file: "laser_red_trail";
+}
+laser_yellow_trail {
+  file: "laser_yellow_trail";
+}
+
+obstacle {
+  file: "obstacle";
+  size: 2.8672;
+}
+seeker {
+  file: "seeker";
+  size: 0.64;
+}
+seeker_pickup {
+  file: "seeker_pickup";
+  size: 1.28;
+}
+
+shield,
+invulnerable {
+  file: "shield";
+  animated: true;
+  loop: true;
+  animation-speed: 0.5;
+  size: 2.56;
+  tile: {
+    size: 64;
+    count: 90;
+  }
+}
+
+shield_pickup {
+  file: "shield_pickup";
+  animated: true;
+  loop: true;
+  animation-speed: 0.5;
+  size: 2.56;
+  tile: {
+    size: 64;
+    count: 30;
+  }
+}
+
+wormhole {
+  file: "wormhole";
+  animated: true;
+  loop: true;
+  animation-speed: 0.5;
+  size: 5.12;
+  tile: {
+    size: 128;
+    count: 90;
+  }
+}
+
+thruster_cyan,
+thruster_blue,
+thruster_green,
+thruster_orange,
+thruster_pink,
+thruster_red,
+thruster_yellow {
+  animated: true;
+  loop: false;
+  animation-speed: 0.85;
+  size: 4;
+  offset: {
+    x: -20;
+    y: 0;
+  }
+  tile: {
+    size: 128;
+    count: 40;
+  }
+}
+
+thruster_cyan {
+  file: "boost_trail_cyan_ani";
+}
+thruster_blue {
+  file: "boost_trail_blue_ani";
+}
+thruster_green {
+  file: "boost_trail_green_ani";
+}
+thruster_orange {
+  file: "boost_trail_orange_ani";
+}
+thruster_pink {
+  file: "boost_trail_pink_ani";
+}
+thruster_red {
+  file: "boost_trail_red_ani";
+}
+thruster_yellow {
+  file: "boost_trail_yellow_ani";
+}
+offenseupgrade,
+defenseupgrade {
+  file: "circles";
+  animated: true;
+  loop: true;
+
+  size: 3.6;
+
+  tile: {
+    size: 72;
+    count: 11;
+  }
+}
+
+offenseupgrade {
+  animation-speed: 0.2;
+  tint: 16711680;
+}
+
+defenseupgrade {
+  animation-speed: 0.4;
+  tint: 6711039;
+}
+
+arrow {
+  file: "arrow";
+  size: 100%;
+}
+
+// Capture the Flag
+ctf_base {
+  file: "ctf_base";
+  size:3.072;
+}
+ctf_flag_red,
+ctf_flag_blue {
+  animated: true;
+  tile: {
+    size: 128;
+    count: 6;
+  }
+  animation-speed: 0.1;
+  size: 1.92;
+  loop: true;
+}
+ctf_flag_blue {
+  file: "ctf_flag_blue";
+}
+ctf_flag_red {
+  file: "ctf_flag_red";
+}
+ctf_score_final {
+  file: "ctf_score_final";
+  size: 100%;
+}
+ctf_score_final_blue {
+  file: "ctf_score_final_blue";
+  size: 100%;
+}
+ctf_score_final_red {
+  file: "ctf_score_final_red";
+  size: 100%;
+}
+ctf_score_left_0 {
+  file: "ctf_score_left_0";
+  size: 100%;
+}
+ctf_score_left_1 {
+  file: "ctf_score_left_1";
+  size: 100%;
+}
+ctf_score_left_2 {
+  file: "ctf_score_left_2";
+  size: 100%;
+}
+ctf_score_left_3 {
+  file: "ctf_score_left_3";
+  size: 100%;
+}
+ctf_score_left_4 {
+  file: "ctf_score_left_4";
+  size: 100%;
+}
+ctf_score_right_0 {
+  file: "ctf_score_right_0";
+  size: 100%;
+}
+ctf_score_right_1 {
+  file: "ctf_score_right_1";
+  size: 100%;
+}
+ctf_score_right_2 {
+  file: "ctf_score_right_2";
+  size: 100%;
+}
+ctf_score_right_3 {
+  file: "ctf_score_right_3";
+  size: 100%;
+}
+ctf_score_right_4 {
+  file: "ctf_score_right_4";
+  size: 100%;
+}
+ctf_score_stripes {
+  file: "ctf_score_stripes";
+  size: 100%;
+}
+ctf_arrow_red {
+  file: "ctf_arrow_red";
+  size: 25.6;
+}
+ctf_arrow_blue {
+  file: "ctf_arrow_blue";
+  size: 25.6;
+}
+ctf_arrow_trans_flag {
+  file: "ctf_arrow_trans_flag";
+  size: 51.2;
+}
+
+map_beach {
+  file: "beach_tileset";
+  map: true;
+  tile-height: 16;
+  tile-width: 16;
+  tile-count: 936;
+  image-width: 576;
+  image-height: 416;
+  size: 27.248;
+}
+map_wilds {
+  file: "buch-outdoor";
+  map: true;
+  tile: {
+    width: 16;
+    height: 16;
+    count: 288;
+    space: {
+      height: 400;
+      width: 400;
+    }
+  }
+  image: {
+    width: 384;
+    height: 192;
+  }
+  size: 33.536;
+}
+map {
+  file: "spritesheet";
+  map: true;
+  tile: {
+    width: 64;
+    height: 64;
+    count: 81;
+    space: {
+      height: 400;
+      width: 400;
+    }
+  }
+  image: {
+    width: 1024;
+    height: 1024;
+  }
+  size:67.072;
+}

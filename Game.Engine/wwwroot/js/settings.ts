@@ -1,15 +1,13 @@
 import { fetch } from "whatwg-fetch";
 import Cookies from "js-cookie";
 import JSZip from "jszip";
-import { textureMapRules } from "./models/textureMap";
-import { spriteModeMapRules } from "./models/spriteModeMap";
 import { textureCache } from "./models/textureCache";
+import { getDefaultTextureMapRules } from "./models/textureMap";
+import { getDefaultSpriteModeMapRules } from "./models/spriteModeMap";
 import { Controls } from "./controls";
 import { Connection } from "./connection";
 var sass = require("sass");
 var Buffer = require("buffer").Buffer;
-var textureMapRulesLen = textureMapRules[0].length;
-var spriteModeMapRulesLen = spriteModeMapRules[0].length;
 
 // in case your code is isomorphic
 if (typeof window !== "undefined") (<any>window).Buffer = Buffer;
@@ -17,6 +15,7 @@ if (typeof window !== "undefined") (<any>window).Buffer = Buffer;
 import { queryProperties, parseScssIntoRules } from "./parser/parseTheme.js";
 
 export const Settings = {
+    graphics: "high",
     theme: "",
     themeCustom: "",
     mouseScale: 1.0,
@@ -39,6 +38,12 @@ export const Settings = {
     updatesVersion: 0,
     mouseOneButton: 0
 };
+
+var spriteModeMapRules = [getDefaultSpriteModeMapRules(Settings.graphics)];
+var textureMapRules = [getDefaultTextureMapRules(Settings.graphics)];
+var textureMapRulesLen = textureMapRules[0].length;
+var spriteModeMapRulesLen = spriteModeMapRules[0].length;
+
 const themeSelector = <HTMLInputElement>document.getElementById("settingsThemeSelector");
 const themeSelectorCustom = <HTMLInputElement>document.getElementById("settingsThemeSelectorCustom");
 const mouseScale = <HTMLInputElement>document.getElementById("settingsMouseScale");
