@@ -40,6 +40,7 @@ bus.on("loaded", () => {
             let backgroundSprite = backgroundSprites[i];
             if (!backgroundSprite) {
                 backgroundSprite = new PIXI.TilingSprite(textures[0], 200000, 200000);
+                backgroundSprite.visible = Settings.background;
                 if (container) container.addChild(backgroundSprite);
                 backgroundSprite.tileScale.set(spriteDefinition.scale[i], spriteDefinition.scale[i]);
                 backgroundSprite.rotation = Math.random() - 0.5;
