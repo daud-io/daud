@@ -1,3 +1,8 @@
+"use strict";
+
+window.process = require("process");
+window.global = window as any;
+
 import { CustomContainer } from "./CustomContainer";
 import { Interpolator } from "./interpolator";
 import { Cache } from "./cache";
@@ -11,12 +16,12 @@ export class Renderer {
     draw(cache: Cache, interpolator: Interpolator, currentTime: number, fleetID: number) {
         const groupsUsed = [];
 
-        if (this.container.tiles.isDirty) {
-            this.container.tiles.clear();
-            this.container.tiles.isRefreshing = true;
-        } else this.container.tiles.isRefreshing = false;
+        // if (this.container.tiles.isDirty) {
+        //     this.container.tiles.clear();
+        //     this.container.tiles.isRefreshing = true;
+        // } else this.container.tiles.isRefreshing = false;
 
-        cache.foreach(function(body) {
+        cache.foreach(function (body) {
             if (body.Group) {
                 const group = cache.getGroup(body.Group);
                 if (group && groupsUsed.indexOf(group) == -1) groupsUsed.push(group);
@@ -25,9 +30,9 @@ export class Renderer {
             if (body.renderer) body.renderer.preRender(currentTime, interpolator, fleetID);
         }, this);
 
-        this.container.tiles.isDirty = false;
+        // this.container.tiles.isDirty = false;
 
-        let ids = [];
+        const ids = [];
 
         for (const group of groupsUsed) {
             if (group) {
