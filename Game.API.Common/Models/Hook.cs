@@ -51,8 +51,8 @@
                     },
                     BaseThrustConverter = 0.002f,
 
-                    Drag = 0.895f,
-                    DragBoost = 0.91f,
+                    Drag = 0.9f,
+                    DragBoost = 0.9f,
                     DragAbandoned = 0.97f,
 
                     BoomDrag = 0.92f,
@@ -66,11 +66,11 @@
                     ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 0f,
-                    BoostDuration2 = 250,
+                    BoostDuration2 = 300,
                     BoostDuration = 1000,
 
                     AbandonBuffer = 120,
-                    AbandonMomentumMultiplier = 0.33f,
+                    AbandonMomentumMultiplier = 0.4f,
 
                     ShotCooldownTimeM = 45,
                     ShotCooldownTimeB = 500,
