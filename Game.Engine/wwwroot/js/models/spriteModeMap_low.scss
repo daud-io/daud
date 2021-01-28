@@ -1,5 +1,5 @@
 bg {
-    layer-speeds: .3;
+    layer-speeds: 1;
     layer-cpu-levels: 1;
     layer-textures: 'bg'
 }
@@ -15,25 +15,25 @@ world {
 
 fish {
     &.cyan {
-        textures: 'food_cyan_glow', 'fish_cyan';
+        textures: 'fish_cyan';
     }
     &.blue {
-        textures: 'food_blue_glow', 'fish_blue';
+        textures: 'fish_blue';
     }
     &.green {
-        textures: 'food_green_glow', 'fish_green';
+        textures: 'fish_green';
     }
     &.pink {
-        textures: 'food_pink_glow', 'fish_pink';
+        textures: 'fish_pink';
     }
     &.orange {
-        textures: 'food_orange_glow', 'fish_orange';
+        textures: 'fish_orange';
     }
     &.red {
-        textures: 'food_red_glow', 'fish_red';
+        textures: 'fish_red';
     }
     &.yellow {
-        textures: 'food_yellow_glow', 'fish_yellow';
+        textures: 'fish_yellow';
     }
 }
 
@@ -205,31 +205,31 @@ bullet {
     textures: 'bullet';
 
     &.cyan {
-        textures: 'bullet_cyan', 'laser_cyan_trail', 'bullet_emitter_cyan';
+        textures: 'bullet_cyan', 'laser_cyan_trail';
     }
 
     &.blue {
-        textures: 'bullet_blue', 'laser_blue_trail', 'bullet_emitter_blue';
+        textures: 'bullet_blue', 'laser_blue_trail';
     }
 
     &.green {
-        textures: 'bullet_green', 'laser_green_trail', 'bullet_emitter_green';
+        textures: 'bullet_green', 'laser_green_trail';
     }
 
     &.orange {
-        textures: 'bullet_orange', 'laser_orange_trail', 'bullet_emitter_orange';
+        textures: 'bullet_orange', 'laser_orange_trail';
     }
 
     &.pink {
-        textures: 'bullet_pink', 'laser_pink_trail', 'bullet_emitter_pink';
+        textures: 'bullet_pink', 'laser_pink_trail';
     }
 
     &.red {
-        textures: 'bullet_red', 'laser_red_trail', 'bullet_emitter_red';
+        textures: 'bullet_red', 'laser_red_trail';
     }
 
     &.yellow {
-        textures: 'bullet_yellow', 'laser_yellow_trail', 'bullet_emitter_yellow';
+        textures: 'bullet_yellow', 'laser_yellow_trail';
     }
 }
 

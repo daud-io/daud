@@ -2,8 +2,8 @@
 import * as emitters from "../../img/emitters.json";
 import { Settings } from "../settings";
 import { textureCache } from "./textureCache";
-import { textureMapRules } from "./textureMap";
-import { spriteModeMapRules } from "./spriteModeMap";
+import { getDefaultTextureMapRules, textureMapRules } from "./textureMap";
+import { getDefaultSpriteModeMapRules } from "./spriteModeMap";
 import "pixi.js";
 import "pixi-layers";
 import * as particles from "pixi-particles";
@@ -12,6 +12,9 @@ import { CustomContainer } from "../CustomContainer";
 import { parseScssIntoRules, parseCssIntoRules, queryProperties } from "../parser/parseTheme.js";
 import { readFileSync } from "fs";
 import { Sprite } from "pixi.js";
+
+var textureMapRules = [getDefaultTextureMapRules(Settings.graphics)];
+var spriteModeMapRules = [getDefaultSpriteModeMapRules(Settings.graphics)];
 
 class GroupParticle extends particles.Particle {
     body: any;
