@@ -217,7 +217,7 @@ export class RenderedObject {
         pixiSprite.y = 0;
 
         // bullet fade
-        if (textureName.includes("bullet") || textureName.includes("laser")) {
+        if ((textureName.includes("bullet") || textureName.includes("laser")) && Settings.graphics !== "low") {
             let m = this.body.Momentum
             let bulletLife = 25 * shotThrust.indexOf(Math.round(Math.sqrt(m.x * m.x + m.y * m.y) / 0.012 * 100) / 100) + 1900;
             pixiSprite.alpha = 0;
