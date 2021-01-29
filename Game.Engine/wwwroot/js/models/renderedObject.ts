@@ -222,7 +222,7 @@ export class RenderedObject {
             let bulletLife = 25 * shotThrust.indexOf(Math.round(Math.sqrt(m.x * m.x + m.y * m.y) / 0.012 * 100) / 100) + 1900;
             pixiSprite.alpha = 0;
             let fadeInInterval = setInterval(() => {
-                pixiSprite.alpha = Math.min(1, pixiSprite.alpha + 0.2);
+                pixiSprite.alpha = Math.min(1, pixiSprite.alpha + 1/3);
                 if (pixiSprite.alpha === 1) {
                     clearInterval(fadeInInterval);
                 }
