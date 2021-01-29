@@ -28,7 +28,7 @@ export class Border extends RenderedObject {
         this.graphics.drawRect(-size - edgeWidth, +size, 2 * size + 2 * edgeWidth, edgeWidth);
         this.graphics.endFill();
         var v2 = hexToRGB("#ff0000", 1);
-        this.graphics.lineStyle(4, v2[0] * 256 * 256 + v2[1] * 256 + v2[2], v2[3]);
+        this.graphics.lineStyle(3, v2[0] * 256 * 256 + v2[1] * 256 + v2[2], v2[3]);
         this.graphics.drawRect(-size, -size, size * 2, size * 2);
 
         this.worldSize = size;
