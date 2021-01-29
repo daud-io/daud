@@ -16,6 +16,8 @@ import { Sprite } from "pixi.js";
 var textureMapRules = [getDefaultTextureMapRules(Settings.graphics)];
 var spriteModeMapRules = [getDefaultSpriteModeMapRules(Settings.graphics)];
 
+const shotThrust = [0, 41, 34.17, 30.71, 28.47, 26.85, 25.59, 24.58, 23.73, 23.01, 22.38, 21.82, 21.33, 20.88, 20.48, 20.11, 19.77, 19.46, 19.17, 18.9, 18.65, 18.41, 18.19, 17.97, 17.77, 17.58, 17.4, 17.23, 17.07, 16.91, 16.76, 16.62, 16.48, 16.35, 16.22, 16.1, 15.98, 15.86, 15.75, 15.64, 15.54, 15.44, 15.34, 15.25, 15.16, 15.07, 14.98, 14.89, 14.81, 14.73, 14.65, 14.58, 14.5, 14.43, 14.36, 14.29, 14.22, 14.16, 14.09, 14.03, 13.97, 13.91, 13.85, 13.79, 13.73, 13.68, 13.62, 13.57, 13.52, 13.46, 13.41, 13.36, 13.31, 13.27, 13.22, 13.17, 13.13, 13.08, 13.04, 12.99, 12.95, 12.91, 12.87, 12.83, 12.79, 12.75, 12.71, 12.67, 12.63, 12.59, 12.56, 12.52, 12.48, 12.45, 12.41, 12.38, 12.34, 12.21, 12.07, 12.03, 12];
+
 class GroupParticle extends particles.Particle {
     body: any;
 
@@ -213,6 +215,27 @@ export class RenderedObject {
         pixiSprite.pivot.y = pixiSprite.height / 2;
         pixiSprite.x = 0;
         pixiSprite.y = 0;
+
+        // bullet fade
+        if (textureName.includes("bullet") || textureName.includes("laser")) {
+            let m = this.body.Momentum
+            let bulletLife = 25 * shotThrust.indexOf(Math.round(Math.sqrt(m.x * m.x + m.y * m.y) / 0.012 * 100) / 100) + 1900;
+            pixiSprite.alpha = 0;
+            let fadeInInterval = setInterval(() => {
+                pixiSprite.alpha = Math.min(1, pixiSprite.alpha + 0.2);
+                if (pixiSprite.alpha === 1) {
+                    clearInterval(fadeInInterval);
+                }
+            }, 70);
+            setTimeout(() => {
+                let fadeOutInterval = setInterval(() => {
+                    pixiSprite.alpha = Math.min(1, pixiSprite.alpha - 0.2);
+                    if (pixiSprite.alpha === 0) {
+                        clearInterval(fadeOutInterval);
+                    }
+                }, 70);
+            }, bulletLife - 70 * 5);
+        }
 
         pixiSprite.baseScale = (<any>textures[0]).daudScale;
         pixiSprite.scale = (<any>textures[0]).daudScale;
