@@ -220,7 +220,7 @@ export class RenderedObject {
         if ((textureName.includes("bullet") || textureName.includes("laser")) && Settings.graphics !== "low") {
             let m = this.body.Momentum
             let bulletLife = 25 * shotThrust.indexOf(Math.round(Math.sqrt(m.x * m.x + m.y * m.y) / 0.012 * 100) / 100) + 1900;
-            pixiSprite.alpha = 0;
+            pixiSprite.alpha = 1/3;
             let fadeInInterval = setInterval(() => {
                 pixiSprite.alpha = Math.min(1, pixiSprite.alpha + 1/3);
                 if (pixiSprite.alpha === 1) {
