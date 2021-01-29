@@ -654,6 +654,11 @@ body {
     width: 48px;
     transform: rotate(-90deg) scale(1.5, 1.5);
     margin: 0 18px;
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-select: none;
 }
 .container #high-score {
     font-size: 1.6em;
