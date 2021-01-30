@@ -684,12 +684,17 @@
     <script type="text/javascript" src="js/game.ts"></script>
     
     <script>
-        var featuredVideosIDs = [
+        const featuredVideosIDs = [
             "VEqF-15QaHw",
             "C5tp00l_3Is",
             "LPutbtJ2UVM",
             "uiSH-T8jRds"
         ];
+        if (/^de\b/.test(navigator.language)) {
+            featuredVideosIDs.push("JTHTjTC9-kw");
+        } else if (/^es\b/.test(navigator.language)) {
+            featuredVideosIDs.push("6OYueeto_6o");
+        }
         var index = Math.floor(featuredVideosIDs.length * Math.random());
         $("#player").html('<iframe id="playerIframe" width="336" height="189" src="https://www.youtube.com/embed/'+featuredVideosIDs[index]+'" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>');
     
