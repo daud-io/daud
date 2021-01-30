@@ -59,7 +59,7 @@
                     BoomLife = 500,
 
                     BoostThrust = 0.033f,
-                    BoostThrust2 = 0.058f,
+                    BoostThrust2 = 0.057f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
