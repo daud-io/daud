@@ -35,6 +35,7 @@ window.Game = window.Game || {};
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 const zoom = 1050;
+const cameraDrag = 0.82;
 
 //PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.LINEAR;
@@ -512,8 +513,8 @@ app.ticker.add(() => {
     if (view) {
         var positionA = interpolator.projectObject(view.camera, gameTime);
         position = new Vector2(positionA.x, positionA.y);
-        position.x = (position.x * 0.2 + lastCamera.x * 0.8);
-        position.y = (position.y * 0.2 + lastCamera.y * 0.8);
+        position.x = (position.x * (1 - cameraDrag) + lastCamera.x * cameraDrag);
+        position.y = (position.y * (1 - cameraDrag) + lastCamera.y * cameraDrag);
 
         lastCamera = position;
 
