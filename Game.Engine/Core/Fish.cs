@@ -26,7 +26,7 @@
         {
             var r = new Random();
             Position = World.RandomPosition();
-            Angle = (float)r.NextDouble() * MathF.PI * 2;
+            AngleMovement = (float)r.NextDouble() * MathF.PI * 2;
             ThrustAmount = World.Hook.FishThrust;
             r = new Random();
             int rInt = r.Next(0, 7); //for ints
