@@ -55,7 +55,7 @@
                         if (distance < 1)
                             distance = 1;
 
-                        accumulator += (ship.Position - shipOther.Position) / (distance * distance);
+                        accumulator += (ship.Position - shipOther.Position) * (1 / (distance * distance) - 1 / (minimumDistance * minimumDistance));
                     }
                 }
             }
