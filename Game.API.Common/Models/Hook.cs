@@ -59,8 +59,8 @@
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.055f,
-                    BoostThrust2 = 0.065f,
+                    BoostThrust = 0.05f,
+                    BoostThrust2 = 0.1f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
@@ -138,7 +138,7 @@
                     SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
-                    Fishes = 35, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
+                    Fishes = 50, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
                     FishThrust = 0.002f,
                     FishFlockAlignment = 10f,
