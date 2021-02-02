@@ -362,7 +362,7 @@
                 float boostf2 = (float)(BoostUntil2 - World.Time) / 1000;
 
                 ship.ThrustAmount = isBoosting
-                    ? baseThrust + (BoostThrust - baseThrust) * boostf * (1 - Burden) * BoostM 
+                    ? baseThrust + (BoostThrust - baseThrust) * boostf * boostf * (1 - Burden) * BoostM 
                     : baseThrust * (1 - Burden);
                 
                 ship.BoostThrustAmount = isBoosting2
