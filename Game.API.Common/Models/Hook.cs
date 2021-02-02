@@ -137,7 +137,7 @@
                     SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
-                    Fishes = 100, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
+                    Fishes = 35, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
                     FishThrust = 0.002f,
                     FishFlockAlignment = 10f,
