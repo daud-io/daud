@@ -360,8 +360,10 @@
                     ? BoostThrust * (1 - Burden) * BoostM 
                     : (BaseThrust[Ships.Count] * BaseThrustConverter) * (1 - Burden);
                 
+                float boostf = (float)(BoostUntil2 - World.Time) / 1000;
+                
                 ship.BoostThrustAmount = isBoosting2
-                    ? World.Hook.BoostThrust2 * (1 - Burden) * BoostM
+                    ? boostf * boostf * World.Hook.BoostThrust2 * (1 - Burden) * BoostM
                     : 0f;
 
                 ship.Drag = isBoosting
