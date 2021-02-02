@@ -137,7 +137,7 @@
                     SpawnShipCount = 3,
                     SpawnInvulnerabilityTime = 3000,
 
-                    Fishes = 35, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
+                    Fishes = 100, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
                     FishThrust = 0.002f,
                     FishFlockAlignment = 10f,
@@ -149,12 +149,13 @@
                     FishOOBWeight = 0.8f,
                     FishCycle = 1000, // how often do they think
 
-                    FlockAlignment = 1.2f,
+                    FlockAlignment = 10f,
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
-                    FlockSeparation = 1f,
-                    FlockSeparationMinimumDistance = 18,
-                    FlockWeight = 5.4f,
+                    FlockSeparation = 2.5f,
+                    FlockSeparationMinimumDistanceB = 28f,
+                    FlockSeparationMinimumDistanceM = 0.2f,
+                    FlockWeight = 1f,
                     SnakeWeight = 0f,
                     BossMode = false,
                     
@@ -340,7 +341,8 @@
         public float FlockCohesion { get; set; }
         public int FlockCohesionMaximumDistance { get; set; }
         public float FlockSeparation { get; set; }
-        public int FlockSeparationMinimumDistance { get; set; }
+        public float FlockSeparationMinimumDistanceB { get; set; }
+        public float FlockSeparationMinimumDistanceM { get; set; }
         public float FlockWeight { get; set; }
         public float SnakeWeight { get; set; }
         public bool BossMode { get; set; }
