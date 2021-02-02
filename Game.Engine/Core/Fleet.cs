@@ -191,7 +191,7 @@
                 }
 
                 ship.Position = position / count + offset;
-                ship.Momentum = momentum / count;
+                ship.Momentum = momentum / count * World.Hook.ShipAddMomentumMultiplier;
                 ship.Angle = angle / count;
             }
             else

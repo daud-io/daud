@@ -31,7 +31,8 @@
                     Quantization = false,
                     QuantizationCount = 16,
 
-                    ShipAddRadius = 8,
+                    ShipAddRadius = 3,
+                    ShipAddMomentumMultiplier = 0.9f,
 
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
@@ -58,15 +59,15 @@
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.033f,
-                    BoostThrust2 = 0.057f,
+                    BoostThrust = 0.034f,
+                    BoostThrust2 = 0.06f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
                     ShotCooldownTimeShark = 300,
 
                     BoostSpeed = 0f,
-                    BoostDuration2 = 330,
+                    BoostDuration2 = 320,
                     BoostDuration = 1000,
 
                     AbandonBuffer = 120,
@@ -149,13 +150,13 @@
                     FishOOBWeight = 0.8f,
                     FishCycle = 1000, // how often do they think
 
-                    FlockAlignment = 10f,
+                    FlockAlignment = 30f,
                     FlockCohesion = 0f,
                     FlockCohesionMaximumDistance = 0,
-                    FlockSeparation = 2.5f,
-                    FlockSeparationMinimumDistanceB = 28f,
+                    FlockSeparation = 1f,
+                    FlockSeparationMinimumDistanceB = 38f,
                     FlockSeparationMinimumDistanceM = 0.2f,
-                    FlockWeight = 1f,
+                    FlockWeight = 1.8f,
                     SnakeWeight = 0f,
                     BossMode = false,
                     
@@ -230,6 +231,7 @@
         public int QuantizationCount { get; set; }
 
         public int ShipAddRadius { get; set; }
+        public float ShipAddMomentumMultiplier { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
