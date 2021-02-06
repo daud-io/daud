@@ -109,7 +109,11 @@
                         takesDamage = true;
                     else
                     {
-                        this.ShieldStrength--;
+                        if (projectedBody is ShipWeaponSeeker)
+                            this.ShieldStrength = 0;
+                        else
+                            this.ShieldStrength--;
+
                         takesDamage = false;
                     }
                 }
