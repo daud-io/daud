@@ -348,6 +348,7 @@
         public int RoyaleDoubleStep1 { get; set; }
         public int RoyaleDoubleStep2 { get; set; }
         public bool CanSpawn { get; set; } = true;
+        public float EinsteinCoefficient { get; set; } = 0;
 
         public Hook Clone()
         {
@@ -486,7 +487,8 @@
                    RoyaleResizeSpeed == hook.RoyaleResizeSpeed &&
                    RoyaleDoubleStep1 == hook.RoyaleDoubleStep1 &&
                    RoyaleDoubleStep2 == hook.RoyaleDoubleStep2 &&
-                   CanSpawn == hook.CanSpawn;
+                   CanSpawn == hook.CanSpawn &&
+                   EinsteinCoefficient == EinsteinCoefficient;
         }
 
         public override int GetHashCode()
@@ -622,6 +624,7 @@
             hash.Add(RoyaleDoubleStep1);
             hash.Add(RoyaleDoubleStep2);
             hash.Add(CanSpawn);
+            hash.Add(EinsteinCoefficient);
             return hash.ToHashCode();
         }
     }

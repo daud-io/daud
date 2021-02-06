@@ -16,6 +16,7 @@
         public float Drag { get => World.Hook.Drag; }
 
         public bool Consumed { get; set; }
+        private Vector2 Reference = Vector2.Zero;
 
         public ShipWeaponBullet()
         {
@@ -27,7 +28,12 @@
             base.Think();
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount * 10;
-            Momentum = thrust;
+
+            if (World.Hook.EinsteinCoefficient > 0)
+                Momentum = thrust + (World.Hook.EinsteinCoefficient * Reference);
+            else
+                Momentum = thrust;
+
 
             if (World.Time >= TimeDeath)
                 PendingDestruction = true;
@@ -76,6 +82,7 @@
             else
                 this.Angle = ship.Angle;
 
+            this.Reference = ship.Fleet.FleetMomentum;
             this.OwnedByFleet = ship.Fleet;
             this.Sprite = ship.BulletSprite;
             this.Size = 20;
