@@ -8,6 +8,7 @@
     using System.IO;
     using System.Threading.Tasks;
 
+    [Command("herd")]
     class HerdCommand : CommandBase
     {
         [Option]

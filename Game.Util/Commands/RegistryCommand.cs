@@ -8,10 +8,12 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    [Subcommand("list", typeof(List))]
-    [Subcommand("migrate", typeof(MigrateDatabase))]
+    [Subcommand(typeof(List))]
+    [Subcommand(typeof(MigrateDatabase))]
+    [Command("registry")]
     class RegistryCommand : CommandBase
     {
+        [Command("list")]
         class List : CommandBase
         {
             protected async override Task ExecuteAsync()
@@ -22,6 +24,7 @@
             }
         }
 
+        [Command("migrate")]
         class MigrateDatabase : CommandBase
         {
             private Dictionary<string, object> fields = null;

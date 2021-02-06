@@ -2,23 +2,20 @@ FROM node:14
 WORKDIR /app
 COPY ./Game.Engine/wwwroot ./
 
-RUN ["npm", "ci"]
-RUN ["npm", "run", "build"]
+RUN npm ci
+RUN npm run build
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1
+FROM mcr.microsoft.com/dotnet/sdk:5.0
 WORKDIR /app
 COPY . ./
 COPY --from=0 /app/dist ./Game.Engine/wwwroot/dist
 
 WORKDIR /app/Game.Engine
-RUN ["dotnet", "publish", "-c", "Release"]
+RUN dotnet publish -c Release -o out
 
-WORKDIR /app/Game.Util
-RUN ["dotnet", "publish", "-c", "Release"]
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
+WORKDIR /app
+COPY --from=1  /app/Game.Engine/out ./
 
-WORKDIR /app/Game.Registry
-RUN ["dotnet", "publish", "-c", "Release"]
-
-WORKDIR /app/Game.Engine/bin/Release/netcoreapp3.1/publish
-EXPOSE 5000
+EXPOSE 80
 CMD ["dotnet", "Game.Engine.dll"]

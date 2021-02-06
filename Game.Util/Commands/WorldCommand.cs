@@ -12,14 +12,16 @@
     using System.Threading.Tasks;
     using TiledSharp;
 
-    [Subcommand("shrink", typeof(Shrink))]
-    [Subcommand("hook", typeof(Hook))]
-    [Subcommand("create", typeof(Create))]
-    [Subcommand("parse", typeof(Parse))]
-    [Subcommand("delete", typeof(Delete))]
-    [Subcommand("reset", typeof(Reset))]
+    [Subcommand(typeof(Shrink))]
+    [Subcommand(typeof(Hook))]
+    [Subcommand(typeof(Create))]
+    [Subcommand(typeof(Parse))]
+    [Subcommand(typeof(Delete))]
+    [Subcommand(typeof(Reset))]
+    [Command("world")]
     class WorldCommand : CommandBase
     {
+        [Command("create")]
         class Create : CommandBase
         {
             [Argument(0)]
@@ -40,6 +42,7 @@
             }
         }
 
+        [Command("delete")]
         class Delete : CommandBase
         {
             [Argument(0)]
@@ -51,6 +54,7 @@
             }
         }
 
+        [Command("reset")]
         class Reset : CommandBase
         {
             [Argument(0)]
@@ -62,6 +66,7 @@
             }
         }
 
+        [Command("hook")]
         class Hook : CommandBase
         {
             [Argument(0)]
@@ -94,7 +99,7 @@
             }
         }
 
-
+        [Command("parse")]
         class Parse : CommandBase
         {
             [Argument(0)]
@@ -192,7 +197,7 @@
             }
         }
 
-
+        [Command("shrink")]
         class Shrink : CommandBase
         {
             [Option]

@@ -1,22 +1,7 @@
-const { build } = require("esbuild");
 const fs = require("fs-extra");
 const chokidar = require("chokidar");
 
 let prod = process.argv[2] == "production";
-function runBuild() {
-    build({
-        stdio: "inherit",
-        entryPoints: ["./src/game.ts"],
-        outfile: "dist/main.js",
-        sourcemap: true,
-        bundle: true,
-        minifyWhitespace: prod,
-        minifySyntax: prod,
-        define: { global: "window" },
-    }).then(() => {
-        console.log("Wrote to dist/main.js");
-    });
-}
 
 function copy() {
     if (!fs.existsSync("dist")) fs.mkdirSync("dist");
@@ -25,11 +10,28 @@ function copy() {
         console.log("Copied public to dist");
     });
 }
+copy();
+
+let build = require("esbuild").build({
+    entryPoints: ["./src/game.ts"],
+    outdir: "dist",
+    sourcemap: !prod,
+    bundle: true,
+    minify: prod,
+    format: "esm",
+    splitting: true,
+    target: ["safari12"],
+    define: { global: "window", "process.env.NODE_ENV": prod ? '"prudocution"' : '"development"' },
+    incremental: !prod,
+});
+
+function log() {
+    console.log("Wrote to dist/game.js");
+}
 
 if (!prod) {
-    chokidar.watch("src").on("change", runBuild);
+    build.then((x) => chokidar.watch("src").on("change", () => x.rebuild().then(log)));
     chokidar.watch("public").on("change", copy);
 }
 
-runBuild();
-copy();
+build.then(log);

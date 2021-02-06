@@ -1,201 +1,221 @@
-import { Bullet } from "./models/bullet";
-import { Ship } from "./models/ship";
-import { RenderedObject } from "./models/renderedObject";
-import { Fleet } from "./models/fleet";
-import { Tile } from "./models/tile";
+import { spriteIndices } from "./spriteIndices";
+import { NetGroup, NetBody } from "./game_generated";
+import { RenderedObject } from "./renderedObject";
+import { Fleet } from "./fleet";
 import { CustomContainer } from "./CustomContainer";
+import { Vector2 } from "./Vector2";
+import bus from "./bus";
 
-export class Cache {
-    container: CustomContainer;
-    bodies: any;
-    groups: any;
-    static count: number;
-    constructor(container: CustomContainer) {
-        this.container = container;
-        this.clear();
-    }
+type ClientRendered = {
+    body: ClientBody;
+    renderer?: RenderedObject;
+};
+export type ClientBody = {
+    ID: number;
+    DefinitionTime: number;
+    Size: number;
+    Sprite: string;
+    Mode: number;
+    Color: string;
+    Group: number;
+    OriginalAngle: number;
+    AngularVelocity: number;
+    Momentum: Vector2;
+    OriginalPosition: Vector2;
+    zIndex: number;
+    obsolete?: number;
+    Position: Vector2;
+    Angle: number;
+};
 
-    clear() {
-        this.foreach(function (body) {
-            if (body && body.renderer) body.renderer.destroy();
-        }, this);
+const VELOCITY_SCALE_FACTOR = 5000.0;
+export function bodyFromServer(body: NetBody): ClientBody {
+    const originalPosition = body.originalPosition()!;
+    const momentum = body.velocity()!;
+    const groupID = body.group();
 
-        this.foreachGroup(function (group) {
-            if (group && group.renderer) group.renderer.destroy();
-        });
+    const spriteIndex = body.sprite();
+    const spriteName = spriteIndices[spriteIndex];
 
-        this.bodies = {};
-        this.groups = {};
-        Cache.count = 0;
-    }
+    return {
+        ID: body.id(),
+        DefinitionTime: body.definitionTime(),
+        Size: body.size() * 5,
+        Sprite: spriteName,
+        Mode: body.mode(),
+        Color: "red",
+        Group: groupID,
+        OriginalAngle: (body.originalAngle() / 127) * Math.PI,
+        AngularVelocity: body.angularVelocity() / 10000,
+        Momentum: new Vector2(momentum.x() / VELOCITY_SCALE_FACTOR, momentum.y() / VELOCITY_SCALE_FACTOR),
+        OriginalPosition: new Vector2(originalPosition.x(), originalPosition.y()),
+        Position: new Vector2(0, 0),
+        Angle: (body.originalAngle() / 127) * Math.PI,
+        zIndex: 0,
+    };
+}
 
-    empty() {
-        this.clear();
-    }
+export type ClientGroup = {
+    ID: number;
+    Caption: string | null;
+    Type: number;
+    ZIndex: number;
+    CustomData: any;
+    renderer?: Fleet;
+};
+export function groupFromServer(group: NetGroup): ClientGroup {
+    let customData = group.customData();
+    if (customData) customData = JSON.parse(customData);
 
-    refreshSprites() {
-        this.foreach(function (body) {
-            if (body && body.renderer) body.renderer.refreshSprite();
-        }, this);
-    }
+    return {
+        ID: group.group(),
+        Caption: group.caption(),
+        Type: group.type(),
+        ZIndex: group.zindex(),
+        CustomData: customData,
+    };
+}
 
-    update(updates, deletes, groups, groupDeletes, time, myFleetID) {
-        let i = 0;
+let container: CustomContainer | undefined;
+const bodies: Map<string, ClientRendered> = new Map();
+const groups: Map<string, ClientGroup> = new Map();
 
-        // delete objects that should no longer exist
-        for (i = 0; i < deletes.length; i++) {
-            const deleteKey = deletes[i];
-            const key = `b-${deleteKey}`;
-            if (key in this.bodies) Cache.count--;
+export function setContainer(newContainer: CustomContainer): void {
+    container = newContainer;
+    groups.forEach((group) => {
+        if (group.Type == 1) group.renderer = new Fleet(newContainer);
+    });
+    bodies.forEach((body) => {
+        body.renderer = new RenderedObject(newContainer, body.body);
+        const group = groups.get(`g-${body.body.Group}`);
+        if (group && group.renderer) group.renderer.addShip(`b-${body.body.ID}`, body.body);
+    });
+}
 
-            const body = this.bodies[key];
-            if (body && body.renderer) body.renderer.destroy();
-            delete this.bodies[key];
+bus.on("worldjoin", () => {
+    bodies.forEach((body) => {
+        if (body && body.renderer) body.renderer.destroy();
+    });
+
+    groups.forEach((group) => {
+        if (group && group.renderer) group.renderer.destroy();
+    });
+
+    bodies.clear();
+    groups.clear();
+});
+
+export function refreshSprites(): void {
+    bodies.forEach((body) => {
+        if (body && body.renderer) body.renderer.refresh();
+    });
+}
+export function update(updates: NetBody[], deletes: number[], newGroups: NetGroup[], groupDeletes: number[], time: number, myFleetID: number): void {
+    // delete objects that should no longer exist
+    for (const deleteKey of deletes) {
+        const key = `b-${deleteKey}`;
+
+        const body = bodies.get(key);
+        if (body) {
+            const group = groups.get(`g-${body.body.Group}`);
+            if (group && group.renderer) group.renderer.deleteShip(key);
+            if (body.renderer) body.renderer.destroy();
         }
 
-        // delete groups that should no longer exist
-        for (i = 0; i < groupDeletes.length; i++) {
-            const deleteKey = groupDeletes[i];
-            const key = `g-${deleteKey}`;
-            const group = this.groups[key];
-            if (!group) console.log("group delete on object not in cache");
+        bodies.delete(key);
+    }
 
-            //console.log(`deleting group: ${key}`);
+    // delete groups that should no longer exist
+    for (const deleteKey of groupDeletes) {
+        const key = `g-${deleteKey}`;
+        const group = groups.get(key);
+        if (!group) console.log("group delete on object not in cache");
 
-            if (group && group.renderer) group.renderer.destroy();
-            delete this.groups[key];
+        // console.log(`deleting group: ${key}`);
+
+        if (group && group.renderer) group.renderer.destroy();
+        groups.delete(key);
+    }
+
+    // update groups that should be here
+    for (const group of newGroups) {
+        let existing = groups.get(`g-${group.group()}`);
+
+        if (!existing) {
+            const clientGroup = groupFromServer(group);
+            if (clientGroup.Type == 1 && container) clientGroup.renderer = new Fleet(container);
+            groups.set(`g-${clientGroup.ID}`, clientGroup);
+            existing = clientGroup;
+        } else {
+            existing.ID = group.group();
+            existing.Caption = group.caption()!;
+            existing.Type = group.type();
+            existing.ZIndex = group.zindex();
+            const cd = group.customData();
+            existing.CustomData = cd ? JSON.parse(cd) : cd;
         }
 
-        // update groups that should be here
-        for (i = 0; i < groups.length; i++) {
-            const group = groups[i];
-            let existing = this.groups[`g-${group.ID}`];
+        if (existing.renderer) existing.renderer.update(existing, myFleetID);
+    }
 
-            if (!existing) {
-                if (group.Type == 1) group.renderer = new Fleet(this.container, this);
+    // update objects that should be here
+    for (const update of updates) {
+        const existing = bodies.get(`b-${update.id()}`);
 
-                existing = group;
-            } else {
-                existing.ID = group.ID;
-                existing.Caption = group.Caption;
-                existing.Type = group.Type;
-                existing.ZIndex = group.ZIndex;
-                existing.CustomData = group.CustomData;
+        if (existing) {
+            existing.body.obsolete = time;
+            existing.body.Size = update.size() * 5;
+            existing.body.Sprite = spriteIndices[update.sprite()];
+            existing.body.Mode = update.mode();
+            existing.body.DefinitionTime = update.definitionTime();
+            existing.body.OriginalAngle = (update.originalAngle() / 127) * Math.PI;
+            existing.body.AngularVelocity = update.angularVelocity() / 10000;
+            const originalPosition = update.originalPosition()!;
+            existing.body.OriginalPosition.x = originalPosition.x();
+            existing.body.OriginalPosition.y = originalPosition.y();
+            const velocity = update.velocity()!;
+            existing.body.Momentum.x = velocity.x() / VELOCITY_SCALE_FACTOR;
+            existing.body.Momentum.y = velocity.y() / VELOCITY_SCALE_FACTOR;
+
+            let group: ClientGroup | undefined = undefined;
+            if (update.group() != 0) group = groups.get(`g-${update.group()}`);
+
+            if (update.group() != existing.body.Group) {
+                const oldGroup = groups.get(`g-${existing.body.Group}`);
+                if (oldGroup) oldGroup.renderer!.deleteShip(`b-${update.id()}`);
+                existing.body.Group = update.group();
             }
 
-            if (existing.renderer) existing.renderer.update(existing, myFleetID);
-
-            this.groups[`g-${group.ID}`] = existing;
+            existing.body.zIndex = 0;
+            if (group) existing.body.zIndex = group.ZIndex || 0;
+            if (existing.renderer) existing.renderer.update();
         }
 
-        // update objects that should be here
-        for (i = 0; i < updates.length; i++) {
-            const update = updates[i];
-            const existing = this.bodies[`b-${update.ID}`];
+        if (!existing) {
+            const clientBody = bodyFromServer(update);
 
-            this.bodies[`b-${update.ID}`] = update;
+            const group = groups.get(`g-${clientBody.Group}`);
+            clientBody.zIndex = group?.ZIndex || 0;
 
-            if (existing) {
-                update.renderer = existing.renderer;
-                update.previous = existing;
+            const renderer = container && new RenderedObject(container, clientBody);
 
-                existing.previous = false;
-                existing.renderer = false;
-                existing.obsolete = time;
-
-                if (update.Size === -1) update.Size = existing.Size;
-
-                if (update.Sprite === null) update.Sprite = existing.Sprite;
-
-                if (update.OriginalAngle === -999) update.OriginalAngle = existing.OriginalAngle;
-                if (update.AngularVelocity === -999) update.AngularVelocity = existing.AngularVelocity;
-
-                let group = null;
-                if (update.Group != 0) group = this.getGroup(update.Group);
-                update.group = group;
-                update.zIndex = 0;
-                if (group) update.zIndex = group.ZIndex || 0;
-
-                if (update.renderer) update.renderer.update(update);
+            if (group && group.renderer) {
+                group.renderer.addShip(`b-${clientBody.ID}`, clientBody);
             }
 
-            if (!existing) {
-                let group = null;
-                if (update.Group != 0) {
-                    group = this.groups[`g-${update.Group}`];
-                    if (group) {
-                        switch (group.Type) {
-                            case 1: {
-                                let ship: Ship = update.renderer;
-                                if (!ship) ship = new Ship(this.container);
-                                update.renderer = ship;
-
-                                let fleet: Fleet = group.renderer;
-                                if (!fleet) fleet = new Fleet(this.container, this);
-                                group.renderer = fleet;
-
-                                if (fleet) fleet.addShip(ship);
-                                break;
-                            }
-                            case 3:
-                            case 4: {
-                                let bullet = update.renderer;
-                                if (!bullet) bullet = new Bullet(this.container, this);
-                                update.renderer = bullet;
-                                break;
-                            }
-                            case 6: {
-                                let tile = update.renderer;
-                                if (!tile) tile = new Tile(this.container, this);
-                                update.renderer = tile;
-                                break;
-                            }
-                        }
-                    }
-                }
-                if (!update.renderer) update.renderer = new RenderedObject(this.container);
-
-                update.group = group;
-                update.zIndex = 0;
-                if (group) update.zIndex = group.ZIndex || 0;
-
-                if (update.renderer) update.renderer.update(update, myFleetID);
-
-                Cache.count++;
-            }
+            bodies.set(`b-${clientBody.ID}`, {
+                body: clientBody,
+                renderer,
+            });
         }
     }
+}
 
-    foreach(action, thisObj) {
-        this.foreachGroup(function (group) {
-            for (const key in this.bodies) {
-                if (key.indexOf("b-") === 0) {
-                    const body = this.bodies[key];
-                    if (body.Group == group.ID) {
-                        action.apply(thisObj, [body]);
-                    }
-                }
-            }
-        }, this);
-    }
-
-    foreachGroup(action, thisObj?) {
-        const sortedGroups = [];
-
-        for (const key in this.groups) {
-            const group = this.groups[key];
-            sortedGroups.push(group);
-        }
-
-        sortedGroups.sort((a, b) => a.ZIndex - b.ZIndex);
-        sortedGroups.unshift({ ID: 0 });
-
-        for (const group of sortedGroups) {
-            action.apply(thisObj, [group]);
-        }
-    }
-
-    getGroup(groupID) {
-        return this.groups[`g-${groupID}`];
-    }
+export function tick(gameTime: number): void {
+    bodies.forEach((body) => {
+        if (body.renderer) body.renderer.tick(gameTime);
+    });
+    groups.forEach((group) => {
+        if (group.renderer) group.renderer.tick(gameTime);
+    });
 }

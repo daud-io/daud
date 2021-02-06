@@ -51,6 +51,8 @@
                 );
             });
 
+            services.AddResponseCompression();
+
             services
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
@@ -92,6 +94,7 @@
             };
 
             app.UseAuthentication();
+            app.UseResponseCompression();
 
             app.UseMvc();
 

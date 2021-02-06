@@ -1,26 +1,28 @@
-﻿import { Settings } from "./settings";
+﻿const hudh = document.getElementById("hud")!;
 
-const hudh = document.getElementById("hud");
-export class HUD {
-    _latency: number;
-    framesPerSecond: number;
-    playerCount: number;
-    spectatorCount: number;
-    set latency(l: number) {
-        this._latency = l;
-        this.update();
-    }
-    update() {
-        if (Settings.hudEnabled) hudh.style.visibility = "visible";
-        else hudh.style.visibility = "hidden";
-
-        hudh.innerHTML = `fps: ${this.framesPerSecond || 0} - \
-                          players: ${this.playerCount || 0} - \
-                          spectators: ${this.spectatorCount || 0} - \
-                          ping: ${Math.floor(this._latency || 0)}`;
-        hudh.style.fontFamily = Settings.font;
-
-        if (this.playerCount > 0) window.document.title = `Daud.io (${this.playerCount})`;
-        else window.document.title = `Daud.io`;
-    }
+let latency: number;
+let framesPerSecond: number;
+let playerCount: number;
+let spectatorCount: number;
+function update(): void {
+    hudh.innerText = `fps: ${framesPerSecond || 0} - \
+                          players: ${playerCount || 0} - \
+                          spectators: ${spectatorCount || 0} - \
+                          ping: ${latency || 0}`;
+}
+export function setPerf(l: number, f: number): void {
+    if (latency == Math.floor(l) && framesPerSecond == f) return;
+    latency = Math.floor(l);
+    framesPerSecond = f;
+    update();
+}
+export function setSpectatorCount(s: number): void {
+    if (spectatorCount == s) return;
+    spectatorCount = s;
+    update();
+}
+export function setPlayerCount(p: number): void {
+    if (p == playerCount) return;
+    playerCount = p;
+    window.document.title = playerCount > 0 ? `Daud.io (${playerCount})` : "Daud.io";
 }

@@ -1,87 +1,68 @@
-import { Settings } from "./settings";
-import { RenderedObject } from "./models/renderedObject";
+import { getDefinition } from "./loader";
 import * as PIXI from "pixi.js";
 import { Vector2 } from "./Vector2";
-import { CustomContainer } from "./CustomContainer";
+import bus from "./bus";
+import { Settings } from "./settings";
 
-export class Background extends RenderedObject {
-    focus: Vector2;
-    speeds: number[];
-    backgroundSprites: PIXI.TilingSprite[];
-    constructor(container: CustomContainer) {
-        super(container);
-        this.focus = new Vector2(0, 0);
-        this.speeds = [];
-        this.refreshSprite();
-    }
+let container: PIXI.Container | undefined;
+let focus: Vector2 = new Vector2(0, 0);
+let speeds: number[] = [];
+let backgroundSprites: PIXI.TilingSprite[] = [];
 
-    draw() {
-        if (this.backgroundSprites) {
-            for (let i = 0; i < this.backgroundSprites.length; i++) {
-                const backgroundSprite = this.backgroundSprites[i];
-                if (this.speeds && this.speeds.length > i) {
-                    backgroundSprite.position.x = -100000 * (Math.cos(backgroundSprite.rotation) - Math.sin(backgroundSprite.rotation)) - this.focus.x * (this.speeds[i] - 1);
-                    backgroundSprite.position.y = -100000 * (Math.sin(backgroundSprite.rotation) + Math.cos(backgroundSprite.rotation)) - this.focus.y * (this.speeds[i] - 1);
-                    if (Settings.background == "none" && backgroundSprite.visible) backgroundSprite.visible = false;
-                    if (Settings.background == "on" && !backgroundSprite.visible) backgroundSprite.visible = true;
-                } else {
-                    backgroundSprite.visible = false;
-                }
-            }
+export function setContainer(newContainer: PIXI.Container): void {
+    container = newContainer;
+}
+export function draw(): void {
+    if (backgroundSprites) {
+        for (let i = 0; i < backgroundSprites.length; i++) {
+            const backgroundSprite = backgroundSprites[i];
+            backgroundSprite.position.x = focus.x * (1 - speeds[i]) - 100000;
+            backgroundSprite.position.y = focus.y * (1 - speeds[i]) - 100000;
         }
     }
-    updateFocus(focus: Vector2) {
-        this.focus = focus;
-    }
+}
 
-    refreshSprite() {
-        const spriteDefinition = RenderedObject.getSpriteDefinition("bg");
+export function updateFocus(newFocus: Vector2): void {
+    focus = newFocus;
+}
 
-        let layerSpeeds = spriteDefinition["layer-speeds"];
-        let layerTextures = spriteDefinition["layer-textures"];
-        if (!layerSpeeds || !layerTextures) {
-            layerSpeeds = [];
-            layerTextures = [];
-        }
-        const speeds = layerSpeeds;
-        this.speeds = speeds;
-        const allLayersTextureNames = layerTextures;
-        const allLayersTextures = allLayersTextureNames.map((x) => RenderedObject.getTextureDefinition(x));
-        if (!this.backgroundSprites) {
-            this.backgroundSprites = [];
-        }
-        for (let i = 0; i < allLayersTextures.length; i++) {
-            if (i >= this.backgroundSprites.length) {
-                this.backgroundSprites.push(null);
-            }
-            const textures = RenderedObject.loadTexture(allLayersTextures[i], allLayersTextureNames[i]);
-            if (textures.length > 0) {
-                let backgroundSprite = this.backgroundSprites[i];
-                if (!backgroundSprite) {
-                    backgroundSprite = new PIXI.TilingSprite(textures[0], 200000, 200000);
-                    this.container.addChild(backgroundSprite);
-                    backgroundSprite.tileScale.set(RenderedObject.getScale(allLayersTextures[i], textures[0]), RenderedObject.getScale(allLayersTextures[i], textures[0]));
-                    backgroundSprite.rotation = Math.random() - 0.5;
-                    backgroundSprite.position.x = -100000 * (Math.cos(backgroundSprite.rotation) - Math.sin(backgroundSprite.rotation));
-                    backgroundSprite.position.y = -100000 * (Math.sin(backgroundSprite.rotation) + Math.cos(backgroundSprite.rotation));
+bus.on("loaded", () => {
+    const spriteDefinition = (getDefinition("bg") as unknown) as {
+        layerSpeeds: number[];
+        layerTextures: string[];
+        scale: number[];
+    };
+    speeds = spriteDefinition.layerSpeeds;
+    const allLayersTextures = spriteDefinition.layerTextures.map((x) => getDefinition(x));
+    for (let i = 0; i < allLayersTextures.length; i++) {
+        const textures = allLayersTextures[i].textures!;
+        if (textures.length > 0) {
+            let backgroundSprite = backgroundSprites[i];
+            if (!backgroundSprite) {
+                backgroundSprite = new PIXI.TilingSprite(textures[0], 200000, 200000);
+                backgroundSprite.visible = Settings.background;
+                if (container) container.addChild(backgroundSprite);
+                backgroundSprite.tileScale.set(spriteDefinition.scale[i], spriteDefinition.scale[i]);
+                backgroundSprite.rotation = Math.random() - 0.5;
 
-                    this.backgroundSprites[i] = backgroundSprite;
-                } else backgroundSprite.texture = textures[0];
-            }
+                backgroundSprites[i] = backgroundSprite;
+            } else backgroundSprite.texture = textures[0];
         }
     }
+    draw();
+});
 
-    destroy() {
-        if (this.backgroundSprites) {
-            for (let i = 0; i < this.backgroundSprites.length; i++) {
-                const backgroundSprite = this.backgroundSprites[i];
-                if (backgroundSprite) this.container.removeChild(backgroundSprite);
-            }
-        }
+bus.on("settings", () => {
+    for (const sprite of backgroundSprites) {
+        sprite.visible = Settings.background;
+    }
+});
 
-        this.backgroundSprites = [];
+export function destroy(): void {
+    for (let i = 0; i < backgroundSprites.length; i++) {
+        const backgroundSprite = backgroundSprites[i];
+        if (backgroundSprite && container) container.removeChild(backgroundSprite);
     }
-    update(updateData) {
-        super.update(updateData);
-    }
+
+    backgroundSprites = [];
 }

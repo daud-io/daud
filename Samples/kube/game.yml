@@ -85,7 +85,7 @@ spec:
             #requests:
             #  cpu: "0.057"
           command: ["dotnet"]
-          args: ["/app/Game.Util/bin/Release/netcoreapp3.1/publish/Game.Util.dll",
+          args: ["/app/Game.Util/bin/Release/netcoreapp5.0/publish/Game.Util.dll",
             "--server", "http://game-internal/", 
             "--user-key", "Administrator", 
             "player", "robots",
@@ -128,7 +128,7 @@ spec:
             #requests:
             #  cpu: "0.057"
           command: ["dotnet"]
-          args: ["/app/Game.Registry/bin/Release/netcoreapp3.1/publish/Game.Registry.dll"]
+          args: ["/app/Game.Registry/bin/Release/netcoreapp5.0/publish/Game.Registry.dll"]
           env:
           - name: config__ElasticSearchURI
             value: "http://game-elastic:9200"

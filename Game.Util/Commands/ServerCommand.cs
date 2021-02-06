@@ -5,10 +5,11 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    [Subcommand("get", typeof(Get))]
-    [Subcommand("reset", typeof(Reset))]
-    [Subcommand("announce", typeof(Announce))]
-    [Subcommand("connections", typeof(Connections))]
+    [Subcommand(typeof(Get))]
+    [Subcommand(typeof(Reset))]
+    [Subcommand(typeof(Announce))]
+    [Subcommand(typeof(Connections))]
+    [Command("server")]
     class ServerCommand : CommandBase
     {
         private static string[] Worlds = new[]
@@ -27,6 +28,7 @@
                 return new[] { world };
         }
 
+        [Command("get")]
         class Get : CommandBase
         {
             protected async override Task ExecuteAsync()
@@ -44,6 +46,7 @@
             }
         }
 
+        [Command("reset")]
         class Reset : CommandBase
         {
             protected async override Task ExecuteAsync()
@@ -52,6 +55,7 @@
             }
         }
 
+        [Command("announce")]
         class Announce : CommandBase
         {
             [Argument(0)]
@@ -70,6 +74,7 @@
             }
         }
 
+        [Command("connections")]
         class Connections : CommandBase
         {
             [Option]

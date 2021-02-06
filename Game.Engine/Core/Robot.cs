@@ -68,7 +68,7 @@
                 GetWorldPlayers(World)
                     .Where(p => p.IsAlive)
                     .Where(p => ExcludeFleet == null || (p.Fleet != ExcludeFleet && (p as Robot)?.ExcludeFleet != ExcludeFleet))
-                    .Where(p => (p.Fleet?.Ships?.Count() ?? 0) > 0)
+                    .Where(p => p.Fleet?.Ships?.Any() ?? false)
                     .Where(p => AttackRobots || (!p.Name?.StartsWith("🤖") ?? true))
                     .Where(p => p != this)
                     .OrderBy(p => Vector2.Distance(p.Fleet.FleetCenter, this.Fleet.FleetCenter))

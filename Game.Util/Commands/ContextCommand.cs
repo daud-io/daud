@@ -5,11 +5,13 @@
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
-    [Subcommand("get", typeof(Get))]
-    [Subcommand("list", typeof(List))]
-    [Subcommand("set", typeof(Set))]
+    [Subcommand(typeof(Get))]
+    [Subcommand(typeof(List))]
+    [Subcommand(typeof(Set))]
+    [Command("context")]
     class ContextCommand : CommandBase
     {
+        [Command("get")]
         class Get : CommandBase
         {
 
@@ -23,6 +25,7 @@
             }
         }
 
+        [Command("list")]
         class List : CommandBase
         {
             protected override void Execute()
@@ -37,6 +40,7 @@
             }
         }
 
+        [Command("set")]
         class Set : CommandBase
         {
             [Required, Argument(0, Description = "contextName")]

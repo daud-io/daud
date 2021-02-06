@@ -14,9 +14,11 @@
     using System.Numerics;
     using System.Threading.Tasks;
 
-    [Subcommand("robots", typeof(Robots))]
+    [Subcommand(typeof(Robots))]
+    [Command("player")]
     class PlayerCommand : CommandBase
     {
+        [Command("robots")]
         class Robots : CommandBase
         {
             [Option]

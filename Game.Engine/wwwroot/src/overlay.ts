@@ -10,10 +10,10 @@ export class Overlay {
         this.container = container;
         this.plotly = plotly;
         this.canvas = canvas;
-        this.data = false;
+        this.data = undefined;
     }
 
-    update(customData) {
+    update(customData: any): void {
         this.data = customData;
 
         if (this.plotly.used) this.container.plotly.style.visibility = "visible";

@@ -6,46 +6,58 @@ namespace Game.Engine.Networking.FlatBuffers
 {
 
 using global::System;
-using global::Google.FlatBuffers;
+using global::System.Collections.Generic;
+using global::FlatBuffers;
 
 public enum AllMessages : byte
 {
- NONE = 0,
- NetWorldView = 1,
- NetSpawn = 2,
- NetEvent = 3,
- NetControlInput = 4,
- NetPing = 5,
- NetLeaderboard = 6,
- NetExit = 7,
- NetAuthenticate = 8,
+  NONE = 0,
+  NetWorldView = 1,
+  NetSpawn = 2,
+  NetEvent = 3,
+  NetControlInput = 4,
+  NetPing = 5,
+  NetLeaderboard = 6,
+  NetExit = 7,
+  NetAuthenticate = 8,
 };
 
 public struct NetLeaderboard : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetLeaderboard GetRootAsNetLeaderboard(ByteBuffer _bb) { return GetRootAsNetLeaderboard(_bb, new NetLeaderboard()); }
   public static NetLeaderboard GetRootAsNetLeaderboard(ByteBuffer _bb, NetLeaderboard obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetLeaderboard __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public uint FleetID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public string Type { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTypeBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
   public ArraySegment<byte>? GetTypeBytes() { return __p.__vector_as_arraysegment(6); }
-  public NetLeaderboardEntry? Entries(int j) { int o = __p.__offset(8); return o != 0 ? (NetLeaderboardEntry?)(new NetLeaderboardEntry()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+#endif
+  public byte[] GetTypeArray() { return __p.__vector_as_array<byte>(6); }
+  public Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry? Entries(int j) { int o = __p.__offset(8); return o != 0 ? (Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry?)(new Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int EntriesLength { get { int o = __p.__offset(8); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public NetLeaderboardEntry? Record { get { int o = __p.__offset(10); return o != 0 ? (NetLeaderboardEntry?)(new NetLeaderboardEntry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  public Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry? Record { get { int o = __p.__offset(10); return o != 0 ? (Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry?)(new Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
   public string ModeData { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetModeDataBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
   public ArraySegment<byte>? GetModeDataBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetModeDataArray() { return __p.__vector_as_array<byte>(12); }
 
-  public static Offset<NetLeaderboard> CreateNetLeaderboard(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboard> CreateNetLeaderboard(FlatBufferBuilder builder,
       uint fleetID = 0,
       StringOffset typeOffset = default(StringOffset),
       VectorOffset entriesOffset = default(VectorOffset),
-      Offset<NetLeaderboardEntry> recordOffset = default(Offset<NetLeaderboardEntry>),
+      Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry> recordOffset = default(Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry>),
       StringOffset modeDataOffset = default(StringOffset)) {
-    builder.StartObject(5);
+    builder.StartTable(5);
     NetLeaderboard.AddModeData(builder, modeDataOffset);
     NetLeaderboard.AddRecord(builder, recordOffset);
     NetLeaderboard.AddEntries(builder, entriesOffset);
@@ -54,17 +66,18 @@ public struct NetLeaderboard : IFlatbufferObject
     return NetLeaderboard.EndNetLeaderboard(builder);
   }
 
-  public static void StartNetLeaderboard(FlatBufferBuilder builder) { builder.StartObject(5); }
+  public static void StartNetLeaderboard(FlatBufferBuilder builder) { builder.StartTable(5); }
   public static void AddFleetID(FlatBufferBuilder builder, uint fleetID) { builder.AddUint(0, fleetID, 0); }
   public static void AddType(FlatBufferBuilder builder, StringOffset typeOffset) { builder.AddOffset(1, typeOffset.Value, 0); }
   public static void AddEntries(FlatBufferBuilder builder, VectorOffset entriesOffset) { builder.AddOffset(2, entriesOffset.Value, 0); }
-  public static VectorOffset CreateEntriesVector(FlatBufferBuilder builder, Offset<NetLeaderboardEntry>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEntriesVector(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateEntriesVectorBlock(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartEntriesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddRecord(FlatBufferBuilder builder, Offset<NetLeaderboardEntry> recordOffset) { builder.AddOffset(3, recordOffset.Value, 0); }
+  public static void AddRecord(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry> recordOffset) { builder.AddOffset(3, recordOffset.Value, 0); }
   public static void AddModeData(FlatBufferBuilder builder, StringOffset modeDataOffset) { builder.AddOffset(4, modeDataOffset.Value, 0); }
-  public static Offset<NetLeaderboard> EndNetLeaderboard(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetLeaderboard>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboard> EndNetLeaderboard(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboard>(o);
   }
 };
 
@@ -72,33 +85,49 @@ public struct NetLeaderboardEntry : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetLeaderboardEntry GetRootAsNetLeaderboardEntry(ByteBuffer _bb) { return GetRootAsNetLeaderboardEntry(_bb, new NetLeaderboardEntry()); }
   public static NetLeaderboardEntry GetRootAsNetLeaderboardEntry(ByteBuffer _bb, NetLeaderboardEntry obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetLeaderboardEntry __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public uint FleetID { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public string Name { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNameBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
   public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(6); }
+#endif
+  public byte[] GetNameArray() { return __p.__vector_as_array<byte>(6); }
   public int Score { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public string Color { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetColorBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
   public ArraySegment<byte>? GetColorBytes() { return __p.__vector_as_arraysegment(10); }
-  public Vec2? Position { get { int o = __p.__offset(12); return o != 0 ? (Vec2?)(new Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+#endif
+  public byte[] GetColorArray() { return __p.__vector_as_array<byte>(10); }
+  public Game.Engine.Networking.FlatBuffers.Vec2? Position { get { int o = __p.__offset(12); return o != 0 ? (Game.Engine.Networking.FlatBuffers.Vec2?)(new Game.Engine.Networking.FlatBuffers.Vec2()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public bool Token { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public string ModeData { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetModeDataBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
   public ArraySegment<byte>? GetModeDataBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetModeDataArray() { return __p.__vector_as_array<byte>(16); }
 
-  public static void StartNetLeaderboardEntry(FlatBufferBuilder builder) { builder.StartObject(7); }
+  public static void StartNetLeaderboardEntry(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddFleetID(FlatBufferBuilder builder, uint fleetID) { builder.AddUint(0, fleetID, 0); }
   public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(1, nameOffset.Value, 0); }
   public static void AddScore(FlatBufferBuilder builder, int score) { builder.AddInt(2, score, 0); }
   public static void AddColor(FlatBufferBuilder builder, StringOffset colorOffset) { builder.AddOffset(3, colorOffset.Value, 0); }
-  public static void AddPosition(FlatBufferBuilder builder, Offset<Vec2> positionOffset) { builder.AddStruct(4, positionOffset.Value, 0); }
+  public static void AddPosition(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.Vec2> positionOffset) { builder.AddStruct(4, positionOffset.Value, 0); }
   public static void AddToken(FlatBufferBuilder builder, bool token) { builder.AddBool(5, token, false); }
   public static void AddModeData(FlatBufferBuilder builder, StringOffset modeDataOffset) { builder.AddOffset(6, modeDataOffset.Value, 0); }
-  public static Offset<NetLeaderboardEntry> EndNetLeaderboardEntry(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetLeaderboardEntry>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry> EndNetLeaderboardEntry(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetLeaderboardEntry>(o);
   }
 };
 
@@ -106,26 +135,47 @@ public struct NetSpawn : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetSpawn GetRootAsNetSpawn(ByteBuffer _bb) { return GetRootAsNetSpawn(_bb, new NetSpawn()); }
   public static NetSpawn GetRootAsNetSpawn(ByteBuffer _bb, NetSpawn obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetSpawn __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Name { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNameBytes() { return __p.__vector_as_span<byte>(4, 1); }
+#else
   public ArraySegment<byte>? GetNameBytes() { return __p.__vector_as_arraysegment(4); }
+#endif
+  public byte[] GetNameArray() { return __p.__vector_as_array<byte>(4); }
   public string Ship { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetShipBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
   public ArraySegment<byte>? GetShipBytes() { return __p.__vector_as_arraysegment(6); }
+#endif
+  public byte[] GetShipArray() { return __p.__vector_as_array<byte>(6); }
   public string Color { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetColorBytes() { return __p.__vector_as_span<byte>(8, 1); }
+#else
   public ArraySegment<byte>? GetColorBytes() { return __p.__vector_as_arraysegment(8); }
+#endif
+  public byte[] GetColorArray() { return __p.__vector_as_array<byte>(8); }
   public string Token { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTokenBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
   public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(10); }
 
-  public static Offset<NetSpawn> CreateNetSpawn(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetSpawn> CreateNetSpawn(FlatBufferBuilder builder,
       StringOffset nameOffset = default(StringOffset),
       StringOffset shipOffset = default(StringOffset),
       StringOffset colorOffset = default(StringOffset),
       StringOffset tokenOffset = default(StringOffset)) {
-    builder.StartObject(4);
+    builder.StartTable(4);
     NetSpawn.AddToken(builder, tokenOffset);
     NetSpawn.AddColor(builder, colorOffset);
     NetSpawn.AddShip(builder, shipOffset);
@@ -133,14 +183,14 @@ public struct NetSpawn : IFlatbufferObject
     return NetSpawn.EndNetSpawn(builder);
   }
 
-  public static void StartNetSpawn(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void StartNetSpawn(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddName(FlatBufferBuilder builder, StringOffset nameOffset) { builder.AddOffset(0, nameOffset.Value, 0); }
   public static void AddShip(FlatBufferBuilder builder, StringOffset shipOffset) { builder.AddOffset(1, shipOffset.Value, 0); }
   public static void AddColor(FlatBufferBuilder builder, StringOffset colorOffset) { builder.AddOffset(2, colorOffset.Value, 0); }
   public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(3, tokenOffset.Value, 0); }
-  public static Offset<NetSpawn> EndNetSpawn(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetSpawn>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetSpawn> EndNetSpawn(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetSpawn>(o);
   }
 };
 
@@ -148,25 +198,26 @@ public struct NetExit : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetExit GetRootAsNetExit(ByteBuffer _bb) { return GetRootAsNetExit(_bb, new NetExit()); }
   public static NetExit GetRootAsNetExit(ByteBuffer _bb, NetExit obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetExit __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public int Code { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
 
-  public static Offset<NetExit> CreateNetExit(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetExit> CreateNetExit(FlatBufferBuilder builder,
       int code = 0) {
-    builder.StartObject(1);
+    builder.StartTable(1);
     NetExit.AddCode(builder, code);
     return NetExit.EndNetExit(builder);
   }
 
-  public static void StartNetExit(FlatBufferBuilder builder) { builder.StartObject(1); }
+  public static void StartNetExit(FlatBufferBuilder builder) { builder.StartTable(1); }
   public static void AddCode(FlatBufferBuilder builder, int code) { builder.AddInt(0, code, 0); }
-  public static Offset<NetExit> EndNetExit(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetExit>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetExit> EndNetExit(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetExit>(o);
   }
 };
 
@@ -174,9 +225,10 @@ public struct NetControlInput : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetControlInput GetRootAsNetControlInput(ByteBuffer _bb) { return GetRootAsNetControlInput(_bb, new NetControlInput()); }
   public static NetControlInput GetRootAsNetControlInput(ByteBuffer _bb, NetControlInput obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetControlInput __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public float Angle { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetFloat(o + __p.bb_pos) : (float)0.0f; } }
@@ -185,11 +237,21 @@ public struct NetControlInput : IFlatbufferObject
   public bool Boost { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public bool Shoot { get { int o = __p.__offset(12); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public string SpectateControl { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSpectateControlBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
   public ArraySegment<byte>? GetSpectateControlBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetSpectateControlArray() { return __p.__vector_as_array<byte>(14); }
   public string CustomData { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCustomDataBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
   public ArraySegment<byte>? GetCustomDataBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetCustomDataArray() { return __p.__vector_as_array<byte>(16); }
 
-  public static Offset<NetControlInput> CreateNetControlInput(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetControlInput> CreateNetControlInput(FlatBufferBuilder builder,
       float angle = 0.0f,
       float x = 0.0f,
       float y = 0.0f,
@@ -197,7 +259,7 @@ public struct NetControlInput : IFlatbufferObject
       bool shoot = false,
       StringOffset spectateControlOffset = default(StringOffset),
       StringOffset customDataOffset = default(StringOffset)) {
-    builder.StartObject(7);
+    builder.StartTable(7);
     NetControlInput.AddCustomData(builder, customDataOffset);
     NetControlInput.AddSpectateControl(builder, spectateControlOffset);
     NetControlInput.AddY(builder, y);
@@ -208,7 +270,7 @@ public struct NetControlInput : IFlatbufferObject
     return NetControlInput.EndNetControlInput(builder);
   }
 
-  public static void StartNetControlInput(FlatBufferBuilder builder) { builder.StartObject(7); }
+  public static void StartNetControlInput(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddAngle(FlatBufferBuilder builder, float angle) { builder.AddFloat(0, angle, 0.0f); }
   public static void AddX(FlatBufferBuilder builder, float x) { builder.AddFloat(1, x, 0.0f); }
   public static void AddY(FlatBufferBuilder builder, float y) { builder.AddFloat(2, y, 0.0f); }
@@ -216,9 +278,9 @@ public struct NetControlInput : IFlatbufferObject
   public static void AddShoot(FlatBufferBuilder builder, bool shoot) { builder.AddBool(4, shoot, false); }
   public static void AddSpectateControl(FlatBufferBuilder builder, StringOffset spectateControlOffset) { builder.AddOffset(5, spectateControlOffset.Value, 0); }
   public static void AddCustomData(FlatBufferBuilder builder, StringOffset customDataOffset) { builder.AddOffset(6, customDataOffset.Value, 0); }
-  public static Offset<NetControlInput> EndNetControlInput(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetControlInput>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetControlInput> EndNetControlInput(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetControlInput>(o);
   }
 };
 
@@ -226,31 +288,42 @@ public struct NetEvent : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetEvent GetRootAsNetEvent(ByteBuffer _bb) { return GetRootAsNetEvent(_bb, new NetEvent()); }
   public static NetEvent GetRootAsNetEvent(ByteBuffer _bb, NetEvent obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetEvent __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Type { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTypeBytes() { return __p.__vector_as_span<byte>(4, 1); }
+#else
   public ArraySegment<byte>? GetTypeBytes() { return __p.__vector_as_arraysegment(4); }
+#endif
+  public byte[] GetTypeArray() { return __p.__vector_as_array<byte>(4); }
   public string Data { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDataBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
   public ArraySegment<byte>? GetDataBytes() { return __p.__vector_as_arraysegment(6); }
+#endif
+  public byte[] GetDataArray() { return __p.__vector_as_array<byte>(6); }
 
-  public static Offset<NetEvent> CreateNetEvent(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetEvent> CreateNetEvent(FlatBufferBuilder builder,
       StringOffset typeOffset = default(StringOffset),
       StringOffset dataOffset = default(StringOffset)) {
-    builder.StartObject(2);
+    builder.StartTable(2);
     NetEvent.AddData(builder, dataOffset);
     NetEvent.AddType(builder, typeOffset);
     return NetEvent.EndNetEvent(builder);
   }
 
-  public static void StartNetEvent(FlatBufferBuilder builder) { builder.StartObject(2); }
+  public static void StartNetEvent(FlatBufferBuilder builder) { builder.StartTable(2); }
   public static void AddType(FlatBufferBuilder builder, StringOffset typeOffset) { builder.AddOffset(0, typeOffset.Value, 0); }
   public static void AddData(FlatBufferBuilder builder, StringOffset dataOffset) { builder.AddOffset(1, dataOffset.Value, 0); }
-  public static Offset<NetEvent> EndNetEvent(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetEvent>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetEvent> EndNetEvent(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetEvent>(o);
   }
 };
 
@@ -258,9 +331,10 @@ public struct NetPing : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetPing GetRootAsNetPing(ByteBuffer _bb) { return GetRootAsNetPing(_bb, new NetPing()); }
   public static NetPing GetRootAsNetPing(ByteBuffer _bb, NetPing obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetPing __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public uint Time { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
@@ -272,7 +346,7 @@ public struct NetPing : IFlatbufferObject
   public bool Backgrounded { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
   public uint BandwidthThrottle { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
 
-  public static Offset<NetPing> CreateNetPing(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetPing> CreateNetPing(FlatBufferBuilder builder,
       uint time = 0,
       uint latency = 0,
       uint fps = 0,
@@ -281,7 +355,7 @@ public struct NetPing : IFlatbufferObject
       uint cs = 0,
       bool backgrounded = false,
       uint bandwidthThrottle = 0) {
-    builder.StartObject(8);
+    builder.StartTable(8);
     NetPing.AddBandwidthThrottle(builder, bandwidthThrottle);
     NetPing.AddCs(builder, cs);
     NetPing.AddUps(builder, ups);
@@ -293,7 +367,7 @@ public struct NetPing : IFlatbufferObject
     return NetPing.EndNetPing(builder);
   }
 
-  public static void StartNetPing(FlatBufferBuilder builder) { builder.StartObject(8); }
+  public static void StartNetPing(FlatBufferBuilder builder) { builder.StartTable(8); }
   public static void AddTime(FlatBufferBuilder builder, uint time) { builder.AddUint(0, time, 0); }
   public static void AddLatency(FlatBufferBuilder builder, uint latency) { builder.AddUint(1, latency, 0); }
   public static void AddFps(FlatBufferBuilder builder, uint fps) { builder.AddUint(2, fps, 0); }
@@ -302,9 +376,9 @@ public struct NetPing : IFlatbufferObject
   public static void AddCs(FlatBufferBuilder builder, uint cs) { builder.AddUint(5, cs, 0); }
   public static void AddBackgrounded(FlatBufferBuilder builder, bool backgrounded) { builder.AddBool(6, backgrounded, false); }
   public static void AddBandwidthThrottle(FlatBufferBuilder builder, uint bandwidthThrottle) { builder.AddUint(7, bandwidthThrottle, 0); }
-  public static Offset<NetPing> EndNetPing(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetPing>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetPing> EndNetPing(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetPing>(o);
   }
 };
 
@@ -312,26 +386,37 @@ public struct NetWorldView : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetWorldView GetRootAsNetWorldView(ByteBuffer _bb) { return GetRootAsNetWorldView(_bb, new NetWorldView()); }
   public static NetWorldView GetRootAsNetWorldView(ByteBuffer _bb, NetWorldView obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetWorldView __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public uint Time { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
-  public NetBody? Camera { get { int o = __p.__offset(6); return o != 0 ? (NetBody?)(new NetBody()).__assign(o + __p.bb_pos, __p.bb) : null; } }
+  public Game.Engine.Networking.FlatBuffers.NetBody? Camera { get { int o = __p.__offset(6); return o != 0 ? (Game.Engine.Networking.FlatBuffers.NetBody?)(new Game.Engine.Networking.FlatBuffers.NetBody()).__assign(o + __p.bb_pos, __p.bb) : null; } }
   public uint FleetID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public bool IsAlive { get { int o = __p.__offset(10); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)true; } }
-  public NetBody? Updates(int j) { int o = __p.__offset(12); return o != 0 ? (NetBody?)(new NetBody()).__assign(__p.__vector(o) + j * 28, __p.bb) : null; }
+  public Game.Engine.Networking.FlatBuffers.NetBody? Updates(int j) { int o = __p.__offset(12); return o != 0 ? (Game.Engine.Networking.FlatBuffers.NetBody?)(new Game.Engine.Networking.FlatBuffers.NetBody()).__assign(__p.__vector(o) + j * 28, __p.bb) : null; }
   public int UpdatesLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
   public uint Deletes(int j) { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int DeletesLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<uint> GetDeletesBytes() { return __p.__vector_as_span<uint>(14, 4); }
+#else
   public ArraySegment<byte>? GetDeletesBytes() { return __p.__vector_as_arraysegment(14); }
-  public NetGroup? Groups(int j) { int o = __p.__offset(16); return o != 0 ? (NetGroup?)(new NetGroup()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+#endif
+  public uint[] GetDeletesArray() { return __p.__vector_as_array<uint>(14); }
+  public Game.Engine.Networking.FlatBuffers.NetGroup? Groups(int j) { int o = __p.__offset(16); return o != 0 ? (Game.Engine.Networking.FlatBuffers.NetGroup?)(new Game.Engine.Networking.FlatBuffers.NetGroup()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int GroupsLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
   public uint GroupDeletes(int j) { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(__p.__vector(o) + j * 4) : (uint)0; }
   public int GroupDeletesLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<uint> GetGroupDeletesBytes() { return __p.__vector_as_span<uint>(18, 4); }
+#else
   public ArraySegment<byte>? GetGroupDeletesBytes() { return __p.__vector_as_arraysegment(18); }
-  public NetAnnouncement? Announcements(int j) { int o = __p.__offset(20); return o != 0 ? (NetAnnouncement?)(new NetAnnouncement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+#endif
+  public uint[] GetGroupDeletesArray() { return __p.__vector_as_array<uint>(18); }
+  public Game.Engine.Networking.FlatBuffers.NetAnnouncement? Announcements(int j) { int o = __p.__offset(20); return o != 0 ? (Game.Engine.Networking.FlatBuffers.NetAnnouncement?)(new Game.Engine.Networking.FlatBuffers.NetAnnouncement()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
   public int AnnouncementsLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
   public uint PlayerCount { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public uint SpectatorCount { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
@@ -339,26 +424,35 @@ public struct NetWorldView : IFlatbufferObject
   public byte CooldownBoost { get { int o = __p.__offset(28); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public ushort WorldSize { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
   public string CustomData { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCustomDataBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
   public ArraySegment<byte>? GetCustomDataBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetCustomDataArray() { return __p.__vector_as_array<byte>(32); }
 
-  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartObject(15); }
+  public static void StartNetWorldView(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddTime(FlatBufferBuilder builder, uint time) { builder.AddUint(0, time, 0); }
-  public static void AddCamera(FlatBufferBuilder builder, Offset<NetBody> cameraOffset) { builder.AddStruct(1, cameraOffset.Value, 0); }
+  public static void AddCamera(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetBody> cameraOffset) { builder.AddStruct(1, cameraOffset.Value, 0); }
   public static void AddFleetID(FlatBufferBuilder builder, uint fleetID) { builder.AddUint(2, fleetID, 0); }
   public static void AddIsAlive(FlatBufferBuilder builder, bool isAlive) { builder.AddBool(3, isAlive, true); }
   public static void AddUpdates(FlatBufferBuilder builder, VectorOffset updatesOffset) { builder.AddOffset(4, updatesOffset.Value, 0); }
   public static void StartUpdatesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(28, numElems, 4); }
   public static void AddDeletes(FlatBufferBuilder builder, VectorOffset deletesOffset) { builder.AddOffset(5, deletesOffset.Value, 0); }
   public static VectorOffset CreateDeletesVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDeletesVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartDeletesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddGroups(FlatBufferBuilder builder, VectorOffset groupsOffset) { builder.AddOffset(6, groupsOffset.Value, 0); }
-  public static VectorOffset CreateGroupsVector(FlatBufferBuilder builder, Offset<NetGroup>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateGroupsVector(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetGroup>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateGroupsVectorBlock(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetGroup>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartGroupsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddGroupDeletes(FlatBufferBuilder builder, VectorOffset groupDeletesOffset) { builder.AddOffset(7, groupDeletesOffset.Value, 0); }
   public static VectorOffset CreateGroupDeletesVector(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddUint(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateGroupDeletesVectorBlock(FlatBufferBuilder builder, uint[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartGroupDeletesVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddAnnouncements(FlatBufferBuilder builder, VectorOffset announcementsOffset) { builder.AddOffset(8, announcementsOffset.Value, 0); }
-  public static VectorOffset CreateAnnouncementsVector(FlatBufferBuilder builder, Offset<NetAnnouncement>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateAnnouncementsVector(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetAnnouncement>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateAnnouncementsVectorBlock(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetAnnouncement>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static void StartAnnouncementsVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
   public static void AddPlayerCount(FlatBufferBuilder builder, uint playerCount) { builder.AddUint(9, playerCount, 0); }
   public static void AddSpectatorCount(FlatBufferBuilder builder, uint spectatorCount) { builder.AddUint(10, spectatorCount, 0); }
@@ -366,9 +460,9 @@ public struct NetWorldView : IFlatbufferObject
   public static void AddCooldownBoost(FlatBufferBuilder builder, byte cooldownBoost) { builder.AddByte(12, cooldownBoost, 0); }
   public static void AddWorldSize(FlatBufferBuilder builder, ushort worldSize) { builder.AddUshort(13, worldSize, 0); }
   public static void AddCustomData(FlatBufferBuilder builder, StringOffset customDataOffset) { builder.AddOffset(14, customDataOffset.Value, 0); }
-  public static Offset<NetWorldView> EndNetWorldView(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetWorldView>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetWorldView> EndNetWorldView(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetWorldView>(o);
   }
 };
 
@@ -376,23 +470,39 @@ public struct NetGroup : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetGroup GetRootAsNetGroup(ByteBuffer _bb) { return GetRootAsNetGroup(_bb, new NetGroup()); }
   public static NetGroup GetRootAsNetGroup(ByteBuffer _bb, NetGroup obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetGroup __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public uint Group { get { int o = __p.__offset(4); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public byte Type { get { int o = __p.__offset(6); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
   public string Caption { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCaptionBytes() { return __p.__vector_as_span<byte>(8, 1); }
+#else
   public ArraySegment<byte>? GetCaptionBytes() { return __p.__vector_as_arraysegment(8); }
+#endif
+  public byte[] GetCaptionArray() { return __p.__vector_as_array<byte>(8); }
   public uint Zindex { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public uint Owner { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
   public string Color { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetColorBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
   public ArraySegment<byte>? GetColorBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetColorArray() { return __p.__vector_as_array<byte>(14); }
   public string CustomData { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCustomDataBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
   public ArraySegment<byte>? GetCustomDataBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetCustomDataArray() { return __p.__vector_as_array<byte>(16); }
 
-  public static Offset<NetGroup> CreateNetGroup(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetGroup> CreateNetGroup(FlatBufferBuilder builder,
       uint group = 0,
       byte type = 0,
       StringOffset captionOffset = default(StringOffset),
@@ -400,7 +510,7 @@ public struct NetGroup : IFlatbufferObject
       uint owner = 0,
       StringOffset colorOffset = default(StringOffset),
       StringOffset customDataOffset = default(StringOffset)) {
-    builder.StartObject(7);
+    builder.StartTable(7);
     NetGroup.AddCustomData(builder, customDataOffset);
     NetGroup.AddColor(builder, colorOffset);
     NetGroup.AddOwner(builder, owner);
@@ -411,7 +521,7 @@ public struct NetGroup : IFlatbufferObject
     return NetGroup.EndNetGroup(builder);
   }
 
-  public static void StartNetGroup(FlatBufferBuilder builder) { builder.StartObject(7); }
+  public static void StartNetGroup(FlatBufferBuilder builder) { builder.StartTable(7); }
   public static void AddGroup(FlatBufferBuilder builder, uint group) { builder.AddUint(0, group, 0); }
   public static void AddType(FlatBufferBuilder builder, byte type) { builder.AddByte(1, type, 0); }
   public static void AddCaption(FlatBufferBuilder builder, StringOffset captionOffset) { builder.AddOffset(2, captionOffset.Value, 0); }
@@ -419,9 +529,9 @@ public struct NetGroup : IFlatbufferObject
   public static void AddOwner(FlatBufferBuilder builder, uint owner) { builder.AddUint(4, owner, 0); }
   public static void AddColor(FlatBufferBuilder builder, StringOffset colorOffset) { builder.AddOffset(5, colorOffset.Value, 0); }
   public static void AddCustomData(FlatBufferBuilder builder, StringOffset customDataOffset) { builder.AddOffset(6, customDataOffset.Value, 0); }
-  public static Offset<NetGroup> EndNetGroup(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetGroup>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetGroup> EndNetGroup(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetGroup>(o);
   }
 };
 
@@ -429,17 +539,17 @@ public struct Vec2 : IFlatbufferObject
 {
   private Struct __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Struct(_i, _bb); }
   public Vec2 __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public short X { get { return __p.bb.GetShort(__p.bb_pos + 0); } }
   public short Y { get { return __p.bb.GetShort(__p.bb_pos + 2); } }
 
-  public static Offset<Vec2> CreateVec2(FlatBufferBuilder builder, short X, short Y) {
+  public static Offset<Game.Engine.Networking.FlatBuffers.Vec2> CreateVec2(FlatBufferBuilder builder, short X, short Y) {
     builder.Prep(2, 4);
     builder.PutShort(Y);
     builder.PutShort(X);
-    return new Offset<Vec2>(builder.Offset);
+    return new Offset<Game.Engine.Networking.FlatBuffers.Vec2>(builder.Offset);
   }
 };
 
@@ -447,13 +557,13 @@ public struct NetBody : IFlatbufferObject
 {
   private Struct __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Struct(_i, _bb); }
   public NetBody __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public uint Id { get { return __p.bb.GetUint(__p.bb_pos + 0); } }
   public uint DefinitionTime { get { return __p.bb.GetUint(__p.bb_pos + 4); } }
-  public Vec2 OriginalPosition { get { return (new Vec2()).__assign(__p.bb_pos + 8, __p.bb); } }
-  public Vec2 Velocity { get { return (new Vec2()).__assign(__p.bb_pos + 12, __p.bb); } }
+  public Game.Engine.Networking.FlatBuffers.Vec2 OriginalPosition { get { return (new Game.Engine.Networking.FlatBuffers.Vec2()).__assign(__p.bb_pos + 8, __p.bb); } }
+  public Game.Engine.Networking.FlatBuffers.Vec2 Velocity { get { return (new Game.Engine.Networking.FlatBuffers.Vec2()).__assign(__p.bb_pos + 12, __p.bb); } }
   public sbyte OriginalAngle { get { return __p.bb.GetSbyte(__p.bb_pos + 16); } }
   public sbyte AngularVelocity { get { return __p.bb.GetSbyte(__p.bb_pos + 17); } }
   public byte Size { get { return __p.bb.Get(__p.bb_pos + 18); } }
@@ -461,7 +571,7 @@ public struct NetBody : IFlatbufferObject
   public byte Mode { get { return __p.bb.Get(__p.bb_pos + 22); } }
   public uint Group { get { return __p.bb.GetUint(__p.bb_pos + 24); } }
 
-  public static Offset<NetBody> CreateNetBody(FlatBufferBuilder builder, uint Id, uint DefinitionTime, short originalPosition_X, short originalPosition_Y, short velocity_X, short velocity_Y, sbyte OriginalAngle, sbyte AngularVelocity, byte Size, ushort Sprite, byte Mode, uint Group) {
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetBody> CreateNetBody(FlatBufferBuilder builder, uint Id, uint DefinitionTime, short originalPosition_X, short originalPosition_Y, short velocity_X, short velocity_Y, sbyte OriginalAngle, sbyte AngularVelocity, byte Size, ushort Sprite, byte Mode, uint Group) {
     builder.Prep(4, 28);
     builder.PutUint(Group);
     builder.Pad(1);
@@ -479,7 +589,7 @@ public struct NetBody : IFlatbufferObject
     builder.PutShort(originalPosition_X);
     builder.PutUint(DefinitionTime);
     builder.PutUint(Id);
-    return new Offset<NetBody>(builder.Offset);
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetBody>(builder.Offset);
   }
 };
 
@@ -487,25 +597,41 @@ public struct NetAnnouncement : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetAnnouncement GetRootAsNetAnnouncement(ByteBuffer _bb) { return GetRootAsNetAnnouncement(_bb, new NetAnnouncement()); }
   public static NetAnnouncement GetRootAsNetAnnouncement(ByteBuffer _bb, NetAnnouncement obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetAnnouncement __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Text { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTextBytes() { return __p.__vector_as_span<byte>(4, 1); }
+#else
   public ArraySegment<byte>? GetTextBytes() { return __p.__vector_as_arraysegment(4); }
+#endif
+  public byte[] GetTextArray() { return __p.__vector_as_array<byte>(4); }
   public string Type { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTypeBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
   public ArraySegment<byte>? GetTypeBytes() { return __p.__vector_as_arraysegment(6); }
+#endif
+  public byte[] GetTypeArray() { return __p.__vector_as_array<byte>(6); }
   public int PointsDelta { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
   public string ExtraData { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetExtraDataBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
   public ArraySegment<byte>? GetExtraDataBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetExtraDataArray() { return __p.__vector_as_array<byte>(10); }
 
-  public static Offset<NetAnnouncement> CreateNetAnnouncement(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetAnnouncement> CreateNetAnnouncement(FlatBufferBuilder builder,
       StringOffset textOffset = default(StringOffset),
       StringOffset typeOffset = default(StringOffset),
       int pointsDelta = 0,
       StringOffset extraDataOffset = default(StringOffset)) {
-    builder.StartObject(4);
+    builder.StartTable(4);
     NetAnnouncement.AddExtraData(builder, extraDataOffset);
     NetAnnouncement.AddPointsDelta(builder, pointsDelta);
     NetAnnouncement.AddType(builder, typeOffset);
@@ -513,14 +639,14 @@ public struct NetAnnouncement : IFlatbufferObject
     return NetAnnouncement.EndNetAnnouncement(builder);
   }
 
-  public static void StartNetAnnouncement(FlatBufferBuilder builder) { builder.StartObject(4); }
+  public static void StartNetAnnouncement(FlatBufferBuilder builder) { builder.StartTable(4); }
   public static void AddText(FlatBufferBuilder builder, StringOffset textOffset) { builder.AddOffset(0, textOffset.Value, 0); }
   public static void AddType(FlatBufferBuilder builder, StringOffset typeOffset) { builder.AddOffset(1, typeOffset.Value, 0); }
   public static void AddPointsDelta(FlatBufferBuilder builder, int pointsDelta) { builder.AddInt(2, pointsDelta, 0); }
   public static void AddExtraData(FlatBufferBuilder builder, StringOffset extraDataOffset) { builder.AddOffset(3, extraDataOffset.Value, 0); }
-  public static Offset<NetAnnouncement> EndNetAnnouncement(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetAnnouncement>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetAnnouncement> EndNetAnnouncement(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetAnnouncement>(o);
   }
 };
 
@@ -528,26 +654,32 @@ public struct NetAuthenticate : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetAuthenticate GetRootAsNetAuthenticate(ByteBuffer _bb) { return GetRootAsNetAuthenticate(_bb, new NetAuthenticate()); }
   public static NetAuthenticate GetRootAsNetAuthenticate(ByteBuffer _bb, NetAuthenticate obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetAuthenticate __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
   public string Token { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTokenBytes() { return __p.__vector_as_span<byte>(4, 1); }
+#else
   public ArraySegment<byte>? GetTokenBytes() { return __p.__vector_as_arraysegment(4); }
+#endif
+  public byte[] GetTokenArray() { return __p.__vector_as_array<byte>(4); }
 
-  public static Offset<NetAuthenticate> CreateNetAuthenticate(FlatBufferBuilder builder,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetAuthenticate> CreateNetAuthenticate(FlatBufferBuilder builder,
       StringOffset tokenOffset = default(StringOffset)) {
-    builder.StartObject(1);
+    builder.StartTable(1);
     NetAuthenticate.AddToken(builder, tokenOffset);
     return NetAuthenticate.EndNetAuthenticate(builder);
   }
 
-  public static void StartNetAuthenticate(FlatBufferBuilder builder) { builder.StartObject(1); }
+  public static void StartNetAuthenticate(FlatBufferBuilder builder) { builder.StartTable(1); }
   public static void AddToken(FlatBufferBuilder builder, StringOffset tokenOffset) { builder.AddOffset(0, tokenOffset.Value, 0); }
-  public static Offset<NetAuthenticate> EndNetAuthenticate(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetAuthenticate>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetAuthenticate> EndNetAuthenticate(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetAuthenticate>(o);
   }
 };
 
@@ -555,32 +687,33 @@ public struct NetQuantum : IFlatbufferObject
 {
   private Table __p;
   public ByteBuffer ByteBuffer { get { return __p.bb; } }
+  public static void ValidateVersion() { FlatBufferConstants.FLATBUFFERS_1_12_0(); }
   public static NetQuantum GetRootAsNetQuantum(ByteBuffer _bb) { return GetRootAsNetQuantum(_bb, new NetQuantum()); }
   public static NetQuantum GetRootAsNetQuantum(ByteBuffer _bb, NetQuantum obj) { return (obj.__assign(_bb.GetInt(_bb.Position) + _bb.Position, _bb)); }
-  public void __init(int _i, ByteBuffer _bb) { __p.bb_pos = _i; __p.bb = _bb; }
+  public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public NetQuantum __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public AllMessages MessageType { get { int o = __p.__offset(4); return o != 0 ? (AllMessages)__p.bb.Get(o + __p.bb_pos) : AllMessages.NONE; } }
-  public TTable? Message<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o) : null; }
+  public Game.Engine.Networking.FlatBuffers.AllMessages MessageType { get { int o = __p.__offset(4); return o != 0 ? (Game.Engine.Networking.FlatBuffers.AllMessages)__p.bb.Get(o + __p.bb_pos) : Game.Engine.Networking.FlatBuffers.AllMessages.NONE; } }
+  public TTable? Message<TTable>() where TTable : struct, IFlatbufferObject { int o = __p.__offset(6); return o != 0 ? (TTable?)__p.__union<TTable>(o + __p.bb_pos) : null; }
 
-  public static Offset<NetQuantum> CreateNetQuantum(FlatBufferBuilder builder,
-      AllMessages message_type = AllMessages.NONE,
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetQuantum> CreateNetQuantum(FlatBufferBuilder builder,
+      Game.Engine.Networking.FlatBuffers.AllMessages message_type = Game.Engine.Networking.FlatBuffers.AllMessages.NONE,
       int messageOffset = 0) {
-    builder.StartObject(2);
+    builder.StartTable(2);
     NetQuantum.AddMessage(builder, messageOffset);
     NetQuantum.AddMessageType(builder, message_type);
     return NetQuantum.EndNetQuantum(builder);
   }
 
-  public static void StartNetQuantum(FlatBufferBuilder builder) { builder.StartObject(2); }
-  public static void AddMessageType(FlatBufferBuilder builder, AllMessages messageType) { builder.AddByte(0, (byte)messageType, 0); }
+  public static void StartNetQuantum(FlatBufferBuilder builder) { builder.StartTable(2); }
+  public static void AddMessageType(FlatBufferBuilder builder, Game.Engine.Networking.FlatBuffers.AllMessages messageType) { builder.AddByte(0, (byte)messageType, 0); }
   public static void AddMessage(FlatBufferBuilder builder, int messageOffset) { builder.AddOffset(1, messageOffset, 0); }
-  public static Offset<NetQuantum> EndNetQuantum(FlatBufferBuilder builder) {
-    int o = builder.EndObject();
-    return new Offset<NetQuantum>(o);
+  public static Offset<Game.Engine.Networking.FlatBuffers.NetQuantum> EndNetQuantum(FlatBufferBuilder builder) {
+    int o = builder.EndTable();
+    return new Offset<Game.Engine.Networking.FlatBuffers.NetQuantum>(o);
   }
-  public static void FinishNetQuantumBuffer(FlatBufferBuilder builder, Offset<NetQuantum> offset) { builder.Finish(offset.Value); }
-  public static void FinishSizePrefixedNetQuantumBuffer(FlatBufferBuilder builder, Offset<NetQuantum> offset) { builder.FinishSizePrefixed(offset.Value); }
+  public static void FinishNetQuantumBuffer(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetQuantum> offset) { builder.Finish(offset.Value); }
+  public static void FinishSizePrefixedNetQuantumBuffer(FlatBufferBuilder builder, Offset<Game.Engine.Networking.FlatBuffers.NetQuantum> offset) { builder.FinishSizePrefixed(offset.Value); }
 };
 
 
