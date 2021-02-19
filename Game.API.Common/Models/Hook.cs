@@ -142,7 +142,7 @@
 
                     Fishes = 50, // smaller for test arena; default is 350; ignored if WorldResizeEnabled = true 
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
-                    FishThrust = 0.002f,
+                    FishThrust = 0.001f,
                     FishFlockAlignment = 10f,
                     FishFlockCohesion = 0.001f,
                     FishFlockCohesionMaximumDistance = 3000,
