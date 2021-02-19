@@ -352,7 +352,7 @@
     
                 angleMovement = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
                 if (!float.IsNaN(angleMovement))
-                    ship.AngleMovement = angleMovement;
+                    ship.AngleMovement =  angleMovement;
 
                 Flocking.Flock(ship);
 
@@ -362,15 +362,15 @@
                 float boostf2 = (float)(BoostUntil2 - World.Time) / 1000;
 
                 ship.ThrustAmount = isBoosting
-                    ? baseThrust + (BoostThrust - baseThrust) * (float)Math.Pow(boostf, 3f) * (1 - Burden) * BoostM 
+                    ? baseThrust + (BoostThrust - baseThrust) * (float)Math.Pow(boostf2, 1f) /*(1 - (float)Math.Pow(2 * boostf2 - 1f, 2f))*/ * (1 - Burden) * BoostM 
                     : baseThrust * (1 - Burden);
                 
                 ship.BoostThrustAmount = isBoosting2
-                    ? (float)Math.Pow(boostf, 3f) * World.Hook.BoostThrust2 * (1 - Burden) * BoostM
+                    ? (float)Math.Pow(boostf2, 3f) * World.Hook.BoostThrust2 * (1 - Burden) * BoostM
                     : 0f;
 
                 ship.Drag = isBoosting
-                    ? World.Hook.DragBoost// World.Hook.Drag + (World.Hook.DragBoost - World.Hook.Drag) * (BoostUntil - World.Time) / World.Hook.BoostDuration // interpolate drag during the boost
+                    ? World.Hook.DragBoost/* + (1f - World.Hook.DragBoost) * (float)Math.Pow(boostf2, 2.5f)*/
                     : World.Hook.Drag;
 
                 ship.Mode = (byte)
@@ -386,6 +386,10 @@
                     //BoostAngle = angle;
                     if (ship.Momentum != Vector2.Zero)
                         ship.Momentum += Vector2.Normalize(FleetMomentum) * World.Hook.BoostSpeed * BoostM;
+
+                if (ship.Momentum.Length() > (ship.ThrustAmount + ship.BoostThrustAmount) * World.Hook.MaxMomentumCoefficient) {
+                    ship.Momentum = Vector2.Multiply(Vector2.Normalize(ship.Momentum), (ship.ThrustAmount + ship.BoostThrustAmount) * World.Hook.MaxMomentumCoefficient);
+                }
                 
                 /*if (ship.Momentum.LengthSquared() != 0) {
                     ship.Momentum = Vector2.Multiply(Vector2.Normalize(ship.Momentum), (Single)Math.Round(ship.Momentum.Length()*200)/200);

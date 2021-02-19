@@ -34,6 +34,8 @@
                     ShipAddRadius = 3,
                     ShipAddMomentumMultiplier = 0.9f,
 
+                    MaxMomentumCoefficient = 6f,
+
                     BaseThrustM = -0.00015f,
                     BaseThrustB = 0.015f,
                     // source: https://cdn.discordapp.com/attachments/357878752446906378/357892120427626498/uptodate_-_Sheet1.pdf
@@ -50,17 +52,17 @@
                         5.525f, 5.511f, 5.497f, 5.484f, 5.470f, 5.457f, 5.444f, 5.432f, 5.419f, 5.407f, // 81 - 90 size
                         5.394f, 5.382f, 5.370f, 5.359f, 5.347f, 5.335f, 5.324f, 5.312f, 5.300f, 5.289f // 91 - 100 size
                     },
-                    BaseThrustConverter = 0.002f,
+                    BaseThrustConverter = 0.0025f,
 
-                    Drag = 0.9f,
-                    DragBoost = 0.9f,
+                    Drag = 1f,
+                    DragBoost = 1f,
                     DragAbandoned = 0.98f,
 
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
                     BoostThrust = 0.05f,
-                    BoostThrust2 = 0.1f,
+                    BoostThrust2 = 0.04f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
@@ -232,6 +234,8 @@
 
         public int ShipAddRadius { get; set; }
         public float ShipAddMomentumMultiplier { get; set; }
+
+        public float MaxMomentumCoefficient { get; set; }
 
         public float BaseThrustM { get; set; }
         public float BaseThrustB { get; set; }
