@@ -362,11 +362,11 @@
                 float boostf2 = 1f - (float)(BoostUntil2 - World.Time) / 1000;
 
                 ship.ThrustAmount = isBoosting
-                    ? baseThrust + (BoostThrust - baseThrust) * 27f/4 * (float)(Math.Pow(boostf, 1f) * Math.Pow(1 - Math.Pow(boostf, 1f), 2f)) /*(1 - (float)Math.Pow(2 * boostf2 - 1f, 2f))*/ * (1 - Burden) * BoostM 
+                    ? baseThrust + (BoostThrust - baseThrust) * 27f/4 * (float)(Math.Pow(boostf, 1.1f) * Math.Pow(1 - Math.Pow(boostf, 1.1f), 2f)) /*(1 - (float)Math.Pow(2 * boostf2 - 1f, 2f))*/ * (1 - Burden) * BoostM 
                     : baseThrust * (1 - Burden);
                 
                 ship.BoostThrustAmount = isBoosting2
-                    ? 27f/4 * (float)(Math.Pow(boostf2, 0.6f) * Math.Pow(1 - Math.Pow(boostf2, 0.6f), 2f)) * World.Hook.BoostThrust2 * (1 - Burden) * BoostM
+                    ? 27f/4 * (float)(Math.Pow(boostf2, 0.7f) * Math.Pow(1 - Math.Pow(boostf2, 0.7f), 2f)) * World.Hook.BoostThrust2 * (1 - Burden) * BoostM
                     : 0f;
 
                 ship.Drag = isBoosting
