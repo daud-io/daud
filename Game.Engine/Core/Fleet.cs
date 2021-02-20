@@ -352,7 +352,7 @@
     
                 angleMovement = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
                 if (!float.IsNaN(angleMovement))
-                    ship.AngleMovement =  angleMovement;
+                    ship.AngleMovement = angleMovement;
 
                 Flocking.Flock(ship);
 
@@ -362,11 +362,11 @@
                 float boostf2 = (float)(BoostUntil2 - World.Time) / 1000;
 
                 ship.ThrustAmount = isBoosting
-                    ? baseThrust + (BoostThrust - baseThrust) * (float)Math.Pow(boostf2, 0.5f) /*(1 - (float)Math.Pow(2 * boostf2 - 1f, 2f))*/ * (1 - Burden) * BoostM 
+                    ? baseThrust + (BoostThrust - baseThrust) * (float)Math.Pow(boostf2, 0.6f) /*(1 - (float)Math.Pow(2 * boostf2 - 1f, 2f))*/ * (1 - Burden) * BoostM 
                     : baseThrust * (1 - Burden);
                 
                 ship.BoostThrustAmount = isBoosting2
-                    ? (float)Math.Pow(boostf2, 2f) * World.Hook.BoostThrust2 * (1 - Burden) * BoostM
+                    ? (float)Math.Pow(boostf2, 1.4f) * World.Hook.BoostThrust2 * (1 - Burden) * BoostM
                     : 0f;
 
                 ship.Drag = isBoosting
