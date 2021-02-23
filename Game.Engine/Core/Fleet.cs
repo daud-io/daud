@@ -324,7 +324,13 @@
                 BoostUntil = World.Time + World.Hook.BoostDuration;
                 BoostUntil2 = World.Time + World.Hook.BoostDuration2;
 
-                BoostAngle = MathF.Atan2(AimTarget.Y, AimTarget.X);
+                Vector2 BoostVector = new Vector2(0, 0);
+                foreach (var ship in Ships) {
+                    BoostVector += ship.Momentum;
+                }
+                BoostVector = Vector2.Normalize(Vector2.Normalize(BoostVector) + Vector2.Multiply(AimTarget, (Single)0.75));
+
+                BoostAngle = MathF.Atan2(BoostVector.Y, BoostVector.X);
                 isBoostInitial = true;
                 var shipLoss = (int)MathF.Floor(Ships.Count / 2);
                 var Sorter = Ships.OrderByDescending((ship) => Vector2.DistanceSquared(FleetCenter + AimTarget, ship.Position)).Take(shipLoss);
@@ -362,7 +368,7 @@
                 float boostf2 = 1f - (float)(BoostUntil2 - World.Time) / 1000;
 
                 ship.ThrustAmount = isBoosting
-                    ? baseThrust + (BoostThrust - baseThrust) * 27f/4 * (float)(Math.Pow(boostf, 2f) * Math.Pow(1 - Math.Pow(boostf, 2f), 2f)) /*(1 - (float)Math.Pow(2 * boostf2 - 1f, 2f))*/ * (1 - Burden) * BoostM 
+                    ? baseThrust + (BoostThrust - baseThrust) * 27f/4 * (float)(Math.Pow(boostf, 1.5f) * Math.Pow(1 - Math.Pow(boostf, 1.5f), 2f)) /*(1 - (float)Math.Pow(2 * boostf2 - 1f, 2f))*/ * (1 - Burden) * BoostM 
                     : baseThrust * (1 - Burden);
                 
                 ship.BoostThrustAmount = isBoosting2
