@@ -61,8 +61,8 @@
                     BoomDrag = 0.92f,
                     BoomLife = 500,
 
-                    BoostThrust = 0.045f,
-                    BoostThrust2 = 0.035f,
+                    BoostThrust = 0.05f,
+                    BoostThrust2 = 0.05f,
 
                     BoostCooldownTimeM = 14.0f,
                     BoostCooldownTimeB = 1080.0f,
