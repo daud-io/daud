@@ -13,6 +13,12 @@ COPY --from=0 /app/dist ./Game.Engine/wwwroot/dist
 WORKDIR /app/Game.Engine
 RUN dotnet publish -c Release -o out
 
+WORKDIR /app/Game.Engine
+RUN dotnet publish -c Release -o out
+
+WORKDIR /app/Game.Util
+RUN dotnet publish -c Release -o out
+
 FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 COPY --from=1  /app/Game.Engine/out ./
