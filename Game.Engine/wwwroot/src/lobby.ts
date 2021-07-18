@@ -97,7 +97,7 @@ export async function refreshList(first = false): Promise<void> {
 
     const url = new URLSearchParams(window.location.search);
     const host = url.get("host") || "daud.io";
-    const fetched = await window.fetch(`${window.location.protocol}//${host}/api/v1/world/all`, {
+    const fetched = await window.fetch(`/api/v1/world/all`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json; charset=utf-8",

@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Robots", "Game.Robots\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Registry", "Game.Registry\Game.Registry.csproj", "{BD231600-BDBE-48AE-89A8-366E22DF86D0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PKISharp.SimplePKI", "PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{6EFC6827-A34A-4908-B413-A0286DDB83E3}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.API.Client", "Game.API.Client\Game.API.Client.csproj", "{40BBE777-A59D-411F-BD61-34A2BB08D858}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.API.Common", "Game.API.Common\Game.API.Common.csproj", "{0FC74086-5FDC-477E-93C2-927E11918AEE}"
