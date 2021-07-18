@@ -147,8 +147,6 @@
                 var searchPaths = new List<TreeState> { baseS };
                 var newSearchPaths = new List<TreeState>();
 
-                var searched = 0;
-
                 for (var i = 0; i < this.Depth; i++)
                 {
                     newSearchPaths = new List<TreeState>();

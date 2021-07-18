@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27428.2037
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Engine", "Game.Engine\Game.Engine.csproj", "{3AD01CCA-F212-4EE1-8718-2250D4869A53}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Robots", "Game.Robots\Game.Robots.csproj", "{D0600DFB-F0A1-456E-A386-F916210B66EE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.Registry", "Game.Registry\Game.Registry.csproj", "{BD231600-BDBE-48AE-89A8-366E22DF86D0}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PKISharp.SimplePKI", "PKISharp.SimplePKI\PKISharp.SimplePKI.csproj", "{6EFC6827-A34A-4908-B413-A0286DDB83E3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Game.API.Client", "Game.API.Client\Game.API.Client.csproj", "{40BBE777-A59D-411F-BD61-34A2BB08D858}"
 EndProject

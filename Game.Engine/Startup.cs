@@ -9,7 +9,6 @@
     using Game.Engine.Authentication;
     using Game.Engine.ChatBot;
     using Game.Engine.Core;
-    using Game.Engine.Crypto.LetsEncrypt;
     using Game.Engine.Networking;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -18,6 +17,10 @@
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;
+    using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+    using Elasticsearch.Net;
+    using Nest;
+    using Nest.JsonNetSerializer;
 
     public class Startup
     {
@@ -33,8 +36,8 @@
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<ISecurityContext, TokenSecurityContext>();
-            services.AddMvc().
-                AddJsonOptions(options =>
+            services.AddMvc(options => options.EnableEndpointRouting = false).
+                AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Formatting = Newtonsoft.Json.Formatting.Indented;
                     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Serialize;
@@ -47,9 +50,10 @@
                     builder => builder.AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowCredentials()
                 );
             });
+
+            services.AddResponseCompression();
 
             services
                 .AddSingleton<DiscordSocketClient>()
@@ -62,6 +66,22 @@
             services.AddSingleton(new RegistryClient(new Uri(config.RegistryUri)));
             if (config.RegistryEnabled)
                 services.AddSingleton<RegistryHandling>();
+
+            services
+                .AddSingleton<HttpClient>();
+
+            if (config.ElasticSearchURI != null)
+            {
+                // choose the appropriate IConnectionPool for your use case
+                var pool = new SingleNodeConnectionPool(new Uri(config.ElasticSearchURI));
+                var connectionSettings =
+                    new ConnectionSettings(pool, JsonNetSerializer.Default)
+                    .DefaultIndex("daud");
+                services.AddSingleton(new ElasticClient(connectionSettings));
+            }
+            else
+                services.AddSingleton(new ElasticClient());
+
         }
 
         private GameConfiguration LoadConfiguration(IServiceCollection services)
@@ -75,7 +95,7 @@
 
         public void Configure(
             IApplicationBuilder app,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             IServiceProvider provider,
             GameConfiguration config,
             RegistryClient registryClient
@@ -92,6 +112,7 @@
             };
 
             app.UseAuthentication();
+            app.UseResponseCompression();
 
             app.UseMvc();
 
@@ -115,7 +136,6 @@
                     }
                 }
             });
-            app.UseAcmeChallengeHandler();
 
             app.UseWebSockets(new WebSocketOptions
             {

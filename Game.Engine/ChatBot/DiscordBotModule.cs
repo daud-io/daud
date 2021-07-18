@@ -1,6 +1,5 @@
 namespace Game.Engine.ChatBot
 {
-    using Docker.DotNet;
     using Discord;
     using Discord.Commands;
     using Discord.Rest;
@@ -9,8 +8,6 @@ namespace Game.Engine.ChatBot
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Docker.DotNet.Models;
-    using Game.Engine.Hosting;
 
     // Modules must be public and inherit from an IModuleBase
     public class DiscordBotModule : ModuleBase<SocketCommandContext>
@@ -51,12 +48,7 @@ namespace Game.Engine.ChatBot
         public async Task DeployAsync(string url, string tag)
         {
             if (url == GameConfiguration.PublicURL || url == "*")
-            {
-                await DockerUpgrade.UpgradeAsync(GameConfiguration, tag, async (message) =>
-                {
-                    await ReplyAsync(message);
-                });
-            }
+                await ReplyAsync("I'm sorry Dave, I can't do that.");
         }
 
 
