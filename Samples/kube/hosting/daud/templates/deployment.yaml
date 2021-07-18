@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "daud.fullname" . }}
+  labels:
+    {{- include "daud.labels" . | nindent 4 }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "daud.selectorLabels" . | nindent 6 }}
+      component: game
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "daud.selectorLabels" . | nindent 8 }}
+        component: game
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "daud.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+
+          # daud
+          - name: config__PublicURL
+            value: "{{ .Values.daud.publicURL }}"
+          - name: config__AdministratorPassword
+            value: "{{ .Values.daud.administratorPassword }}"
+          - name: config__NoWorlds
+            value: "{{ .Values.daud.noWorlds }}"
+
+          {{- if .Values.discord.guildID }}
+          # discord
+          - name: config__DiscordGuildID
+            value: "{{ .Values.discord.guildID }}"
+          - name: config__DiscordToken
+            value: "{{ .Values.discord.token }}"
+          {{- end }}
+
+          # registry
+          - name: config__RegistryEnabled
+            value: "{{ .Values.registry.enabled }}"
+          - name: config__RegistryUri
+            value: "{{ .Values.registry.uri }}"
+          - name: config__RegistryUserKey
+            value: "{{ .Values.registry.user }}"
+          - name: config__RegistryPassword
+            value: "{{ .Values.registry.password }}"
+
+          - name: PORT
+            value: "80"
+
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

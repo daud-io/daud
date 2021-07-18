@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: {{ include "daud.fullname" . }}-letsencrypt-staging
+spec:
+  acme:
+    email: andylippitt@gmail.com
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    privateKeySecretRef:
+      name: {{ include "daud.fullname" . }}-letsencrypt-staging
+    solvers:
+    - http01:
+        ingress:
+          class: public

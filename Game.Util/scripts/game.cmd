@@ -1,1 +1,1 @@
-@dotnet C:\code\IOGame\Game.Util\bin\Debug\netcoreapp2.1\Game.Util.dll %*
+@dotnet C:\code\IOGame\Game.Util\bin\Debug\netcoreapp5.0\Game.Util.dll %*
