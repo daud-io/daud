@@ -60,6 +60,8 @@
         public bool AuthenticationStarted { get; set; }
         public List<string> Roles { get; set; } = null;
         public string LoginName { get; set; }
+        
+        public string Avatar {get; set;}
 
         public bool PendingDestruction { get; set; } = false;
         private bool IsSpawning = false;
