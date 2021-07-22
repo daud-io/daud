@@ -169,7 +169,6 @@
             var aimSpot = targetPosition + targetMomentum * t;
             var aimMinusS = aimSpot - start;
             var desMinusS = destination - start;
-            var willHit = false;
             var disss = float.MaxValue;
             var bulletPath = aimSpot - fromPosition;
             var timeToImpact = (int)(bulletPath.Length() / bulletSpeed);//speed must be in units per second            

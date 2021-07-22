@@ -9,7 +9,6 @@
     using Game.Engine.Authentication;
     using Game.Engine.ChatBot;
     using Game.Engine.Core;
-    using Game.Engine.Crypto.LetsEncrypt;
     using Game.Engine.Networking;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
@@ -19,6 +18,9 @@
     using System;
     using System.Net.Http;
     using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
+    using Elasticsearch.Net;
+    using Nest;
+    using Nest.JsonNetSerializer;
 
     public class Startup
     {
@@ -64,6 +66,22 @@
             services.AddSingleton(new RegistryClient(new Uri(config.RegistryUri)));
             if (config.RegistryEnabled)
                 services.AddSingleton<RegistryHandling>();
+
+            services
+                .AddSingleton<HttpClient>();
+
+            if (config.ElasticSearchURI != null)
+            {
+                // choose the appropriate IConnectionPool for your use case
+                var pool = new SingleNodeConnectionPool(new Uri(config.ElasticSearchURI));
+                var connectionSettings =
+                    new ConnectionSettings(pool, JsonNetSerializer.Default)
+                    .DefaultIndex("daud");
+                services.AddSingleton(new ElasticClient(connectionSettings));
+            }
+            else
+                services.AddSingleton(new ElasticClient());
+
         }
 
         private GameConfiguration LoadConfiguration(IServiceCollection services)
@@ -118,7 +136,6 @@
                     }
                 }
             });
-            app.UseAcmeChallengeHandler();
 
             app.UseWebSockets(new WebSocketOptions
             {

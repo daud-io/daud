@@ -8,8 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FlatBuffers.Core" Version="1.12.0" />
-    <PackageReference Include="ACMESharpCore" Version="2.2.0.148" />
-    <PackageReference Include="Docker.DotNet" Version="3.125.4" />
+    <!--  <PackageReference Include="Docker.DotNet" Version="3.125.4" /> -->
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2" />
@@ -17,8 +16,10 @@
     <PackageReference Include="RBush" Version="2.0.46" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Discord.Net" Version="2.2.0" />
-    <PackageReference Include="DnsClient" Version="1.3.2" />
-    <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" />
+    <PackageReference Include="NEST" Version="7.10.1" />
+    <PackageReference Include="NEST.JsonNetSerializer" Version="7.10.1" />
+    <!-- <PackageReference Include="DnsClient" Version="1.3.2" /> -->
+    <!-- <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" /> -->
   </ItemGroup>
 
   <ItemGroup>
@@ -26,7 +27,6 @@
     <ProjectReference Include="..\Game.API.Common\Game.API.Common.csproj" />
     <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
     <ProjectReference Include="..\Game.Util\Game.Util.csproj" />
-    <ProjectReference Include="..\PKISharp.SimplePKI\PKISharp.SimplePKI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,9 +39,5 @@
     <None Update="Dockerfile">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\img\worlds\" />
   </ItemGroup>
 </Project>

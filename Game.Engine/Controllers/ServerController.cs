@@ -28,8 +28,17 @@
             return new Server
             {
                 PlayerCount = Player.GetWorldPlayers(world).Count,
-                WorldCount = Worlds.AllWorlds.Count
+                WorldCount = Worlds.AllWorlds.Count,
+                Callouts = Player
+                    .GetWorldPlayers(world)
+                    .Where(p => p.Roles?.Contains("Callouts") ?? false)
+                    .Select(p => new Server.Callout {
+                        AvatarUrl = p.Avatar,
+                        Name = p.LoginName
+                    })
+                    .ToList()
             };
+            
         }
 
         [HttpPost, Route("reset")]

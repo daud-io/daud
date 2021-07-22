@@ -48,6 +48,8 @@
                                     player.LoginName = user.Username;
                                     player.LoginID = user.Id;
                                     player.Roles = playerRoles;
+
+                                    player.Avatar = $"https://cdn.discordapp.com/avatars/{user.Id}/{user.AvatarId}.png?size=128";
                                     player.OnAuthenticated();
                                 }
                             }
