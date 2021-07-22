@@ -35,7 +35,8 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          
+
+          workingDir: {{ .Values.workingDir }}
           {{- with .Values.command }}
           command:
             {{- toYaml . | nindent 12 }}
@@ -76,6 +77,9 @@ spec:
           - name: PORT
             value: "80"
 
+        {{- with .Values.extraEnv }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
           ports:
             - name: http
               containerPort: 80

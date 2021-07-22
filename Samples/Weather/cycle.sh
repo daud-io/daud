@@ -2,7 +2,8 @@
 
 apply()
 {
-	game world hook default --file $1.json
+	echo Setting mode $1
+	game --server=$hostname --user-key=$user --password=$password world hook $world --file $1.json
 }
 
 apply fish-fast
@@ -28,7 +29,6 @@ sleep 5m
 
 apply obstacles-none
 sleep 1
-apply obstacles-standard
 apply obstacles-fast
 sleep 5m
 apply obstacles-extra

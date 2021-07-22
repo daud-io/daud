@@ -1,5 +1,6 @@
 replicaCount: 1
 
+
 daud:
   publicURL: ""
   administratorPassword: ""
@@ -10,10 +11,12 @@ discord:
   token: ""
 
 
+workingDir: /app
 command:
   - dotnet
   - Game.Engine.dll
 args: []
+extraEnv: []
 
 probes:
   enabled: true
