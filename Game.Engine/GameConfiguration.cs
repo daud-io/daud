@@ -8,8 +8,6 @@
         public int TokenExpirationSeconds { get; set; } = 100000;
         public string AdministratorPassword { get; set; }
 
-        public string ACMEStateDirectory { get; set; }
-
         public string DiscordToken { get; set; } = null;
         public ulong? DiscordGuildID { get; set; } = null;
 
@@ -24,10 +22,11 @@
         public string RegistryUserKey { get; set; }
         public string RegistryPassword { get; set; }
 
-        public bool LetsEncryptEnabled { get; set; }
-
         public string PublicURL { get; set; }
 
         public string DuelBotURL { get; set; } = "https://daud-discord.glitch.me/";
+
+        public string ElasticSearchURI { get; set; }
+        public bool DisableSuggestionLookup { get; set; } = false;
     }
 }
