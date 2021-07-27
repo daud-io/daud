@@ -188,7 +188,7 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
 
             existing.body.zIndex = 0;
             if (group) existing.body.zIndex = group.ZIndex || 0;
-            if (existing.renderer) existing.renderer.update();
+            if (existing.renderer) existing.renderer.update(group, myFleetID);
         }
 
         if (!existing) {

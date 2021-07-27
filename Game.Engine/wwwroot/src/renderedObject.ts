@@ -3,8 +3,9 @@ import * as PIXI from "pixi.js";
 
 import { Emitter } from "pixi-particles";
 import { projectObject } from "./interpolator";
-import { ClientBody } from "./cache";
+import { ClientBody, ClientGroup } from "./cache";
 import { getDefinition, TextureDefinition } from "./loader";
+import { Settings } from "./settings";
 
 export class RenderedObject {
     container: CustomContainer;
@@ -16,6 +17,7 @@ export class RenderedObject {
     lastTime = 0;
     layers: Record<string, PIXI.Sprite>;
     baseSpriteDefinition: TextureDefinition;
+    caption: string | null;
 
     constructor(container: CustomContainer, clientBody: ClientBody) {
         this.layers = {};
@@ -27,6 +29,8 @@ export class RenderedObject {
         this.baseSpriteDefinition = getDefinition(clientBody.Sprite);
         this.sprite = this.buildSprite(this.baseSpriteDefinition);
         // this.base.addChild(this.buildSprite(getDefinition("circle")) as PIXI.Sprite);
+
+        this.caption = null;
 
         if (this.baseSpriteDefinition?.modes?.['default'] != null)
             this.addMode("default");

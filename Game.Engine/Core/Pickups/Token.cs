@@ -6,7 +6,6 @@
     public class Token : ActorBody
     {
         private ActorGroup TokenGroup = new ActorGroup();
-        public float Burden = -0.2f;
         public Fleet CarriedBy = null;
 
         public Token()
@@ -50,12 +49,7 @@
             else
             {
                 // not carried anymore
-
-                // relieve the carrier of it
-                if (CarriedBy != null)
-                    CarriedBy.Burden = 0;
-                CarriedBy = null;
-
+                this.Drop();
                 
                 if (World.DistanceOutOfBounds(this.Position) > 0 &&
                     this.Position != Vector2.Zero)
@@ -63,6 +57,12 @@
                 else
                     this.Momentum = Vector2.Zero;
             }
+        }
+
+        protected void Drop()
+        {
+            this.OnDroppedByFleet(CarriedBy);
+            CarriedBy = null;
         }
 
         protected override void Collided(ICollide otherObject)
@@ -74,13 +74,19 @@
                 if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
                 {
                     CarriedBy = fleet;
-                    if (CarriedBy != null)
-                        CarriedBy.Burden = Burden;
+                    this.OnPickedUpByFleet(fleet);
                 }
             }
 
             base.Collided(otherObject);
         }
-        
+
+        protected virtual void OnPickedUpByFleet(Fleet fleet)
+        {
+        }
+
+        protected virtual void OnDroppedByFleet(Fleet fleet)
+        {
+        }
     }
 }
