@@ -1,0 +1,3 @@
+#!/bin/bash
+
+dotnet ~/code/daud.io/daud/Game.Util/bin/Debug/netcoreapp5.0/Game.Util.dll "$@"

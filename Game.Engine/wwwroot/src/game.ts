@@ -13,7 +13,7 @@ import { Controls, initializeWorld, registerCanvas, setCurrentWorld } from "./co
 import { message } from "./chat";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
-import { Settings, theme } from "./settings";
+import { Settings } from "./settings";
 import { Events } from "./events";
 import { refreshList, joinWorld, firstLoad } from "./lobby";
 import { Vector2 } from "./Vector2";
@@ -128,6 +128,9 @@ function onView(newView: NetWorldView) {
     if (!isAlive && connection.hook != null) {
         buttonSpectate.disabled = spawnButton.disabled = connection.hook.CanSpawn === false;
     }
+
+    if (isAlive)
+        isSpectating = false;
 
     const lastOffset = time + connection.latency / 2 - performance.now();
     if (!serverTimeOffset) serverTimeOffset = lastOffset;
@@ -367,7 +370,7 @@ let lastControl: { angle?: number; aimTarget?: PIXI.Point; boost?: boolean; shoo
 refreshList(true).then(firstLoad);
 setInterval(refreshList, 1000);
 
-const loadImages = Settings.theme ? theme() : load();
+const loadImages = load();
 loadImages.then(() => {
     bus.emit("loaded");
     document.querySelector(".loading")!.classList.remove("loading");

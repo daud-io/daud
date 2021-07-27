@@ -290,7 +290,7 @@ namespace Game.Engine.Networking
 
                             var players = Player.GetWorldPlayers(world);
                             NetWorldView.AddPlayerCount(builder, (uint)world.AdvertisedPlayerCount);
-                            NetWorldView.AddSpectatorCount(builder, (uint)players.Count(p => p.Connection?.IsSpectating ?? false));
+                            NetWorldView.AddSpectatorCount(builder, (uint)world.SpectatorCount);
 
                             NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
                             NetWorldView.AddCooldownShoot(builder, (byte)((player?.Fleet?.ShootCooldownStatus * 255) ?? 0));

@@ -24,6 +24,7 @@
             Flock.Add(new GenericTender<PickupShield>(() => World.Hook.PickupShields));
             Flock.Add(new GenericTender<Wormhole>(() => World.Hook.Wormholes));
             Flock.Add(new GenericTender<PickupRobotGun>(() => World.Hook.PickupRobotGuns));
+            Flock.Add(new GenericTender<Token>(() => World.Hook.Tokens));
 
 
             foreach (var element in Flock)

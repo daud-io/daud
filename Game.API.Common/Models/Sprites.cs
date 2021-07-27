@@ -59,6 +59,7 @@
         shield,
         shield_pickup,
         wormhole,
-        boom
+        boom,
+        haste_powerup
     }
 }

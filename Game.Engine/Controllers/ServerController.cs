@@ -64,21 +64,24 @@
         public IEnumerable<GameConnection> GetPlayers(string worldName = null)
         {
             var world = Worlds.Find(worldName);
-            return Player.GetWorldPlayers(world)
-                .Select(p => new GameConnection
-                {
-                    Name = p.Name,
-                    Score = p.Score,
-                    IsAlive = p.IsAlive,
-                    IP = p.IP,
-                    Backgrounded = p.Connection?.Backgrounded ?? false,
-                    ClientFPS = p.Connection?.ClientFPS ?? 0,
-                    ClientVPS = p.Connection?.ClientVPS ?? 0,
-                    ClientUPS = p.Connection?.ClientUPS ?? 0,
-                    ClientCS = p.Connection?.ClientCS ?? 0,
-                    Bandwidth = p.Connection?.Bandwidth ?? 0,
-                    Latency = p.Connection?.Latency ?? 0
-                });
+            if (world != null)
+                return Player.GetWorldPlayers(world)
+                    .Select(p => new GameConnection
+                    {
+                        Name = p.Name,
+                        Score = p.Score,
+                        IsAlive = p.IsAlive,
+                        IP = p.IP,
+                        Backgrounded = p.Connection?.Backgrounded ?? false,
+                        ClientFPS = p.Connection?.ClientFPS ?? 0,
+                        ClientVPS = p.Connection?.ClientVPS ?? 0,
+                        ClientUPS = p.Connection?.ClientUPS ?? 0,
+                        ClientCS = p.Connection?.ClientCS ?? 0,
+                        Bandwidth = p.Connection?.Bandwidth ?? 0,
+                        Latency = p.Connection?.Latency ?? 0
+                    });
+            else
+                return new GameConnection[0];
         }
     }
 }

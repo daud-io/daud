@@ -18,6 +18,7 @@ export type ServerWorld = {
     description: string;
     allowedColors: string[];
     instructions: string;
+    isDefault: boolean;
 };
 
 let allWorlds: Record<string, ServerWorld> = {};
@@ -74,6 +75,16 @@ export function firstLoad(): void {
         return;
     }
 
+    for (const worldKey in allWorlds) {
+        const world = allWorlds[worldKey];
+        if (world.isDefault)
+        {
+            joinWorld(worldKey);
+            return;
+        }
+    }
+    
+
     if (bestServer) {
         // If there is a cookie saved with the best server.
         joinWorld(bestServer + worldConnect);
@@ -84,7 +95,6 @@ export function firstLoad(): void {
                 best = best = best.split("/")[0] + "/";
                 save(best);
 
-                joinWorld(best + worldConnect);
             } else {
                 joinWorld(`us.daud.io/${worldConnect}`);
             }

@@ -159,7 +159,9 @@
                     RoyaleCountdownDurationSeconds = 5,
                     RoyaleResizeSpeed = 4,
                     RoyaleDoubleStep1 = 4200,
-                    RoyaleDoubleStep2 = 1500
+                    RoyaleDoubleStep2 = 1500,
+
+                    EinsteinCoefficient = 0.25f
                 };
             }
         }
@@ -348,7 +350,8 @@
         public int RoyaleDoubleStep1 { get; set; }
         public int RoyaleDoubleStep2 { get; set; }
         public bool CanSpawn { get; set; } = true;
-        public float EinsteinCoefficient { get; set; } = 0;
+        public float EinsteinCoefficient { get; set; }
+        public int Tokens { get; set; }
 
         public Hook Clone()
         {
@@ -488,7 +491,8 @@
                    RoyaleDoubleStep1 == hook.RoyaleDoubleStep1 &&
                    RoyaleDoubleStep2 == hook.RoyaleDoubleStep2 &&
                    CanSpawn == hook.CanSpawn &&
-                   EinsteinCoefficient == EinsteinCoefficient;
+                   EinsteinCoefficient == hook.EinsteinCoefficient &&
+                   Tokens == hook.Tokens;
         }
 
         public override int GetHashCode()
@@ -625,6 +629,7 @@
             hash.Add(RoyaleDoubleStep2);
             hash.Add(CanSpawn);
             hash.Add(EinsteinCoefficient);
+            hash.Add(Tokens);
             return hash.ToHashCode();
         }
     }

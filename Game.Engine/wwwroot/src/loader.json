@@ -6,15 +6,15 @@
     "scale": [4]
   },
   "bg1": {
-    "url": "/img/bg.png",
+    "url": "bg.png",
     "size": 1
   },
   "circle": {
-    "url": "/img/circle.png",
+    "url": "circle.png",
     "size": 2
   },
   "boost": {
-    "url": "/img/thruster_cyan.png",
+    "url": "thruster_cyan.png",
     "size": 2.5,
     "offset": {
       "x": -2,
@@ -29,7 +29,7 @@
     "rotate": 90
   },
   "shield": {
-    "url": "/img/shield.png",
+    "url": "shield.png",
     "size": 2.56,
     "animated": {
       "speed": 0.5,
@@ -39,7 +39,7 @@
     }
   },
   "invulnerable": {
-    "url": "/img/shield.png",
+    "url": "shield.png",
     "size": 2.56,
     "animated": {
       "speed": 0.5,
@@ -49,7 +49,7 @@
     }
   },
   "offenseupgrade": {
-    "url": "/img/circles.png",
+    "url": "circles.png",
     "size": 3.6,
     "animated": {
       "loop": true,
@@ -60,7 +60,7 @@
     "tint": 16711680
   },
   "defenseupgrade": {
-    "url": "/img/circles.png",
+    "url": "circles.png",
     "size": 3.6,
     "animated": {
       "loop": true,
@@ -83,151 +83,151 @@
   },
   "ship0": {
     "extends": "ship",
-    "url": "/img/ship0.png"
+    "url": "ship0.png"
   },
   "ship_gray": {
     "extends": "ship",
-    "url": "/img/ship_gray.png"
+    "url": "ship_gray.png"
   },
   "ship_flash": {
     "extends": "ship",
-    "url": "/img/ship_flash.png"
+    "url": "ship_flash.png"
   },
   "thruster_cyan": {
     "extends": "boost",
-    "url": "/img/thruster_cyan.png"
+    "url": "thruster_cyan.png"
   },
   "ship_cyan": {
     "extends": "ship",
-    "url": "/img/ship_cyan.png",
+    "url": "ship_cyan.png",
     "modes": {
       "boost": "thruster_cyan"
     }
   },
   "thruster_blue": {
     "extends": "boost",
-    "url": "/img/thruster_blue.png"
+    "url": "thruster_blue.png"
   },
   "ship_blue": {
     "extends": "ship",
-    "url": "/img/ship_blue.png",
+    "url": "ship_blue.png",
     "modes": {
       "boost": "thruster_blue"
     }
   },
   "thruster_green": {
     "extends": "boost",
-    "url": "/img/thruster_green.png"
+    "url": "thruster_green.png"
   },
   "ship_green": {
     "extends": "ship",
-    "url": "/img/ship_green.png",
+    "url": "ship_green.png",
     "modes": {
       "boost": "thruster_green"
     }
   },
   "thruster_orange": {
     "extends": "boost",
-    "url": "/img/thruster_orange.png"
+    "url": "thruster_orange.png"
   },
   "ship_orange": {
     "extends": "ship",
-    "url": "/img/ship_orange.png",
+    "url": "ship_orange.png",
     "modes": {
       "boost": "thruster_orange"
     }
   },
   "thruster_pink": {
     "extends": "boost",
-    "url": "/img/thruster_pink.png"
+    "url": "thruster_pink.png"
   },
   "ship_pink": {
     "extends": "ship",
-    "url": "/img/ship_pink.png",
+    "url": "ship_pink.png",
     "modes": {
       "boost": "thruster_pink"
     }
   },
   "thruster_red": {
     "extends": "boost",
-    "url": "/img/thruster_red.png"
+    "url": "thruster_red.png"
   },
   "ship_red": {
     "extends": "ship",
-    "url": "/img/ship_red.png",
+    "url": "ship_red.png",
     "modes": {
       "boost": "thruster_red"
     }
   },
   "thruster_yellow": {
     "extends": "boost",
-    "url": "/img/thruster_yellow.png"
+    "url": "thruster_yellow.png"
   },
   "ship_yellow": {
     "extends": "ship",
-    "url": "/img/ship_yellow.png",
+    "url": "ship_yellow.png",
     "modes": {
       "boost": "thruster_yellow"
     }
   },
   "ship_secret": {
     "extends": "ship",
-    "url": "/img/ship_secret.png"
+    "url": "ship_secret.png"
   },
   "ship_zed": {
     "extends": "ship",
-    "url": "/img/ship_zed.png"
+    "url": "ship_zed.png"
   },
   "bullet": {
-    "url": "/img/bullet.png",
+    "url": "bullet.png",
     "size": 5
   },
   "bullet_cyan": {
     "extends": "bullet",
-    "url": "/img/bullet_cyan.png"
+    "url": "bullet_cyan.png"
   },
   "bullet_blue": {
     "extends": "bullet",
-    "url": "/img/bullet_blue.png"
+    "url": "bullet_blue.png"
   },
   "bullet_green": {
     "extends": "bullet",
-    "url": "/img/bullet_green.png"
+    "url": "bullet_green.png"
   },
   "bullet_orange": {
     "extends": "bullet",
-    "url": "/img/bullet_orange.png"
+    "url": "bullet_orange.png"
   },
   "bullet_pink": {
     "extends": "bullet",
-    "url": "/img/bullet_pink.png"
+    "url": "bullet_pink.png"
   },
   "bullet_red": {
     "extends": "bullet",
-    "url": "/img/bullet_red.png"
+    "url": "bullet_red.png"
   },
   "bullet_yellow": {
     "extends": "bullet",
-    "url": "/img/bullet_yellow.png"
+    "url": "bullet_yellow.png"
   },
   "obstacle": {
-    "url": "/img/obstacle.png",
+    "url": "obstacle.png",
     "size": 2.1
   },
   "seeker": {
-    "url": "/img/seeker.png",
+    "url": "seeker.png",
     "size": 0.64
   },
   "seeker_pickup": {
-    "url": "/img/seeker_pickup.png",
+    "url": "seeker_pickup.png",
     "size": 1
   },
   "fish": {
-    "url": "/img/fish.png",
+    "url": "fish.png",
     "size": 2
   },
   "shield_pickup": {
-    "url": "/img/shield_pickup.png",
+    "url": "shield_pickup.png",
     "animated": {
       "loop": true,
       "speed": 0.5,
@@ -237,11 +237,11 @@
     "size": 2.56
   },
   "ctf_base": {
-    "url": "/img/ctf_base.png",
+    "url": "ctf_base.png",
     "size": 3.072
   },
   "boom": {
-    "url": "/img/ctf_arrow_red.png",
+    "url": "ctf_arrow_red.png",
     "emitter": {
       "alpha": {
         "start": 0.33,
@@ -307,61 +307,128 @@
   },
   "ctf_flag_blue": {
     "extends": "ctf_flag_base",
-    "url": "/img/ctf_flag_blue.png",
+    "url": "ctf_flag_blue.png",
     "size": 1
   },
   "ctf_flag_red": {
     "extends": "ctf_flag_base",
-    "url": "/img/ctf_flag_red.png",
+    "url": "ctf_flag_red.png",
     "size": 1
   },
   "ctf_arrow_blue": {
-    "url":"/img/ctf_arrow_blue.png"
+    "url":"ctf_arrow_blue.png"
   },
   "ctf_arrow_red": {
-    "url":"/img/ctf_arrow_blue.png"
+    "url":"ctf_arrow_blue.png"
   },
   "ctf_score_stripes": {
-    "url":"/img/ctf_score_stripes.png"
+    "url":"ctf_score_stripes.png"
   },
   "ctf_score_final": {
-    "url":"/img/ctf_score_final.png"
+    "url":"ctf_score_final.png"
   },
   "ctf_score_final_red": {
-    "url":"/img/ctf_score_final_red.png"
+    "url":"ctf_score_final_red.png"
   },
   "ctf_score_final_blue": {
-    "url":"/img/ctf_score_final_blue.png"
+    "url":"ctf_score_final_blue.png"
   },
   "ctf_score_left_0": {
-    "url":"/img/ctf_score_left_0.png"
+    "url":"ctf_score_left_0.png"
   },
   "ctf_score_left_1": {
-    "url":"/img/ctf_score_left_1.png"
+    "url":"ctf_score_left_1.png"
   },
   "ctf_score_left_2": {
-    "url":"/img/ctf_score_left_2.png"
+    "url":"ctf_score_left_2.png"
   },
   "ctf_score_left_3": {
-    "url":"/img/ctf_score_left_3.png"
+    "url":"ctf_score_left_3.png"
   },
   "ctf_score_left_4": {
-    "url":"/img/ctf_score_left_4.png"
+    "url":"ctf_score_left_4.png"
   },
 
   "ctf_score_right_0": {
-    "url":"/img/ctf_score_right_0.png"
+    "url":"ctf_score_right_0.png"
   },
   "ctf_score_right_1": {
-    "url":"/img/ctf_score_right_1.png"
+    "url":"ctf_score_right_1.png"
   },
   "ctf_score_right_2": {
-    "url":"/img/ctf_score_right_2.png"
+    "url":"ctf_score_right_2.png"
   },
   "ctf_score_right_3": {
-    "url":"/img/ctf_score_right_3.png"
+    "url":"ctf_score_right_3.png"
   },
   "ctf_score_right_4": {
-    "url":"/img/ctf_score_right_4.png"
+    "url":"ctf_score_right_4.png"
+  },
+
+
+  "powerup_base": {
+    "url":"particle.png",
+    "abstract": false,
+    "--emitter": {
+      "alpha": {
+        "start": 1,
+        "end": 0
+      },
+      "scale": {
+        "start": 0.1,
+        "end": 0.01,
+        "minimumScaleMultiplier": 1
+      },
+      "color": {
+        "start": "#e4f9ff",
+        "end": "#3fcbff"
+      },
+      "speed": {
+        "start": 200,
+        "end": 50,
+        "minimumSpeedMultiplier": 1
+      },
+      "acceleration": {
+        "x": 0,
+        "y": 0
+      },
+      "maxSpeed": 0,
+      "startRotation": {
+        "min": 0,
+        "max": 360
+      },
+      "noRotation": false,
+      "rotationSpeed": {
+        "min": 0,
+        "max": 0
+      },
+      "lifetime": {
+        "min": 0.2,
+        "max": 0.8
+      },
+      "blendMode": "normal",
+      "frequency": 0.001,
+      "emitterLifetime": -1,
+      "maxParticles": 500,
+      "pos": {
+        "x": 0,
+        "y": 0
+      },
+      "addAtBack": false,
+      "spawnType": "circle",
+      "spawnCircle": {
+        "x": 0,
+        "y": 0,
+        "r": 0
+      }
+    }
+  },
+
+  "haste_powerup": {
+    "url":"haste_powerup.png",
+    "size": 1,
+    "modes":{
+      "default": "defenseupgrade"
+    }
   }
 }

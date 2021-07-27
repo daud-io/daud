@@ -1,9 +1,7 @@
-import JSZip from "jszip";
 import Cookies from "js-cookie";
-import { loadTexture, merge, setDefinitions, load } from "./loader";
+import { load } from "./loader";
 import { initializeWorld } from "./controls";
 import * as cache from "./cache";
-import { allProgress } from "./loader";
 import bus from "./bus";
 
 export const Settings = {
@@ -27,8 +25,7 @@ loadSettings();
 
 async function themeChange() {
     Settings.theme = themeSelector.value;
-    if (Settings.theme) await theme();
-    else await load();
+    await load();
     bus.emit("loaded");
     cache.refreshSprites();
     initializeWorld();
@@ -82,47 +79,6 @@ export function loadSettings(): void {
     logLength.value = String(Settings.logLength);
     nameSize.value = String(Settings.nameSize);
     backgroundEl.checked = Settings.background;
-}
-
-export async function theme(): Promise<void> {
-    //`https://dl.dropboxusercontent.com/s/${v.toLowerCase()}/daudmod.zip`;
-    if (!["/themes/daudmod.zip", "/themes/retro.zip"].includes(Settings.theme)) {
-        themeSelector.value = "";
-        await themeChange();
-        return;
-    }
-    const zip = await window
-        .fetch(Settings.theme)
-        .then((response) => response.blob())
-        .then(JSZip.loadAsync);
-
-    const text = await zip.file("daudmod/info.json")!.async("string");
-    const info = JSON.parse(text);
-
-    const parsedJSON: any = {};
-
-    const all = Object.keys(info).map(async (key) => {
-        const defaultKey = info[key].extends;
-        if (defaultKey) {
-            parsedJSON[key] = merge(info[defaultKey], info[key]);
-            parsedJSON[key].abstract = info[key].abstract;
-        } else {
-            parsedJSON[key] = info[key];
-        }
-
-        if (!parsedJSON[key].abstract) {
-            const file = zip.file(`daudmod/${parsedJSON[key].url}`);
-            if (!file) throw new Error("Missing file: " + parsedJSON[key].url);
-            const ab = await file.async("arraybuffer");
-            const arrayBufferView = new Uint8Array(ab);
-            const blob = new Blob([arrayBufferView], { type: "image/png" });
-            const url = URL.createObjectURL(blob);
-            parsedJSON[key].url = url;
-            return await loadTexture(parsedJSON[key]);
-        }
-    });
-    await allProgress(all);
-    setDefinitions(parsedJSON);
 }
 
 const gear = document.getElementById("gear")!;

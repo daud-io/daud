@@ -15,6 +15,7 @@ export class RenderedObject {
     sprite?: PIXI.Sprite | Emitter;
     lastTime = 0;
     layers: Record<string, PIXI.Sprite>;
+    baseSpriteDefinition: TextureDefinition;
 
     constructor(container: CustomContainer, clientBody: ClientBody) {
         this.layers = {};
@@ -23,23 +24,46 @@ export class RenderedObject {
         this.body = clientBody;
         this.currentSpriteName = clientBody.Sprite;
         this.currentModes = 0;
-        this.sprite = this.buildSprite(getDefinition(clientBody.Sprite));
+        this.baseSpriteDefinition = getDefinition(clientBody.Sprite);
+        this.sprite = this.buildSprite(this.baseSpriteDefinition);
         // this.base.addChild(this.buildSprite(getDefinition("circle")) as PIXI.Sprite);
+
+        if (this.baseSpriteDefinition?.modes?.['default'] != null)
+            this.addMode("default");
+
         if (this.sprite instanceof PIXI.Sprite) {
             this.sprite.zIndex = clientBody.zIndex;
+            this.base.zIndex = this.sprite.zIndex;
             this.base.addChild(this.sprite);
         }
+
+
         this.container.bodyGroup.addChild(this.base);
     }
 
     addMode(name: string): void {
-        const x = getDefinition(this.currentSpriteName).modes!;
-        this.layers[name] = this.buildSprite(getDefinition(x[name])) as PIXI.Sprite;
-        this.base.addChild(this.layers[name]);
+        if (this.baseSpriteDefinition == null)
+        {
+            console.log(`missing mode: ${name} in sprite ${this.currentSpriteName}`);
+        }
+        else
+        {
+            const namedMode = this.baseSpriteDefinition?.modes?.[name] || null;
+            const layerTextures = namedMode?.split(' ') ?? [];
+            for (let textureName of layerTextures) {
+                this.layers[textureName] = this.buildSprite(getDefinition(textureName)) as PIXI.Sprite;
+                this.base.addChild(this.layers[textureName]);
+            }
+        }
     }
     deleteMode(name: string): void {
-        this.base.removeChild(this.layers[name]);
-        delete this.layers[name];
+
+        const namedMode = this.baseSpriteDefinition?.modes?.[name] || null;
+        const layerTextures = namedMode?.split(' ') ?? [];
+        for (let textureName of layerTextures) {
+            this.base.removeChild(this.layers[textureName]);
+            delete this.layers[textureName];
+            }
     }
     updateModes(): void {
         const mode = this.body.Mode;

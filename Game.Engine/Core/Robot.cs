@@ -73,6 +73,7 @@
                     .Where(p => p != this)
                     .OrderBy(p => Vector2.Distance(p.Fleet.FleetCenter, this.Fleet.FleetCenter))
                     .FirstOrDefault();
+
             var vel = Vector2.Zero;
             if (player != null)
             {

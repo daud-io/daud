@@ -115,48 +115,27 @@
 
             if (GameConfiguration.RegistryEnabled)
             {
+                bool first = true;
                 var serverWorlds = await RegistryClient.Registry.ListAsync();
                 worlds.AddRange(
                     serverWorlds
-                        .Where(s => new[] { "de.daud.io", "us.daud.io" }.Contains(s.URL))
                         .SelectMany(server => server.Worlds.Select(world => new { server, world }))
-                        .Where(s => allWorlds || !s.world.Hook.Hidden)
-                        .Where(s =>
-                            s.server.URL == "us.daud.io"
-                            || (s.server.URL == "de.daud.io" && s.world.WorldKey == "default")
-                            || (s.server.URL == "de.daud.io" && s.world.WorldKey == "duel")
-                            || (s.server.URL == "de.daud.io" && s.world.WorldKey == "royale")
-                        )
                         .OrderBy(s => s.world.Hook.Weight)
                         .Select(s =>
                         {
-                            var name = s.world.Hook.Name;
-                            var description = s.world.Hook.Description;
-
-                            if (s.world.WorldKey == "default" && s.server.URL == "de.daud.io")
-                            {
-                                name = "FFA-Europe";
-                                description = "Like regular FFA but with different ping times and metric-sized cup holders";
-                            }
-                            if (s.world.WorldKey == "duel" && s.server.URL == "de.daud.io")
-                            {
-                                name = "Dueling Room-Europe";
-                            }
-                            if (s.world.WorldKey == "royale" && s.server.URL == "de.daud.io")
-                            {
-                                name = "Battle Royale - EU";
-                            }
-
+                            bool isDefault = first;
+                            first = false;
                             return
                                 new
                                 {
                                     world = $"{s.server.URL}/{s.world.WorldKey}",
                                     server = s.server.URL,
                                     players = s.world.AdvertisedPlayers,
-                                    name,
-                                    description,
+                                    name = s.world.Hook.Name,
+                                    description = s.world.Hook.Description,
                                     allowedColors = s.world.Hook.AllowedColors,
-                                    instructions = s.world.Hook.Instructions
+                                    instructions = s.world.Hook.Instructions,
+                                    isDefault = isDefault
                                 };
                         })
                 );
@@ -165,10 +144,14 @@
             if (Request.HttpContext.Connection.LocalIpAddress.Equals(Request.HttpContext.Connection.RemoteIpAddress)
                 || !GameConfiguration.RegistryEnabled)
             {
+                bool first = true;
                 worlds.AddRange(Worlds.AllWorlds
                         .OrderBy(w => w.Value.Hook.Weight)
                         .Select(s =>
                         {
+                            bool isDefault = first;
+                            first = false;
+
                             var name = s.Value.Hook.Name;
                             var description = s.Value.Hook.Description;
 
@@ -180,7 +163,8 @@
                                 name = "Local: " + name,
                                 description,
                                 allowedColors = s.Value.Hook.AllowedColors,
-                                instructions = s.Value.Hook.Instructions
+                                instructions = s.Value.Hook.Instructions,
+                                isDefault = isDefault
                             };
                         }));
             }
