@@ -49,7 +49,8 @@
             else
             {
                 // not carried anymore
-                this.Drop();
+                if (CarriedBy != null)
+                    this.Drop();
                 
                 if (World.DistanceOutOfBounds(this.Position) > 0 &&
                     this.Position != Vector2.Zero)

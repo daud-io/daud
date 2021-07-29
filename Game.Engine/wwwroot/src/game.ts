@@ -1,5 +1,6 @@
 ﻿import { NetBody, NetWorldView, NetGroup } from "./game_generated";
 import * as PIXI from "pixi.js";
+import { Layer, Group } from "@pixi/layers";
 import * as background from "./background";
 import { Border } from "./border";
 import { Overlay } from "./overlay";
@@ -80,6 +81,7 @@ let joiningWorld = false;
 let spawnOnView = false;
 
 const app = new PIXI.Application({ view: canvas, transparent: true, resolution: window.devicePixelRatio || 1 });
+
 app.stage.sortableChildren = true;
 const container = new CustomContainer();
 app.stage.addChild(container);
@@ -91,6 +93,7 @@ const overlay = new Overlay(container, canvas, container.plotly);
 const minimap = new Minimap(app.stage, size);
 background.setContainer(container.backgroundGroup);
 registerCanvas(canvas);
+
 
 bus.on("dead", () => {
     document.body.classList.remove("alive");
@@ -367,15 +370,15 @@ let lastControl: { angle?: number; aimTarget?: PIXI.Point; boost?: boolean; shoo
     chat: undefined,
 };
 
-refreshList(true).then(firstLoad);
-setInterval(refreshList, 1000);
-
 const loadImages = load();
 loadImages.then(() => {
-    bus.emit("loaded");
+    setContainer(container);
     document.querySelector(".loading")!.classList.remove("loading");
 
-    setContainer(container);
+    bus.emit("loaded");
+
+    refreshList(true).then(firstLoad);
+    setInterval(refreshList, 1000);
 
     bus.on("leaderboard", (lb) => {
         leaderboardUpdate(lb, lastPosition, fleetID);
@@ -387,7 +390,7 @@ loadImages.then(() => {
         if (Controls.mouseX) {
             const pos = container.toLocal(new Vector2(Controls.mouseX, Controls.mouseY));
             angle = Controls.angle;
-            aimTarget = new Vector2(Settings.mouseScale * (pos.x - lastPosition.x), Settings.mouseScale * (pos.y - lastPosition.y));
+        aimTarget = new Vector2(Settings.mouseScale * (pos.x - lastPosition.x), Settings.mouseScale * (pos.y - lastPosition.y));
         }
 
         if (

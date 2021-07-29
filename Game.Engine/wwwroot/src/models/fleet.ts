@@ -1,9 +1,10 @@
-﻿import { Settings } from "./settings";
+﻿import { Settings } from "../settings";
 import * as PIXI from "pixi.js";
-import { CustomContainer } from "./CustomContainer";
-import Plotly from "./plotly-subset";
-import { projectObject } from "./interpolator";
-import { ClientGroup, ClientBody } from "./cache";
+import { CustomContainer } from "../CustomContainer";
+import Plotly from "../plotly-subset";
+import { projectObject } from "../interpolator";
+import { ClientGroup, ClientBody } from "../cache";
+import { Ship } from "./ship";
 
 export class Fleet {
     container: CustomContainer;
@@ -12,7 +13,7 @@ export class Fleet {
     text: PIXI.Text;
     textChat: PIXI.Text;
     chat?: string;
-    ships: { [id: string]: ClientBody };
+    ships: { [id: string]: Ship };
     plotly?: { data; layout };
     usingPlotly: boolean;
 
@@ -38,7 +39,7 @@ export class Fleet {
         this.usingPlotly = false;
     }
 
-    addShip(id: string, ship: ClientBody): void {
+    addShip(id: string, ship: Ship): void {
         this.ships[id] = ship;
     }
     deleteShip(id: string): void {
@@ -85,9 +86,8 @@ export class Fleet {
 
         for (const shipkey in this.ships) {
             const ship = this.ships[shipkey];
-            projectObject(ship, time);
-            accX += ship.Position.x;
-            accY += ship.Position.y;
+            accX += ship.body.Position.x;
+            accY += ship.body.Position.y;
             count++;
         }
 

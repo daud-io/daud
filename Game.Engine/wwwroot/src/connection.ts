@@ -89,11 +89,7 @@ export class Connection {
         this.socket.binaryType = "arraybuffer";
 
         this.socket.onmessage = (event) => {
-            if (this.simulateLatency > 0) {
-                setTimeout(() => {
-                    this.onMessage(event);
-                }, this.simulateLatency);
-            } else this.onMessage(event);
+            this.onMessage(event);
         };
 
         this.socket.onerror = () => {

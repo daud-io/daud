@@ -59,7 +59,7 @@ nick.addEventListener("input", () => {
 });
 
 export const Controls = {
-    emoji: "👋",
+    emoji: "🥚",
     nick: "unknown",
     boost: false,
     shoot: false,
