@@ -6,6 +6,8 @@ import { CustomContainer } from "./CustomContainer";
 import { Vector2 } from "./Vector2";
 import bus from "./bus";
 import { Ship } from "./models/ship";
+import { Particle } from "pixi-particles";
+import { Token } from "./models/token";
 
 type ClientRendered = {
     body: ClientBody;
@@ -197,13 +199,17 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
             const clientBody = bodyFromServer(update);
 
             const group = groups.get(`g-${clientBody.Group}`);
+
             clientBody.zIndex = group?.ZIndex || 0;
 
             const groupType = group?.Type ?? -1;
 
             switch (groupType)
             {
-                case 1:
+                case 0: // fish
+                    break;
+
+                case 1: // fleets
                     if (group?.renderer instanceof Fleet)
                     {
                         var ship = new Ship(container, clientBody);
@@ -211,6 +217,11 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
                         group.renderer.addShip(`b-${clientBody.ID}`, ship);
                     }
                     break;
+
+                case 6: // tokens
+                        renderer = new Token(container, clientBody);
+                    break;
+
             }
 
             if (!renderer) renderer = new RenderedObject(container, clientBody);

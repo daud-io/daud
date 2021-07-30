@@ -24,8 +24,8 @@ export class Fleet {
         this.ships = {};
         this.text = new PIXI.Text("", { fontFamily: ["Exo 2", "Noto Color Emoji"], fontSize: Settings.nameSize, fill: 0xffffff });
         this.textChat = new PIXI.Text("", { fontFamily: ["Exo 2", "Noto Color Emoji"], fontSize: Settings.nameSize, fill: 0xffffff });
-        this.text.zIndex = 1000;
-        this.textChat.zIndex = 1000;
+        this.text.zIndex = 350;
+        this.textChat.zIndex = 350;
         this.chat = undefined;
         this.plotly = undefined;
         this.text.anchor.set(0.5, 0.5);

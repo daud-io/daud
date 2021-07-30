@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core.Pickups
 {
     using Game.API.Common;
+    using System;
     using System.Numerics;
 
     public class Token : ActorBody
@@ -8,12 +9,24 @@
         private ActorGroup TokenGroup = new ActorGroup();
         public Fleet CarriedBy = null;
 
+        public bool ExpiringSoon = false;
+
+        [Flags]
+        public enum TokenModeEnum
+        {
+            none = 0,
+            carried = 1,
+            expiring = 2
+        }
+
         public Token()
         {
             Size = 200;
 
             Sprite = Sprites.haste_powerup;
             CausesCollisions = true;
+
+            Mode = 0;
         }
 
         public override void Init(World world)
@@ -22,8 +35,9 @@
 
             TokenGroup.Init(world);
             TokenGroup.ZIndex = 300;
+            TokenGroup.GroupType = GroupTypes.Token;
             this.Group = TokenGroup;
-            
+
             Position = world.RandomPosition();
         }
 
@@ -58,6 +72,12 @@
                 else
                     this.Momentum = Vector2.Zero;
             }
+
+            this.Mode = (byte)
+                (
+                    (carried ? TokenModeEnum.carried : TokenModeEnum.none)
+                    | (this.ExpiringSoon ? TokenModeEnum.expiring : TokenModeEnum.none)
+                );
         }
 
         protected void Drop()

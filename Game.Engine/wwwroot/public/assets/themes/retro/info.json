@@ -66,7 +66,6 @@
     },
     "boost": {
       "url": "thruster_cyan.png",
-      "abstract": true,
       "size": 2.56,
       "offset": {
         "x": -140,

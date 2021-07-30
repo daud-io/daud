@@ -1,5 +1,5 @@
 import JSZip from "jszip";
-import { EmitterConfig } from "pixi-particles";
+import { OldEmitterConfig } from "pixi-particles";
 import * as PIXI from "pixi.js";
 import { Settings } from "./settings";
 import { SpriteLibrary } from "./spriteLibrary";
@@ -9,7 +9,7 @@ export type TextureDefinition = {
     extends: string;
     url: string;
     animated?: { size: number; count: number; speed: number };
-    emitter: EmitterConfig;
+    emitter: OldEmitterConfig;
     offset?: { x: number; y: number };
     rotate?: number;
     tint?: number;

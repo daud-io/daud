@@ -170,31 +170,33 @@
 
     "haste_powerup": {
       "modes": {
-        "default": "powerup_base haste"
+        "default": "powerup_base haste",
+        "carried": "haste"
       }
     }
   },
   "textures": {
     "powerup_base": {
       "url": "particle.png",
+      "size": 0.02,
       "emitter": {
         "alpha": {
           "start": 1,
           "end": 0
         },
         "scale": {
-          "start": 0.02,
+          "start": 0.14,
           "end": 0.001,
           "minimumScaleMultiplier": 1
         },
         "color": {
-          "start": "#e4f9ff",
-          "end": "#3fcbff"
+          "start": "#dbc72c",
+          "end": "#4f4f4f"
         },
         "speed": {
-          "start": 400,
+          "start": 200,
           "end": 50,
-          "minimumSpeedMultiplier": 2
+          "minimumSpeedMultiplier": 1
         },
         "acceleration": {
           "x": 0,
@@ -212,7 +214,7 @@
         },
         "lifetime": {
           "min": 0.2,
-          "max": 1
+          "max": 0.8
         },
         "blendMode": "normal",
         "frequency": 0.001,
@@ -233,7 +235,6 @@
     },
     "boost": {
       "url": "thruster.png",
-      "abstract": true,
       "offset": {
         "x": -140,
         "y": 0

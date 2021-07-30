@@ -3,7 +3,7 @@ import { Fleet } from "./fleet";
 import { CustomContainer } from "../CustomContainer";
 import { ClientBody } from "../cache";
 
-export class Ship extends RenderedObject {
+export class Token extends RenderedObject {
     fleet: Fleet | null;
     bodyID: string;
     constructor(container: CustomContainer, clientBody: ClientBody) {
@@ -15,24 +15,16 @@ export class Ship extends RenderedObject {
     decodeOrderedModes(mode: number) {
         var modes: string[] = [];
 
-        if ((mode & 16) != 0) modes.push("shield");
-
-        modes.push("default");
-
-        if ((mode & 4) != 0) modes.push("defenseupgrade");
-
-        if ((mode & 8) != 0) modes.push("offenseupgrade");
-
-        if ((mode & 1) != 0) modes.push("boost");
-
-        if ((mode & 2) != 0) modes.push("invulnerable");
-
+        if (mode == 0) modes.push("default");
+        if ((mode & 1) != 0) modes.push("carried");
+        if ((mode & 2) != 0) modes.push("expiring");
 
         return modes;
     }
 
     destroy() {
-        if (this.fleet) this.fleet.deleteShip(this.bodyID);
+        //if (this.fleet) 
+            //this.fleet.deleteShip(this.bodyID);
 
         super.destroy();
     }
@@ -42,9 +34,9 @@ export class Ship extends RenderedObject {
 
         // when a ship is abandoned, the ship lives on
         // but it's disconnected from its group
-        if (this.fleet && this.body.Group != this.fleet.ID) {
+        /*if (this.fleet && this.body.Group != this.fleet.ID) {
             this.fleet.deleteShip(this.bodyID);
             this.fleet = null;
-        }
+        }*/
     }
 }

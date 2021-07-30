@@ -53,6 +53,12 @@
             Sprite = Sprites.obstacle;
             Color = "rgba(128,128,128,.2)";
 
+            this.Group = new Group()
+            {
+                GroupType = GroupTypes.Obstacle,
+                ZIndex = 400
+            };
+
             base.Init(world);
         }
 
