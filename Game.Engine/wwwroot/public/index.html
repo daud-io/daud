@@ -18,7 +18,7 @@
     </script>
 
     <title>Daud.io</title>
-    <link rel="stylesheet" type="text/css" href="/game.css" />
+    <link rel="stylesheet" type="text/css" href="/game.css?v1" />
     <link rel="shortcut icon" type="image/png" href="img/ship_icon.png" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo+2:wght@200..900&display=swap" />
   </head>
@@ -230,9 +230,9 @@
           <label
             >Theme
             <select id="settingsTheme">
-              <option value="">Default</option>
-              <option value="/themes/daudmod.zip">Original Daud</option>
-              <option value="/themes/retro.zip">Space1 Theme</option>
+              <option value="bitty">Default</option>
+              <option value="original">Original Daud</option>
+              <option value="retro">Space1 Theme</option>
             </select>
           </label>
 
@@ -296,6 +296,6 @@
     </div>
     <progress id="loader" max="255" value="0"></progress>
 
-    <script src="game.js" type="module"></script>
+    <script src="game.js?v1" type="module"></script>
   </body>
 </html>

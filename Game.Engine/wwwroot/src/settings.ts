@@ -3,6 +3,7 @@ import { load } from "./loader";
 import { initializeWorld } from "./controls";
 import * as cache from "./cache";
 import bus from "./bus";
+import { settings } from "pixi.js";
 
 export const Settings = {
     theme: "",
@@ -69,7 +70,22 @@ export function loadSettings(): void {
     if (savedSettings) {
         // copying value by value because cookies can be old versions
         // any values NOT in the cookie will remain defined with the new defaults
-        for (const key in savedSettings) Settings[key] = savedSettings[key];
+        for (const key in savedSettings) {
+            Settings[key] = savedSettings[key];
+        }
+    }
+
+    switch (Settings.theme)
+    {
+        case "":
+            Settings.theme = "bitty";
+            break;
+        case "/themes/daudmod.zip":
+            Settings.theme = "original";
+            break;
+        case "/themes/retro.zip":
+            Settings.theme = "retro";
+            break;
     }
 
     themeSelector.value = Settings.theme;

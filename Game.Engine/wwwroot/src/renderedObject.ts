@@ -1,7 +1,7 @@
 ﻿import { CustomContainer } from "./CustomContainer";
 import { projectObject } from "./interpolator";
 import { ClientBody, ClientGroup } from "./cache";
-import { getDefinition, TextureDefinition } from "./loader";
+import { getSpriteDefinition, getTextureDefinition, SpriteDefinition, TextureDefinition } from "./loader";
 import { TextureLayer } from "./textureLayer";
 export class RenderedObject {
     container: CustomContainer;
@@ -11,7 +11,7 @@ export class RenderedObject {
 
     textureLayers: Record<string, TextureLayer>;
 
-    baseSpriteDefinition: TextureDefinition;
+    baseSpriteDefinition: SpriteDefinition;
 
     constructor(container: CustomContainer, clientBody: ClientBody) {
         this.textureLayers = {};
@@ -24,12 +24,7 @@ export class RenderedObject {
         this.currentSpriteName = "";
         this.currentMode = -1;
 
-        if (clientBody.Sprite == "boom")
-        {
-            let x = 1;
-        }
-
-        this.baseSpriteDefinition = getDefinition(clientBody.Sprite);
+        this.baseSpriteDefinition = getSpriteDefinition(clientBody.Sprite);
     }
 
     decodeOrderedModes(mode:number) {
@@ -72,7 +67,7 @@ export class RenderedObject {
         {
             this.destroy();
             this.currentSpriteName = this.body.Sprite;
-            this.baseSpriteDefinition = getDefinition(this.currentSpriteName);
+            this.baseSpriteDefinition = getSpriteDefinition(this.currentSpriteName);
             dirty = true;
         }
 
@@ -93,14 +88,8 @@ export class RenderedObject {
         {
             let mode = modes[i];
             let textureList = <string[]>[];
-            if(mode == 'default')
-                textureList.push(this.currentSpriteName);
-            else
-            {
-                let namedMode = this.baseSpriteDefinition.modes?.[mode];
-
-                textureList = namedMode?.split(' ') ?? [];
-            }
+            let namedMode = this.baseSpriteDefinition.modes?.[mode];
+            textureList = namedMode?.split(' ') ?? [];
 
             for(let t in textureList)
                 if (textures.indexOf(textureList[t]) == -1)
@@ -116,12 +105,9 @@ export class RenderedObject {
         for (let i = 0; i < textures.length; i++) {
             var textureName = textures[i];
 
-            let textureLayer = this.textureLayers[textureName];
-            if (textureLayer == null)
-            {
-                let definition = getDefinition(textureName);
-                textureLayer = new TextureLayer(this.container, this.body);
-            }
+            let textureLayer = this.textureLayers[textureName]
+                ?? new TextureLayer(this.container, this.body, textureName);
+
             if (textureLayer != null)
             {
                 let zIndex = this.body.zIndex;

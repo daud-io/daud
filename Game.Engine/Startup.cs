@@ -129,7 +129,10 @@
                 DefaultContentType = "text/plain",
                 OnPrepareResponse = context =>
                 {
-                    if (context.File.Name == "index.html")
+                    if (context.File.Name.Contains(".html")
+                    || context.File.Name.Contains(".js")
+                    || context.File.Name.Contains(".json")
+                    || context.File.Name.Contains(".css"))
                     {
                         context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
                         context.Context.Response.Headers.Add("Expires", "-1");

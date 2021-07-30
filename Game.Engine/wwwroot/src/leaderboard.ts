@@ -1,5 +1,5 @@
 ﻿import { LeaderboardType, LeaderboardEntry } from "./connection";
-import { getDefinition } from "./loader";
+import { getTextureDefinition } from "./loader";
 import { Vector2 } from "./Vector2";
 import { html, render, Hole } from "uhtml";
 import bus from "./bus";
@@ -179,14 +179,14 @@ export function update(data: LeaderboardType, position: PIXI.Point, fleetID: num
         leaderboardCenter.style.height = "83px";
 
         const image = (textureName: string) => {
-            return html`<img class="overlap" src="${getDefinition(textureName).url}"></img>`;
+            return html`<img class="overlap" src="${getTextureDefinition(textureName).url}"></img>`;
         };
         render(
             leaderboardCenter,
             html`<tbody>
                 <tr>
                     <td class="flag">
-                        <img class="flag-arrow" src=${getDefinition("ctf_arrow_blue").url} style=${`transform:rotate(${cyanAngle}rad);right:-50px`}></img>
+                        <img class="flag-arrow" src=${getTextureDefinition("ctf_arrow_blue").url} style=${`transform:rotate(${cyanAngle}rad);right:-50px`}></img>
                     </td>
                     <td style="width:300px;position:relative">
                         ${image("ctf_score_stripes")}
@@ -195,7 +195,7 @@ export function update(data: LeaderboardType, position: PIXI.Point, fleetID: num
                         ${image(`ctf_score_final${cyanScore >= 5 ? "_blue" : redScore >= 5 ? "_red" : ""}`)}
                     </td>
                     <td class="flag">
-                        <img class="flag-arrow" src=${getDefinition("ctf_arrow_red").url} style=${`transform:rotate(${redAngle}rad);left:-50px`}></img>
+                        <img class="flag-arrow" src=${getTextureDefinition("ctf_arrow_red").url} style=${`transform:rotate(${redAngle}rad);left:-50px`}></img>
                     </td>
                 </tr>
                 </tbody>`
