@@ -83,6 +83,11 @@ let container: CustomContainer | undefined;
 const bodies: Map<string, ClientRendered> = new Map();
 const groups: Map<string, ClientGroup> = new Map();
 
+export function getGroup(groupID: number): ClientGroup | undefined
+{
+    return groups.get(`g-${groupID}`);
+}
+
 export function setContainer(newContainer: CustomContainer): void {
     container = newContainer;
     if (groups.size > 0 || bodies.size > 0)
@@ -212,14 +217,14 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
                 case 1: // fleets
                     if (group?.renderer instanceof Fleet)
                     {
-                        var ship = new Ship(container, clientBody);
+                        var ship = new Ship(container, clientBody, group);
                         renderer = ship;
                         group.renderer.addShip(`b-${clientBody.ID}`, ship);
                     }
                     break;
 
                 case 6: // tokens
-                        renderer = new Token(container, clientBody);
+                    renderer = new Token(container, clientBody, group!);
                     break;
 
             }

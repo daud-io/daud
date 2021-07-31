@@ -1,15 +1,16 @@
 ﻿import { RenderedObject } from "../renderedObject";
 import { Fleet } from "./fleet";
 import { CustomContainer } from "../CustomContainer";
-import { ClientBody } from "../cache";
+import { ClientBody, ClientGroup } from "../cache";
 
 export class Ship extends RenderedObject {
-    fleet: Fleet | null;
+    fleet: Fleet | undefined;
     bodyID: string;
-    constructor(container: CustomContainer, clientBody: ClientBody) {
+    constructor(container: CustomContainer, clientBody: ClientBody, group: ClientGroup) {
         super(container, clientBody);
-        this.fleet = null;
+        this.fleet = group?.renderer;
         this.bodyID = `b-${clientBody.ID}`;
+        this.fleet?.addShip(this.bodyID, this);
     }
 
     decodeOrderedModes(mode: number) {
@@ -27,12 +28,14 @@ export class Ship extends RenderedObject {
 
         if ((mode & 2) != 0) modes.push("invulnerable");
 
+        if (this.fleet?.extraModes)
+            modes.push(...this.fleet?.extraModes);
 
         return modes;
     }
 
     destroy() {
-        if (this.fleet) this.fleet.deleteShip(this.bodyID);
+        //if (this.fleet) this.fleet.deleteShip(this.bodyID);
 
         super.destroy();
     }
@@ -44,7 +47,7 @@ export class Ship extends RenderedObject {
         // but it's disconnected from its group
         if (this.fleet && this.body.Group != this.fleet.ID) {
             this.fleet.deleteShip(this.bodyID);
-            this.fleet = null;
+            this.fleet = undefined;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿namespace Game.Engine.Core.Pickups
 {
     using Game.API.Common;
+    using Newtonsoft.Json;
     using System;
     using System.Numerics;
 
@@ -10,6 +11,9 @@
         public Fleet CarriedBy = null;
 
         public bool ExpiringSoon = false;
+
+        public TokenDataType TokenData { get; set ;}
+        
 
         [Flags]
         public enum TokenModeEnum
@@ -83,6 +87,7 @@
         protected void Drop()
         {
             this.OnDroppedByFleet(CarriedBy);
+            this.SetFleetID(null);
             CarriedBy = null;
         }
 
@@ -95,11 +100,19 @@
                 if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
                 {
                     CarriedBy = fleet;
+                    this.SetFleetID(CarriedBy.ID);
                     this.OnPickedUpByFleet(fleet);
                 }
             }
 
             base.Collided(otherObject);
+        }
+
+        protected void SetFleetID(uint? id)
+        {
+            this.TokenData ??= new TokenDataType();
+            this.TokenData.FleetID = id;
+            this.Group.CustomData = JsonConvert.SerializeObject(this.TokenData);
         }
 
         protected virtual void OnPickedUpByFleet(Fleet fleet)
@@ -108,6 +121,11 @@
 
         protected virtual void OnDroppedByFleet(Fleet fleet)
         {
+        }
+
+        public class TokenDataType
+        {
+            public uint? FleetID { get; set; }
         }
     }
 }

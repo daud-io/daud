@@ -16,6 +16,7 @@ export class Fleet {
     ships: { [id: string]: Ship };
     plotly?: { data; layout };
     usingPlotly: boolean;
+    extraModes: string[];
 
     constructor(container: CustomContainer) {
         this.container = container;
@@ -37,6 +38,7 @@ export class Fleet {
         this.container.bodyGroup.addChild(this.text);
         this.container.bodyGroup.addChild(this.textChat);
         this.usingPlotly = false;
+        this.extraModes = [];
     }
 
     addShip(id: string, ship: Ship): void {
@@ -73,6 +75,20 @@ export class Fleet {
             this.container.plotly.used = false;
             this.usingPlotly = false;
         }
+    }
+
+    addPowerup(powerMode: string)
+    {
+        this.extraModes.push(powerMode);
+        for(let id in this.ships)
+            this.ships[id].updateTextureLayers();
+        
+    }
+    removePowerup(powerMode: string)
+    {
+        this.extraModes = this.extraModes.filter(obj => obj !== powerMode);
+        for(let id in this.ships)
+            this.ships[id].updateTextureLayers();
     }
 
     tick(time: number): void {
