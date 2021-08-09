@@ -362,10 +362,11 @@ window.addEventListener("resize", () => {
 let angle = 0.0;
 let aimTarget = new Vector2(0, 0);
 
-let lastControl: { angle?: number; aimTarget?: PIXI.Point; boost?: boolean; shoot?: boolean; chat?: string } = {
+let lastControl: { angle?: number; aimTarget?: PIXI.Point; boost?: boolean; shoot?: boolean; autofire?: boolean; chat?: string } = {
     angle: undefined,
     aimTarget: undefined,
     boost: undefined,
+    autofire: undefined,
     shoot: undefined,
     chat: undefined,
 };
@@ -398,8 +399,8 @@ loadImages.then(() => {
             aimTarget.x !== aimTarget.x ||
             aimTarget.y !== aimTarget.y ||
             Controls.boost !== lastControl.boost ||
-            Controls.shoot ||
-            Controls.autofire !== lastControl.shoot ||
+            Controls.shoot !== lastControl.shoot ||
+            Controls.autofire !== lastControl.autofire ||
             message.txt !== lastControl.chat
         ) {
             let spectateControl = "";
@@ -422,7 +423,8 @@ loadImages.then(() => {
                 angle,
                 aimTarget,
                 boost: Controls.boost,
-                shoot: Controls.shoot || Controls.autofire,
+                shoot: Controls.shoot,
+                autofire: Controls.autofire,
                 chat: message.txt,
             };
         }
