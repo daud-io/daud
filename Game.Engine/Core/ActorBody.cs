@@ -30,7 +30,7 @@
             this.OriginalPosition = this.Position;
             this.OriginalAngle = this.Angle;
             this.DefinitionTime = world.Time;
-            this.Project(world.Time);
+            //this.Project(world.Time);
 
             this.Exists = true;
         }

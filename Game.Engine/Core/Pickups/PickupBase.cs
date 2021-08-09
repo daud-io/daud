@@ -31,7 +31,7 @@
         {
             var r = new Random();
             Position = World.RandomPosition();
-            Momentum = new Vector2(
+            LinearVelocity = new Vector2(
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
             );
@@ -66,13 +66,13 @@
 
             if (World.DistanceOutOfBounds(Position) > 0)
             {
-                var speed = Momentum.Length();
+                var speed = LinearVelocity.Length();
                 if (Position != Vector2.Zero)
-                    Momentum = Vector2.Normalize(Vector2.Zero - Position) * speed;
+                    LinearVelocity = Vector2.Normalize(Vector2.Zero - Position) * speed;
             }
 
             if (Drag != 1)
-                Momentum *= Drag;
+                LinearVelocity *= Drag;
         }
 
         public static T FireFrom<T>(Fleet fleet)
@@ -86,7 +86,7 @@
                 Angle = MathF.Atan2(fleet.AimTarget.Y, fleet.AimTarget.X),
 
                 ExcludedFleet = fleet,
-                Momentum = fleet.FleetMomentum,
+                LinearVelocity = fleet.FleetMomentum,
                 Drag = 0.98f,
 
 
@@ -94,7 +94,7 @@
             };
 
             if (fleet.AimTarget != Vector2.Zero)
-                pickup.Momentum = Vector2.Normalize(fleet.AimTarget)
+                pickup.LinearVelocity = Vector2.Normalize(fleet.AimTarget)
                     * ((fleet.Ships.Count() * fleet.ShotThrustM + fleet.ShotThrustB) * 10);
 
             pickup.Init(fleet.World);

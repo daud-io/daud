@@ -68,7 +68,7 @@
             var accumulator = Vector2.Zero;
             foreach (var shipOther in ships)
                 if (shipOther != ship)
-                    accumulator += shipOther.Momentum;
+                    accumulator += shipOther.LinearVelocity;
 
             return accumulator / (ships.Count() - 1);
         }

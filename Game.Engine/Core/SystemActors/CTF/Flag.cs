@@ -43,7 +43,7 @@
             if (!(CarriedBy?.PendingDestruction ?? true))
             {
                 this.Position = CarriedBy.FleetCenter;
-                this.Momentum = CarriedBy.FleetMomentum;
+                this.LinearVelocity = CarriedBy.FleetMomentum;
 
                 //Console.WriteLine($"X:{CarriedBy.FleetMomentum.X} Y:{CarriedBy.FleetMomentum.Y}");
             }
@@ -55,13 +55,13 @@
                 }
 
                 CarriedBy = null;
-                this.Momentum = new Vector2(0, 0);
+                this.LinearVelocity = new Vector2(0, 0);
 
                 if (World.DistanceOutOfBounds(this.Position) > 0 &&
                     this.Position != Vector2.Zero)
-                    this.Momentum = Vector2.Normalize(-this.Position) * 0.1f;
+                    this.LinearVelocity = Vector2.Normalize(-this.Position) * 0.1f;
                 else
-                    this.Momentum = Vector2.Zero;
+                    this.LinearVelocity = Vector2.Zero;
             }
         }
 

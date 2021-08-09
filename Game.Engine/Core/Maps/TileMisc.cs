@@ -50,7 +50,7 @@
                     Collide(this, projectedBody);
 
                 if (Drag != 0)
-                    ship.Momentum *= 1 - Drag;
+                    ship.LinearVelocity *= 1 - Drag;
             }
         }
 
@@ -94,7 +94,7 @@
             ball.Position = ball.Position - (mtd * (im2 / (im1 + im2)));
 
             // impact speed
-            Vector2 v = bthis.Momentum - ball.Momentum;
+            Vector2 v = bthis.LinearVelocity - ball.LinearVelocity;
             float vn = Vector2.Dot(v, Vector2.Normalize(mtd));
 
             // sphere intersecting but moving away from each other already
@@ -107,7 +107,7 @@
 
             // change in momentum
             //bthis.Momentum = bthis.Momentum + (impulse * im1);
-            ball.Momentum = ball.Momentum - (impulse * im2);
+            ball.LinearVelocity = ball.LinearVelocity - (impulse * im2);
         }
 
     }

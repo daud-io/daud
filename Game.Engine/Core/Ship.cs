@@ -193,9 +193,9 @@
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * (ThrustOverride ?? ThrustAmount);
 
-            Momentum = (Momentum + thrust) * Drag;
-
+            LinearVelocity = (LinearVelocity + thrust) * Drag;
         }
+
 
         private void DoOutOfBoundsRules()
         {
@@ -204,7 +204,7 @@
             IsOOB = oob > 0;
 
             if (oob > World.Hook.OutOfBoundsBorder)
-                this.Momentum *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
+                this.LinearVelocity *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
 
             if (oob > World.Hook.OutOfBoundsDeathLine)
             {

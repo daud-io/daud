@@ -1,5 +1,8 @@
 ﻿namespace Game.Engine.Core
 {
+    using BepuPhysics;
+    using BepuPhysics.Collidables;
+    using BepuUtilities.Memory;
     using Game.API.Common;
     using Game.API.Common.Models;
     using Game.Engine.Core.Scoring;
@@ -7,6 +10,7 @@
     using Game.Engine.Core.SystemActors.CTF;
     using Game.Engine.Core.SystemActors.Royale;
     using Game.Engine.Networking;
+    using Game.Engine.Physics;
     using RBush;
     using System;
     using System.Collections.Generic;
@@ -67,6 +71,9 @@
         public bool CanSpawn { get => Hook.CanSpawn; set => Hook.CanSpawn = value; }
         public string CanSpawnReason { get; set; }
 
+        private BufferPool bufferPool = new BufferPool();
+        private Simulation Simulation = null;
+        
 
         public World(Hook hook, GameConfiguration gameConfiguration)
         {
@@ -76,6 +83,9 @@
             GameID = Guid.NewGuid().ToString().Replace("-", "");
 
             Console.WriteLine($"Initializing World: {this.Hook.Name}");
+
+            this.Simulation = Simulation.Create(bufferPool, new NarrowPhaseCallbacks(), new PoseIntegratorCallbacks(new Vector3(0, -10, 0)), new PositionLastTimestepper());
+            this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
 
             InitializeSystemActors();
             InitializeStepTimer();
@@ -89,6 +99,9 @@
                 var start = DateTime.Now;
                 // calculate the new game time
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
+
+
+                this.Simulation.Timestep(1000f/Hook.StepTime);
 
                 // the dynamic index is rebuilt each step
                 RebuildDynamicIndex();
@@ -152,7 +165,10 @@
         private void UpdateDirtyBodies()
         {
             foreach (var body in Bodies)
-                body.Update(Time);
+            {
+                var reference = Simulation.Bodies.GetBodyReference(body.BodyHandle);
+                body.UpdateBodyReference(reference, Time);
+            }
         }
 
         private void ActorsCreateDestroy()
@@ -177,7 +193,9 @@
             RTreeDynamic.Clear();
             foreach (var body in Bodies)
             {
-                body.Project(Time);
+                var reference = Simulation.Bodies.GetBodyReference(body.BodyHandle);
+                body.UpdateFromBodyReference(reference, Time);
+
                 body.Envelope = new Envelope(
                     body.Position.X - body.Size,
                     body.Position.Y - body.Size,
@@ -190,6 +208,8 @@
 
         public IEnumerable<Body> BodiesNear(Envelope searchArea)
         {
+            // https://forum.bepuentertainment.com/viewtopic.php?f=4&t=2720&p=15103&hilit=query#p15103
+            
             return RTreeDynamic.Search(searchArea)
                     .Union(RTreeStatic.Search(searchArea));
         }
@@ -215,10 +235,25 @@
             Bodies.Add(body);
             if (body.IsStatic)
                 RTreeStatic.Insert(body);
+
+            int size = Math.Min(Math.Max(body.Size, 1), 1000);
+            var capsule = new Capsule(size, 5000);
+            var mass = 4/3 * MathF.PI * (size ^ 3) * 0.25f;
+            capsule.ComputeInertia(mass, out var capsuleIntertia);
+            capsuleIntertia.InverseInertiaTensor.XX = 0;
+            capsuleIntertia.InverseInertiaTensor.YY = 0;
+
+            body.BodyHandle = Simulation.Bodies.Add(BodyDescription.CreateDynamic(
+                new Vector3(body.Position.X, 0, body.Position.Y), 
+                capsuleIntertia,
+                new CollidableDescription(this.Simulation.Shapes.Add(capsule), 0.1f), 
+                new BodyActivityDescription(0.01f)
+            ));
         }
 
         public void BodyRemove(Body body)
         {
+            Simulation.Bodies.Remove(body.BodyHandle);
             Bodies.Remove(body);
             if (body.IsStatic)
                 RTreeStatic.Delete(body);
@@ -265,6 +300,8 @@
             if (!disposedValue)
                 if (disposing)
                 {
+                    this.Simulation.Dispose();
+                    this.bufferPool.Clear();
 
                     foreach (var player in Player.GetWorldPlayers(this).ToList())
                         try

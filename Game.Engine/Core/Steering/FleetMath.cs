@@ -28,7 +28,7 @@
             int count = 0;
             foreach (var ship in ships.Where(s => s != except))
             {
-                accumlator += ship.Momentum;
+                accumlator += ship.LinearVelocity;
                 count++;
             }
 

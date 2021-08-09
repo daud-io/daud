@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
+    using BepuPhysics;
     using Game.API.Common;
     using RBush;
     using System;
@@ -113,20 +114,29 @@
             }
         }
 
-        private Vector2 _momentum = new Vector2(0, 0);
-        public virtual Vector2 Momentum
+        internal BodyHandle BodyHandle;
+        private Vector2 _linearVelocity = new Vector2(0, 0);
+        public virtual Vector2 LinearVelocity
         {
             get
             {
-                return _momentum;
+                return _linearVelocity;
             }
             set
             {
-                if (float.IsNaN(value.X))
+                if (float.IsNaN(value.X) || float.IsNaN(value.Y))
                     throw new Exception("Invalid position");
-                IsDirty = IsDirty || _momentum != value;
-                _momentum = value;
+
+                IsDirty = IsDirty || _linearVelocity != value;
+                _linearVelocity = value;
             }
+        }
+        
+        [Obsolete("Property renamed because of abuse of real physics terminology")]
+        public virtual Vector2 Momentum
+        {
+            get => LinearVelocity;
+            set => LinearVelocity = value;
         }
 
         private Vector2 _originalPosition { get; set; } = new Vector2(0, 0);
@@ -203,7 +213,7 @@
 
                 var timeDelta = (time - this.DefinitionTime);
 
-                _position = Vector2.Add(OriginalPosition, Vector2.Multiply(Momentum, timeDelta));
+                _position = Vector2.Add(OriginalPosition, Vector2.Multiply(LinearVelocity, timeDelta));
 
                 _angle = OriginalAngle + timeDelta * AngularVelocity;
 
@@ -211,22 +221,84 @@
                     this.IsDirty = true;
             }
         }
-
-        public void Update(uint time)
+        
+        public void UpdateFromBodyReference(BodyReference bodyReference, uint time)
         {
-            if (IsDirty)
+            ProjectedTime = time;
+            DefinitionTime = time;
+
+            _position = Vector3ToVector2(bodyReference.Pose.Position);
+            _originalPosition = _position;
+            _linearVelocity = Vector3ToVector2(bodyReference.Velocity.Linear);
+            _angle = ToEulerAngles(bodyReference.Pose.Orientation).Y;
+            IsDirty = false;
+
+        }
+
+        static Vector3 ToEulerAngles(Quaternion q)
+        {
+            // Store the Euler angles in radians
+            Vector3 pitchYawRoll = new Vector3();
+
+            double sqw = q.W * q.W;
+            double sqx = q.X * q.X;
+            double sqy = q.Y * q.Y;
+            double sqz = q.Z * q.Z;
+
+            // If quaternion is normalised the unit is one, otherwise it is the correction factor
+            double unit = sqx + sqy + sqz + sqw;
+            double test = q.X * q.Y + q.Z * q.W;
+
+            if (test > 0.4999f * unit)                              // 0.4999f OR 0.5f - EPSILON
             {
-                DefinitionTime = time;
-                OriginalPosition = Position;
-                OriginalAngle = Angle;
-                IsDirty = false;
+                // Singularity at north pole
+                pitchYawRoll.Y = 2f * (float)Math.Atan2(q.X, q.W);  // Yaw
+                pitchYawRoll.X = MathF.PI * 0.5f;                         // Pitch
+                pitchYawRoll.Z = 0f;                                // Roll
+                return pitchYawRoll;
             }
+            else if (test < -0.4999f * unit)                        // -0.4999f OR -0.5f + EPSILON
+            {
+                // Singularity at south pole
+                pitchYawRoll.Y = -2f * (float)Math.Atan2(q.X, q.W); // Yaw
+                pitchYawRoll.X = -MathF.PI * 0.5f;                        // Pitch
+                pitchYawRoll.Z = 0f;                                // Roll
+                return pitchYawRoll;
+            }
+            else
+            {
+                pitchYawRoll.Y = (float)Math.Atan2(2f * q.Y * q.W - 2f * q.X * q.Z, sqx - sqy - sqz + sqw);       // Yaw
+                pitchYawRoll.X = (float)Math.Asin(2f * test / unit);                                             // Pitch
+                pitchYawRoll.Z = (float)Math.Atan2(2f * q.X * q.W - 2f * q.Y * q.Z, -sqx + sqy - sqz + sqw);      // Roll
+            }
+
+            return pitchYawRoll;
+        }
+
+        private Vector2 Vector3ToVector2(Vector3 vector3)
+        {
+            return new Vector2
+            {
+                X = vector3.X,
+                Y = vector3.Z
+            };
+        }
+
+        public void UpdateBodyReference(BodyReference bodyReference, uint time)
+        {
+            DefinitionTime = time;
+            OriginalPosition = Position;
+            OriginalAngle = Angle;
+
+            bodyReference.Pose.Position = new Vector3(Position.X, 0, Position.Y);
+            bodyReference.Velocity.Linear = new Vector3(LinearVelocity.X, 0, LinearVelocity.Y);
+                
+            bodyReference.Pose.Orientation = Quaternion.CreateFromAxisAngle(new Vector3(0,1,0), Angle);
         }
 
         public Body Clone()
         {
             return this.MemberwiseClone() as Body;
         }
-
     }
 }

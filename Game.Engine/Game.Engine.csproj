@@ -4,9 +4,11 @@
     <TargetFramework>netcoreapp5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BepuPhysics" Version="2.3.0" />
     <PackageReference Include="FlatBuffers.Core" Version="1.12.0" />
     <!--  <PackageReference Include="Docker.DotNet" Version="3.125.4" /> -->
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />

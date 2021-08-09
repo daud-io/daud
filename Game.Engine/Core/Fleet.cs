@@ -155,13 +155,13 @@
                 foreach (var existingShip in this.Ships)
                 {
                     position += existingShip.Position;
-                    momentum += existingShip.Momentum;
+                    momentum += existingShip.LinearVelocity;
                     angle += existingShip.Angle;
                     count++;
                 }
 
                 ship.Position = position / count + offset;
-                ship.Momentum = momentum / count;
+                ship.LinearVelocity = momentum / count;
                 ship.Angle = angle / count;
             }
             else
@@ -306,8 +306,8 @@
                     );
 
                 if (isBoostInitial)
-                    if (ship.Momentum != Vector2.Zero)
-                        ship.Momentum += Vector2.Normalize(ship.Momentum) * World.Hook.BoostSpeed;
+                    if (ship.LinearVelocity != Vector2.Zero)
+                        ship.LinearVelocity += Vector2.Normalize(ship.LinearVelocity) * World.Hook.BoostSpeed;
             }
 
             if (isShooting)

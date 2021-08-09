@@ -120,7 +120,7 @@ namespace Game.Engine.Networking
                                     DefinitionTime = world.Time,
                                     OriginalPosition = center,
                                     Position = center,
-                                    Momentum = followFleet.FleetMomentum
+                                    LinearVelocity = followFleet.FleetMomentum
                                 };
                             }
                         }
@@ -205,8 +205,8 @@ namespace Game.Engine.Networking
                                     DefinitionTime: serverBody.DefinitionTime,
                                     originalPosition_X: (short)serverBody.OriginalPosition.X,
                                     originalPosition_Y: (short)serverBody.OriginalPosition.Y,
-                                    velocity_X: (short)(serverBody.Momentum.X * VELOCITY_SCALE_FACTOR),
-                                    velocity_Y: (short)(serverBody.Momentum.Y * VELOCITY_SCALE_FACTOR),
+                                    velocity_X: (short)(serverBody.LinearVelocity.X * VELOCITY_SCALE_FACTOR),
+                                    velocity_Y: (short)(serverBody.LinearVelocity.Y * VELOCITY_SCALE_FACTOR),
                                     OriginalAngle: (sbyte)(serverBody.OriginalAngle / MathF.PI * 127),
                                     AngularVelocity: (sbyte)(serverBody.AngularVelocity * 10000),
                                     Size: (byte)(serverBody.Size / 5),
@@ -262,8 +262,8 @@ namespace Game.Engine.Networking
                                 DefinitionTime: followBody?.DefinitionTime ?? 0,
                                 originalPosition_X: (short)(followBody?.OriginalPosition.X ?? 0),
                                 originalPosition_Y: (short)(followBody?.OriginalPosition.Y ?? 0),
-                                velocity_X: (short)(followBody?.Momentum.X * VELOCITY_SCALE_FACTOR ?? 0),
-                                velocity_Y: (short)(followBody?.Momentum.Y * VELOCITY_SCALE_FACTOR ?? 0),
+                                velocity_X: (short)(followBody?.LinearVelocity.X * VELOCITY_SCALE_FACTOR ?? 0),
+                                velocity_Y: (short)(followBody?.LinearVelocity.Y * VELOCITY_SCALE_FACTOR ?? 0),
                                 OriginalAngle: (sbyte)(followBody?.OriginalAngle / MathF.PI / 127 ?? 0),
                                 AngularVelocity: 0,
                                 Size: 0,

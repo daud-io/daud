@@ -13,7 +13,7 @@ namespace Game.Engine.Core.Weapons
         {
             base.FireFrom(ship, group);
 
-            this.Momentum /= 2.0f;
+            this.LinearVelocity /= 2.0f;
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife * World.Hook.SeekerLifeMultiplier);
             this.Sprite = API.Common.Sprites.seeker;
             this.Size = 100;
@@ -22,7 +22,7 @@ namespace Game.Engine.Core.Weapons
 
         public override void Think()
         {
-            var originalMomentum = Momentum;
+            var originalMomentum = LinearVelocity;
 
             base.Think();
 
@@ -55,7 +55,7 @@ namespace Game.Engine.Core.Weapons
             float thrustAngle = 0;
             if (target != null)
             {
-                var delta = (target.Position + (target.Momentum * World.Hook.SeekerLead)) - Position;
+                var delta = (target.Position + (target.LinearVelocity * World.Hook.SeekerLead)) - Position;
                 thrustAngle = MathF.Atan2(delta.Y, delta.X);
 
                 Angle = thrustAngle;
@@ -65,7 +65,7 @@ namespace Game.Engine.Core.Weapons
                 thrustAngle = Angle;
 
             var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
-            Momentum = (originalMomentum + thrust) * Drag;
+            LinearVelocity = (originalMomentum + thrust) * Drag;
         }
 
         public virtual void CollisionExecute(Body projectedBody)

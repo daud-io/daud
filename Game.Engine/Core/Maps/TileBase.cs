@@ -13,8 +13,8 @@
 
         public virtual void InteractWithShip(Ship ship)
         {
-            if (Drag != 0 && ship.Momentum.Length() < 5)
-                ship.Momentum *= Drag;
+            if (Drag != 0 && ship.LinearVelocity.Length() < 5)
+                ship.LinearVelocity *= Drag;
         }
     }
 }

@@ -30,9 +30,9 @@
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount * 10;
 
             if (World.Hook.EinsteinCoefficient > 0)
-                Momentum = thrust + (World.Hook.EinsteinCoefficient * Reference);
+                LinearVelocity = thrust + (World.Hook.EinsteinCoefficient * Reference);
             else
-                Momentum = thrust;
+                LinearVelocity = thrust;
 
 
             if (World.Time >= TimeDeath)
@@ -53,11 +53,11 @@
 
             var momentum =
                 new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle))
-                * Vector2.Distance(ship.Momentum, Vector2.Zero);
+                * Vector2.Distance(ship.LinearVelocity, Vector2.Zero);
 
 
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife);
-            this.Momentum = momentum;
+            this.LinearVelocity = momentum;
             this.Position = bulletOrigin;
 
             if (World.Hook.PrecisionBullets && ship.Fleet != null)

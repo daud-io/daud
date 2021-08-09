@@ -121,7 +121,7 @@
 
                 if (SpawnMomentum != null)
                     foreach (var ship in Fleet.NewShips)
-                        ship.Momentum = SpawnMomentum.Value;
+                        ship.LinearVelocity = SpawnMomentum.Value;
 
                 if (!DisableSpawnInvulnerability)
                     SetInvulnerability(SpawnInvulnerableTime, true);

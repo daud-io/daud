@@ -24,7 +24,7 @@
                 boom.Init(ship.World);
                 boom.Size = ship.Size;
                 boom.Position = ship.Position;
-                boom.Momentum = ship.Momentum;
+                boom.LinearVelocity = ship.LinearVelocity;
 
                 return boom;
             }
@@ -39,7 +39,7 @@
             if (TimeDeath > 0 && World.Time > TimeDeath)
                 PendingDestruction = true;
 
-            Momentum *= Drag;
+            LinearVelocity *= Drag;
         }
     }
 }

@@ -62,7 +62,7 @@
             if (carried)
             {
                 this.Position = CarriedBy.FleetCenter;
-                this.Momentum = CarriedBy.FleetMomentum;
+                this.LinearVelocity = CarriedBy.FleetMomentum;
             }
             else
             {
@@ -72,9 +72,9 @@
                 
                 if (World.DistanceOutOfBounds(this.Position) > 0 &&
                     this.Position != Vector2.Zero)
-                    this.Momentum = Vector2.Normalize(-this.Position) * 0.1f;
+                    this.LinearVelocity = Vector2.Normalize(-this.Position) * 0.1f;
                 else
-                    this.Momentum = Vector2.Zero;
+                    this.LinearVelocity = Vector2.Zero;
             }
 
             this.Mode = (byte)

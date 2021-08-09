@@ -90,8 +90,8 @@
                 var distance2 = avoid.LengthSquared();
                 if (distance2 < 2000*2000)
                 {
-                    var side = -WhichSide(bullet.Position, bullet.Position+bullet.Momentum, this.Fleet.FleetCenter);
-                    var avoidperp = new Vector2(side*bullet.Momentum.Y, -side*bullet.Momentum.X);
+                    var side = -WhichSide(bullet.Position, bullet.Position+bullet.LinearVelocity, this.Fleet.FleetCenter);
+                    var avoidperp = new Vector2(side*bullet.LinearVelocity.Y, -side*bullet.LinearVelocity.X);
                     vel -= Vector2.Normalize(avoid) * (2000 - distance2 / 2000)  * fraction;
                     vel += Vector2.Normalize(avoidperp) * (4000 - distance2/ 1000)  * fraction;
                 }
@@ -106,7 +106,7 @@
                 .OrderBy(p => Vector2.Distance(p.Position, this.Fleet.FleetCenter))
                 .FirstOrDefault();
             
-            var fishintercept = Intercept(this.Fleet.FleetCenter, nearfish.Position,nearfish.Momentum, (this.Fleet.Ships.Count * this.Fleet.ShotThrustM + this.Fleet.ShotThrustB)*10);
+            var fishintercept = Intercept(this.Fleet.FleetCenter, nearfish.Position,nearfish.LinearVelocity, (this.Fleet.Ships.Count * this.Fleet.ShotThrustM + this.Fleet.ShotThrustB)*10);
 
             if (player != null)
             {

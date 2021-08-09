@@ -33,7 +33,7 @@ namespace Game.Engine.Core.Steering
                         MathF.Cos(angle + targetAngle),
                         MathF.Sin(angle + targetAngle)
                     ) * (50 + 15 * fleet.Ships.Count);
-                ship.Momentum = momentum / RingThreshold;
+                ship.LinearVelocity = momentum / RingThreshold;
                 ship.Angle = angle + targetAngle;
             }
         }
