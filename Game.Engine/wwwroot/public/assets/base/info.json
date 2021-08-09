@@ -464,11 +464,11 @@
       "emitter": {
         "alpha": {
           "start": 0.33,
-          "end": 0.0
+          "end": 0
         },
         "scale": {
-          "start": 0.0003,
-          "end": 0.003,
+          "start": 0.08,
+          "end": 0.01,
           "minimumScaleMultiplier": 1
         },
         "color": {
@@ -512,7 +512,7 @@
         "particleSpacing": 0,
         "angleStart": 0
       },
-      "size": 0.5
+      "size": 0.02
     },
 
     "haste": {
