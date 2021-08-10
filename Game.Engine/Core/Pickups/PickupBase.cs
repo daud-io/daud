@@ -89,7 +89,6 @@
                 LinearVelocity = fleet.FleetMomentum,
                 Drag = 0.98f,
 
-
                 DontRandomize = true
             };
 

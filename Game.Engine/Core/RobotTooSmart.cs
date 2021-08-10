@@ -77,7 +77,7 @@
             var fraction = (float)Math.Max(Math.Min((this.Fleet.ShootCooldownStatus>0.1?(1.0-this.Fleet.ShootCooldownStatus):(this.Fleet.ShootCooldownStatus))*10,1.0),0.0);
             
             var danger = false;
-            var bullets = World.Bodies
+            var bullets = World.Bodies.Values
                 .Where(b => b.Group?.GroupType == GroupTypes.VolleyBullet || b.Group?.GroupType == GroupTypes.VolleySeeker)
                 .Where(b => b.Group?.OwnerID != this.Fleet.ID)
                 .OrderBy(p => Vector2.Distance(p.Position, this.Fleet.FleetCenter))
@@ -101,7 +101,7 @@
                 }
             }
 
-            var nearfish = World.Bodies
+            var nearfish = World.Bodies.Values
                 .Where(b => (b.Group!=null && b.Group.GroupType == GroupTypes.Fish) || b.Sprite == Sprites.fish || b.Sprite == Sprites.ship_gray)
                 .OrderBy(p => Vector2.Distance(p.Position, this.Fleet.FleetCenter))
                 .FirstOrDefault();

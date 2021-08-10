@@ -2,18 +2,14 @@
 {
     using BepuPhysics;
     using Game.API.Common;
-    using RBush;
     using System;
     using System.Numerics;
 
-    public class Body : ISpatialData
+    public class Body
     {
         public long ProjectedTime { get; set; }
         private Vector2 _position { get; set; } = new Vector2(0, 0);
         protected long MaximumCleanTime = 2000;
-
-        public Envelope Envelope;
-        private bool ProjectedOnce = false;
 
         public uint ID { get; set; }
         public uint DefinitionTime { get; set; }
@@ -191,35 +187,19 @@
             }
         }
 
-        ref readonly Envelope ISpatialData.Envelope => ref this.Envelope;
-
         public void Project(uint time)
         {
-            if (IsStatic)
-            {
-                if (!ProjectedOnce)
-                {
-                    _position = _originalPosition;
-                    _angle = _originalAngle;
-                    Envelope = new Envelope(_position.X - Size, _position.Y - Size, _position.X + Size, _position.Y + Size);
-                    ProjectedOnce = true;
-                }
-            }
-            else
-            {
-                ProjectedTime = time;
-                if (DefinitionTime == 0)
-                    DefinitionTime = time;
+            ProjectedTime = time;
+            if (DefinitionTime == 0)
+                DefinitionTime = time;
 
-                var timeDelta = (time - this.DefinitionTime);
+            var timeDelta = (time - this.DefinitionTime);
 
-                _position = Vector2.Add(OriginalPosition, Vector2.Multiply(LinearVelocity, timeDelta));
+            _position = Vector2.Add(OriginalPosition, Vector2.Multiply(LinearVelocity, timeDelta));
+            _angle = OriginalAngle + timeDelta * AngularVelocity;
 
-                _angle = OriginalAngle + timeDelta * AngularVelocity;
-
-                if (time - this.DefinitionTime > MaximumCleanTime)
-                    this.IsDirty = true;
-            }
+            if (time - this.DefinitionTime > MaximumCleanTime)
+                this.IsDirty = true;
         }
         
         public void UpdateFromBodyReference(BodyReference bodyReference, uint time)
@@ -232,7 +212,6 @@
             _linearVelocity = Vector3ToVector2(bodyReference.Velocity.Linear);
             _angle = ToEulerAngles(bodyReference.Pose.Orientation).Y;
             IsDirty = false;
-
         }
 
         static Vector3 ToEulerAngles(Quaternion q)

@@ -2,6 +2,8 @@
 {
     using BepuPhysics;
     using BepuPhysics.Collidables;
+    using BepuUtilities;
+    using BepuUtilities.Collections;
     using BepuUtilities.Memory;
     using Game.API.Common;
     using Game.API.Common.Models;
@@ -11,7 +13,6 @@
     using Game.Engine.Core.SystemActors.Royale;
     using Game.Engine.Networking;
     using Game.Engine.Physics;
-    using RBush;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -33,17 +34,8 @@
 
         public Hook Hook { get; set; } = null;
 
-        // spatial indices (RTree)
-        // collectively these contain all the bodies in this world
-
-        // the dynamic rtree is cleared and rebuilt every cycle
-        private RBush<Body> RTreeDynamic = new RBush<Body>();
-        // the static rtree is updated incrementally (originally for map tiles)
-        private RBush<Body> RTreeStatic = new RBush<Body>();
-
-
         // lists of bodies, groups in the world
-        public List<Body> Bodies = new List<Body>();
+        public Dictionary<BodyHandle, Body> Bodies = new Dictionary<BodyHandle, Body>();
         public List<Group> Groups = new List<Group>();
 
         // list of IActors in the world. Actors are things that think.
@@ -70,7 +62,6 @@
 
         public bool CanSpawn { get => Hook.CanSpawn; set => Hook.CanSpawn = value; }
         public string CanSpawnReason { get; set; }
-
         private BufferPool bufferPool = new BufferPool();
         private Simulation Simulation = null;
         
@@ -86,7 +77,6 @@
 
             this.Simulation = Simulation.Create(bufferPool, new NarrowPhaseCallbacks(), new PoseIntegratorCallbacks(new Vector3(0, -10, 0)), new PositionLastTimestepper());
             this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
-
             InitializeSystemActors();
             InitializeStepTimer();
         }
@@ -104,7 +94,7 @@
                 this.Simulation.Timestep(1000f/Hook.StepTime);
 
                 // the dynamic index is rebuilt each step
-                RebuildDynamicIndex();
+                ReadSimulationState();
 
                 // every registered actor gets a chance to think
                 ActorsThink();
@@ -164,7 +154,7 @@
 
         private void UpdateDirtyBodies()
         {
-            foreach (var body in Bodies)
+            foreach (var body in Bodies.Values)
             {
                 var reference = Simulation.Bodies.GetBodyReference(body.BodyHandle);
                 body.UpdateBodyReference(reference, Time);
@@ -188,53 +178,49 @@
             }
         }
 
-        private void RebuildDynamicIndex()
+        private void ReadSimulationState()
         {
-            RTreeDynamic.Clear();
-            foreach (var body in Bodies)
+            foreach (var body in Bodies.Values)
             {
                 var reference = Simulation.Bodies.GetBodyReference(body.BodyHandle);
                 body.UpdateFromBodyReference(reference, Time);
-
-                body.Envelope = new Envelope(
-                    body.Position.X - body.Size,
-                    body.Position.Y - body.Size,
-                    body.Position.X + body.Size,
-                    body.Position.Y + body.Size);
             }
-
-            RTreeDynamic.BulkLoad(Bodies.Where(b => !b.IsStatic));
         }
 
-        public IEnumerable<Body> BodiesNear(Envelope searchArea)
+        struct BroadPhaseOverlapEnumerator : IBreakableForEach<CollidableReference>
         {
-            // https://forum.bepuentertainment.com/viewtopic.php?f=4&t=2720&p=15103&hilit=query#p15103
-            
-            return RTreeDynamic.Search(searchArea)
-                    .Union(RTreeStatic.Search(searchArea));
-        }
-
-        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance = 0)
-        {
-            if (maximumDistance == 0)
-                return this.Bodies;
-            else
+            public QuickList<CollidableReference> References;
+            //The enumerator never gets stored into unmanaged memory, so it's safe to include a reference type instance.
+            public BufferPool Pool;
+            public bool LoopBody(CollidableReference reference)
             {
-                var searchEnvelope = new Envelope(
-                    point.X - maximumDistance / 2,
-                    point.Y - maximumDistance / 2,
-                    point.X + maximumDistance / 2,
-                    point.Y + maximumDistance / 2
-                );
-                return BodiesNear(searchEnvelope);
+                References.Allocate(Pool) = reference;
+                //If you wanted to do any top-level filtering, this would be a good spot for it.
+                //The CollidableReference tells you whether it's a body or a static object and the associated handle. You can look up metadata with that.
+                return true;
             }
+        }
+
+        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance)
+        {
+            var broadPhaseEnumerator = new BroadPhaseOverlapEnumerator {
+                Pool = bufferPool,
+                References = new QuickList<CollidableReference>(16, bufferPool)
+            };
+
+            Simulation.BroadPhase.GetOverlaps(
+                new Vector3(point.X - maximumDistance / 2, 0, point.Y - maximumDistance / 2), 
+                new Vector3(point.X + maximumDistance / 2, 0, point.Y + maximumDistance / 2), 
+                ref broadPhaseEnumerator
+            );
+
+            foreach (var collidableReference in broadPhaseEnumerator.References)
+                if (collidableReference.BodyHandle != default)
+                    yield return this.Bodies[collidableReference.BodyHandle];
         }
 
         public void BodyAdd(Body body)
         {
-            Bodies.Add(body);
-            if (body.IsStatic)
-                RTreeStatic.Insert(body);
 
             int size = Math.Min(Math.Max(body.Size, 1), 1000);
             var capsule = new Capsule(size, 5000);
@@ -249,14 +235,14 @@
                 new CollidableDescription(this.Simulation.Shapes.Add(capsule), 0.1f), 
                 new BodyActivityDescription(0.01f)
             ));
+
+            Bodies.Add(body.BodyHandle, body);
         }
 
         public void BodyRemove(Body body)
         {
             Simulation.Bodies.Remove(body.BodyHandle);
-            Bodies.Remove(body);
-            if (body.IsStatic)
-                RTreeStatic.Delete(body);
+            Bodies.Remove(body.BodyHandle);
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)

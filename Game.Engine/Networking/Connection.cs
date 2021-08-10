@@ -135,23 +135,14 @@ namespace Game.Engine.Networking
 
                         // if we haven't found anything to watch yet, watch anything
                         if (followBody == null)
-                            followBody = player?.World.Bodies.FirstOrDefault();
+                            followBody = player?.World.Bodies.Values.FirstOrDefault();
 
                         if (followBody != null)
                         {
                             var size = 6000;
-                            var viewportHeight = size * 2;
-                            var viewportWidth = size * 2;
-
-                            var playerViewport = new Envelope(
-                                followBody.Position.X - viewportWidth / 2,
-                                followBody.Position.Y - viewportHeight / 2,
-                                followBody.Position.X + viewportWidth / 2,
-                                followBody.Position.Y + viewportHeight / 2
-                            );
 
                             BodyCache.Update(
-                                world.BodiesNear(playerViewport).ToList(),
+                                world.BodiesNear(followBody.Position, size).ToList(),
                                 world.Time
                             );
 

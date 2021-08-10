@@ -87,7 +87,7 @@
                 vel += new Vector2(MathF.Cos(angle), MathF.Sin(angle));
             }
             var danger = false;
-            var bullets = World.Bodies
+            var bullets = World.Bodies.Values
                 .Where(b => b.Group?.GroupType == GroupTypes.VolleyBullet || b.Group?.GroupType == GroupTypes.VolleySeeker)
                 .Where(b => b.Group?.OwnerID != this.Fleet.ID)
                 .OrderBy(p => Vector2.Distance(p.Position, this.Fleet.FleetCenter))
