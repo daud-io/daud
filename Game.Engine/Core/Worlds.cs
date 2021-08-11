@@ -20,6 +20,7 @@
             {
                 Default = WorldDefault();
                 AddWorld("default", Default);
+                return;
                 AddWorld("duel", WorldDuel());
                 AddWorld("team", WorldTeam());
                 AddWorld("ctf", WorldCTF());
@@ -267,14 +268,13 @@
             return new World(null, GameConfiguration)
             {
                 Hook = hook,
-                NewFleetGenerator = delegate (Player p, string Color)
+                NewFleetGenerator = delegate (Player p)
                 {
-                    return new Fleet
+                    return new Fleet(p.World, p)
                     {
-                        Owner = p,
                         Caption = p.Name,
-                        Color = Color,
-                        Shark = Color == "red",
+                        Color = p.Color,
+                        Shark = p.Color == "red",
                     };
                 }
             };

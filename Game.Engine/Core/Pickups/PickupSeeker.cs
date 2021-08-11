@@ -5,7 +5,7 @@
 
     public class PickupSeeker : PickupBase
     {
-        public PickupSeeker()
+        public PickupSeeker(World world): base(world)
         {
             Size = 100;
             Sprite = Sprites.seeker_pickup;
@@ -13,7 +13,7 @@
 
         protected override void EquipFleet(Fleet fleet)
         {
-            fleet.PushStackWeapon(new FleetWeaponGeneric<ShipWeaponSeeker>() { IsOffense = true });
+            fleet.PushStackWeapon(new FleetWeaponGeneric<ShipWeaponSeeker>(fleet.World) { IsOffense = true });
         }
     }
 }

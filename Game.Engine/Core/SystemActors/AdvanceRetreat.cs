@@ -5,6 +5,10 @@ namespace Game.Engine.Core.SystemActors
 {
     public class AdvanceRetreat : SystemActorBase
     {
+        public AdvanceRetreat(World world) : base(world)
+        {
+        }
+
         protected override void CycleThink()
         {
             var livePlayers = Player.GetWorldPlayers(World).Where(p => p.IsAlive).ToList();

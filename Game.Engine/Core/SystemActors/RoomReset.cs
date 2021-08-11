@@ -1,10 +1,14 @@
-﻿using System.Linq;
-
-namespace Game.Engine.Core.SystemActors
+﻿namespace Game.Engine.Core.SystemActors
 {
+    using System.Linq;
+
     public class RoomReset : SystemActorBase
     {
         public bool Reset { get; set; } = false;
+
+        public RoomReset(World world): base(world)
+        {
+        }
 
         protected override void CycleThink()
         {

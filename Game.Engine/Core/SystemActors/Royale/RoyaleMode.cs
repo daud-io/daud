@@ -31,54 +31,9 @@
         private int StartingArenaSize;
         private StartingBlock StartingBlock;
 
-        public RoyaleMode()
+        public RoyaleMode(World world): base(world)
         {
             CycleMS = 0;
-        }
-
-        public override void Init(World world)
-        {
-            base.Init(world);
-        }
-
-        public override void CreateDestroy()
-        {
-            base.CreateDestroy();
-
-            if (World.Hook.RoyaleMode && !Initialized)
-            {
-                // setup
-                OriginalWorldsizeDeltaPerPlayer = World.Hook.WorldSizeDeltaPerPlayer;
-                OriginalWorldResizeSpeed = World.Hook.WorldResizeSpeed;
-                OriginalFishesMultiplier = World.Hook.FishesMultiplier;
-                World.Hook.WorldMinPlayersToResize = 0;
-                World.Hook.WorldResizeEnabled = true;
-
-                World.Hook.PointsPerKillFleet = 0;
-                World.Hook.PointsPerKillShip = 0;
-                World.Hook.PointsPerKillFleetStep = 0;
-                World.Hook.PointsPerUniverseDeath = 0;
-                World.Hook.PointsMultiplierDeath = 1.0f;
-                World.Hook.ComboPointsStep = 0;
-
-                StartingBlock = new StartingBlock
-                {
-                    ParentGame = this
-                };
-                StartingBlock.Init(World);
-                ResetGame();
-                Initialized = true;
-            }
-
-            if (!World.Hook.RoyaleMode && Initialized)
-            {
-                // tear down
-
-                StartingBlock.Destroy();
-                World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
-                World.CanSpawn = true;
-                Initialized = false;
-            }
         }
 
         public void ResetGame()
@@ -202,6 +157,40 @@
 
             if (playerCount > 0)
                 GameEmptySince = 0;
+
+            if (World.Hook.RoyaleMode && !Initialized)
+            {
+                // setup
+                OriginalWorldsizeDeltaPerPlayer = World.Hook.WorldSizeDeltaPerPlayer;
+                OriginalWorldResizeSpeed = World.Hook.WorldResizeSpeed;
+                OriginalFishesMultiplier = World.Hook.FishesMultiplier;
+                World.Hook.WorldMinPlayersToResize = 0;
+                World.Hook.WorldResizeEnabled = true;
+
+                World.Hook.PointsPerKillFleet = 0;
+                World.Hook.PointsPerKillShip = 0;
+                World.Hook.PointsPerKillFleetStep = 0;
+                World.Hook.PointsPerUniverseDeath = 0;
+                World.Hook.PointsMultiplierDeath = 1.0f;
+                World.Hook.ComboPointsStep = 0;
+
+                StartingBlock = new StartingBlock(World)
+                {
+                    ParentGame = this
+                };
+                ResetGame();
+                Initialized = true;
+            }
+
+            if (!World.Hook.RoyaleMode && Initialized)
+            {
+                // tear down
+
+                StartingBlock.Destroy();
+                World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
+                World.CanSpawn = true;
+                Initialized = false;
+            }                
         }
     }
 }

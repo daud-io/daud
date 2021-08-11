@@ -1,11 +1,10 @@
 ﻿namespace Game.Engine.Core.Weapons
 {
-    using Game.Engine.Core.Maps;
     using System;
     using System.Linq;
     using System.Numerics;
 
-    public class ShipWeaponBullet : ActorBody, IShipWeapon
+    public class ShipWeaponBullet : Body, IShipWeapon
     {
         public Fleet OwnedByFleet { get; set; }
         public long TimeDeath { get; set; }
@@ -18,14 +17,12 @@
         public bool Consumed { get; set; }
         private Vector2 Reference = Vector2.Zero;
 
-        public ShipWeaponBullet()
+        public ShipWeaponBullet(World world): base(world)
         {
-            CausesCollisions = true;
         }
 
-        public override void Think()
+        protected override void Update()
         {
-            base.Think();
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount * 10;
 
@@ -34,9 +31,8 @@
             else
                 LinearVelocity = thrust;
 
-
             if (World.Time >= TimeDeath)
-                PendingDestruction = true;
+                Die();
         }
 
         protected override void Collided(ICollide otherObject)
@@ -47,7 +43,6 @@
         public virtual void FireFrom(Ship ship, ActorGroup group)
         {
             var r = new Random();
-            World = ship.World;
             var bulletOrigin = ship.Position
                 + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
 
@@ -92,21 +87,9 @@
             this.Group = group;
         }
 
-        public virtual void FireFrom(TileBase tile, float angle)
+        bool IShipWeapon.Active()
         {
-            World = tile.World;
-
-            this.TimeDeath = World.Time + (long)(World.Hook.BulletLife);
-            this.Position = tile.Position;
-            this.Angle = angle;
-            this.Sprite = API.Common.Sprites.bullet;
-            this.Size = 20;
-            this.Color = "green";
-            this.ThrustAmount = 1 * World.Hook.ShotThrustM + World.Hook.ShotThrustB;
-            this.TimeBirth = World.Time;
-            this.Group = tile.WorldMap.WeaponGroup;
+            return this.Exists;
         }
-
-        public bool Active => this.Exists;
     }
 }

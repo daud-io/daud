@@ -4,10 +4,16 @@
 
     public class Group
     {
+        public World World;
         public uint ID { get; set; }
 
         public bool Exists { get; set; }
         public bool IsDirty { get; set; } = true;
+
+        public Group(World world)
+        {
+            this.World = world;
+        }
 
         private GroupTypes _groupType = GroupTypes.Obstacle;
         public virtual GroupTypes GroupType

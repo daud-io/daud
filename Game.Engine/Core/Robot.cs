@@ -19,19 +19,7 @@
         public Robot() : base()
         {
         }
-
-        protected override Fleet CreateFleet(string color)
-        {
-            return new RobotFleet
-            {
-                Owner = this,
-                Caption = this.Name,
-                Color = color,
-                ShipSize = ShipSize
-            };
-        }
-
-
+        
         public override void CreateDestroy()
         {
             base.CreateDestroy();

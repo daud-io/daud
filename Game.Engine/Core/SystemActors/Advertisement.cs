@@ -6,6 +6,12 @@
     {
         private uint EmptySince = 0;
 
+        public Advertisement(World world) : base(world)
+        {
+
+        }
+
+
         protected override void CycleThink()
         {
             World.AdvertisedPlayerCount = Player.GetWorldPlayers(World)
@@ -19,11 +25,7 @@
 
             if (World.AdvertisedPlayerCount > 0)
                 EmptySince = World.Time;
-        }
 
-        protected override void CycleCreateDestroy()
-        {
-            base.CycleCreateDestroy();
             if (World.Hook.AutoRemoveOnEmptyThreshold > 0
                 && EmptySince > 0
                 && (World.Time - EmptySince) > World.Hook.AutoRemoveOnEmptyThreshold

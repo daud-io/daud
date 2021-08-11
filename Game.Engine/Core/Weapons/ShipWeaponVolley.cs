@@ -6,7 +6,7 @@
     using System.Linq;
 
     public class ShipWeaponVolley<T> : ActorGroup
-        where T : IShipWeapon, new()
+        where T : IShipWeapon
     {
         public Fleet FiredFrom { get; set; }
         public List<IShipWeapon> NewWeapons { get; set; } = new List<IShipWeapon>();
@@ -14,27 +14,29 @@
         public List<Tuple<Ship, long>> FiringSequence = new List<Tuple<Ship, long>>();
         private Action<IShipWeapon> Configure;
 
+        public ShipWeaponVolley(World world): base(world)
+        {
+
+        }
+
         public static void FireFrom(Fleet fleet, Action<IShipWeapon> configure = null)
         {
-            var volley = new ShipWeaponVolley<T>
-            {
-                Configure = configure,
-                FiredFrom = fleet,
-                GroupType = GroupTypes.VolleyBullet,
-                OwnerID = fleet.ID,
-                ZIndex = 150,
-                Color = fleet.Color
-            };
+            var volley = Activator.CreateInstance(typeof(ShipWeaponVolley<T>), fleet.World) as ShipWeaponVolley<T>;
+            volley.Configure = configure;
+            volley.FiredFrom = fleet;
+            volley.GroupType = GroupTypes.VolleyBullet;
+            volley.OwnerID = fleet.ID;
+            volley.ZIndex = 150;
+            volley.Color = fleet.Color;
 
             for (var i = 0; i < fleet.Ships.Count; i++)
+
                 volley.FiringSequence.Add(
                     new Tuple<Ship, long>(
                         fleet.Ships[i],
                         fleet.World.Time + i * fleet.World.Hook.FiringSequenceDelay
                     )
                 );
-
-            volley.Init(fleet.World);
         }
 
         public override void Think()
@@ -56,7 +58,7 @@
                     && fireBy > 0)
                 {
 
-                    var shipWeapon = new T();
+                    var shipWeapon = Activator.CreateInstance(typeof(T), World) as IShipWeapon;
                     shipWeapon.FireFrom(ship, this);
                     Configure?.Invoke(shipWeapon);
 
@@ -72,16 +74,9 @@
                 this.PendingDestruction
                 || (
                     !NewWeapons.Any()
-                    && !AllWeapons.Any(b => b.Active)
+                    && !AllWeapons.Any(b => b.Active())
                 );
-        }
 
-        public override void CreateDestroy()
-        {
-            base.CreateDestroy();
-
-            foreach (var bullet in NewWeapons)
-                bullet.Init(World);
 
             AllWeapons.AddRange(NewWeapons);
             NewWeapons.Clear();

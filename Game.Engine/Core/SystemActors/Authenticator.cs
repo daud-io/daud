@@ -8,7 +8,8 @@
 
     public class Authenticator : SystemActorBase
     {
-        public Authenticator()
+
+        public Authenticator(World world) : base(world)
         {
             this.CycleMS = 0;
         }

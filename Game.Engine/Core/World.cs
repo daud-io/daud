@@ -51,21 +51,23 @@
 
         public Func<Fleet, Vector2> FleetSpawnPositionGenerator { get; set; }
         public Func<Leaderboard> LeaderboardGenerator { get; set; }
-        public Func<Player, string, Fleet> NewFleetGenerator { get; set; }
+        public Func<Player, Fleet> NewFleetGenerator { get; set; }
 
         public GameConfiguration GameConfiguration { get; set; }
 
         public ScoringBase Scoring = new DefaultScoring();
 
-        private uint LastObjectID = 0;
-        public uint GenerateObjectID() { lock (this) return ++LastObjectID; }
+        private uint LastObjectID = 1;
+
+        public uint GenerateObjectID() { 
+            return Interlocked.Increment(ref LastObjectID);
+        }
 
         public bool CanSpawn { get => Hook.CanSpawn; set => Hook.CanSpawn = value; }
         public string CanSpawnReason { get; set; }
         private BufferPool bufferPool = new BufferPool();
-        private Simulation Simulation = null;
+        public Simulation Simulation = null;
         
-
         public World(Hook hook, GameConfiguration gameConfiguration)
         {
             this.GameConfiguration = gameConfiguration;
@@ -77,8 +79,20 @@
 
             this.Simulation = Simulation.Create(bufferPool, new NarrowPhaseCallbacks(), new PoseIntegratorCallbacks(new Vector3(0, -10, 0)), new PositionLastTimestepper());
             this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
+            NewFleetGenerator = this.DefaultNewFleetGenerator;
+
             InitializeSystemActors();
             InitializeStepTimer();
+        }
+
+        private Fleet DefaultNewFleetGenerator(Player player)
+        {
+            return new Fleet(this, player)
+            {
+                Owner = player,
+                Caption = player.Name,
+                Color = player.Color
+            };
         }
 
         // main entry to the world. This will be called every Hook.StepSize milliseconds
@@ -90,19 +104,17 @@
                 // calculate the new game time
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
 
-
-                this.Simulation.Timestep(1000f/Hook.StepTime);
-
-                // the dynamic index is rebuilt each step
-                ReadSimulationState();
+                lock(this)
+                {
+                    // still not sure about this step time.
+                    this.Simulation.Timestep(1000f/25);
+                    
+                    // Ensure that every body as a new handle... else .. <cringe>
+                    UpdateBodyReferences();
+                }
 
                 // every registered actor gets a chance to think
                 ActorsThink();
-                // every registered actor gets a chance to create and destroy new bodies
-                ActorsCreateDestroy();
-
-                // any bodies that were dirtied, need to be updated
-                UpdateDirtyBodies();
 
                 CheckTimings(start);
             }
@@ -115,11 +127,9 @@
             InitializeSystemActor<LeaderboardActor>();
             InitializeSystemActor<Authenticator>();
             InitializeSystemActor<Advertisement>();
-            InitializeSystemActor<RobotTender>();
             InitializeSystemActor<ObstacleTender>();
             InitializeSystemActor<CaptureTheFlag>();
             InitializeSystemActor<Sumo>();
-            InitializeSystemActor<MapActor>();
             InitializeSystemActor<TeamColors>();
             InitializeSystemActor<RoomReset>();
             InitializeSystemActor<RoyaleMode>();
@@ -131,11 +141,10 @@
             return this.Actors.OfType<T>().FirstOrDefault();
         }
 
-        private void InitializeSystemActor<T>(T instance = null)
-            where T : class, IActor, new()
+        private void InitializeSystemActor<T>()
+            where T : class, IActor
         {
-            var actor = instance ?? new T();
-            actor.Init(this);
+            Activator.CreateInstance(typeof(T), this);
         }
 
         private void CheckTimings(DateTime start)
@@ -152,38 +161,18 @@
             }
         }
 
-        private void UpdateDirtyBodies()
-        {
-            foreach (var body in Bodies.Values)
-            {
-                var reference = Simulation.Bodies.GetBodyReference(body.BodyHandle);
-                body.UpdateBodyReference(reference, Time);
-            }
-        }
-
-        private void ActorsCreateDestroy()
-        {
-            foreach (var actor in Actors.ToList())
-                actor.CreateDestroy();
-        }
-
         private void ActorsThink()
         {
-            foreach (var actor in Actors)
-            {
-                int actors = Actors.Count();
+            foreach (var actor in Actors.ToList())
                 actor.Think();
-                if (Actors.Count() != actors)
-                    throw new Exception($"Collection modified in think time by {actor.GetType().Name}");
-            }
         }
 
-        private void ReadSimulationState()
+        private void UpdateBodyReferences()
         {
             foreach (var body in Bodies.Values)
             {
                 var reference = Simulation.Bodies.GetBodyReference(body.BodyHandle);
-                body.UpdateFromBodyReference(reference, Time);
+                body.UpdateBodyReference(reference);
             }
         }
 
@@ -221,27 +210,11 @@
 
         public void BodyAdd(Body body)
         {
-
-            int size = Math.Min(Math.Max(body.Size, 1), 1000);
-            var capsule = new Capsule(size, 5000);
-            var mass = 4/3 * MathF.PI * (size ^ 3) * 0.25f;
-            capsule.ComputeInertia(mass, out var capsuleIntertia);
-            capsuleIntertia.InverseInertiaTensor.XX = 0;
-            capsuleIntertia.InverseInertiaTensor.YY = 0;
-
-            body.BodyHandle = Simulation.Bodies.Add(BodyDescription.CreateDynamic(
-                new Vector3(body.Position.X, 0, body.Position.Y), 
-                capsuleIntertia,
-                new CollidableDescription(this.Simulation.Shapes.Add(capsule), 0.1f), 
-                new BodyActivityDescription(0.01f)
-            ));
-
             Bodies.Add(body.BodyHandle, body);
         }
 
         public void BodyRemove(Body body)
         {
-            Simulation.Bodies.Remove(body.BodyHandle);
             Bodies.Remove(body.BodyHandle);
         }
 

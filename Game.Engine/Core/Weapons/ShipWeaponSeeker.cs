@@ -6,8 +6,11 @@ namespace Game.Engine.Core.Weapons
 {
     public class ShipWeaponSeeker : ShipWeaponBullet, ICollide
     {
-
         public Ship DeclaredTarget { get; private set; } = null;
+        public ShipWeaponSeeker(World world): base(world)
+        {
+            
+        }
 
         public override void FireFrom(Ship ship, ActorGroup group)
         {
@@ -20,11 +23,10 @@ namespace Game.Engine.Core.Weapons
 
         }
 
-        public override void Think()
+        protected override void Update()
         {
+            base.Update();
             var originalMomentum = LinearVelocity;
-
-            base.Think();
 
             Ship target = null;
             if (World.Time > TimeBirth + World.Hook.SeekerCycle)

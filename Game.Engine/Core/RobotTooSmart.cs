@@ -21,28 +21,6 @@
         {
         }
 
-        protected override Fleet CreateFleet(string color)
-        {
-            return new RobotFleet
-            {
-                Owner = this,
-                Caption = this.Name,
-                Color = color,
-                ShipSize = ShipSize
-            };
-        }
-
-
-        public override void CreateDestroy()
-        {
-            base.CreateDestroy();
-
-            if (!IsAlive)
-            {
-                if (AutoSpawn && World.Time > SpawnTimeAfter)
-                    this.Spawn(Name, ShipSprite, "green", "");
-            }
-        }
 
         protected override void OnDeath(Player player = null)
         {
@@ -59,8 +37,14 @@
 
         public override void Think()
         {
+
             if (!IsAlive)
+            {
+                if (AutoSpawn && World.Time > SpawnTimeAfter)
+                    this.Spawn(Name, ShipSprite, "green", "");
+
                 return;
+            }
 
             this.ControlInput.ShootRequested = World.Time > this.Fleet.ShootCooldownTime;
 
@@ -145,6 +129,7 @@
 
             base.Think();
         }
+        
         public float WhichSide(Vector2 a, Vector2 b, Vector2 c) {
             return ((b.X - a.X)*(c.Y - a.Y) - (b.Y - a.Y)*(c.X - a.X));
         }

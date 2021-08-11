@@ -3,7 +3,7 @@
     using Game.API.Common;
     using System.Numerics;
 
-    public class Base : ActorBody, ICollide
+    public class Base : Body, ICollide
     {
         private readonly Team Team;
         public Flag Flag { get; set; }
@@ -12,7 +12,7 @@
         private readonly CaptureTheFlag CaptureTheFlag = null;
         public ActorGroup BaseGroup;
 
-        public Base(CaptureTheFlag captureTheFlag, Vector2 position, Team team)
+        public Base(World world, CaptureTheFlag captureTheFlag, Vector2 position, Team team): base(world)
         {
             this.Team = team;
             this.Position = position;
@@ -20,19 +20,14 @@
             this.AngularVelocity = SPEED_STOPPED;
             this.Size = 200;
             this.CaptureTheFlag = captureTheFlag;
-            CausesCollisions = true;
 
-            this.BaseGroup = new ActorGroup();
+            this.BaseGroup = new ActorGroup(world);
             BaseGroup.ZIndex = 50;
 
-            BaseGroup.Init(captureTheFlag.World);
             this.Group = BaseGroup;
         }
-
-        public override void Think()
+        protected override void Update()
         {
-            base.Think();
-
             this.AngularVelocity = FlagIsHome()
                 ? SPEED_SPINNING
                 : SPEED_STOPPED;

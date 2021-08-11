@@ -104,21 +104,6 @@ bus.on("dead", () => {
     isSpectating = true;
 
     Events.Death((gameTime - aliveSince) / 1000);
-
-    let countDown = 3;
-    const updateButton = () => {
-        if (countDown > 0) {
-            buttonSpectate.value = button.value = `${countDown--} ...`;
-            buttonSpectate.disabled = button.disabled = true;
-        } else {
-            buttonSpectate.value = button.value = `Launch!`;
-            buttonSpectate.disabled = button.disabled = false;
-            clearInterval(interval);
-        }
-    };
-    const interval = setInterval(updateButton, 1000);
-
-    updateButton();
 });
 
 function onView(newView: NetWorldView) {

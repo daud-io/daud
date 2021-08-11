@@ -5,7 +5,7 @@
 
     public class PickupRobotGun : PickupBase
     {
-        public PickupRobotGun()
+        public PickupRobotGun(World world): base(world)
         {
             Size = 80;
             Sprite = Sprites.ship0;

@@ -103,10 +103,9 @@
 
                 IsAlive = true;
 
-                Fleet = CreateFleet(Color);
+                Fleet = World.NewFleetGenerator(this);
 
                 Fleet.SpawnLocation = SpawnLocation;
-                Fleet.Init(World);
 
                 RemoteEventLog.SendEvent(new AuditEventSpawn
                 {
@@ -118,10 +117,6 @@
                     Fleet.BaseWeapon = new FleetWeaponRobot();
                     IsGearhead = true;
                 }
-
-                if (SpawnMomentum != null)
-                    foreach (var ship in Fleet.NewShips)
-                        ship.LinearVelocity = SpawnMomentum.Value;
 
                 if (!DisableSpawnInvulnerability)
                     SetInvulnerability(SpawnInvulnerableTime, true);
@@ -223,6 +218,8 @@
 
         public virtual void Think()
         {
+            CreateDestroy();
+
             if (!IsAlive)
                 return;
 
@@ -281,26 +278,6 @@
                         ship.ShieldStrength = 0;
                 }
             }
-        }
-
-        protected virtual Fleet CreateFleet(string color)
-        {
-            if (UserColor == "monster")
-                return new MonsterFleet
-                {
-                    Owner = this,
-                    Caption = this.Name,
-                    Color = color
-                };
-            else if (World.NewFleetGenerator != null)
-                return World.NewFleetGenerator(this, color);
-            else
-                return new Fleet
-                {
-                    Owner = this,
-                    Caption = this.Name,
-                    Color = color
-                };
         }
 
         public void Spawn(string name, Sprites sprite, string color, string token, string userColor = null)

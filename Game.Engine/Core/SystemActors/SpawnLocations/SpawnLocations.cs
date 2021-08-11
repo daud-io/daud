@@ -20,7 +20,7 @@
                 SpawnLocationModeMap.Remove(modeName);
         }
 
-        public SpawnLocationsActor()
+        public SpawnLocationsActor(World world): base(world)
         {
             GeneratorAdd("Corners", Corners.GeneratorCorners);
             GeneratorAdd("Static", Static.GeneratorStatic);

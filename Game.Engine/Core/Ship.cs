@@ -6,15 +6,19 @@
     using System;
     using System.Numerics;
 
-    public class Ship : ActorBody, ICollide
+    public class Ship : Body, ICollide
     {
-        public virtual int HealthHitCost { get => World.Hook.HealthHitCost; }
-        public virtual int MaxHealth { get => World.Hook.MaxHealth; }
-        public virtual float HealthRegenerationPerFrame { get => World.Hook.HealthRegenerationPerFrame; }
+        public Fleet Fleet { 
+            get 
+            {
+                return this.Group as Fleet;
+            }
+            set
+            {
+                this.Group = value;
+            }
+        }
 
-        public Fleet Fleet { get; set; }
-
-        public float Health { get; set; }
         public int SizeMinimum { get; set; }
         public int SizeMaximum { get; set; }
 
@@ -28,12 +32,10 @@
         protected bool IsOOB = false;
         public long TimeDeath = 0;
 
-        public float? ThrustOverride { get; set; } = null;
-        public float? SteeringOverride { get; set; } = null;
-
-        public Ship()
+        public Ship(World world): base(world)
         {
             Size = 70;
+            Drag = World.Hook.Drag;
         }
 
         public int ShieldStrength { get; set; }
@@ -58,16 +60,6 @@
             }
         }
 
-        public override void Init(World world)
-        {
-            base.Init(world);
-
-            Health = MaxHealth;
-            Drag = World.Hook.Drag;
-
-            this.Group = this.Fleet;
-        }
-
         public override void Destroy()
         {
             if (!(this is Fish)
@@ -87,8 +79,7 @@
                 World.Scoring.ShipDied(player, this.Fleet?.Owner, this);
 
             fleet?.KilledShip(this);
-
-            PendingDestruction = true;
+            Die();
 
             if (this.Fleet != null)
                 this.Fleet.ShipDeath(player, this, bullet);
@@ -121,12 +112,7 @@
                     takesDamage = !this.Fleet?.Owner?.IsInvulnerable ?? true;
 
                 if (takesDamage)
-                {
-                    Health -= HealthHitCost;
-
-                    if (Health <= 0)
-                        Die(player, fleet, bullet);
-                }
+                    Die(player, fleet, bullet);
             }
         }
 
@@ -173,9 +159,8 @@
             return false;
         }
 
-        public override void Think()
+        protected override void Update()
         {
-            base.Think();
 
             if (Abandoned && TimeDeath == 0)
                 TimeDeath = World.Time + 20000;
@@ -183,19 +168,12 @@
             if (TimeDeath > 0 && World.Time > TimeDeath)
                 Die(null, null, null);
 
-            Health = Math.Max(Math.Min(Health, MaxHealth), 0) + HealthRegenerationPerFrame;
-            //Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum - SizeMinimum));
-
             DoOutOfBoundsRules();
 
-            if (SteeringOverride != null)
-                Angle = SteeringOverride.Value;
-
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * (ThrustOverride ?? ThrustAmount);
+            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
 
             LinearVelocity = (LinearVelocity + thrust) * Drag;
         }
-
 
         private void DoOutOfBoundsRules()
         {

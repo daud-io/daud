@@ -1,8 +1,10 @@
 ﻿namespace Game.Engine.Networking
 {
+    using Game.API.Common;
     using Game.Engine.Core;
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Numerics;
 
@@ -19,7 +21,8 @@
 
             // project the current bodies and calculate errors
             foreach (var bucket in Bodies.Values)
-                bucket.Project(time);
+                if(!bucket.Stale)
+                    bucket.Project(time);
 
             foreach (var bucket in Groups.Values)
                 bucket.CalculateError();
@@ -79,16 +82,19 @@
 
             foreach (var obj in bodies)
             {
+                if (!obj.Exists)
+                    continue;
+
                 if (Bodies.ContainsKey(obj.ID))
                 {
                     Bodies[obj.ID].Stale = false;
-                    Bodies[obj.ID].BodyUpdated = obj;
+                    Debug.Assert(Bodies[obj.ID].Body == obj);
                 }
                 else
                 {
                     var bucket = new BucketBody
                     {
-                        BodyUpdated = obj,
+                        Body = obj,
                         Stale = false
                     };
                     Bodies.Add(obj.ID, bucket);
@@ -113,7 +119,7 @@
         {
             var stale = Bodies.Values.Where(b => b.Stale).ToList();
             foreach (var b in stale)
-                Bodies.Remove(b.BodyUpdated.ID);
+                Bodies.Remove(b.Body.ID);
 
             return stale;
         }
@@ -152,8 +158,17 @@
 
         public class BucketBody
         {
-            public Body BodyUpdated { get; set; }
-            public Body BodyClient { get; set; }
+            public Body Body { get; set; }
+
+            public Vector2 Position { get; set;}
+            public Vector2 LinearVelocity { get; set;}
+            public float AngularVelocity { get; set;}
+            public float Angle { get; set;}
+            public int Size = 0;
+            public byte Mode = 0;
+            public Sprites Sprite;
+
+            public uint ClientUpdatedTime { get; set;}
 
             public float Error { get; set; }
             public bool Stale { get; set; }
@@ -166,25 +181,36 @@
             private const float WEIGHT_MODE = 1;
             private const float WEIGHT_MISSING = float.MaxValue;
 
+            public void UpdateSent(uint time)
+            {
+                ClientUpdatedTime = time;
+                Position = Body.Position;
+                LinearVelocity = Body.LinearVelocity;
+                AngularVelocity = Body.AngularVelocity;
+                Angle = Body.Angle;
+                Size = Body.Size;
+                Mode = Body.Mode;
+                Sprite = Body.Sprite;
+            }
+
             public void Project(uint time)
             {
-                if (BodyClient != null)
+                if (ClientUpdatedTime != 0)
                 {
-                    if (BodyClient.DefinitionTime == BodyUpdated.DefinitionTime)
-                        Error = 0;
-                    else
-                    {
-                        BodyClient.Project(time);
-                        var distance = Vector2.Distance(BodyClient.Position, BodyUpdated.Position);
-                        Error =
-                            distance > DISTANCE_THRESHOLD
-                                ? WEIGHT_DISTANCE * distance
-                                : 0
-                            + WEIGHT_ANGLE * Math.Abs(BodyClient.Angle - BodyUpdated.Angle)
-                            + WEIGHT_SIZE * Math.Abs(BodyClient.Size - BodyUpdated.Size)
-                            + WEIGHT_MODE * Math.Abs(BodyClient.Mode - BodyUpdated.Mode)
-                            + WEIGHT_SPRITE * (BodyClient.Sprite != BodyUpdated.Sprite ? 1 : 0);
-                    }
+                    var timeDelta = (time - this.ClientUpdatedTime);
+
+                    var position = Vector2.Add(Position, Vector2.Multiply(LinearVelocity, timeDelta));
+                    var angle = Angle + timeDelta * AngularVelocity;
+
+                    var distance = Vector2.Distance(position, Body.Position);
+                    Error =
+                        distance > DISTANCE_THRESHOLD
+                            ? WEIGHT_DISTANCE * distance
+                            : 0
+                        + WEIGHT_ANGLE * Math.Abs(angle - Body.Angle)
+                        + WEIGHT_SIZE * Math.Abs(Size - Body.Size)
+                        + WEIGHT_MODE * Math.Abs(Mode - Body.Mode)
+                        + WEIGHT_SPRITE * (Sprite != Body.Sprite ? 1 : 0);
                 }
                 else
                     Error = WEIGHT_MISSING;

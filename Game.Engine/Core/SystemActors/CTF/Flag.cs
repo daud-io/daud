@@ -3,42 +3,35 @@
     using Game.API.Common;
     using System.Numerics;
 
-    public class Flag : ActorBody
+    public class Flag : Body
     {
         public readonly Team Team;
         private readonly Base Base;
 
-        private ActorGroup FlagGroup = new ActorGroup();
+        private ActorGroup FlagGroup;
         public Fleet CarriedBy = null;
 
-        public Flag(Sprites flagSprite, Team team, Base b)
+        public Flag(World world, Sprites flagSprite, Team team, Base b): base(world)
         {
             Size = 260;
             Team = team;
             Base = b;
             Sprite = flagSprite;
-            CausesCollisions = true;
-        }
 
-        public override void Init(World world)
-        {
-            base.Init(world);
-
-            FlagGroup.Init(world);
+            FlagGroup = new ActorGroup(world);
             FlagGroup.ZIndex = 200;
             this.Group = FlagGroup;
             Position = world.RandomPosition();
-        }
 
+        }
         public override void Destroy()
         {
             base.Destroy();
             FlagGroup.Destroy();
         }
 
-        public override void Think()
+        protected override void Update()
         {
-            base.Think();
 
             if (!(CarriedBy?.PendingDestruction ?? true))
             {

@@ -4,7 +4,7 @@
 
     public class WorldResizer : SystemActorBase
     {
-        public WorldResizer()
+        public WorldResizer(World world): base(world)
         {
             CycleMS = 0;
         }

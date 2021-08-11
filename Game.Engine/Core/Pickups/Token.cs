@@ -5,9 +5,9 @@
     using System;
     using System.Numerics;
 
-    public class Token : ActorBody
+    public class Token : Body
     {
-        private ActorGroup TokenGroup = new ActorGroup();
+        private ActorGroup TokenGroup;
         public Fleet CarriedBy = null;
 
         public bool ExpiringSoon = false;
@@ -23,21 +23,14 @@
             expiring = 2
         }
 
-        public Token()
+        public Token(World world): base(world)
         {
             Size = 200;
 
             Sprite = Sprites.haste_powerup;
-            CausesCollisions = true;
-
             Mode = 0;
-        }
 
-        public override void Init(World world)
-        {
-            base.Init(world);
-
-            TokenGroup.Init(world);
+            TokenGroup = new ActorGroup(world);
             TokenGroup.ZIndex = 300;
             TokenGroup.GroupType = GroupTypes.Token;
             this.Group = TokenGroup;
@@ -51,9 +44,8 @@
             TokenGroup.Destroy();
         }
 
-        public override void Think()
+        protected override void Update()
         {
-            base.Think();
 
             bool carried = 
                     CarriedBy != null

@@ -17,14 +17,9 @@
 
         public long NextAnnounceTime { get; set; } = 0;
 
-        public CaptureTheFlag()
+        public CaptureTheFlag(World world) : base(world)
         {
             CycleMS = 0;
-        }
-
-        public override void Init(World world)
-        {
-            base.Init(world);
             World.GetActor<SpawnLocationsActor>().GeneratorAdd("CTF", this.FleetSpawnPosition);
         }
 
@@ -121,57 +116,16 @@
 
             Teams.Add(team);
 
-            var b = new Base(this, basePosition, team);
-            var flag = new Flag(flagSprite, team, b);
+            var b = new Base(World, this, basePosition, team);
+            var flag = new Flag(World, flagSprite, team, b);
             b.Flag = flag;
             team.Flag = flag;
             team.Base = b;
 
-            flag.Init(World);
-            b.Init(World);
             Flags.Add(flag);
             Bases.Add(b);
 
-
             flag.ReturnToBase();
-        }
-
-        public override void CreateDestroy()
-        {
-            base.CreateDestroy();
-
-            if (World.Hook.CTFMode)
-            {
-                World.Hook.TeamMode = true;
-            }
-
-            if (World.Hook.CTFMode && Flags.Count == 0)
-            {
-                CreateTeam("cyan", Sprites.ctf_flag_blue, new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
-                CreateTeam("red", Sprites.ctf_flag_red, new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
-                World.FleetSpawnPositionGenerator = this.FleetSpawnPosition;
-                World.LeaderboardGenerator = this.LeaderboardGenerator;
-            }
-
-            if (!World.Hook.CTFMode && Flags.Count > 0)
-            {
-                foreach (var flag in Flags)
-                {
-                    flag.Destroy();
-                }
-
-                foreach (var b in Bases)
-                {
-                    b.Destroy();
-                }
-
-                Flags.Clear();
-                Bases.Clear();
-
-                World.FleetSpawnPositionGenerator = null;
-                World.LeaderboardGenerator = null;
-            }
-
         }
 
         public void TeamScored(Team team)
@@ -229,6 +183,39 @@
 
             if (playerCount > 0)
                 GameEmptySince = 0;
+
+
+            if (World.Hook.CTFMode)
+            {
+                World.Hook.TeamMode = true;
+            }
+
+            if (World.Hook.CTFMode && Flags.Count == 0)
+            {
+                CreateTeam("cyan", Sprites.ctf_flag_blue, new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
+                CreateTeam("red", Sprites.ctf_flag_red, new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
+                World.FleetSpawnPositionGenerator = this.FleetSpawnPosition;
+                World.LeaderboardGenerator = this.LeaderboardGenerator;
+            }
+
+            if (!World.Hook.CTFMode && Flags.Count > 0)
+            {
+                foreach (var flag in Flags)
+                {
+                    flag.Destroy();
+                }
+
+                foreach (var b in Bases)
+                {
+                    b.Destroy();
+                }
+
+                Flags.Clear();
+                Bases.Clear();
+
+                World.FleetSpawnPositionGenerator = null;
+                World.LeaderboardGenerator = null;
+            }
         }
     }
 }

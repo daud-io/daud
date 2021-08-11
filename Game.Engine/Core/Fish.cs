@@ -1,7 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.API.Common;
-    using Game.API.Common.Models;
     using Game.Engine.Core.Steering;
     using System;
     using System.Linq;
@@ -11,17 +10,11 @@
     {
         private long SleepUntil = 0;
 
-        public Fish()
+        public Fish(World world) : base(world)
         {
             Size = 70;
             Sprite = Sprites.fish;
-        }
-
-        public override void Init(World world)
-        {
-            World = world;
             Randomize();
-            base.Init(world);
         }
 
         public void Randomize()
@@ -32,12 +25,12 @@
             ThrustAmount = World.Hook.FishThrust;
         }
 
-        public override void Think()
+        protected override void Update()
         {
             if (SleepUntil < World.Time)
             {
+                base.Update();
                 Flock();
-                base.Think();
                 SleepUntil = World.Time + World.Hook.FishCycle;
             }
         }
@@ -72,6 +65,12 @@
                 + oobVector;
 
             Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+        }
+
+        public override void Destroy()
+        {
+            Boom.FromShip(this);
+            base.Destroy();
         }
     }
 }

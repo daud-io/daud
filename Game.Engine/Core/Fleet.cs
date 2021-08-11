@@ -39,7 +39,6 @@
         public Vector2 AimTarget { get; set; }
 
         public List<Ship> Ships { get; set; } = new List<Ship>();
-        public List<Ship> NewShips { get; set; } = new List<Ship>();
 
         public List<ShipWeaponBullet> NewBullets { get; set; } = new List<ShipWeaponBullet>();
 
@@ -89,6 +88,24 @@
             }
         }
 
+        public Fleet(World world, Player owner):base(world)
+        {
+            this.Owner = owner;
+            this.GroupType = GroupTypes.Fleet;
+            this.ZIndex = 100;
+
+            this.BaseWeapon = new FleetWeaponGeneric<ShipWeaponBullet>(World);
+
+            if (SpawnLocation != null)
+                FleetCenter = SpawnLocation.Value;
+            else
+                FleetCenter = world.RandomSpawnPosition(this);
+
+            for (int i = 0; i < SpawnShipCount; i++)
+                this.AddShip();
+
+        }
+
         private void Die(Player player)
         {
             World.Scoring.FleetDied(player, Owner, this);
@@ -96,7 +113,6 @@
             this.Owner.Die(player);
 
             PendingDestruction = true;
-            NewShips.Clear();
         }
 
         public override void Destroy()
@@ -109,7 +125,7 @@
 
         public void ShipDeath(Player player, Ship ship, ShipWeaponBullet bullet)
         {
-            if (!Ships.Where(s => !s.PendingDestruction).Any())
+            if (!Ships.Where(s => !s.Exists).Any())
                 Die(player);
         }
 
@@ -137,7 +153,7 @@
                 random.Next(-20, 20)
             );
 
-            var ship = new Ship()
+            var ship = new Ship(World)
             {
                 Fleet = this,
                 Sprite = this.Owner.ShipSprite,
@@ -169,57 +185,7 @@
                 ship.Position = FleetCenter + offset;
             }
 
-            NewShips.Add(ship);
-        }
-
-        public override void Init(World world)
-        {
-            base.Init(world);
-            this.GroupType = GroupTypes.Fleet;
-            this.ZIndex = 100;
-
-            this.BaseWeapon = new FleetWeaponGeneric<ShipWeaponBullet>();
-
-            if (SpawnLocation != null)
-                FleetCenter = SpawnLocation.Value;
-            else
-                FleetCenter = world.RandomSpawnPosition(this);
-
-            for (int i = 0; i < SpawnShipCount; i++)
-                this.AddShip();
-        }
-
-        public override void CreateDestroy()
-        {
-            if (FiringWeapon)
-            {
-                var weapon = this.WeaponStack.Any()
-                    ? this.WeaponStack.Pop()
-                    : this.BaseWeapon;
-
-                weapon.FireFrom(this);
-                FiringWeapon = false;
-            }
-
-            while (EarnedShips.Any() && EarnedShips.Peek() < World.Time)
-            {
-                AddShip();
-                EarnedShips.Dequeue();
-            }
-
-            foreach (var ship in NewShips)
-            {
-                ship.Init(World);
-                Ships.Add(ship);
-            }
-            NewShips.Clear();
-
-            foreach (var bullet in NewBullets)
-                bullet.Init(World);
-
-            NewBullets.Clear();
-
-            base.CreateDestroy();
+            Ships.Add(ship);
         }
 
         public void Abandon()
@@ -254,6 +220,8 @@
 
         public override void Think()
         {
+            base.Think();
+            
             var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
             var isBoosting = World.Time < BoostUntil;
             var isBoostInitial = false;
@@ -342,10 +310,24 @@
                 Owner.Score++;
             }
 
-            if (!Ships.Where(s => !s.PendingDestruction).Any()
-                && !NewShips.Any())
+            if (!Ships.Where(s => s.Exists).Any())
                 Die(null);
-        }
 
+            if (FiringWeapon)
+            {
+                var weapon = this.WeaponStack.Any()
+                    ? this.WeaponStack.Pop()
+                    : this.BaseWeapon;
+
+                weapon.FireFrom(this);
+                FiringWeapon = false;
+            }
+
+            while (EarnedShips.Any() && EarnedShips.Peek() < World.Time)
+            {
+                AddShip();
+                EarnedShips.Dequeue();
+            }
+        }
     }
 }

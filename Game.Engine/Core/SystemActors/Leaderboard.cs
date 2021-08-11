@@ -8,6 +8,11 @@
 
     public class LeaderboardActor : SystemActorBase
     {
+        public LeaderboardActor(World world) : base(world)
+        {
+
+        }
+
         protected override void CycleThink()
         {
             CycleMS = World.Hook.LeaderboardRefresh;
@@ -22,7 +27,6 @@
                     World.Leaderboard = GenerateStandardLeaderboard();
             }
         }
-
         protected Leaderboard GenerateStandardLeaderboard()
         {
             var leaderboard = new Leaderboard

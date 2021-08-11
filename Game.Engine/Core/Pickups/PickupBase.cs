@@ -5,26 +5,19 @@
     using System.Linq;
     using System.Numerics;
 
-    public abstract class PickupBase : ActorBody
+    public abstract class PickupBase : Body
     {
         public long TimeDeath { get; set; }
         public Fleet ExcludedFleet { get; set; }
         public bool DontRandomize { get; set; }
         public float Drag { get; set; } = 1.0f;
 
-        public PickupBase()
+        public PickupBase(World world): base(world)
         {
             Size = 100;
             Sprite = Sprites.seeker_pickup;
-            CausesCollisions = true;
-        }
-
-        public override void Init(World world)
-        {
-            World = world;
             if (!DontRandomize)
                 Randomize();
-            base.Init(world);
         }
 
         public virtual void Randomize()
@@ -56,13 +49,11 @@
             base.Collided(otherObject);
         }
 
-        public override void Think()
+        protected override void Update()
         {
-            base.Think();
-
 
             if (TimeDeath > 0 && TimeDeath < World.Time)
-                this.PendingDestruction = true;
+                Die();
 
             if (World.DistanceOutOfBounds(Position) > 0)
             {
@@ -76,30 +67,24 @@
         }
 
         public static T FireFrom<T>(Fleet fleet)
-            where T : PickupBase, new()
+            where T : PickupBase
         {
 
-            var pickup = new T
-            {
-                World = fleet.World,
-                Position = fleet.FleetCenter,
-                Angle = MathF.Atan2(fleet.AimTarget.Y, fleet.AimTarget.X),
+            var pickup = Activator.CreateInstance(typeof(T), fleet.World) as T;
+            pickup.Position = fleet.FleetCenter;
+            pickup.Angle = MathF.Atan2(fleet.AimTarget.Y, fleet.AimTarget.X);
 
-                ExcludedFleet = fleet,
-                LinearVelocity = fleet.FleetMomentum,
-                Drag = 0.98f,
+            pickup.ExcludedFleet = fleet;
+            pickup.LinearVelocity = fleet.FleetMomentum;
+            pickup.Drag = 0.98f;
 
-                DontRandomize = true
-            };
+            pickup.DontRandomize = true;
 
             if (fleet.AimTarget != Vector2.Zero)
                 pickup.LinearVelocity = Vector2.Normalize(fleet.AimTarget)
                     * ((fleet.Ships.Count() * fleet.ShotThrustM + fleet.ShotThrustB) * 10);
 
-            pickup.Init(fleet.World);
-
             return pickup;
         }
-
     }
 }

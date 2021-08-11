@@ -5,7 +5,7 @@
 
     public class PickupShieldCannon : PickupBase
     {
-        public PickupShieldCannon()
+        public PickupShieldCannon(World world): base(world)
         {
             Size = 150;
             Sprite = Sprites.shield_pickup;
@@ -14,7 +14,7 @@
         protected override void EquipFleet(Fleet fleet)
         {
             fleet.PushStackWeapon(new FleetWeaponPickupCannon<PickupShield>());
-            this.PendingDestruction = true;
+            Die();
         }
     }
 }

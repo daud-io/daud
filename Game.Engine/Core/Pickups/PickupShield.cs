@@ -5,7 +5,7 @@
 
     public class PickupShield : PickupBase
     {
-        public PickupShield()
+        public PickupShield(World world): base(world)
         {
             Size = 100;
             Sprite = Sprites.shield_pickup;

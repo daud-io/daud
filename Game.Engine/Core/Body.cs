@@ -1,220 +1,120 @@
 ﻿namespace Game.Engine.Core
 {
     using BepuPhysics;
+    using BepuPhysics.Collidables;
     using Game.API.Common;
     using System;
     using System.Numerics;
 
-    public class Body
+    public class Body : IActor
     {
-        public long ProjectedTime { get; set; }
-        private Vector2 _position { get; set; } = new Vector2(0, 0);
-        protected long MaximumCleanTime = 2000;
-
-        public uint ID { get; set; }
-        public uint DefinitionTime { get; set; }
-        public Group Group { get; set; }
-
-        public bool Exists { get; set; }
-        public bool IsDirty { get; set; } = true;
-
-        public bool Indexed { get; set; } = false;
-        public bool Removed { get; set; } = false;
-        public bool Updated { get; set; } = false;
-
-        public Vector2 IndexedPosition { get; set; }
-
-        public bool IsStatic { get; set; } = false;
-
-        private int _size { get; set; }
-        public virtual int Size
-        {
-            get
-            {
-                return _size;
-            }
-            set
-            {
-                IsDirty = IsDirty || _size != value;
-                _size = value;
-            }
-        }
-
-        private byte _mode { get; set; }
-        public virtual byte Mode
-        {
-            get
-            {
-                return _mode;
-            }
-            set
-            {
-                IsDirty = IsDirty || _mode != value;
-                _mode = value;
-            }
-        }
-
-        private Sprites _sprite { get; set; }
-        public virtual Sprites Sprite
-        {
-            get
-            {
-                return _sprite;
-            }
-            set
-            {
-                IsDirty = IsDirty || _sprite != value;
-                _sprite = value;
-            }
-        }
-
-        private string _color { get; set; }
-        public virtual string Color
-        {
-            get
-            {
-                return _color;
-            }
-            set
-            {
-                IsDirty = IsDirty || _color != value;
-                _color = value;
-            }
-        }
-
-        private float _anuglarVelocity { get; set; }
-        public virtual float AngularVelocity
-        {
-            get
-            {
-                return _anuglarVelocity;
-            }
-            set
-            {
-                IsDirty = IsDirty || _anuglarVelocity != value;
-                _anuglarVelocity = value;
-            }
-        }
-
-        private float _originalAngle { get; set; }
-        public virtual float OriginalAngle
-        {
-            get
-            {
-                return _originalAngle;
-            }
-            set
-            {
-                IsDirty = IsDirty || _originalAngle != value;
-                _originalAngle = value;
-            }
-        }
+        public readonly World World;
+        public uint ID;
 
         internal BodyHandle BodyHandle;
-        private Vector2 _linearVelocity = new Vector2(0, 0);
-        public virtual Vector2 LinearVelocity
+
+        public Group Group;
+
+        public bool Exists;
+
+        public int Size = 0;
+        public byte Mode = 0;
+        public Sprites Sprite;
+        public string Color;
+
+        private BodyReference BodyReference;
+        public bool PendingDestruction = false;
+
+
+        public Body(World world)
+        {
+            this.World = world;
+
+            this.ID = World.GenerateObjectID();
+            int size = Math.Min(Math.Max(this.Size, 1), 1000);
+            var capsule = new Capsule(size, 5000);
+            var mass = 4 / 3 * MathF.PI * (size ^ 3) * 0.25f;
+            capsule.ComputeInertia(mass, out var capsuleIntertia);
+            capsuleIntertia.InverseInertiaTensor.XX = 0;
+            capsuleIntertia.InverseInertiaTensor.YY = 0;
+
+            var position2 = InitialPosition();
+            
+            BodyHandle = World.Simulation.Bodies.Add(BodyDescription.CreateDynamic(
+                new Vector3(position2.X, 0, position2.Y),
+                capsuleIntertia,
+                new CollidableDescription(World.Simulation.Shapes.Add(capsule), 0.1f),
+                new BodyActivityDescription(0.01f)
+            ));
+
+            this.UpdateBodyReference(World.Simulation.Bodies.GetBodyReference(this.BodyHandle));
+
+            World.BodyAdd(this);
+            World.Actors.Add(this);
+            this.Exists = true;
+        }
+
+        protected virtual Vector2 InitialPosition()
+        {
+            return Vector2.Zero;
+        }
+
+        public Vector2 Position
         {
             get
             {
-                return _linearVelocity;
+                return Vector3ToVector2(BodyReference.Pose.Position);
             }
             set
             {
-                if (float.IsNaN(value.X) || float.IsNaN(value.Y))
-                    throw new Exception("Invalid position");
-
-                IsDirty = IsDirty || _linearVelocity != value;
-                _linearVelocity = value;
+                BodyReference.Pose.Position = new Vector3(value.X, 0, value.Y);
             }
         }
-        
-        [Obsolete("Property renamed because of abuse of real physics terminology")]
-        public virtual Vector2 Momentum
-        {
-            get => LinearVelocity;
-            set => LinearVelocity = value;
-        }
 
-        private Vector2 _originalPosition { get; set; } = new Vector2(0, 0);
-        public virtual Vector2 OriginalPosition
+        public Vector2 LinearVelocity
         {
             get
             {
-                return _originalPosition;
+                return Vector3ToVector2(BodyReference.Velocity.Linear);
             }
             set
             {
-                IsDirty = IsDirty || _originalPosition != value;
-                _originalPosition = value;
+                BodyReference.Velocity.Linear = new Vector3(value.X, 0, value.Y);
             }
         }
 
-        public virtual Vector2 Position
+        public float AngularVelocity
         {
-            set
-            {
-                if (_position != value)
-                {
-                    if (float.IsNaN(value.X))
-                        throw new Exception("Invalid position");
-                    _position = value;
-                    IsDirty = true;
-                }
-            }
             get
             {
-                return _position;
-            }
-        }
+                return BodyReference.Velocity.Angular.Y;
 
-        private float _angle { get; set; } = 0;
-        public virtual float Angle
-        {
+            }
             set
             {
-                if (_angle != value)
-                {
-                    if (float.IsNaN(value))
-                        throw new Exception("Invalid angle");
-
-                    _angle = value;
-                    IsDirty = true;
-                }
+                BodyReference.Velocity.Angular.Y = value;
             }
+        }
+
+        public float Angle
+        {
             get
             {
-                return _angle;
+                return ToEulerAngles(BodyReference.Pose.Orientation).Y;
+            }
+            set
+            {
+                BodyReference.Pose.Orientation = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), value);
             }
         }
 
-        public void Project(uint time)
+        public void UpdateBodyReference(BodyReference bodyReference)
         {
-            ProjectedTime = time;
-            if (DefinitionTime == 0)
-                DefinitionTime = time;
-
-            var timeDelta = (time - this.DefinitionTime);
-
-            _position = Vector2.Add(OriginalPosition, Vector2.Multiply(LinearVelocity, timeDelta));
-            _angle = OriginalAngle + timeDelta * AngularVelocity;
-
-            if (time - this.DefinitionTime > MaximumCleanTime)
-                this.IsDirty = true;
-        }
-        
-        public void UpdateFromBodyReference(BodyReference bodyReference, uint time)
-        {
-            ProjectedTime = time;
-            DefinitionTime = time;
-
-            _position = Vector3ToVector2(bodyReference.Pose.Position);
-            _originalPosition = _position;
-            _linearVelocity = Vector3ToVector2(bodyReference.Velocity.Linear);
-            _angle = ToEulerAngles(bodyReference.Pose.Orientation).Y;
-            IsDirty = false;
+            BodyReference = bodyReference;
+            BodyReference.Awake = true;
         }
 
-        static Vector3 ToEulerAngles(Quaternion q)
+        private Vector3 ToEulerAngles(Quaternion q)
         {
             // Store the Euler angles in radians
             Vector3 pitchYawRoll = new Vector3();
@@ -262,19 +162,50 @@
                 Y = vector3.Z
             };
         }
-
-        public void UpdateBodyReference(BodyReference bodyReference, uint time)
+        protected virtual void Update()
         {
-            DefinitionTime = time;
-            OriginalPosition = Position;
-            OriginalAngle = Angle;
 
-            bodyReference.Pose.Position = new Vector3(Position.X, 0, Position.Y);
-            bodyReference.Velocity.Linear = new Vector3(LinearVelocity.X, 0, LinearVelocity.Y);
-                
-            bodyReference.Pose.Orientation = Quaternion.CreateFromAxisAngle(new Vector3(0,1,0), Angle);
         }
 
+        void IActor.Think()
+        {
+            if (PendingDestruction)
+            {
+                Destroy();
+                if (this.Exists)
+                {
+                    World.Actors.Remove(this);
+                    World.BodyRemove(this);
+                    World.Simulation.Bodies.Remove(this.BodyHandle);
+                    this.BodyHandle = default;
+                    this.BodyReference = default;
+                    this.Exists = false;
+                }
+                PendingDestruction = false;
+            }
+
+            if (Exists)
+                this.Update();
+        }
+
+        protected virtual void Die()
+        {
+            this.PendingDestruction = true;
+        }
+
+
+        public virtual void Destroy()
+        {
+        }
+
+
+        protected virtual void Collided(ICollide otherObject)
+        {
+
+        }
+
+        // this doesn't do what you think it does.
+        // it's only useful for caching.
         public Body Clone()
         {
             return this.MemberwiseClone() as Body;

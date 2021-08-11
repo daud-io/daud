@@ -5,14 +5,33 @@
     using System;
     using System.Numerics;
 
-    public class Obstacle : ActorBody, ICollide, ILifeCycle
+    public class Obstacle : Body, ICollide
     {
         private Vector2 TargetMomentum = Vector2.Zero;
         private float Multiplier = 1;
         private long DieByTime = 0;
         private float IdealSize = 1;
         protected int TargetSize = 0;
-        private bool SpawnPickup = false;
+        public Obstacle(World world): base(world)
+        {
+            var r = new Random();
+            Position = World.RandomPosition();
+            TargetMomentum = new Vector2(
+                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
+                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
+            );
+
+            Sprite = Sprites.obstacle;
+            Color = "rgba(128,128,128,.2)";
+
+            this.Group = new Group(world)
+            {
+                GroupType = GroupTypes.Obstacle,
+                ZIndex = 400
+            };
+
+            this.TargetSize = r.Next(World.Hook.ObstacleMinSize, World.Hook.ObstacleMaxSize);
+        }
 
         public virtual void CollisionExecute(Body projectedBody)
         {
@@ -40,45 +59,8 @@
             return isHit;
         }
 
-        public override void Init(World world)
+        protected override void Update()
         {
-            World = world;
-            var r = new Random();
-            Position = World.RandomPosition();
-            TargetMomentum = new Vector2(
-                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
-                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
-            );
-
-            Sprite = Sprites.obstacle;
-            Color = "rgba(128,128,128,.2)";
-
-            this.Group = new Group()
-            {
-                GroupType = GroupTypes.Obstacle,
-                ZIndex = 400
-            };
-
-            base.Init(world);
-        }
-
-        public override void CreateDestroy()
-        {
-            if (SpawnPickup)
-            {
-                var pickup = new Pickups.PickupShieldCannon();
-                pickup.Init(World);
-                pickup.Position = this.Position;
-                SpawnPickup = false;
-            }
-
-            base.CreateDestroy();
-        }
-
-        public override void Think()
-        {
-            base.Think();
-
             if (World.DistanceOutOfBounds(Position, World.Hook.ObstacleBorderBuffer) > 0)
             {
                 var speed = TargetMomentum.Length();
@@ -107,25 +89,13 @@
 
             if (IdealSize < World.Hook.ObstacleMinSize * 0.02)
             {
-                if (World.Hook.ObstaclesSpawnShieldCannons)
-                    SpawnPickup = true;
-                this.PendingDestruction = true;
+                base.Die();
             }
 
-            /* if (GrowthRate != 0)
-                IdealSize += (GrowthRate * (float)World.LastStepSize);
-
-            if (DieByTime > 0 && DieByTime < World.Time)
-                this.PendingDestruction = true;
-
-            if (GrowthRate > 0 && IdealSize > TargetSize)
-                GrowthRate = 0;*/
-
-            //Console.WriteLine(Size);
             Size = (int)IdealSize;
         }
 
-        public void Die()
+        protected override void Die()
         {
             var random = new Random();
             long LengthOfDeath = World.Hook.LifecycleDuration;
@@ -134,13 +104,6 @@
             TargetSize = 0;
 
             //GrowthRate = -1 * (float)Size / (float)LengthOfDeath; // shrink
-        }
-
-        public void Spawn()
-        {
-            var r = new Random();
-            this.TargetSize = r.Next(World.Hook.ObstacleMinSize, World.Hook.ObstacleMaxSize);
-            //GrowthRate = (float)this.TargetSize / (float)World.Hook.LifecycleDuration; // grow
         }
     }
 }
