@@ -13,7 +13,7 @@
         private readonly Dictionary<long, BucketBody> Bodies = new Dictionary<long, BucketBody>();
         private readonly Dictionary<long, BucketGroup> Groups = new Dictionary<long, BucketGroup>();
 
-        public void Update(IEnumerable<Body> bodies, uint time)
+        public void Update(IEnumerable<WorldBody> bodies, uint time)
         {
 
             // update cache items and flag missing ones as stale
@@ -47,32 +47,7 @@
                 .OrderByDescending(b => b.Error);
         }
 
-        private void UpdateLocalGroups(IEnumerable<Group> groups)
-        {
-            foreach (var bucket in Groups.Values)
-                bucket.Stale = true;
-
-            foreach (var obj in groups)
-            {
-                BucketGroup bucket = null;
-
-                if (Groups.ContainsKey(obj.ID))
-                {
-                    Groups[obj.ID].Stale = false;
-                }
-                else
-                {
-                    bucket = new BucketGroup
-                    {
-                        GroupUpdated = obj,
-                        Stale = false
-                    };
-                    Groups.Add(obj.ID, bucket);
-                }
-            }
-        }
-
-        private void UpdateLocalBodies(IEnumerable<Body> bodies)
+        private void UpdateLocalBodies(IEnumerable<WorldBody> bodies)
         {
             foreach (var bucket in Groups.Values)
                 bucket.Stale = true;
@@ -158,7 +133,7 @@
 
         public class BucketBody
         {
-            public Body Body { get; set; }
+            public WorldBody Body { get; set; }
 
             public Vector2 Position { get; set;}
             public Vector2 LinearVelocity { get; set;}

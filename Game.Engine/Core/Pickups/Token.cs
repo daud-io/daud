@@ -5,7 +5,7 @@
     using System;
     using System.Numerics;
 
-    public class Token : Body
+    public class Token : WorldBody
     {
         private ActorGroup TokenGroup;
         public Fleet CarriedBy = null;
@@ -83,7 +83,21 @@
             CarriedBy = null;
         }
 
-        protected override void Collided(ICollide otherObject)
+        public override bool IsCollision(WorldBody otherObject)
+        {
+            if (otherObject is Ship ship)
+            {
+                var fleet = ship.Fleet;
+
+                if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
+                {
+                    return true;
+                }
+            }
+
+            return base.IsCollision(otherObject);
+        }
+        public override void CollisionExecute(WorldBody otherObject)
         {
             if (otherObject is Ship ship)
             {
@@ -97,7 +111,7 @@
                 }
             }
 
-            base.Collided(otherObject);
+            base.CollisionExecute(otherObject);
         }
 
         protected void SetFleetID(uint? id)

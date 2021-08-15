@@ -3,13 +3,16 @@
     using BepuPhysics;
     using BepuPhysics.Collidables;
     using Game.API.Common;
+    using Game.Engine.Physics;
     using System;
     using System.Numerics;
 
-    public class Body : IActor
+    public class WorldBody : IActor
     {
         public readonly World World;
         public uint ID;
+
+        private TypedIndex ShapeHandle;
 
         internal BodyHandle BodyHandle;
 
@@ -17,7 +20,6 @@
 
         public bool Exists;
 
-        public int Size = 0;
         public byte Mode = 0;
         public Sprites Sprite;
         public string Color;
@@ -25,33 +27,51 @@
         private BodyReference BodyReference;
         public bool PendingDestruction = false;
 
-
-        public Body(World world)
+        public WorldBody(World world)
         {
             this.World = world;
 
             this.ID = World.GenerateObjectID();
-            int size = Math.Min(Math.Max(this.Size, 1), 1000);
-            var capsule = new Capsule(size, 5000);
-            var mass = 4 / 3 * MathF.PI * (size ^ 3) * 0.25f;
-            capsule.ComputeInertia(mass, out var capsuleIntertia);
-            capsuleIntertia.InverseInertiaTensor.XX = 0;
-            capsuleIntertia.InverseInertiaTensor.YY = 0;
-
-            var position2 = InitialPosition();
             
-            BodyHandle = World.Simulation.Bodies.Add(BodyDescription.CreateDynamic(
-                new Vector3(position2.X, 0, position2.Y),
-                capsuleIntertia,
-                new CollidableDescription(World.Simulation.Shapes.Add(capsule), 0.1f),
-                new BodyActivityDescription(0.01f)
-            ));
+            this.DefinePhysicsObject();
 
             this.UpdateBodyReference(World.Simulation.Bodies.GetBodyReference(this.BodyHandle));
 
             World.BodyAdd(this);
             World.Actors.Add(this);
             this.Exists = true;
+        }
+
+        protected virtual void DefinePhysicsObject()
+        {
+            int size = this.Size;
+            var shape = new Sphere(size);
+            var position2d = InitialPosition();
+
+            ShapeHandle = World.Simulation.Shapes.Add(shape);
+            BodyHandle = World.Simulation.Bodies.Add(BodyDescription.CreateDynamic(
+                new Vector3(position2d.X, 0, position2d.Y),
+                GetBodyInertia(shape),
+                new CollidableDescription(ShapeHandle, 0.1f),
+                new BodyActivityDescription(0.01f)
+            ));
+
+            ref var worldBodyProperties = ref World.BodyProperties.Allocate(BodyHandle);
+            worldBodyProperties = new WorldBodyProperties
+            {
+            };
+        }
+        
+        protected virtual BodyInertia GetBodyInertia(Sphere shape)
+        {
+            var size = shape.Radius;
+            var mass = 4/3 * MathF.PI * (size*size*size) * 0.25f;
+            shape.ComputeInertia(mass, out var bodyInertia);
+            // this locks rotation along the X and Z axes, aiding 2d physics
+            bodyInertia.InverseInertiaTensor.XX = 0;
+            bodyInertia.InverseInertiaTensor.ZZ = 0;
+
+            return bodyInertia;
         }
 
         protected virtual Vector2 InitialPosition()
@@ -87,12 +107,11 @@
         {
             get
             {
-                return BodyReference.Velocity.Angular.Y;
-
+                return -1 * BodyReference.Velocity.Angular.Y;
             }
             set
             {
-                BodyReference.Velocity.Angular.Y = value;
+                BodyReference.Velocity.Angular.Y = -1 * value;
             }
         }
 
@@ -100,11 +119,32 @@
         {
             get
             {
-                return ToEulerAngles(BodyReference.Pose.Orientation).Y;
+                return -1 * ToEulerAngles(BodyReference.Pose.Orientation).Y;
             }
             set
             {
-                BodyReference.Pose.Orientation = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), value);
+                BodyReference.Pose.Orientation = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), -value);
+            }
+        }
+
+        private int _size = 0;
+
+        public int Size
+        {
+            get
+            {
+                return _size;
+            }
+            set
+            {
+                if (value != _size)
+                {
+                    ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
+                    shape.Radius = value;
+                    BodyReference.LocalInertia = GetBodyInertia(shape);
+                    BodyReference.SetShape(ShapeHandle);
+                }
+                _size = value;
             }
         }
 
@@ -112,6 +152,7 @@
         {
             BodyReference = bodyReference;
             BodyReference.Awake = true;
+            BodyReference.Pose.Position.Y = 0;
         }
 
         private Vector3 ToEulerAngles(Quaternion q)
@@ -162,6 +203,7 @@
                 Y = vector3.Z
             };
         }
+
         protected virtual void Update()
         {
 
@@ -169,6 +211,9 @@
 
         void IActor.Think()
         {
+            if (Exists)
+                this.Update();
+
             if (PendingDestruction)
             {
                 Destroy();
@@ -177,15 +222,15 @@
                     World.Actors.Remove(this);
                     World.BodyRemove(this);
                     World.Simulation.Bodies.Remove(this.BodyHandle);
+                    World.Simulation.Shapes.Remove(this.ShapeHandle);
                     this.BodyHandle = default;
                     this.BodyReference = default;
+
+                    this.ShapeHandle = default;
                     this.Exists = false;
                 }
                 PendingDestruction = false;
             }
-
-            if (Exists)
-                this.Update();
         }
 
         protected virtual void Die()
@@ -198,17 +243,14 @@
         {
         }
 
-
-        protected virtual void Collided(ICollide otherObject)
+        public virtual bool IsCollision(WorldBody otherBody)
         {
-
+            return false;
         }
 
-        // this doesn't do what you think it does.
-        // it's only useful for caching.
-        public Body Clone()
+        public virtual void CollisionExecute(WorldBody projectedBody)
         {
-            return this.MemberwiseClone() as Body;
+            
         }
     }
 }

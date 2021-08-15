@@ -5,7 +5,7 @@
     using System.Linq;
 
     public class GenericTender<T> : SystemActorBase
-        where T : Body
+        where T : WorldBody
     {
         private readonly List<T> Herd = new List<T>();
         private readonly Func<int> DesiredCount = () => 0;

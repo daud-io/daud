@@ -3,7 +3,7 @@
     using Game.API.Common;
     using System.Numerics;
 
-    public class Flag : Body
+    public class Flag : WorldBody
     {
         public readonly Team Team;
         private readonly Base Base;
@@ -69,7 +69,7 @@
             this.CarriedBy = null;
         }
 
-        protected override void Collided(ICollide otherObject)
+        public override void CollisionExecute(WorldBody otherObject)
         {
             if (otherObject is Ship ship)
             {
@@ -93,7 +93,7 @@
                 }
             }
 
-            base.Collided(otherObject);
+            base.CollisionExecute(otherObject);
         }
     }
 }

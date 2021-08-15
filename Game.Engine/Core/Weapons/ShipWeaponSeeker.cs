@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
 
 namespace Game.Engine.Core.Weapons
 {
-    public class ShipWeaponSeeker : ShipWeaponBullet, ICollide
+    public class ShipWeaponSeeker : ShipWeaponBullet
     {
         public Ship DeclaredTarget { get; private set; } = null;
-        public ShipWeaponSeeker(World world): base(world)
+        public ShipWeaponSeeker(World world, Ship ship): base(world, ship)
         {
-            
+            Interlocked.Increment(ref World.ProjectileCount);
         }
 
         public override void FireFrom(Ship ship, ActorGroup group)
@@ -20,7 +21,6 @@ namespace Game.Engine.Core.Weapons
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife * World.Hook.SeekerLifeMultiplier);
             this.Sprite = API.Common.Sprites.seeker;
             this.Size = 100;
-
         }
 
         protected override void Update()
@@ -70,18 +70,20 @@ namespace Game.Engine.Core.Weapons
             LinearVelocity = (originalMomentum + thrust) * Drag;
         }
 
-        public virtual void CollisionExecute(Body projectedBody)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             var bullet = projectedBody as ShipWeaponBullet;
             var fleet = bullet?.OwnedByFleet;
             var player = fleet?.Owner;
-            bullet.Consumed = true;
+
+            if (bullet != null && !bullet.Consumed)
+                bullet.Consumed = true;
 
             this.Consumed = true;
             this.PendingDestruction = true;
         }
 
-        public bool IsCollision(Body projectedBody)
+        public override bool IsCollision(WorldBody projectedBody)
         {
             if (PendingDestruction)
                 return false;
@@ -108,5 +110,11 @@ namespace Game.Engine.Core.Weapons
 
             return false;
         }
+        public override void Destroy()
+        {
+            Interlocked.Decrement(ref World.ProjectileCount);
+            base.Destroy();
+        }
+
     }
 }

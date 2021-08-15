@@ -60,11 +60,13 @@ namespace Game.Engine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void IntegrateVelocity(int bodyIndex, in RigidPose pose, in BodyInertia localInertia, int workerIndex, ref BodyVelocity velocity)
         {
+            velocity.Linear.Y = 0;
+
             //Note that we avoid accelerating kinematics. Kinematics are any body with an inverse mass of zero (so a mass of ~infinity). No force can move them.
-            if (localInertia.InverseMass > 0)
+            /*if (localInertia.InverseMass > 0)
             {
                 velocity.Linear = velocity.Linear + gravityDt;
-            }
+            }*/
         }
 
     }

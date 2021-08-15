@@ -84,7 +84,7 @@
             }                
         }
 
-        private class RingBody : Body
+        private class RingBody : WorldBody
         {
             private const float SPEED_SPINNING = 0.001f;
 

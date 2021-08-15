@@ -2,6 +2,7 @@
 {
     using BepuPhysics;
     using BepuPhysics.Collidables;
+    using BepuPhysics.CollisionDetection;
     using BepuUtilities;
     using BepuUtilities.Collections;
     using BepuUtilities.Memory;
@@ -35,7 +36,7 @@
         public Hook Hook { get; set; } = null;
 
         // lists of bodies, groups in the world
-        public Dictionary<BodyHandle, Body> Bodies = new Dictionary<BodyHandle, Body>();
+        public Dictionary<BodyHandle, WorldBody> Bodies = new Dictionary<BodyHandle, WorldBody>();
         public List<Group> Groups = new List<Group>();
 
         // list of IActors in the world. Actors are things that think.
@@ -65,8 +66,10 @@
 
         public bool CanSpawn { get => Hook.CanSpawn; set => Hook.CanSpawn = value; }
         public string CanSpawnReason { get; set; }
-        private BufferPool bufferPool = new BufferPool();
+        private BufferPool BufferPool = new BufferPool();
         public Simulation Simulation = null;
+        public CollidableProperty<WorldBodyProperties> BodyProperties;
+        internal int ProjectileCount;
         
         public World(Hook hook, GameConfiguration gameConfiguration)
         {
@@ -77,9 +80,20 @@
 
             Console.WriteLine($"Initializing World: {this.Hook.Name}");
 
-            this.Simulation = Simulation.Create(bufferPool, new NarrowPhaseCallbacks(), new PoseIntegratorCallbacks(new Vector3(0, -10, 0)), new PositionLastTimestepper());
-            this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
+            BodyProperties = new CollidableProperty<WorldBodyProperties>();
+
+            this.Simulation = Simulation.Create(
+                BufferPool, 
+                new NarrowPhaseCallbacks(this) 
+                {
+                    Properties = BodyProperties
+                },
+                new PoseIntegratorCallbacks(new Vector3(0, 0, 0)),
+                new PositionLastTimestepper()
+            );
+            //this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
             NewFleetGenerator = this.DefaultNewFleetGenerator;
+
 
             InitializeSystemActors();
             InitializeStepTimer();
@@ -106,17 +120,35 @@
 
                 lock(this)
                 {
-                    // still not sure about this step time.
-                    this.Simulation.Timestep(1000f/25);
+                    ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
+                    bodyImpacts.EnsureCapacity(this.Bodies.Count * 10, this.BufferPool);
+
+                    this.Simulation.Timestep(Hook.StepTime);
                     
                     // Ensure that every body as a new handle... else .. <cringe>
                     UpdateBodyReferences();
+
+                    // execute collisions
+                    for (int i = 0; i < bodyImpacts.Count; ++i)
+                    {
+                        ref var impact = ref bodyImpacts[i];
+
+                        WorldBody wbA = Bodies[impact.BodyHandleA];
+                        WorldBody wbB = impact.BodyHandleB.Value != -1
+                            ? Bodies[impact.BodyHandleB]
+                            : null;
+
+                        wbA.CollisionExecute(wbB);
+                        if (wbB != null)
+                            wbB.CollisionExecute(wbA);
+                    }
+                    bodyImpacts.Count = 0;
+
+                    // every registered actor gets a chance to think
+                    ActorsThink();
+
+                    CheckTimings(start);
                 }
-
-                // every registered actor gets a chance to think
-                ActorsThink();
-
-                CheckTimings(start);
             }
         }
 
@@ -190,30 +222,29 @@
             }
         }
 
-        public IEnumerable<Body> BodiesNear(Vector2 point, int maximumDistance)
+        public IEnumerable<WorldBody> BodiesNear(Vector2 point, int maximumDistance)
         {
             var broadPhaseEnumerator = new BroadPhaseOverlapEnumerator {
-                Pool = bufferPool,
-                References = new QuickList<CollidableReference>(16, bufferPool)
+                Pool = BufferPool,
+                References = new QuickList<CollidableReference>(16, BufferPool)
             };
 
             Simulation.BroadPhase.GetOverlaps(
-                new Vector3(point.X - maximumDistance / 2, 0, point.Y - maximumDistance / 2), 
-                new Vector3(point.X + maximumDistance / 2, 0, point.Y + maximumDistance / 2), 
+                new Vector3(point.X - maximumDistance / 2, -10, point.Y - maximumDistance / 2), 
+                new Vector3(point.X + maximumDistance / 2, 10, point.Y + maximumDistance / 2), 
                 ref broadPhaseEnumerator
             );
 
             foreach (var collidableReference in broadPhaseEnumerator.References)
-                if (collidableReference.BodyHandle != default)
-                    yield return this.Bodies[collidableReference.BodyHandle];
+                yield return this.Bodies[collidableReference.BodyHandle];
         }
 
-        public void BodyAdd(Body body)
+        public void BodyAdd(WorldBody body)
         {
             Bodies.Add(body.BodyHandle, body);
         }
 
-        public void BodyRemove(Body body)
+        public void BodyRemove(WorldBody body)
         {
             Bodies.Remove(body.BodyHandle);
         }
@@ -253,6 +284,7 @@
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
+        
 
         protected virtual void Dispose(bool disposing)
         {
@@ -260,7 +292,7 @@
                 if (disposing)
                 {
                     this.Simulation.Dispose();
-                    this.bufferPool.Clear();
+                    this.BufferPool.Clear();
 
                     foreach (var player in Player.GetWorldPlayers(this).ToList())
                         try

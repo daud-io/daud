@@ -2,32 +2,28 @@ using BepuPhysics;
 using BepuPhysics.Collidables;
 using BepuPhysics.CollisionDetection;
 using BepuPhysics.Constraints;
-using BepuUtilities;
-using BepuUtilities.Memory;
-using System;
-using System.Collections.Generic;
-using System.Numerics;
+using BepuUtilities.Collections;
+using Game.Engine.Core;
 using System.Runtime.CompilerServices;
-using System.Text;
-
+using System.Threading;
 
 namespace Game.Engine.Physics
 {
-    //The simulation has a variety of extension points that must be defined. 
-    //The demos tend to reuse a few types like the DemoNarrowPhaseCallbacks, but this demo will provide its own (super simple) versions.
-    //If you're wondering why the callbacks are interface implementing structs rather than classes or events, it's because 
-    //the compiler can specialize the implementation using the compile time type information. That avoids dispatch overhead associated
-    //with delegates or virtual dispatch and allows inlining, which is valuable for extremely high frequency logic like contact callbacks.
     unsafe struct NarrowPhaseCallbacks : INarrowPhaseCallbacks
     {
-        /// <summary>
-        /// Performs any required initialization logic after the Simulation instance has been constructed.
-        /// </summary>
-        /// <param name="simulation">Simulation that owns these callbacks.</param>
+        public CollidableProperty<WorldBodyProperties> Properties;
+        public SpinLock ProjectileLock;
+        public QuickList<BodyImpacts> BodyImpacts;
+        public World World;
+        
+        public NarrowPhaseCallbacks(World world): this()
+        {
+            this.World = world;
+        }
+
         public void Initialize(Simulation simulation)
         {
-            //Often, the callbacks type is created before the simulation instance is fully constructed, so the simulation will call this function when it's ready.
-            //Any logic which depends on the simulation existing can be put here.
+            Properties.Initialize(simulation);
         }
 
         /// <summary>
@@ -40,12 +36,19 @@ namespace Game.Engine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool AllowContactGeneration(int workerIndex, CollidableReference a, CollidableReference b)
         {
-            //Before creating a narrow phase pair, the broad phase asks this callback whether to bother with a given pair of objects.
-            //This can be used to implement arbitrary forms of collision filtering. See the RagdollDemo or NewtDemo for examples.
-            //Here, we'll make sure at least one of the two bodies is dynamic.
-            //The engine won't generate static-static pairs, but it will generate kinematic-kinematic pairs.
-            //That's useful if you're trying to make some sort of sensor/trigger object, but since kinematic-kinematic pairs
-            //can't generate constraints (both bodies have infinite inertia), simple simulations can just ignore such pairs.
+            //It's impossible for two statics to collide, and pairs are sorted such that bodies always come before statics.
+            if (b.Mobility != CollidableMobility.Static)
+            {
+                var worldBodyA = World.Bodies[a.BodyHandle];
+                var worldBodyB = World.Bodies[b.BodyHandle];
+                
+                bool isCollision = false;
+
+                isCollision = worldBodyA.IsCollision(worldBodyB)
+                    || worldBodyB.IsCollision(worldBodyA);
+
+                return isCollision;
+            }
             return a.Mobility == CollidableMobility.Dynamic || b.Mobility == CollidableMobility.Dynamic;
         }
 
@@ -69,6 +72,30 @@ namespace Game.Engine.Physics
             return true;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        void AddBodyImpact(BodyHandle A, CollidableReference impactedCollidable)
+        {
+            bool lockTaken = false;
+            ProjectileLock.Enter(ref lockTaken);
+            try
+            {
+                ref var newImpact = ref BodyImpacts.AllocateUnsafely();
+                newImpact.BodyHandleA = A;
+                if (impactedCollidable.Mobility != CollidableMobility.Static)
+                {
+                    ref var properties = ref Properties[impactedCollidable.BodyHandle];
+                    newImpact.BodyHandleB = impactedCollidable.BodyHandle;
+                }
+                else
+                    newImpact.BodyHandleB = new BodyHandle(-1);
+            }
+            finally
+            {
+                if (lockTaken)
+                    ProjectileLock.Exit();
+            }
+        }        
+
         /// <summary>
         /// Provides a notification that a manifold has been created for a pair. Offers an opportunity to change the manifold's details. 
         /// </summary>
@@ -80,16 +107,27 @@ namespace Game.Engine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe bool ConfigureContactManifold<TManifold>(int workerIndex, CollidablePair pair, ref TManifold manifold, out PairMaterialProperties pairMaterial) where TManifold : struct, IContactManifold<TManifold>
         {
-            //The IContactManifold parameter includes functions for accessing contact data regardless of what the underlying type of the manifold is.
-            //If you want to have direct access to the underlying type, you can use the manifold.Convex property and a cast like Unsafe.As<TManifold, ConvexContactManifold or NonconvexContactManifold>(ref manifold).
+            ref var propertiesA = ref Properties[pair.A.BodyHandle];
+            pairMaterial.FrictionCoefficient = propertiesA.Friction;
+            if (pair.B.Mobility != CollidableMobility.Static)
+            {
+                //If two bodies collide, just average the friction. Other options include min(a, b) or a * b.
+                ref var propertiesB = ref Properties[pair.B.BodyHandle];
+                pairMaterial.FrictionCoefficient = (pairMaterial.FrictionCoefficient + propertiesB.Friction) * 0.5f;
+            }
 
-            //The engine does not define any per-body material properties. Instead, all material lookup and blending operations are handled by the callbacks.
-            //For the purposes of this demo, we'll use the same settings for all pairs.
-            //(Note that there's no bounciness property! See here for more details: https://github.com/bepu/bepuphysics2/issues/3 and check out the BouncinessDemo for some options.)
-            pairMaterial.FrictionCoefficient = 0f;
-            pairMaterial.MaximumRecoveryVelocity = 2f;
-            pairMaterial.SpringSettings = new SpringSettings(30, 1);
-            //For the purposes of the demo, contact constraints are always generated.
+            pairMaterial.MaximumRecoveryVelocity = float.MaxValue;
+            pairMaterial.SpringSettings = new SpringSettings(30, 0);
+
+            for (int i = 0; i < manifold.Count; ++i)
+            {
+                if (manifold.GetDepth(ref manifold, i) >= -1e-3f)
+                {
+                    //An actual collision was found. 
+                    AddBodyImpact(pair.A.BodyHandle, pair.B);
+                    break;
+                }
+            }
             return true;
         }
 
@@ -106,6 +144,7 @@ namespace Game.Engine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool ConfigureContactManifold(int workerIndex, CollidablePair pair, int childIndexA, int childIndexB, ref ConvexContactManifold manifold)
         {
+            // in daud, so far we have no compound objects
             return true;
         }
 

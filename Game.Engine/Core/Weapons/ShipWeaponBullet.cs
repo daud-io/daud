@@ -3,8 +3,10 @@
     using System;
     using System.Linq;
     using System.Numerics;
+    using System.Threading;
+    using Game.Engine.Physics;
 
-    public class ShipWeaponBullet : Body, IShipWeapon
+    public class ShipWeaponBullet : WorldBody, IShipWeapon
     {
         public Fleet OwnedByFleet { get; set; }
         public long TimeDeath { get; set; }
@@ -17,27 +19,37 @@
         public bool Consumed { get; set; }
         private Vector2 Reference = Vector2.Zero;
 
-        public ShipWeaponBullet(World world): base(world)
+        public ShipWeaponBullet(World world, Ship ship): base(world)
         {
+            this.OwnedByFleet = ship.Fleet;
+
+            OverrideBodyProperties(ref world.BodyProperties[this.BodyHandle]);
+
+            Interlocked.Increment(ref World.ProjectileCount);
         }
 
         protected override void Update()
         {
-
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount * 10;
-
-            if (World.Hook.EinsteinCoefficient > 0)
-                LinearVelocity = thrust + (World.Hook.EinsteinCoefficient * Reference);
-            else
-                LinearVelocity = thrust;
+            Angle = MathF.Atan2(LinearVelocity.Y, LinearVelocity.X);
+            AngularVelocity = 0;
 
             if (World.Time >= TimeDeath)
                 Die();
         }
 
-        protected override void Collided(ICollide otherObject)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             TimeDeath = World.Time;
+        }
+
+        public override bool IsCollision(WorldBody otherBody)
+        {
+            return false;
+        }
+
+        protected void OverrideBodyProperties(ref WorldBodyProperties properties)
+        {
+            properties.Projectile = true;
         }
 
         public virtual void FireFrom(Ship ship, ActorGroup group)
@@ -73,18 +85,36 @@
 
                 this.Angle = MathF.Atan2(toTarget.Y, toTarget.X)
                     + noise;
+
+                this.AngularVelocity = 0;
             }
             else
+            {
                 this.Angle = ship.Angle;
+                this.AngularVelocity = 0;
+            }
 
             this.Reference = ship.Fleet.FleetMomentum;
-            this.OwnedByFleet = ship.Fleet;
             this.Sprite = ship.BulletSprite;
             this.Size = 20;
             this.Color = ship.Color;
             this.ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB;
             this.TimeBirth = World.Time;
             this.Group = group;
+
+            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount * 10;
+
+            if (World.Hook.EinsteinCoefficient > 0)
+                LinearVelocity = thrust + (World.Hook.EinsteinCoefficient * Reference);
+            else
+                LinearVelocity = thrust;
+
+        }
+
+        public override void Destroy()
+        {
+            Interlocked.Decrement(ref World.ProjectileCount);
+            base.Destroy();
         }
 
         bool IShipWeapon.Active()

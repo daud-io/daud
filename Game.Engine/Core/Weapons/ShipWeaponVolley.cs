@@ -58,7 +58,7 @@
                     && fireBy > 0)
                 {
 
-                    var shipWeapon = Activator.CreateInstance(typeof(T), World) as IShipWeapon;
+                    var shipWeapon = Activator.CreateInstance(typeof(T), World, ship) as IShipWeapon;
                     shipWeapon.FireFrom(ship, this);
                     Configure?.Invoke(shipWeapon);
 

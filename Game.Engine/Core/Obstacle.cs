@@ -5,10 +5,9 @@
     using System;
     using System.Numerics;
 
-    public class Obstacle : Body, ICollide
+    public class Obstacle : WorldBody
     {
-        private Vector2 TargetMomentum = Vector2.Zero;
-        private float Multiplier = 1;
+        private Vector2 TargetVelocity = Vector2.Zero;
         private long DieByTime = 0;
         private float IdealSize = 1;
         protected int TargetSize = 0;
@@ -16,7 +15,7 @@
         {
             var r = new Random();
             Position = World.RandomPosition();
-            TargetMomentum = new Vector2(
+            LinearVelocity = new Vector2(
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
                 (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
             );
@@ -33,7 +32,7 @@
             this.TargetSize = r.Next(World.Hook.ObstacleMinSize, World.Hook.ObstacleMaxSize);
         }
 
-        public virtual void CollisionExecute(Body projectedBody)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             if (projectedBody is ShipWeaponBullet bullet)
             {
@@ -48,7 +47,7 @@
             }
         }
 
-        public virtual bool IsCollision(Body projectedBody)
+        public override bool IsCollision(WorldBody projectedBody)
         {
             var isHit = false;
 
@@ -63,17 +62,11 @@
         {
             if (World.DistanceOutOfBounds(Position, World.Hook.ObstacleBorderBuffer) > 0)
             {
-                var speed = TargetMomentum.Length();
-                speed *= Multiplier;
+                var speed = LinearVelocity.Length();
 
                 if (Position != Vector2.Zero)
-                    TargetMomentum = Vector2.Normalize(Vector2.Zero - Position) * speed;
+                    LinearVelocity = Vector2.Normalize(Vector2.Zero - Position) * speed;
             }
-
-            var weatherMultiplerDelta = Math.Abs(World.Hook.ObstacleMaxMomentumWeatherMultiplier - Multiplier);
-            if (weatherMultiplerDelta / World.Hook.ObstacleMaxMomentumWeatherMultiplier > 0.02)
-                Multiplier = Multiplier * 0.97f + World.Hook.ObstacleMaxMomentumWeatherMultiplier * 0.03f;
-            LinearVelocity = TargetMomentum * Multiplier;
 
             if (IdealSize > 0 && MathF.Abs(IdealSize - TargetSize) / IdealSize > 0.02f)
             {

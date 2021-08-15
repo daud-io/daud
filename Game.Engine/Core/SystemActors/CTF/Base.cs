@@ -3,7 +3,7 @@
     using Game.API.Common;
     using System.Numerics;
 
-    public class Base : Body, ICollide
+    public class Base : WorldBody
     {
         private readonly Team Team;
         public Flag Flag { get; set; }
@@ -33,7 +33,7 @@
                 : SPEED_STOPPED;
         }
 
-        void ICollide.CollisionExecute(Body projectedBody)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             var flag = projectedBody as Flag;
 
@@ -42,13 +42,7 @@
             flag.ReturnToBase();
         }
 
-        public bool FlagIsHome()
-        {
-            return Vector2.Distance(Flag.Position, this.Position)
-                < (Flag.Size + this.Size);
-        }
-
-        bool ICollide.IsCollision(Body projectedBody)
+        public override bool IsCollision(WorldBody projectedBody)
         {
             if (projectedBody is Flag flag)
             {
@@ -76,6 +70,13 @@
                         < (projectedBody.Size + this.Size);
             }
             return false;
+        }
+
+
+        public bool FlagIsHome()
+        {
+            return Vector2.Distance(Flag.Position, this.Position)
+                < (Flag.Size + this.Size);
         }
 
         public override void Destroy()

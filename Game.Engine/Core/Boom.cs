@@ -2,7 +2,7 @@
 {
     using Game.API.Common;
 
-    public class Boom : Body
+    public class Boom : WorldBody
     {
         public float Drag { get; set; }
         private long TimeDeath = 0;

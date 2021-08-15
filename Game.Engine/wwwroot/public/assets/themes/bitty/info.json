@@ -143,7 +143,7 @@
     },
     "obstacle": {
       "url": "obstacle.png",
-      "size": 2.1
+      "size": 2.3
     },
     "seeker": {
       "url": "seeker.png",

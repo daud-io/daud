@@ -5,7 +5,7 @@
     using System.Linq;
     using System.Numerics;
 
-    public abstract class PickupBase : Body
+    public abstract class PickupBase : WorldBody
     {
         public long TimeDeath { get; set; }
         public Fleet ExcludedFleet { get; set; }
@@ -34,19 +34,30 @@
 
         protected abstract void EquipFleet(Fleet fleet);
 
-        protected override void Collided(ICollide otherObject)
+        public override void CollisionExecute(WorldBody otherBody)
         {
-            var ship = otherObject as Ship;
+            var ship = otherBody as Ship;
+            var fleet = ship?.Fleet;
+            if (fleet != null && fleet != ExcludedFleet)
+            {
+                EquipFleet(fleet);
+                Randomize();
+            }
+
+            base.IsCollision(otherBody);
+        }
+
+        public override bool IsCollision(WorldBody otherBody)
+        {
+            var ship = otherBody as Ship;
             var fleet = ship?.Fleet;
 
             if (fleet != null && fleet != ExcludedFleet)
             {
-                EquipFleet(fleet);
-
-                Randomize();
+                return true;
             }
 
-            base.Collided(otherObject);
+            return base.IsCollision(otherBody);
         }
 
         protected override void Update()

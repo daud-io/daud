@@ -4,7 +4,7 @@
     using Game.Engine.Core.Weapons;
     using System.Numerics;
 
-    public class StartingBlock : Body, ICollide
+    public class StartingBlock : WorldBody
     {
         public RoyaleMode ParentGame;
 
@@ -16,14 +16,14 @@
             Position = world.RandomPosition();
         }
 
-        void ICollide.CollisionExecute(Body projectedBody)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             ParentGame.StartCountdown();
         }
 
-        bool ICollide.IsCollision(Body projectedBody)
+        public override bool IsCollision(WorldBody otherBody)
         {
-            if (projectedBody is ShipWeaponBullet bullet)
+            if (otherBody is ShipWeaponBullet bullet)
             {
                 if (ParentGame.World.AdvertisedPlayerCount > 1)
                     return true;

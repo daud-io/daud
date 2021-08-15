@@ -108,7 +108,7 @@
     },
     "bullet": {
       "url": "bullet_cyan.png",
-      "offset": { "x": -7, "y": 0 },
+      "offset": { "x": -60, "y": 0 },
       "size": 20,
       "animated": {
         "loop": "false",
@@ -149,7 +149,7 @@
 
     "obstacle": {
       "url": "obstacle.png",
-      "size": 2.8
+      "size": 2.6
     },
     "seeker": {
       "url": "seeker.png",

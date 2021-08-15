@@ -125,7 +125,7 @@
 
         public void ShipDeath(Player player, Ship ship, ShipWeaponBullet bullet)
         {
-            if (!Ships.Where(s => !s.Exists).Any())
+            if (!Ships.Where(s => s.Exists).Any())
                 Die(player);
         }
 
@@ -251,6 +251,7 @@
 
                 // todo: this dirties the ship body every cycle
                 ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
+                ship.AngularVelocity = 0;
 
                 Flocking.Flock(ship);
                 Snaking.Snake(ship);

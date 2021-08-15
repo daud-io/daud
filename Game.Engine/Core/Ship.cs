@@ -3,10 +3,11 @@
     using Game.API.Common;
     using Game.Engine.Core.Pickups;
     using Game.Engine.Core.Weapons;
+    using Game.Engine.Physics;
     using System;
     using System.Numerics;
 
-    public class Ship : Body, ICollide
+    public class Ship : WorldBody
     {
         public Fleet Fleet { 
             get 
@@ -16,6 +17,7 @@
             set
             {
                 this.Group = value;
+                OverrideBodyProperties(ref World.BodyProperties[this.BodyHandle]);
             }
         }
 
@@ -60,6 +62,12 @@
             }
         }
 
+
+        private void OverrideBodyProperties(ref WorldBodyProperties properties)
+        {
+            
+        }
+        
         public override void Destroy()
         {
             if (!(this is Fish)
@@ -72,7 +80,7 @@
             if (Fleet?.Ships?.Contains(this) ?? false)
                 Fleet.Ships.Remove(this);
         }
-
+        
         public void Die(Player player, Fleet fleet, ShipWeaponBullet bullet)
         {
             if (player != null)
@@ -85,7 +93,7 @@
                 this.Fleet.ShipDeath(player, this, bullet);
         }
 
-        public virtual void CollisionExecute(Body projectedBody)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             if (projectedBody is ShipWeaponBullet bullet)
             {
@@ -116,7 +124,7 @@
             }
         }
 
-        public bool IsCollision(Body projectedBody)
+        public override bool IsCollision(WorldBody projectedBody)
         {
             if (PendingDestruction)
                 return false;
