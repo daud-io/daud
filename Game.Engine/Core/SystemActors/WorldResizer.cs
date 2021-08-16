@@ -1,12 +1,22 @@
 ﻿namespace Game.Engine.Core.SystemActors
 {
     using System;
+    using System.Collections.Generic;
 
     public class WorldResizer : SystemActorBase
     {
+        private List<ArenaWall> Walls;
+        
         public WorldResizer(World world): base(world)
         {
             CycleMS = 0;
+
+            Walls = new List<ArenaWall>();
+            Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.North));
+            Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.East));
+            Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.South));
+            Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.West));
+            
         }
 
         protected override void CycleThink()

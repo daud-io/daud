@@ -174,7 +174,14 @@
         "default": "powerup_base haste",
         "carried": "haste"
       }
+    },
+
+    "sportsball": {
+      "modes": {
+        "default": "sportsball"
+      }
     }
+
   },
   "textures": {
     "powerup_base": {
@@ -518,6 +525,11 @@
     "haste": {
       "url": "haste_powerup.png",
       "size": 1
+    },
+
+    "sportsball": {
+      "url": "sportsball_front.png",
+      "size": 2.5
     }
   }
 }

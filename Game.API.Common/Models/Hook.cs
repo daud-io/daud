@@ -76,8 +76,8 @@
                     ObstaclesMultiplier = 0.0005, // used when WorldResizeEnabled = true
                     ObstacleMaxMomentum = 0.1f,
                     ObstacleMaxMomentumWeatherMultiplier = 1.0f,
-                    ObstacleMinSize = 300,
-                    ObstacleMaxSize = 600,
+                    ObstacleMinSize = 50,
+                    ObstacleMaxSize = 200,
                     ObstacleBorderBuffer = 1000,
 
                     TeamMode = false,

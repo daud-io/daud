@@ -125,7 +125,7 @@
 
         public void ShipDeath(Player player, Ship ship, ShipWeaponBullet bullet)
         {
-            if (!Ships.Where(s => s.Exists).Any())
+            if (!Ships.Where(s => s.Exists && !s.PendingDestruction).Any())
                 Die(player);
         }
 

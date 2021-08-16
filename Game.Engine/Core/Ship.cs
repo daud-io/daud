@@ -21,9 +21,6 @@
             }
         }
 
-        public int SizeMinimum { get; set; }
-        public int SizeMaximum { get; set; }
-
         public float ThrustAmount { get; set; }
         public float Drag { get; set; }
 
@@ -62,7 +59,6 @@
             }
         }
 
-
         private void OverrideBodyProperties(ref WorldBodyProperties properties)
         {
             
@@ -70,7 +66,7 @@
         
         public override void Destroy()
         {
-            if (!(this is Fish)
+            if (!(this.GetType() == typeof(Fish))
                 && !(this.Sprite == Sprites.ship_gray)
             )
                 Boom.FromShip(this);
@@ -97,9 +93,11 @@
         {
             if (projectedBody is ShipWeaponBullet bullet)
             {
+                if (bullet.Consumed)
+                    return;
+
                 var fleet = bullet?.OwnedByFleet;
                 var player = fleet?.Owner;
-                bullet.Consumed = true;
 
                 var takesDamage = true;
                 if (this.Fleet?.Owner?.IsShielded ?? false)
@@ -109,7 +107,10 @@
                     else
                     {
                         if (projectedBody is ShipWeaponSeeker)
+                        {
                             this.ShieldStrength = 0;
+                            bullet.Consumed = true;
+                        }
                         else
                             this.ShieldStrength--;
 
@@ -117,7 +118,11 @@
                     }
                 }
                 else
+                {
+                    bullet.Consumed = true;
+
                     takesDamage = !this.Fleet?.Owner?.IsInvulnerable ?? true;
+                }
 
                 if (takesDamage)
                     Die(player, fleet, bullet);
@@ -129,12 +134,11 @@
             if (PendingDestruction)
                 return false;
 
+            if (projectedBody is Ship ship)
+                return ship.Fleet != null && this.Fleet != null && this.Fleet != ship.Fleet;
+
             if (projectedBody is ShipWeaponBullet bullet)
             {
-                // avoid "piercing" shots
-                if (bullet.Consumed)
-                    return false;
-
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.Fleet)
                     return false;
@@ -148,10 +152,7 @@
                 if (World.Hook.TeamMode && bullet.Color == this.Color)
                     return false;
 
-                // did it actually hit
-                if ((Vector2.Distance(projectedBody.Position, this.Position)
-                        <= this.Size + projectedBody.Size))
-                    return true;
+                return true;
             }
 
             if (!this.Abandoned)
@@ -160,8 +161,7 @@
                     || projectedBody is HasteToken
                     || projectedBody is SystemActors.CTF.Base
                     || projectedBody is SystemActors.CTF.Flag)
-                    return ((Vector2.Distance(projectedBody.Position, this.Position)
-                            <= this.Size + projectedBody.Size));
+                    return true;
             }
 
             return false;

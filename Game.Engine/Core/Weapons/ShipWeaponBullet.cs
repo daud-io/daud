@@ -19,6 +19,9 @@
         public bool Consumed { get; set; }
         private Vector2 Reference = Vector2.Zero;
 
+        private float MaximumSpeed;
+
+
         public ShipWeaponBullet(World world, Ship ship): base(world)
         {
             this.OwnedByFleet = ship.Fleet;
@@ -33,13 +36,15 @@
             Angle = MathF.Atan2(LinearVelocity.Y, LinearVelocity.X);
             AngularVelocity = 0;
 
-            if (World.Time >= TimeDeath)
+            MaximumSpeed = MathF.Max(LinearVelocity.Length(), MaximumSpeed);
+
+            if (World.Time >= TimeDeath || Consumed)
                 Die();
         }
 
         public override void CollisionExecute(WorldBody projectedBody)
         {
-            TimeDeath = World.Time;
+            
         }
 
         public override bool IsCollision(WorldBody otherBody)

@@ -117,7 +117,7 @@ namespace Game.Engine.Physics
             }
 
             pairMaterial.MaximumRecoveryVelocity = float.MaxValue;
-            pairMaterial.SpringSettings = new SpringSettings(30, 0);
+            pairMaterial.SpringSettings = new SpringSettings(30, 1);
 
             for (int i = 0; i < manifold.Count; ++i)
             {

@@ -408,7 +408,7 @@
                 WebsocketSendingSemaphore.Release();
             }
         }
-
+ 
         private async Task SendPingAsync()
         {
             var builder = new FlatBufferBuilder(1);

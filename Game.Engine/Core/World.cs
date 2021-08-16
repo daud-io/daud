@@ -89,7 +89,7 @@
                     Properties = BodyProperties
                 },
                 new PoseIntegratorCallbacks(new Vector3(0, 0, 0)),
-                new PositionLastTimestepper()
+                new PositionFirstTimestepper()
             );
             //this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
             NewFleetGenerator = this.DefaultNewFleetGenerator;
@@ -122,6 +122,7 @@
                 {
                     ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
                     bodyImpacts.EnsureCapacity(this.Bodies.Count * 10, this.BufferPool);
+                    //Console.WriteLine($"EnsureCapacity({this.Bodies.Count * 10})");
 
                     this.Simulation.Timestep(Hook.StepTime);
                     
@@ -191,6 +192,8 @@
                 else if (elapsed > Hook.StepTime * 0.5f)
                     Console.WriteLine($"** 50% processing time warning: {elapsed}");
             }
+
+
         }
 
         private void ActorsThink()
@@ -235,8 +238,13 @@
                 ref broadPhaseEnumerator
             );
 
-            foreach (var collidableReference in broadPhaseEnumerator.References)
-                yield return this.Bodies[collidableReference.BodyHandle];
+            var list = new WorldBody[broadPhaseEnumerator.References.Count];
+            for (int overlapIndex = 0; overlapIndex < broadPhaseEnumerator.References.Count; ++overlapIndex)
+                list[overlapIndex] = Bodies[broadPhaseEnumerator.References[overlapIndex].BodyHandle];
+
+            broadPhaseEnumerator.References.Dispose(BufferPool);
+
+            return list;
         }
 
         public void BodyAdd(WorldBody body)

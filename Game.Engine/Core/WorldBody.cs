@@ -12,7 +12,7 @@
         public readonly World World;
         public uint ID;
 
-        private TypedIndex ShapeHandle;
+        protected TypedIndex ShapeHandle;
 
         internal BodyHandle BodyHandle;
 
@@ -24,7 +24,7 @@
         public Sprites Sprite;
         public string Color;
 
-        private BodyReference BodyReference;
+        protected BodyReference BodyReference;
         public bool PendingDestruction = false;
 
         public WorldBody(World world)
@@ -33,7 +33,7 @@
 
             this.ID = World.GenerateObjectID();
             
-            this.DefinePhysicsObject();
+            this.DefinePhysicsObject(this.Size, this.Mass);
 
             this.UpdateBodyReference(World.Simulation.Bodies.GetBodyReference(this.BodyHandle));
 
@@ -42,31 +42,30 @@
             this.Exists = true;
         }
 
-        protected virtual void DefinePhysicsObject()
+        protected virtual void DefinePhysicsObject(float size, float mass)
         {
-            int size = this.Size;
             var shape = new Sphere(size);
             var position2d = InitialPosition();
 
             ShapeHandle = World.Simulation.Shapes.Add(shape);
             BodyHandle = World.Simulation.Bodies.Add(BodyDescription.CreateDynamic(
                 new Vector3(position2d.X, 0, position2d.Y),
-                GetBodyInertia(shape),
+                GetBodyInertia(shape, mass),
                 new CollidableDescription(ShapeHandle, 0.1f),
-                new BodyActivityDescription(0.01f)
+                new BodyActivityDescription(0.00f)
             ));
 
             ref var worldBodyProperties = ref World.BodyProperties.Allocate(BodyHandle);
             worldBodyProperties = new WorldBodyProperties
             {
+                Friction = 0.5f
             };
         }
         
-        protected virtual BodyInertia GetBodyInertia(Sphere shape)
+        protected virtual BodyInertia GetBodyInertia(IConvexShape shape, float mass)
         {
-            var size = shape.Radius;
-            var mass = 4/3 * MathF.PI * (size*size*size) * 0.25f;
             shape.ComputeInertia(mass, out var bodyInertia);
+            
             // this locks rotation along the X and Z axes, aiding 2d physics
             bodyInertia.InverseInertiaTensor.XX = 0;
             bodyInertia.InverseInertiaTensor.ZZ = 0;
@@ -127,8 +126,7 @@
             }
         }
 
-        private int _size = 0;
-
+        protected int _size = 100;
         public int Size
         {
             get
@@ -139,13 +137,39 @@
             {
                 if (value != _size)
                 {
-                    ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
-                    shape.Radius = value;
-                    BodyReference.LocalInertia = GetBodyInertia(shape);
-                    BodyReference.SetShape(ShapeHandle);
+                    _size = value;
+                    UpdateSize();
                 }
-                _size = value;
             }
+        }
+        private float _mass = 100f;
+        public virtual float Mass
+        {
+            get
+            {
+                return _mass;
+            }
+            set
+            {
+                if (value != _mass)
+                {
+                    _mass = value;
+
+                    UpdateInertia();
+                }
+            }
+        }
+
+        protected virtual void UpdateSize()
+        {
+            ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
+            shape.Radius = _size;
+        }
+
+        protected virtual void UpdateInertia()
+        {
+            ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
+            BodyReference.LocalInertia = GetBodyInertia(shape, _mass);
         }
 
         public void UpdateBodyReference(BodyReference bodyReference)
