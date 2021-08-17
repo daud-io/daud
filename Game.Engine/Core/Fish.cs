@@ -8,14 +8,13 @@
 
     public class Fish : Ship
     {
-        private long SleepUntil = 0;
-
         public Fish(World world) : base(world)
         {
             this.Mass = 10;
             
             Size = 70;
             Sprite = Sprites.fish;
+            CycleMS = World.Hook.FishCycle;
             Randomize();
         }
 
@@ -29,12 +28,8 @@
 
         protected override void Update()
         {
-            if (SleepUntil < World.Time)
-            {
-                base.Update();
-                Flock();
-                SleepUntil = World.Time + World.Hook.FishCycle;
-            }
+            base.Update();
+            Flock();
         }
 
         private void Flock()
