@@ -1,0 +1,58 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "server build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Game.Engine/Game.Engine.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "isBuildCommand": true,
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "server publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/Game.Engine/Game.Engine.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "server watch",
+            "command": "dotnet",
+            "type": "process",
+            "options": {
+                "cwd": "${workspaceFolder}/Game.Engine",
+            },
+            "isBackground": true,
+
+            "args": [
+                "watch",
+                "run",
+                "${workspaceFolder}/Game.Engine/Game.Engine.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "client watch",
+            "isBackground": true,
+            "type": "npm",
+            "script": "watch",
+            "options": {
+                "cwd": "${workspaceFolder}/Game.Engine/wwwroot/src"
+            },
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

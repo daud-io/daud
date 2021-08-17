@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "client",
+            "request": "launch",
+            "type": "pwa-chrome",
+            "url": "http://localhost:5100",
+            "browserAttachLocation": "ui",
+            "webRoot": "${workspaceFolder}/Game.Engine/wwwroot/src",
+            "preLaunchTask": "client watch",
+            "stopOnEntry": false
+        },
+        {
+            "name": "server",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "server build",
+            "program": "${workspaceFolder}/Game.Engine/bin/Debug/netcoreapp5.0/Game.Engine.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Game.Engine",
+            "stopAtEntry": false,
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "client and server",
+            "configurations": ["server", "client"]
+        }
+    ]
+}  
