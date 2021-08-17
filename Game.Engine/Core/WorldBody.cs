@@ -19,11 +19,12 @@
         public Group Group;
 
         public bool Exists;
+        public long SleepUntil;
 
         public byte Mode = 0;
         public Sprites Sprite;
         public string Color;
-
+        protected int CycleMS = 0;
         protected BodyReference BodyReference;
         public bool PendingDestruction = false;
 
@@ -236,24 +237,28 @@
         void IActor.Think()
         {
             if (Exists)
-                this.Update();
-
-            if (PendingDestruction)
             {
-                Destroy();
-                if (this.Exists)
+                if (World != null && World.Time > SleepUntil)
                 {
+                    this.Update();
+
+                    if (World != null)
+                        SleepUntil = World.Time + CycleMS;
+                }
+
+
+                if (PendingDestruction)
+                {
+                    Destroy();
                     World.Actors.Remove(this);
                     World.BodyRemove(this);
                     World.Simulation.Bodies.Remove(this.BodyHandle);
                     World.Simulation.Shapes.Remove(this.ShapeHandle);
                     this.BodyHandle = default;
                     this.BodyReference = default;
-
                     this.ShapeHandle = default;
                     this.Exists = false;
                 }
-                PendingDestruction = false;
             }
         }
 

@@ -685,15 +685,6 @@
             }
         }
 
-        private void Close()
-        {
-            try
-            {
-                Socket.Abort();
-            }
-            catch (Exception) { }
-        }
-
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
 

@@ -15,6 +15,7 @@
         public PickupBase(World world): base(world)
         {
             Size = 100;
+            this.Mass = 0.001f;
             Sprite = Sprites.seeker_pickup;
             if (!DontRandomize)
                 Randomize();

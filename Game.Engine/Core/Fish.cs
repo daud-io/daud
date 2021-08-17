@@ -12,6 +12,8 @@
 
         public Fish(World world) : base(world)
         {
+            this.Mass = 10;
+            
             Size = 70;
             Sprite = Sprites.fish;
             Randomize();
