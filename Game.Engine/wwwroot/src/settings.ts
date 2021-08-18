@@ -3,7 +3,6 @@ import { load } from "./loader";
 import { initializeWorld } from "./controls";
 import * as cache from "./cache";
 import bus from "./bus";
-import { settings } from "pixi.js";
 
 export const Settings = {
     theme: "",
@@ -26,7 +25,7 @@ loadSettings();
 
 async function themeChange() {
     Settings.theme = themeSelector.value;
-    await load();
+    //await load();
     bus.emit("loaded");
     cache.refreshSprites();
     initializeWorld();

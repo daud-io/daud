@@ -12,7 +12,9 @@
   {
     "bg1": {
       "url": "bg.png",
-      "size": 1
+      "size": 1,
+      "width": 828,
+      "height": 600
     },
     "boost": {
       "url": "thruster_cyan.png",
@@ -22,16 +24,20 @@
         "y": 0
       },
       "animated": {
-        "speed": 0.5,
+        "speed": 50,
         "loop": true,
         "size": 64,
         "count": 29
       },
+      "width": 64,
+      "height": 64,
       "rotate": 6
     },
     "ship": {
       "size": 2.5,
-      "abstract": true
+      "abstract": true,
+      "width": 1024,
+      "height": 1024
     },
     "ship0": {
       "extends": "ship",
@@ -111,7 +117,9 @@
     },
     "bullet": {
       "url": "bullet_cyan.png",
-      "size": 5
+      "size": 5,
+      "width": 584,
+      "height": 288
     },
     "bullet_cyan": {
       "extends": "bullet",
@@ -143,19 +151,27 @@
     },
     "obstacle": {
       "url": "obstacle.png",
-      "size": 2.3
+      "size": 2.3,
+      "width": 752,
+      "height": 752
     },
     "seeker": {
       "url": "seeker.png",
-      "size": 0.64
+      "size": 0.64,
+      "width": 1088,
+      "height": 240
     },
     "seeker_pickup": {
       "url": "seeker_pickup.png",
-      "size": 1
+      "size": 1,
+      "width": 75,
+      "height": 51
     },
     "fish": {
       "url": "fish.png",
-      "size": 2
+      "size": 2,
+      "width": 1024,
+      "height": 1024
     }
   }
 }

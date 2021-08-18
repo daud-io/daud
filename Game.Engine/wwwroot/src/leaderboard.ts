@@ -1,8 +1,8 @@
 ﻿import { LeaderboardType, LeaderboardEntry } from "./connection";
 import { getTextureDefinition } from "./loader";
-import { Vector2 } from "./Vector2";
 import { html, render, Hole } from "uhtml";
 import bus from "./bus";
+import { Vector2 } from "@babylonjs/core";
 const record = document.getElementById("record")!;
 const leaderboard = document.getElementById("leaderboard")!;
 const leaderboardLeft = document.getElementById("leaderboard-left")!;
@@ -40,7 +40,7 @@ function getOut(entry: LeaderboardEntry, position: Vector2, rank?: number, entry
 
 let recordName: string;
 let recordScore: number;
-export function update(data: LeaderboardType, position: PIXI.Point, fleetID: number): void {
+export function update(data: LeaderboardType, position: Vector2, fleetID: number): void {
     if (data.Record && (recordName != data.Record.Name || recordScore != data.Record.Score)) {
         recordName = data.Record.Name;
         recordScore = data.Record.Score;

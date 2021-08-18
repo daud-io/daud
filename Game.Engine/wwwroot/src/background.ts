@@ -1,25 +1,25 @@
 import { getSpriteDefinition, getTextureDefinition } from "./loader";
-import * as PIXI from "pixi.js";
-import { Vector2 } from "./Vector2";
 import bus from "./bus";
 import { Settings } from "./settings";
+import { CustomContainer } from "./CustomContainer";
+import { Vector2 } from "@babylonjs/core";
 
-let container: PIXI.Container | undefined;
+let container: CustomContainer;
 let focus: Vector2 = new Vector2(0, 0);
 let speeds: number[] = [];
-let backgroundSprites: PIXI.TilingSprite[] = [];
+//let backgroundSprites: PIXI.TilingSprite[] = [];
 
-export function setContainer(newContainer: PIXI.Container): void {
+export function setContainer(newContainer: CustomContainer): void {
     container = newContainer;
 }
 export function draw(): void {
-    if (backgroundSprites) {
+    /*if (backgroundSprites) {
         for (let i = 0; i < backgroundSprites.length; i++) {
             const backgroundSprite = backgroundSprites[i];
             backgroundSprite.position.x = focus.x * (1 - speeds[i]) - 100000;
             backgroundSprite.position.y = focus.y * (1 - speeds[i]) - 100000;
         }
-    }
+    }*/
 }
 
 export function updateFocus(newFocus: Vector2): void {
@@ -27,7 +27,7 @@ export function updateFocus(newFocus: Vector2): void {
 }
 
 bus.on("loaded", () => {
-    const spriteDefinition = (getSpriteDefinition("bg") as unknown) as {
+    /*const spriteDefinition = (getSpriteDefinition("bg") as unknown) as {
         layerSpeeds: number[];
         layerTextures: string[];
         scale: number[];
@@ -39,7 +39,6 @@ bus.on("loaded", () => {
         if (textures.length > 0) {
             let backgroundSprite = backgroundSprites[i];
             if (!backgroundSprite) {
-                backgroundSprite = new PIXI.TilingSprite(textures[0], 200000, 200000);
                 backgroundSprite.visible = Settings.background;
                 if (container) container.addChild(backgroundSprite);
                 backgroundSprite.tileScale.set(spriteDefinition.scale[i], spriteDefinition.scale[i]);
@@ -49,20 +48,20 @@ bus.on("loaded", () => {
             } else backgroundSprite.texture = textures[0];
         }
     }
-    draw();
+    draw();*/
 });
 
 bus.on("settings", () => {
-    for (const sprite of backgroundSprites) {
+    /*for (const sprite of backgroundSprites) {
         sprite.visible = Settings.background;
-    }
+    }*/
 });
 
 export function destroy(): void {
-    for (let i = 0; i < backgroundSprites.length; i++) {
+    /*for (let i = 0; i < backgroundSprites.length; i++) {
         const backgroundSprite = backgroundSprites[i];
         if (backgroundSprite && container) container.removeChild(backgroundSprite);
     }
 
-    backgroundSprites = [];
+    backgroundSprites = [];*/
 }

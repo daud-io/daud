@@ -13,16 +13,18 @@
     "watch": "node build.js"
   },
   "dependencies": {
-    "@pixi/display": "^6.0.4",
-    "@pixi/layers": "^1.0.6",
     "@types/flatbuffers": "^1.10.0",
     "@types/js-cookie": "^2.2.6",
+    "@babylonjs/core": "4.2.0",
+    "@babylonjs/loaders": "4.2.0",
+    "@babylonjs/materials": "4.2.0",
+    "@babylonjs/post-processes": "4.2.0",
+    "@babylonjs/procedural-textures": "4.2.0",
+    "@babylonjs/gui": "4.2.0",
     "emoji-picker-element": "^1.4.0",
     "flatbuffers": "^1.12.0",
     "js-cookie": "^2.2.1",
-    "jszip": "^3.5.0",
-    "pixi-particles": "^4.3.0",
-    "pixi.js": "^5.3.7",
+    "jszip": "^3.7.1",
     "plotly.js": "^1.58.4",
     "uhtml": "^2.3.1"
   },

@@ -1,7 +1,6 @@
+import { Vector2 } from "@babylonjs/core";
 import { LeaderboardType } from "./connection";
-import * as PIXI from "pixi.js";
-import { Vector2 } from "./Vector2";
-import { Dimension2 } from "./Dimension2";
+import { CustomContainer } from "./CustomContainer";
 const minimapSize = 180;
 const minimapMarginBottom = 15;
 const minimapMarginRight = 15;
@@ -16,7 +15,7 @@ const colors = {
     green: 0x00ff00,
 };
 
-const ctx = new PIXI.Graphics();
+/*const ctx = new PIXI.Graphics();
 ctx.zIndex = 11;
 
 let minimapChanged = false;
@@ -30,16 +29,16 @@ window.addEventListener("keydown", (e) => {
 window.addEventListener("keyup", (e) => {
     if (e.code == "KeyM") minimapChanged = false;
 });
-
+*/
 export class Minimap {
-    constructor(stage: PIXI.Container, size: Dimension2) {
-        this.size(size);
-        stage.addChild(ctx);
+    constructor(container: CustomContainer) {
+        //stage.addChild(ctx);
     }
-    size(size: Dimension2): void {
-        ctx.position = new Vector2(size.width - minimapSize - minimapMarginRight, size.height - minimapSize - minimapMarginBottom);
+    resize(): void {
+        //ctx.position = new Vector2(size.width - minimapSize - minimapMarginRight, size.height - minimapSize - minimapMarginBottom);
     }
     update(data: LeaderboardType, worldSize: number, fleetID: number): void {
+        /*
         const startIndex = data.Type === "Team" ? 2 : 0;
         const isCTF = data.Type === "CTF";
         ctx.clear();
@@ -52,8 +51,12 @@ export class Minimap {
                 this.drawMinimap(new Vector2(entry.Position.x, entry.Position.y), entry.Color as keyof typeof colors, entryIsSelf, i, isCTF, worldSize);
             }
         }
+        */
     }
     drawMinimap(position: Vector2, color: keyof typeof colors, self: boolean, rank: number, isCTF: boolean, worldSize: number): void {
+
+        /*
+
         const minimapX = ((position.x + worldSize) / 2 / worldSize) * minimapSize;
         const minimapY = ((position.y + worldSize) / 2 / worldSize) * minimapSize;
 
@@ -89,5 +92,6 @@ export class Minimap {
                 .drawRect(minimapX - 2, minimapY - 2, 4, 4)
                 .endFill();
         }
+        */
     }
 }

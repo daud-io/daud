@@ -1,82 +1,89 @@
 import { CustomContainer } from "./CustomContainer";
-import * as PIXI from "pixi.js";
 
-import { Emitter } from "pixi-particles";
 import { ClientBody } from "./cache";
 import { getTextureDefinition, TextureDefinition } from "./loader";
+import { Sprite } from "@babylonjs/core";
+import { projectObject } from "./interpolator";
 
 export class TextureLayer {
-    sprite: PIXI.Sprite | undefined;
-    emitter: Emitter | undefined;
+    private sprite: Sprite | undefined;
+    emitter: any | undefined;
 
     lastTime: number;
-    scale: number;
 
     textureDefinition: TextureDefinition;
 
-    baseRotation: number;
-
     offset: { x: number; y: number };
-
+    aspectRatio: number;
 
     constructor(container: CustomContainer, clientBody: ClientBody, textureName: string) {
-        this.scale = 0;
         this.lastTime = 0;
-        this.baseRotation = 0;
         this.offset = { x: 0, y: 0 };
+        this.aspectRatio = 1;
 
         let textureDefinition = getTextureDefinition(textureName);
         this.textureDefinition = textureDefinition;
 
-        const textures = textureDefinition.textures!;
-
-        if (textureDefinition.animated) {
-            const animatedSprite = new PIXI.AnimatedSprite(textures);
-            animatedSprite.animationSpeed = textureDefinition.animated.speed;
-            animatedSprite.play();
-            this.sprite = animatedSprite;
-            this.scale = textureDefinition.size / textureDefinition.animated.size;
-        } else if (textureDefinition.emitter) {
-            this.emitter = new Emitter(container.bodyGroup, textures, textureDefinition.emitter);
+        if (textureDefinition.emitter) {
+            /*this.emitter = new Emitter(container.bodyGroup, textures, textureDefinition.emitter);
             this.emitter.emit = true;
             if (textureDefinition.size)
-                this.scale = textureDefinition.size;
+                this.scale = textureDefinition.size;*/
         } else {
-            this.sprite = new PIXI.Sprite(textures[0]);
-            this.scale = textureDefinition.size / this.sprite.texture.baseTexture.realHeight;
+            if (textureDefinition.spriteManager)
+            {
+                this.sprite = new Sprite(textureName, textureDefinition.spriteManager);
+                this.sprite.position.y = 0;
+
+                projectObject(clientBody, clientBody.DefinitionTime);
+                this.updateFromBody(clientBody);
+
+                if (textureDefinition.animated) {
+                    this.sprite.playAnimation(0, textureDefinition.animated.count, true, textureDefinition.animated.speed);
+                }
+
+                this.aspectRatio = this.textureDefinition.width/this.textureDefinition.height;
+            }
         }
 
-        if (this.sprite && this.sprite instanceof PIXI.Sprite) {
-            if (textureDefinition.tint) this.sprite.tint = textureDefinition.tint;
-
+        if (this.sprite && this.sprite instanceof Sprite) {
+            /*if (textureDefinition.tint)
+                this.sprite.tint = textureDefinition.tint;
+            */
 
             if (textureDefinition.offset) {
                 this.offset.x = textureDefinition.offset.x;
                 this.offset.y = textureDefinition.offset.y;
             }
-            this.sprite.anchor.set(0.5);
+        }
+    }
 
-            container.bodyGroup.addChild(this.sprite);
+    updateFromBody(body: ClientBody) {
+        if (this.sprite) {
+            if (this.offset.x != 0 || this.offset.y != 0) {
+                this.sprite.position.x = (body.Position.x + (this.offset.x * Math.cos(body.Angle) - this.offset.y * Math.sin(body.Angle)));
+                this.sprite.position.z = (body.Position.y + (this.offset.y * Math.cos(body.Angle) + this.offset.x * Math.sin(body.Angle)));
+            }
+            else {
+                this.sprite.position.x = body.Position.x;
+                this.sprite.position.z = body.Position.y;
+            }
+
+            let extraRotation = 0;
+            if (this.textureDefinition.rotate)
+                extraRotation = -Math.PI/2;
+
+            this.sprite.angle = body.Angle + Math.PI + extraRotation;
+            this.sprite.height = this.textureDefinition.size * body.Size; 
+            this.sprite.width = this.sprite.height * this.aspectRatio;
         }
     }
 
     tick(time: number, body: ClientBody) {
-        if (this.sprite) {
-
-            if (this.offset.x != 0 || this.offset.y != 0) {
-                this.sprite.x = (body.Position.x + (this.offset.x * Math.cos(body.Angle) - this.offset.y * Math.sin(body.Angle)));
-                this.sprite.y = (body.Position.y + (this.offset.y * Math.cos(body.Angle) + this.offset.x * Math.sin(body.Angle)));
-            }
-            else {
-                this.sprite.x = body.Position.x;
-                this.sprite.y = body.Position.y;
-            }
-            this.sprite.rotation = body.Angle
-            this.sprite.scale.set(this.scale * body.Size, this.scale * body.Size);
-        }
+        this.updateFromBody(body);
 
         if (this.emitter) {
-            let scale = this.textureDefinition.emitter.scale;
+            /*let scale = this.textureDefinition.emitter.scale;
             let speed = this.textureDefinition.emitter.speed;
 
             if (scale && speed)
@@ -91,19 +98,19 @@ export class TextureLayer {
             this.emitter.updateOwnerPos(body.Position.x, body.Position.y);
 
             if (this.lastTime > 0)
-                this.emitter.update((time - this.lastTime) * 0.001);
+                this.emitter.update((time - this.lastTime) * 0.001);*/
         }
 
         this.lastTime = time;
     }
 
     setZIndex(z: number): void {
-        if (this.sprite) this.sprite.zIndex = z;
+        if (this.sprite) this.sprite.position.y = z;
     }
 
     destroy(): void {
-        (this.sprite) && this.sprite.destroy();
-        (this.emitter) && this.emitter.destroy();
+        this.sprite?.dispose();
+        this.emitter?.dispose();
         this.sprite = undefined;
         this.emitter = undefined;
     }

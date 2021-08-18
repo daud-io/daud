@@ -62,6 +62,7 @@
                 + oobVector;
 
             Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            AngularVelocity = 0;
         }
 
         public override void Destroy()

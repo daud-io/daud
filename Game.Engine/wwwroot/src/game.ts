@@ -1,9 +1,6 @@
 ﻿import { NetBody, NetWorldView, NetGroup } from "./game_generated";
-import * as PIXI from "pixi.js";
-import { Layer, Group } from "@pixi/layers";
 import * as background from "./background";
 import { Border } from "./border";
-import { Overlay } from "./overlay";
 import { setContainer, bodyFromServer, ClientBody, update as updateCache, tick as cacheTick } from "./cache";
 import { projectObject } from "./interpolator";
 import { update as leaderboardUpdate } from "./leaderboard";
@@ -17,21 +14,16 @@ import { getToken } from "./discord";
 import { Settings } from "./settings";
 import { Events } from "./events";
 import { refreshList, joinWorld, firstLoad } from "./lobby";
-import { Vector2 } from "./Vector2";
 import { CustomContainer } from "./CustomContainer";
 import { load } from "./loader";
 import "./hintbox";
 import bus from "./bus";
 
+import { Vector2, Vector3 } from "@babylonjs/core";
+
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
 
-declare global {
-    interface Window {
-        magic: string | undefined;
-        webkitAudioContext: typeof window.AudioContext;
-    }
-}
 const actx = new (window.AudioContext || window.webkitAudioContext)();
 
 function beep() {
@@ -63,12 +55,12 @@ const spectateControls = document.querySelector("#spectatecontrols") as HTMLElem
 const button = document.getElementById("spawn") as HTMLButtonElement;
 const connection = new Connection(onView);
 
-let camera: ClientBody;
+let cameraPositionFromServer: ClientBody;
 let time: number;
 let isAlive: boolean;
 let serverTimeOffset: number | undefined;
 let gameTime: number;
-let lastPosition: PIXI.Point = new Vector2(0, 0);
+let lastPosition: Vector2 = new Vector2(0, 0);
 let worldSize = 1000;
 let fleetID = 0;
 let frameCounter = 0;
@@ -80,20 +72,14 @@ let aliveSince: number;
 let joiningWorld = false;
 let spawnOnView = false;
 
-const app = new PIXI.Application({ view: canvas, transparent: true, resolution: window.devicePixelRatio || 1 });
 
-app.stage.sortableChildren = true;
-const container = new CustomContainer();
-app.stage.addChild(container);
-app.stage.sortChildren();
+
+const container = new CustomContainer(canvas as HTMLCanvasElement);
 
 const border = new Border(container);
-container.plotly = document.getElementById("plotly");
-const overlay = new Overlay(container, canvas, container.plotly);
-const minimap = new Minimap(app.stage, size);
-background.setContainer(container.backgroundGroup);
+const minimap = new Minimap(container);
+background.setContainer(container);
 registerCanvas(canvas);
-
 
 bus.on("dead", () => {
     document.body.classList.remove("alive");
@@ -172,7 +158,6 @@ function onView(newView: NetWorldView) {
     for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d)!);
 
     updateCache(updates, deletes, groups, groupDeletes, gameTime, fleetID);
-    if (overlay) overlay.update(newView.customData());
 
     setPlayerCount(newView.playerCount());
     setSpectatorCount(newView.spectatorCount());
@@ -184,7 +169,7 @@ function onView(newView: NetWorldView) {
 
     progress.value = newView.cooldownShoot();
 
-    camera = bodyFromServer(newView.camera()!);
+    cameraPositionFromServer = bodyFromServer(newView.camera()!);
 
     if (spawnOnView) {
         spawnOnView = false;
@@ -331,11 +316,8 @@ const sizeCanvas = () => {
     ctfArea.style.transformOrigin = `top center`;
     spectateControls.style.transformOrigin = `bottom center`;
 
-    minimap.size(size);
-
-    app.renderer.resize(width, height);
-    app.renderer.resolution = window.devicePixelRatio || 1;
-    container.scale.set(width / 5500, width / 5500);
+    container.resize();
+    minimap.resize();
 };
 
 sizeCanvas();
@@ -347,7 +329,7 @@ window.addEventListener("resize", () => {
 let angle = 0.0;
 let aimTarget = new Vector2(0, 0);
 
-let lastControl: { angle?: number; aimTarget?: PIXI.Point; boost?: boolean; shoot?: boolean; autofire?: boolean; chat?: string } = {
+let lastControl: { angle?: number; aimTarget?: Vector2; boost?: boolean; shoot?: boolean; autofire?: boolean; chat?: string } = {
     angle: undefined,
     aimTarget: undefined,
     boost: undefined,
@@ -356,7 +338,7 @@ let lastControl: { angle?: number; aimTarget?: PIXI.Point; boost?: boolean; shoo
     chat: undefined,
 };
 
-const loadImages = load();
+const loadImages = load(container);
 loadImages.then(() => {
     setContainer(container);
     document.querySelector(".loading")!.classList.remove("loading");
@@ -371,12 +353,16 @@ loadImages.then(() => {
         minimap.update(lb, worldSize, fleetID);
     });
 
+    
+
     // Game Loop
-    app.ticker.add(() => {
+    container.engine.runRenderLoop(() => {
+        container.scene.render()
+        
         if (Controls.mouseX) {
-            const pos = container.toLocal(new Vector2(Controls.mouseX, Controls.mouseY));
+            const pos = container.toWorld();
             angle = Controls.angle;
-        aimTarget = new Vector2(Settings.mouseScale * (pos.x - lastPosition.x), Settings.mouseScale * (pos.y - lastPosition.y));
+            aimTarget = new Vector2(Settings.mouseScale * (pos.x - lastPosition.x), Settings.mouseScale * (pos.y - lastPosition.y));
         }
 
         if (
@@ -397,10 +383,6 @@ loadImages.then(() => {
             let customData = Controls.customData;
 
             if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
-            if (window.magic) {
-                customData = JSON.stringify(Object.assign(JSON.parse(customData || "{}"), { magic: window.magic }));
-                window.magic = undefined;
-            }
 
             connection.sendControl(angle, Controls.boost, Controls.shoot || Controls.autofire, aimTarget.x, aimTarget.y, spectateControl, customData);
 
@@ -420,15 +402,14 @@ loadImages.then(() => {
             const position = new Vector2(0, 0);
             gameTime = performance.now() + serverTimeOffset;
 
-            projectObject(camera, gameTime);
-            position.x = Math.floor(camera.Position.x * 0.2 + lastCamera.x * 0.8);
-            position.y = Math.floor(camera.Position.y * 0.2 + lastCamera.y * 0.8);
+            projectObject(cameraPositionFromServer, gameTime);
+
+            position.x = cameraPositionFromServer.Position.x * 0.2 + lastCamera.x * 0.8;
+            position.y = cameraPositionFromServer.Position.y * 0.2 + lastCamera.y * 0.8;
             lastCamera = position;
 
-            container.pivot.x = Math.floor(position.x - 5500 / 2);
-            container.pivot.y = Math.floor(position.y - (5500 / 2) * (9 / 16));
-            container.position.x = Math.floor(container.position.x);
-            container.position.y = Math.floor(container.position.y);
+            container.camera.position = new Vector3(position.x, 6000, position.y);
+            container.camera.setTarget(new Vector3(position.x, 0, position.y));
 
             cacheTick(gameTime);
 

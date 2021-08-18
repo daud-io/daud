@@ -51,8 +51,7 @@
             "script": "watch",
             "options": {
                 "cwd": "${workspaceFolder}/Game.Engine/wwwroot/src"
-            },
-            "problemMatcher": "$msCompile"
+            }
         }
     ]
 }

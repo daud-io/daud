@@ -3,11 +3,10 @@ import { NetGroup, NetBody } from "./game_generated";
 import { RenderedObject } from "./renderedObject";
 import { Fleet } from "./models/fleet";
 import { CustomContainer } from "./CustomContainer";
-import { Vector2 } from "./Vector2";
 import bus from "./bus";
 import { Ship } from "./models/ship";
-import { Particle } from "pixi-particles";
 import { Token } from "./models/token";
+import { Vector2 } from "@babylonjs/core";
 
 type ClientRendered = {
     body: ClientBody;

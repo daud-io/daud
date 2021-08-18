@@ -1,10 +1,10 @@
 ﻿import { flatbuffers } from "flatbuffers";
 import * as fb from "./game_generated";
 import { Settings } from "./settings";
-import { Vector2 } from "./Vector2";
 import { addSecretShips } from "./controls";
 import { getToken } from "./discord";
 import bus from "./bus";
+import { Vector2 } from "@babylonjs/core";
 
 export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
 export type LeaderboardType = {

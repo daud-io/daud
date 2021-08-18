@@ -186,6 +186,8 @@
   "textures": {
     "powerup_base": {
       "url": "particle.png",
+      "width": 1,
+      "height": 1,
       "size": 0.02,
       "emitter": {
         "alpha": {
@@ -243,6 +245,8 @@
     },
     "ship_haste": {
       "url": "particle.png",
+      "width": 1,
+      "height": 1,
       "size": 0.02,
       "emitter": {
         "alpha": {

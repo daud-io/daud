@@ -1,6 +1,5 @@
-import JSZip from "jszip";
-import { OldEmitterConfig } from "pixi-particles";
-import * as PIXI from "pixi.js";
+import { Engine, Scene, SpriteManager, Texture } from "@babylonjs/core";
+import { CustomContainer } from "./CustomContainer";
 import { Settings } from "./settings";
 import { SpriteLibrary } from "./spriteLibrary";
 
@@ -9,13 +8,15 @@ export type TextureDefinition = {
     extends: string;
     url: string;
     animated?: { size: number; count: number; speed: number };
-    emitter: OldEmitterConfig;
+    emitter: any;
     offset?: { x: number; y: number };
     rotate?: number;
     tint?: number;
     size: number;
+    width: number;
+    height: number;
     abstract: boolean;
-    textures?: PIXI.Texture[];
+    spriteManager?: SpriteManager;
 };
 let spriteDefinitions: Record<string, SpriteDefinition> = {};
 export type SpriteDefinition = {
@@ -37,37 +38,41 @@ export function getSpriteDefinition(spriteName: string): SpriteDefinition {
     return definition;
 }
 
-export function loadTexture(textureDefinition: TextureDefinition): Promise<void> {
-    const textures: PIXI.Texture[] = [];
-    const baseTexture = PIXI.BaseTexture.from(textureDefinition.url);
-
+export function loadTexture(container: CustomContainer, textureKey: string): Promise<void> {
     return new Promise((resolve) => {
-        const cb = () => {
-            if (textureDefinition.animated) {
-                const tileSize = textureDefinition.animated.size;
-                const totalTiles = textureDefinition.animated.count;
-
-                for (let tileIndex = 0; tileIndex < totalTiles; tileIndex++) {
-                    const sx = (tileSize * tileIndex) % baseTexture.realWidth;
-                    const sy = tileSize * Math.floor((tileSize * tileIndex) / baseTexture.realWidth);
-                    const sw = tileSize;
-                    const sh = tileSize;
-                    const tex = new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh));
-                    if (textureDefinition.rotate)
-                        tex.rotate = textureDefinition.rotate;
-                        
-                    textures.push(tex);
-                }
-            } else {
-                const texture = new PIXI.Texture(baseTexture);
-                textures.push(texture);
-            }
-            textureDefinition.textures = textures;
+        var def = textureDefinitions[textureKey];
+        if (def.abstract)
             resolve();
-        };
-        if (baseTexture.valid) cb();
-        else baseTexture.once("loaded", cb);
+        else {
+            if (def.animated) {
+
+                const cellSize = def.animated.size;
+                const totalCells = def.animated.count;
+
+                def.spriteManager = new SpriteManager(
+                    `texture-${textureKey}`, def.url, 1000,
+                    {
+                        width: cellSize, 
+                        height: cellSize
+                    },
+                    container.scene
+                );
+
+                /*if (def.rotate)
+                    tex.rotate = def.rotate;*/
+
+            } else {
+                def.spriteManager = new SpriteManager(
+                    `texture-${textureKey}`, def.url, 1000, undefined,
+                    container.scene
+                );
+            }
+
+            // preferrably wait :/
+            resolve();
+        }
     });
+
 }
 
 interface IObject {
@@ -97,7 +102,7 @@ export const merge = <T extends IObject[]>(...objects: T): TUnionToIntersection<
     }, {}) as any;
 
 const progressEl = document.getElementById("loader") as HTMLProgressElement;
-export async function load(): Promise<void> {
+export async function load(container: CustomContainer): Promise<void> {
 
     // load all the libraries
     let library = await SpriteLibrary.load("assets/base");
@@ -110,19 +115,14 @@ export async function load(): Promise<void> {
     // load the textures
     await allProgress(
         Object.keys(textureDefinitions)
-            .map(async (key) => {
-                var texture = textureDefinitions[key];
-                if (!texture.abstract)
-                {
-                    await loadTexture(texture);
-                }
+            .map(async (textureKey) => {
+                await loadTexture(container, textureKey);
             })
             .filter((x) => !!x)
-        );
+    );
 }
 
-function addLayer(base:SpriteLibrary, patch:SpriteLibrary): void
-{
+function addLayer(base: SpriteLibrary, patch: SpriteLibrary): void {
     for (let k in patch.sprites)
         base.sprites[k] = patch.sprites[k];
     for (let k in patch.textures)
