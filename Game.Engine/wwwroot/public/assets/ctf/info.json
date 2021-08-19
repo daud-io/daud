@@ -24,7 +24,9 @@
     "textures": {
         "ctf_base": {
             "url": "ctf_base.png",
-            "size": 3.072
+            "size": 3.072,
+            "width": 1024,
+            "height": 1024
         },
         "ctf_flag_base": {
             "abstract": true,
@@ -34,7 +36,9 @@
                 "size": 128,
                 "count": 6
             },
-            "size": 1.92
+            "size": 1.92,
+            "width": 128,
+            "height": 128
         },
         "ctf_flag_blue": {
             "extends": "ctf_flag_base",

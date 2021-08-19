@@ -42,7 +42,10 @@ export class TextureLayer {
                     this.sprite.playAnimation(0, textureDefinition.animated.count, true, textureDefinition.animated.speed);
                 }
 
-                this.aspectRatio = this.textureDefinition.width/this.textureDefinition.height;
+                if (this.textureDefinition.width == undefined || this.textureDefinition.height == undefined)
+                    console.log(`TextureDefinition[${textureName}] is missing height/width`);
+                else
+                    this.aspectRatio = this.textureDefinition.width/this.textureDefinition.height;
             }
         }
 

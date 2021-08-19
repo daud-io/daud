@@ -189,14 +189,14 @@
 
             IsOOB = oob > 0;
 
-            if (oob > World.Hook.OutOfBoundsBorder)
+            /*if (oob > World.Hook.OutOfBoundsBorder)
                 this.LinearVelocity *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
 
             if (oob > World.Hook.OutOfBoundsDeathLine)
             {
                 //Console.WriteLine("ship dying oob");
                 Die(null, null, null);
-            }
+            }*/
         }
     }
 }

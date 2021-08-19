@@ -63,7 +63,11 @@ export function loadTexture(container: CustomContainer, textureKey: string): Pro
 
             } else {
                 def.spriteManager = new SpriteManager(
-                    `texture-${textureKey}`, def.url, 1000, undefined,
+                    `texture-${textureKey}`, def.url, 1000,
+                    {
+                        width: def.width, 
+                        height: def.height
+                    },
                     container.scene
                 );
             }

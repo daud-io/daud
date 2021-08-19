@@ -186,8 +186,8 @@
   "textures": {
     "powerup_base": {
       "url": "particle.png",
-      "width": 1,
-      "height": 1,
+      "width": 44,
+      "height": 44,
       "size": 0.02,
       "emitter": {
         "alpha": {
@@ -314,7 +314,9 @@
         "speed": 0.5,
         "size": 64,
         "count": 29
-      }
+      },
+      "width": 1856,
+      "height": 64
     },
     "shield": {
       "url": "shield.png",
@@ -324,7 +326,10 @@
         "loop": true,
         "size": 64,
         "count": 90
-      }
+      },
+      "width": 64,
+      "height": 64
+
     },
     "invulnerable": {
       "url": "shield.png",
@@ -341,26 +346,32 @@
       "size": 3.6,
       "animated": {
         "loop": true,
-        "speed": 0.4,
+        "speed": 50,
         "size": 72,
         "count": 11
       },
-      "tint": 16711680
+      "tint": 16711680,
+      "width": 72,
+      "height": 72
     },
     "defenseupgrade": {
       "url": "circles.png",
       "size": 3.6,
       "animated": {
         "loop": true,
-        "speed": 0.2,
+        "speed": 50,
         "size": 72,
         "count": 11
       },
-      "tint": 6711039
+      "tint": 6711039,
+      "width": 72,
+      "height": 72
     },
     "ship": {
       "size": 2.5,
-      "url": "ship.png"
+      "url": "ship.png",
+      "width": 128,
+      "height": 128
     },
     "ship0": {
       "extends": "ship"
@@ -421,7 +432,10 @@
     },
     "bullet": {
       "url": "bullet.png",
-      "size": 5
+      "size": 5,
+      "width": 512,
+      "height": 256
+
     },
     "bullet_cyan": {
       "extends": "bullet"
@@ -446,19 +460,29 @@
     },
     "obstacle": {
       "url": "obstacle.png",
-      "size": 2.1
+      "size": 2.1,
+      "width": 1024,
+      "height": 1024
+      
     },
     "seeker": {
       "url": "seeker.png",
-      "size": 0.64
+      "size": 0.64,
+      "width": 256,
+      "height": 32
     },
     "seeker_pickup": {
       "url": "seeker_pickup.png",
-      "size": 1
+      "size": 1,
+      "width": 128,
+      "height": 64
+
     },
     "fish": {
       "url": "fish.png",
-      "size": 7
+      "size": 7,
+      "width": 64,
+      "height": 64
     },
     "shield_pickup": {
       "url": "shield_pickup.png",
@@ -468,7 +492,9 @@
         "count": 30,
         "size": 64
       },
-      "size": 2.56
+      "size": 2.56,
+      "width": 64,
+      "height": 64
     },
     "boom": {
       "url": "boom.png",
@@ -523,17 +549,25 @@
         "particleSpacing": 0,
         "angleStart": 0
       },
-      "size": 0.02
+      "size": 0.02,
+      "width": 512,
+      "height": 512
+
     },
 
     "haste": {
       "url": "haste_powerup.png",
-      "size": 1
+      "size": 1,
+      "width": 256,
+      "height": 256
+
     },
 
     "sportsball": {
       "url": "sportsball_front.png",
-      "size": 2.5
+      "size": 2.5,
+      "width": 256,
+      "height": 256
     }
   }
 }

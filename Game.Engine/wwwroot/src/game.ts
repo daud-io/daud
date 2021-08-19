@@ -408,7 +408,7 @@ loadImages.then(() => {
             position.y = cameraPositionFromServer.Position.y * 0.2 + lastCamera.y * 0.8;
             lastCamera = position;
 
-            container.camera.position = new Vector3(position.x, 6000, position.y);
+            container.camera.position = new Vector3(position.x, 4000, position.y);
             container.camera.setTarget(new Vector3(position.x, 0, position.y));
 
             cacheTick(gameTime);

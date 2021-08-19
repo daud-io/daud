@@ -168,6 +168,7 @@
 
 
         public int WorldSize { get; set; }
+        public string WorldMesh { get; set; }
         public bool WorldResizeEnabled { get; set; }
         public int WorldResizeSpeed { get; set; }
         public int WorldSizeBasic { get; set; }

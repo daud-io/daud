@@ -31,10 +31,9 @@
             "command": "dotnet",
             "type": "process",
             "options": {
-                "cwd": "${workspaceFolder}/Game.Engine",
+                "cwd": "${workspaceFolder}/Game.Engine"
             },
             "isBackground": true,
-
             "args": [
                 "watch",
                 "run",
@@ -51,7 +50,8 @@
             "script": "watch",
             "options": {
                 "cwd": "${workspaceFolder}/Game.Engine/wwwroot/src"
-            }
+            },
+            "problemMatcher": []
         }
     ]
 }

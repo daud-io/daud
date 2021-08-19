@@ -31,7 +31,9 @@
     },
     "ship": {
       "size": 2.56,
-      "abstract": true
+      "abstract": true,
+      "width": 128,
+      "height": 128
     },
     "ship0": {
       "url": "ship0.png",
@@ -93,7 +95,10 @@
         "speed": 0.5,
         "size": 64,
         "count": 29
-      }
+      },
+      "width": 64,
+      "height": 64
+
     },
     "thruster_blue": {
       "url": "thruster_blue.png",
@@ -129,7 +134,9 @@
         "x": -2,
         "y": 0
       },
-      "size": 7.68
+      "size": 7.68,
+      "width": 512,
+      "height": 256
     },
     "bullet_cyan": {
       "extends": "bullet",
@@ -162,19 +169,28 @@
 
     "obstacle": {
       "url": "obstacle.png",
-      "size": 2.6
+      "size": 2.6,
+      "width": 1024,
+      "height": 1024
     },
     "seeker": {
       "url": "seeker.png",
-      "size": 0.64
+      "size": 0.64,
+      "width": 256,
+      "height": 32
     },
     "seeker_pickup": {
       "url": "seeker_pickup.png",
-      "size": 1
+      "size": 1,
+      "width": 128,
+      "height": 64
+
     },
     "fish": {
       "url": "fish.png",
-      "size": 2
+      "size": 2,
+      "width": 64,
+      "height": 64
     }
   }
 }

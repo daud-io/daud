@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="BepuPhysics" Version="2.3.0" />
+    <PackageReference Include="CjClutter.ObjLoader" Version="1.0.0" />
     <PackageReference Include="FlatBuffers.Core" Version="1.12.0" />
     <!--  <PackageReference Include="Docker.DotNet" Version="3.125.4" /> -->
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
@@ -16,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
     <PackageReference Include="RBush" Version="2.0.46" />
+    <PackageReference Include="SharpGLTF.Core" Version="1.0.0-alpha0023" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Discord.Net" Version="2.2.0" />
     <PackageReference Include="NEST" Version="7.10.1" />

@@ -66,7 +66,7 @@
 
         public bool CanSpawn { get => Hook.CanSpawn; set => Hook.CanSpawn = value; }
         public string CanSpawnReason { get; set; }
-        private BufferPool BufferPool = new BufferPool();
+        public BufferPool BufferPool = new BufferPool();
         public Simulation Simulation = null;
         public CollidableProperty<WorldBodyProperties> BodyProperties;
         internal int ProjectileCount;
@@ -89,7 +89,11 @@
                     Properties = BodyProperties
                 },
                 new PoseIntegratorCallbacks(new Vector3(0, 0, 0)),
-                new PositionFirstTimestepper()
+                
+                
+                //new SubsteppingTimestepper(10)
+                //new PositionFirstTimestepper()
+                new PositionLastTimestepper()
             );
             //this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
             NewFleetGenerator = this.DefaultNewFleetGenerator;
@@ -155,8 +159,9 @@
 
         private void InitializeSystemActors()
         {
+            //InitializeSystemActor<WorldResizer>();
+            InitializeSystemActor<WorldMeshLoader>();
             InitializeSystemActor<SpawnLocationsActor>();
-            InitializeSystemActor<WorldResizer>();
             InitializeSystemActor<LeaderboardActor>();
             InitializeSystemActor<Authenticator>();
             InitializeSystemActor<Advertisement>();

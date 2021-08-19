@@ -5,9 +5,12 @@ const worldDefinition = { dangerColor: 0xff0000, edgeColor: 0x0000ff, edgeWidth:
 
 export class Border {
     container: CustomContainer;
+    worldSize: number;
+
     constructor(container: CustomContainer) {
         this.container = container;
-        this.updateWorldSize(6000);
+        this.worldSize = 6000;
+        this.updateWorldSize(this.worldSize);
     }
 
     updateWorldSize(size: number): void {
