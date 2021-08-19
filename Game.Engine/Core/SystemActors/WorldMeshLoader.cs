@@ -51,8 +51,12 @@
                     int i=0;
                     foreach (var (a,b,c) in trianglesIndices)
                     {
-                        triangles[i++] = new Triangle(vertices[c],vertices[b],vertices[a]);
-                        triangles[i++] = new Triangle(vertices[a],vertices[b],vertices[c]);
+                        triangles[i] = new Triangle(vertices[a],vertices[b],vertices[c]);
+                        triangles[i].A.X *= -1; 
+                        triangles[i].B.X *= -1; 
+                        triangles[i].C.X *= -1; 
+
+                        i++;
                     }
 
                     var mesh = new Mesh(triangles, new Vector3(1,1,1), World.BufferPool);
