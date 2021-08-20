@@ -2,13 +2,14 @@
 import { CustomContainer } from "../CustomContainer";
 import { ClientGroup, ClientBody } from "../cache";
 import { Ship } from "./ship";
+import { TextBlock } from "@babylonjs/gui";
+import { Scene, Vector3 } from "@babylonjs/core";
 
 export class Fleet {
     container: CustomContainer;
     caption: string | null;
     ID?: number;
-    text: any;
-    textChat: any;
+    text: TextBlock;
     chat?: string;
     ships: { [id: string]: Ship };
     plotly?: { data; layout };
@@ -19,22 +20,12 @@ export class Fleet {
         this.caption = null;
         this.ID = undefined;
         this.ships = {};
-        /*
-        this.text = new PIXI.Text("", { fontFamily: ["Exo 2", "Noto Color Emoji"], fontSize: Settings.nameSize, fill: 0xffffff });
-        this.textChat = new PIXI.Text("", { fontFamily: ["Exo 2", "Noto Color Emoji"], fontSize: Settings.nameSize, fill: 0xffffff });
-        this.text.zIndex = 350;
-        this.textChat.zIndex = 350;
-        this.chat = undefined;
-        this.plotly = undefined;
-        this.text.anchor.set(0.5, 0.5);
-        this.textChat.anchor.set(0.5, 0.5);
-        this.text.position.x = 0;
-        this.text.position.y = 0;
-        this.textChat.position.x = 0;
-        this.textChat.position.y = 0;
-        this.container.bodyGroup.addChild(this.text);
-        this.container.bodyGroup.addChild(this.textChat);
-        */
+
+        this.text = new TextBlock();
+        this.text.color = "white";
+        this.text.fontSizeInPixels = Settings.nameSize / 2;
+        this.container.guiTexture.addControl(this.text);
+
         this.extraModes = [];
     }
 
@@ -48,30 +39,8 @@ export class Fleet {
         this.caption = groupUpdate.Caption;
         this.ID = groupUpdate.ID;
 
-        /*this.chat = groupUpdate?.CustomData?.chat || undefined;
-        this.plotly = groupUpdate?.CustomData?.plotly || undefined;
+        this.chat = groupUpdate?.CustomData?.chat || undefined;
 
-        if (this.plotly && this.ID == myFleetID) {
-            if (!this.container.plotly.used) {
-                this.container.plotly.used = true;
-                this.usingPlotly = true;
-                console.log("setting plotly use");
-            }
-            Plotly.react(this.container.plotly, this.plotly.data, this.plotly.layout, {
-                displayModeBar: false,
-                staticPlot: true,
-            });
-        }
-
-        if (this.usingPlotly && this.ID != myFleetID) {
-            // we must have been spectating a fleet
-            // with plotly data, and now we've switched
-            // to a different fleet to follow
-            // but the original one is still on screen
-            // ... that's us.
-            this.container.plotly.used = false;
-            this.usingPlotly = false;
-        }*/
     }
 
     addPowerup(powerMode: string)
@@ -90,8 +59,7 @@ export class Fleet {
 
     tick(time: number): void {
         //console.log(`Group: ${this.ID} ${this.caption} ${this.ships.length}`);
-        //this.text.text = this.caption || "";
-        //this.textChat.text = this.chat || "";
+        this.text.text = this.caption || "";
 
         let accX = 0,
             accY = 0,
@@ -105,14 +73,10 @@ export class Fleet {
         }
 
         const offsetY = 0;
-        /*this.text.position.x = accX / count;
-        this.text.position.y = accY / count + offsetY;
-        this.textChat.position.x = accX / count;
-        this.textChat.position.y = accY / count + offsetY - 200;*/
+        this.text.moveToVector3(new Vector3(accX / count, 350, accY / count + offsetY), this.container.scene);
     }
 
     destroy(): void {
-        //this.container.bodyGroup.removeChild(this.text);
-        //this.container.bodyGroup.removeChild(this.textChat);
+        this.container.guiTexture.removeControl(this.text);
     }
 }

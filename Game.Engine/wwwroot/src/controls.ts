@@ -3,6 +3,9 @@ import { ServerWorld } from "./lobby";
 import Cookies from "js-cookie";
 import { Picker } from "emoji-picker-element";
 import { getTextureDefinition } from "./loader";
+import { CustomContainer } from "./CustomContainer";
+import { PointerEventTypes } from "@babylonjs/core/Events";
+import { Control } from "@babylonjs/gui";
 
 const emojiContainer = document.getElementById("emoji-container")!;
 const picker = new Picker();
@@ -53,7 +56,6 @@ shipSelectorSwitch.addEventListener("click", (e) => {
 const nick = document.querySelector("#nick") as HTMLInputElement;
 nick.addEventListener("input", () => {
     Controls.nick = nick.value;
-    if (Controls && Controls.canvas) Controls.canvas.focus();
 
     save();
 });
@@ -69,53 +71,53 @@ export const Controls = {
     mouseX: 0,
     mouseY: 0,
     angle: 0,
-    canvas: undefined as HTMLCanvasElement | undefined,
+    container: undefined as CustomContainer | undefined,
     color: undefined as string | undefined,
     ship: "ship_green",
 };
 
-export function registerCanvas(canvas: HTMLCanvasElement): void {
-    const getMousePos = (canvas: HTMLCanvasElement, { clientX, clientY }: MouseEvent) => {
-        const rect = canvas.getBoundingClientRect();
-        return {
-            x: clientX - rect.left,
-            y: clientY - rect.top,
-        };
-    };
-    if (isMobile) {
-        joystick.onMoved(() => {
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-            Controls.mouseX = joystick.deltaX() * 100 + cx;
-            Controls.mouseY = joystick.deltaY() * 100 + cy;
-            Controls.angle = Math.atan2(joystick.deltaY(), joystick.deltaX());
-        });
-        const shootEl = document.getElementById("shoot")!;
-        const boostEl = document.getElementById("boost")!;
-        shootEl.addEventListener("touchstart", () => {
-            Controls.shoot = true;
-        });
-        shootEl.addEventListener("touchend", () => {
-            Controls.shoot = false;
-        });
-        boostEl.addEventListener("touchstart", () => {
-            Controls.boost = true;
-        });
-        boostEl.addEventListener("touchend", () => {
-            Controls.boost = false;
-        });
-    } else {
-        window.addEventListener("mousemove", (e) => {
-            const pos = getMousePos(canvas, e);
-            Controls.mouseX = pos.x;
-            Controls.mouseY = pos.y;
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-            const dy = pos.y - cy;
-            const dx = pos.x - cx;
+export function registerContainer(container: CustomContainer): void {
 
-            Controls.angle = Math.atan2(dy, dx);
-        });
+    container.scene.onPointerObservable.add((pointerInfo) => {
+
+        switch (pointerInfo.type) {
+            case PointerEventTypes.POINTERDOWN:
+                if (pointerInfo.event.button == 2)
+                    Controls.boost = true;
+                else
+                    Controls.shoot = true;
+
+                break;
+
+            case PointerEventTypes.POINTERUP:
+                if (pointerInfo.event.button == 2)
+                    Controls.boost = false;
+                else
+                    Controls.shoot = false;
+
+                break;
+
+            case PointerEventTypes.POINTERMOVE:
+
+                const pos = container.toWorld();
+                Controls.mouseX = pos.x;
+                Controls.mouseY = pos.y;
+
+                break;
+            case PointerEventTypes.POINTERWHEEL:
+                console.log("POINTER WHEEL");
+                break;
+            case PointerEventTypes.POINTERPICK:
+                console.log("POINTER PICK");
+                break;
+            case PointerEventTypes.POINTERTAP:
+                console.log("POINTER TAP");
+                break;
+            case PointerEventTypes.POINTERDOUBLETAP:
+                console.log("POINTER DOUBLE-TAP");
+                break;
+        }
+
         window.addEventListener("mousedown", ({ button }) => {
             //right click
             if (button == 2) Controls.boost = true;
@@ -133,8 +135,10 @@ export function registerCanvas(canvas: HTMLCanvasElement): void {
                 return false;
             }
         });
-    }
-    Controls.canvas = canvas;
+
+    });
+
+    Controls.container = container;
 }
 
 let currentWorld: ServerWorld;

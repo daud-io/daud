@@ -52,7 +52,7 @@
             BodyHandle = World.Simulation.Bodies.Add(BodyDescription.CreateDynamic(
                 new Vector3(position2d.X, 0, position2d.Y),
                 GetBodyInertia(shape, mass),
-                new CollidableDescription(ShapeHandle, 0.1f),
+                new CollidableDescription(ShapeHandle, 50f),
                 //new CollidableDescription(ShapeHandle, 0.1f, ContinuousDetectionSettings.Continuous(1e-4f, 1e-4f)),
                 new BodyActivityDescription(0.00f)
             ));
@@ -60,7 +60,7 @@
             ref var worldBodyProperties = ref World.BodyProperties.Allocate(BodyHandle);
             worldBodyProperties = new WorldBodyProperties
             {
-                Friction = 0.5f
+                Friction = 0.1f
             };
         }
         

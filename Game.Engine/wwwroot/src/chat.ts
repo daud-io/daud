@@ -1,19 +1,46 @@
+import { KeyboardEventTypes, KeyboardInfo } from "@babylonjs/core/Events";
+import { EventState } from "@babylonjs/core/Misc";
+import { CustomContainer } from "./CustomContainer";
+
+export class ChatOverlay {
+    container: CustomContainer;
+    chat: HTMLElement;
+    messages = ["YES", "NO", "OOPS", "HI", "GO", "LAG", "HMM?", "STOP RUNNING", "GG", "LOL"];
+
+    constructor(container: CustomContainer) {
+        this.container = container;
+
+        this.chat = document.getElementById("chat")!;
+        
+        for (let i = 0; i < this.messages.length; i++) {
+            this.chat.innerHTML += `<tr><td>${(i + 1) % 10}</td><td>${this.messages[i]}</td></tr>`;
+        }
+
+        this.container.scene.onKeyboardObservable.add((kbInfo, eventState) => this.onKey(kbInfo));
+    }
+
+    onKey(kbInfo: KeyboardInfo)
+    {
+        switch (kbInfo.type) {
+            case KeyboardEventTypes.KEYDOWN:
+                const e = kbInfo.event;
+
+                if (e.key == "t" && document.body.classList.contains("alive")) {
+                    this.chat.classList.toggle("open");
+                }
+                if ((e.code.startsWith("Digit") || e.code.startsWith("Numpad")) && document.body.classList.contains("alive")) {
+                    message.txt = this.messages[(Number(e.key) + 9) % 10] || "";
+                    message.time = Date.now();
+                    this.chat.classList.remove("open");
+                }
+                                
+                break;
+        }        
+    }
+}
+
 export const message = {
     txt: "",
     time: Date.now(),
 };
-const chat = document.getElementById("chat")!;
-const messages = ["YES", "NO", "OOPS", "HI", "GO", "LAG", "HMM?", "STOP RUNNING", "GG", "LOL"];
-for (let i = 0; i < messages.length; i++) {
-    chat.innerHTML += `<tr><td>${(i + 1) % 10}</td><td>${messages[i]}</td></tr>`;
-}
-window.addEventListener("keydown", (e) => {
-    if (e.key == "t" && document.body.classList.contains("alive")) {
-        chat.classList.toggle("open");
-    }
-    if ((e.code.startsWith("Digit") || e.code.startsWith("Numpad")) && document.body.classList.contains("alive")) {
-        message.txt = messages[(Number(e.key) + 9) % 10] || "";
-        message.time = Date.now();
-        chat.classList.remove("open");
-    }
-});
+

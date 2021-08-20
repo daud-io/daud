@@ -21,7 +21,6 @@
 
         public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
 
-        public virtual bool BossMode { get => World.Hook.BossMode && World.Hook.BossModeSprites.Contains(this.Owner.ShipSprite); }
 
         public Player Owner { get; set; }
 
@@ -46,11 +45,10 @@
         public Stack<IFleetWeapon> WeaponStack { get; set; } = new Stack<IFleetWeapon>();
 
         public Vector2 FleetCenter = Vector2.Zero;
-        public Vector2 FleetMomentum = Vector2.Zero;
+        public Vector2 FleetVelocity = Vector2.Zero;
 
         public float Burden { get; set; } = 0f;
         public bool Shark { get; set; } = false;
-        public bool LastTouchedLeft { get; set; } = false;
         public bool FiringWeapon { get; private set; } = false;
 
         public Vector2? SpawnLocation { get; set; } = null;
@@ -163,21 +161,17 @@
 
             if (this.Ships.Any())
             {
-                var position = Vector2.Zero;
-                var momentum = Vector2.Zero;
                 var angle = 0f;
                 var count = 0;
 
                 foreach (var existingShip in this.Ships)
                 {
-                    position += existingShip.Position;
-                    momentum += existingShip.LinearVelocity;
                     angle += existingShip.Angle;
                     count++;
                 }
 
-                ship.Position = position / count + offset;
-                ship.LinearVelocity = momentum / count;
+                ship.Position = Ships.First().Position + offset;
+                ship.LinearVelocity = FleetVelocity;
                 ship.Angle = angle / count;
             }
             else
@@ -243,9 +237,11 @@
             }
 
             FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
-            FleetMomentum = FleetMath.FleetMomentum(this.Ships);
+            FleetVelocity = FleetMath.FleetMomentum(this.Ships);
 
-            foreach (var ship in Ships)
+            bool killedTooBig = false;
+
+            foreach (var ship in Ships.ToList())
             {
                 var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
@@ -254,8 +250,6 @@
                 ship.AngularVelocity = 0;
 
                 Flocking.Flock(ship);
-                Snaking.Snake(ship);
-                Ringing.Ring(ship);
 
                 ship.ThrustAmount = isBoosting
                     ? BoostThrust * (1 - Burden)
@@ -277,6 +271,12 @@
                 if (isBoostInitial)
                     if (ship.LinearVelocity != Vector2.Zero)
                         ship.LinearVelocity += Vector2.Normalize(ship.LinearVelocity) * World.Hook.BoostSpeed;
+
+                if (!killedTooBig && Vector2.Distance(ship.Position, FleetCenter) > 1500)
+                {
+                    killedTooBig = true; // only do it once per tick
+                    AbandonShip(ship);
+                }
             }
 
             if (isShooting)
@@ -299,6 +299,7 @@
                 ShootCooldownStatus = (float)
                     (World.Time - ShootCooldownTimeStart) / (ShootCooldownTime - ShootCooldownTimeStart);
 
+            /* too slow
             if (MathF.Abs(FleetCenter.X) > World.Hook.WorldSize &&
                 FleetCenter.X < 0 != LastTouchedLeft &&
                 World.Hook.Name == "Sharks and Minnows" &&
@@ -310,6 +311,7 @@
                 Owner.SpawnTime = World.Time;
                 Owner.Score++;
             }
+            */
 
             if (!Ships.Where(s => s.Exists).Any())
                 Die(null);

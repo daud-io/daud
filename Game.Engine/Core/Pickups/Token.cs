@@ -54,7 +54,7 @@
             if (carried)
             {
                 this.Position = CarriedBy.FleetCenter;
-                this.LinearVelocity = CarriedBy.FleetMomentum;
+                this.LinearVelocity = CarriedBy.FleetVelocity;
             }
             else
             {

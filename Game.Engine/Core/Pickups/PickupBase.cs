@@ -87,7 +87,7 @@
             pickup.Angle = MathF.Atan2(fleet.AimTarget.Y, fleet.AimTarget.X);
 
             pickup.ExcludedFleet = fleet;
-            pickup.LinearVelocity = fleet.FleetMomentum;
+            pickup.LinearVelocity = fleet.FleetVelocity;
             pickup.Drag = 0.98f;
 
             pickup.DontRandomize = true;

@@ -124,6 +124,8 @@
 
                 lock(this)
                 {
+                    ActorsThink();
+
                     ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
                     bodyImpacts.EnsureCapacity(this.Bodies.Count * 10, this.BufferPool);
                     //Console.WriteLine($"EnsureCapacity({this.Bodies.Count * 10})");
@@ -149,8 +151,6 @@
                     }
                     bodyImpacts.Count = 0;
 
-                    // every registered actor gets a chance to think
-                    ActorsThink();
 
                     CheckTimings(start);
                 }

@@ -106,7 +106,7 @@
 
                 var center = FleetMath.FleetCenterNaive(followFleet.Ships);
                 position = center;
-                linearVelocity = followFleet.FleetMomentum;
+                linearVelocity = followFleet.FleetVelocity;
             }
             else
                 this.FollowFleet = null;

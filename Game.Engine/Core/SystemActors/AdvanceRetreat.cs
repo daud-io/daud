@@ -24,7 +24,7 @@ namespace Game.Engine.Core.SystemActors
                     foreach (var other in nearby)
                     {
                         var relative = other.Fleet.FleetCenter - player.Fleet.FleetCenter;
-                        var dp = Vector2.Dot(Vector2.Normalize(relative), Vector2.Normalize(player.Fleet.FleetMomentum));
+                        var dp = Vector2.Dot(Vector2.Normalize(relative), Vector2.Normalize(player.Fleet.FleetVelocity));
                         if (float.IsNaN(dp)) // if either vector is zero
                             dp = 0;
 

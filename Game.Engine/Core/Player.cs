@@ -421,7 +421,7 @@
                 MaxCombo = this.MaxCombo,
 
                 Position = this.Fleet?.FleetCenter,
-                Momentum = this.Fleet?.FleetMomentum
+                Momentum = this.Fleet?.FleetVelocity
             };
         }
     }

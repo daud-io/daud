@@ -99,14 +99,14 @@
                 if(dist.LengthSquared()<500*500 || (this.Fleet.Ships.Count<5 && dist.LengthSquared()<2000*2000)) vel -= dist * fraction;
                 else if(dist.LengthSquared()<1500*1500 || this.Fleet.Ships.Count<5) 
                 {
-                    vel += (Math.Sign(WhichSide(Vector2.Zero, dist, this.Fleet.FleetMomentum)+1)*2-1)*new Vector2(-dist.Y,dist.X) * fraction;
+                    vel += (Math.Sign(WhichSide(Vector2.Zero, dist, this.Fleet.FleetVelocity)+1)*2-1)*new Vector2(-dist.Y,dist.X) * fraction;
                 }
                 else vel += dist * fraction;
                 if (dist.LengthSquared()>1500*1500) vel += fishintercept * 1000.0f * (1.0f-fraction);
                 else 
                 {
                     var shotspeed = (this.Fleet.Ships.Count * this.Fleet.ShotThrustM + this.Fleet.ShotThrustB)*10;
-                    vel += Intercept(this.Fleet.FleetCenter, player.Fleet.FleetCenter, player.Fleet.FleetMomentum, shotspeed) * 1000.0f * (1.0f-fraction);
+                    vel += Intercept(this.Fleet.FleetCenter, player.Fleet.FleetCenter, player.Fleet.FleetVelocity, shotspeed) * 1000.0f * (1.0f-fraction);
                 }
             }
             else

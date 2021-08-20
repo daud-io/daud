@@ -7,8 +7,8 @@ import { update as leaderboardUpdate } from "./leaderboard";
 import { Minimap } from "./minimap";
 import { setPerf, setPlayerCount, setSpectatorCount } from "./hud";
 import * as log from "./log";
-import { Controls, initializeWorld, registerCanvas, setCurrentWorld } from "./controls";
-import { message } from "./chat";
+import { Controls, initializeWorld, registerContainer, setCurrentWorld } from "./controls";
+import { ChatOverlay, message } from "./chat";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { Settings } from "./settings";
@@ -78,8 +78,10 @@ const container = new CustomContainer(canvas as HTMLCanvasElement);
 
 const border = new Border(container);
 const minimap = new Minimap(container);
+const chat = new ChatOverlay(container)
+
 background.setContainer(container);
-registerCanvas(canvas);
+registerContainer(container);
 
 bus.on("dead", () => {
     document.body.classList.remove("alive");
@@ -326,12 +328,9 @@ window.addEventListener("resize", () => {
     sizeCanvas();
 });
 
-let angle = 0.0;
-let aimTarget = new Vector2(0, 0);
-
-let lastControl: { angle?: number; aimTarget?: Vector2; boost?: boolean; shoot?: boolean; autofire?: boolean; chat?: string } = {
-    angle: undefined,
-    aimTarget: undefined,
+let lastControl: { mouseX: number, mouseY: number; boost?: boolean; shoot?: boolean; autofire?: boolean; chat?: string } = {
+    mouseX: 0,
+    mouseY: 0,
     boost: undefined,
     autofire: undefined,
     shoot: undefined,
@@ -359,16 +358,9 @@ loadImages.then(() => {
     container.engine.runRenderLoop(() => {
         container.scene.render()
         
-        if (Controls.mouseX) {
-            const pos = container.toWorld();
-            angle = Controls.angle;
-            aimTarget = new Vector2(Settings.mouseScale * (pos.x - lastPosition.x), Settings.mouseScale * (pos.y - lastPosition.y));
-        }
-
         if (
-            angle !== lastControl.angle ||
-            aimTarget.x !== aimTarget.x ||
-            aimTarget.y !== aimTarget.y ||
+            Controls.mouseX !== lastControl.mouseX ||
+            Controls.mouseY !== lastControl.mouseY ||
             Controls.boost !== lastControl.boost ||
             Controls.shoot !== lastControl.shoot ||
             Controls.autofire !== lastControl.autofire ||
@@ -384,11 +376,11 @@ loadImages.then(() => {
 
             if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
 
-            connection.sendControl(angle, Controls.boost, Controls.shoot || Controls.autofire, aimTarget.x, aimTarget.y, spectateControl, customData);
+            connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX - lastPosition.x, Controls.mouseY - lastPosition.y, spectateControl, customData);
 
             lastControl = {
-                angle,
-                aimTarget,
+                mouseX: Controls.mouseX,
+                mouseY: Controls.mouseY,
                 boost: Controls.boost,
                 shoot: Controls.shoot,
                 autofire: Controls.autofire,

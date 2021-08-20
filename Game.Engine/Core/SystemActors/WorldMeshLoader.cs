@@ -32,7 +32,7 @@
                 World.Simulation.Statics.Add(
                     new StaticDescription(
                         new Vector3(0, -500, 0),
-                        new CollidableDescription(World.Simulation.Shapes.Add(mesh), 0.1f)));
+                        new CollidableDescription(World.Simulation.Shapes.Add(mesh), 10f)));
             }            
         }
 

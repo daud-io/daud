@@ -67,7 +67,6 @@
                 new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle))
                 * Vector2.Distance(ship.LinearVelocity, Vector2.Zero);
 
-
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife);
             this.LinearVelocity = momentum;
             this.Position = bulletOrigin;
@@ -99,7 +98,7 @@
                 this.AngularVelocity = 0;
             }
 
-            this.Reference = ship.Fleet.FleetMomentum;
+            this.Reference = ship.Fleet.FleetVelocity;
             this.Sprite = ship.BulletSprite;
             this.Size = 20;
             this.Color = ship.Color;

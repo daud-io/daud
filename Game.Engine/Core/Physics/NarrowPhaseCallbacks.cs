@@ -121,12 +121,12 @@ namespace Game.Engine.Physics
 
             for (int i = 0; i < manifold.Count; ++i)
             {
-                if (manifold.GetDepth(ref manifold, i) >= -1e-3f)
-                {
+                //if (manifold.GetDepth(ref manifold, i) >= -1e-3f)
+                //{
                     //An actual collision was found. 
                     AddBodyImpact(pair.A.BodyHandle, pair.B);
-                    break;
-                }
+                    //break;
+                //}
             }
             return true;
         }

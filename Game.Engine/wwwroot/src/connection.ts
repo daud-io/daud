@@ -195,7 +195,7 @@ export class Connection {
         console.log("spawned");
     }
 
-    sendControl(angle: number, boost: boolean, shoot: boolean, x: number, y: number, spectateControl: string, customDataJson: string): void {
+    sendControl(boost: boolean, shoot: boolean, x: number, y: number, spectateControl: string, customDataJson: string): void {
         const builder = new flatbuffers.Builder(0);
 
         let spectateString: number | undefined = undefined;
@@ -205,7 +205,6 @@ export class Connection {
         if (customDataJson) customDataJsonString = builder.createString(customDataJson);
 
         fb.NetControlInput.startNetControlInput(builder);
-        fb.NetControlInput.addAngle(builder, angle);
         fb.NetControlInput.addBoost(builder, boost);
         fb.NetControlInput.addShoot(builder, shoot);
         fb.NetControlInput.addX(builder, x);
