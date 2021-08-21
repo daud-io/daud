@@ -39,7 +39,7 @@
 
         private void LoadGLB()
         {
-            var root = SharpGLTF.Schema2.ModelRoot.Load($"wwwroot/public/assets/base/models/grid.glb");
+            var root = SharpGLTF.Schema2.ModelRoot.Load($"wwwroot/public/assets/base/models/partycity.glb");
 
             foreach(var logicialMesh in root.LogicalMeshes)
             {

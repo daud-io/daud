@@ -25,7 +25,6 @@ namespace Game.Engine.Core.Weapons
 
         protected override void Update()
         {
-            base.Update();
             var originalMomentum = LinearVelocity;
 
             Ship target = null;
@@ -68,6 +67,8 @@ namespace Game.Engine.Core.Weapons
 
             var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
             LinearVelocity = (originalMomentum + thrust) * Drag;
+
+            base.Update();
         }
 
         public override void CollisionExecute(WorldBody projectedBody)

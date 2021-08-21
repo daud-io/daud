@@ -118,7 +118,7 @@
             };
         }
 
-        // main entry to the world. This will be called every Hook.StepSize milliseconds
+        // main entry to the world. This will be called every Hook.StepSize milliseconds, unless it's late. or early.
         public void Step()
         {
             var start = DateTime.Now;
@@ -130,9 +130,9 @@
             if (dt == 0)
                 dt = (uint)this.Hook.StepTime;
 
+            // this is a bad way to do this... just overestimating potentential number of contacts... though what's the 4-color theorem equivalent for spheres?
             ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
             bodyImpacts.EnsureCapacity(this.Bodies.Count * 10, this.BufferPool);
-
 
             foreach (var player in Player.GetWorldPlayers(this).ToList())
                 player.ControlCharacter();
@@ -148,6 +148,9 @@
 
                 var aValid = Bodies.TryGetValue(impact.BodyHandleA, out WorldBody wbA);
                 var bValid = Bodies.TryGetValue(impact.BodyHandleB, out WorldBody wbB);
+
+                if (impact.CustomBounce)
+                    wbA.LinearVelocity = new Vector2(impact.newAVelocity.X, impact.newAVelocity.Z);
 
                 if (aValid)
                 {

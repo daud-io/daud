@@ -4,6 +4,7 @@ using BepuPhysics.CollisionDetection;
 using BepuPhysics.Constraints;
 using BepuUtilities.Collections;
 using Game.Engine.Core;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -72,7 +73,7 @@ namespace Game.Engine.Physics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        void AddBodyImpact(BodyHandle A, CollidableReference impactedCollidable)
+        void AddBodyImpact(BodyHandle A, CollidableReference impactedCollidable, Vector3 newAVelocity, bool customBounce)
         {
             bool lockTaken = false;
             ProjectileLock.Enter(ref lockTaken);
@@ -87,6 +88,9 @@ namespace Game.Engine.Physics
                 }
                 else
                     newImpact.BodyHandleB = new BodyHandle(-1);
+
+                newImpact.CustomBounce = customBounce;
+                newImpact.newAVelocity = newAVelocity;
             }
             finally
             {
@@ -106,13 +110,24 @@ namespace Game.Engine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe bool ConfigureContactManifold<TManifold>(int workerIndex, CollidablePair pair, ref TManifold manifold, out PairMaterialProperties pairMaterial) where TManifold : struct, IContactManifold<TManifold>
         {
-            ref var propertiesA = ref Properties[pair.A.BodyHandle];
-            pairMaterial.FrictionCoefficient = propertiesA.Friction;
+            var worldBodyA = World.Bodies[pair.A.BodyHandle];
+            var worldBodyB = World.Bodies[pair.B.BodyHandle];
+
+            var responseAB = worldBodyA.CanCollide(worldBodyB);
+            var responseBA = worldBodyB.CanCollide(worldBodyA);
+
+            bool customBouncy = false;
+
+            pairMaterial.FrictionCoefficient = 0;
             if (pair.B.Mobility != CollidableMobility.Static)
             {
                 //If two bodies collide, just average the friction. Other options include min(a, b) or a * b.
                 ref var propertiesB = ref Properties[pair.B.BodyHandle];
                 pairMaterial.FrictionCoefficient = (pairMaterial.FrictionCoefficient + propertiesB.Friction) * 0.5f;
+            }
+            else
+            {
+                customBouncy = true;
             }
 
             pairMaterial.MaximumRecoveryVelocity = float.MaxValue;
@@ -121,17 +136,38 @@ namespace Game.Engine.Physics
             for (int i = 0; i < manifold.Count; ++i)
                 if (manifold.GetDepth(ref manifold, i) >= -1e-3f)
                 {
-                    //An actual collision was found. 
-                    AddBodyImpact(pair.A.BodyHandle, pair.B);
-                    break;
+                    if ((responseAB.HasImpact || responseBA.HasImpact)
+                        && (customBouncy)
+                        && (pair.B.Mobility == CollidableMobility.Static && manifold.Count == 1))
+                    {
+                        // simulate a "satisfying" bounce
+                        // this is not physically accurate
+
+                        //var reference = World.Simulation.Bodies.GetBodyReference(pair.A.BodyHandle);
+                        //Vector3 incoming = reference.Velocity.Linear;
+                        Vector3 incoming = new Vector3(worldBodyA.AverageLinearVelocity.X, 0, worldBodyA.AverageLinearVelocity.Y);
+                        float incomingLength = incoming.Length();
+                        if (incomingLength > 0)
+                        {
+                            Vector3 normal = manifold.GetNormal(ref manifold, 0);
+                            Vector3 reflection = incoming - 2 * Vector3.Dot(incoming, normal) * normal;
+                            
+                            reflection = Vector3.Normalize(reflection) * incomingLength;
+                            AddBodyImpact(pair.A.BodyHandle, pair.B, reflection, true);
+                            return false;
+                        }
+
+                        return true;
+                    }
+                    else
+                    {
+                        //An actual collision was found. 
+                        AddBodyImpact(pair.A.BodyHandle, pair.B, default, false);
+                        break;
+                    }
                 }
 
 
-            var worldBodyA = World.Bodies[pair.A.BodyHandle];
-            var worldBodyB = World.Bodies[pair.B.BodyHandle];
-
-            var responseAB = worldBodyA.CanCollide(worldBodyB);
-            var responseBA = worldBodyB.CanCollide(worldBodyA);
 
             if (responseAB.HasImpact || responseBA.HasImpact)
                 return true; // bouncy

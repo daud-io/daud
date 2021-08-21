@@ -31,6 +31,8 @@
             this.AngularVelocity = FlagIsHome()
                 ? SPEED_SPINNING
                 : SPEED_STOPPED;
+
+            base.Update();
         }
 
         public override void CollisionExecute(WorldBody projectedBody)

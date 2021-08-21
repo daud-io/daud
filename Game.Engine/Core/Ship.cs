@@ -183,6 +183,8 @@
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
 
             LinearVelocity = (LinearVelocity + thrust) * Drag;
+
+            base.Update();
         }
 
         private void DoOutOfBoundsRules()

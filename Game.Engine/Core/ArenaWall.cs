@@ -81,6 +81,8 @@
                     break;
 
             }
+
+            base.Update();
         }
     }
 }

@@ -56,6 +56,8 @@
                 else
                     this.LinearVelocity = Vector2.Zero;
             }
+
+            base.Update();
         }
 
         public void ReturnToBase()

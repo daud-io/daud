@@ -59,6 +59,7 @@
         {
             LinearVelocity *= Drag;
             AngularVelocity *= Drag;
+            base.Update();
         }
     }
 }

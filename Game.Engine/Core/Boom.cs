@@ -35,6 +35,8 @@
                 Die();
 
             LinearVelocity *= Drag;
+
+            base.Update();
         }
     }
 }

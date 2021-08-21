@@ -175,6 +175,8 @@
             }
         }
 
+        public Vector2 AverageLinearVelocity { get; set; }
+
         protected virtual void UpdateSize()
         {
             ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
@@ -245,7 +247,7 @@
 
         protected virtual void Update()
         {
-
+            this.AverageLinearVelocity = this.AverageLinearVelocity * 0.75f + LinearVelocity * 0.25f;
         }
 
         void IActor.Think()

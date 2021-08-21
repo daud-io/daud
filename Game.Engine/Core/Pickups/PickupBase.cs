@@ -77,6 +77,8 @@
 
             if (Drag != 1)
                 LinearVelocity *= Drag;
+
+            base.Update();
         }
 
         public static T FireFrom<T>(Fleet fleet)

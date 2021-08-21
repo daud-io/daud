@@ -30,10 +30,10 @@
             Angle = MathF.Atan2(LinearVelocity.Y, LinearVelocity.X);
             AngularVelocity = 0;
 
-            //MaximumSpeed = MathF.Max(LinearVelocity.Length(), MaximumSpeed);
-
             if (World.Time >= TimeDeath || Consumed)
                 Die();
+
+            base.Update();
         }
 
         public virtual void FireFrom(Ship ship, ActorGroup group)

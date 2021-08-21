@@ -33,7 +33,7 @@ export class CustomContainer {
 
         if (loadMesh) {
             SceneLoader.ShowLoadingScreen = false;
-            SceneLoader.ImportMesh(null, "/assets/base/models/", "grid.glb", this.scene,
+            SceneLoader.ImportMesh(null, "/assets/base/models/", "partycity.glb", this.scene,
                 function (scene) { // on success
                     let x = 1;
                     for(let i in scene)
@@ -65,12 +65,5 @@ export class CustomContainer {
 
     resize() {
         this.engine.resize();
-    }
-
-    toWorld(): Vector2 {
-        var ray = this.scene.createPickingRay(this.scene.pointerX, this.scene.pointerY, Matrix.Identity(), this.camera);
-
-        var hit = this.scene.pickWithRay(ray);
-        return new Vector2(hit?.pickedPoint?.x ?? 0, hit?.pickedPoint?.z ?? 0);
     }
 }

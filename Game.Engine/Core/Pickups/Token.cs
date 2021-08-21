@@ -74,6 +74,8 @@
                     (carried ? TokenModeEnum.carried : TokenModeEnum.none)
                     | (this.ExpiringSoon ? TokenModeEnum.expiring : TokenModeEnum.none)
                 );
+
+            base.Update();
         }
 
         protected void Drop()

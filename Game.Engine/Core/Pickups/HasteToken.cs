@@ -25,8 +25,6 @@ namespace Game.Engine.Core.Pickups
 
         protected override void Update()
         {
-            base.Update();
-
             if (this.CarriedBy != null)
             {
                 this.EffectMSRemaining -= this.World.Hook.StepTime;
@@ -45,6 +43,8 @@ namespace Game.Engine.Core.Pickups
                 Cooldown = false;
                 this.OnRenewed();
             }
+
+            base.Update();
         }
 
         protected virtual void OnCooldownStart()
