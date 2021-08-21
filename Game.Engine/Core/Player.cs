@@ -138,12 +138,6 @@
         {
             Die();
 
-            if (Fleet != null)
-            {
-                Fleet.Destroy();
-                Fleet = null;
-            }
-
             if (this.Connection != null)
                 try
                 {
@@ -166,6 +160,38 @@
             var worldPlayers = GetWorldPlayers(world);
             worldPlayers.Add(this);
 
+        }
+
+        internal void ControlCharacter()
+        {
+            if (this.IsControlNew && this.IsAlive && this.Fleet != null)
+            {
+                if (float.IsNaN(ControlInput.Position.X))
+                    ControlInput.Position = new System.Numerics.Vector2(0, 0);
+
+                Fleet.AimTarget = ControlInput.Position;
+
+                Fleet.BoostRequested = CummulativeBoostRequested;
+                Fleet.ShootRequested = CummulativeShootRequested;
+
+                CummulativeBoostRequested = false;
+                CummulativeShootRequested = false;
+
+                Fleet.CustomData = ControlInput.CustomData;
+
+                if (Fleet.CustomData != null)
+                {
+                    var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });
+                    if (parsed?.magic != null)
+                        JsonConvert.PopulateObject(parsed.magic, this);
+                }
+                
+
+                if (this.Backgrounded)
+                    Fleet.AimTarget = Vector2.Zero;
+            }
+
+            this.IsControlNew = false;
         }
 
         public string Name { get; set; }
@@ -232,35 +258,6 @@
                 if (r.NextDouble() < World.Hook.GearheadRegen)
                     Fleet.AddShip();
             }
-
-
-            if (this.IsControlNew)
-            {
-                if (float.IsNaN(ControlInput.Position.X))
-                    ControlInput.Position = new System.Numerics.Vector2(0, 0);
-
-                Fleet.AimTarget = ControlInput.Position;
-
-                Fleet.BoostRequested = CummulativeBoostRequested;
-                Fleet.ShootRequested = CummulativeShootRequested;
-
-                CummulativeBoostRequested = false;
-                CummulativeShootRequested = false;
-
-                Fleet.CustomData = ControlInput.CustomData;
-
-                if (Fleet.CustomData != null)
-                {
-                    var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });
-                    if (parsed?.magic != null)
-                        JsonConvert.PopulateObject(parsed.magic, this);
-                }
-            }
-
-            if (this.Backgrounded)
-                Fleet.AimTarget = Vector2.Zero;
-
-            this.IsControlNew = false;
 
             if (IsInvulnerable)
             {
@@ -369,13 +366,11 @@
             {
                 DeadSince = World.Time;
                 OnDeath(player);
-
-                if (Fleet != null)
-                    Fleet.PendingDestruction = true;
-
-                Fleet = null;
-                IsAlive = false;
             }
+
+            Fleet?.Destroy();
+            Fleet = null;
+            IsAlive = false;
         }
 
         public void SendMessage(string message, string type = "message", int pointsDelta = 0, object extraData = null)

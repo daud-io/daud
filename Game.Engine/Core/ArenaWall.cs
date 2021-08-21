@@ -51,9 +51,9 @@
             
         }
 
-        public override bool IsCollision(WorldBody projectedBody)
+        public override CollisionResponse CanCollide(WorldBody projectedBody)
         {
-            return true;
+            return new CollisionResponse(true, true);
         }
 
         protected override void Update()

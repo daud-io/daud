@@ -17,7 +17,7 @@ bus.on("worldjoin", () => {
 });
 
 function getOut(entry: LeaderboardEntry, position: Vector2, rank?: number, entryIsSelf?: boolean, extra?: string) {
-    const angle = Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
+    const angle = -Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x) + Math.PI;
 
     let color;
     if (entry.Color === "blue") {

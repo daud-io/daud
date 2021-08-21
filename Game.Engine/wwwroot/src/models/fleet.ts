@@ -23,7 +23,7 @@ export class Fleet {
 
         this.text = new TextBlock();
         this.text.color = "white";
-        this.text.fontSizeInPixels = Settings.nameSize / 2;
+        this.text.fontSize = Settings.nameSize / 3;
         this.container.guiTexture.addControl(this.text);
 
         this.extraModes = [];

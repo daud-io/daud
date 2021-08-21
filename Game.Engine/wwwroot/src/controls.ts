@@ -6,6 +6,7 @@ import { getTextureDefinition } from "./loader";
 import { CustomContainer } from "./CustomContainer";
 import { PointerEventTypes } from "@babylonjs/core/Events";
 import { Control } from "@babylonjs/gui";
+import { Matrix, Scene, Vector3 } from "@babylonjs/core";
 
 const emojiContainer = document.getElementById("emoji-container")!;
 const picker = new Picker();
@@ -99,43 +100,17 @@ export function registerContainer(container: CustomContainer): void {
 
             case PointerEventTypes.POINTERMOVE:
 
-                const pos = container.toWorld();
-                Controls.mouseX = pos.x;
-                Controls.mouseY = pos.y;
+                const pos = Vector3.Unproject(
+                    new Vector3(container.scene.pointerX, container.scene.pointerY, 1),
+                    container.engine.getRenderWidth(),
+                    container.engine.getRenderHeight(),
+                    Matrix.Identity(), container.scene.getViewMatrix(),
+                    container.scene.getProjectionMatrix());
 
-                break;
-            case PointerEventTypes.POINTERWHEEL:
-                console.log("POINTER WHEEL");
-                break;
-            case PointerEventTypes.POINTERPICK:
-                console.log("POINTER PICK");
-                break;
-            case PointerEventTypes.POINTERTAP:
-                console.log("POINTER TAP");
-                break;
-            case PointerEventTypes.POINTERDOUBLETAP:
-                console.log("POINTER DOUBLE-TAP");
+                Controls.mouseX = pos.x;
+                Controls.mouseY = pos.z;
                 break;
         }
-
-        window.addEventListener("mousedown", ({ button }) => {
-            //right click
-            if (button == 2) Controls.boost = true;
-            else Controls.shoot = true;
-        });
-
-        window.addEventListener("mouseup", ({ button }) => {
-            //right click
-            if (button == 2) Controls.boost = false;
-            else Controls.shoot = false;
-        });
-        document.body.addEventListener("contextmenu", (e) => {
-            if (document.body.classList.contains("alive")) {
-                e.preventDefault();
-                return false;
-            }
-        });
-
     });
 
     Controls.container = container;

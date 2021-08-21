@@ -29,6 +29,7 @@
         public int SpectatorCount { get; set; }
 
         // the canonical game time, in milliseconds, from world start
+        public uint PreviousTime { get; private set; } = 0;
         public uint Time { get; private set; } = 0;
         // offset between system clock and world start
         private readonly long OffsetTicks = 0;
@@ -43,7 +44,7 @@
         public List<IActor> Actors = new List<IActor>();
 
         // timer for world step entry
-        private Timer Heartbeat = null;
+        private Thread GameLoopThread = null;
 
         // most recent leaderboard available
         public Leaderboard Leaderboard = null;
@@ -70,6 +71,8 @@
         public Simulation Simulation = null;
         public CollidableProperty<WorldBodyProperties> BodyProperties;
         internal int ProjectileCount;
+
+        public bool PendingDestruction;
         
         public World(Hook hook, GameConfiguration gameConfiguration)
         {
@@ -100,7 +103,9 @@
 
 
             InitializeSystemActors();
-            InitializeStepTimer();
+
+            GameLoopThread = new Thread((state) => WorldTickEntry());
+            GameLoopThread.Start();
         }
 
         private Fleet DefaultNewFleetGenerator(Player player)
@@ -116,45 +121,45 @@
         // main entry to the world. This will be called every Hook.StepSize milliseconds
         public void Step()
         {
-            lock (this.Bodies)
+            var start = DateTime.Now;
+            // calculate the new game time
+            PreviousTime = Time;
+            Time = (uint)((start.Ticks - OffsetTicks) / 10000);
+            
+            var dt = Time - PreviousTime;
+            if (dt == 0)
+                dt = (uint)this.Hook.StepTime;
+
+            ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
+            bodyImpacts.EnsureCapacity(this.Bodies.Count * 10, this.BufferPool);
+
+
+            foreach (var player in Player.GetWorldPlayers(this).ToList())
+                player.ControlCharacter();
+
+            this.Simulation.Timestep(dt);
+            // Ensure that every body as a new handle... else .. <cringe>
+            UpdateBodyReferences();
+
+            // execute collisions
+            for (int i = 0; i < bodyImpacts.Count; ++i)
             {
-                var start = DateTime.Now;
-                // calculate the new game time
-                Time = (uint)((start.Ticks - OffsetTicks) / 10000);
+                ref var impact = ref bodyImpacts[i];
 
-                lock(this)
+                var aValid = Bodies.TryGetValue(impact.BodyHandleA, out WorldBody wbA);
+                var bValid = Bodies.TryGetValue(impact.BodyHandleB, out WorldBody wbB);
+
+                if (aValid)
                 {
-                    ActorsThink();
-
-                    ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
-                    bodyImpacts.EnsureCapacity(this.Bodies.Count * 10, this.BufferPool);
-                    //Console.WriteLine($"EnsureCapacity({this.Bodies.Count * 10})");
-
-                    this.Simulation.Timestep(Hook.StepTime);
-                    
-                    // Ensure that every body as a new handle... else .. <cringe>
-                    UpdateBodyReferences();
-
-                    // execute collisions
-                    for (int i = 0; i < bodyImpacts.Count; ++i)
-                    {
-                        ref var impact = ref bodyImpacts[i];
-
-                        WorldBody wbA = Bodies[impact.BodyHandleA];
-                        WorldBody wbB = impact.BodyHandleB.Value != -1
-                            ? Bodies[impact.BodyHandleB]
-                            : null;
-
-                        wbA.CollisionExecute(wbB);
-                        if (wbB != null)
-                            wbB.CollisionExecute(wbA);
-                    }
-                    bodyImpacts.Count = 0;
-
-
-                    CheckTimings(start);
+                    wbA.CollisionExecute(wbB);
+                    if (bValid)
+                        wbB.CollisionExecute(wbA);
                 }
             }
+            bodyImpacts.Count = 0;
+
+            ActorsThink();
+            CheckTimings(start);
         }
 
         private void InitializeSystemActors()
@@ -197,8 +202,6 @@
                 else if (elapsed > Hook.StepTime * 0.5f)
                     Console.WriteLine($"** 50% processing time warning: {elapsed}");
             }
-
-
         }
 
         private void ActorsThink()
@@ -268,14 +271,27 @@
             return Math.Max(pos.X - Hook.WorldSize + buffer, Math.Max(pos.Y - Hook.WorldSize + buffer, 0));
         }
 
-        private void InitializeStepTimer()
+        private void WorldTickEntry()
         {
-            Heartbeat = new Timer((state) =>
+            var interval = TimeSpan.FromMilliseconds(Hook.StepTime);
+
+            var nextTick = DateTime.Now + interval;
+            while (!PendingDestruction)
             {
-                Step();
+                while ( DateTime.Now < nextTick )
+                {
+                    var delay = nextTick - DateTime.Now;
+                    if (delay.TotalMilliseconds > 0)
+                        Thread.Sleep(delay);
+                }
+                nextTick += interval; // Notice we're adding onto when the last tick was supposed to be, not when it is now
+
+                this.Step();
                 ConnectionHeartbeat.Step();
-            }, null, 0, Hook.StepTime);
+            }
         }
+
+        
 
         public Vector2 RandomPosition()
         {
@@ -298,12 +314,12 @@
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
         
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
                 if (disposing)
                 {
+                    this.PendingDestruction = true;
                     this.Simulation.Dispose();
                     this.BufferPool.Clear();
 
@@ -314,7 +330,6 @@
                         }
                         catch (Exception) { }
 
-                    Heartbeat?.Dispose();
                 }
             disposedValue = true;
         }

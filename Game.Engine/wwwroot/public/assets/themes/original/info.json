@@ -92,7 +92,7 @@
       "rotate": 6,
       "size": 2.56,
       "animated": {
-        "speed": 0.5,
+        "speed": 50,
         "size": 64,
         "count": 29
       },

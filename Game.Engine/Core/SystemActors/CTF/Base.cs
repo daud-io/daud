@@ -42,14 +42,12 @@
             flag.ReturnToBase();
         }
 
-        public override bool IsCollision(WorldBody projectedBody)
+        public override CollisionResponse CanCollide(WorldBody projectedBody)
         {
             if (projectedBody is Flag flag)
             {
                 if (flag.Team == this.Team)
-                {
-                    return false;
-                }
+                    return new CollisionResponse(false);
 
                 if (!FlagIsHome())
                 {
@@ -63,13 +61,12 @@
                         }
                     }
 
-                    return false;
+                    return new CollisionResponse(false);
                 }
 
-                return Vector2.Distance(projectedBody.Position, this.Position)
-                        < (projectedBody.Size + this.Size);
+                return new CollisionResponse(true);
             }
-            return false;
+            return new CollisionResponse(false);
         }
 
 

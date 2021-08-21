@@ -41,16 +41,15 @@ namespace Game.Engine.Physics
             {
                 var worldBodyA = World.Bodies[a.BodyHandle];
                 var worldBodyB = World.Bodies[b.BodyHandle];
+
+                var responseAB = worldBodyA.CanCollide(worldBodyB);
+                var responseBA = worldBodyB.CanCollide(worldBodyA);
                 
-                bool isCollision = false;
-
-                isCollision = worldBodyA.IsCollision(worldBodyB)
-                    || worldBodyB.IsCollision(worldBodyA);
-
-                return isCollision;
+                return responseAB.CanCollide || responseBA.CanCollide;
             }
             return a.Mobility == CollidableMobility.Dynamic || b.Mobility == CollidableMobility.Dynamic;
         }
+        
 
         /// <summary>
         /// Chooses whether to allow contact generation to proceed for the children of two overlapping collidables in a compound-including pair.
@@ -120,15 +119,24 @@ namespace Game.Engine.Physics
             pairMaterial.SpringSettings = new SpringSettings(30, 0);
 
             for (int i = 0; i < manifold.Count; ++i)
-            {
-                //if (manifold.GetDepth(ref manifold, i) >= -1e-3f)
-                //{
+                if (manifold.GetDepth(ref manifold, i) >= -1e-3f)
+                {
                     //An actual collision was found. 
                     AddBodyImpact(pair.A.BodyHandle, pair.B);
-                    //break;
-                //}
-            }
-            return true;
+                    break;
+                }
+
+
+            var worldBodyA = World.Bodies[pair.A.BodyHandle];
+            var worldBodyB = World.Bodies[pair.B.BodyHandle];
+
+            var responseAB = worldBodyA.CanCollide(worldBodyB);
+            var responseBA = worldBodyB.CanCollide(worldBodyA);
+
+            if (responseAB.HasImpact || responseBA.HasImpact)
+                return true; // bouncy
+            else
+                return false; // no bouncy
         }
 
         /// <summary>

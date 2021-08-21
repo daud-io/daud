@@ -80,36 +80,34 @@ namespace Game.Engine.Core.Weapons
                 bullet.Consumed = true;
 
             this.Consumed = true;
-            this.PendingDestruction = true;
+            this.Die();
         }
 
-        public override bool IsCollision(WorldBody projectedBody)
+        public override CollisionResponse CanCollide(WorldBody projectedBody)
         {
-            if (PendingDestruction)
-                return false;
+            if (Consumed)
+                return new CollisionResponse(false);
 
             if (projectedBody is ShipWeaponBullet bullet)
             {
                 // avoid "piercing" shots
                 if (bullet.Consumed)
-                    return false;
+                    return new CollisionResponse(false);
 
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.OwnedByFleet)
-                    return false;
+                    return new CollisionResponse(false);
 
                 // team mode ensures that bullets of like colors do no harm
                 if (World.Hook.TeamMode && bullet.Color == this.Color)
-                    return false;
+                    return new CollisionResponse(false);
 
-                // did it actually hit
-                if ((Vector2.Distance(projectedBody.Position, this.Position)
-                        <= this.Size + projectedBody.Size))
-                    return true;
+                return new CollisionResponse(true, false);
             }
 
-            return false;
+            return new CollisionResponse(false);
         }
+
         public override void Destroy()
         {
             Interlocked.Decrement(ref World.ProjectileCount);

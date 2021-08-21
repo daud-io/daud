@@ -10,12 +10,16 @@
         {
         }
 
+
         public static void Step()
         {
             lock (Connections)
             {
                 foreach (var connection in Connections)
+                {
+                    connection.StepSyncInGameLoop();
                     connection.WorldUpdateEvent.Set();
+                }
             }
         }
 

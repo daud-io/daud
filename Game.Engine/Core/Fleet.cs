@@ -104,10 +104,9 @@
 
         }
 
-        private void Die(Player player)
+        public void Die(Player player)
         {
             World.Scoring.FleetDied(player, Owner, this);
-
             this.Owner.Die(player);
 
             PendingDestruction = true;
@@ -134,7 +133,7 @@
             if (random.NextDouble() < threshold)
                 if (Ships?.Any() ?? false)
                 {
-                    EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay);
+                    EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay +1);
                 }
         }
 

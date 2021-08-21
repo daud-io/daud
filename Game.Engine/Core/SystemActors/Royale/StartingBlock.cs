@@ -8,7 +8,7 @@
     {
         public RoyaleMode ParentGame;
 
-        public StartingBlock(World world): base(world)
+        public StartingBlock(World world) : base(world)
         {
             Size = 200;
             AngularVelocity = 0.01f;
@@ -18,23 +18,28 @@
 
         public override void CollisionExecute(WorldBody projectedBody)
         {
-            ParentGame.StartCountdown();
+            if (projectedBody is ShipWeaponBullet bullet)
+            {
+
+                if (ParentGame.World.AdvertisedPlayerCount > 1)
+                    ParentGame.StartCountdown();
+                else
+                {
+                    var player = bullet?.OwnedByFleet?.Owner;
+                    if (player != null)
+                        player.SendMessage("Wait for at least 2 players, then shoot this thing to start.");
+                }
+            }
         }
 
-        public override bool IsCollision(WorldBody otherBody)
+        public override CollisionResponse CanCollide(WorldBody otherBody)
         {
-            if (otherBody is ShipWeaponBullet bullet)
-            {
-                if (ParentGame.World.AdvertisedPlayerCount > 1)
-                    return true;
+            CollisionResponse response = new CollisionResponse();
 
-                var player = bullet?.OwnedByFleet?.Owner;
+            if (otherBody is ShipWeaponBullet)
+                response.CanCollide = true;
 
-                if (player != null)
-                    player.SendMessage("Wait for at least 2 players, then shoot this thing to start.");
-            }
-
-            return false;
+            return response;
         }
     }
 }

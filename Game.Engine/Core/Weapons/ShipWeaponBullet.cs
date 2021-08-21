@@ -19,15 +19,9 @@
         public bool Consumed { get; set; }
         private Vector2 Reference = Vector2.Zero;
 
-        private float MaximumSpeed;
-
-
         public ShipWeaponBullet(World world, Ship ship): base(world)
         {
             this.OwnedByFleet = ship.Fleet;
-
-            OverrideBodyProperties(ref world.BodyProperties[this.BodyHandle]);
-
             Interlocked.Increment(ref World.ProjectileCount);
         }
 
@@ -36,25 +30,10 @@
             Angle = MathF.Atan2(LinearVelocity.Y, LinearVelocity.X);
             AngularVelocity = 0;
 
-            MaximumSpeed = MathF.Max(LinearVelocity.Length(), MaximumSpeed);
+            //MaximumSpeed = MathF.Max(LinearVelocity.Length(), MaximumSpeed);
 
             if (World.Time >= TimeDeath || Consumed)
                 Die();
-        }
-
-        public override void CollisionExecute(WorldBody projectedBody)
-        {
-            
-        }
-
-        public override bool IsCollision(WorldBody otherBody)
-        {
-            return false;
-        }
-
-        protected void OverrideBodyProperties(ref WorldBodyProperties properties)
-        {
-            properties.Projectile = true;
         }
 
         public virtual void FireFrom(Ship ship, ActorGroup group)

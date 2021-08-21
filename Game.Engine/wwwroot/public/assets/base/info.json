@@ -311,7 +311,7 @@
       "rotate": 6,
       "size": 2.56,
       "animated": {
-        "speed": 0.5,
+        "speed": 50,
         "size": 64,
         "count": 29
       },
@@ -322,7 +322,7 @@
       "url": "shield.png",
       "size": 2.56,
       "animated": {
-        "speed": 0.5,
+        "speed": 50,
         "loop": true,
         "size": 64,
         "count": 90
@@ -335,7 +335,7 @@
       "url": "shield.png",
       "size": 2.56,
       "animated": {
-        "speed": 0.5,
+        "speed": 50,
         "loop": true,
         "size": 64,
         "count": 90
@@ -357,6 +357,7 @@
     "defenseupgrade": {
       "url": "circles.png",
       "size": 3.6,
+      
       "animated": {
         "loop": true,
         "speed": 50,
@@ -488,7 +489,7 @@
       "url": "shield_pickup.png",
       "animated": {
         "loop": true,
-        "speed": 0.5,
+        "speed": 50,
         "count": 30,
         "size": 64
       },

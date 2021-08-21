@@ -45,20 +45,21 @@
                 Randomize();
             }
 
-            base.IsCollision(otherBody);
+            base.CanCollide(otherBody);
         }
 
-        public override bool IsCollision(WorldBody otherBody)
+        public override CollisionResponse CanCollide(WorldBody otherBody)
         {
             var ship = otherBody as Ship;
             var fleet = ship?.Fleet;
 
             if (fleet != null && fleet != ExcludedFleet)
-            {
-                return true;
-            }
+                return new CollisionResponse(true, false);
 
-            return base.IsCollision(otherBody);
+            if (otherBody == null)
+                return new CollisionResponse(true, true);
+                
+            return base.CanCollide(otherBody);
         }
 
         protected override void Update()

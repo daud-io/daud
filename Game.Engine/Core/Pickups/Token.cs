@@ -83,19 +83,17 @@
             CarriedBy = null;
         }
 
-        public override bool IsCollision(WorldBody otherObject)
+        public override CollisionResponse CanCollide(WorldBody otherObject)
         {
             if (otherObject is Ship ship)
             {
                 var fleet = ship.Fleet;
 
                 if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
-                {
-                    return true;
-                }
+                    return new CollisionResponse(true, false);
             }
 
-            return base.IsCollision(otherObject);
+            return base.CanCollide(otherObject);
         }
         public override void CollisionExecute(WorldBody otherObject)
         {

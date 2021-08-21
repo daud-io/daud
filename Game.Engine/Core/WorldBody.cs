@@ -9,6 +9,19 @@
 
     public class WorldBody : IActor
     {
+        public struct CollisionResponse
+        {
+            public CollisionResponse(bool canCollide = false, bool hasImpact = false)
+            {
+                this.CanCollide = canCollide;
+                this.HasImpact = hasImpact;
+
+            }
+
+            public bool CanCollide;
+            public bool HasImpact;
+        }
+
         public readonly World World;
         public uint ID;
 
@@ -52,7 +65,7 @@
             BodyHandle = World.Simulation.Bodies.Add(BodyDescription.CreateDynamic(
                 new Vector3(position2d.X, 0, position2d.Y),
                 GetBodyInertia(shape, mass),
-                new CollidableDescription(ShapeHandle, 50f),
+                new CollidableDescription(ShapeHandle, 150f),
                 //new CollidableDescription(ShapeHandle, 0.1f, ContinuousDetectionSettings.Continuous(1e-4f, 1e-4f)),
                 new BodyActivityDescription(0.00f)
             ));
@@ -249,17 +262,7 @@
 
 
                 if (PendingDestruction)
-                {
                     Destroy();
-                    World.Actors.Remove(this);
-                    World.BodyRemove(this);
-                    World.Simulation.Bodies.Remove(this.BodyHandle);
-                    World.Simulation.Shapes.Remove(this.ShapeHandle);
-                    this.BodyHandle = default;
-                    this.BodyReference = default;
-                    this.ShapeHandle = default;
-                    this.Exists = false;
-                }
             }
         }
 
@@ -271,11 +274,23 @@
 
         public virtual void Destroy()
         {
+            World.Actors.Remove(this);
+            World.BodyRemove(this);
+            World.Simulation.Bodies.Remove(this.BodyHandle);
+            World.Simulation.Shapes.Remove(this.ShapeHandle);
+            this.BodyHandle = default;
+            this.BodyReference = default;
+            this.ShapeHandle = default;
+            this.Exists = false;
         }
 
-        public virtual bool IsCollision(WorldBody otherBody)
+        public virtual CollisionResponse CanCollide(WorldBody otherBody)
         {
-            return false;
+            return new CollisionResponse
+            {
+                CanCollide = false,
+                HasImpact = false
+            };
         }
 
         public virtual void CollisionExecute(WorldBody projectedBody)

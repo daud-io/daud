@@ -83,7 +83,7 @@
                 World.Scoring.ShipDied(player, this.Fleet?.Owner, this);
 
             fleet?.KilledShip(this);
-            Die();
+            base.Die();
 
             if (this.Fleet != null)
                 this.Fleet.ShipDeath(player, this, bullet);
@@ -96,6 +96,8 @@
                 if (bullet.Consumed)
                     return;
 
+                bullet.Consumed = true;
+
                 var fleet = bullet?.OwnedByFleet;
                 var player = fleet?.Owner;
 
@@ -107,10 +109,7 @@
                     else
                     {
                         if (projectedBody is ShipWeaponSeeker)
-                        {
                             this.ShieldStrength = 0;
-                            bullet.Consumed = true;
-                        }
                         else
                             this.ShieldStrength--;
 
@@ -118,53 +117,56 @@
                     }
                 }
                 else
-                {
-                    bullet.Consumed = true;
-
                     takesDamage = !this.Fleet?.Owner?.IsInvulnerable ?? true;
-                }
 
                 if (takesDamage)
                     Die(player, fleet, bullet);
             }
         }
 
-        public override bool IsCollision(WorldBody projectedBody)
+        public override CollisionResponse CanCollide(WorldBody projectedBody)
         {
             if (PendingDestruction)
-                return false;
+                return new CollisionResponse(false);
 
-            if (projectedBody is Ship ship)
-                return ship.Fleet != null && this.Fleet != null && this.Fleet != ship.Fleet;
+            // ship-to-ship collisions
+            /*if (projectedBody is Ship ship)
+                if (ship.Fleet != null && this.Fleet != null && this.Fleet != ship.Fleet)
+                    return new CollisionResponse(true, true);*/
 
             if (projectedBody is ShipWeaponBullet bullet)
             {
+                if (bullet.Consumed)
+                    return new CollisionResponse(false);
+
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.Fleet)
-                    return false;
+                    return new CollisionResponse(false);
 
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.AbandonedByFleet
                     && World.Time < (this.AbandonedTime + World.Hook.AbandonBuffer))
-                    return false;
+                    return new CollisionResponse(false);
 
                 // team mode ensures that bullets of like colors do no harm
                 if (World.Hook.TeamMode && bullet.Color == this.Color)
-                    return false;
+                    return new CollisionResponse(false);
 
-                return true;
+                return new CollisionResponse(true, false);
             }
 
             if (!this.Abandoned)
             {
+                // TODO: do we still need this beast?
                 if (projectedBody is PickupBase
                     || projectedBody is HasteToken
                     || projectedBody is SystemActors.CTF.Base
                     || projectedBody is SystemActors.CTF.Flag)
-                    return true;
+
+                    return new CollisionResponse(true, false);;
             }
 
-            return false;
+            return base.CanCollide(projectedBody);
         }
 
         protected override void Update()

@@ -21,8 +21,10 @@
 
     public class Connection : IDisposable
     {
+        private Vector2 CameraPosition;
+        private Vector2 CameraLinearVelocity;
+
         private const float VELOCITY_SCALE_FACTOR = 5000;
-        private static readonly List<Connection> connections = new List<Connection>();
 
         private readonly ILogger<Connection> Logger = null;
         private readonly SemaphoreSlim WebsocketSendingSemaphore = new SemaphoreSlim(1, 1);
@@ -30,8 +32,8 @@
 
         private WebSocket Socket = null;
 
-        private World world = null;
-        private Player player = null;
+        private World World = null;
+        private Player Player = null;
 
         private int HookHash = 0;
         private long LeaderboardTime = 0;
@@ -82,7 +84,7 @@
 
             // First try to focus camera on the player if they have
             // a fleet alive;
-            var followFleet = player?.Fleet;
+            var followFleet = Player?.Fleet;
 
             // if the player doesn't have a fleet alive
             if (followFleet == null)
@@ -92,7 +94,7 @@
 
             if (followFleet == null)
                 // find someone else to watch
-                followFleet = Player.GetWorldPlayers(world)
+                followFleet = Player.GetWorldPlayers(World)
                     .ToList()
                     .Where(p => p.IsAlive)
                     .OrderByDescending(p => p.Score * 10000 + (10000 - p.Fleet?.ID ?? 0))
@@ -114,32 +116,35 @@
             return (position, linearVelocity);
         }
 
+        public void StepSyncInGameLoop()
+        {
+            var size = 6000;
+
+            (this.CameraPosition, this.CameraLinearVelocity) = DefineCamera();
+            
+            lock (this.BodyCache) // wrong kind of lock but might do for now
+            {
+                BodyCache.Update(
+                    World.BodiesNear(CameraPosition, size).ToList(),
+                    World.Time
+                );
+            }
+        }
+
 
         public async Task StepAsync(CancellationToken cancellationToken)
         {
             try
             {
 
-                if (player != null)
+                if (Player != null)
                 {
                     var builder = new FlatBufferBuilder(1);
 
-                    lock (world.Bodies) // wrong kind of lock but might do for now
+                    lock(BodyCache)
                     {
-                        var size = 6000;
-
-                        var (cameraPosition, cameraLinearVelocity) = DefineCamera();
-
-                        BodyCache.Update(
-                            world.BodiesNear(cameraPosition, size).ToList(),
-                            world.Time
-                        );
-
                         var updates = BodyCache.BodiesByError();
-
                         var updateBodies = updates.Take((int)this.Bandwidth);
-
-
                         var updatedGroups = BodyCache.GroupsByError().ToList();
 
                         var groupsVector = NetWorldView.CreateGroupsVector(builder,
@@ -178,7 +183,7 @@
                         foreach (var update in updateBodies)
                         {
                             var serverBody = update.Body;
-                            update.UpdateSent(world.Time);
+                            update.UpdateSent(World.Time);
 
                             NetBody.CreateNetBody(builder,
                                 Id: serverBody.ID,
@@ -201,7 +206,7 @@
                             b.Body.ID
                         ).ToArray());
 
-                        var messages = player.GetMessages();
+                        var messages = Player.GetMessages();
                         VectorOffset announcementsVector = new VectorOffset();
                         if (messages != null && messages.Any())
                         {
@@ -234,11 +239,11 @@
                         var cameraBody = NetBody.CreateNetBody(
                             builder,
                             Id: 0,
-                            DefinitionTime: world.Time,
-                            originalPosition_X: (short)(cameraPosition.X),
-                            originalPosition_Y: (short)(cameraPosition.Y),
-                            velocity_X: (short)(cameraLinearVelocity.X * VELOCITY_SCALE_FACTOR),
-                            velocity_Y: (short)(cameraLinearVelocity.Y * VELOCITY_SCALE_FACTOR),
+                            DefinitionTime: World.Time,
+                            originalPosition_X: (short)(this.CameraPosition.X),
+                            originalPosition_Y: (short)(this.CameraPosition.Y),
+                            velocity_X: (short)(this.CameraLinearVelocity.X * VELOCITY_SCALE_FACTOR),
+                            velocity_Y: (short)(this.CameraLinearVelocity.Y * VELOCITY_SCALE_FACTOR),
                             OriginalAngle: 0,
                             AngularVelocity: 0,
                             Size: 0,
@@ -249,8 +254,8 @@
 
                         NetWorldView.AddCamera(builder, cameraBody);
 
-                        NetWorldView.AddIsAlive(builder, player?.IsAlive ?? false);
-                        NetWorldView.AddTime(builder, world.Time);
+                        NetWorldView.AddIsAlive(builder, Player?.IsAlive ?? false);
+                        NetWorldView.AddTime(builder, World.Time);
 
                         NetWorldView.AddUpdates(builder, updatesVector);
                         NetWorldView.AddDeletes(builder, deletesVector);
@@ -264,18 +269,18 @@
                             NetWorldView.AddCustomData(builder, customOffset);
                         CustomData = this.FollowFleet?.CustomData;
 
-                        var players = Player.GetWorldPlayers(world);
-                        NetWorldView.AddPlayerCount(builder, (uint)world.AdvertisedPlayerCount);
-                        NetWorldView.AddSpectatorCount(builder, (uint)world.SpectatorCount);
+                        var players = Player.GetWorldPlayers(World);
+                        NetWorldView.AddPlayerCount(builder, (uint)World.AdvertisedPlayerCount);
+                        NetWorldView.AddSpectatorCount(builder, (uint)World.SpectatorCount);
 
-                        NetWorldView.AddCooldownBoost(builder, (byte)((player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
-                        NetWorldView.AddCooldownShoot(builder, (byte)((player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
-                        NetWorldView.AddWorldSize(builder, (ushort)world.Hook.WorldSize);
+                        NetWorldView.AddCooldownBoost(builder, (byte)((Player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
+                        NetWorldView.AddCooldownShoot(builder, (byte)((Player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
+                        NetWorldView.AddWorldSize(builder, (ushort)World.Hook.WorldSize);
 
                         if (this.FollowFleet != null)
                         {
                             // we've found someone to spectate, record it
-                            if (this.FollowFleet != player?.Fleet && this.FollowFleet != SpectatingFleet)
+                            if (this.FollowFleet != Player?.Fleet && this.FollowFleet != SpectatingFleet)
                                 SpectatingFleet = this.FollowFleet;
 
                             // inform the client of which the fleet id
@@ -286,13 +291,13 @@
 
                         var worldView = NetWorldView.EndNetWorldView(builder);
 
-                        var newHash = world.Hook.GetHashCode();
+                        var newHash = World.Hook.GetHashCode();
                         if (HookHash != newHash)
                         {
                             this.Events.Enqueue(new BroadcastEvent
                             {
                                 EventType = "hook",
-                                Data = JsonConvert.SerializeObject(world.Hook)
+                                Data = JsonConvert.SerializeObject(World.Hook)
                             });
                         }
 
@@ -304,23 +309,23 @@
 
                     await this.SendAsync(builder.DataBuffer, cancellationToken);
 
-                    if (LeaderboardTime != (world.Leaderboard?.Time ?? 0))
+                    if (LeaderboardTime != (World.Leaderboard?.Time ?? 0))
                     {
-                        LeaderboardTime = (world.Leaderboard?.Time ?? 0);
+                        LeaderboardTime = (World.Leaderboard?.Time ?? 0);
 
                         builder = new FlatBufferBuilder(1);
 
-                        var stringName = builder.CreateString(world.Leaderboard?.ArenaRecord?.Name ?? " ");
-                        var stringColor = builder.CreateString(world.Leaderboard?.ArenaRecord?.Color ?? " ");
+                        var stringName = builder.CreateString(World.Leaderboard?.ArenaRecord?.Name ?? " ");
+                        var stringColor = builder.CreateString(World.Leaderboard?.ArenaRecord?.Color ?? " ");
 
                         NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
                         NetLeaderboardEntry.AddColor(builder, stringColor);
                         NetLeaderboardEntry.AddName(builder, stringName);
-                        NetLeaderboardEntry.AddScore(builder, world.Leaderboard?.ArenaRecord?.Score ?? 0);
-                        NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(world.Leaderboard?.ArenaRecord?.Token));
+                        NetLeaderboardEntry.AddScore(builder, World.Leaderboard?.ArenaRecord?.Score ?? 0);
+                        NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(World.Leaderboard?.ArenaRecord?.Token));
                         var record = NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
 
-                        var entriesVector = NetLeaderboard.CreateEntriesVector(builder, world.Leaderboard.Entries.Select(e =>
+                        var entriesVector = NetLeaderboard.CreateEntriesVector(builder, World.Leaderboard.Entries.Select(e =>
                         {
                             // the strings must be created into the buffer before the are referenced
                             // and before the start of the entry object
@@ -346,7 +351,7 @@
                             return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
                         }).ToArray());
 
-                        var stringType = builder.CreateString(world.Leaderboard.Type ?? string.Empty);
+                        var stringType = builder.CreateString(World.Leaderboard.Type ?? string.Empty);
                         NetLeaderboard.StartNetLeaderboard(builder);
                         NetLeaderboard.AddEntries(builder, entriesVector);
                         NetLeaderboard.AddType(builder, stringType);
@@ -412,7 +417,7 @@
         private async Task SendPingAsync()
         {
             var builder = new FlatBufferBuilder(1);
-            var pong = NetPing.CreateNetPing(builder, world.Time);
+            var pong = NetPing.CreateNetPing(builder, World.Time);
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
             builder.Finish(q.Value);
 
@@ -429,8 +434,8 @@
             this.Bandwidth = ping.BandwidthThrottle;
             this.Latency = ping.Latency;
 
-            if (player != null)
-                player.Backgrounded = this.Backgrounded;
+            if (Player != null)
+                Player.Backgrounded = this.Backgrounded;
 
             await SendPingAsync();
         }
@@ -450,8 +455,8 @@
 
                     Sprites shipSprite = Sprites.ship_red;
 
-                    player.Connection = this;
-                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {player.Score} Roles: {player.Roles}");
+                    Player.Connection = this;
+                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {Player.Score} Roles: {Player.Roles}");
 
 
                     switch (spawn.Ship)
@@ -461,7 +466,7 @@
                             color = "green";
                             break;
                         case "ship_secret":
-                            if (player?.Roles?.Contains("Player") ?? false)
+                            if (Player?.Roles?.Contains("Player") ?? false)
                             {
                                 shipSprite = Sprites.ship_secret;
                                 color = "yellow";
@@ -478,7 +483,7 @@
                         break;
                         */
                         case "ship_zed":
-                            if (player?.Roles?.Contains("Old Guard") ?? false)
+                            if (Player?.Roles?.Contains("Old Guard") ?? false)
                             {
                                 shipSprite = Sprites.ship_zed;
                                 color = "red";
@@ -524,13 +529,13 @@
                             break;
                     }
 
-                    player.Spawn(spawn.Name, shipSprite, color, spawn.Token, spawn.Color);
+                    Player.Spawn(spawn.Name, shipSprite, color, spawn.Token, spawn.Color);
 
                     break;
                 case AllMessages.NetControlInput:
                     var input = quantum.Message<NetControlInput>().Value;
 
-                    player?.SetControl(new ControlInput
+                    Player?.SetControl(new ControlInput
                     {
                         Position = new Vector2(input.X, input.Y),
                         BoostRequested = input.Boost,
@@ -541,14 +546,14 @@
                     if (input.SpectateControl == "action:next")
                     {
                         var next =
-                            Player.GetWorldPlayers(world)
+                            Player.GetWorldPlayers(World)
                                 .Where(p => p.IsAlive)
                                 .Where(p => p?.Fleet?.ID > (SpectatingFleet?.ID ?? 0))
                                 .OrderBy(p => p?.Fleet?.ID)
                                 .FirstOrDefault()?.Fleet;
 
                         if (next == null)
-                            next = Player.GetWorldPlayers(world)
+                            next = Player.GetWorldPlayers(World)
                                 .Where(p => p.IsAlive)
                                 .OrderBy(p => p?.Fleet?.ID)
                                 .FirstOrDefault()?.Fleet;
@@ -562,7 +567,7 @@
                         var fleetID = int.Parse(match.Value);
 
                         var next =
-                            Player.GetWorldPlayers(world)
+                            Player.GetWorldPlayers(World)
                                 .Where(p => p.IsAlive)
                                 .Where(p => p?.Fleet?.ID == fleetID)
                                 .FirstOrDefault()?.Fleet;
@@ -578,15 +583,15 @@
                     break;
 
                 case AllMessages.NetExit:
-                    player.Exit();
+                    Player.Exit();
                     break;
 
                 case AllMessages.NetAuthenticate:
                     var auth = quantum.Message<NetAuthenticate>().Value;
-                    if (player != null)
+                    if (Player != null)
                     {
-                        player.Token = auth.Token;
-                        player.AuthenticationStarted = false;
+                        Player.Token = auth.Token;
+                        Player.AuthenticationStarted = false;
                     }
                     break;
             }
@@ -600,7 +605,7 @@
 
             this.Logger.LogInformation($"New Connection: {worldRequest}");
 
-            world = Worlds.Find(worldRequest);
+            World = Worlds.Find(worldRequest);
 
             var builder = new FlatBufferBuilder(1);
             await SendPingAsync();
@@ -609,14 +614,14 @@
 
             try
             {
-                lock (world.Bodies)
+                lock (World.Bodies)
                 {
-                    player = new Player
+                    Player = new Player
                     {
                         IP = httpContext.Connection.RemoteIpAddress.ToString(),
                         Connection = this
                     };
-                    player.Init(world);
+                    Player.Init(World);
                 }
 
                 var updateTask = StartSynchronizing(cancellationToken);
@@ -629,10 +634,10 @@
             {
                 ConnectionHeartbeat.Unregister(this);
 
-                if (player != null)
+                if (Player != null)
                 {
-                    player.PendingDestruction = true;
-                    player.Connection = null;
+                    Player.PendingDestruction = true;
+                    Player.Connection = null;
                 }
             }
         }
@@ -687,7 +692,6 @@
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
-
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)

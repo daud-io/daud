@@ -8,7 +8,8 @@
     public class Obstacle : WorldBody
     {
         private Vector2 TargetVelocity = Vector2.Zero;
-        protected float Drag = 0.97f;
+        //protected float Drag = 0.97f;
+        protected float Drag = 1.0f;
 
         public Obstacle(World world) : base(world)
         {
@@ -36,27 +37,22 @@
             if (projectedBody is ShipWeaponBullet bullet)
             {
                 if (!bullet.Consumed)
-                {
                     bullet.Consumed = true;
-                    
-                }
             }
         }
 
-        public override bool IsCollision(WorldBody projectedBody)
+        public override CollisionResponse CanCollide(WorldBody projectedBody)
         {
-            var isHit = false;
-
             if (projectedBody is ShipWeaponBullet bullet)
-                return true;
+                return new CollisionResponse(true, true);
 
             if (projectedBody is Ship)
-                return true;
+                return new CollisionResponse(true, true);
 
             if (projectedBody is Obstacle)
-                return true;
+                return new CollisionResponse(true, true);
 
-            return isHit;
+            return base.CanCollide(projectedBody);
         }
 
         protected override void Update()
