@@ -149,14 +149,18 @@
                 var aValid = Bodies.TryGetValue(impact.BodyHandleA, out WorldBody wbA);
                 var bValid = Bodies.TryGetValue(impact.BodyHandleB, out WorldBody wbB);
 
-                if (impact.CustomBounce)
-                    wbA.LinearVelocity = new Vector2(impact.newAVelocity.X, impact.newAVelocity.Z);
+                /*if (impact.CustomBounce)
+                    wbA.LinearVelocity = new Vector2(impact.newAVelocity.X, impact.newAVelocity.Z);*/
 
                 if (aValid)
                 {
                     wbA.CollisionExecute(wbB);
+                    wbA.IsInContact = true;
                     if (bValid)
+                    {
                         wbB.CollisionExecute(wbA);
+                        wbB.IsInContact = true;
+                    }
                 }
             }
             bodyImpacts.Count = 0;
@@ -219,6 +223,7 @@
             {
                 var reference = Simulation.Bodies.GetBodyReference(body.BodyHandle);
                 body.UpdateBodyReference(reference);
+                body.IsInContact = false;
             }
         }
 

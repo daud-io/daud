@@ -40,6 +40,7 @@
         protected int CycleMS = 0;
         protected BodyReference BodyReference;
         public bool PendingDestruction = false;
+        public bool ContactLastFrame = false;
 
         public WorldBody(World world)
         {
@@ -176,6 +177,8 @@
         }
 
         public Vector2 AverageLinearVelocity { get; set; }
+        public bool IsBouncing { get; set; }
+        public bool IsInContact { get; set; }
 
         protected virtual void UpdateSize()
         {
@@ -248,6 +251,8 @@
         protected virtual void Update()
         {
             this.AverageLinearVelocity = this.AverageLinearVelocity * 0.75f + LinearVelocity * 0.25f;
+            if (!this.IsInContact)
+                this.IsBouncing = false;
         }
 
         void IActor.Think()

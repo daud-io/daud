@@ -1,0 +1,4 @@
+User-Agent: *
+Disallow: /img
+Disallow: /font
+Allow: /

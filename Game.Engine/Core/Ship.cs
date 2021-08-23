@@ -134,8 +134,12 @@
                 if (ship.Fleet != null && this.Fleet != null && this.Fleet != ship.Fleet)
                     return new CollisionResponse(true, true);*/
 
+
             if (projectedBody is ShipWeaponBullet bullet)
             {
+                if (projectedBody is ShipWeaponSeeker && this.Abandoned)
+                    return new CollisionResponse(false);
+
                 if (bullet.Consumed)
                     return new CollisionResponse(false);
 

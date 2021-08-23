@@ -99,16 +99,19 @@ export function registerContainer(container: CustomContainer): void {
                 break;
 
             case PointerEventTypes.POINTERMOVE:
+                if (container?.ready)
+                {
+                    const pos = Vector3.Unproject(
+                        new Vector3(container.scene.pointerX, container.scene.pointerY, 1),
+                        container.engine.getRenderWidth(),
+                        container.engine.getRenderHeight(),
+                        Matrix.Identity(),
+                        container.scene.getViewMatrix(),
+                        container.scene.getProjectionMatrix());
 
-                const pos = Vector3.Unproject(
-                    new Vector3(container.scene.pointerX, container.scene.pointerY, 1),
-                    container.engine.getRenderWidth(),
-                    container.engine.getRenderHeight(),
-                    Matrix.Identity(), container.scene.getViewMatrix(),
-                    container.scene.getProjectionMatrix());
-
-                Controls.mouseX = pos.x;
-                Controls.mouseY = pos.z;
+                    Controls.mouseX = pos.x;
+                    Controls.mouseY = pos.z;
+                }
                 break;
         }
     });
@@ -175,6 +178,13 @@ window.addEventListener("keydown", ({ key }) => {
 window.addEventListener("keyup", ({ key }) => {
     if (key.toLowerCase() == "s") Controls.boost = false;
     if (key == " ") Controls.shoot = false;
+});
+
+document.body.addEventListener("contextmenu", (e) => {
+    if (document.body.classList.contains("alive")) {
+        e.preventDefault();
+        return false;
+    }
 });
 
 function save() {

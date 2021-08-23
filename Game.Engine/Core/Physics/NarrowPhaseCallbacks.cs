@@ -116,18 +116,12 @@ namespace Game.Engine.Physics
             var responseAB = worldBodyA.CanCollide(worldBodyB);
             var responseBA = worldBodyB.CanCollide(worldBodyA);
 
-            bool customBouncy = false;
-
             pairMaterial.FrictionCoefficient = 0;
             if (pair.B.Mobility != CollidableMobility.Static)
             {
                 //If two bodies collide, just average the friction. Other options include min(a, b) or a * b.
                 ref var propertiesB = ref Properties[pair.B.BodyHandle];
                 pairMaterial.FrictionCoefficient = (pairMaterial.FrictionCoefficient + propertiesB.Friction) * 0.5f;
-            }
-            else
-            {
-                customBouncy = true;
             }
 
             pairMaterial.MaximumRecoveryVelocity = float.MaxValue;
@@ -136,24 +130,31 @@ namespace Game.Engine.Physics
             for (int i = 0; i < manifold.Count; ++i)
                 if (manifold.GetDepth(ref manifold, i) >= -1e-3f)
                 {
+                    AddBodyImpact(pair.A.BodyHandle, pair.B, default, false);
+
                     if ((responseAB.HasImpact || responseBA.HasImpact)
-                        && (customBouncy)
-                        && (pair.B.Mobility == CollidableMobility.Static && manifold.Count == 1))
+                        && (pair.B.Mobility == CollidableMobility.Static && manifold.Count == 1)
+                        && !(worldBodyA.IsBouncing))
                     {
                         // simulate a "satisfying" bounce
                         // this is not physically accurate
 
+                        // not using body's linearvelocity because it was speculatively slowed
                         //var reference = World.Simulation.Bodies.GetBodyReference(pair.A.BodyHandle);
                         //Vector3 incoming = reference.Velocity.Linear;
+
+                        //instead use a moving average of the linear velocity over the last few frames
                         Vector3 incoming = new Vector3(worldBodyA.AverageLinearVelocity.X, 0, worldBodyA.AverageLinearVelocity.Y);
                         float incomingLength = incoming.Length();
                         if (incomingLength > 0)
                         {
                             Vector3 normal = manifold.GetNormal(ref manifold, 0);
                             Vector3 reflection = incoming - 2 * Vector3.Dot(incoming, normal) * normal;
-                            
                             reflection = Vector3.Normalize(reflection) * incomingLength;
-                            AddBodyImpact(pair.A.BodyHandle, pair.B, reflection, true);
+
+                            worldBodyA.LinearVelocity = new Vector2(reflection.X, reflection.Z);
+                            worldBodyA.IsBouncing = true;
+
                             return false;
                         }
 

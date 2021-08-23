@@ -80,6 +80,7 @@
             hook.Description = "FFA Arena";
             hook.Instructions = "Mouse to aim, click to shoot. Press 's' to boost.";
             hook.Weight = 10;
+            hook.WorldSize = 4000;
 
             return new World(hook, GameConfiguration);
         }
