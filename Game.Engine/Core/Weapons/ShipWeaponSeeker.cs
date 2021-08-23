@@ -77,11 +77,12 @@ namespace Game.Engine.Core.Weapons
             var fleet = bullet?.OwnedByFleet;
             var player = fleet?.Owner;
 
-            if (bullet != null && !bullet.Consumed)
+            if (bullet != null && !bullet.Consumed && !this.Consumed)
+            {
                 bullet.Consumed = true;
-
-            this.Consumed = true;
-            this.Die();
+                this.Consumed = true;
+                this.Die();
+            }
         }
 
         public override CollisionResponse CanCollide(WorldBody projectedBody)

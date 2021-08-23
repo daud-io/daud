@@ -37,6 +37,7 @@ export class Connection {
     autoReload = true;
     statPongCount = 0;
     hook: any;
+    lastControlPacket: Uint8Array;
 
     constructor(onView?: (view: fb.NetWorldView) => void) {
         this.hook = null;
@@ -54,6 +55,8 @@ export class Connection {
             this.statBytesUp = 0;
             this.statBytesDown = 0;
         }, 1000);
+
+        this.lastControlPacket = new Uint8Array(0);
     }
     disconnect(): void {
         if (this.socket) {
@@ -195,7 +198,14 @@ export class Connection {
         console.log("spawned");
     }
 
-    sendControl(boost: boolean, shoot: boolean, x: number, y: number, spectateControl: string, customDataJson: string): void {
+    sendControl(
+        boost: boolean, 
+        shoot: boolean, 
+        x: number, 
+        y: number, 
+        spectateControl: string, 
+        customDataJson: string
+    ): void {
         const builder = new flatbuffers.Builder(0);
 
         let spectateString: number | undefined = undefined;
@@ -221,7 +231,22 @@ export class Connection {
 
         builder.finish(quantum);
 
-        this.send(builder.asUint8Array());
+        const newControlPacket = builder.asUint8Array();
+
+        if (this.lastControlPacket.length != newControlPacket.length)
+        {
+            this.send(newControlPacket);
+            this.lastControlPacket = newControlPacket;
+        }
+        else
+            for(let i=0; i<newControlPacket.length; i++)
+                if (newControlPacket[i] != this.lastControlPacket[i])
+                {
+                    this.send(newControlPacket);
+                    this.lastControlPacket = newControlPacket;
+                    break;
+                }
+
     }
 
     send(databuffer: Uint8Array): void {

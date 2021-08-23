@@ -109,8 +109,8 @@ export function registerContainer(container: CustomContainer): void {
                         container.scene.getViewMatrix(),
                         container.scene.getProjectionMatrix());
 
-                    Controls.mouseX = pos.x;
-                    Controls.mouseY = pos.z;
+                    Controls.mouseX = pos.x - container.cameraPosition.x;
+                    Controls.mouseY = pos.z - container.cameraPosition.y;
                 }
                 break;
         }

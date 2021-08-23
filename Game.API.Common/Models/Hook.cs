@@ -91,7 +91,7 @@
                     SpawnShipCount = 5,
                     SpawnInvulnerabilityTime = 3000,
 
-                    Fishes = 60, // ignored if WorldResizeEnabled = true
+                    Fishes = 35, // ignored if WorldResizeEnabled = true
                     FishesMultiplier = 0.01, // used when WorldResizeEnabled = true
                     FishThrust = 0.08f,
                     FishFlockAlignment = 5f,
@@ -117,11 +117,11 @@
 
                     FlockSpeed = 0,
 
-                    PickupShields = 4,
+                    PickupShields = 3,
                     PickupShieldsMultiplier = 0.0004,
                     ShieldStrength = 3,
 
-                    PickupSeekers = 6,
+                    PickupSeekers = 5,
                     PickupSeekersMultiplier = 0.0006,
                     SeekerRange = 2100,
                     SeekerCycle = 250,

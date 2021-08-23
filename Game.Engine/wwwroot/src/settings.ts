@@ -12,6 +12,8 @@ export const Settings = {
     showHints: true,
     nameSize: 48,
     background: true,
+    latencyMode: "server",
+    latencyOffset: 0
 };
 
 const themeSelector = document.getElementById("settingsTheme") as HTMLSelectElement;
@@ -21,6 +23,9 @@ const bandwidth = document.getElementById("settingsBandwidth") as HTMLInputEleme
 const logLength = document.getElementById("settingsLog") as HTMLInputElement;
 const nameSize = document.getElementById("settingsNameSize") as HTMLInputElement;
 const backgroundEl = document.getElementById("settingsShowBackground") as HTMLInputElement;
+const latencyModeEl = document.getElementById("settingsLatencyMode") as HTMLInputElement;
+const latencyOffsetEl = document.getElementById("settingsLatencyOffset") as HTMLInputElement;
+
 loadSettings();
 
 async function themeChange() {
@@ -57,6 +62,12 @@ backgroundEl.onchange = () => {
     Settings.background = backgroundEl.checked;
     save();
 };
+latencyModeEl.onchange = () => {
+    Settings.latencyMode = latencyModeEl.value;
+}
+latencyOffsetEl.onchange = () => {
+    Settings.latencyOffset = Number(latencyOffsetEl.value);
+}
 
 function save() {
     bus.emit("settings");
@@ -94,6 +105,8 @@ export function loadSettings(): void {
     logLength.value = String(Settings.logLength);
     nameSize.value = String(Settings.nameSize);
     backgroundEl.checked = Settings.background;
+    latencyModeEl.value = Settings.latencyMode;
+    latencyOffsetEl.value = Settings.latencyOffset.toString();
 }
 
 const gear = document.getElementById("gear")!;

@@ -93,9 +93,11 @@
         {
             if (projectedBody is ShipWeaponBullet bullet)
             {
-                if (bullet.Consumed)
+                if (this.PendingDestruction)
                     return;
-
+                if (bullet.Consumed || this.PendingDestruction)
+                    return;
+                
                 bullet.Consumed = true;
 
                 var fleet = bullet?.OwnedByFleet;
@@ -137,8 +139,8 @@
 
             if (projectedBody is ShipWeaponBullet bullet)
             {
-                if (projectedBody is ShipWeaponSeeker && this.Abandoned)
-                    return new CollisionResponse(false);
+                //if (projectedBody is ShipWeaponSeeker && this.Abandoned)
+                //    return new CollisionResponse(false);
 
                 if (bullet.Consumed)
                     return new CollisionResponse(false);

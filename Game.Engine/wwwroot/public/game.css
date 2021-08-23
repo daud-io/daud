@@ -796,6 +796,7 @@ progress[value="255"]::-webkit-progress-value {
     position: absolute;
     top: 50%;
     left: 50%;
+    pointer-events: none;
 }
 
 .plusScore {
@@ -895,7 +896,7 @@ progress[value="255"]::-webkit-progress-value {
     padding: 8px;
 }
 
-#links a {
+#links>a {
     display: inline-block;
     width: 40px;
     height: 40px;

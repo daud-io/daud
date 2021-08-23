@@ -154,8 +154,12 @@
 
                 if (aValid)
                 {
+                    if (wbA?.PendingDestruction == true || wbB?.PendingDestruction == true)
+                        continue;
+
                     wbA.CollisionExecute(wbB);
                     wbA.IsInContact = true;
+
                     if (bValid)
                     {
                         wbB.CollisionExecute(wbA);

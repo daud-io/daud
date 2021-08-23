@@ -92,14 +92,13 @@
         <button id="spawnSpectate">Launch</button>
       </div>
 
-      <div id="plotly"></div>
-
       <table id="leaderboard" cellspacing="0"></table>
       <table id="leaderboard-left" cellspacing="0"></table>
       <table id="leaderboard-center" cellspacing="0"></table>
+
       <progress id="cooldown" value="0" max="255"></progress>
 
-      <table id="chat">
+      <table id="chat" style="display:none;">
         <tr>
           <th>⏰</th>
           <th>waiting</th>
@@ -123,6 +122,7 @@
       <div>
         <img id="controls_instructions" src="img/controls.png" />
         <div id="links">
+          <div><a href="https://discord.gg/5ak5FsU" target="_blank">Join our active and <em>friendly</em> online Chat!</a></div>
           <a href="https://discord.gg/5ak5FsU" target="_blank">
             <img src="img/discord-icon.png" />
           </a>
@@ -158,7 +158,11 @@
           <h4>Changelog</h4>
           <table>
             <tr>
-              <td class="date"><em></eb>7/26/2021</em></td>
+              <td class="date"><em>8/23/2021</em></td>
+              <td>Strange new dimensions have been discovered</td>
+            </tr>
+            <tr>
+              <td class="date">7/26/2021</td>
               <td>Balanced chasing vs. running with EinsteinCoefficient</td>
             </tr>
             <tr>
@@ -287,6 +291,34 @@
               <option value="100">High</option>
               <option value="50">Medium</option>
               <option value="25">Low</option>
+            </select>
+          </label>
+
+          <label for="settingsLatencyMode"
+            >Latency Mode
+            <select id="settingsLatencyMode">
+              <option value="server">Server (default)</option>
+              <option value="offset">Client (experimental)</option>
+            </select>
+          </label>
+
+          <label for="settingsLatencyOffset"
+            >Latency Offset
+            <select id="settingsLatencyOffset">
+              <option value="-80">-80ms</option>
+              <option value="-60">-60ms</option>
+              <option value="-40">-40ms</option>
+              <option value="-20">-20ms</option>
+              <option value="0">Zero (default)</option>
+              <option value="20">+20ms</option>
+              <option value="40">+40ms</option>
+              <option value="60">+60ms</option>
+              <option value="80">+80ms</option>
+              <option value="100">+100ms</option>
+              <option value="120">+120ms</option>
+              <option value="150">+150ms</option>
+              <option value="200">+200ms</option>
+              <option value="250">+250ms</option>
             </select>
           </label>
 

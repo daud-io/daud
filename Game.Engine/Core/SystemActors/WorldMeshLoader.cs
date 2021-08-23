@@ -1,10 +1,13 @@
 ﻿namespace Game.Engine.Core.SystemActors
 {
+    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
     using BepuPhysics;
     using BepuPhysics.Collidables;
+    using Newtonsoft.Json;
     using SharpGLTF.Schema2;
 
     public class WorldMeshLoader : SystemActorBase
@@ -20,15 +23,19 @@
         private void LoadNode(ModelRoot root, Node node)
         {
 
-            foreach (var child in node.VisualChildren)
-                LoadNode(root, child);
 
             Matrix4x4 transform = 
                 node.WorldMatrix
                 * Matrix4x4.CreateScale(new Vector3(-10, 10, 10)); // invert X because reasons
 
-            if (node.Mesh != null)
+            if (node.Extras.Content != null)
             {
+                var tags = JsonConvert.DeserializeObject<Dictionary<string, string>>(node.Extras.ToJson());
+                if (tags != null)
+                    if (tags.TryGetValue("physics", out string physics))
+                        if (physics == "false")
+                            return;
+
                 foreach (var primitive in node.Mesh.Primitives)
                 {
                     var vertices = primitive.GetVertexAccessor("POSITION")?.AsVector3Array();
@@ -59,6 +66,10 @@
                             new CollidableDescription(World.Simulation.Shapes.Add(mesh), 0.1f))));
                 }
             }
+
+            foreach (var child in node.VisualChildren)
+                LoadNode(root, child);
+
         }
 
         private void LoadScene(ModelRoot root, Scene scene)

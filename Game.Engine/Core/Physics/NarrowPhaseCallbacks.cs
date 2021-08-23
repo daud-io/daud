@@ -150,7 +150,7 @@ namespace Game.Engine.Physics
                         {
                             Vector3 normal = manifold.GetNormal(ref manifold, 0);
                             Vector3 reflection = incoming - 2 * Vector3.Dot(incoming, normal) * normal;
-                            reflection = Vector3.Normalize(reflection) * incomingLength;
+                            reflection = Vector3.Normalize(reflection) * incomingLength * 0.66f;
 
                             worldBodyA.LinearVelocity = new Vector2(reflection.X, reflection.Z);
                             worldBodyA.IsBouncing = true;

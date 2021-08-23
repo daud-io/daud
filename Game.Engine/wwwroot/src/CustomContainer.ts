@@ -6,11 +6,10 @@ export class CustomContainer {
     scene: Scene;
     engine: Engine;
     camera: FreeCamera;
-    light: HemisphericLight;
+    light: DirectionalLight;
 
     guiTexture: AdvancedDynamicTexture;
-    lastCamera: Vector2;
-    lastPosition: Vector2;
+    cameraPosition: Vector2;
     cameraHeight: number;
 
     ready: boolean;
@@ -19,13 +18,15 @@ export class CustomContainer {
         this.ready = false;
         this.engine = new Engine(canvas, true);
         this.scene = new Scene(this.engine);
-        this.camera = new FreeCamera("Camera", new Vector3(0, 1000, 0), this.scene);
-        this.light = new HemisphericLight("HemiLight", new Vector3(1, 1, 1), this.scene);
-        this.guiTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
         this.cameraHeight = 4000;
+        this.camera = new FreeCamera("Camera", new Vector3(0, this.cameraHeight, 0), this.scene);
+        this.camera.setTarget(new Vector3(0,0,0));
+        //this.light = new HemisphericLight("HemiLight", new Vector3(1, 1, 1), this.scene);
+        this.light = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 1), this.scene);
+        this.guiTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
         //this.pointLight2 = new PointLight("Light", new Vector3(0, -1000, 0), this.scene);
         
-        this.lastCamera = this.lastPosition = Vector2.Zero();
+        this.cameraPosition = Vector2.Zero();
 
         this.defineGround();
     }
@@ -37,7 +38,11 @@ export class CustomContainer {
             SceneLoader.ShowLoadingScreen = false;
             SceneLoader.ImportMesh(null, "/assets/base/models/", "ffa.glb", this.scene,
                 function (abstractMesh) { // on success
+                    // if you try to use the mesh scaling() vector directly, it doesn't something sort of like scaling,
+                    // but a freaky sort of scaling that is not what we want.
 
+                    // putting it inside a Mesh.CreateBox and scaling that makes all the difference.
+                    
                     var m = Mesh.CreateBox('scaling', 15000, abstractMesh[0].getScene());
                     m.isVisible = false;
                     m.scaling = new Vector3(-10,10,10);
@@ -45,7 +50,7 @@ export class CustomContainer {
                     {
                         const mesh = abstractMesh[i];
                         for (var j = 0; j < abstractMesh.length; j++)
-                            abstractMesh[i].parent = m;
+                            mesh.parent = m;
                             
                         /*if (mesh.material && mesh.material.name.indexOf('invisible.png') > -1)
                             mesh.dispose();*/
@@ -75,13 +80,10 @@ export class CustomContainer {
 
     PositionCamera(serverPosition: Vector2)
     {
-        const position = new Vector2(0, 0);
-        position.x = serverPosition.x * 0.2 + this.lastCamera.x * 0.8;
-        position.y = serverPosition.y * 0.2 + this.lastCamera.y * 0.8;
-        this.lastCamera = position;
-        this.camera.position = new Vector3(position.x, this.cameraHeight, position.y);
-        this.camera.setTarget(new Vector3(position.x, 0, position.y));
-        this.lastPosition = position;
+        this.cameraPosition.x = serverPosition.x * 0.2 + this.cameraPosition.x * 0.8;
+        this.cameraPosition.y = serverPosition.y * 0.2 + this.cameraPosition.y * 0.8;
+        this.camera.position = new Vector3(this.cameraPosition.x, this.cameraHeight, this.cameraPosition.y);
+        this.camera.setTarget(new Vector3(this.cameraPosition.x, 0, this.cameraPosition.y));
         this.ready = true;
     }
 

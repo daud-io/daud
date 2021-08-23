@@ -108,7 +108,12 @@ function onView(newView: NetWorldView) {
     if (isAlive)
         isSpectating = false;
 
-    const lastOffset = time + connection.latency / 2 - performance.now();
+    let offset = Settings.latencyOffset;
+    if (Settings.latencyMode == "server")
+        offset += -connection.latency/2;
+    
+    let lastOffset = time + (offset) - performance.now();
+
     if (!serverTimeOffset) serverTimeOffset = lastOffset;
     serverTimeOffset = 0.95 * serverTimeOffset + 0.05 * lastOffset;
 
@@ -352,7 +357,6 @@ loadImages.then(() => {
         minimap.update(lb, worldSize, fleetID);
     });
 
-    
 
     // Game Loop
     container.engine.runRenderLoop(() => {
@@ -362,35 +366,21 @@ loadImages.then(() => {
         if (serverTimeOffset) {
             gameTime = performance.now() + serverTimeOffset;
 
-            if (
-                Controls.mouseX !== lastControl.mouseX ||
-                Controls.mouseY !== lastControl.mouseY ||
-                Controls.boost !== lastControl.boost ||
-                Controls.shoot !== lastControl.shoot ||
-                Controls.autofire !== lastControl.autofire ||
-                message.txt !== lastControl.chat
-            ) {
-                let spectateControl = "";
-                if (isSpectating) {
-                    if (Controls.shoot && !lastControl.shoot) spectateControl = "action:next";
-                    else spectateControl = "spectating";
-                }
-    
-                let customData = Controls.customData;
-    
-                if (message.time + 3000 > Date.now()) customData = JSON.stringify({ chat: message.txt });
-    
-                connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX - container.lastCamera.x, Controls.mouseY - container.lastCamera.y, spectateControl, customData);
-    
-                lastControl = {
-                    mouseX: Controls.mouseX,
-                    mouseY: Controls.mouseY,
-                    boost: Controls.boost,
-                    shoot: Controls.shoot,
-                    autofire: Controls.autofire,
-                    chat: message.txt,
-                };
+            let spectateControl = "";
+            if (isSpectating) {
+                if (Controls.shoot && !lastControl.shoot) spectateControl = "action:next";
+                else spectateControl = "spectating";
             }
+
+            //let customData = ;
+            connection.sendControl(
+                Controls.boost, 
+                Controls.shoot || Controls.autofire, 
+                Controls.mouseX,
+                Controls.mouseY,
+                spectateControl, 
+                Controls.customData
+            );
 
             projectObject(cameraPositionFromServer, gameTime);
             container.PositionCamera(cameraPositionFromServer.Position);
