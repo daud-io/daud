@@ -1,10 +1,10 @@
-﻿import { CustomContainer } from "./CustomContainer";
+﻿import { GameContainer } from "./gameContainer";
 import { projectObject } from "./interpolator";
 import { ClientBody, ClientGroup } from "./cache";
 import { getSpriteDefinition, getTextureDefinition, SpriteDefinition, TextureDefinition } from "./loader";
 import { TextureLayer } from "./textureLayer";
 export class RenderedObject {
-    container: CustomContainer;
+    container: GameContainer;
     body: ClientBody;
     currentSpriteName: string;
     currentMode: number;
@@ -13,7 +13,7 @@ export class RenderedObject {
 
     baseSpriteDefinition: SpriteDefinition;
 
-    constructor(container: CustomContainer, clientBody: ClientBody) {
+    constructor(container: GameContainer, clientBody: ClientBody) {
         this.textureLayers = {};
 
         if (!container)

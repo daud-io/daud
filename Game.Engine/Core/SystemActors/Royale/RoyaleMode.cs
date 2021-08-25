@@ -15,9 +15,9 @@
 
         private uint CountdownUntil = 0;
         private int RestartDelayMS = 6000;
-        private int OriginalWorldsizeDeltaPerPlayer = 0;
-        private int OriginalWorldResizeSpeed = 0;
-        private double OriginalFishesMultiplier = 0;
+        //private int OriginalWorldsizeDeltaPerPlayer = 0;
+        //private int OriginalWorldResizeSpeed = 0;
+        //private double OriginalFishesMultiplier = 0;
 
         private GameStateEnum GameState = GameStateEnum.Prestart;
         enum GameStateEnum
@@ -41,7 +41,7 @@
             GameRestartTime = 0;
             GameState = GameStateEnum.Prestart;
             World.CanSpawn = true;
-            World.Hook.FishesMultiplier = OriginalFishesMultiplier;
+            //World.Hook.FishesMultiplier = OriginalFishesMultiplier;
             StartingBlock.Position = Vector2.Zero;
             InRoomAnnouncement($"Launch now to join the next game!");
         }
@@ -65,8 +65,11 @@
             StartingArenaSize = World.Hook.WorldSize;
             World.CanSpawn = false;
             World.CanSpawnReason = "You can't join this game right now. Wait for the next one.";
-            World.Hook.WorldSizeDeltaPerPlayer = 0;
-            World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
+
+
+
+            //World.Hook.WorldSizeDeltaPerPlayer = 0;
+            //World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed;
             
         }
 
@@ -77,13 +80,13 @@
 
             if (World.Hook.WorldSize < World.Hook.RoyaleDoubleStep1)
             {
-                World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed / 2;
-                World.Hook.FishesMultiplier = OriginalFishesMultiplier / 2;
+                //World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed / 2;
+                //World.Hook.FishesMultiplier = OriginalFishesMultiplier / 2;
             }
             if (World.Hook.WorldSize < World.Hook.RoyaleDoubleStep2)
             {
-                World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed / 4;
-                World.Hook.FishesMultiplier = OriginalFishesMultiplier / 4;
+                //World.Hook.WorldResizeSpeed = World.Hook.RoyaleResizeSpeed / 4;
+                //World.Hook.FishesMultiplier = OriginalFishesMultiplier / 4;
             }
 
 
@@ -111,8 +114,8 @@
         {
             GameState = GameStateEnum.Waiting;
             GameRestartTime = (uint)(World.Time + RestartDelayMS);
-            World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
-            World.Hook.WorldResizeSpeed = OriginalWorldResizeSpeed;
+            //World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
+            //World.Hook.WorldResizeSpeed = OriginalWorldResizeSpeed;
         }
 
         private void InRoomAnnouncement(string message)
@@ -161,11 +164,11 @@
             if (World.Hook.RoyaleMode && !Initialized)
             {
                 // setup
-                OriginalWorldsizeDeltaPerPlayer = World.Hook.WorldSizeDeltaPerPlayer;
-                OriginalWorldResizeSpeed = World.Hook.WorldResizeSpeed;
-                OriginalFishesMultiplier = World.Hook.FishesMultiplier;
-                World.Hook.WorldMinPlayersToResize = 0;
-                World.Hook.WorldResizeEnabled = true;
+                //OriginalWorldsizeDeltaPerPlayer = World.Hook.WorldSizeDeltaPerPlayer;
+                //OriginalWorldResizeSpeed = World.Hook.WorldResizeSpeed;
+                //OriginalFishesMultiplier = World.Hook.FishesMultiplier;
+                //World.Hook.WorldMinPlayersToResize = 0;
+                //World.Hook.WorldResizeEnabled = true;
 
                 World.Hook.PointsPerKillFleet = 0;
                 World.Hook.PointsPerKillShip = 0;
@@ -187,7 +190,7 @@
                 // tear down
 
                 StartingBlock.Destroy();
-                World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
+                //World.Hook.WorldSizeDeltaPerPlayer = OriginalWorldsizeDeltaPerPlayer;
                 World.CanSpawn = true;
                 Initialized = false;
             }                

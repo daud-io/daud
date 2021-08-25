@@ -1,5 +1,5 @@
 import { Engine, Scene, SpriteManager, Texture } from "@babylonjs/core";
-import { CustomContainer } from "./CustomContainer";
+import { GameContainer } from "./gameContainer";
 import { Settings } from "./settings";
 import { SpriteLibrary } from "./spriteLibrary";
 
@@ -38,7 +38,7 @@ export function getSpriteDefinition(spriteName: string): SpriteDefinition {
     return definition;
 }
 
-export function loadTexture(container: CustomContainer, textureKey: string): Promise<void> {
+export function loadTexture(container: GameContainer, textureKey: string): Promise<void> {
     return new Promise((resolve) => {
         var def = textureDefinitions[textureKey];
         if (def.abstract)
@@ -106,7 +106,7 @@ export const merge = <T extends IObject[]>(...objects: T): TUnionToIntersection<
     }, {}) as any;
 
 const progressEl = document.getElementById("loader") as HTMLProgressElement;
-export async function load(container: CustomContainer): Promise<void> {
+export async function load(container: GameContainer): Promise<void> {
 
     // load all the libraries
     let library = await SpriteLibrary.load("assets/base");

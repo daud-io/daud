@@ -34,7 +34,6 @@
 
         private void Flock()
         {
-            var oobVectorWeight = World.Hook.FishOOBWeight;
             var ships = World.BodiesNear(Position, World.Hook.FishFlockCohesionMaximumDistance)
                 .OfType<Ship>();
 
@@ -49,12 +48,6 @@
                         * Flocking.Alignment(ships, this))
                     + (World.Hook.FishFlockSeparation
                         * Flocking.Separation(ships, this, World.Hook.FishFlockSeparationMinimumDistance));
-
-            if (IsOOB)
-            {
-                if (Position != Vector2.Zero)
-                    oobVector = Vector2.Normalize(-Position) * oobVectorWeight;
-            }
 
             var steeringVector =
                 new Vector2(MathF.Cos(Angle), MathF.Sin(Angle))

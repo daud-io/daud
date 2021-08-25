@@ -15,10 +15,7 @@
         {
             var r = new Random();
             Position = World.RandomPosition();
-            LinearVelocity = new Vector2(
-                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum),
-                (float)(r.NextDouble() * 2 * World.Hook.ObstacleMaxMomentum - World.Hook.ObstacleMaxMomentum)
-            );
+            LinearVelocity = new Vector2(0,0);
 
             Sprite = Sprites.sportsball;
             Color = "rgba(128,128,128,.2)";

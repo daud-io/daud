@@ -77,7 +77,7 @@
             {
                 var fleet = ship.Fleet;
 
-                if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
+                if (CarriedBy == null && fleet != null)
                 {
                     if (fleet.Owner.Color == Team.ColorName)
                     {

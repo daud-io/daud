@@ -1,4 +1,4 @@
-import { CustomContainer } from "./CustomContainer";
+import { GameContainer } from "./gameContainer";
 
 import { ClientBody } from "./cache";
 import { getTextureDefinition, TextureDefinition } from "./loader";
@@ -16,7 +16,7 @@ export class TextureLayer {
     offset: { x: number; y: number };
     aspectRatio: number;
 
-    constructor(container: CustomContainer, clientBody: ClientBody, textureName: string) {
+    constructor(container: GameContainer, clientBody: ClientBody, textureName: string) {
         this.lastTime = 0;
         this.offset = { x: 0, y: 0 };
         this.aspectRatio = 1;

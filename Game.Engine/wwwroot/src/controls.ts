@@ -3,7 +3,7 @@ import { ServerWorld } from "./lobby";
 import Cookies from "js-cookie";
 import { Picker } from "emoji-picker-element";
 import { getTextureDefinition } from "./loader";
-import { CustomContainer } from "./CustomContainer";
+import { GameContainer } from "./gameContainer";
 import { PointerEventTypes } from "@babylonjs/core/Events";
 import { Control } from "@babylonjs/gui";
 import { Matrix, Scene, Vector3 } from "@babylonjs/core";
@@ -72,12 +72,12 @@ export const Controls = {
     mouseX: 0,
     mouseY: 0,
     angle: 0,
-    container: undefined as CustomContainer | undefined,
+    container: undefined as GameContainer | undefined,
     color: undefined as string | undefined,
     ship: "ship_green",
 };
 
-export function registerContainer(container: CustomContainer): void {
+export function registerContainer(container: GameContainer): void {
 
     container.scene.onPointerObservable.add((pointerInfo) => {
 

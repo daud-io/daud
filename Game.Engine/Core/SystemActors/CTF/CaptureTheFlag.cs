@@ -161,10 +161,10 @@
             {
                 if (team.Score >= 5 && GameRestartTime == 0)
                 {
-                    var world = Worlds.Find();
-                    var players = Player.GetWorldPlayers(world);
-                    foreach (var player in players)
-                        player.SendMessage("Next round of CTF (Capture the Flag) starts in 30 seconds, join now");
+                    //var world = Worlds.Find("default");
+                    //var players = Player.GetWorldPlayers(world);
+                    //foreach (var player in players)
+                    //    player.SendMessage("Next round of CTF (Capture the Flag) starts in 30 seconds, join now");
 
                     GameRestartTime = World.Time + 30000;
                 }

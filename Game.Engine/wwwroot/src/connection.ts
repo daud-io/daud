@@ -318,6 +318,7 @@ export class Connection {
 
             if (event.type == "hook") {
                 this.hook = event.data;
+                bus.emit('hook', this.hook);
             }
 
             if (event.data.roles) addSecretShips(event.data.roles);

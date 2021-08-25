@@ -12,17 +12,17 @@
             CycleMS = 0;
 
             Walls = new List<ArenaWall>();
-            Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.North));
+            /*Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.North));
             Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.East));
             Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.South));
-            Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.West));
+            Walls.Add(new ArenaWall(world, ArenaWall.WhichWall.West));*/
             
         }
 
         protected override void CycleThink()
         {
             var hook = World.Hook;
-            if (World.Hook.WorldResizeEnabled)
+            /*if (World.Hook.WorldResizeEnabled)
             {
                 int resizeCount = (World.AdvertisedPlayerCount < hook.WorldMinPlayersToResize)
                     ? 0
@@ -38,7 +38,7 @@
                 hook.Fishes = Convert.ToInt32(Math.Floor(hook.WorldSize * hook.FishesMultiplier));
                 hook.PickupSeekers = Convert.ToInt32(Math.Floor(hook.WorldSize * hook.PickupSeekersMultiplier));
                 hook.PickupShields = Convert.ToInt32(Math.Floor(hook.WorldSize * hook.PickupShieldsMultiplier));
-            }
+            }*/
         }
     }
 }

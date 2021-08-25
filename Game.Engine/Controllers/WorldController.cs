@@ -9,6 +9,7 @@
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
     using Newtonsoft.Json;
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -46,10 +47,7 @@
                     publicURL = suggestion;
             }
 
-            var world = new World(hook, GameConfiguration)
-            {
-                WorldKey = worldKey
-            };
+            var world = new World(hook, GameConfiguration, worldKey);
 
             Worlds.AddWorld(world);
 
@@ -93,6 +91,16 @@
             world.GetActor<RoomReset>().Reset = true;
 
             return true;
+        }
+
+
+        [AllowAnonymous, HttpGet, Route("mesh/{worldKey}/{id}"), EnableCors("AllowAllOrigins")]
+        public async Task<IActionResult> GetMesh(string worldKey, string id)
+        {
+            this.SuppressWrapper=true;
+            var world = Worlds.Find(worldKey);
+            var mesh = await world.MeshLoader.GetMeshStreamAsync(id);
+            return File(mesh, "model/gltf-binary", "server.glb");
         }
 
         [AllowAnonymous, HttpGet, Route("all"), EnableCors("AllowAllOrigins")]

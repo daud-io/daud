@@ -12,9 +12,7 @@
             Flock.Add(new GenericTender<Fish>(world, () => World.Hook.Fishes));
             Flock.Add(new GenericTender<PickupSeeker>(world, () => World.Hook.PickupSeekers));
             Flock.Add(new GenericTender<PickupShield>(world, () => World.Hook.PickupShields));
-            Flock.Add(new GenericTender<PickupRobotGun>(world, () => World.Hook.PickupRobotGuns));
             Flock.Add(new GenericTender<HasteToken>(world, () => World.Hook.Tokens));
-
         }
 
         public override void Destroy()

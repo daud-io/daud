@@ -12,7 +12,6 @@
     {
         public virtual float ShotCooldownTimeM { get => World.Hook.ShotCooldownTimeM; }
         public virtual float ShotCooldownTimeB { get => World.Hook.ShotCooldownTimeB; }
-        public virtual int ShotCooldownTimeShark { get => World.Hook.ShotCooldownTimeShark; }
         public virtual float ShotThrustM { get => World.Hook.ShotThrustM; }
         public virtual float ShotThrustB { get => World.Hook.ShotThrustB; }
         public virtual float BaseThrustM { get => World.Hook.BaseThrustM; }
@@ -48,7 +47,6 @@
         public Vector2 FleetVelocity = Vector2.Zero;
 
         public float Burden { get; set; } = 0f;
-        public bool Shark { get; set; } = false;
         public bool FiringWeapon { get; private set; } = false;
 
         public Vector2? SpawnLocation { get; set; } = null;
@@ -280,7 +278,7 @@
 
             if (isShooting)
             {
-                ShootCooldownTime = World.Time + (Shark ? ShotCooldownTimeShark : (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB));
+                ShootCooldownTime = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
                 ShootCooldownTimeStart = World.Time;
 
                 FiringWeapon = true;

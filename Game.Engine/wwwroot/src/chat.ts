@@ -1,13 +1,13 @@
 import { KeyboardEventTypes, KeyboardInfo } from "@babylonjs/core/Events";
 import { EventState } from "@babylonjs/core/Misc";
-import { CustomContainer } from "./CustomContainer";
+import { GameContainer } from "./gameContainer";
 
 export class ChatOverlay {
-    container: CustomContainer;
+    container: GameContainer;
     chat: HTMLElement;
     messages = ["YES", "NO", "OOPS", "HI", "GO", "LAG", "HMM?", "STOP RUNNING", "GG", "LOL"];
 
-    constructor(container: CustomContainer) {
+    constructor(container: GameContainer) {
         this.container = container;
 
         this.chat = document.getElementById("chat")!;

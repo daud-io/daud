@@ -10,8 +10,6 @@
     using Game.API.Common.Models;
     using Game.Engine.Core.Scoring;
     using Game.Engine.Core.SystemActors;
-    using Game.Engine.Core.SystemActors.CTF;
-    using Game.Engine.Core.SystemActors.Royale;
     using Game.Engine.Networking;
     using Game.Engine.Physics;
     using System;
@@ -22,7 +20,7 @@
 
     public class World : IDisposable
     {
-        public string WorldKey { get; set; }
+        public readonly string WorldKey;
         public string GameID { get; set; }
 
         public int AdvertisedPlayerCount { get; set; }
@@ -59,6 +57,8 @@
 
         public ScoringBase Scoring = new DefaultScoring();
 
+        public readonly WorldMeshLoader MeshLoader;
+
         private uint LastObjectID = 1;
 
         public uint GenerateObjectID() { 
@@ -74,11 +74,14 @@
 
         public bool PendingDestruction;
         
-        public World(Hook hook, GameConfiguration gameConfiguration)
+        public World(Hook hook, GameConfiguration gameConfiguration, string worldKey)
         {
             this.GameConfiguration = gameConfiguration;
+            this.WorldKey = worldKey;
+            
             OffsetTicks = DateTime.Now.Ticks;
             Hook = hook ?? Hook.Default;
+
             GameID = Guid.NewGuid().ToString().Replace("-", "");
 
             Console.WriteLine($"Initializing World: {this.Hook.Name}");
@@ -93,7 +96,6 @@
                 },
                 new PoseIntegratorCallbacks(new Vector3(0, 0, 0)),
                 
-                
                 //new SubsteppingTimestepper(10)
                 //new PositionFirstTimestepper()
                 new PositionLastTimestepper()
@@ -101,6 +103,7 @@
             //this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
             NewFleetGenerator = this.DefaultNewFleetGenerator;
 
+            this.MeshLoader = new WorldMeshLoader(this);
 
             InitializeSystemActors();
 
@@ -175,19 +178,19 @@
 
         private void InitializeSystemActors()
         {
-            //InitializeSystemActor<WorldResizer>();
-            InitializeSystemActor<WorldMeshLoader>();
+            InitializeSystemActor<WorldResizer>();
             InitializeSystemActor<SpawnLocationsActor>();
             InitializeSystemActor<LeaderboardActor>();
             InitializeSystemActor<Authenticator>();
             InitializeSystemActor<Advertisement>();
             InitializeSystemActor<ObstacleTender>();
-            InitializeSystemActor<CaptureTheFlag>();
-            InitializeSystemActor<Sumo>();
-            InitializeSystemActor<TeamColors>();
             InitializeSystemActor<RoomReset>();
-            InitializeSystemActor<RoyaleMode>();
             InitializeSystemActor<AdvanceRetreat>();
+            
+            //InitializeSystemActor<CaptureTheFlag>();
+            //InitializeSystemActor<Sumo>();
+            //InitializeSystemActor<TeamColors>();
+            //InitializeSystemActor<RoyaleMode>();
         }
 
         public T GetActor<T>()

@@ -1,6 +1,4 @@
 ﻿import { NetBody, NetWorldView, NetGroup } from "./game_generated";
-import * as background from "./background";
-import { Border } from "./border";
 import { setContainer, bodyFromServer, ClientBody, update as updateCache, tick as cacheTick } from "./cache";
 import { projectObject } from "./interpolator";
 import { update as leaderboardUpdate } from "./leaderboard";
@@ -12,14 +10,14 @@ import { ChatOverlay, message } from "./chat";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { Settings } from "./settings";
-import { Events } from "./events";
 import { refreshList, joinWorld, firstLoad } from "./lobby";
-import { CustomContainer } from "./CustomContainer";
+import { GameContainer } from "./gameContainer";
 import { load } from "./loader";
 import "./hintbox";
 import bus from "./bus";
 
 import { Vector2, Vector3 } from "@babylonjs/core";
+import { WorldMeshLoader } from "./worldMeshLoader";
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
@@ -60,27 +58,22 @@ let time: number;
 let isAlive: boolean;
 let serverTimeOffset: number | undefined;
 let gameTime: number;
-let lastPosition: Vector2 = new Vector2(0, 0);
 let worldSize = 1000;
 let fleetID = 0;
 let frameCounter = 0;
 let viewCounter = 0;
 let updateCounter = 0;
-let lastCamera = new Vector2(0, 0);
 let isSpectating = false;
-let aliveSince: number;
 let joiningWorld = false;
 let spawnOnView = false;
 
+const container = new GameContainer(canvas as HTMLCanvasElement);
 
 
-const container = new CustomContainer(canvas as HTMLCanvasElement);
+const worldMeshLoader = new WorldMeshLoader(container);
 
-const border = new Border(container);
 const minimap = new Minimap(container);
-const chat = new ChatOverlay(container)
 
-background.setContainer(container);
 registerContainer(container);
 
 bus.on("dead", () => {
@@ -90,8 +83,6 @@ bus.on("dead", () => {
     if (connection.hook.AllowedColors) setCurrentWorld().allowedColors = connection.hook.AllowedColors;
     initializeWorld();
     isSpectating = true;
-
-    Events.Death((gameTime - aliveSince) / 1000);
 });
 
 function onView(newView: NetWorldView) {
@@ -169,11 +160,6 @@ function onView(newView: NetWorldView) {
     setPlayerCount(newView.playerCount());
     setSpectatorCount(newView.spectatorCount());
 
-    if (border && newView.worldSize() != border.worldSize) {
-        worldSize = newView.worldSize();
-        border.updateWorldSize(newView.worldSize());
-    }
-
     progress.value = newView.cooldownShoot();
 
     cameraPositionFromServer = bodyFromServer(newView.camera()!);
@@ -183,6 +169,7 @@ function onView(newView: NetWorldView) {
         doSpawn();
     }
 }
+
 function doSpawn() {
     if ("ontouchstart" in document.documentElement) {
         window.scrollTo(0, 0);
@@ -192,11 +179,10 @@ function doSpawn() {
             console.log("Fullscreen failed", e);
         }
     }
-    Events.Spawn();
+
     document.body.classList.remove("dead");
     document.body.classList.remove("spectating");
     document.body.classList.add("alive");
-    aliveSince = gameTime;
     connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
 }
 spawnButton.addEventListener("click", doSpawn);
@@ -204,7 +190,6 @@ buttonSpectate.addEventListener("click", doSpawn);
 
 function startSpectate(hideButton = false) {
     isSpectating = true;
-    Events.Spectate();
     document.body.classList.add("spectating");
     document.body.classList.add("dead");
 
@@ -353,16 +338,16 @@ loadImages.then(() => {
     setInterval(refreshList, 1000);
 
     bus.on("leaderboard", (lb) => {
-        leaderboardUpdate(lb, lastPosition, fleetID);
+        leaderboardUpdate(lb, container.cameraPosition, fleetID);
         minimap.update(lb, worldSize, fleetID);
     });
-
 
     // Game Loop
     container.engine.runRenderLoop(() => {
         frameCounter++;
+
         container.scene.render()
-        
+
         if (serverTimeOffset) {
             gameTime = performance.now() + serverTimeOffset;
 

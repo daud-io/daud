@@ -16,7 +16,6 @@
         {
             World.AdvertisedPlayerCount = Player.GetWorldPlayers(World)
                 .Where(p => p.IsAlive || p.IsStillPlaying)
-                .Where(p => !(p is Robot))
                 .Count();
 
             World.SpectatorCount = Player.GetWorldPlayers(World)

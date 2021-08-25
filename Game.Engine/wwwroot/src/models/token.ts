@@ -1,6 +1,6 @@
 ﻿import { RenderedObject } from "../renderedObject";
 import { Fleet } from "./fleet";
-import { CustomContainer } from "../CustomContainer";
+import { GameContainer } from "../gameContainer";
 import { ClientBody, ClientGroup, getGroup } from "../cache";
 
 export type TokenData ={
@@ -12,7 +12,7 @@ export class Token extends RenderedObject {
     group: ClientGroup;
     tokenData: TokenData;
 
-    constructor(container: CustomContainer, clientBody: ClientBody, group: ClientGroup) {
+    constructor(container: GameContainer, clientBody: ClientBody, group: ClientGroup) {
         super(container, clientBody);
         this.fleet = undefined;
         this.bodyID = `b-${clientBody.ID}`;

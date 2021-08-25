@@ -2,7 +2,7 @@ import { spriteIndices } from "./spriteIndices";
 import { NetGroup, NetBody } from "./game_generated";
 import { RenderedObject } from "./renderedObject";
 import { Fleet } from "./models/fleet";
-import { CustomContainer } from "./CustomContainer";
+import { GameContainer } from "./gameContainer";
 import bus from "./bus";
 import { Ship } from "./models/ship";
 import { Token } from "./models/token";
@@ -78,7 +78,7 @@ export function groupFromServer(group: NetGroup): ClientGroup {
     };
 }
 
-let container: CustomContainer | undefined;
+let container: GameContainer | undefined;
 const bodies: Map<string, ClientRendered> = new Map();
 const groups: Map<string, ClientGroup> = new Map();
 
@@ -87,7 +87,7 @@ export function getGroup(groupID: number): ClientGroup | undefined
     return groups.get(`g-${groupID}`);
 }
 
-export function setContainer(newContainer: CustomContainer): void {
+export function setContainer(newContainer: GameContainer): void {
     container = newContainer;
     if (groups.size > 0 || bodies.size > 0)
         throw "container change";

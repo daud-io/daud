@@ -4,13 +4,11 @@
     using Game.API.Common.Models;
     using Game.API.Common.Models.Auditing;
     using Game.Engine.Auditing;
-    using Game.Engine.Core.Weapons;
     using Game.Engine.Networking;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net.Http;
     using System.Numerics;
 
     public class Player : IActor
@@ -74,7 +72,6 @@
         public Vector2? SpawnLocation { get; set; } = null;
         public Vector2? SpawnMomentum { get; set; } = null;
 
-        private bool IsGearhead = false;
         private string UserColor = null;
 
         public float Advance = 0f;
@@ -112,11 +109,6 @@
                     Player = this.ToAuditModelPlayer()
                 }, World);
 
-                if (World.Hook.GearheadName != null && this.Name == World.Hook.GearheadName)
-                {
-                    Fleet.BaseWeapon = new FleetWeaponRobot();
-                    IsGearhead = true;
-                }
 
                 if (!DisableSpawnInvulnerability)
                     SetInvulnerability(SpawnInvulnerableTime, true);
@@ -251,13 +243,6 @@
 
             if (TimeDeath > 0 && TimeDeath < World.Time)
                 this.PendingDestruction = true;
-
-            if (IsGearhead && Fleet.Ships.Count < 15)
-            {
-                var r = new Random();
-                if (r.NextDouble() < World.Hook.GearheadRegen)
-                    Fleet.AddShip();
-            }
 
             if (IsInvulnerable)
             {

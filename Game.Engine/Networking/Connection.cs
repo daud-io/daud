@@ -183,7 +183,8 @@
                         foreach (var update in updateBodies)
                         {
                             var serverBody = update.Body;
-                            update.UpdateSent(World.Time);
+                            if (update.Body.Exists)
+                                update.UpdateSent(World.Time);
 
                             NetBody.CreateNetBody(builder,
                                 Id: serverBody.ID,
@@ -601,7 +602,7 @@
         {
             Socket = socket;
 
-            var worldRequest = httpContext.Request.Query["world"].FirstOrDefault();
+            var worldRequest = httpContext.Request.Query["world"].FirstOrDefault() ?? "default";
 
             this.Logger.LogInformation($"New Connection: {worldRequest}");
 

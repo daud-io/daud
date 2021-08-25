@@ -1,12 +1,12 @@
 ﻿import { Settings } from "../settings";
-import { CustomContainer } from "../CustomContainer";
+import { GameContainer } from "../gameContainer";
 import { ClientGroup, ClientBody } from "../cache";
 import { Ship } from "./ship";
 import { TextBlock } from "@babylonjs/gui";
 import { Scene, Vector3 } from "@babylonjs/core";
 
 export class Fleet {
-    container: CustomContainer;
+    container: GameContainer;
     caption: string | null;
     ID?: number;
     text: TextBlock;
@@ -15,7 +15,7 @@ export class Fleet {
     plotly?: { data; layout };
     extraModes: string[];
 
-    constructor(container: CustomContainer) {
+    constructor(container: GameContainer) {
         this.container = container;
         this.caption = null;
         this.ID = undefined;

@@ -1,12 +1,12 @@
 ﻿import { RenderedObject } from "../renderedObject";
 import { Fleet } from "./fleet";
-import { CustomContainer } from "../CustomContainer";
+import { GameContainer } from "../gameContainer";
 import { ClientBody, ClientGroup } from "../cache";
 
 export class Ship extends RenderedObject {
     fleet: Fleet | undefined;
     bodyID: string;
-    constructor(container: CustomContainer, clientBody: ClientBody, group: ClientGroup) {
+    constructor(container: GameContainer, clientBody: ClientBody, group: ClientGroup) {
         super(container, clientBody);
         this.fleet = group?.renderer;
         this.bodyID = `b-${clientBody.ID}`;

@@ -1,6 +1,6 @@
 import { Vector2 } from "@babylonjs/core";
 import { LeaderboardType } from "./connection";
-import { CustomContainer } from "./CustomContainer";
+import { GameContainer } from "./gameContainer";
 const minimapSize = 180;
 const minimapMarginBottom = 15;
 const minimapMarginRight = 15;
@@ -31,7 +31,7 @@ window.addEventListener("keyup", (e) => {
 });
 */
 export class Minimap {
-    constructor(container: CustomContainer) {
+    constructor(container: GameContainer) {
         //stage.addChild(ctx);
     }
     resize(): void {

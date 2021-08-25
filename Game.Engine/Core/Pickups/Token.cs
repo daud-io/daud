@@ -91,7 +91,7 @@
             {
                 var fleet = ship.Fleet;
 
-                if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
+                if (CarriedBy == null && fleet != null)
                     return new CollisionResponse(true, false);
             }
 
@@ -103,7 +103,7 @@
             {
                 var fleet = ship.Fleet;
 
-                if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
+                if (CarriedBy == null && fleet != null)
                 {
                     CarriedBy = fleet;
                     this.SetFleetID(CarriedBy.ID);
