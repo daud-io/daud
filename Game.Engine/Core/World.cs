@@ -90,15 +90,10 @@
 
             Console.WriteLine($"Initializing World: {this.Hook.Name}");
 
-            BodyProperties = new CollidableProperty<WorldBodyProperties>();
-                
             this.ThreadDispatcher = new SimpleThreadDispatcher(2);
             this.Simulation = Simulation.Create(
                 BufferPool, 
-                new NarrowPhaseCallbacks(this) 
-                {
-                    Properties = BodyProperties
-                },
+                new NarrowPhaseCallbacks(this),
                 new PoseIntegratorCallbacks(new Vector3(0, 0, 0)),
                 
                 //new SubsteppingTimestepper(10)
@@ -143,9 +138,6 @@
                 if (dt == 0)
                     dt = (uint)this.Hook.StepTime;
     
-                // this is a bad way to do this... just overestimating potentential number of contacts... though what's the 4-color theorem equivalent for spheres?
-                ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
-                bodyImpacts.EnsureCapacity(10000, this.BufferPool);
 
                 foreach (var player in Player.GetWorldPlayers(this).ToList())
                     player.ControlCharacter();
@@ -154,15 +146,17 @@
 
                 //Console.WriteLine("dt:" + dt);
 
-                this.Simulation.Timestep((float)Hook.StepTime, ThreadDispatcher);
-                //this.Simulation.Timestep((float)Hook.StepTime);
+                //this.Simulation.Timestep((float)Hook.StepTime, ThreadDispatcher);
+                this.Simulation.Timestep((float)Hook.StepTime);
 
                 InStep = false;
                 // Ensure that every body as a new handle... else .. <cringe>
                 ReadSimulation();
 
                 // execute collisions
+                ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
                 if (true)
+                {
                     for (int i = 0; i < bodyImpacts.Count; ++i)
                     {
                         ref var impact = ref bodyImpacts[i];
@@ -185,7 +179,8 @@
                             }
                         }
                     }
-                
+
+                }
                 bodyImpacts.Count = 0;
 
                 ActorsThink();

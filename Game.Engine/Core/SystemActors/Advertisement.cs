@@ -30,7 +30,7 @@
                 && (World.Time - EmptySince) > World.Hook.AutoRemoveOnEmptyThreshold
             )
             {
-                Worlds.Destroy(World.WorldKey);
+                World.PendingDestruction = true;
                 EmptySince = 0;
             }
         }

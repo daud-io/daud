@@ -74,12 +74,6 @@
                 //new CollidableDescription(ShapeHandle, 0.1f, ContinuousDetectionSettings.Continuous(1e-4f, 1e-4f)),
                 new BodyActivityDescription(0.01f)
             ));
-
-            ref var worldBodyProperties = ref World.BodyProperties.Allocate(BodyHandle);
-            worldBodyProperties = new WorldBodyProperties
-            {
-                Friction = 0.1f
-            };
         }
         
         protected virtual BodyInertia GetBodyInertia(IConvexShape shape, float mass)
@@ -273,7 +267,7 @@
             World.Simulation.Bodies.Remove(this.BodyHandle);
             World.Simulation.Shapes.Remove(this.ShapeHandle);
             this.BodyHandle.Value = -1;
-            this.ShapeHandle.Value = -1;
+            this.ShapeHandle = default;
             this.Exists = false;
         }
 

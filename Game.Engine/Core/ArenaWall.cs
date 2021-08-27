@@ -40,11 +40,6 @@
                 new BodyActivityDescription(0.00f)
             ));
 
-            ref var worldBodyProperties = ref World.BodyProperties.Allocate(BodyHandle);
-            worldBodyProperties = new WorldBodyProperties
-            {
-                Friction = 0.0f,
-            };
         }
 
         public override void CollisionExecute(WorldBody projectedBody)

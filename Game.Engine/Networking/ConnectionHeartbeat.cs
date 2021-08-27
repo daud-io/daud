@@ -16,10 +16,10 @@
             lock (Connections)
             {
                 foreach (var connection in Connections)
-                {
                     connection.StepSyncInGameLoop();
+
+                foreach (var connection in Connections)
                     connection.WorldUpdateEvent.Set();
-                }
             }
         }
 

@@ -10,6 +10,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
+    using System.Threading;
 
     public class Player : IActor
     {
@@ -68,6 +69,7 @@
 
         private bool CummulativeBoostRequested = false;
         private bool CummulativeShootRequested = false;
+        private int ControlPackets = 0;
 
         public Vector2? SpawnLocation { get; set; } = null;
         public Vector2? SpawnMomentum { get; set; } = null;
@@ -83,6 +85,7 @@
 
         public void SetControl(ControlInput input)
         {
+            Interlocked.Increment(ref this.ControlPackets);
             if (input.BoostRequested)
                 CummulativeBoostRequested = true;
             if (input.ShootRequested)
@@ -150,6 +153,8 @@
 
         internal void ControlCharacter()
         {
+            //Console.WriteLine("Control: " + this.ControlPackets);
+            this.ControlPackets = 0;
             if (this.IsControlNew && this.IsAlive && this.Fleet != null)
             {
                 if (float.IsNaN(ControlInput.Position.X) || float.IsNaN(ControlInput.Position.Y))

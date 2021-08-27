@@ -13,19 +13,17 @@ namespace Game.Engine.Physics
 {
     unsafe struct NarrowPhaseCallbacks : INarrowPhaseCallbacks
     {
-        public CollidableProperty<WorldBodyProperties> Properties;
-        public SpinLock ProjectileLock;
         public QuickList<BodyImpacts> BodyImpacts;
         public World World;
 
         public NarrowPhaseCallbacks(World world) : this()
         {
             this.World = world;
+            this.BodyImpacts = new QuickList<BodyImpacts>();
         }
 
         public void Initialize(Simulation simulation)
         {
-            Properties.Initialize(simulation);
         }
 
         /// <summary>
@@ -84,28 +82,15 @@ namespace Game.Engine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         void AddBodyImpact(BodyHandle A, CollidableReference impactedCollidable, Vector3 newAVelocity, bool customBounce)
         {
-            bool lockTaken = false;
-            ProjectileLock.Enter(ref lockTaken);
-            try
-            {
-                ref var newImpact = ref BodyImpacts.AllocateUnsafely();
-                newImpact.BodyHandleA = A;
-                if (impactedCollidable.Mobility != CollidableMobility.Static)
-                {
-                    ref var properties = ref Properties[impactedCollidable.BodyHandle];
-                    newImpact.BodyHandleB = impactedCollidable.BodyHandle;
-                }
-                else
-                    newImpact.BodyHandleB = new BodyHandle(-1);
+            ref var newImpact = ref BodyImpacts.Allocate(World.BufferPool);
+            newImpact.BodyHandleA = A;
+            if (impactedCollidable.Mobility != CollidableMobility.Static)
+                newImpact.BodyHandleB = impactedCollidable.BodyHandle;
+            else
+                newImpact.BodyHandleB = new BodyHandle(-1);
 
-                newImpact.CustomBounce = customBounce;
-                newImpact.newAVelocity = newAVelocity;
-            }
-            finally
-            {
-                if (lockTaken)
-                    ProjectileLock.Exit();
-            }
+            newImpact.CustomBounce = customBounce;
+            newImpact.newAVelocity = newAVelocity;
         }
 
         /// <summary>
@@ -130,13 +115,6 @@ namespace Game.Engine.Physics
 
                 var responseAB = worldBodyA.CanCollide(worldBodyB);
                 var responseBA = worldBodyB.CanCollide(worldBodyA);
-
-                if (pair.B.Mobility != CollidableMobility.Static)
-                {
-                    //If two bodies collide, just average the friction. Other options include min(a, b) or a * b.
-                    ref var propertiesB = ref Properties[pair.B.BodyHandle];
-                    pairMaterial.FrictionCoefficient = (pairMaterial.FrictionCoefficient + propertiesB.Friction) * 0.5f;
-                }
 
                 for (int i = 0; i < manifold.Count; ++i)
                     if (manifold.GetDepth(ref manifold, i) >= -1e-3f)

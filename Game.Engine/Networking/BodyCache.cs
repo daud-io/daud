@@ -145,15 +145,6 @@
             public float Error { get; set; }
             public bool Stale { get; set; }
 
-            private const int DISTANCE_THRESHOLD = 2;
-            private const float WEIGHT_DISTANCE = 1;
-            private const float WEIGHT_ANGLE = 10;
-            private const float WEIGHT_SPRITE = 1;
-            private const float WEIGHT_SIZE = 1;
-            private const float WEIGHT_MODE = 1;
-            private const float WEIGHT_MISSING = float.MaxValue;
-
-
             public void UpdateSent(uint time)
             {
                 ClientUpdatedTime = time;
@@ -176,24 +167,10 @@
             {
                 if (ClientUpdatedTime != 0)
                 {
-                    var timeDelta = (time - this.ClientUpdatedTime);
-
-                    var position = Vector2.Add(Position, Vector2.Multiply(LinearVelocity, timeDelta));
-                    var angle = Angle + timeDelta * AngularVelocity;
-
-                    var distance = Vector2.Distance(position, Position);
-                    Error =
-                        distance > DISTANCE_THRESHOLD
-                            ? WEIGHT_DISTANCE * distance
-                            : 0;
-                            /*
-                        + WEIGHT_ANGLE * Math.Abs(angle - Body.Angle)
-                        + WEIGHT_SIZE * Math.Abs(Size - Body.Size)
-                        + WEIGHT_MODE * Math.Abs(Mode - Body.Mode)
-                        + WEIGHT_SPRITE * (Sprite != Body.Sprite ? 1 : 0);*/
+                    Error = 1;
                 }
                 else
-                    Error = WEIGHT_MISSING;
+                    Error = 1;
             }
         }
     }

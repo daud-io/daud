@@ -17,7 +17,6 @@
             set
             {
                 this.Group = value;
-                OverrideBodyProperties(ref World.BodyProperties[this.BodyHandle]);
             }
         }
 
@@ -59,11 +58,6 @@
             }
         }
 
-        private void OverrideBodyProperties(ref WorldBodyProperties properties)
-        {
-            
-        }
-        
         public override void Destroy()
         {
             base.Destroy();

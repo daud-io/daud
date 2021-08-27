@@ -140,7 +140,7 @@
             });
             app.UseGameWebsocketHandler();
 
-            RemoteEventLog.Initialize(config, registryClient);
+            //RemoteEventLog.Initialize(config, registryClient);
             Worlds.Initialize(config);
 
             if (config.RegistryEnabled)
