@@ -92,7 +92,7 @@
             this.IsControlNew = true;
         }
 
-        public virtual void CreateDestroy()
+        public virtual void Create()
         {
             if (IsSpawning && !IsAlive && Fleet == null)
             {
@@ -116,14 +116,8 @@
                 SpawnTime = World.Time;
             }
 
-            if (PendingDestruction)
-            {
-                Destroy();
-                PendingDestruction = false;
-            }
+            IsStillPlaying = DeadSince > World.Time - World.Hook.PlayerCountGracePeriodMS;
 
-            IsStillPlaying = !PendingDestruction &&
-                DeadSince > World.Time - World.Hook.PlayerCountGracePeriodMS;
         }
 
         public void Destroy()
@@ -158,7 +152,7 @@
         {
             if (this.IsControlNew && this.IsAlive && this.Fleet != null)
             {
-                if (float.IsNaN(ControlInput.Position.X))
+                if (float.IsNaN(ControlInput.Position.X) || float.IsNaN(ControlInput.Position.Y))
                     ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
                 Fleet.AimTarget = ControlInput.Position;
@@ -236,7 +230,7 @@
 
         public virtual void Think()
         {
-            CreateDestroy();
+            Create();
 
             if (!IsAlive)
                 return;
@@ -260,6 +254,9 @@
                         ship.ShieldStrength = 0;
                 }
             }
+
+            if (PendingDestruction)
+                Destroy();
         }
 
         public void Spawn(string name, Sprites sprite, string color, string token, string userColor = null)
@@ -353,8 +350,11 @@
                 OnDeath(player);
             }
 
-            Fleet?.Destroy();
-            Fleet = null;
+            if (Fleet != null)
+            {
+                Fleet.PendingDestruction = true;
+                Fleet = null;
+            }
             IsAlive = false;
         }
 

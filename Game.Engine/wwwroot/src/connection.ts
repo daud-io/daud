@@ -232,7 +232,6 @@ export class Connection {
         builder.finish(quantum);
 
         const newControlPacket = builder.asUint8Array();
-
         if (this.lastControlPacket.length != newControlPacket.length)
         {
             this.send(newControlPacket);

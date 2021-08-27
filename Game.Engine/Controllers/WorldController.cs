@@ -88,7 +88,7 @@
         public bool Reset(string worldName = null)
         {
             var world = Worlds.Find(worldName);
-            world.GetActor<RoomReset>().Reset = true;
+            //world.GetActor<RoomReset>().Reset = true;
 
             return true;
         }

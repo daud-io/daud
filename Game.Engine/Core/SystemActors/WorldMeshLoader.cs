@@ -25,8 +25,10 @@
 
         private void LoadNode(ModelRoot root, Node node)
         {
-            Matrix4x4 transform =
-                node.WorldMatrix * Matrix4x4.CreateScale(new Vector3(-10, 10, 10)); // invert X because reasons
+            Matrix4x4 transform = Matrix4x4.Identity
+                * Matrix4x4.CreateScale(new Vector3(1,1,-1))
+                * node.WorldMatrix
+                * Matrix4x4.CreateScale(new Vector3(10, 10, 10));
 
             if (node.Extras.Content != null)
             {

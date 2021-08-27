@@ -1,8 +1,9 @@
 import { GameContainer } from './gameContainer';
 import bus from "./bus";
 import "@babylonjs/loaders/glTF";
-import { Mesh, SceneLoader, Vector3 } from "@babylonjs/core";
+import { Color3, CubeTexture, Mesh, MeshBuilder, SceneLoader, TransformNode, Vector3, VertexBuffer } from "@babylonjs/core";
 import { GLTFFileLoader } from '@babylonjs/loaders';
+import { instancesDeclaration } from '@babylonjs/core/Shaders/ShadersInclude/instancesDeclaration';
 
 export class WorldMeshLoader {
     container: GameContainer;
@@ -41,31 +42,34 @@ export class WorldMeshLoader {
     loadGLB(worldMesh: string)
     {
         SceneLoader.ShowLoadingScreen = false;
-        SceneLoader.ImportMesh(null, "/api/v1/world/mesh/", worldMesh, this.container.scene,
-            function (abstractMesh) { // on success
-                // if you try to use the mesh scaling() vector directly, it does something sort of like scaling,
-                // but a freaky sort of scaling that is not what we want.
-
-                // putting it inside a Mesh.CreateBox and scaling that makes all the difference.
-                
-                var m = Mesh.CreateBox('scaling', 1, abstractMesh[0].getScene());
-                m.isVisible = false;
-                m.scaling = new Vector3(-10,10,10);
-                for (var i in abstractMesh)
+        //const plugin = <GLTFFileLoader>SceneLoader.Append("/api/v1/world/mesh/", worldMesh, this.container.scene);
+        const plugin = <GLTFFileLoader>SceneLoader.Append("/api/v1/world/mesh/", worldMesh, this.container.scene, () => {
+            this.container.scene.lights.forEach(light => {
+                //console.log(((<TransformNode>(light.parent?.parent))?.position));
+                if (light.parent?.parent instanceof(TransformNode))
                 {
-                    const mesh = abstractMesh[i];
-                    for (var j = 0; j < abstractMesh.length; j++)
-                        mesh.parent = m;
-                        
-                    // property-based material changes
-                    /*if (mesh.material && mesh.material.name.indexOf('invisible.png') > -1)
-                        mesh.dispose();*/
+                    /*light.parent?.parent.position.multiply(new Vector3(10,10,10));
+                    light.computeWorldMatrix(true);*/
+                    light.intensity *= 10;
                 }
-            },
-            () => {}, // progress
-            (scene, errorMessage, exception) => { // on error
-                console.log(`error in WorldMeshLoader: ${errorMessage}`);
+            });
+
+        });
+
+        plugin.onMeshLoadedObservable.add((mesh, state) => {
+            if (mesh.name == "__root__")
+            {
+                mesh.scaling = new Vector3(10 * mesh.scaling.x, 10 * mesh.scaling.y, 10 * mesh.scaling.z);
+                mesh.rotate(new Vector3(0, 1, 0), Math.PI);
             }
-        );
+        });
+
+        plugin.onParsedObservable.add(() => {
+
+            var l = this.container.scene.lights;
+
+            
+        });
+        
     }
 }

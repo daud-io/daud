@@ -66,11 +66,6 @@
         
         public override void Destroy()
         {
-            if (!(this.GetType() == typeof(Fish))
-                && !(this.Sprite == Sprites.ship_gray)
-            )
-                Boom.FromShip(this);
-
             base.Destroy();
 
             if (Fleet?.Ships?.Contains(this) ?? false)
@@ -84,6 +79,10 @@
 
             fleet?.KilledShip(this);
             base.Die();
+
+            if (!(this.GetType() == typeof(Fish))
+                && !this.Abandoned)
+                Boom.FromShip(this);
 
             if (this.Fleet != null)
                 this.Fleet.ShipDeath(player, this, bullet);
@@ -184,29 +183,11 @@
             if (TimeDeath > 0 && World.Time > TimeDeath)
                 Die(null, null, null);
 
-            DoOutOfBoundsRules();
-
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
 
             LinearVelocity = (LinearVelocity + thrust) * Drag;
 
             base.Update();
-        }
-
-        private void DoOutOfBoundsRules()
-        {
-            var oob = World.DistanceOutOfBounds(Position);
-
-            IsOOB = oob > 0;
-
-            /*if (oob > World.Hook.OutOfBoundsBorder)
-                this.LinearVelocity *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
-
-            if (oob > World.Hook.OutOfBoundsDeathLine)
-            {
-                //Console.WriteLine("ship dying oob");
-                Die(null, null, null);
-            }*/
         }
     }
 }

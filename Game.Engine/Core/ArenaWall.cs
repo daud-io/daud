@@ -20,8 +20,9 @@
 
         public ArenaWall(World world, WhichWall which): base(world)
         {
-            BodyReference.BecomeKinematic();
-            _size = 0;
+            this.BecomeKinematic();
+
+            size = 0;
             this.Sprite = API.Common.Sprites.ctf_base;
             this.Which = which;
         }

@@ -2,9 +2,7 @@
 {
     using Game.API.Common;
     using Game.Engine.Core;
-    using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Numerics;
 
@@ -15,7 +13,6 @@
 
         public void Update(IEnumerable<WorldBody> bodies, uint time)
         {
-
             // update cache items and flag missing ones as stale
             UpdateLocalBodies(bodies);
 
@@ -26,7 +23,6 @@
 
             foreach (var bucket in Groups.Values)
                 bucket.CalculateError();
-
         }
 
         public IEnumerable<BucketBody> BodiesByError()
@@ -57,35 +53,33 @@
 
             foreach (var obj in bodies)
             {
-                if (!obj.Exists)
+                if (obj == null || !obj.Exists)
                     continue;
 
-                if (Bodies.ContainsKey(obj.ID))
+                BucketBody bucket;
+                if (!Bodies.TryGetValue(obj.ID, out bucket))
                 {
-                    Bodies[obj.ID].Stale = false;
-                    Debug.Assert(Bodies[obj.ID].Body == obj);
-                }
-                else
-                {
-                    var bucket = new BucketBody
+                    bucket = new BucketBody()
                     {
-                        Body = obj,
                         Stale = false
                     };
                     Bodies.Add(obj.ID, bucket);
                 }
+
+                bucket.Stale = false;
+                bucket.ReadBody(obj);
 
                 if (obj.Group != null)
                     if (Groups.ContainsKey(obj.Group.ID))
                         Groups[obj.Group.ID].Stale = false;
                     else
                     {
-                        var bucket = new BucketGroup
+                        var bucketGroup = new BucketGroup
                         {
                             GroupUpdated = obj.Group,
                             Stale = false
                         };
-                        Groups.Add(obj.Group.ID, bucket);
+                        Groups.Add(obj.Group.ID, bucketGroup);
                     }
             }
         }
@@ -94,7 +88,7 @@
         {
             var stale = Bodies.Values.Where(b => b.Stale).ToList();
             foreach (var b in stale)
-                Bodies.Remove(b.Body.ID);
+                Bodies.Remove(b.ID);
 
             return stale;
         }
@@ -133,15 +127,18 @@
 
         public class BucketBody
         {
-            public WorldBody Body { get; set; }
+            //public WorldBody Body { get; set; }
 
-            public Vector2 Position { get; set;}
-            public Vector2 LinearVelocity { get; set;}
-            public float AngularVelocity { get; set;}
-            public float Angle { get; set;}
+            public Vector2 Position;
+            public Vector2 LinearVelocity;
+            public float AngularVelocity;
+            public float Angle;
             public int Size = 0;
             public byte Mode = 0;
             public Sprites Sprite;
+
+            public uint GroupID = 0;
+            public uint ID = 0;
 
             public uint ClientUpdatedTime { get; set;}
 
@@ -156,16 +153,23 @@
             private const float WEIGHT_MODE = 1;
             private const float WEIGHT_MISSING = float.MaxValue;
 
+
             public void UpdateSent(uint time)
             {
                 ClientUpdatedTime = time;
-                Position = Body.Position;
-                LinearVelocity = Body.LinearVelocity;
-                AngularVelocity = Body.AngularVelocity;
-                Angle = Body.Angle;
-                Size = Body.Size;
-                Mode = Body.Mode;
-                Sprite = Body.Sprite;
+            }
+
+            public void ReadBody(WorldBody body)
+            {
+                Position = body.Position;
+                LinearVelocity = body.LinearVelocity;
+                AngularVelocity = body.AngularVelocity;
+                Angle = body.Angle;
+                Size = body.Size;
+                Mode = body.Mode;
+                Sprite = body.Sprite;
+                GroupID = body.Group?.ID ?? 0;
+                ID = body.ID;
             }
 
             public void Project(uint time)
@@ -177,15 +181,16 @@
                     var position = Vector2.Add(Position, Vector2.Multiply(LinearVelocity, timeDelta));
                     var angle = Angle + timeDelta * AngularVelocity;
 
-                    var distance = Vector2.Distance(position, Body.Position);
+                    var distance = Vector2.Distance(position, Position);
                     Error =
                         distance > DISTANCE_THRESHOLD
                             ? WEIGHT_DISTANCE * distance
-                            : 0
+                            : 0;
+                            /*
                         + WEIGHT_ANGLE * Math.Abs(angle - Body.Angle)
                         + WEIGHT_SIZE * Math.Abs(Size - Body.Size)
                         + WEIGHT_MODE * Math.Abs(Mode - Body.Mode)
-                        + WEIGHT_SPRITE * (Sprite != Body.Sprite ? 1 : 0);
+                        + WEIGHT_SPRITE * (Sprite != Body.Sprite ? 1 : 0);*/
                 }
                 else
                     Error = WEIGHT_MISSING;

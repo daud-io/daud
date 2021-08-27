@@ -38,20 +38,24 @@
         public Sprites Sprite;
         public string Color;
         protected int CycleMS = 0;
-        protected BodyReference BodyReference;
         public bool PendingDestruction = false;
         public bool ContactLastFrame = false;
 
         public WorldBody(World world)
         {
             this.World = world;
+            if (world.InStep)
+                throw new Exception("Tried to create WorldBody while processing step");
+
+            this.BodyHandle.Value = -1;
 
             this.ID = World.GenerateObjectID();
-            
+            this.Mass = 100;
+            this.Size = 100;
+
             this.DefinePhysicsObject(this.Size, this.Mass);
-
-            this.UpdateBodyReference(World.Simulation.Bodies.GetBodyReference(this.BodyHandle));
-
+            this.WriteSimulation();
+            
             World.BodyAdd(this);
             World.Actors.Add(this);
             this.Exists = true;
@@ -68,7 +72,7 @@
                 GetBodyInertia(shape, mass),
                 new CollidableDescription(ShapeHandle, 150f),
                 //new CollidableDescription(ShapeHandle, 0.1f, ContinuousDetectionSettings.Continuous(1e-4f, 1e-4f)),
-                new BodyActivityDescription(0.00f)
+                new BodyActivityDescription(0.01f)
             ));
 
             ref var worldBodyProperties = ref World.BodyProperties.Allocate(BodyHandle);
@@ -94,109 +98,88 @@
             return Vector2.Zero;
         }
 
-        public Vector2 Position
-        {
-            get
-            {
-                return Vector3ToVector2(BodyReference.Pose.Position);
-            }
-            set
-            {
-                BodyReference.Pose.Position = new Vector3(value.X, 0, value.Y);
-            }
-        }
+        public Vector2 Position;
+        public Vector2 LinearVelocity;
 
-        public Vector2 LinearVelocity
-        {
-            get
-            {
-                return Vector3ToVector2(BodyReference.Velocity.Linear);
-            }
-            set
-            {
-                BodyReference.Velocity.Linear = new Vector3(value.X, 0, value.Y);
-            }
-        }
+        public float AngularVelocity;
+        public float Angle;
 
-        public float AngularVelocity
-        {
-            get
-            {
-                return -1 * BodyReference.Velocity.Angular.Y;
-            }
-            set
-            {
-                BodyReference.Velocity.Angular.Y = -1 * value;
-            }
-        }
-
-        public float Angle
-        {
-            get
-            {
-                return -1 * ToEulerAngles(BodyReference.Pose.Orientation).Y;
-            }
-            set
-            {
-                BodyReference.Pose.Orientation = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), -value);
-            }
-        }
-
-        protected int _size = 100;
+        protected int size = 100;
+        protected bool sizeDirty;
         public int Size
         {
-            get
-            {
-                return _size;
-            }
+            get => size;
             set
             {
-                if (value != _size)
-                {
-                    _size = value;
-                    UpdateSize();
-                }
+                if (value != size)
+                    sizeDirty = true;
+
+                size = value;
             }
         }
-        private float _mass = 100f;
-        public virtual float Mass
-        {
-            get
-            {
-                return _mass;
-            }
+
+        private float mass;
+        private bool massDirty;
+        public float Mass {
+            get => mass;
             set
             {
-                if (value != _mass)
-                {
-                    _mass = value;
+                if (mass != value)
+                    this.massDirty = true; 
 
-                    UpdateInertia();
-                }
+                mass = value;
             }
         }
 
-        public Vector2 AverageLinearVelocity { get; set; }
-        public bool IsBouncing { get; set; }
-        public bool IsInContact { get; set; }
+        public Vector2 AverageLinearVelocity;
+        public bool IsBouncing;
+        public bool IsInContact;
 
-        protected virtual void UpdateSize()
+        protected void BecomeKinematic()
         {
-            ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
-            shape.Radius = _size;
+            World.Simulation.Bodies
+                .GetBodyReference(this.BodyHandle)
+                .BecomeKinematic();
         }
 
-        protected virtual void UpdateInertia()
+        public void ReadSimulation()
         {
-            ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
-            BodyReference.LocalInertia = GetBodyInertia(shape, _mass);
+            var body = World.Simulation.Bodies.GetBodyReference(this.BodyHandle);
+
+            Position = Vector3ToVector2(body.Pose.Position);
+            LinearVelocity = Vector3ToVector2(body.Velocity.Linear);;
+
+            AngularVelocity = body.Velocity.Angular.Y;
+            Angle = ToEulerAngles(body.Pose.Orientation).Y;
         }
 
-        public void UpdateBodyReference(BodyReference bodyReference)
+        public void WriteSimulation()
         {
-            BodyReference = bodyReference;
-            BodyReference.Awake = true;
-            BodyReference.Pose.Position.Y = 0;
+            if (this.BodyHandle.Value == -1)
+                throw new Exception("Cannot write simulation with invalid body handle");
+
+            var body = World.Simulation.Bodies.GetBodyReference(this.BodyHandle);
+
+            body.Pose.Position = new Vector3(Position.X, 0, Position.Y);
+            body.Velocity.Linear = new Vector3(LinearVelocity.X, 0, LinearVelocity.Y);
+
+            body.Velocity.Angular.Y = AngularVelocity;
+            body.Pose.Orientation = Quaternion.CreateFromAxisAngle(new Vector3(0, 1, 0), Angle);
+
+            if (massDirty || sizeDirty)
+            {
+                ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
+                if (massDirty)
+                    body.LocalInertia = GetBodyInertia(shape, Mass);
+                if (massDirty)
+                    shape.Radius = size;
+
+                massDirty = sizeDirty = false;
+                
+            }
+
+            body.Awake = true;
+            body.Pose.Position.Y = 0;
         }
 
         private Vector3 ToEulerAngles(Quaternion q)
@@ -259,17 +242,21 @@
         {
             if (Exists)
             {
-                if (World != null && World.Time > SleepUntil)
-                {
-                    this.Update();
-
-                    if (World != null)
-                        SleepUntil = World.Time + CycleMS;
-                }
-
-
                 if (PendingDestruction)
                     Destroy();
+                else
+                {
+                    if (World != null && World.Time > SleepUntil)
+                    {
+                        this.Update();
+
+                        if (World != null)
+                            SleepUntil = World.Time + CycleMS;
+                    }
+
+                    if (PendingDestruction)
+                        Destroy();
+                }
             }
         }
 
@@ -285,9 +272,8 @@
             World.BodyRemove(this);
             World.Simulation.Bodies.Remove(this.BodyHandle);
             World.Simulation.Shapes.Remove(this.ShapeHandle);
-            this.BodyHandle = default;
-            this.BodyReference = default;
-            this.ShapeHandle = default;
+            this.BodyHandle.Value = -1;
+            this.ShapeHandle.Value = -1;
             this.Exists = false;
         }
 

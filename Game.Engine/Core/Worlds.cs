@@ -16,7 +16,10 @@
             {
                 
                 AddWorld(FFA(), "default");
-                AddWorld(PartyCity(), "partycity");
+                //AddWorld(PartyCity(), "partycity");
+                //AddWorld(PartyCity(), "partycity2");
+                
+
             }
 
             //AddWorld("duel", WorldDuel());
@@ -45,7 +48,7 @@
             hook.Name = "Party City";
             hook.Description = "Party City, what can we say?";
             hook.Mesh.Enabled = true;
-            hook.Fishes *= 4;
+            hook.Fishes = 0;
             hook.PickupSeekers *= 4;
             hook.PickupShields *= 4;
             hook.Mesh.MeshURL = "wwwroot/dist/assets/base/models/partycity.glb";

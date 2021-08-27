@@ -13,6 +13,7 @@
     using Game.Engine.Networking;
     using Game.Engine.Physics;
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
@@ -35,7 +36,7 @@
         public Hook Hook { get; set; } = null;
 
         // lists of bodies, groups in the world
-        public Dictionary<BodyHandle, WorldBody> Bodies = new Dictionary<BodyHandle, WorldBody>();
+        readonly internal ConcurrentDictionary<BodyHandle, WorldBody> Bodies = new ConcurrentDictionary<BodyHandle, WorldBody>();
         public List<Group> Groups = new List<Group>();
 
         // list of IActors in the world. Actors are things that think.
@@ -70,6 +71,9 @@
         public BufferPool BufferPool = new BufferPool();
         public Simulation Simulation = null;
         public CollidableProperty<WorldBodyProperties> BodyProperties;
+
+        public SimpleThreadDispatcher ThreadDispatcher { get; }
+
         internal int ProjectileCount;
 
         public bool PendingDestruction;
@@ -87,7 +91,8 @@
             Console.WriteLine($"Initializing World: {this.Hook.Name}");
 
             BodyProperties = new CollidableProperty<WorldBodyProperties>();
-
+                
+            this.ThreadDispatcher = new SimpleThreadDispatcher(2);
             this.Simulation = Simulation.Create(
                 BufferPool, 
                 new NarrowPhaseCallbacks(this) 
@@ -99,6 +104,7 @@
                 //new SubsteppingTimestepper(10)
                 //new PositionFirstTimestepper()
                 new PositionLastTimestepper()
+                
             );
             //this.Simulation.Statics.Add(new StaticDescription(new Vector3(0, -10, 0), new CollidableDescription(this.Simulation.Shapes.Add(new Box(100000, 10, 100000)), 0.1f)));
             NewFleetGenerator = this.DefaultNewFleetGenerator;
@@ -121,59 +127,80 @@
             };
         }
 
+
+        public bool InStep = false;
         // main entry to the world. This will be called every Hook.StepSize milliseconds, unless it's late. or early.
         public void Step()
         {
-            var start = DateTime.Now;
-            // calculate the new game time
-            PreviousTime = Time;
-            Time = (uint)((start.Ticks - OffsetTicks) / 10000);
-            
-            var dt = Time - PreviousTime;
-            if (dt == 0)
-                dt = (uint)this.Hook.StepTime;
-
-            // this is a bad way to do this... just overestimating potentential number of contacts... though what's the 4-color theorem equivalent for spheres?
-            ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
-            bodyImpacts.EnsureCapacity(this.Bodies.Count * 10, this.BufferPool);
-
-            foreach (var player in Player.GetWorldPlayers(this).ToList())
-                player.ControlCharacter();
-
-            this.Simulation.Timestep(dt);
-            // Ensure that every body as a new handle... else .. <cringe>
-            UpdateBodyReferences();
-
-            // execute collisions
-            for (int i = 0; i < bodyImpacts.Count; ++i)
+            try
             {
-                ref var impact = ref bodyImpacts[i];
+                var start = DateTime.Now;
+                // calculate the new game time
+                PreviousTime = Time;
+                Time = (uint)((start.Ticks - OffsetTicks) / 10000);
+                
+                var dt = Time - PreviousTime;
+                if (dt == 0)
+                    dt = (uint)this.Hook.StepTime;
+    
+                // this is a bad way to do this... just overestimating potentential number of contacts... though what's the 4-color theorem equivalent for spheres?
+                ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
+                bodyImpacts.EnsureCapacity(10000, this.BufferPool);
 
-                var aValid = Bodies.TryGetValue(impact.BodyHandleA, out WorldBody wbA);
-                var bValid = Bodies.TryGetValue(impact.BodyHandleB, out WorldBody wbB);
+                foreach (var player in Player.GetWorldPlayers(this).ToList())
+                    player.ControlCharacter();
 
-                /*if (impact.CustomBounce)
-                    wbA.LinearVelocity = new Vector2(impact.newAVelocity.X, impact.newAVelocity.Z);*/
+                InStep = true;
 
-                if (aValid)
-                {
-                    if (wbA?.PendingDestruction == true || wbB?.PendingDestruction == true)
-                        continue;
+                //Console.WriteLine("dt:" + dt);
 
-                    wbA.CollisionExecute(wbB);
-                    wbA.IsInContact = true;
+                this.Simulation.Timestep((float)Hook.StepTime, ThreadDispatcher);
+                //this.Simulation.Timestep((float)Hook.StepTime);
 
-                    if (bValid)
+                InStep = false;
+                // Ensure that every body as a new handle... else .. <cringe>
+                ReadSimulation();
+
+                // execute collisions
+                if (true)
+                    for (int i = 0; i < bodyImpacts.Count; ++i)
                     {
-                        wbB.CollisionExecute(wbA);
-                        wbB.IsInContact = true;
-                    }
-                }
-            }
-            bodyImpacts.Count = 0;
+                        ref var impact = ref bodyImpacts[i];
 
-            ActorsThink();
-            CheckTimings(start);
+                        var aValid = Bodies.TryGetValue(impact.BodyHandleA, out WorldBody wbA);
+                        var bValid = Bodies.TryGetValue(impact.BodyHandleB, out WorldBody wbB);
+
+                        if (aValid)
+                        {
+                            if (wbA?.PendingDestruction == true || wbB?.PendingDestruction == true)
+                                continue;
+
+                            wbA.CollisionExecute(wbB);
+                            wbA.IsInContact = true;
+
+                            if (bValid)
+                            {
+                                wbB.CollisionExecute(wbA);
+                                wbB.IsInContact = true;
+                            }
+                        }
+                    }
+                
+                bodyImpacts.Count = 0;
+
+                ActorsThink();
+                WriteSimulation();
+                CheckTimings(start);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Exception in server game loop:" + e.Message);
+
+            }
+            finally
+            {
+                InStep = false;
+            }
         }
 
         private void InitializeSystemActors()
@@ -184,7 +211,6 @@
             InitializeSystemActor<Authenticator>();
             InitializeSystemActor<Advertisement>();
             InitializeSystemActor<ObstacleTender>();
-            InitializeSystemActor<RoomReset>();
             InitializeSystemActor<AdvanceRetreat>();
             
             //InitializeSystemActor<CaptureTheFlag>();
@@ -224,13 +250,19 @@
                 actor.Think();
         }
 
-        private void UpdateBodyReferences()
+        private void ReadSimulation()
         {
             foreach (var body in Bodies.Values)
             {
-                var reference = Simulation.Bodies.GetBodyReference(body.BodyHandle);
-                body.UpdateBodyReference(reference);
+                body.ReadSimulation();
                 body.IsInContact = false;
+            }
+        }
+        private void WriteSimulation()
+        {
+            foreach (var body in Bodies.Values)
+            {
+                body.WriteSimulation();
             }
         }
 
@@ -242,6 +274,7 @@
             public bool LoopBody(CollidableReference reference)
             {
                 References.Allocate(Pool) = reference;
+
                 //If you wanted to do any top-level filtering, this would be a good spot for it.
                 //The CollidableReference tells you whether it's a body or a static object and the associated handle. You can look up metadata with that.
                 return true;
@@ -263,7 +296,19 @@
 
             var list = new WorldBody[broadPhaseEnumerator.References.Count];
             for (int overlapIndex = 0; overlapIndex < broadPhaseEnumerator.References.Count; ++overlapIndex)
-                list[overlapIndex] = Bodies[broadPhaseEnumerator.References[overlapIndex].BodyHandle];
+            {
+                var handle = broadPhaseEnumerator.References[overlapIndex].BodyHandle;
+                var reference = Simulation.Bodies.GetBodyReference(handle);
+                if (reference.Exists)
+                {
+                    if (Bodies.TryGetValue(handle, out var body))
+                        list[overlapIndex] = body;
+                }
+                else
+                {
+                    var x = 1;
+                }
+            }
 
             broadPhaseEnumerator.References.Dispose(BufferPool);
 
@@ -272,12 +317,19 @@
 
         public void BodyAdd(WorldBody body)
         {
-            Bodies.Add(body.BodyHandle, body);
+            if (InStep)
+                throw new Exception("adding body during step");
+            
+            Bodies.AddOrUpdate(body.BodyHandle, body, (h, b) => {
+                throw new Exception("Body already exists");
+            });
         }
 
         public void BodyRemove(WorldBody body)
         {
-            Bodies.Remove(body.BodyHandle);
+            if (InStep)
+                throw new Exception("removing body during step");
+            Bodies.TryRemove(body.BodyHandle, out var trash);
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
@@ -286,8 +338,21 @@
             return Math.Max(pos.X - Hook.WorldSize + buffer, Math.Max(pos.Y - Hook.WorldSize + buffer, 0));
         }
 
+        public Player CreatePlayer()
+        {
+            lock(Bodies)            
+            {
+                var player = new Player();
+                player.Init(this);
+
+                return player;
+            }
+        }
+
         private void WorldTickEntry()
         {
+            try
+            {
             var interval = TimeSpan.FromMilliseconds(Hook.StepTime);
 
             var nextTick = DateTime.Now + interval;
@@ -301,13 +366,20 @@
                 }
                 nextTick += interval; // Notice we're adding onto when the last tick was supposed to be, not when it is now
 
-                this.Step();
-                ConnectionHeartbeat.Step();
+                lock(Bodies)
+                {
+                    this.Step();
+                    ConnectionHeartbeat.Step();
+                }
+            }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception in WorldTickEntry: " + e);
             }
         }
 
         
-
         public Vector2 RandomPosition()
         {
             var r = new Random();
@@ -352,6 +424,7 @@
         {
             Dispose(true);
         }
+
         #endregion
     }
 }

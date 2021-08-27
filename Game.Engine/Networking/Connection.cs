@@ -182,29 +182,26 @@
                         NetWorldView.StartUpdatesVector(builder, updateBodies.Count());
                         foreach (var update in updateBodies)
                         {
-                            var serverBody = update.Body;
-                            if (update.Body.Exists)
-                                update.UpdateSent(World.Time);
-
+                            update.UpdateSent(World.Time);
                             NetBody.CreateNetBody(builder,
-                                Id: serverBody.ID,
+                                Id: update.ID,
                                 DefinitionTime: update.ClientUpdatedTime,
-                                originalPosition_X: (short)serverBody.Position.X,
-                                originalPosition_Y: (short)serverBody.Position.Y,
-                                velocity_X: (short)(serverBody.LinearVelocity.X * VELOCITY_SCALE_FACTOR),
-                                velocity_Y: (short)(serverBody.LinearVelocity.Y * VELOCITY_SCALE_FACTOR),
-                                OriginalAngle: (sbyte)(serverBody.Angle / MathF.PI * 127),
-                                AngularVelocity: (sbyte)(serverBody.AngularVelocity * 10000),
-                                Size: (byte)(serverBody.Size / 5),
-                                Sprite: (ushort)serverBody.Sprite,
-                                Mode: serverBody.Mode,
-                                Group: serverBody.Group?.ID ?? 0);
+                                originalPosition_X: (short)update.Position.X,
+                                originalPosition_Y: (short)update.Position.Y,
+                                velocity_X: (short)(update.LinearVelocity.X * VELOCITY_SCALE_FACTOR),
+                                velocity_Y: (short)(update.LinearVelocity.Y * VELOCITY_SCALE_FACTOR),
+                                OriginalAngle: (sbyte)(update.Angle / MathF.PI * 127),
+                                AngularVelocity: (sbyte)(update.AngularVelocity * 10000),
+                                Size: (byte)(update.Size / 5),
+                                Sprite: (ushort)update.Sprite,
+                                Mode: update.Mode,
+                                Group: update.GroupID);
                         }
 
                         var updatesVector = builder.EndVector();
 
                         var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
-                            b.Body.ID
+                            b.ID
                         ).ToArray());
 
                         var messages = Player.GetMessages();
@@ -408,6 +405,10 @@
                     cancellationToken: cancellationToken);
 
                 //Console.WriteLine($"{DateTime.Now.Subtract(start).TotalMilliseconds}ms in send");
+            }
+            catch(WebSocketException)
+            {
+                // client disconnected
             }
             finally
             {
@@ -615,15 +616,10 @@
 
             try
             {
-                lock (World.Bodies)
-                {
-                    Player = new Player
-                    {
-                        IP = httpContext.Connection.RemoteIpAddress.ToString(),
-                        Connection = this
-                    };
-                    Player.Init(World);
-                }
+                
+                Player = World.CreatePlayer();
+                Player.IP = httpContext.Connection.RemoteIpAddress.ToString();
+                Player.Connection = this;
 
                 var updateTask = StartSynchronizing(cancellationToken);
                 var readTask = StartReadAsync(this.HandleIncomingMessage, cancellationToken);
@@ -683,6 +679,11 @@
                 }
 
                 return true;
+            }
+            catch (WebSocketException )
+            {
+                // client disconnected
+                return false;
             }
             catch (Exception e)
             {

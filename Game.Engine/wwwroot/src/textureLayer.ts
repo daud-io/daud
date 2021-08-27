@@ -76,7 +76,7 @@ export class TextureLayer {
             if (this.textureDefinition.rotate)
                 extraRotation = -Math.PI/2;
 
-            this.sprite.angle = body.Angle + Math.PI + extraRotation;
+            this.sprite.angle = (body.Angle + extraRotation);
             this.sprite.height = this.textureDefinition.size * body.Size; 
             this.sprite.width = this.sprite.height * this.aspectRatio;
         }
