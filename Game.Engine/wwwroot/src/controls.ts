@@ -2,7 +2,7 @@
 import { ServerWorld } from "./lobby";
 import Cookies from "js-cookie";
 import { Picker } from "emoji-picker-element";
-import { getDefinition } from "./loader";
+import { getTextureDefinition } from "./loader";
 
 const emojiContainer = document.getElementById("emoji-container")!;
 const picker = new Picker();
@@ -59,7 +59,7 @@ nick.addEventListener("input", () => {
 });
 
 export const Controls = {
-    emoji: "👋",
+    emoji: "🥚",
     nick: "unknown",
     boost: false,
     shoot: false,
@@ -149,7 +149,7 @@ export function initializeWorld(world: ServerWorld = currentWorld): void {
 
     for (let i = 0; i < colors.length; i++) {
         const selectorImage = new Image();
-        selectorImage.src = getDefinition(colors[i]).url;
+        selectorImage.src = getTextureDefinition(colors[i]).url;
 
         if (selectorImage) {
             selector.appendChild(selectorImage);

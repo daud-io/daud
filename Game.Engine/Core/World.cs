@@ -20,6 +20,7 @@
         public string GameID { get; set; }
 
         public int AdvertisedPlayerCount { get; set; }
+        public int SpectatorCount { get; set; }
 
         // the canonical game time, in milliseconds, from world start
         public uint Time { get; private set; } = 0;

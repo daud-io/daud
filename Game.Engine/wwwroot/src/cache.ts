@@ -1,10 +1,13 @@
 import { spriteIndices } from "./spriteIndices";
 import { NetGroup, NetBody } from "./game_generated";
 import { RenderedObject } from "./renderedObject";
-import { Fleet } from "./fleet";
+import { Fleet } from "./models/fleet";
 import { CustomContainer } from "./CustomContainer";
 import { Vector2 } from "./Vector2";
 import bus from "./bus";
+import { Ship } from "./models/ship";
+import { Particle } from "pixi-particles";
+import { Token } from "./models/token";
 
 type ClientRendered = {
     body: ClientBody;
@@ -80,16 +83,15 @@ let container: CustomContainer | undefined;
 const bodies: Map<string, ClientRendered> = new Map();
 const groups: Map<string, ClientGroup> = new Map();
 
+export function getGroup(groupID: number): ClientGroup | undefined
+{
+    return groups.get(`g-${groupID}`);
+}
+
 export function setContainer(newContainer: CustomContainer): void {
     container = newContainer;
-    groups.forEach((group) => {
-        if (group.Type == 1) group.renderer = new Fleet(newContainer);
-    });
-    bodies.forEach((body) => {
-        body.renderer = new RenderedObject(newContainer, body.body);
-        const group = groups.get(`g-${body.body.Group}`);
-        if (group && group.renderer) group.renderer.addShip(`b-${body.body.ID}`, body.body);
-    });
+    if (groups.size > 0 || bodies.size > 0)
+        throw "container change";
 }
 
 bus.on("worldjoin", () => {
@@ -111,6 +113,9 @@ export function refreshSprites(): void {
     });
 }
 export function update(updates: NetBody[], deletes: number[], newGroups: NetGroup[], groupDeletes: number[], time: number, myFleetID: number): void {
+    if (!container)
+        throw "update before container";
+
     // delete objects that should no longer exist
     for (const deleteKey of deletes) {
         const key = `b-${deleteKey}`;
@@ -143,7 +148,7 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
 
         if (!existing) {
             const clientGroup = groupFromServer(group);
-            if (clientGroup.Type == 1 && container) clientGroup.renderer = new Fleet(container);
+            if (clientGroup.Type == 1) clientGroup.renderer = new Fleet(container);
             groups.set(`g-${clientGroup.ID}`, clientGroup);
             existing = clientGroup;
         } else {
@@ -177,9 +182,6 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
             existing.body.Momentum.x = velocity.x() / VELOCITY_SCALE_FACTOR;
             existing.body.Momentum.y = velocity.y() / VELOCITY_SCALE_FACTOR;
 
-            let group: ClientGroup | undefined = undefined;
-            if (update.group() != 0) group = groups.get(`g-${update.group()}`);
-
             if (update.group() != existing.body.Group) {
                 const oldGroup = groups.get(`g-${existing.body.Group}`);
                 if (oldGroup) oldGroup.renderer!.deleteShip(`b-${update.id()}`);
@@ -187,27 +189,56 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
             }
 
             existing.body.zIndex = 0;
-            if (group) existing.body.zIndex = group.ZIndex || 0;
+
+            if (update.group() != 0)
+            {
+                let group = groups.get(`g-${update.group()}`);  
+                if (group) existing.body.zIndex = group.ZIndex || 0;
+            } 
+
             if (existing.renderer) existing.renderer.update();
         }
 
         if (!existing) {
+            var renderer = <RenderedObject|undefined>undefined;
             const clientBody = bodyFromServer(update);
 
             const group = groups.get(`g-${clientBody.Group}`);
+
             clientBody.zIndex = group?.ZIndex || 0;
 
-            const renderer = container && new RenderedObject(container, clientBody);
+            const groupType = group?.Type ?? -1;
 
-            if (group && group.renderer) {
-                group.renderer.addShip(`b-${clientBody.ID}`, clientBody);
+            switch (groupType)
+            {
+                case 0: // fish
+                    break;
+
+                case 1: // fleets
+                    if (group?.renderer instanceof Fleet)
+                    {
+                        var ship = new Ship(container, clientBody, group);
+                        renderer = ship;
+                        group.renderer.addShip(`b-${clientBody.ID}`, ship);
+                    }
+                    break;
+
+                case 6: // tokens
+                    renderer = new Token(container, clientBody, group!);
+                    break;
+
             }
+
+            if (!renderer) renderer = new RenderedObject(container, clientBody);
+            
+            if (renderer) renderer.update();
 
             bodies.set(`b-${clientBody.ID}`, {
                 body: clientBody,
                 renderer,
             });
         }
+
     }
 }
 

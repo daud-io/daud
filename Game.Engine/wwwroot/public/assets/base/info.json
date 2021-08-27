@@ -1,0 +1,523 @@
+{
+  "sprites": {
+    "ship": {
+      "abstract": true,
+      "modes": {
+        "default": "ship",
+        "defenseupgrade": "defenseupgrade",
+        "offenseupgrade": "offenseupgrade",
+        "invulnerable": "invulnerable",
+        "shield": "shield",
+        "boost": "boost",
+        "haste": "powerup_base"
+      }
+    },
+
+    "ship0": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship0"
+      }
+    },
+    "ship_gray": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_gray"
+      }
+    },
+    "ship_cyan": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_cyan",
+        "boost": "thruster_cyan"
+      }
+    },
+    "ship_blue": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_blue",
+        "boost": "thruster_blue"
+      }
+    },
+    "ship_green": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_green",
+        "boost": "thruster_green"
+      }
+    },
+    "ship_orange": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_orange",
+        "boost": "thruster_orange"
+      }
+    },
+    "ship_pink": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_pink",
+        "boost": "thruster_pink"
+      }
+    },
+    "ship_red": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_red",
+        "boost": "thruster_red"
+      }
+    },
+    "ship_yellow": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_yellow",
+        "boost": "thruster_yellow"
+      }
+    },
+    "ship_secret": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_secret",
+        "boost": "thruster_yellow"
+      }
+    },
+    "ship_zed": {
+      "extends": "ship",
+      "modes": {
+        "default": "ship_zed",
+        "boost": "thruster_red"
+      }
+    },
+
+    "bullet": {
+      "modes": {
+        "default": "bullet"
+      }
+    },
+    "bullet_cyan": {
+      "extends": "bullet",
+      "modes": {
+        "default": "bullet_cyan"
+      }
+    },
+    "bullet_blue": {
+      "extends": "bullet",
+      "modes": {
+        "default": "bullet_blue"
+      }
+    },
+    "bullet_green": {
+      "extends": "bullet",
+      "modes": {
+        "default": "bullet_green"
+      }
+    },
+    "bullet_orange": {
+      "extends": "bullet",
+      "modes": {
+        "default": "bullet_orange"
+      }
+    },
+    "bullet_pink": {
+      "extends": "bullet",
+      "modes": {
+        "default": "bullet_pink"
+      }
+    },
+    "bullet_red": {
+      "extends": "bullet",
+      "modes": {
+        "default": "bullet_red"
+      }
+    },
+    "bullet_yellow": {
+      "extends": "bullet",
+      "modes": {
+        "default": "bullet_yellow"
+      }
+    },
+
+    "obstacle": {
+      "modes": {
+        "default": "obstacle"
+      }
+    },
+
+    "seeker": {
+      "modes": {
+        "default": "seeker"
+      }
+    },
+    "seeker_pickup": {
+      "modes": {
+        "default": "seeker_pickup"
+      }
+    },
+    "fish": {
+      "modes": {
+        "default": "fish"
+      }
+    },
+    "shield_pickup": {
+      "modes": {
+        "default": "shield_pickup"
+      }
+    },
+    "boom": {
+      "modes": {
+        "default": "boom"
+      }
+    },
+
+    "haste_powerup": {
+      "modes": {
+        "default": "powerup_base haste",
+        "carried": "haste"
+      }
+    }
+  },
+  "textures": {
+    "powerup_base": {
+      "url": "particle.png",
+      "size": 0.02,
+      "emitter": {
+        "alpha": {
+          "start": 1,
+          "end": 0
+        },
+        "scale": {
+          "start": 0.14,
+          "end": 0.001,
+          "minimumScaleMultiplier": 1
+        },
+        "color": {
+          "start": "#dbc72c",
+          "end": "#4f4f4f"
+        },
+        "speed": {
+          "start": 200,
+          "end": 50,
+          "minimumSpeedMultiplier": 1
+        },
+        "acceleration": {
+          "x": 0,
+          "y": 0
+        },
+        "maxSpeed": 0,
+        "startRotation": {
+          "min": 0,
+          "max": 360
+        },
+        "noRotation": false,
+        "rotationSpeed": {
+          "min": 0,
+          "max": 0
+        },
+        "lifetime": {
+          "min": 0.2,
+          "max": 0.8
+        },
+        "blendMode": "normal",
+        "frequency": 0.01,
+        "emitterLifetime": -1,
+        "maxParticles": 500,
+        "pos": {
+          "x": 0,
+          "y": 0
+        },
+        "addAtBack": false,
+        "spawnType": "circle",
+        "spawnCircle": {
+          "x": 0,
+          "y": 0,
+          "r": 0
+        }
+      }
+    },
+    "ship_haste": {
+      "url": "particle.png",
+      "size": 0.02,
+      "emitter": {
+        "alpha": {
+          "start": 1,
+          "end": 0
+        },
+        "scale": {
+          "start": 0.14,
+          "end": 0.001,
+          "minimumScaleMultiplier": 1
+        },
+        "color": {
+          "start": "#dbc72c",
+          "end": "#4f4f4f"
+        },
+        "speed": {
+          "start": 200,
+          "end": 50,
+          "minimumSpeedMultiplier": 1
+        },
+        "acceleration": {
+          "x": 0,
+          "y": 0
+        },
+        "maxSpeed": 0,
+        "startRotation": {
+          "min": 0,
+          "max": 360
+        },
+        "noRotation": false,
+        "rotationSpeed": {
+          "min": 0,
+          "max": 0
+        },
+        "lifetime": {
+          "min": 0.2,
+          "max": 0.8
+        },
+        "blendMode": "normal",
+        "frequency": 0.01,
+        "emitterLifetime": -1,
+        "maxParticles": 500,
+        "pos": {
+          "x": 0,
+          "y": 0
+        },
+        "addAtBack": false,
+        "spawnType": "circle",
+        "spawnCircle": {
+          "x": 0,
+          "y": 0,
+          "r": 0
+        }
+      }
+    },    
+    "boost": {
+      "url": "thruster.png",
+      "offset": {
+        "x": -140,
+        "y": 0
+      },
+      "rotate": 6,
+      "size": 2.56,
+      "animated": {
+        "speed": 0.5,
+        "size": 64,
+        "count": 29
+      }
+    },
+    "shield": {
+      "url": "shield.png",
+      "size": 2.56,
+      "animated": {
+        "speed": 0.5,
+        "loop": true,
+        "size": 64,
+        "count": 90
+      }
+    },
+    "invulnerable": {
+      "url": "shield.png",
+      "size": 2.56,
+      "animated": {
+        "speed": 0.5,
+        "loop": true,
+        "size": 64,
+        "count": 90
+      }
+    },
+    "offenseupgrade": {
+      "url": "circles.png",
+      "size": 3.6,
+      "animated": {
+        "loop": true,
+        "speed": 0.4,
+        "size": 72,
+        "count": 11
+      },
+      "tint": 16711680
+    },
+    "defenseupgrade": {
+      "url": "circles.png",
+      "size": 3.6,
+      "animated": {
+        "loop": true,
+        "speed": 0.2,
+        "size": 72,
+        "count": 11
+      },
+      "tint": 6711039
+    },
+    "ship": {
+      "size": 2.5,
+      "url": "ship.png"
+    },
+    "ship0": {
+      "extends": "ship"
+    },
+    "ship_gray": {
+      "extends": "ship"
+    },
+    "ship_flash": {
+      "extends": "ship"
+    },
+    "thruster_cyan": {
+      "extends": "boost"
+    },
+    "ship_cyan": {
+      "extends": "ship"
+    },
+    "thruster_blue": {
+      "extends": "boost"
+    },
+    "ship_blue": {
+      "extends": "ship"
+    },
+    "thruster_green": {
+      "extends": "boost"
+    },
+    "ship_green": {
+      "extends": "ship"
+    },
+    "thruster_orange": {
+      "extends": "boost"
+    },
+    "ship_orange": {
+      "extends": "ship"
+    },
+    "thruster_pink": {
+      "extends": "boost"
+    },
+    "ship_pink": {
+      "extends": "ship"
+    },
+    "thruster_red": {
+      "extends": "boost"
+    },
+    "ship_red": {
+      "extends": "ship"
+    },
+    "thruster_yellow": {
+      "extends": "boost"
+    },
+    "ship_yellow": {
+      "extends": "ship"
+    },
+    "ship_secret": {
+      "extends": "ship"
+    },
+    "ship_zed": {
+      "extends": "ship"
+    },
+    "bullet": {
+      "url": "bullet.png",
+      "size": 5
+    },
+    "bullet_cyan": {
+      "extends": "bullet"
+    },
+    "bullet_blue": {
+      "extends": "bullet"
+    },
+    "bullet_green": {
+      "extends": "bullet"
+    },
+    "bullet_orange": {
+      "extends": "bullet"
+    },
+    "bullet_pink": {
+      "extends": "bullet"
+    },
+    "bullet_red": {
+      "extends": "bullet"
+    },
+    "bullet_yellow": {
+      "extends": "bullet"
+    },
+    "obstacle": {
+      "url": "obstacle.png",
+      "size": 2.1
+    },
+    "seeker": {
+      "url": "seeker.png",
+      "size": 0.64
+    },
+    "seeker_pickup": {
+      "url": "seeker_pickup.png",
+      "size": 1
+    },
+    "fish": {
+      "url": "fish.png",
+      "size": 2
+    },
+    "shield_pickup": {
+      "url": "shield_pickup.png",
+      "animated": {
+        "loop": true,
+        "speed": 0.5,
+        "count": 30,
+        "size": 64
+      },
+      "size": 2.56
+    },
+    "boom": {
+      "url": "boom.png",
+      "emitter": {
+        "alpha": {
+          "start": 0.33,
+          "end": 0.0
+        },
+        "scale": {
+          "start": 0.0003,
+          "end": 0.003,
+          "minimumScaleMultiplier": 1
+        },
+        "color": {
+          "start": "#ffffff",
+          "end": "#ffffff"
+        },
+        "speed": {
+          "start": 200,
+          "end": 100,
+          "minimumSpeedMultiplier": 1
+        },
+        "acceleration": {
+          "x": 0,
+          "y": 0
+        },
+        "maxSpeed": 0,
+        "startRotation": {
+          "min": 0,
+          "max": 12
+        },
+        "noRotation": false,
+        "rotationSpeed": {
+          "min": 0,
+          "max": 22
+        },
+        "lifetime": {
+          "min": 0.15,
+          "max": 0.44
+        },
+        "blendMode": "normal",
+        "frequency": 0.1,
+        "emitterLifetime": 0.31,
+        "maxParticles": 1000,
+        "pos": {
+          "x": 0,
+          "y": 0
+        },
+        "addAtBack": false,
+        "spawnType": "burst",
+        "particlesPerWave": 10,
+        "particleSpacing": 0,
+        "angleStart": 0
+      },
+      "size": 0.5
+    },
+
+    "haste": {
+      "url": "haste_powerup.png",
+      "size": 1
+    }
+  }
+}

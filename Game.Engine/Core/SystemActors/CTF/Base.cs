@@ -23,6 +23,7 @@
             CausesCollisions = true;
 
             this.BaseGroup = new ActorGroup();
+            BaseGroup.ZIndex = 50;
 
             BaseGroup.Init(captureTheFlag.World);
             this.Group = BaseGroup;

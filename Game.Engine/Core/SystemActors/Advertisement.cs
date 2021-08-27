@@ -13,6 +13,10 @@
                 .Where(p => !(p is Robot))
                 .Count();
 
+            World.SpectatorCount = Player.GetWorldPlayers(World)
+                .Where(p => !(p.IsAlive || p.IsStillPlaying) && (p.Connection?.IsSpectating ?? false))
+                .Count();
+
             if (World.AdvertisedPlayerCount > 0)
                 EmptySince = World.Time;
         }

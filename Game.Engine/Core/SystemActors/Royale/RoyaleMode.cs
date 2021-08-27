@@ -41,7 +41,6 @@
             base.Init(world);
         }
 
-
         public override void CreateDestroy()
         {
             base.CreateDestroy();

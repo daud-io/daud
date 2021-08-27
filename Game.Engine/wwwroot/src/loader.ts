@@ -1,30 +1,46 @@
-import { EmitterConfig } from "pixi-particles";
+import JSZip from "jszip";
+import { OldEmitterConfig } from "pixi-particles";
 import * as PIXI from "pixi.js";
-import loaderJSON from "./loader.json";
+import { Settings } from "./settings";
+import { SpriteLibrary } from "./spriteLibrary";
 
-let parsedJSON: Record<string, TextureDefinition> = {};
+let textureDefinitions: Record<string, TextureDefinition> = {};
 export type TextureDefinition = {
     extends: string;
     url: string;
     animated?: { size: number; count: number; speed: number };
-    emitter: EmitterConfig;
+    emitter: OldEmitterConfig;
     offset?: { x: number; y: number };
-    rotate: number;
+    rotate?: number;
     tint?: number;
     size: number;
     abstract: boolean;
     textures?: PIXI.Texture[];
+};
+let spriteDefinitions: Record<string, SpriteDefinition> = {};
+export type SpriteDefinition = {
+    extends: string;
     modes?: Record<string, string>;
 };
-export function getDefinition(textureName: string): TextureDefinition {
-    return parsedJSON[textureName];
+export function getTextureDefinition(textureName: string): TextureDefinition {
+    const definition = textureDefinitions[textureName];
+    if (definition == null)
+        console.log(`trying to load unknown texture: ${textureName}`);
+
+    return definition;
 }
-export function setDefinitions(newJSON: Record<string, TextureDefinition>): void {
-    parsedJSON = newJSON;
+export function getSpriteDefinition(spriteName: string): SpriteDefinition {
+    const definition = spriteDefinitions[spriteName];
+    if (definition == null)
+        console.log(`trying to load unknown sprite: ${spriteName}`);
+
+    return definition;
 }
+
 export function loadTexture(textureDefinition: TextureDefinition): Promise<void> {
     const textures: PIXI.Texture[] = [];
     const baseTexture = PIXI.BaseTexture.from(textureDefinition.url);
+
     return new Promise((resolve) => {
         const cb = () => {
             if (textureDefinition.animated) {
@@ -37,6 +53,9 @@ export function loadTexture(textureDefinition: TextureDefinition): Promise<void>
                     const sw = tileSize;
                     const sh = tileSize;
                     const tex = new PIXI.Texture(baseTexture, new PIXI.Rectangle(sx, sy, sw, sh));
+                    if (textureDefinition.rotate)
+                        tex.rotate = textureDefinition.rotate;
+                        
                     textures.push(tex);
                 }
             } else {
@@ -79,22 +98,35 @@ export const merge = <T extends IObject[]>(...objects: T): TUnionToIntersection<
 
 const progressEl = document.getElementById("loader") as HTMLProgressElement;
 export async function load(): Promise<void> {
+
+    // load all the libraries
+    let library = await SpriteLibrary.load("assets/base");
+    addLayer(library, await SpriteLibrary.load("assets/ctf"));
+    addLayer(library, await SpriteLibrary.load("assets/themes/" + Settings.theme));
+
+    spriteDefinitions = library.sprites;
+    textureDefinitions = library.textures;
+
+    // load the textures
     await allProgress(
-        Object.keys(loaderJSON)
+        Object.keys(textureDefinitions)
             .map(async (key) => {
-                let out: TextureDefinition;
-                const defaultKey = loaderJSON[key].extends;
-                if (defaultKey) {
-                    out = merge(loaderJSON[defaultKey], loaderJSON[key]);
-                    out.abstract = loaderJSON[key].abstract;
-                } else {
-                    out = loaderJSON[key];
+                var texture = textureDefinitions[key];
+                if (!texture.abstract)
+                {
+                    await loadTexture(texture);
                 }
-                if (!out.abstract) await loadTexture(out);
-                parsedJSON[key] = out;
             })
             .filter((x) => !!x)
-    );
+        );
+}
+
+function addLayer(base:SpriteLibrary, patch:SpriteLibrary): void
+{
+    for (let k in patch.sprites)
+        base.sprites[k] = patch.sprites[k];
+    for (let k in patch.textures)
+        base.textures[k] = patch.textures[k];
 }
 
 export async function allProgress<T>(proms: Promise<T>[]): Promise<void> {

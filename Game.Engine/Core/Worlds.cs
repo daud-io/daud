@@ -173,9 +173,15 @@
             hook.PickupSeekers = 3;
             hook.PickupShields = 0;
             hook.PointsPerKillFleet = 1;
+            hook.PointsPerKillFleetMax = 1;
             hook.PointsPerKillShip = 0;
             hook.PointsPerUniverseDeath = -1;
             hook.PointsMultiplierDeath = 1.0f;
+            hook.PointsPerKillFleetStep = 1;
+            hook.PointsPerKillFleetPerStep = 1;
+            hook.ComboPointsStep = 0;
+            hook.ComboDelay = 0;
+
             hook.Weight = 20;
 
             hook.Name = "Dueling Room";

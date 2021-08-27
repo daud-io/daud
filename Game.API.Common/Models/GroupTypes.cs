@@ -14,6 +14,8 @@
         VolleySeeker,
         PickupSeeker,
 
+        Token,
+
         Map
     }
 }

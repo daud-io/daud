@@ -1,4 +1,4 @@
-import { getDefinition } from "./loader";
+import { getSpriteDefinition, getTextureDefinition } from "./loader";
 import * as PIXI from "pixi.js";
 import { Vector2 } from "./Vector2";
 import bus from "./bus";
@@ -27,13 +27,13 @@ export function updateFocus(newFocus: Vector2): void {
 }
 
 bus.on("loaded", () => {
-    const spriteDefinition = (getDefinition("bg") as unknown) as {
+    const spriteDefinition = (getSpriteDefinition("bg") as unknown) as {
         layerSpeeds: number[];
         layerTextures: string[];
         scale: number[];
     };
     speeds = spriteDefinition.layerSpeeds;
-    const allLayersTextures = spriteDefinition.layerTextures.map((x) => getDefinition(x));
+    const allLayersTextures = spriteDefinition.layerTextures.map((x) => getTextureDefinition(x));
     for (let i = 0; i < allLayersTextures.length; i++) {
         const textures = allLayersTextures[i].textures!;
         if (textures.length > 0) {
