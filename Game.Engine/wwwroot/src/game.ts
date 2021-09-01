@@ -56,7 +56,6 @@ const connection = new Connection(onView);
 let cameraPositionFromServer: ClientBody;
 let time: number;
 let isAlive: boolean;
-let serverTimeOffset: number | undefined;
 let gameTime: number;
 let worldSize = 1000;
 let fleetID = 0;
@@ -98,15 +97,6 @@ function onView(newView: NetWorldView) {
 
     if (isAlive)
         isSpectating = false;
-
-    let offset = Settings.latencyOffset;
-    if (Settings.latencyMode == "server")
-        offset += -connection.latency/2;
-    
-    let lastOffset = time + (offset) - performance.now();
-
-    if (!serverTimeOffset) serverTimeOffset = lastOffset;
-    serverTimeOffset = 0.95 * serverTimeOffset + 0.05 * lastOffset;
 
     const updatesLength = newView.updatesLength();
     const updates: NetBody[] = [];
@@ -276,7 +266,6 @@ bus.on("worldjoin", (worldKey, world) => {
     loadImages.then(() => initializeWorld(world));
     connection.disconnect();
     connection.connect(worldKey);
-    serverTimeOffset = undefined;
 });
 
 const sizeCanvas = () => {
@@ -348,8 +337,9 @@ loadImages.then(() => {
 
         container.scene.render()
 
-        if (serverTimeOffset) {
-            gameTime = performance.now() + serverTimeOffset;
+        if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
+            gameTime = performance.now() - connection.serverClockOffset;
+            //console.log(gameTime);
 
             let spectateControl = "";
             if (isSpectating) {
@@ -357,13 +347,12 @@ loadImages.then(() => {
                 else spectateControl = "spectating";
             }
 
-            //let customData = ;
             connection.sendControl(
-                Controls.boost, 
-                Controls.shoot || Controls.autofire, 
+                Controls.boost,
+                Controls.shoot || Controls.autofire,
                 Controls.mouseX,
                 Controls.mouseY,
-                spectateControl, 
+                spectateControl,
                 Controls.customData
             );
 

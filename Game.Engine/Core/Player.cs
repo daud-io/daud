@@ -107,10 +107,10 @@
 
                 Fleet.SpawnLocation = SpawnLocation;
 
-                RemoteEventLog.SendEvent(new AuditEventSpawn
+                /*RemoteEventLog.SendEvent(new AuditEventSpawn
                 {
                     Player = this.ToAuditModelPlayer()
-                }, World);
+                }, World);*/
 
 
                 if (!DisableSpawnInvulnerability)
@@ -318,13 +318,13 @@
             if (Connection != null && player?.Fleet != null)
                 Connection.SpectatingFleet = player.Fleet;
 
-            if (!string.IsNullOrEmpty(player?.Token))
+            /*if (!string.IsNullOrEmpty(player?.Token))
                 RemoteEventLog.SendEvent(new OnDeath
                 {
                     token = this.Token,
                     name = this.Name,
                     killedBy = player?.Token
-                });
+                });*/
         }
 
         public void Exit()

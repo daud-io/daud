@@ -12,11 +12,11 @@ namespace Game.Engine.Core.Scoring
 
         public virtual void FleetDied(Player killer, Player victim, Fleet fleet)
         {
-            RemoteEventLog.SendEvent(new AuditEventDeath
+            /*RemoteEventLog.SendEvent(new AuditEventDeath
             {
                 Killer = killer?.ToAuditModelPlayer(),
                 Victim = victim?.ToAuditModelPlayer()
-            }, fleet.World);
+            }, fleet.World);*/
         }
     }
 }

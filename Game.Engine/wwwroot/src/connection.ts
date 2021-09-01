@@ -30,6 +30,7 @@ export class Connection {
     statBytesDownPerSecond = 0;
     statBytesUpPerSecond = 0;
     latency = 0;
+    serverClockOffset = -1;
     simulateLatency = 0;
     socket?: WebSocket;
     pingSent?: number;
@@ -42,11 +43,6 @@ export class Connection {
     constructor(onView?: (view: fb.NetWorldView) => void) {
         this.hook = null;
         this.onView = onView;
-        setInterval(() => {
-            if (this.connected) {
-                this.sendPing();
-            }
-        }, 250);
 
         setInterval(() => {
             this.statBytesDownPerSecond = this.statBytesDown;
@@ -82,6 +78,7 @@ export class Connection {
         if (worldKey) url += `world=${encodeURIComponent(worldKey)}&`;
 
         this.hook = null;
+        this.serverClockOffset = -1;
 
         if (this.socket) {
             this.socket.onclose = null;
@@ -113,7 +110,7 @@ export class Connection {
         fb.NetPing.startNetPing(builder);
         this.pingSent = performance.now();
 
-        //fb.Ping.addTime(builder, this.pingSent);
+        fb.NetPing.addTime(builder, this.pingSent);
         fb.NetPing.addLatency(builder, this.latency);
         fb.NetPing.addVps(builder, this.viewsPerSecond);
         fb.NetPing.addUps(builder, this.updatesPerSecond);
@@ -250,12 +247,7 @@ export class Connection {
 
     send(databuffer: Uint8Array): void {
         if (this.socket && this.socket.readyState === 1) {
-            if (this.simulateLatency > 0) {
-                setTimeout(() => {
-                    this.socket?.send(databuffer);
-                }, this.simulateLatency);
-            } else this.socket.send(databuffer);
-
+            this.socket.send(databuffer);
             this.statBytesUp += databuffer.length;
         }
     }
@@ -302,9 +294,29 @@ export class Connection {
             if (this.onView) this.onView(message);
         }
         if (messageType == fb.AllMessages.NetPing) {
+            const message = quantum.message(new fb.NetPing())!;
             if (this.pingSent) {
+                
                 this.statPongCount++;
                 this.latency = performance.now() - this.pingSent;
+
+                let offset = Settings.latencyOffset;
+                if (Settings.latencyMode == "server")
+                    offset += -this.latency/2;
+                
+                let newClockOffset = this.pingSent - message.time()  + offset;
+
+                if (this.serverClockOffset == -1)
+                    this.serverClockOffset = newClockOffset;
+
+                this.serverClockOffset = 0.80 * this.serverClockOffset + 0.20 * newClockOffset;
+                console.log("tweened clock offset:", this.serverClockOffset);
+
+                setTimeout(() => {
+                    if (this.connected) {
+                        this.sendPing();
+                    }
+                }, 250);
             }
         }
         if (messageType == fb.AllMessages.NetEvent) {

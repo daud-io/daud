@@ -22,7 +22,6 @@
     public class World : IDisposable
     {
         public readonly string WorldKey;
-        public string GameID { get; set; }
 
         public int AdvertisedPlayerCount { get; set; }
         public int SpectatorCount { get; set; }
@@ -85,8 +84,6 @@
             
             OffsetTicks = DateTime.Now.Ticks;
             Hook = hook ?? Hook.Default;
-
-            GameID = Guid.NewGuid().ToString().Replace("-", "");
 
             Console.WriteLine($"Initializing World: {this.Hook.Name}");
 

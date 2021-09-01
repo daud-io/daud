@@ -1,6 +1,6 @@
 ﻿namespace Game.Engine.Auditing
 {
-    using Game.API.Client;
+/*    using Game.API.Client;
     using Game.API.Common.Models.Auditing;
     using Game.Engine.Core;
     using System;
@@ -21,7 +21,7 @@
 
         public static void Initialize(GameConfiguration gameConfiguration, RegistryClient registryClient)
         {
-            /*GameConfiguration = gameConfiguration;
+            GameConfiguration = gameConfiguration;
             RegistryClient = registryClient;
 
             Heartbeat = new Timer((state) =>
@@ -29,25 +29,25 @@
                 PostData().Wait();
             }, null, 0, POST_TIMER_MS);
 
-            Initialized = true;*/
+            Initialized = true;
         }
 
         public static void SendEvent(object message)
         {
-            //if (Initialized)
-            //    queue.Enqueue(message);
+            if (Initialized)
+                queue.Enqueue(message);
         }
 
         public static void SendEvent(AuditEventBase auditEvent, World world)
         {
-            /*auditEvent.WorldKey = world.WorldKey;
+            *auditEvent.WorldKey = world.WorldKey;
             auditEvent.AdvertisedPlayerCount = world.AdvertisedPlayerCount;
             auditEvent.GameID = world.GameID;
             auditEvent.GameTime = world.Time;
             auditEvent.Created = DateTime.Now;
             auditEvent.PublicURL = world.GameConfiguration.PublicURL;
             auditEvent.Type = auditEvent.GetType().Name;
-            SendEvent(auditEvent);*/
+            SendEvent(auditEvent);
         }
 
         private async static Task PostData()
@@ -74,5 +74,5 @@
             catch (Exception)
             { }
         }
-    }
+    }*/
 }

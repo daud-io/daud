@@ -242,7 +242,6 @@
             {
                 var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
-                // todo: this dirties the ship body every cycle
                 ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
                 ship.AngularVelocity = 0;
 

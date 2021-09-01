@@ -63,6 +63,9 @@
 
         protected virtual void DefinePhysicsObject(float size, float mass)
         {
+            if (size == 0 || mass == 0)
+                throw new Exception("WorldBody defined with zero size or mass");
+
             var shape = new Sphere(size);
             var position2d = InitialPosition();
 
@@ -72,7 +75,7 @@
                 GetBodyInertia(shape, mass),
                 new CollidableDescription(ShapeHandle, 150f),
                 //new CollidableDescription(ShapeHandle, 0.1f, ContinuousDetectionSettings.Continuous(1e-4f, 1e-4f)),
-                new BodyActivityDescription(0.01f)
+                new BodyActivityDescription(0.0f)
             ));
         }
         
@@ -164,9 +167,9 @@
             {
                 ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
                 if (massDirty)
-                    body.LocalInertia = GetBodyInertia(shape, Mass);
-                if (massDirty)
                     shape.Radius = size;
+                if (massDirty)
+                    body.LocalInertia = GetBodyInertia(shape, Mass);
 
                 massDirty = sizeDirty = false;
                 

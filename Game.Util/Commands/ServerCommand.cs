@@ -1,12 +1,15 @@
 ﻿namespace Game.Util.Commands
 {
+    using Game.API.Client;
     using McMaster.Extensions.CommandLineUtils;
     using System;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     [Subcommand(typeof(Get))]
     [Subcommand(typeof(Reset))]
+    [Subcommand(typeof(Stress))]
     [Subcommand(typeof(Announce))]
     [Subcommand(typeof(Connections))]
     [Command("server")]
@@ -52,6 +55,25 @@
             protected async override Task ExecuteAsync()
             {
                 await API.Server.ServerResetAsync();
+            }
+        }
+
+        [Command("stress")]
+        class Stress : CommandBase
+        {
+            protected async override Task ExecuteAsync()
+            {
+                var connection = new PlayerConnection(API.BaseURL.ToString(), "default");
+
+                var cts = new CancellationTokenSource();
+                
+                for (int i=0; i<1000; i++)
+                {
+                    Console.WriteLine($"Spawn #: {i+1}");
+                    await connection.ConnectAsync(cts.Token);
+                    await connection.SpawnAsync("Testing", "ship_red", "red");
+                    connection.Dispose();
+                }
             }
         }
 

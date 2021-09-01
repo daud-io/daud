@@ -105,13 +105,10 @@
             if (followFleet != null)
             {
                 this.FollowFleet = followFleet;
-
                 var center = FleetMath.FleetCenterNaive(followFleet.Ships);
                 position = center;
                 linearVelocity = followFleet.FleetVelocity;
             }
-            else
-                this.FollowFleet = null;
 
             return (position, linearVelocity);
         }
@@ -420,6 +417,7 @@
         {
             var builder = new FlatBufferBuilder(1);
             var pong = NetPing.CreateNetPing(builder, World.Time);
+            
             var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
             builder.Finish(q.Value);
 

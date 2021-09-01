@@ -16,7 +16,7 @@
             {
                 
                 AddWorld(FFA(), "default");
-                //AddWorld(PartyCity(), "partycity");
+                AddWorld(PartyCity(), "partycity");
                 //AddWorld(PartyCity(), "partycity2");
                 
 
