@@ -5,7 +5,7 @@ import { update as leaderboardUpdate } from "./leaderboard";
 import { Minimap } from "./minimap";
 import { setPerf, setPlayerCount, setSpectatorCount } from "./hud";
 import * as log from "./log";
-import { Controls, initializeWorld, registerContainer, setCurrentWorld } from "./controls";
+import { Controls, initializeWorld, updateControlAim, registerContainer, setCurrentWorld } from "./controls";
 import { ChatOverlay, message } from "./chat";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
@@ -15,7 +15,6 @@ import { GameContainer } from "./gameContainer";
 import { load } from "./loader";
 import "./hintbox";
 import bus from "./bus";
-
 import { Vector2, Vector3 } from "@babylonjs/core";
 import { WorldMeshLoader } from "./worldMeshLoader";
 
@@ -335,18 +334,24 @@ loadImages.then(() => {
     container.engine.runRenderLoop(() => {
         frameCounter++;
 
-        container.scene.render()
 
         if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
             gameTime = performance.now() - connection.serverClockOffset;
             //console.log(gameTime);
+
+            projectObject(cameraPositionFromServer, gameTime);
+            container.PositionCamera(cameraPositionFromServer.Position);
+            cacheTick(gameTime);
+            container.scene.render()
 
             let spectateControl = "";
             if (isSpectating) {
                 if (Controls.shoot && !lastControl.shoot) spectateControl = "action:next";
                 else spectateControl = "spectating";
             }
-
+            
+            updateControlAim();
+            
             connection.sendControl(
                 Controls.boost,
                 Controls.shoot || Controls.autofire,
@@ -356,9 +361,7 @@ loadImages.then(() => {
                 Controls.customData
             );
 
-            projectObject(cameraPositionFromServer, gameTime);
-            container.PositionCamera(cameraPositionFromServer.Position);
-            cacheTick(gameTime);
+
         }
     });
 });

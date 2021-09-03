@@ -126,9 +126,8 @@
 
         public void KilledShip(Ship killedShip)
         {
-            var random = new Random();
             var threshold = Ships.Count * World.Hook.ShipGainBySizeM + World.Hook.ShipGainBySizeB;
-            if (random.NextDouble() < threshold)
+            if (World.Random.NextDouble() < threshold)
                 if (Ships?.Any() ?? false)
                 {
                     EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay +1);
@@ -139,44 +138,20 @@
         {
             if (!this.Owner.IsAlive || this.PendingDestruction)
                 return;
-
-            var random = new Random();
-
-            var offset = new Vector2
-            (
-                random.Next(-20, 20),
-                random.Next(-20, 20)
-            );
-
-            var ship = new Ship(World)
+                
+            Ships.Add(new Ship(World)
             {
                 Fleet = this,
                 Sprite = this.Owner.ShipSprite,
                 Color = this.Owner.Color,
-                Size = ShipSize
-            };
-
-            if (this.Ships.Any())
-            {
-                var angle = 0f;
-                var count = 0;
-
-                foreach (var existingShip in this.Ships)
-                {
-                    angle += existingShip.Angle;
-                    count++;
-                }
-
-                ship.Position = Ships.First().Position + offset;
-                ship.LinearVelocity = FleetVelocity;
-                ship.Angle = angle / count;
-            }
-            else
-            {
-                ship.Position = FleetCenter + offset;
-            }
-
-            Ships.Add(ship);
+                Size = ShipSize,
+                Position = this.FleetCenter + new Vector2
+                (
+                    World.Random.Next(-20, 20),
+                    World.Random.Next(-20, 20)
+                ),
+                LinearVelocity = FleetVelocity
+            });
         }
 
         public void Abandon()

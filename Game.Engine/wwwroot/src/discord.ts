@@ -41,5 +41,8 @@ if (token) {
             if (!r.ok) {
                 Cookies.remove("auth_token");
             }
+        })
+        .catch(function(error) {
+            console.log(error);
         });
 }

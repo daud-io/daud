@@ -21,8 +21,6 @@
 
         public Connection Connection { get; set; }
 
-        public static Dictionary<World, List<Player>> Players = new Dictionary<World, List<Player>>();
-
         public int Score { get; set; }
         public int KillStreak { get; set; } = 0;
         public int KillCount { get; set; } = 0;
@@ -86,12 +84,25 @@
         public void SetControl(ControlInput input)
         {
             Interlocked.Increment(ref this.ControlPackets);
+
             if (input.BoostRequested)
                 CummulativeBoostRequested = true;
-            if (input.ShootRequested)
-                CummulativeShootRequested = true;
 
-            this.ControlInput = input;
+            // if we find a control packet that requests firing
+            if (input.ShootRequested)
+            {
+                // and it's the first one, then set the aim
+                if (!CummulativeShootRequested)
+                    this.ControlInput = input;
+
+                CummulativeShootRequested = true;
+            }
+
+            // if we haven't started shooting, then update the aiming with the latest packet
+            if (!CummulativeShootRequested)
+                this.ControlInput = input;
+
+            
             this.IsControlNew = true;
         }
 
@@ -198,19 +209,7 @@
 
         public static List<Player> GetWorldPlayers(World world)
         {
-            lock (typeof(Player))
-            {
-                List<Player> worldPlayers = null;
-                if (!Players.ContainsKey(world))
-                {
-                    worldPlayers = new List<Player>();
-                    Players.Add(world, worldPlayers);
-                }
-                else
-                    worldPlayers = Players[world];
-
-                return worldPlayers;
-            }
+            return world.Players;
         }
 
         public void SetInvulnerability(int duration, bool isShield = false)

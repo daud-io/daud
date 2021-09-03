@@ -13,6 +13,7 @@ function angleLerp(a0: number, a1: number, t: number): number {
 export function projectObject(object: ClientBody, time: number): void {
     const timeShift = time - object.DefinitionTime;
     if (object.AngularVelocity == 0)
+        //object.Angle = object.OriginalAngle;
         object.Angle = angleLerp(object.Angle, object.OriginalAngle, 0.7);
     else
         object.Angle = object.OriginalAngle + timeShift * object.AngularVelocity;

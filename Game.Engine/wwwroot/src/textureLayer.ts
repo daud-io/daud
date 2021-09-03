@@ -67,7 +67,8 @@ export class TextureLayer {
                 this.sprite.position.x = (body.Position.x + (this.offset.x * Math.cos(body.Angle) - this.offset.y * Math.sin(body.Angle)));
                 this.sprite.position.z = (body.Position.y + (this.offset.y * Math.cos(body.Angle) + this.offset.x * Math.sin(body.Angle)));
             }
-            else {
+            else
+            {
                 this.sprite.position.x = body.Position.x;
                 this.sprite.position.z = body.Position.y;
             }

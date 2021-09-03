@@ -12,6 +12,7 @@
     using Game.Engine.Core.SystemActors;
     using Game.Engine.Networking;
     using Game.Engine.Physics;
+    using Nito.AsyncEx;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -22,15 +23,17 @@
     public class World : IDisposable
     {
         public readonly string WorldKey;
-
+        public Random Random = new Random();
         public int AdvertisedPlayerCount { get; set; }
         public int SpectatorCount { get; set; }
 
         // the canonical game time, in milliseconds, from world start
         public uint PreviousTime { get; private set; } = 0;
         public uint Time { get; private set; } = 0;
+
         // offset between system clock and world start
         private readonly long OffsetTicks = 0;
+        public uint LastTimingReport = 0;
 
         public Hook Hook { get; set; } = null;
 
@@ -40,6 +43,9 @@
 
         // list of IActors in the world. Actors are things that think.
         public List<IActor> Actors = new List<IActor>();
+
+        public List<Player> Players = new List<Player>();
+        public List<Connection> Connections = new List<Connection>();
 
         // timer for world step entry
         private Thread GameLoopThread = null;
@@ -139,16 +145,20 @@
                 foreach (var player in Player.GetWorldPlayers(this).ToList())
                     player.ControlCharacter();
 
-                InStep = true;
-
                 //Console.WriteLine("dt:" + dt);
 
+                InStep = true;
                 //this.Simulation.Timestep((float)Hook.StepTime, ThreadDispatcher);
+                //Console.WriteLine($"Enter Step: {this.WorldKey}");
                 this.Simulation.Timestep((float)Hook.StepTime);
-
+                //Console.WriteLine($"Exit Step: {this.WorldKey}");
                 InStep = false;
-                // Ensure that every body as a new handle... else .. <cringe>
-                ReadSimulation();
+
+                foreach (var body in Bodies.Values)
+                {
+                    body.ReadSimulation();
+                    body.IsInContact = false;
+                }
 
                 // execute collisions
                 ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
@@ -187,7 +197,6 @@
             catch(Exception e)
             {
                 Console.WriteLine("Exception in server game loop:" + e.Message);
-
             }
             finally
             {
@@ -233,6 +242,12 @@
                     Console.WriteLine($"*** 80% processing time warning: {elapsed}");
                 else if (elapsed > Hook.StepTime * 0.5f)
                     Console.WriteLine($"** 50% processing time warning: {elapsed}");
+
+                if (Time - LastTimingReport > 20000)
+                {
+                    LastTimingReport = Time;
+                    Console.WriteLine($"{WorldKey} {elapsed}");
+                }
             }
         }
 
@@ -242,14 +257,6 @@
                 actor.Think();
         }
 
-        private void ReadSimulation()
-        {
-            foreach (var body in Bodies.Values)
-            {
-                body.ReadSimulation();
-                body.IsInContact = false;
-            }
-        }
         private void WriteSimulation()
         {
             foreach (var body in Bodies.Values)
@@ -275,6 +282,9 @@
 
         public IEnumerable<WorldBody> BodiesNear(Vector2 point, int maximumDistance)
         {
+            if (InStep)
+                throw new Exception("BodiesNear In step");
+
             var broadPhaseEnumerator = new BroadPhaseOverlapEnumerator {
                 Pool = BufferPool,
                 References = new QuickList<CollidableReference>(16, BufferPool)
@@ -334,6 +344,8 @@
         {
             lock(Bodies)            
             {
+                if (InStep)
+                    throw new Exception("adding player instep");
                 var player = new Player();
                 player.Init(this);
 
@@ -345,25 +357,27 @@
         {
             try
             {
-            var interval = TimeSpan.FromMilliseconds(Hook.StepTime);
+                var interval = TimeSpan.FromMilliseconds(Hook.StepTime);
 
-            var nextTick = DateTime.Now + interval;
-            while (!PendingDestruction)
-            {
-                while ( DateTime.Now < nextTick )
+                var nextTick = DateTime.Now + interval;
+                while (!PendingDestruction)
                 {
-                    var delay = nextTick - DateTime.Now;
-                    if (delay.TotalMilliseconds > 0)
-                        Thread.Sleep(delay);
-                }
-                nextTick += interval; // Notice we're adding onto when the last tick was supposed to be, not when it is now
+                    while ( DateTime.Now < nextTick )
+                    {
+                        var delay = nextTick - DateTime.Now;
+                        if (delay.TotalMilliseconds > 0)
+                            Thread.Sleep(delay);
+                    }
+                    nextTick += interval; // Notice we're adding onto when the last tick was supposed to be, not when it is now
 
-                lock(Bodies)
-                {
-                    this.Step();
-                    ConnectionHeartbeat.Step();
+                    lock(Bodies)
+                    {
+                        this.Step();
+                        lock(Connections)
+                            foreach (var connection in Connections)
+                                connection.StepSyncInGameLoop();
+                    }
                 }
-            }
             }
             catch (Exception e)
             {

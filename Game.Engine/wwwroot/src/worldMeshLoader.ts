@@ -18,6 +18,9 @@ export class WorldMeshLoader {
 
     onHook(hook:any)
     {
+        if (!hook.Mesh) // old server/hook
+            return;
+
         if (hook.Mesh.MeshURL != this.loadedFile)
         {
             if (this.loadedFile != null)
@@ -45,13 +48,7 @@ export class WorldMeshLoader {
         //const plugin = <GLTFFileLoader>SceneLoader.Append("/api/v1/world/mesh/", worldMesh, this.container.scene);
         const plugin = <GLTFFileLoader>SceneLoader.Append("/api/v1/world/mesh/", worldMesh, this.container.scene, () => {
             this.container.scene.lights.forEach(light => {
-                //console.log(((<TransformNode>(light.parent?.parent))?.position));
-                if (light.parent?.parent instanceof(TransformNode))
-                {
-                    /*light.parent?.parent.position.multiply(new Vector3(10,10,10));
-                    light.computeWorldMatrix(true);*/
-                    light.intensity *= 10;
-                }
+                //light.intensity *= 10;
             });
 
         });

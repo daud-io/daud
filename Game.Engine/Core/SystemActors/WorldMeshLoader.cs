@@ -108,6 +108,7 @@
         private void ConfigureMeshes()
         {
             var hook = World.Hook;
+
             if (World.Hook.Mesh.Enabled)
             {
                 var newURL = World.Hook.Mesh.MeshURL;

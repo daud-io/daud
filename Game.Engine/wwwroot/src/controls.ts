@@ -6,7 +6,7 @@ import { getTextureDefinition } from "./loader";
 import { GameContainer } from "./gameContainer";
 import { PointerEventTypes } from "@babylonjs/core/Events";
 import { Control } from "@babylonjs/gui";
-import { Matrix, Scene, Vector3 } from "@babylonjs/core";
+import { DeviceSourceManager, DeviceType, Matrix, Plane, PointerInput, Scene, Vector3 } from "@babylonjs/core";
 
 const emojiContainer = document.getElementById("emoji-container")!;
 const picker = new Picker();
@@ -71,8 +71,11 @@ export const Controls = {
     customData: undefined as any,
     mouseX: 0,
     mouseY: 0,
+    screenMouseX: 0,
+    screenMouseY: 0,
     angle: 0,
     container: undefined as GameContainer | undefined,
+    dsm: undefined as DeviceSourceManager | undefined,
     color: undefined as string | undefined,
     ship: "ship_green",
 };
@@ -81,7 +84,7 @@ export function registerContainer(container: GameContainer): void {
 
     container.scene.onPointerObservable.add((pointerInfo) => {
 
-        switch (pointerInfo.type) {
+        /*switch (pointerInfo.type) {
             case PointerEventTypes.POINTERDOWN:
                 if (pointerInfo.event.button == 2)
                     Controls.boost = true;
@@ -97,27 +100,62 @@ export function registerContainer(container: GameContainer): void {
                     Controls.shoot = false;
 
                 break;
-
-            case PointerEventTypes.POINTERMOVE:
-                if (container?.ready)
-                {
-                    const pos = Vector3.Unproject(
-                        new Vector3(container.scene.pointerX, container.scene.pointerY, 1),
-                        container.engine.getRenderWidth(),
-                        container.engine.getRenderHeight(),
-                        Matrix.Identity(),
-                        container.scene.getViewMatrix(),
-                        container.scene.getProjectionMatrix());
-
-                    Controls.mouseX = pos.x - container.cameraPosition.x;
-                    Controls.mouseY = pos.z - container.cameraPosition.y;
-                }
-                break;
-        }
+        }*/
     });
 
     Controls.container = container;
+    Controls.dsm = new DeviceSourceManager(container.engine);
 }
+
+
+export function updateControlAim()
+{
+    const container = Controls.container;
+    Controls.shoot = false;
+    Controls.boost = false;
+
+    const mouse = Controls.dsm?.getDeviceSource(DeviceType.Mouse);
+    if (mouse)
+    {
+        if (mouse.getInput(PointerInput.LeftClick) === 1)
+            Controls.shoot = true;
+        if (mouse.getInput(PointerInput.RightClick) === 1)
+            Controls.boost = true;
+    }
+
+    const kbd = Controls.dsm?.getDeviceSource(DeviceType.Keyboard);
+    if (kbd)
+    {
+        if (kbd.getInput(116) === 1)
+            Controls.boost = true;
+        if (kbd.getInput(83) === 1)
+            Controls.boost = true;
+
+        if (kbd.getInput(32) === 1)
+            Controls.shoot = true;
+    }
+
+    if (container)
+    {
+        if (Controls.screenMouseX != container.scene.pointerX
+            || Controls.screenMouseY != container.scene.pointerY)
+        {
+
+            Controls.screenMouseX = container.scene.pointerX;
+            Controls.screenMouseY = container.scene.pointerY;
+            const ray = container.scene.createPickingRay(Controls.screenMouseX, Controls.screenMouseY, Matrix.Identity(), container.camera);
+            const pos = ray.intersectsAxis('y', 100);
+            if (pos)
+            {
+                Controls.mouseX = pos.x - container.cameraPosition.x;
+                Controls.mouseY = pos.z - container.cameraPosition.y;
+            }
+        }
+        container.scene.onPointerDown
+    }
+}
+
+
 
 let currentWorld: ServerWorld;
 export function setCurrentWorld(world?: ServerWorld): ServerWorld {
@@ -161,8 +199,9 @@ export function addSecretShips(roles: string[]): void {
     }
 }
 window.addEventListener("keydown", ({ key }) => {
-    if (key.toLowerCase() == "s") Controls.boost = true;
-    if (key == " ") Controls.shoot = true;
+    //if (key.toLowerCase() == "s") Controls.boost = true;
+    //if (key == " ") Controls.shoot = true;
+
     if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
         // Autofire
         if (!Controls.autofire) {
@@ -176,8 +215,8 @@ window.addEventListener("keydown", ({ key }) => {
 });
 
 window.addEventListener("keyup", ({ key }) => {
-    if (key.toLowerCase() == "s") Controls.boost = false;
-    if (key == " ") Controls.shoot = false;
+    //if (key.toLowerCase() == "s") Controls.boost = false;
+    //if (key == " ") Controls.shoot = false;
 });
 
 document.body.addEventListener("contextmenu", (e) => {

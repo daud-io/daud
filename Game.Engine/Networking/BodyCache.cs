@@ -165,11 +165,8 @@
 
             public void Project(uint time)
             {
-                if (ClientUpdatedTime != 0)
-                {
-                    Error = 1;
-                }
-                else
+                Error = ClientUpdatedTime;
+                if (Error == 0)
                     Error = 1;
             }
         }

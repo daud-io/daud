@@ -39,7 +39,6 @@
         public string Color;
         protected int CycleMS = 0;
         public bool PendingDestruction = false;
-        public bool ContactLastFrame = false;
 
         public WorldBody(World world)
         {
@@ -166,7 +165,7 @@
             if (massDirty || sizeDirty)
             {
                 ref var shape = ref World.Simulation.Shapes.GetShape<Sphere>(ShapeHandle.Index);
-                if (massDirty)
+                if (sizeDirty)
                     shape.Radius = size;
                 if (massDirty)
                     body.LocalInertia = GetBodyInertia(shape, Mass);
@@ -230,8 +229,10 @@
 
         protected virtual void Update()
         {
-            this.AverageLinearVelocity = this.AverageLinearVelocity * 0.75f + LinearVelocity * 0.25f;
-            if (!this.IsInContact)
+            this.AverageLinearVelocity = this.AverageLinearVelocity * 0.5f + LinearVelocity * 0.5f;
+            //this.AverageLinearVelocity = this.AverageLinearVelocity * 0.85f + LinearVelocity * 0.15f;
+            
+            if (this.IsBouncing && !this.IsInContact)
                 this.IsBouncing = false;
         }
 

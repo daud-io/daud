@@ -30,6 +30,7 @@ export class Connection {
     statBytesDownPerSecond = 0;
     statBytesUpPerSecond = 0;
     latency = 0;
+    minimumLatency = -1;
     serverClockOffset = -1;
     simulateLatency = 0;
     socket?: WebSocket;
@@ -79,6 +80,7 @@ export class Connection {
 
         this.hook = null;
         this.serverClockOffset = -1;
+        this.minimumLatency = -1;
 
         if (this.socket) {
             this.socket.onclose = null;
@@ -299,18 +301,16 @@ export class Connection {
                 
                 this.statPongCount++;
                 this.latency = performance.now() - this.pingSent;
+                if (this.latency < this.minimumLatency || this.minimumLatency == -1)
+                {
+                    this.minimumLatency = this.latency;
 
-                let offset = Settings.latencyOffset;
-                if (Settings.latencyMode == "server")
-                    offset += -this.latency/2;
-                
-                let newClockOffset = this.pingSent - message.time()  + offset;
-
-                if (this.serverClockOffset == -1)
-                    this.serverClockOffset = newClockOffset;
-
-                this.serverClockOffset = 0.80 * this.serverClockOffset + 0.20 * newClockOffset;
-                console.log("tweened clock offset:", this.serverClockOffset);
+                    let offset = Settings.latencyOffset;
+                    if (Settings.latencyMode == "server")
+                        offset += -this.minimumLatency/2;
+                    
+                    this.serverClockOffset = this.pingSent - message.time()  + offset;
+                }
 
                 setTimeout(() => {
                     if (this.connected) {

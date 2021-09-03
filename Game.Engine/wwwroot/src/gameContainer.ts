@@ -21,12 +21,12 @@ export class GameContainer {
         //this.cameraHeight = 6000;
         this.camera = new FreeCamera("Camera", new Vector3(0, this.cameraHeight, 0), this.scene);
         this.camera.setTarget(new Vector3(0,0,0));
-        //this.light = new DirectionalLight("DirectionalLight", new Vector3(1, -1, 1), this.scene);
+        this.light = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, -1), this.scene);
+        this.light.intensityMode = 0.5;
         this.guiTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
         
         this.cameraPosition = Vector2.Zero();
         this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("/assets/base/models/environment.env", this.scene);
-
         
 
         //this.defineGround();

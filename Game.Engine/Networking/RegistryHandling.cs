@@ -84,7 +84,6 @@
                     return;
 
                 Step();
-                ConnectionHeartbeat.Step();
 
             }, null, 0, ReportingTimerDelay);
             Disposables.Add(Heartbeat);

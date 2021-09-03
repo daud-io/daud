@@ -104,9 +104,11 @@ namespace Game.Engine.Physics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public unsafe bool ConfigureContactManifold<TManifold>(int workerIndex, CollidablePair pair, ref TManifold manifold, out PairMaterialProperties pairMaterial) where TManifold : struct, IContactManifold<TManifold>
         {
+
             pairMaterial.FrictionCoefficient = 0;
-            pairMaterial.MaximumRecoveryVelocity = float.MaxValue;
-            pairMaterial.SpringSettings = new SpringSettings(30, 0);
+            pairMaterial.MaximumRecoveryVelocity = 4f;
+            pairMaterial.SpringSettings = new SpringSettings(13, 0);
+
 
             try
             {
@@ -123,8 +125,7 @@ namespace Game.Engine.Physics
 
                         if (true
                             && (responseAB.HasImpact || responseBA.HasImpact)
-                            && (pair.B.Mobility == CollidableMobility.Static && manifold.Count == 1)
-                            && !(worldBodyA.IsBouncing))
+                            && (pair.B.Mobility == CollidableMobility.Static && manifold.Count == 1))
                         {
                             // simulate a "satisfying" bounce
                             // this is not physically accurate
@@ -133,29 +134,34 @@ namespace Game.Engine.Physics
                             //var reference = World.Simulation.Bodies.GetBodyReference(pair.A.BodyHandle);
                             //Vector3 incoming = reference.Velocity.Linear;
 
-                            //instead use a moving average of the linear velocity over the last few frames
-                            Vector3 incoming = new Vector3(worldBodyA.AverageLinearVelocity.X, 0, worldBodyA.AverageLinearVelocity.Y);
-                            float incomingLength = incoming.Length();
-                            if (incomingLength > 0)
+                            if (!worldBodyA.IsBouncing)
                             {
-                                Vector3 normal = manifold.GetNormal(ref manifold, 0);
-                                Vector3 reflection = incoming - 2 * Vector3.Dot(incoming, normal) * normal;
-                                reflection = Vector3.Normalize(reflection) * incomingLength * 0.66f;
+                                //instead use a moving average of the linear velocity over the last few frames
+                                Vector3 incoming = new Vector3(worldBodyA.AverageLinearVelocity.X, 0, worldBodyA.AverageLinearVelocity.Y);
+                                float incomingLength = incoming.Length();
+                                if (incomingLength > 1.0f)
+                                {
+                                    Vector3 normal = manifold.GetNormal(ref manifold, 0);
+                                    Vector3 reflection = (incoming - 2 * Vector3.Dot(incoming, normal) * normal) * 0.66f;
 
-                                worldBodyA.LinearVelocity = new Vector2(reflection.X, reflection.Z);
-                                worldBodyA.IsBouncing = true;
+                                    var angle = Vector3.Dot(reflection, normal) / reflection.Length() / normal.Length();
+                                    if (angle > 0.3)
+                                    {
 
-                                return false;
+                                        reflection = Vector3.Normalize(reflection) * incomingLength;
+                                        worldBodyA.LinearVelocity = new Vector2(reflection.X, reflection.Z);
+                                        worldBodyA.WriteSimulation();
+                                        worldBodyA.IsBouncing = true;
+
+                                        return false;
+                                    }
+                                }
                             }
+                            if (worldBodyA.IsBouncing)
+                                return false;
+                        }
 
-                            return true;
-                        }
-                        else
-                        {
-                            //An actual collision was found. 
-                            AddBodyImpact(pair.A.BodyHandle, pair.B, default, false);
-                            break;
-                        }
+                        break;
                     }
 
 

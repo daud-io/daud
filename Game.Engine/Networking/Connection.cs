@@ -30,6 +30,7 @@
         private readonly SemaphoreSlim WebsocketSendingSemaphore = new SemaphoreSlim(1, 1);
         private readonly BodyCache BodyCache = new BodyCache();
 
+        public readonly AsyncAutoResetEvent WorldUpdateEvent;
         private WebSocket Socket = null;
 
         private World World = null;
@@ -38,7 +39,6 @@
         private int HookHash = 0;
         private long LeaderboardTime = 0;
 
-        public AsyncAutoResetEvent WorldUpdateEvent = null;
 
         public bool Backgrounded { get; set; } = false;
         public uint ClientFPS { get; set; } = 0;
@@ -60,7 +60,7 @@
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
-            WorldUpdateEvent = new AsyncAutoResetEvent();
+            this.WorldUpdateEvent = new AsyncAutoResetEvent();
         }
 
         public async Task StartSynchronizing(CancellationToken cancellationToken)
@@ -119,21 +119,20 @@
 
             (this.CameraPosition, this.CameraLinearVelocity) = DefineCamera();
             
-            lock (this.BodyCache) // wrong kind of lock but might do for now
+            lock (this.BodyCache)
             {
                 BodyCache.Update(
                     World.BodiesNear(CameraPosition, size).ToList(),
                     World.Time
                 );
             }
+            WorldUpdateEvent.Set();
         }
-
 
         public async Task StepAsync(CancellationToken cancellationToken)
         {
             try
             {
-
                 if (Player != null)
                 {
                     var builder = new FlatBufferBuilder(1);
@@ -141,7 +140,7 @@
                     lock(BodyCache)
                     {
                         var updates = BodyCache.BodiesByError();
-                        var updateBodies = updates.Take((int)this.Bandwidth);
+                        var updateBodies = updates.Take((int)this.Bandwidth * 2);
                         var updatedGroups = BodyCache.GroupsByError().ToList();
 
                         var groupsVector = NetWorldView.CreateGroupsVector(builder,
@@ -393,15 +392,22 @@
             await WebsocketSendingSemaphore.WaitAsync();
             try
             {
-                var start = DateTime.Now;
+                if (Socket.State == WebSocketState.Open)
+                {
+                    var start = DateTime.Now;
 
-                await Socket.SendAsync(
-                    buffer,
-                    WebSocketMessageType.Binary,
-                    endOfMessage: true,
-                    cancellationToken: cancellationToken);
+                    await Socket.SendAsync(
+                        buffer,
+                        WebSocketMessageType.Binary,
+                        endOfMessage: true,
+                        cancellationToken: cancellationToken);
 
-                //Console.WriteLine($"{DateTime.Now.Subtract(start).TotalMilliseconds}ms in send");
+                    //Console.WriteLine($"{DateTime.Now.Subtract(start).TotalMilliseconds}ms in send");
+                }
+                else
+                {
+                    throw new Exception("Connection is closed, cannot write");
+                }
             }
             catch(WebSocketException)
             {
@@ -610,7 +616,8 @@
             var builder = new FlatBufferBuilder(1);
             await SendPingAsync();
 
-            ConnectionHeartbeat.Register(this);
+            lock(World.Connections)
+                World.Connections.Add(this);
 
             try
             {
@@ -627,7 +634,8 @@
             }
             finally
             {
-                ConnectionHeartbeat.Unregister(this);
+                lock(World.Connections)
+                    World.Connections.Remove(this);
 
                 if (Player != null)
                 {
