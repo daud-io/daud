@@ -4,8 +4,6 @@
     using Game.API.Common;
     using Game.Engine.Core;
     using Game.Engine.Core.Steering;
-    using global::FlatBuffers;
-    using Game.Engine.Networking.FlatBuffers;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Nito.AsyncEx;
@@ -18,6 +16,8 @@
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
+    using DaudNet;
+    using FlatSharp;
 
     public class Connection : IDisposable
     {
@@ -72,9 +72,13 @@
             }
         }
 
-        private Offset<Vec2> FromPositionVector(FlatBufferBuilder builder, Vector2 vector)
+        private Vec2 FromPositionVector(Vector2 vector)
         {
-            return Vec2.CreateVec2(builder, (short)vector.X, (short)vector.Y);
+            return new Vec2
+            {
+                x = (short)vector.X, 
+                y = (short)vector.Y
+            };
         }
 
         private (Vector2, Vector2) DefineCamera()
@@ -135,7 +139,7 @@
             {
                 if (Player != null)
                 {
-                    var builder = new FlatBufferBuilder(1);
+                    var netWorldView = new NetWorldView();
 
                     lock(BodyCache)
                     {
@@ -143,133 +147,108 @@
                         var updateBodies = updates.Take((int)this.Bandwidth * 2);
                         var updatedGroups = BodyCache.GroupsByError().ToList();
 
-                        var groupsVector = NetWorldView.CreateGroupsVector(builder,
-                            updatedGroups.Select(b =>
+                        netWorldView.groups = updatedGroups.Select(b =>
+                        {
+                            var serverGroup = b.GroupUpdated;
+
+                            var group = new NetGroup
                             {
-                                var serverGroup = b.GroupUpdated;
+                                group = serverGroup.ID,
+                                type = (byte)serverGroup.GroupType,
+                                caption = serverGroup.Caption,
+                                zindex = serverGroup.ZIndex,
+                                owner = serverGroup.OwnerID,
+                                color = serverGroup.Color,
+                                customdata = serverGroup.CustomData
+                            };
 
-                                var caption = builder.CreateString(serverGroup.Caption ?? " ");
-                                var color = builder.CreateString(serverGroup.Color ?? "");
-                                var customData = builder.CreateString(serverGroup.CustomData ?? "");
-
-                                var group = NetGroup.CreateNetGroup(builder,
-                                    group: serverGroup.ID,
-                                    type: (byte)serverGroup.GroupType,
-                                    captionOffset: caption,
-                                    zindex: serverGroup.ZIndex,
-                                    owner: serverGroup.OwnerID,
-                                    colorOffset: color,
-                                    customDataOffset: customData
-                                );
-                                return group;
-                            }).ToArray());
+                            return group;
+                        }).ToList();
 
 
                         foreach (var update in updatedGroups)
-                        {
                             update.GroupClient = update.GroupUpdated.Clone();
-                        }
 
-                        var groupDeletesVector = NetWorldView.CreateGroupDeletesVector(builder, BodyCache.CollectStaleGroups().Select(b =>
+                        netWorldView.groupdeletes = BodyCache.CollectStaleGroups().Select(b =>
                             b.GroupUpdated.ID
-                        ).ToArray());
+                        ).ToList();
 
-
-                        NetWorldView.StartUpdatesVector(builder, updateBodies.Count());
+                        netWorldView.updates = new List<NetBody>();
                         foreach (var update in updateBodies)
                         {
                             update.UpdateSent(World.Time);
-                            NetBody.CreateNetBody(builder,
-                                Id: update.ID,
-                                DefinitionTime: update.ClientUpdatedTime,
-                                originalPosition_X: (short)update.Position.X,
-                                originalPosition_Y: (short)update.Position.Y,
-                                velocity_X: (short)(update.LinearVelocity.X * VELOCITY_SCALE_FACTOR),
-                                velocity_Y: (short)(update.LinearVelocity.Y * VELOCITY_SCALE_FACTOR),
-                                OriginalAngle: (sbyte)(update.Angle / MathF.PI * 127),
-                                AngularVelocity: (sbyte)(update.AngularVelocity * 10000),
-                                Size: (byte)(update.Size / 5),
-                                Sprite: (ushort)update.Sprite,
-                                Mode: update.Mode,
-                                Group: update.GroupID);
+                            netWorldView.updates.Add(new NetBody
+                            {
+                                id = update.ID,
+                                definitiontime = update.ClientUpdatedTime,
+                                originalposition = new Vec2
+                                {
+                                    x = (short)update.Position.X,
+                                    y = (short)update.Position.Y
+                                },
+                                velocity = new Vec2
+                                {
+                                    x = (short)(update.LinearVelocity.X * VELOCITY_SCALE_FACTOR),
+                                    y = (short)(update.LinearVelocity.Y * VELOCITY_SCALE_FACTOR)
+                                },
+                                originalangle = (sbyte)(update.Angle / MathF.PI * 127),
+                                angularvelocity = (sbyte)(update.AngularVelocity * 10000),
+                                size = (byte)(update.Size / 5),
+                                sprite = (ushort)update.Sprite,
+                                mode = update.Mode,
+                                group = update.GroupID
+                            });
                         }
 
-                        var updatesVector = builder.EndVector();
-
-                        var deletesVector = NetWorldView.CreateDeletesVector(builder, BodyCache.CollectStaleBuckets().Select(b =>
+                        netWorldView.deletes = BodyCache.CollectStaleBuckets().Select(b =>
                             b.ID
-                        ).ToArray());
+                        ).ToList();
 
                         var messages = Player.GetMessages();
-                        VectorOffset announcementsVector = new VectorOffset();
                         if (messages != null && messages.Any())
                         {
-                            announcementsVector = NetWorldView.CreateAnnouncementsVector(builder, messages.Select(e =>
+                            netWorldView.announcements = messages.Select(e =>
                             {
-                                var stringType = builder.CreateString(e.Type);
-                                var stringMessage = builder.CreateString(e.Message);
-                                var stringExtraData = e.ExtraData != null
-                                    ? builder.CreateString(JsonConvert.SerializeObject(e.ExtraData))
-                                    : new StringOffset();
+                                return new NetAnnouncement
+                                {
+                                    type = e.Type,
+                                    text = e.Message,
+                                    extradata = e.ExtraData != null
+                                        ? JsonConvert.SerializeObject(e.ExtraData)
+                                        : null,
+                                    pointsdelta = e.PointsDelta
+                                };
 
-                                NetAnnouncement.StartNetAnnouncement(builder);
-                                NetAnnouncement.AddType(builder, stringType);
-                                NetAnnouncement.AddText(builder, stringMessage);
-                                if (e.ExtraData != null)
-                                    NetAnnouncement.AddExtraData(builder, stringExtraData);
-                                NetAnnouncement.AddPointsDelta(builder, e.PointsDelta);
-
-                                return NetAnnouncement.EndNetAnnouncement(builder);
-                            }).ToArray());
+                            }).ToList();
                         }
 
-                        StringOffset customOffset = new StringOffset();
-                        if (this.FollowFleet?.CustomData != null && this.FollowFleet.CustomData != CustomData)
-                            customOffset = builder.CreateString(this.FollowFleet.CustomData);
-
-                        NetWorldView.StartNetWorldView(builder);
-
                         // define camera
-                        var cameraBody = NetBody.CreateNetBody(
-                            builder,
-                            Id: 0,
-                            DefinitionTime: World.Time,
-                            originalPosition_X: (short)(this.CameraPosition.X),
-                            originalPosition_Y: (short)(this.CameraPosition.Y),
-                            velocity_X: (short)(this.CameraLinearVelocity.X * VELOCITY_SCALE_FACTOR),
-                            velocity_Y: (short)(this.CameraLinearVelocity.Y * VELOCITY_SCALE_FACTOR),
-                            OriginalAngle: 0,
-                            AngularVelocity: 0,
-                            Size: 0,
-                            Sprite: 0,
-                            Mode: 0,
-                            Group: 0
-                        );
+                        netWorldView.camera = new NetBody
+                        {
+                            definitiontime = World.Time,
+                            originalposition = new Vec2
+                            {
+                                x = (short)(this.CameraPosition.X),
+                                y = (short)(this.CameraPosition.Y)
+                            },
+                            velocity = new Vec2
+                            {
+                                x = (short)(this.CameraLinearVelocity.X * VELOCITY_SCALE_FACTOR),
+                                y = (short)(this.CameraLinearVelocity.Y * VELOCITY_SCALE_FACTOR)
+                            }
+                        };
 
-                        NetWorldView.AddCamera(builder, cameraBody);
+                        netWorldView.isalive = Player?.IsAlive ?? false;
+                        netWorldView.time = World.Time;
 
-                        NetWorldView.AddIsAlive(builder, Player?.IsAlive ?? false);
-                        NetWorldView.AddTime(builder, World.Time);
-
-                        NetWorldView.AddUpdates(builder, updatesVector);
-                        NetWorldView.AddDeletes(builder, deletesVector);
-
-                        NetWorldView.AddGroups(builder, groupsVector);
-                        NetWorldView.AddGroupDeletes(builder, groupDeletesVector);
-                        if (messages != null && messages.Any())
-                            NetWorldView.AddAnnouncements(builder, announcementsVector);
-
-                        if (this.FollowFleet?.CustomData != null && this.FollowFleet.CustomData != CustomData)
-                            NetWorldView.AddCustomData(builder, customOffset);
-                        CustomData = this.FollowFleet?.CustomData;
+                        netWorldView.customdata = this.FollowFleet?.CustomData;
 
                         var players = Player.GetWorldPlayers(World);
-                        NetWorldView.AddPlayerCount(builder, (uint)World.AdvertisedPlayerCount);
-                        NetWorldView.AddSpectatorCount(builder, (uint)World.SpectatorCount);
-
-                        NetWorldView.AddCooldownBoost(builder, (byte)((Player?.Fleet?.BoostCooldownStatus * 255) ?? 0));
-                        NetWorldView.AddCooldownShoot(builder, (byte)((Player?.Fleet?.ShootCooldownStatus * 255) ?? 0));
-                        NetWorldView.AddWorldSize(builder, (ushort)World.Hook.WorldSize);
+                        netWorldView.playercount = (uint)World.AdvertisedPlayerCount;
+                        netWorldView.spectatorcount = (uint)World.SpectatorCount;
+                        netWorldView.cooldownboost = (byte)((Player?.Fleet?.BoostCooldownStatus * 255) ?? 0);
+                        netWorldView.cooldownshoot = (byte)((Player?.Fleet?.ShootCooldownStatus * 255) ?? 0);
+                        netWorldView.worldsize = (ushort)World.Hook.WorldSize;
 
                         if (this.FollowFleet != null)
                         {
@@ -278,12 +257,11 @@
                                 SpectatingFleet = this.FollowFleet;
 
                             // inform the client of which the fleet id
-                            NetWorldView.AddFleetID(builder, (uint)this.FollowFleet.ID);
+                            netWorldView.fleetid = (uint)this.FollowFleet.ID;
                         }
                         else
-                            NetWorldView.AddFleetID(builder, 0);
+                            netWorldView.fleetid = 0;
 
-                        var worldView = NetWorldView.EndNetWorldView(builder);
 
                         var newHash = World.Hook.GetHashCode();
                         if (HookHash != newHash)
@@ -296,80 +274,49 @@
                         }
 
                         HookHash = newHash;
-
-                        var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetWorldView, worldView.Value);
-                        builder.Finish(q.Value);
                     }
 
-                    await this.SendAsync(builder.DataBuffer, cancellationToken);
+                    await this.SendAsync(new AllMessages(netWorldView), cancellationToken);
 
                     if (LeaderboardTime != (World.Leaderboard?.Time ?? 0))
                     {
                         LeaderboardTime = (World.Leaderboard?.Time ?? 0);
-
-                        builder = new FlatBufferBuilder(1);
-
-                        var stringName = builder.CreateString(World.Leaderboard?.ArenaRecord?.Name ?? " ");
-                        var stringColor = builder.CreateString(World.Leaderboard?.ArenaRecord?.Color ?? " ");
-
-                        NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
-                        NetLeaderboardEntry.AddColor(builder, stringColor);
-                        NetLeaderboardEntry.AddName(builder, stringName);
-                        NetLeaderboardEntry.AddScore(builder, World.Leaderboard?.ArenaRecord?.Score ?? 0);
-                        NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(World.Leaderboard?.ArenaRecord?.Token));
-                        var record = NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
-
-                        var entriesVector = NetLeaderboard.CreateEntriesVector(builder, World.Leaderboard.Entries.Select(e =>
+                        await this.SendAsync(new AllMessages(new NetLeaderboard
                         {
-                            // the strings must be created into the buffer before the are referenced
-                            // and before the start of the entry object
-                            stringName = builder.CreateString(e.Name ?? string.Empty);
-                            stringColor = builder.CreateString(e.Color ?? string.Empty);
-                            StringOffset stringModeData = new StringOffset();
-
-                            if (e.ModeData != null)
-                                stringModeData = builder.CreateString(JsonConvert.SerializeObject(e.ModeData));
-
-                            // here's the start of the entry object, after this we can only use
-                            // predefined string offsets
-                            NetLeaderboardEntry.StartNetLeaderboardEntry(builder);
-                            NetLeaderboardEntry.AddFleetID(builder, e.FleetID);
-                            NetLeaderboardEntry.AddName(builder, stringName);
-                            NetLeaderboardEntry.AddColor(builder, stringColor);
-                            NetLeaderboardEntry.AddScore(builder, e.Score);
-                            NetLeaderboardEntry.AddPosition(builder, FromPositionVector(builder, e.Position));
-                            NetLeaderboardEntry.AddToken(builder, !string.IsNullOrEmpty(e.Token));
-                            if (e.ModeData != null)
-                                NetLeaderboardEntry.AddModeData(builder, stringModeData);
-
-                            return NetLeaderboardEntry.EndNetLeaderboardEntry(builder);
-                        }).ToArray());
-
-                        var stringType = builder.CreateString(World.Leaderboard.Type ?? string.Empty);
-                        NetLeaderboard.StartNetLeaderboard(builder);
-                        NetLeaderboard.AddEntries(builder, entriesVector);
-                        NetLeaderboard.AddType(builder, stringType);
-                        NetLeaderboard.AddRecord(builder, record);
-
-                        var leaderboardOffset = NetLeaderboard.EndNetLeaderboard(builder);
-
-                        builder.Finish(NetQuantum.CreateNetQuantum(builder, AllMessages.NetLeaderboard, leaderboardOffset.Value).Value);
-                        await this.SendAsync(builder.DataBuffer, cancellationToken);
+                            record = new NetLeaderboardEntry
+                            {
+                                name = World.Leaderboard?.ArenaRecord?.Name ?? " ",
+                                color = World.Leaderboard?.ArenaRecord?.Color ?? " ",
+                                score = World.Leaderboard?.ArenaRecord?.Score ?? 0,
+                                token = !string.IsNullOrEmpty(World.Leaderboard?.ArenaRecord?.Token)
+                            },
+                            entries = World.Leaderboard.Entries.Select(
+                                e => new NetLeaderboardEntry
+                                {
+                                    fleetid = e.FleetID,
+                                    name = e.Name,
+                                    color = e.Color,
+                                    score = e.Score,
+                                    position = FromPositionVector(e.Position),
+                                    token = !string.IsNullOrEmpty(e.Token),
+                                    modedata = (e.ModeData != null)
+                                        ? JsonConvert.SerializeObject(e.ModeData)
+                                        : null
+                                }
+                            ).ToList(),
+                            type = World.Leaderboard.Type
+                        }), cancellationToken);
                     }
 
                     while (Events.Count > 0)
                     {
                         var e = Events.Dequeue();
 
-                        var eventType = builder.CreateString(e.EventType);
-                        var eventData = builder.CreateString(e.Data);
-                        NetEvent.StartNetEvent(builder);
-                        NetEvent.AddType(builder, eventType);
-                        NetEvent.AddData(builder, eventData);
-                        var eventOffset = NetEvent.EndNetEvent(builder);
-
-                        builder.Finish(NetQuantum.CreateNetQuantum(builder, AllMessages.NetEvent, eventOffset.Value).Value);
-                        await this.SendAsync(builder.DataBuffer, cancellationToken);
+                        await this.SendAsync(new AllMessages(new NetEvent
+                        {
+                            type = e.EventType,
+                            data = e.Data
+                        }), cancellationToken);
                     }
                 }
             }
@@ -385,9 +332,16 @@
             }
         }
 
-        private async Task SendAsync(ByteBuffer message, CancellationToken cancellationToken)
+        private async Task SendAsync(AllMessages message, CancellationToken cancellationToken = default)
         {
-            var buffer = message.ToSizedArray();
+            var q = new NetQuantum
+            {
+                message = message
+            };
+
+            int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(q);
+            byte[] buffer = new byte[maxBytesNeeded];
+            int bytesWritten = FlatBufferSerializer.Default.Serialize(q, buffer);
 
             await WebsocketSendingSemaphore.WaitAsync();
             try
@@ -419,53 +373,50 @@
             }
         }
  
-        private async Task SendPingAsync()
+        private async Task SendPingAsync(uint time)
         {
-            var builder = new FlatBufferBuilder(1);
-            var pong = NetPing.CreateNetPing(builder, World.Time);
-            
-            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, pong.Value);
-            builder.Finish(q.Value);
-
-            await SendAsync(builder.DataBuffer, default);
+            await SendAsync(new AllMessages(new NetPing
+            {
+                time = World.Time,
+                clienttime = time
+            }));
         }
 
         private async Task HandlePingAsync(NetPing ping)
         {
-            this.Backgrounded = ping.Backgrounded;
-            this.ClientFPS = ping.Fps;
-            this.ClientVPS = ping.Vps;
-            this.ClientUPS = ping.Ups;
-            this.ClientCS = ping.Cs;
-            this.Bandwidth = ping.BandwidthThrottle;
-            this.Latency = ping.Latency;
+            this.Backgrounded = ping.backgrounded;
+            this.ClientFPS = ping.fps;
+            this.ClientVPS = ping.vps;
+            this.ClientUPS = ping.ups;
+            this.ClientCS = ping.cs;
+            this.Bandwidth = ping.bandwidththrottle;
+            this.Latency = ping.latency;
 
             if (Player != null)
                 Player.Backgrounded = this.Backgrounded;
 
-            await SendPingAsync();
+            await SendPingAsync(ping.time);
         }
 
         private async Task HandleIncomingMessage(NetQuantum quantum)
         {
-            switch (quantum.MessageType)
+            switch (quantum.message.Kind)
             {
-                case AllMessages.NetPing:
-                    var ping = quantum.Message<NetPing>().Value;
-                    await HandlePingAsync(ping);
+                case AllMessages.ItemKind.NetPing:
+                    await HandlePingAsync(quantum.message.NetPing);
                     break;
 
-                case AllMessages.NetSpawn:
-                    var spawn = quantum.Message<NetSpawn>().Value;
+                case AllMessages.ItemKind.NetSpawn:
+                    var spawn = quantum.message.NetSpawn;
                     var color = "red";
 
                     Sprites shipSprite = Sprites.ship_red;
 
                     Player.Connection = this;
-                    Logger.LogInformation($"Spawn: Name:\"{spawn.Name}\" Ship: {spawn.Ship} Score: {Player.Score} Roles: {Player.Roles}");
+                    Logger.LogInformation($"Spawn: Name:\"{spawn.name}\" Ship: {spawn.ship} Score: {Player.Score} Roles: {Player.Roles}");
 
 
-                    switch (spawn.Ship)
+                    switch (spawn.ship)
                     {
                         case "ship0":
                             shipSprite = Sprites.ship0;
@@ -535,21 +486,21 @@
                             break;
                     }
 
-                    Player.Spawn(spawn.Name, shipSprite, color, spawn.Token, spawn.Color);
+                    Player.Spawn(spawn.name, shipSprite, color, spawn.token, spawn.color);
 
                     break;
-                case AllMessages.NetControlInput:
-                    var input = quantum.Message<NetControlInput>().Value;
+                case AllMessages.ItemKind.NetControlInput:
+                    var input = quantum.message.NetControlInput;
 
                     Player?.SetControl(new ControlInput
                     {
-                        Position = new Vector2(input.X, input.Y),
-                        BoostRequested = input.Boost,
-                        ShootRequested = input.Shoot,
-                        CustomData = input.CustomData
+                        Position = new Vector2(input.x, input.y),
+                        BoostRequested = input.boost,
+                        ShootRequested = input.shoot,
+                        CustomData = input.customdata
                     });
 
-                    if (input.SpectateControl == "action:next")
+                    if (input.spectatecontrol == "action:next")
                     {
                         var next =
                             Player.GetWorldPlayers(World)
@@ -567,9 +518,9 @@
                         SpectatingFleet = next;
                         IsSpectating = true;
                     }
-                    else if (input.SpectateControl?.StartsWith("action:fleet:") ?? false)
+                    else if (input.spectatecontrol?.StartsWith("action:fleet:") ?? false)
                     {
-                        var match = Regex.Match(input.SpectateControl, @"\d*$");
+                        var match = Regex.Match(input.spectatecontrol, @"\d*$");
                         var fleetID = int.Parse(match.Value);
 
                         var next =
@@ -581,22 +532,22 @@
                         SpectatingFleet = next;
                         IsSpectating = true;
                     }
-                    else if (input.SpectateControl == "spectating")
+                    else if (input.spectatecontrol == "spectating")
                         IsSpectating = true;
                     else
                         IsSpectating = false;
 
                     break;
 
-                case AllMessages.NetExit:
+                case AllMessages.ItemKind.NetExit:
                     Player.Exit();
                     break;
 
-                case AllMessages.NetAuthenticate:
-                    var auth = quantum.Message<NetAuthenticate>().Value;
+                case AllMessages.ItemKind.NetAuthenticate:
+                    var auth = quantum.message.NetAuthenticate;
                     if (Player != null)
                     {
-                        Player.Token = auth.Token;
+                        Player.Token = auth.token;
                         Player.AuthenticationStarted = false;
                     }
                     break;
@@ -613,8 +564,7 @@
 
             World = Worlds.Find(worldRequest);
 
-            var builder = new FlatBufferBuilder(1);
-            await SendPingAsync();
+            //await SendPingAsync()
 
             lock(World.Connections)
                 World.Connections.Add(this);
@@ -673,8 +623,7 @@
                             if (result.EndOfMessage)
                             {
                                 var bytes = ms.GetBuffer();
-                                var dataBuffer = new ByteBuffer(bytes);
-                                var quantum = NetQuantum.GetRootAsNetQuantum(dataBuffer);
+                                var quantum = FlatBufferSerializer.Default.Parse<NetQuantum>(bytes);
 
                                 await onReceive(quantum);
 

@@ -1,4 +1,4 @@
-﻿namespace Game.Engine.Networking.FlatBuffers;
+﻿namespace DaudNet;
 
 union AllMessages
 {
@@ -14,22 +14,22 @@ union AllMessages
 
 table NetLeaderboard
 {
-	fleetID	: uint;
+	fleetid	: uint;
 	type	: string;
 	entries	: [NetLeaderboardEntry];
 	record	: NetLeaderboardEntry;
-	modeData: string;
+	modedata: string;
 }
 
 table NetLeaderboardEntry
 {
-	fleetID	: uint;
+	fleetid	: uint;
 	name	: string;
 	score	: int;
 	color	: string;
 	position: Vec2;
 	token	: bool;
-	modeData: string;
+	modedata: string;
 }
 
 table NetSpawn
@@ -52,8 +52,8 @@ table NetControlInput
 	y: float;
 	boost:bool;
 	shoot:bool;
-    spectateControl:string;
-    customData:string;
+    spectatecontrol:string;
+    customdata:string;
 }
 
 table NetEvent 
@@ -71,26 +71,27 @@ table NetPing
     ups:uint = 0;
     cs:uint = 0;
     backgrounded:bool = false;
-    bandwidthThrottle:uint;
+    bandwidththrottle:uint;
+	clienttime:uint = 0;
 }
 
 table NetWorldView
 {
 	time:uint;
 	camera:NetBody;
-    fleetID:uint;
-	isAlive:bool = true;
+    fleetid:uint;
+	isalive:bool = true;
 	updates:[NetBody];
 	deletes:[uint];
     groups:[NetGroup];
-	groupDeletes:[uint];
+	groupdeletes:[uint];
 	announcements:[NetAnnouncement];
-    playerCount:uint;
-    spectatorCount:uint;
-    cooldownShoot:ubyte;
-    cooldownBoost:ubyte;
-    worldSize:ushort;
-    customData:string;
+    playercount:uint;
+    spectatorcount:uint;
+    cooldownshoot:ubyte;
+    cooldownboost:ubyte;
+    worldsize:ushort;
+    customdata:string;
 }
 
 table NetGroup
@@ -101,7 +102,7 @@ table NetGroup
     zindex:uint;
     owner:uint;
     color:string;
-    customData:string;
+    customdata:string;
 }
 
 struct Vec2
@@ -117,11 +118,11 @@ struct Vec2
 struct NetBody
 {
 	id:uint;
-	definitionTime:uint;
-	originalPosition:Vec2;
+	definitiontime:uint;
+	originalposition:Vec2;
 	velocity:Vec2;
-	originalAngle:byte;
-	angularVelocity:byte;
+	originalangle:byte;
+	angularvelocity:byte;
 	size:ubyte;
 	sprite:ushort;
 	mode:ubyte;
@@ -132,8 +133,8 @@ table NetAnnouncement
 {
 	text:string;
     type:string;
-    pointsDelta:int;
-    extraData:string;
+    pointsdelta:int;
+    extradata:string;
 }
 
 table NetAuthenticate

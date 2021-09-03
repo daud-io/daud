@@ -22,7 +22,7 @@
     "@types/flatbuffers": "^1.10.0",
     "@types/js-cookie": "^2.2.6",
     "emoji-picker-element": "^1.4.0",
-    "flatbuffers": "^1.12.0",
+    "flatbuffers": "^2.0.3",
     "js-cookie": "^2.2.1",
     "jszip": "^3.7.1",
     "plotly.js": "^1.58.4",

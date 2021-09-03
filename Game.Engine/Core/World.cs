@@ -12,7 +12,6 @@
     using Game.Engine.Core.SystemActors;
     using Game.Engine.Networking;
     using Game.Engine.Physics;
-    using Nito.AsyncEx;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -302,14 +301,8 @@
                 var handle = broadPhaseEnumerator.References[overlapIndex].BodyHandle;
                 var reference = Simulation.Bodies.GetBodyReference(handle);
                 if (reference.Exists)
-                {
                     if (Bodies.TryGetValue(handle, out var body))
                         list[overlapIndex] = body;
-                }
-                else
-                {
-                    var x = 1;
-                }
             }
 
             broadPhaseEnumerator.References.Dispose(BufferPool);

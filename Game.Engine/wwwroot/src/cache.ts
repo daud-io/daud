@@ -1,5 +1,4 @@
 import { spriteIndices } from "./spriteIndices";
-import { NetGroup, NetBody } from "./game_generated";
 import { RenderedObject } from "./renderedObject";
 import { Fleet } from "./models/fleet";
 import { GameContainer } from "./gameContainer";
@@ -7,6 +6,8 @@ import bus from "./bus";
 import { Ship } from "./models/ship";
 import { Token } from "./models/token";
 import { Vector2 } from "@babylonjs/core";
+import { NetBody } from "./daud-net/net-body";
+import { NetGroup } from "./daud-net/net-group";
 
 type ClientRendered = {
     body: ClientBody;
@@ -32,7 +33,7 @@ export type ClientBody = {
 
 const VELOCITY_SCALE_FACTOR = 5000.0;
 export function bodyFromServer(body: NetBody): ClientBody {
-    const originalPosition = body.originalPosition()!;
+    const originalPosition = body.originalposition()!;
     const momentum = body.velocity()!;
     const groupID = body.group();
 
@@ -41,18 +42,18 @@ export function bodyFromServer(body: NetBody): ClientBody {
 
     return {
         ID: body.id(),
-        DefinitionTime: body.definitionTime(),
+        DefinitionTime: body.definitiontime(),
         Size: body.size() * 5,
         Sprite: spriteName,
         Mode: body.mode(),
         Color: "red",
         Group: groupID,
-        OriginalAngle: (body.originalAngle() / 127) * Math.PI,
-        AngularVelocity: body.angularVelocity() / 10000,
+        OriginalAngle: (body.originalangle() / 127) * Math.PI,
+        AngularVelocity: body.angularvelocity() / 10000,
         Momentum: new Vector2(momentum.x() / VELOCITY_SCALE_FACTOR, momentum.y() / VELOCITY_SCALE_FACTOR),
         OriginalPosition: new Vector2(originalPosition.x(), originalPosition.y()),
         Position: new Vector2(0, 0),
-        Angle: (body.originalAngle() / 127) * Math.PI,
+        Angle: (body.originalangle() / 127) * Math.PI,
         zIndex: 0,
     };
 }
@@ -66,7 +67,7 @@ export type ClientGroup = {
     renderer?: Fleet;
 };
 export function groupFromServer(group: NetGroup): ClientGroup {
-    let customData = group.customData();
+    let customData = group.customdata();
     if (customData) customData = JSON.parse(customData);
 
     return {
@@ -155,7 +156,7 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
             existing.Caption = group.caption()!;
             existing.Type = group.type();
             existing.ZIndex = group.zindex();
-            const cd = group.customData();
+            const cd = group.customdata();
             existing.CustomData = cd ? JSON.parse(cd) : cd;
         }
 
@@ -171,10 +172,10 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
             existing.body.Size = update.size() * 5;
             existing.body.Sprite = spriteIndices[update.sprite()];
             existing.body.Mode = update.mode();
-            existing.body.DefinitionTime = update.definitionTime();
-            existing.body.OriginalAngle = (update.originalAngle() / 127) * Math.PI;
-            existing.body.AngularVelocity = update.angularVelocity() / 10000;
-            const originalPosition = update.originalPosition()!;
+            existing.body.DefinitionTime = update.definitiontime();
+            existing.body.OriginalAngle = (update.originalangle() / 127) * Math.PI;
+            existing.body.AngularVelocity = update.angularvelocity() / 10000;
+            const originalPosition = update.originalposition()!;
             existing.body.OriginalPosition.x = originalPosition.x();
             existing.body.OriginalPosition.y = originalPosition.y();
             const velocity = update.velocity()!;

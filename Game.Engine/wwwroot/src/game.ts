@@ -1,4 +1,4 @@
-﻿import { NetBody, NetWorldView, NetGroup } from "./game_generated";
+﻿import { NetWorldView } from './daudnet/net-world-view';
 import { setContainer, bodyFromServer, ClientBody, update as updateCache, tick as cacheTick } from "./cache";
 import { projectObject } from "./interpolator";
 import { update as leaderboardUpdate } from "./leaderboard";
@@ -6,17 +6,16 @@ import { Minimap } from "./minimap";
 import { setPerf, setPlayerCount, setSpectatorCount } from "./hud";
 import * as log from "./log";
 import { Controls, initializeWorld, updateControlAim, registerContainer, setCurrentWorld } from "./controls";
-import { ChatOverlay, message } from "./chat";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
-import { Settings } from "./settings";
 import { refreshList, joinWorld, firstLoad } from "./lobby";
 import { GameContainer } from "./gameContainer";
 import { load } from "./loader";
 import "./hintbox";
 import bus from "./bus";
-import { Vector2, Vector3 } from "@babylonjs/core";
 import { WorldMeshLoader } from "./worldMeshLoader";
+import { NetBody } from './daudnet/net-body';
+import { NetGroup } from './daudnet/net-group';
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
@@ -87,8 +86,8 @@ function onView(newView: NetWorldView) {
     viewCounter++;
 
     time = newView.time();
-    isAlive = newView.isAlive();
-    fleetID = newView.fleetID();
+    isAlive = newView.isalive();
+    fleetID = newView.fleetid();
 
     if (!isAlive && connection.hook != null) {
         buttonSpectate.disabled = spawnButton.disabled = connection.hook.CanSpawn === false;
@@ -118,7 +117,7 @@ function onView(newView: NetWorldView) {
                 joinWorld(worldKey);
             }
         } else {
-            let extra = announcement.extraData();
+            let extra = announcement.extradata();
 
             if (extra) extra = JSON.parse(extra);
             if (announcement.type() == "announce" && announcement.text() == "Launch now to join the next game!") {
@@ -128,7 +127,7 @@ function onView(newView: NetWorldView) {
             log.addEntry({
                 type: announcement.type()!,
                 text: announcement.text()!,
-                pointsDelta: announcement.pointsDelta(),
+                pointsDelta: announcement.pointsdelta(),
                 extraData: extra,
             });
         }
@@ -141,15 +140,15 @@ function onView(newView: NetWorldView) {
     for (let d = 0; d < deletesLength; d++) deletes.push(newView.deletes(d)!);
 
     const groupDeletes: number[] = [];
-    const groupDeletesLength = newView.groupDeletesLength();
-    for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupDeletes(d)!);
+    const groupDeletesLength = newView.groupdeletesLength();
+    for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupdeletes(d)!);
 
     updateCache(updates, deletes, groups, groupDeletes, gameTime, fleetID);
 
-    setPlayerCount(newView.playerCount());
-    setSpectatorCount(newView.spectatorCount());
+    setPlayerCount(newView.playercount());
+    setSpectatorCount(newView.spectatorcount());
 
-    progress.value = newView.cooldownShoot();
+    progress.value = newView.cooldownshoot();
 
     cameraPositionFromServer = bodyFromServer(newView.camera()!);
 

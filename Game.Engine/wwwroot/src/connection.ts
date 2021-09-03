@@ -1,10 +1,20 @@
-﻿import { flatbuffers } from "flatbuffers";
-import * as fb from "./game_generated";
+﻿
 import { Settings } from "./settings";
 import { addSecretShips } from "./controls";
 import { getToken } from "./discord";
 import bus from "./bus";
 import { Vector2 } from "@babylonjs/core";
+import { NetWorldView } from "./daud-net/net-world-view";
+import { NetPing } from "./daud-net/net-ping";
+import { NetQuantum } from "./daud-net/net-quantum";
+import { Builder, ByteBuffer } from "flatbuffers";
+import { NetExit } from "./daud-net/net-exit";
+import { AllMessages } from "./daud-net/all-messages";
+import { NetAuthenticate } from "./daud-net/net-authenticate";
+import { NetSpawn } from "./daud-net/net-spawn";
+import { NetControlInput } from "./daud-net/net-control-input";
+import { NetEvent } from "./daud-net/net-event";
+import { NetLeaderboard } from "./daud-net/net-leaderboard";
 
 export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
 export type LeaderboardType = {
@@ -18,7 +28,7 @@ export type LeaderboardType = {
     };
 };
 export class Connection {
-    onView?: (view: fb.NetWorldView) => void;
+    onView?: (view: NetWorldView) => void;
     reloading = false;
     disconnecting = false;
     connected = false;
@@ -41,7 +51,7 @@ export class Connection {
     hook: any;
     lastControlPacket: Uint8Array;
 
-    constructor(onView?: (view: fb.NetWorldView) => void) {
+    constructor(onView?: (view: NetWorldView) => void) {
         this.hook = null;
         this.onView = onView;
 
@@ -107,26 +117,26 @@ export class Connection {
         };
     }
     sendPing(): void {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new Builder(0);
 
-        fb.NetPing.startNetPing(builder);
+        NetPing.startNetPing(builder);
         this.pingSent = performance.now();
 
-        fb.NetPing.addTime(builder, this.pingSent);
-        fb.NetPing.addLatency(builder, this.latency);
-        fb.NetPing.addVps(builder, this.viewsPerSecond);
-        fb.NetPing.addUps(builder, this.updatesPerSecond);
-        fb.NetPing.addFps(builder, this.framesPerSecond);
-        fb.NetPing.addCs(builder, 0);
-        fb.NetPing.addBackgrounded(builder, this.framesPerSecond < 1);
-        fb.NetPing.addBandwidthThrottle(builder, this.bandwidthThrottle);
+        NetPing.addTime(builder, this.pingSent);
+        NetPing.addLatency(builder, this.latency);
+        NetPing.addVps(builder, this.viewsPerSecond);
+        NetPing.addUps(builder, this.updatesPerSecond);
+        NetPing.addFps(builder, this.framesPerSecond);
+        NetPing.addCs(builder, 0);
+        NetPing.addBackgrounded(builder, this.framesPerSecond < 1);
+        NetPing.addBandwidththrottle(builder, this.bandwidthThrottle);
 
-        const ping = fb.NetPing.endNetPing(builder);
+        const ping = NetPing.endNetPing(builder);
 
-        fb.NetQuantum.startNetQuantum(builder);
-        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetPing);
-        fb.NetQuantum.addMessage(builder, ping);
-        const quantum = fb.NetQuantum.endNetQuantum(builder);
+        NetQuantum.startNetQuantum(builder);
+        NetQuantum.addMessageType(builder, AllMessages.NetPing);
+        NetQuantum.addMessage(builder, ping);
+        const quantum = NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -134,17 +144,17 @@ export class Connection {
     }
 
     sendExit(): void {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new Builder(0);
 
-        fb.NetExit.startNetExit(builder);
+        NetExit.startNetExit(builder);
 
-        fb.NetExit.addCode(builder, 0);
-        const exitmessage = fb.NetExit.endNetExit(builder);
+        NetExit.addCode(builder, 0);
+        const exitmessage = NetExit.endNetExit(builder);
 
-        fb.NetQuantum.startNetQuantum(builder);
-        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetExit);
-        fb.NetQuantum.addMessage(builder, exitmessage);
-        const quantum = fb.NetQuantum.endNetQuantum(builder);
+        NetQuantum.startNetQuantum(builder);
+        NetQuantum.addMessageType(builder, AllMessages.NetExit);
+        NetQuantum.addMessage(builder, exitmessage);
+        const quantum = NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -152,18 +162,18 @@ export class Connection {
     }
 
     sendAuthenticate(token: string): void {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new Builder(0);
 
         const stringToken = builder.createString(token || "");
 
-        fb.NetAuthenticate.startNetAuthenticate(builder);
-        fb.NetAuthenticate.addToken(builder, stringToken);
-        const auth = fb.NetAuthenticate.endNetAuthenticate(builder);
+        NetAuthenticate.startNetAuthenticate(builder);
+        NetAuthenticate.addToken(builder, stringToken);
+        const auth = NetAuthenticate.endNetAuthenticate(builder);
 
-        fb.NetQuantum.startNetQuantum(builder);
-        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetAuthenticate);
-        fb.NetQuantum.addMessage(builder, auth);
-        const quantum = fb.NetQuantum.endNetQuantum(builder);
+        NetQuantum.startNetQuantum(builder);
+        NetQuantum.addMessageType(builder, AllMessages.NetAuthenticate);
+        NetQuantum.addMessage(builder, auth);
+        const quantum = NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -172,24 +182,24 @@ export class Connection {
     }
 
     sendSpawn(name?: string, color?: string, ship?: string, token?: string): void {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new Builder(0);
 
         const stringColor = builder.createString(color || "gray");
         const stringName = builder.createString(name || "unknown");
         const stringShip = builder.createString(ship || "ship_gray");
         const stringToken = builder.createString(token || "");
 
-        fb.NetSpawn.startNetSpawn(builder);
-        fb.NetSpawn.addColor(builder, stringColor);
-        fb.NetSpawn.addName(builder, stringName);
-        fb.NetSpawn.addShip(builder, stringShip);
-        fb.NetSpawn.addToken(builder, stringToken);
-        const spawn = fb.NetSpawn.endNetSpawn(builder);
+        NetSpawn.startNetSpawn(builder);
+        NetSpawn.addColor(builder, stringColor);
+        NetSpawn.addName(builder, stringName);
+        NetSpawn.addShip(builder, stringShip);
+        NetSpawn.addToken(builder, stringToken);
+        const spawn = NetSpawn.endNetSpawn(builder);
 
-        fb.NetQuantum.startNetQuantum(builder);
-        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetSpawn);
-        fb.NetQuantum.addMessage(builder, spawn);
-        const quantum = fb.NetQuantum.endNetQuantum(builder);
+        NetQuantum.startNetQuantum(builder);
+        NetQuantum.addMessageType(builder, AllMessages.NetSpawn);
+        NetQuantum.addMessage(builder, spawn);
+        const quantum = NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -205,7 +215,7 @@ export class Connection {
         spectateControl: string, 
         customDataJson: string
     ): void {
-        const builder = new flatbuffers.Builder(0);
+        const builder = new Builder(0);
 
         let spectateString: number | undefined = undefined;
         let customDataJsonString: number | undefined = undefined;
@@ -213,20 +223,20 @@ export class Connection {
         if (spectateControl) spectateString = builder.createString(spectateControl);
         if (customDataJson) customDataJsonString = builder.createString(customDataJson);
 
-        fb.NetControlInput.startNetControlInput(builder);
-        fb.NetControlInput.addBoost(builder, boost);
-        fb.NetControlInput.addShoot(builder, shoot);
-        fb.NetControlInput.addX(builder, x);
-        fb.NetControlInput.addY(builder, y);
-        if (spectateString) fb.NetControlInput.addSpectateControl(builder, spectateString);
-        if (customDataJsonString) fb.NetControlInput.addCustomData(builder, customDataJsonString);
+        NetControlInput.startNetControlInput(builder);
+        NetControlInput.addBoost(builder, boost);
+        NetControlInput.addShoot(builder, shoot);
+        NetControlInput.addX(builder, x);
+        NetControlInput.addY(builder, y);
+        if (spectateString) NetControlInput.addSpectatecontrol(builder, spectateString);
+        if (customDataJsonString) NetControlInput.addCustomdata(builder, customDataJsonString);
 
-        const input = fb.NetControlInput.endNetControlInput(builder);
+        const input = NetControlInput.endNetControlInput(builder);
 
-        fb.NetQuantum.startNetQuantum(builder);
-        fb.NetQuantum.addMessageType(builder, fb.AllMessages.NetControlInput);
-        fb.NetQuantum.addMessage(builder, input);
-        const quantum = fb.NetQuantum.endNetQuantum(builder);
+        NetQuantum.startNetQuantum(builder);
+        NetQuantum.addMessageType(builder, AllMessages.NetControlInput);
+        NetQuantum.addMessage(builder, input);
+        const quantum = NetQuantum.endNetQuantum(builder);
 
         builder.finish(quantum);
 
@@ -282,25 +292,25 @@ export class Connection {
 
     onMessage(event: MessageEvent): void {
         const data = new Uint8Array(event.data);
-        const buf = new flatbuffers.ByteBuffer(data);
+        const buf = new ByteBuffer(data);
 
         this.statBytesDown += data.byteLength;
 
-        const quantum = fb.NetQuantum.getRootAsNetQuantum(buf);
+        const quantum = NetQuantum.getRootAsNetQuantum(buf);
 
         const messageType = quantum.messageType();
 
-        if (messageType == fb.AllMessages.NetWorldView) {
-            const message = quantum.message(new fb.NetWorldView())!;
+        if (messageType == AllMessages.NetWorldView) {
+            const message = quantum.message(new NetWorldView())!;
 
             if (this.onView) this.onView(message);
         }
-        if (messageType == fb.AllMessages.NetPing) {
-            const message = quantum.message(new fb.NetPing())!;
+        if (messageType == AllMessages.NetPing) {
+            const message = quantum.message(new NetPing())!;
             if (this.pingSent) {
                 
                 this.statPongCount++;
-                this.latency = performance.now() - this.pingSent;
+                this.latency = performance.now() - message.clienttime();
                 if (this.latency < this.minimumLatency || this.minimumLatency == -1)
                 {
                     this.minimumLatency = this.latency;
@@ -309,7 +319,7 @@ export class Connection {
                     if (Settings.latencyMode == "server")
                         offset += -this.minimumLatency/2;
                     
-                    this.serverClockOffset = this.pingSent - message.time()  + offset;
+                    this.serverClockOffset = message.clienttime() - message.time() + offset;
                 }
 
                 setTimeout(() => {
@@ -319,8 +329,8 @@ export class Connection {
                 }, 250);
             }
         }
-        if (messageType == fb.AllMessages.NetEvent) {
-            const message = quantum.message(new fb.NetEvent())!;
+        if (messageType == AllMessages.NetEvent) {
+            const message = quantum.message(new NetEvent())!;
 
             const event = {
                 type: message.type()!,
@@ -334,21 +344,21 @@ export class Connection {
 
             if (event.data.roles) addSecretShips(event.data.roles);
         }
-        if (messageType == fb.AllMessages.NetLeaderboard) {
-            const message = quantum.message(new fb.NetLeaderboard())!;
+        if (messageType == AllMessages.NetLeaderboard) {
+            const message = quantum.message(new NetLeaderboard())!;
 
             const entriesLength = message.entriesLength();
             const entries: LeaderboardEntry[] = [];
             for (let i = 0; i < entriesLength; i++) {
                 const entry = message.entries(i)!;
                 entries.push({
-                    FleetID: entry.fleetID(),
+                    FleetID: entry.fleetid(),
                     Name: entry.name()!,
                     Color: entry.color()!,
                     Score: entry.score(),
                     Position: new Vector2(entry.position()!.x(), entry.position()!.y()),
                     Token: entry.token(),
-                    ModeData: JSON.parse(entry.modeData()!) || { flagStatus: "home" },
+                    ModeData: JSON.parse(entry.modedata()!) || { flagStatus: "home" },
                 });
             }
 

@@ -58,7 +58,7 @@
 
         protected float ScoreAngleByTargetPoint(Vector2 target, float angle, Vector2 position, Vector2 momentum)
         {
-            if (Active && target != null)
+            if (Active)
             {
                 var vectorToPoint = Robot.VectorToAbsolutePoint(target);
                 var angleToPoint = MathF.Atan2(vectorToPoint.Y, vectorToPoint.X);
