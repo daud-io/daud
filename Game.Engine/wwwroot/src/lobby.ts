@@ -22,6 +22,7 @@ export type ServerWorld = {
 };
 
 let allWorlds: Record<string, ServerWorld> = {};
+let refreshIntervalHandle = 0;
 
 function selectRow(selectedWorld: string) {
     for (const world in allWorlds) {
@@ -38,7 +39,8 @@ function buildList(response: ServerWorld[]) {
     for (const world of response) {
         allWorlds[world.world] = world;
 
-        options.push(html`<tbody
+    options.push(
+        html`<tbody
             id=${world.world + "_row"}
             onclick=${(e: MouseEvent) => {
                 if ((e.target as HTMLElement).tagName == "BUTTON") joinWorld(world.world);
@@ -63,7 +65,11 @@ function buildList(response: ServerWorld[]) {
 
 let showing = false;
 
-export function firstLoad(): void {
+export async function firstLoad(): Promise<void> {
+
+    console.log("firstload calling refreshlist");
+    await refreshList();
+    console.log();
     const url = new URLSearchParams(window.location.search);
 
     const hostName = window.location.hash.substr(1) || url.get("host");
@@ -79,6 +85,7 @@ export function firstLoad(): void {
         const world = allWorlds[worldKey];
         if (world.isDefault)
         {
+            console.log("joining default world from lobby list");
             joinWorld(worldKey);
             return;
         }
@@ -102,9 +109,7 @@ export function firstLoad(): void {
     }
 }
 
-export async function refreshList(first = false): Promise<void> {
-    if (!showing && !first) return;
-
+export async function refreshList(): Promise<void> {
     const url = new URLSearchParams(window.location.search);
     const host = url.get("host") || "daud.io";
     const fetched = await window.fetch(`/api/v1/world/all`, {
@@ -118,15 +123,18 @@ export async function refreshList(first = false): Promise<void> {
     buildList(response);
 }
 
+
 function hide() {
     worldsWrapper.classList.add("closed");
     document.body.classList.remove("lobby");
     showing = false;
+    clearInterval(refreshIntervalHandle);
 }
 
 function show() {
     document.body.classList.add("lobby");
     showing = true;
+    refreshIntervalHandle = setInterval(refreshList, 1000);
 }
 
 export function joinWorld(worldKey: string): void {

@@ -1,8 +1,8 @@
 ﻿import { GameContainer } from "./gameContainer";
 import { projectObject } from "./interpolator";
 import { ClientBody, ClientGroup } from "./cache";
-import { getSpriteDefinition, getTextureDefinition, SpriteDefinition, TextureDefinition } from "./loader";
 import { TextureLayer } from "./textureLayer";
+import { SpriteDefinition } from "./loader";
 export class RenderedObject {
     container: GameContainer;
     body: ClientBody;
@@ -24,7 +24,7 @@ export class RenderedObject {
         this.currentSpriteName = "";
         this.currentMode = -1;
 
-        this.baseSpriteDefinition = getSpriteDefinition(clientBody.Sprite);
+        this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(clientBody.Sprite);
     }
 
     decodeOrderedModes(mode:number) {
@@ -67,7 +67,7 @@ export class RenderedObject {
         {
             this.destroy();
             this.currentSpriteName = this.body.Sprite;
-            this.baseSpriteDefinition = getSpriteDefinition(this.currentSpriteName);
+            this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(this.currentSpriteName);
             dirty = true;
         }
 

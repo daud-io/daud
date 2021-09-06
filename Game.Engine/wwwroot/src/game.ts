@@ -1,21 +1,18 @@
-﻿import { NetWorldView } from './daudnet/net-world-view';
-import { setContainer, bodyFromServer, ClientBody, update as updateCache, tick as cacheTick } from "./cache";
+﻿import { NetWorldView } from './daud-net/net-world-view'
+import { setContainer, bodyFromServer, ClientBody, update as updateCache, tick as cacheTick, refreshSprites } from "./cache";
 import { projectObject } from "./interpolator";
-import { update as leaderboardUpdate } from "./leaderboard";
 import { Minimap } from "./minimap";
 import { setPerf, setPlayerCount, setSpectatorCount } from "./hud";
 import * as log from "./log";
 import { Controls, initializeWorld, updateControlAim, registerContainer, setCurrentWorld } from "./controls";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
-import { refreshList, joinWorld, firstLoad } from "./lobby";
+import { firstLoad, joinWorld } from "./lobby";
 import { GameContainer } from "./gameContainer";
-import { load } from "./loader";
 import "./hintbox";
 import bus from "./bus";
-import { WorldMeshLoader } from "./worldMeshLoader";
-import { NetBody } from './daudnet/net-body';
-import { NetGroup } from './daudnet/net-group';
+import { NetBody } from './daud-net/net-body';
+import { NetGroup } from './daud-net/net-group';
 
 const size = { width: 1000, height: 500 };
 const canvas = document.getElementById("gameCanvas") as HTMLCanvasElement;
@@ -50,11 +47,11 @@ const logEl = document.querySelector("#log") as HTMLElement;
 const spectateControls = document.querySelector("#spectatecontrols") as HTMLElement;
 const connection = new Connection(onView);
 
+
 let cameraPositionFromServer: ClientBody;
 let isAlive: boolean;
 let gameTime: number;
 let worldSize = 1000;
-let fleetID = 0;
 let frameCounter = 0;
 let viewCounter = 0;
 let updateCounter = 0;
@@ -63,13 +60,18 @@ let joiningWorld = false;
 let spawnOnView = false;
 
 const container = new GameContainer(canvas as HTMLCanvasElement);
-
-
-const worldMeshLoader = new WorldMeshLoader(container);
-
 const minimap = new Minimap(container);
 
 registerContainer(container);
+setContainer(container);
+
+async function initialize():Promise<void>
+{
+    await container.loader.load();
+    await firstLoad();
+}
+
+initialize();
 
 bus.on("dead", () => {
     document.body.classList.remove("alive");
@@ -86,7 +88,7 @@ function onView(newView: NetWorldView) {
     gameTime = connection.currentWorldTime();
 
     isAlive = newView.isalive();
-    fleetID = newView.fleetid();
+    container.fleetID = newView.fleetid();
 
     if (!isAlive && connection.hook != null)
     {
@@ -142,7 +144,7 @@ function onView(newView: NetWorldView) {
     const groupDeletesLength = newView.groupdeletesLength();
     for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupdeletes(d)!);
 
-    updateCache(updates, deletes, groups, groupDeletes, gameTime, fleetID);
+    updateCache(updates, deletes, groups, groupDeletes, gameTime, container.fleetID);
 
     setPlayerCount(newView.playercount());
     setSpectatorCount(newView.spectatorcount());
@@ -258,7 +260,7 @@ bus.on("worldjoin", (worldKey, world) => {
     }
 
     setCurrentWorld(world);
-    loadImages.then(() => initializeWorld(world));
+    initializeWorld(world);
     connection.disconnect();
     connection.connect(worldKey);
 });
@@ -296,67 +298,70 @@ const sizeCanvas = () => {
     minimap.resize();
 };
 
-sizeCanvas();
+bus.on("leaderboard", (lb) => {
+    minimap.update(lb, worldSize, container.fleetID);
+});
 
+bus.on("themechange", () => {
+    console.log('theme change');
+    container.loader.load();
+    refreshSprites();
+    initializeWorld();
+});
+
+sizeCanvas();
 window.addEventListener("resize", () => {
     sizeCanvas();
 });
 
-const loadImages = load(container);
-loadImages.then(() => {
-    setContainer(container);
-    document.querySelector(".loading")!.classList.remove("loading");
-
-    bus.emit("loaded");
-
-    refreshList(true).then(firstLoad);
-    setInterval(refreshList, 1000);
-
-    bus.on("leaderboard", (lb) => {
-        leaderboardUpdate(lb, container.cameraPosition, fleetID);
-        minimap.update(lb, worldSize, fleetID);
-    });
 
 
-    let spectateNextDebounce = false;
-    // Game Loop
-    container.engine.runRenderLoop(() => {
-        frameCounter++;
+let spectateNextDebounce = false;
+// Game Loop
+container.engine.runRenderLoop(() => {
+    frameCounter++;
 
-        if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
-            gameTime = performance.now() - connection.serverClockOffset;
-            //console.log(gameTime);
+    if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
+        gameTime = performance.now() - connection.serverClockOffset;
+        //console.log(gameTime);
 
-            projectObject(cameraPositionFromServer, gameTime);
-            container.PositionCamera(cameraPositionFromServer.Position);
-            cacheTick(gameTime);
-            container.scene.render()
+        projectObject(cameraPositionFromServer, gameTime);
+        container.PositionCamera(cameraPositionFromServer.Position);
+        cacheTick(gameTime);
+        container.scene.render()
 
-            let spectateControl = "";
-            if (isSpectating) {
-                if (spectateNextDebounce && !Controls.shoot)
-                {
-                    spectateNextDebounce = false;
-                }
-                if (!spectateNextDebounce && Controls.shoot)
-                {
-                    spectateControl = "action:next";
-                    spectateNextDebounce = true;
-                }
-                else
-                    spectateControl = "spectating";
+        let spectateControl = "";
+        if (isSpectating) {
+            if (spectateNextDebounce && !Controls.shoot)
+            {
+                spectateNextDebounce = false;
             }
-            
-            updateControlAim();
-            
-            connection.sendControl(
-                Controls.boost,
-                Controls.shoot || Controls.autofire,
-                Controls.mouseX,
-                Controls.mouseY,
-                spectateControl,
-                Controls.customData
-            );
+            if (!spectateNextDebounce && Controls.shoot)
+            {
+                spectateControl = "action:next";
+                spectateNextDebounce = true;
+            }
+            else
+                spectateControl = "spectating";
         }
-    });
+        
+        updateControlAim();
+        
+        connection.sendControl(
+            Controls.boost,
+            Controls.shoot || Controls.autofire,
+            Controls.mouseX,
+            Controls.mouseY,
+            spectateControl,
+            Controls.customData
+        );
+    }
+});
+
+bus.on('loaded', () => {
+    
+    var loadingElement = document.querySelector(".loading");
+    if (loadingElement) loadingElement.classList.remove("loading");
+
+
 });

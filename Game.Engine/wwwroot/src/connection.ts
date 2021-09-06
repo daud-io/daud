@@ -72,6 +72,7 @@ export class Connection {
         }
     }
     connect(worldKey?: string): void {
+        console.log("connecting to " + worldKey);
         let url: string = window.location.protocol === "https:" ? "wss:" : "ws:";
 
         let hostname = "daud.io";

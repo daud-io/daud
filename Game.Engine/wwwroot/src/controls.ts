@@ -2,10 +2,10 @@
 import { ServerWorld } from "./lobby";
 import Cookies from "js-cookie";
 import { Picker } from "emoji-picker-element";
-import { getTextureDefinition } from "./loader";
 import { GameContainer } from "./gameContainer";
 import { DeviceSourceManager, DeviceType, Matrix, Plane, PointerInput, Scene, Vector3 } from "@babylonjs/core";
 import '@babylonjs/inspector';
+import bus from "./bus";
 
 const emojiContainer = document.getElementById("emoji-container")!;
 const picker = new Picker();
@@ -171,9 +171,11 @@ export function initializeWorld(world: ServerWorld = currentWorld): void {
     const selector = document.getElementById("shipSelectorSwitch")!;
     while (selector.firstChild) selector.removeChild(selector.firstChild);
 
+
     for (let i = 0; i < colors.length; i++) {
         const selectorImage = new Image();
-        selectorImage.src = getTextureDefinition(colors[i]).url;
+        if (Controls.container)
+            selectorImage.src = Controls.container.loader.getTextureDefinition(colors[i])?.url;
 
         if (selectorImage) {
             selector.appendChild(selectorImage);

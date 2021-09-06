@@ -8,6 +8,7 @@ const events = {
     leaderboard: [] as ((leaderboard: LeaderboardType) => void)[],
     loaded: [] as (() => void)[],
     hook: [] as ((hook: any) => void)[],
+    themechange: [] as (() => void)[]
 };
 
 type Magic = any; // The type is valid, but typescript can't understand that yet

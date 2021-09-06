@@ -1,7 +1,4 @@
 import Cookies from "js-cookie";
-import { load } from "./loader";
-import { initializeWorld } from "./controls";
-import * as cache from "./cache";
 import bus from "./bus";
 
 export const Settings = {
@@ -30,11 +27,8 @@ loadSettings();
 
 async function themeChange() {
     Settings.theme = themeSelector.value;
-    //await load();
-    bus.emit("loaded");
-    cache.refreshSprites();
-    initializeWorld();
     save();
+    bus.emit("themechange");
 }
 themeSelector.onchange = themeChange;
 

@@ -1,5 +1,8 @@
 import { CubeTexture, DirectionalLight, Engine, FreeCamera, HemisphericLight, Matrix, Mesh, MeshBuilder, PointLight, Quaternion, Scene, SceneLoader, ShadowGenerator, StandardMaterial, Texture, Vector2, Vector3 } from "@babylonjs/core";
+import { Loader } from "./loader";
 import { AdvancedDynamicTexture } from "@babylonjs/gui";
+import { Leaderboard } from "./leaderboard";
+import { WorldMeshLoader } from "./worldMeshLoader";
 
 export class GameContainer {
     scene: Scene;
@@ -7,25 +10,48 @@ export class GameContainer {
     camera: FreeCamera;
 
     guiTexture: AdvancedDynamicTexture;
-    cameraPosition: Vector2;
-    cameraHeight: number;
-
+    cameraPosition: Vector2 = Vector2.Zero();
+    cameraHeight: number = 0;
+    loader: Loader;
     ready: boolean;
-    //shadowGenerator: ShadowGenerator;
-    //light: DirectionalLight;
+    leaderboard: Leaderboard;
+    fleetID: number = 0;
+    worldMeshLoader: WorldMeshLoader;
 
     constructor(canvas: HTMLCanvasElement) {
         this.ready = false;
         this.engine = new Engine(canvas, true);
         this.scene = new Scene(this.engine);
-        this.cameraHeight = 4000;
-        //this.cameraHeight = 6000;
-        this.camera = new FreeCamera("Camera", new Vector3(0, this.cameraHeight, 0), this.scene);
-        this.camera.setTarget(new Vector3(0,0,0));
-        this.camera.maxZ = 20000;
+        this.loader = new Loader(this);
+        this.worldMeshLoader = new WorldMeshLoader(this);
 
+        this.camera = this.setupCamera();
+        this.guiTexture = this.setupGUI();
+        this.leaderboard = new Leaderboard(this);
+        
+        this.PositionCamera(Vector2.Zero());
+        this.setupLights();
+
+        //this.defineGround();
+    }
+
+    setupGUI(): AdvancedDynamicTexture
+    {
+        return AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    }
+
+    setupCamera(): FreeCamera
+    {
+        const camera = new FreeCamera("Camera", new Vector3(0, this.cameraHeight, 0), this.scene);
+        camera.maxZ = 20000;
+        return camera;
+    }
+
+    setupLights()
+    {
         var light = new HemisphericLight("containerLight", new Vector3(0, 1, 0), this.scene);
         light.intensity *= 0.3;
+
         //var light = new DirectionalLight("containerLight", new Vector3(0, -1, 0), this.scene);
         //light.position = new Vector3(0, 500, 0);
         //light.intensity = 50;
@@ -38,14 +64,6 @@ export class GameContainer {
         //this.shadowGenerator = new ShadowGenerator(1024, this.light);
         //this.shadowGenerator.bias = 0.01;
 
-
-        this.guiTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
-        
-        this.cameraPosition = Vector2.Zero();
-        //this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("/assets/base/models/environment.env", this.scene);
-        
-
-        //this.defineGround();
     }
 
     defineGround() {
@@ -65,6 +83,7 @@ export class GameContainer {
 
     PositionCamera(serverPosition: Vector2)
     {
+        this.cameraHeight = 4000;
         this.cameraPosition.x = serverPosition.x * 0.2 + this.cameraPosition.x * 0.8;
         this.cameraPosition.y = serverPosition.y * 0.2 + this.cameraPosition.y * 0.8;
         this.camera.position = new Vector3(this.cameraPosition.x, this.cameraHeight, this.cameraPosition.y);

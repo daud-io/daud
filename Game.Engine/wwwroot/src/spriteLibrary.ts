@@ -1,4 +1,4 @@
-import { merge, SpriteDefinition, TextureDefinition } from "./loader";
+import { Loader, SpriteDefinition, TextureDefinition } from "./loader";
 
 export class SpriteLibrary {
     sprites: Record<string, SpriteDefinition>;
@@ -24,7 +24,7 @@ export class SpriteLibrary {
         {
             let sprite = sprites[spriteName];
             if (sprite.extends) {
-                sprites[spriteName] = merge(sprites[sprite.extends], sprite);
+                sprites[spriteName] = Loader.merge(sprites[sprite.extends], sprite);
             }
         }
 
@@ -34,7 +34,7 @@ export class SpriteLibrary {
             let texture = textures[textureName];
             
             if (texture.extends) {
-                texture = merge(textures[texture.extends], texture);
+                texture = Loader.merge(textures[texture.extends], texture);
                 // preserve the local abstract value
                 texture.abstract = textures[textureName].abstract;
                 textures[textureName] = texture;

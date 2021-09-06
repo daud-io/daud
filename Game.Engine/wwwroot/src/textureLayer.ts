@@ -1,7 +1,7 @@
 import { GameContainer } from "./gameContainer";
 
 import { ClientBody } from "./cache";
-import { getTextureDefinition, TextureDefinition } from "./loader";
+import { TextureDefinition } from "./loader";
 import { Sprite } from "@babylonjs/core";
 import { projectObject } from "./interpolator";
 
@@ -21,7 +21,7 @@ export class TextureLayer {
         this.offset = { x: 0, y: 0 };
         this.aspectRatio = 1;
 
-        let textureDefinition = getTextureDefinition(textureName);
+        let textureDefinition = container.loader.getTextureDefinition(textureName);
         this.textureDefinition = textureDefinition;
 
         if (textureDefinition.emitter) {
