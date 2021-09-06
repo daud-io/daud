@@ -16,6 +16,7 @@
     "@babylonjs/core": "4.2.0",
     "@babylonjs/gui": "4.2.0",
     "@babylonjs/loaders": "4.2.0",
+    "@babylonjs/inspector": "4.2.0",
     "@babylonjs/materials": "4.2.0",
     "@babylonjs/post-processes": "4.2.0",
     "@babylonjs/procedural-textures": "4.2.0",

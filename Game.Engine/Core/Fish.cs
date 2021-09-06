@@ -15,20 +15,15 @@
             Size = 70;
             Sprite = Sprites.fish;
             CycleMS = World.Hook.FishCycle;
-            Randomize();
-        }
-
-        public void Randomize()
-        {
-            var r = new Random();
-            Position = World.RandomPosition();
-            Angle = (float)r.NextDouble() * MathF.PI * 2;
+            
+            Position = World.ChooseSpawnPoint("fish", this);
+            Angle = (float)World.Random.NextDouble() * MathF.PI * 2;
             ThrustAmount = World.Hook.FishThrust;
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
-            base.Update();
+            base.Update(dt);
             Flock();
         }
 

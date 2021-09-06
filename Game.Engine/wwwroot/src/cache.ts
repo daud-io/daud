@@ -116,6 +116,8 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
     if (!container)
         throw "update before container";
 
+    const start = performance.now();
+
     // delete objects that should no longer exist
     for (const deleteKey of deletes) {
         const key = `b-${deleteKey}`;
@@ -238,8 +240,9 @@ export function update(updates: NetBody[], deletes: number[], newGroups: NetGrou
                 renderer,
             });
         }
-
     }
+
+    //console.log("cache update: " + (performance.now() - start).toString());
 }
 
 export function tick(gameTime: number): void {

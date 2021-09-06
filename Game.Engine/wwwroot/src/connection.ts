@@ -15,6 +15,7 @@ import { NetSpawn } from "./daud-net/net-spawn";
 import { NetControlInput } from "./daud-net/net-control-input";
 import { NetEvent } from "./daud-net/net-event";
 import { NetLeaderboard } from "./daud-net/net-leaderboard";
+import { brickProceduralTexturePixelShader } from "@babylonjs/procedural-textures/brick/brickProceduralTexture.fragment";
 
 export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
 export type LeaderboardType = {
@@ -48,11 +49,11 @@ export class Connection {
     bandwidthThrottle = Settings.bandwidth;
     autoReload = true;
     statPongCount = 0;
-    hook: any;
-    lastControlPacket: Uint8Array;
+    hook: any = null;
+    lastControlPacket: Uint8Array = new Uint8Array(0);
+    earliestOffset: number = -1;
 
     constructor(onView?: (view: NetWorldView) => void) {
-        this.hook = null;
         this.onView = onView;
 
         setInterval(() => {
@@ -62,9 +63,8 @@ export class Connection {
             this.statBytesUp = 0;
             this.statBytesDown = 0;
         }, 1000);
-
-        this.lastControlPacket = new Uint8Array(0);
     }
+
     disconnect(): void {
         if (this.socket) {
             this.disconnecting = true;
@@ -91,6 +91,7 @@ export class Connection {
         this.hook = null;
         this.serverClockOffset = -1;
         this.minimumLatency = -1;
+        this.earliestOffset = -1;
 
         if (this.socket) {
             this.socket.onclose = null;
@@ -123,6 +124,7 @@ export class Connection {
         this.pingSent = performance.now();
 
         NetPing.addTime(builder, this.pingSent);
+        NetPing.addClienttime(builder, this.pingSent);
         NetPing.addLatency(builder, this.latency);
         NetPing.addVps(builder, this.viewsPerSecond);
         NetPing.addUps(builder, this.updatesPerSecond);
@@ -208,11 +210,11 @@ export class Connection {
     }
 
     sendControl(
-        boost: boolean, 
-        shoot: boolean, 
-        x: number, 
-        y: number, 
-        spectateControl: string, 
+        boost: boolean,
+        shoot: boolean,
+        x: number,
+        y: number,
+        spectateControl: string,
         customDataJson: string
     ): void {
         const builder = new Builder(0);
@@ -241,15 +243,13 @@ export class Connection {
         builder.finish(quantum);
 
         const newControlPacket = builder.asUint8Array();
-        if (this.lastControlPacket.length != newControlPacket.length)
-        {
+        if (this.lastControlPacket.length != newControlPacket.length) {
             this.send(newControlPacket);
             this.lastControlPacket = newControlPacket;
         }
         else
-            for(let i=0; i<newControlPacket.length; i++)
-                if (newControlPacket[i] != this.lastControlPacket[i])
-                {
+            for (let i = 0; i < newControlPacket.length; i++)
+                if (newControlPacket[i] != this.lastControlPacket[i]) {
                     this.send(newControlPacket);
                     this.lastControlPacket = newControlPacket;
                     break;
@@ -290,100 +290,120 @@ export class Connection {
         this.disconnecting = false;
     }
 
+    currentWorldTime(): number {
+        return performance.now() - this.serverClockOffset;
+    }
+
+    handleNetWorldView(view: NetWorldView): void {
+
+        const offset = performance.now() - view.time();
+
+        if (this.earliestOffset == -1)
+            this.earliestOffset = offset;
+        else
+            this.earliestOffset = Math.min(this.earliestOffset, offset);
+
+        if (this.onView)
+            this.onView(view);
+    }
+
+    handleNetPing(message: NetPing): void {
+        this.statPongCount++;
+
+        this.latency = performance.now() - message.clienttime();
+        if (this.latency < this.minimumLatency || this.minimumLatency == -1) {
+            this.minimumLatency = this.latency;
+        }
+
+        let offset = Settings.latencyOffset;
+        if (Settings.latencyMode == "server")
+            offset += -this.minimumLatency / 2;
+            
+        this.serverClockOffset = this.earliestOffset + offset;
+
+        setTimeout(() => {
+            if (this.connected) {
+                this.sendPing();
+            }
+        }, 250);
+    }
+
+    handleNetEvent(message: NetEvent): void {
+        const eventObject = {
+            type: message.type()!,
+            data: JSON.parse(message.data()!),
+        };
+
+        if (eventObject.type == "hook") {
+            this.hook = eventObject.data;
+            bus.emit('hook', this.hook);
+        }
+
+        if (eventObject.data.roles) addSecretShips(eventObject.data.roles);
+    }
+
+    handleNetLeaderboard(message: NetLeaderboard): void {
+        const entriesLength = message.entriesLength();
+        const entries: LeaderboardEntry[] = [];
+        for (let i = 0; i < entriesLength; i++) {
+            const entry = message.entries(i)!;
+            entries.push({
+                FleetID: entry.fleetid(),
+                Name: entry.name()!,
+                Color: entry.color()!,
+                Score: entry.score(),
+                Position: new Vector2(entry.position()!.x(), entry.position()!.y()),
+                Token: entry.token(),
+                ModeData: JSON.parse(entry.modedata()!) || { flagStatus: "home" },
+            });
+        }
+
+        const record = message.record();
+
+        let recordModel = {
+            Name: "",
+            Color: "red",
+            Score: 0,
+            Token: false,
+        };
+
+        if (record) {
+            recordModel = {
+                Name: record.name()!,
+                Color: record.color()!,
+                Score: record.score(),
+                Token: record.token(),
+            };
+        }
+        bus.emit("leaderboard", {
+            Type: message.type()!,
+            Entries: entries,
+            Record: recordModel,
+        });
+    }
+
     onMessage(event: MessageEvent): void {
         const data = new Uint8Array(event.data);
         const buf = new ByteBuffer(data);
+        const quantum = NetQuantum.getRootAsNetQuantum(buf);
+        const messageType = quantum.messageType();
 
         this.statBytesDown += data.byteLength;
 
-        const quantum = NetQuantum.getRootAsNetQuantum(buf);
+        switch (messageType) {
+            case AllMessages.NetWorldView:
+                this.handleNetWorldView(quantum.message(new NetWorldView()))
+                break;
+            case AllMessages.NetPing:
+                this.handleNetPing(quantum.message(new NetPing()))
+                break;
+            case AllMessages.NetEvent:
+                this.handleNetEvent(quantum.message(new NetEvent()))
+                break;
+            case AllMessages.NetLeaderboard:
+                this.handleNetLeaderboard(quantum.message(new NetLeaderboard()))
+                break;
 
-        const messageType = quantum.messageType();
-
-        if (messageType == AllMessages.NetWorldView) {
-            const message = quantum.message(new NetWorldView())!;
-
-            if (this.onView) this.onView(message);
-        }
-        if (messageType == AllMessages.NetPing) {
-            const message = quantum.message(new NetPing())!;
-            if (this.pingSent) {
-                
-                this.statPongCount++;
-                this.latency = performance.now() - message.clienttime();
-                if (this.latency < this.minimumLatency || this.minimumLatency == -1)
-                {
-                    this.minimumLatency = this.latency;
-
-                    let offset = Settings.latencyOffset;
-                    if (Settings.latencyMode == "server")
-                        offset += -this.minimumLatency/2;
-                    
-                    this.serverClockOffset = message.clienttime() - message.time() + offset;
-                }
-
-                setTimeout(() => {
-                    if (this.connected) {
-                        this.sendPing();
-                    }
-                }, 250);
-            }
-        }
-        if (messageType == AllMessages.NetEvent) {
-            const message = quantum.message(new NetEvent())!;
-
-            const event = {
-                type: message.type()!,
-                data: JSON.parse(message.data()!),
-            };
-
-            if (event.type == "hook") {
-                this.hook = event.data;
-                bus.emit('hook', this.hook);
-            }
-
-            if (event.data.roles) addSecretShips(event.data.roles);
-        }
-        if (messageType == AllMessages.NetLeaderboard) {
-            const message = quantum.message(new NetLeaderboard())!;
-
-            const entriesLength = message.entriesLength();
-            const entries: LeaderboardEntry[] = [];
-            for (let i = 0; i < entriesLength; i++) {
-                const entry = message.entries(i)!;
-                entries.push({
-                    FleetID: entry.fleetid(),
-                    Name: entry.name()!,
-                    Color: entry.color()!,
-                    Score: entry.score(),
-                    Position: new Vector2(entry.position()!.x(), entry.position()!.y()),
-                    Token: entry.token(),
-                    ModeData: JSON.parse(entry.modedata()!) || { flagStatus: "home" },
-                });
-            }
-
-            const record = message.record();
-
-            let recordModel = {
-                Name: "",
-                Color: "red",
-                Score: 0,
-                Token: false,
-            };
-
-            if (record) {
-                recordModel = {
-                    Name: record.name()!,
-                    Color: record.color()!,
-                    Score: record.score(),
-                    Token: record.token(),
-                };
-            }
-            bus.emit("leaderboard", {
-                Type: message.type()!,
-                Entries: entries,
-                Record: recordModel,
-            });
         }
     }
 }

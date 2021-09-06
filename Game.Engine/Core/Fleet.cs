@@ -95,7 +95,7 @@
             if (SpawnLocation != null)
                 FleetCenter = SpawnLocation.Value;
             else
-                FleetCenter = world.RandomSpawnPosition(this);
+                FleetCenter = world.ChooseSpawnPoint("fleet", this);
 
             for (int i = 0; i < SpawnShipCount; i++)
                 this.AddShip();
@@ -184,9 +184,9 @@
                 WeaponStack = new Stack<IFleetWeapon>(WeaponStack.TakeLast(World.Hook.FleetWeaponStackDepth));
         }
 
-        public override void Think()
+        public override void Think(float dt)
         {
-            base.Think();
+            base.Think(dt);
             
             var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
             var isBoosting = World.Time < BoostUntil;
@@ -227,7 +227,7 @@
                     : (BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
 
                 ship.Drag = isBoosting
-                    ? 1.0f
+                    ? 0f
                     : World.Hook.Drag;
 
                 ship.Mode = (byte)

@@ -73,7 +73,7 @@ export class Fleet {
         }
 
         const offsetY = 0;
-        this.text.moveToVector3(new Vector3(accX / count, 200, (accY / count + offsetY)), this.container.scene);
+        this.text.moveToVector3(new Vector3(accX / count, 120, (accY / count + offsetY)), this.container.scene);
     }
 
     destroy(): void {

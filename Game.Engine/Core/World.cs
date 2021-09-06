@@ -23,6 +23,7 @@
     {
         public readonly string WorldKey;
         public Random Random = new Random();
+        public Dictionary<string, List<Vector2>> SpawnPoints = new Dictionary<string, List<Vector2>>();
         public int AdvertisedPlayerCount { get; set; }
         public int SpectatorCount { get; set; }
 
@@ -127,7 +128,7 @@
 
         public bool InStep = false;
         // main entry to the world. This will be called every Hook.StepSize milliseconds, unless it's late. or early.
-        public void Step()
+        public void Step(float dt)
         {
             try
             {
@@ -136,21 +137,15 @@
                 PreviousTime = Time;
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
                 
-                var dt = Time - PreviousTime;
-                if (dt == 0)
-                    dt = (uint)this.Hook.StepTime;
-    
-
                 foreach (var player in Player.GetWorldPlayers(this).ToList())
                     player.ControlCharacter();
 
-                //Console.WriteLine("dt:" + dt);
+                ActorsThink(dt);
+                WriteSimulation();
 
                 InStep = true;
-                //this.Simulation.Timestep((float)Hook.StepTime, ThreadDispatcher);
-                //Console.WriteLine($"Enter Step: {this.WorldKey}");
-                this.Simulation.Timestep((float)Hook.StepTime);
-                //Console.WriteLine($"Exit Step: {this.WorldKey}");
+                //this.Simulation.Timestep(dt, ThreadDispatcher);
+                this.Simulation.Timestep(dt);
                 InStep = false;
 
                 foreach (var body in Bodies.Values)
@@ -189,8 +184,8 @@
                 }
                 bodyImpacts.Count = 0;
 
-                ActorsThink();
-                WriteSimulation();
+                ActorsCleanup();
+
                 CheckTimings(start);
             }
             catch(Exception e)
@@ -250,10 +245,16 @@
             }
         }
 
-        private void ActorsThink()
+        private void ActorsThink(float dt)
         {
             foreach (var actor in Actors.ToList())
-                actor.Think();
+                actor.Think(dt);
+        }
+
+        private void ActorsCleanup()
+        {
+            foreach (var actor in Actors.ToList())
+                actor.Cleanup();
         }
 
         private void WriteSimulation()
@@ -351,8 +352,8 @@
             try
             {
                 var interval = TimeSpan.FromMilliseconds(Hook.StepTime);
-
                 var nextTick = DateTime.Now + interval;
+                var lastRun = DateTime.Now;
                 while (!PendingDestruction)
                 {
                     while ( DateTime.Now < nextTick )
@@ -365,10 +366,17 @@
 
                     lock(Bodies)
                     {
-                        this.Step();
-                        lock(Connections)
-                            foreach (var connection in Connections)
-                                connection.StepSyncInGameLoop();
+                        var now = DateTime.Now;
+                        var dt = now.Subtract(lastRun).TotalMilliseconds;
+
+                        if (dt > 0)
+                        {
+                            this.Step((float)dt);
+                            lastRun = DateTime.Now;
+                            lock(Connections)
+                                foreach (var connection in Connections)
+                                    connection.StepSyncInGameLoop();
+                        }
                     }
                 }
             }
@@ -378,7 +386,19 @@
             }
         }
 
-        
+        public Vector2 ChooseSpawnPoint(string type, object obj)
+        {
+            var alias = type;
+
+            if (SpawnPoints.TryGetValue(alias, out var locations))
+                return locations[Random.Next(0, locations.Count)];
+
+            if (type == "fleet" && obj is Fleet fleet)
+                if (FleetSpawnPositionGenerator != null)
+                    return FleetSpawnPositionGenerator(fleet);
+
+            return RandomPosition();
+        }
         public Vector2 RandomPosition()
         {
             var r = new Random();
@@ -387,14 +407,6 @@
                 X = r.Next(-Hook.WorldSize, Hook.WorldSize),
                 Y = r.Next(-Hook.WorldSize, Hook.WorldSize)
             };
-        }
-
-        public Vector2 RandomSpawnPosition(Fleet fleet = null)
-        {
-            if (FleetSpawnPositionGenerator != null)
-                return FleetSpawnPositionGenerator(fleet);
-
-            return RandomPosition();
         }
 
         #region IDisposable Support

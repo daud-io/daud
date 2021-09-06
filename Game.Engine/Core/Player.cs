@@ -232,7 +232,13 @@
             }
         }
 
-        public virtual void Think()
+        public void Cleanup()
+        {
+            if (PendingDestruction)
+                Destroy();
+        }
+
+        public virtual void Think(float dt)
         {
             Create();
 
@@ -258,9 +264,6 @@
                         ship.ShieldStrength = 0;
                 }
             }
-
-            if (PendingDestruction)
-                Destroy();
         }
 
         public void Spawn(string name, Sprites sprite, string color, string token, string userColor = null)

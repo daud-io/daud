@@ -4,15 +4,18 @@ let latency: number;
 let framesPerSecond: number;
 let playerCount: number;
 let spectatorCount: number;
+let minlatency: number;
+
 function update(): void {
     hudh.innerText = `fps: ${framesPerSecond || 0} - \
                           players: ${playerCount || 0} - \
                           spectators: ${spectatorCount || 0} - \
-                          ping: ${latency || 0}`;
+                          ping: ${latency || 0} min:${minlatency}`;
 }
-export function setPerf(l: number, f: number): void {
+export function setPerf(l: number, ml:number, f: number): void {
     if (latency == Math.floor(l) && framesPerSecond == f) return;
     latency = Math.floor(l);
+    minlatency = Math.floor(ml);
     framesPerSecond = f;
     update();
 }

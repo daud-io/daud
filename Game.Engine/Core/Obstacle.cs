@@ -8,8 +8,7 @@
     public class Obstacle : WorldBody
     {
         private Vector2 TargetVelocity = Vector2.Zero;
-        //protected float Drag = 0.97f;
-        protected float Drag = 1.0f;
+        protected float Drag = 0.00075f;
 
         public Obstacle(World world) : base(world)
         {
@@ -23,7 +22,7 @@
             this.Group = new Group(world)
             {
                 GroupType = GroupTypes.Obstacle,
-                ZIndex = 400
+                ZIndex = 95
             };
 
             this.Size = r.Next(World.Hook.ObstacleMinSize, World.Hook.ObstacleMaxSize);
@@ -52,11 +51,11 @@
             return base.CanCollide(projectedBody);
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
-            LinearVelocity *= Drag;
-            AngularVelocity *= Drag;
-            base.Update();
+            LinearVelocity *= (1f-Drag*dt);
+            AngularVelocity *= (1f-Drag*dt);
+            base.Update(dt);
         }
     }
 }

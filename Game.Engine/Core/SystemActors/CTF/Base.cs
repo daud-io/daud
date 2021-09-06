@@ -26,13 +26,13 @@
 
             this.Group = BaseGroup;
         }
-        protected override void Update()
+        protected override void Update(float dt)
         {
             this.AngularVelocity = FlagIsHome()
                 ? SPEED_SPINNING
                 : SPEED_STOPPED;
 
-            base.Update();
+            base.Update(dt);
         }
 
         public override void CollisionExecute(WorldBody projectedBody)

@@ -23,7 +23,7 @@ namespace Game.Engine.Core.Weapons
             this.Size = 100;
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
             var originalMomentum = LinearVelocity;
 
@@ -65,10 +65,10 @@ namespace Game.Engine.Core.Weapons
             else
                 thrustAngle = Angle;
 
-            var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
-            LinearVelocity = (originalMomentum + thrust) * Drag;
+            var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount/40 * World.Hook.SeekerThrustMultiplier;
+            LinearVelocity = (originalMomentum + thrust * dt) * (1-Drag*dt);
 
-            base.Update();
+            base.Update(dt);
         }
 
         public override void CollisionExecute(WorldBody projectedBody)

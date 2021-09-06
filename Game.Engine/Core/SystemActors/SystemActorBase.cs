@@ -17,7 +17,7 @@
         }
 
         protected virtual void CycleThink() { }
-        public virtual void Think()
+        public virtual void Think(float dt)
         {
             if (World != null && World.Time > SleepUntil)
             {
@@ -26,6 +26,10 @@
                 if (World != null)
                     SleepUntil = World.Time + CycleMS;
             }
+        }
+
+        public void Cleanup()
+        {
         }
     }
 }

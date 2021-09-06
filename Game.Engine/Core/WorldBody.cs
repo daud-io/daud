@@ -227,7 +227,7 @@
             };
         }
 
-        protected virtual void Update()
+        protected virtual void Update(float dt)
         {
             this.AverageLinearVelocity = this.AverageLinearVelocity * 0.5f + LinearVelocity * 0.5f;
             //this.AverageLinearVelocity = this.AverageLinearVelocity * 0.85f + LinearVelocity * 0.15f;
@@ -235,25 +235,31 @@
             if (this.IsBouncing && !this.IsInContact)
                 this.IsBouncing = false;
         }
-
-        void IActor.Think()
+        
+        void IActor.Cleanup()
         {
             if (Exists)
             {
                 if (PendingDestruction)
                     Destroy();
+            }
+        }
+
+        void IActor.Think(float dt)
+        {
+            if (Exists)
+            {
+                if (PendingDestruction) // destroyed in collision phase
+                    Destroy();
                 else
                 {
                     if (World != null && World.Time > SleepUntil)
                     {
-                        this.Update();
+                        this.Update(dt);
 
                         if (World != null)
                             SleepUntil = World.Time + CycleMS;
                     }
-
-                    if (PendingDestruction)
-                        Destroy();
                 }
             }
         }
@@ -262,7 +268,6 @@
         {
             this.PendingDestruction = true;
         }
-
 
         public virtual void Destroy()
         {

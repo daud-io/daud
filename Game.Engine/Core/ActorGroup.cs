@@ -22,7 +22,11 @@
             }
         }
 
-        public virtual void Think()
+        public virtual void Think(float dt)
+        {
+        }
+
+        public void Cleanup()
         {
             if (PendingDestruction)
                 Destroy();

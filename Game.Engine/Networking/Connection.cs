@@ -373,15 +373,6 @@
             }
         }
  
-        private async Task SendPingAsync(uint time)
-        {
-            await SendAsync(new AllMessages(new NetPing
-            {
-                time = World.Time,
-                clienttime = time
-            }));
-        }
-
         private async Task HandlePingAsync(NetPing ping)
         {
             this.Backgrounded = ping.backgrounded;
@@ -395,7 +386,10 @@
             if (Player != null)
                 Player.Backgrounded = this.Backgrounded;
 
-            await SendPingAsync(ping.time);
+            ping.time = World.Time;
+            ping.clienttime = ping.clienttime;
+
+            await SendAsync(new AllMessages(ping));
         }
 
         private async Task HandleIncomingMessage(NetQuantum quantum)

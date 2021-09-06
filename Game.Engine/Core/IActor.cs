@@ -4,7 +4,7 @@
     {
         void Destroy();
 
-        void Think();
-        //void CreateDestroy();
+        void Think(float dt);
+        void Cleanup();
     }
 }

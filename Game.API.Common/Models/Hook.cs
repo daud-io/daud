@@ -39,10 +39,9 @@
         public int BoostDuration { get; set; } = 420;
         public float BoostSpeed { get; set; } = 1f;
 
-        public float Drag { get; set; } = 0.92f;
+        public float Drag { get; set; } = 0.002f;
 
         public int BoomLife { get; set; } = 500;
-        public float BoomDrag { get; set; } = 0.92f;
 
         public int PointsPerKillShip { get; set; } = 1;
         public int PointsPerUniverseDeath { get; set; } = -1;
@@ -113,7 +112,7 @@
         public float ShipGainBySizeM { get; set; } = -0.034f;
         public float ShipGainBySizeB { get; set; } = 1.03f;
 
-        public int StepTime { get; set; } = 40;
+        public int StepTime { get; set; } = 20;
 
         public int PickupShields { get; set; } = 3;
         public int ShieldStrength { get; set; } = 3;
@@ -182,7 +181,6 @@
                    BoostSpeed == hook.BoostSpeed &&
                    Drag == hook.Drag &&
                    BoomLife == hook.BoomLife &&
-                   BoomDrag == hook.BoomDrag &&
                    PointsPerKillShip == hook.PointsPerKillShip &&
                    PointsPerUniverseDeath == hook.PointsPerUniverseDeath &&
                    PointsMultiplierDeath == hook.PointsMultiplierDeath &&
@@ -278,7 +276,6 @@
             hash.Add(BoostSpeed);
             hash.Add(Drag);
             hash.Add(BoomLife);
-            hash.Add(BoomDrag);
             hash.Add(PointsPerKillShip);
             hash.Add(PointsPerUniverseDeath);
             hash.Add(PointsMultiplierDeath);

@@ -25,7 +25,7 @@
             Interlocked.Increment(ref World.ProjectileCount);
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
             Angle = MathF.Atan2(LinearVelocity.Y, LinearVelocity.X);
             AngularVelocity = 0;
@@ -33,7 +33,7 @@
             if (World.Time >= TimeDeath || Consumed)
                 Die();
 
-            base.Update();
+            base.Update(dt);
         }
 
         public virtual void FireFrom(Ship ship, ActorGroup group)

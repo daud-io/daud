@@ -39,9 +39,9 @@
                 );
         }
 
-        public override void Think()
+        public override void Think(float dt)
         {
-            base.Think();
+            base.Think(dt);
 
             var fired = new List<Tuple<Ship, long>>();
             foreach (var pair in FiringSequence)

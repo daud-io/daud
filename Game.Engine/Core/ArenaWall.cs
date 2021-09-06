@@ -52,7 +52,7 @@
             return new CollisionResponse(true, true);
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
             ref var shape = ref World.Simulation.Shapes.GetShape<Box>(ShapeHandle.Index);
             shape.Width = this.World.Hook.WorldSize * 2;
@@ -78,7 +78,7 @@
 
             }
 
-            base.Update();
+            base.Update(dt);
         }
     }
 }

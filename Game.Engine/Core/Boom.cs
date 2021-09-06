@@ -25,18 +25,18 @@
         public Boom(World world) : base(world)
         {
             Sprite = Sprites.boom;
-            Drag = World.Hook.BoomDrag;
+            Drag = World.Hook.Drag;
             TimeDeath = World.Time + World.Hook.BoomLife;
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
             if (TimeDeath > 0 && World.Time > TimeDeath)
                 Die();
 
-            LinearVelocity *= Drag;
+            LinearVelocity *= 1f-Drag*dt;
 
-            base.Update();
+            base.Update(dt);
         }
     }
 }

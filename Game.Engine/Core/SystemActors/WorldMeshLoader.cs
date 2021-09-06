@@ -4,6 +4,7 @@
     using System.IO;
     using System.Linq;
     using System.Numerics;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using BepuPhysics;
     using BepuPhysics.Collidables;
@@ -23,20 +24,56 @@
             CycleMS = 1000;
         }
 
+        private bool IsSpawnPoint(Node node)
+        {
+            return node.Name != null 
+                && Regex.Match(node.Name, @"^([a-zA-Z]+?)_spawn").Success;
+        }
+
+        private void RegisterSpawnPoint(Node node, Vector2 point)
+        {
+            var match = Regex.Match(node.Name, @"^([a-zA-Z]+?)_spawn");
+            if (match.Success)
+            {
+                var spawnType = match.Groups[1].Value;
+
+                if (spawnType == "player")
+                    spawnType = "fleet";
+                
+                List<Vector2> typeList;
+                if (!World.SpawnPoints.TryGetValue(spawnType, out typeList))
+                    World.SpawnPoints.Add(spawnType, typeList = new List<Vector2>());
+                
+                typeList.Add(point);
+            }
+        }
+
         private void LoadNode(ModelRoot root, Node node)
         {
-            Matrix4x4 transform = Matrix4x4.Identity
-                * Matrix4x4.CreateScale(new Vector3(1,1,-1))
+            Matrix4x4 transform = 
+                  Matrix4x4.CreateScale(new Vector3(1,1,-1)) // invert Z
                 * node.WorldMatrix
-                * Matrix4x4.CreateScale(new Vector3(10, 10, 10));
+                * Matrix4x4.CreateScale(new Vector3(10, 10, 10)); // scale
 
             if (node.Extras.Content != null)
             {
                 var tags = JsonConvert.DeserializeObject<Dictionary<string, string>>(node.Extras.ToJson());
                 if (tags != null)
+                {
                     if (tags.TryGetValue("physics", out string physics))
                         if (physics == "false")
                             return;
+                }
+            }
+
+            if (node.Name != null)
+            {
+                if (IsSpawnPoint(node))
+                {
+                    Vector3 point = Vector3.Transform(Vector3.Zero, transform);
+                    RegisterSpawnPoint(node, new Vector2(point.X, point.Z));
+                    return;
+                }
             }
 
             if (node.Mesh?.Primitives != null)
@@ -102,6 +139,8 @@
         {
             foreach (var obj in Statics)
                 World.Simulation.Statics.Remove(obj);
+            
+            World.SpawnPoints.Clear();
             this.loadedURL = null;
         }
 

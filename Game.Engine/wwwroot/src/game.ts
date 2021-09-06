@@ -48,11 +48,9 @@ const ctfArea = document.querySelector("#ctf_arena") as HTMLElement;
 const statsEl = document.querySelector(".stats") as HTMLElement;
 const logEl = document.querySelector("#log") as HTMLElement;
 const spectateControls = document.querySelector("#spectatecontrols") as HTMLElement;
-const button = document.getElementById("spawn") as HTMLButtonElement;
 const connection = new Connection(onView);
 
 let cameraPositionFromServer: ClientBody;
-let time: number;
 let isAlive: boolean;
 let gameTime: number;
 let worldSize = 1000;
@@ -85,14 +83,15 @@ bus.on("dead", () => {
 function onView(newView: NetWorldView) {
     viewCounter++;
 
-    time = newView.time();
+    gameTime = connection.currentWorldTime();
+
     isAlive = newView.isalive();
     fleetID = newView.fleetid();
 
-    if (!isAlive && connection.hook != null) {
-        buttonSpectate.disabled = spawnButton.disabled = connection.hook.CanSpawn === false;
+    if (!isAlive && connection.hook != null)
+    {
+        buttonSpectate.disabled = spawnButton.disabled = (connection.hook.CanSpawn === false);
     }
-
     if (isAlive)
         isSpectating = false;
 
@@ -213,19 +212,17 @@ document.addEventListener("keydown", ({ code }) => {
     }
 });
 
-function doPing() {
+function updateStats() {
     connection.framesPerSecond = frameCounter;
     connection.viewsPerSecond = viewCounter;
     connection.updatesPerSecond = updateCounter;
-    setPerf(connection.latency, frameCounter);
+    setPerf(connection.latency, connection.minimumLatency, frameCounter);
 
     frameCounter = 0;
     viewCounter = 0;
     updateCounter = 0;
 }
-
-doPing();
-setInterval(doPing, 1000);
+setInterval(updateStats, 1000);
 
 const query = new URLSearchParams(window.location.search);
 if (query.has("spectate") && query.get("spectate") !== "0") {
@@ -305,15 +302,6 @@ window.addEventListener("resize", () => {
     sizeCanvas();
 });
 
-let lastControl: { mouseX: number, mouseY: number; boost?: boolean; shoot?: boolean; autofire?: boolean; chat?: string } = {
-    mouseX: 0,
-    mouseY: 0,
-    boost: undefined,
-    autofire: undefined,
-    shoot: undefined,
-    chat: undefined,
-};
-
 const loadImages = load(container);
 loadImages.then(() => {
     setContainer(container);
@@ -329,10 +317,11 @@ loadImages.then(() => {
         minimap.update(lb, worldSize, fleetID);
     });
 
+
+    let spectateNextDebounce = false;
     // Game Loop
     container.engine.runRenderLoop(() => {
         frameCounter++;
-
 
         if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
             gameTime = performance.now() - connection.serverClockOffset;
@@ -345,8 +334,17 @@ loadImages.then(() => {
 
             let spectateControl = "";
             if (isSpectating) {
-                if (Controls.shoot && !lastControl.shoot) spectateControl = "action:next";
-                else spectateControl = "spectating";
+                if (spectateNextDebounce && !Controls.shoot)
+                {
+                    spectateNextDebounce = false;
+                }
+                if (!spectateNextDebounce && Controls.shoot)
+                {
+                    spectateControl = "action:next";
+                    spectateNextDebounce = true;
+                }
+                else
+                    spectateControl = "spectating";
             }
             
             updateControlAim();
@@ -359,8 +357,6 @@ loadImages.then(() => {
                 spectateControl,
                 Controls.customData
             );
-
-
         }
     });
 });

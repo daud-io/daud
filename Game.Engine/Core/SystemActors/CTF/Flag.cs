@@ -30,7 +30,7 @@
             FlagGroup.Destroy();
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
 
             if (!(CarriedBy?.PendingDestruction ?? true))
@@ -57,7 +57,7 @@
                     this.LinearVelocity = Vector2.Zero;
             }
 
-            base.Update();
+            base.Update(dt);
         }
 
         public void ReturnToBase()

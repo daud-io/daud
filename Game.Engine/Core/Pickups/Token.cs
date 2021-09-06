@@ -44,7 +44,7 @@
             TokenGroup.Destroy();
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
 
             bool carried = 
@@ -75,7 +75,7 @@
                     | (this.ExpiringSoon ? TokenModeEnum.expiring : TokenModeEnum.none)
                 );
 
-            base.Update();
+            base.Update(dt);
         }
 
         protected void Drop()

@@ -1,17 +1,18 @@
-import { CubeTexture, DirectionalLight, Engine, FreeCamera, HemisphericLight, Matrix, Mesh, MeshBuilder, PointLight, Quaternion, Scene, SceneLoader, StandardMaterial, Texture, Vector2, Vector3 } from "@babylonjs/core";
+import { CubeTexture, DirectionalLight, Engine, FreeCamera, HemisphericLight, Matrix, Mesh, MeshBuilder, PointLight, Quaternion, Scene, SceneLoader, ShadowGenerator, StandardMaterial, Texture, Vector2, Vector3 } from "@babylonjs/core";
 import { AdvancedDynamicTexture } from "@babylonjs/gui";
 
 export class GameContainer {
     scene: Scene;
     engine: Engine;
     camera: FreeCamera;
-    light: DirectionalLight;
 
     guiTexture: AdvancedDynamicTexture;
     cameraPosition: Vector2;
     cameraHeight: number;
 
     ready: boolean;
+    //shadowGenerator: ShadowGenerator;
+    //light: DirectionalLight;
 
     constructor(canvas: HTMLCanvasElement) {
         this.ready = false;
@@ -21,12 +22,27 @@ export class GameContainer {
         //this.cameraHeight = 6000;
         this.camera = new FreeCamera("Camera", new Vector3(0, this.cameraHeight, 0), this.scene);
         this.camera.setTarget(new Vector3(0,0,0));
-        this.light = new DirectionalLight("DirectionalLight", new Vector3(-1, -1, -1), this.scene);
-        this.light.intensityMode = 0.5;
+        this.camera.maxZ = 20000;
+
+        var light = new HemisphericLight("containerLight", new Vector3(0, 1, 0), this.scene);
+        light.intensity *= 0.3;
+        //var light = new DirectionalLight("containerLight", new Vector3(0, -1, 0), this.scene);
+        //light.position = new Vector3(0, 500, 0);
+        //light.intensity = 50;
+
+        //this.light.shadowEnabled = false;
+        //this.light.shadowMaxZ = 10000;
+        //this.light.shadowMinZ = -10000;
+        //this.light.intensity = 0;
+        
+        //this.shadowGenerator = new ShadowGenerator(1024, this.light);
+        //this.shadowGenerator.bias = 0.01;
+
+
         this.guiTexture = AdvancedDynamicTexture.CreateFullscreenUI("UI");
         
         this.cameraPosition = Vector2.Zero();
-        this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("/assets/base/models/environment.env", this.scene);
+        //this.scene.environmentTexture = CubeTexture.CreateFromPrefilteredData("/assets/base/models/environment.env", this.scene);
         
 
         //this.defineGround();

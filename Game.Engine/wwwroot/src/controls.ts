@@ -4,9 +4,8 @@ import Cookies from "js-cookie";
 import { Picker } from "emoji-picker-element";
 import { getTextureDefinition } from "./loader";
 import { GameContainer } from "./gameContainer";
-import { PointerEventTypes } from "@babylonjs/core/Events";
-import { Control } from "@babylonjs/gui";
 import { DeviceSourceManager, DeviceType, Matrix, Plane, PointerInput, Scene, Vector3 } from "@babylonjs/core";
+import '@babylonjs/inspector';
 
 const emojiContainer = document.getElementById("emoji-container")!;
 const picker = new Picker();
@@ -67,7 +66,6 @@ export const Controls = {
     boost: false,
     shoot: false,
     autofire: false,
-    downSince: undefined,
     customData: undefined as any,
     mouseX: 0,
     mouseY: 0,
@@ -133,6 +131,12 @@ export function updateControlAim()
 
         if (kbd.getInput(32) === 1)
             Controls.shoot = true;
+
+        if (kbd.getInput(68) === 1)
+            container?.scene.debugLayer.show({
+                embedMode: true,
+            });
+        
     }
 
     if (container)

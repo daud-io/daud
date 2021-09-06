@@ -168,7 +168,7 @@
             return base.CanCollide(projectedBody);
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
 
             if (Abandoned && TimeDeath == 0)
@@ -177,11 +177,11 @@
             if (TimeDeath > 0 && World.Time > TimeDeath)
                 Die(null, null, null);
 
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount;
+            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * (ThrustAmount / 40f);
 
-            LinearVelocity = (LinearVelocity + thrust) * Drag;
+            LinearVelocity = (LinearVelocity + (thrust * dt)) * (1f - Drag*dt);
 
-            base.Update();
+            base.Update(dt);
         }
     }
 }

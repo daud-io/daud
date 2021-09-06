@@ -10,7 +10,7 @@
         public long TimeDeath { get; set; }
         public Fleet ExcludedFleet { get; set; }
         public bool DontRandomize { get; set; }
-        public float Drag { get; set; } = 1.0f;
+        public float Drag { get; set; } = 0.0f;
 
         public PickupBase(World world): base(world)
         {
@@ -58,7 +58,7 @@
             return base.CanCollide(otherBody);
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
 
             if (TimeDeath > 0 && TimeDeath < World.Time)
@@ -71,10 +71,10 @@
                     LinearVelocity = Vector2.Normalize(Vector2.Zero - Position) * speed;
             }
 
-            if (Drag != 1)
-                LinearVelocity *= Drag;
+            if (Drag != 0)
+                LinearVelocity *= 1-Drag*dt;
 
-            base.Update();
+            base.Update(dt);
         }
 
         public static T FireFrom<T>(Fleet fleet)
@@ -87,7 +87,7 @@
 
             pickup.ExcludedFleet = fleet;
             pickup.LinearVelocity = fleet.FleetVelocity;
-            pickup.Drag = 0.98f;
+            pickup.Drag = 0.0005f;
 
             pickup.DontRandomize = true;
 

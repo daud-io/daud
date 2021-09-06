@@ -64,9 +64,11 @@ backgroundEl.onchange = () => {
 };
 latencyModeEl.onchange = () => {
     Settings.latencyMode = latencyModeEl.value;
+    save();
 }
 latencyOffsetEl.onchange = () => {
     Settings.latencyOffset = Number(latencyOffsetEl.value);
+    save();
 }
 
 function save() {

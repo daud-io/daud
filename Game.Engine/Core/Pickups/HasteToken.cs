@@ -23,7 +23,7 @@ namespace Game.Engine.Core.Pickups
             OnRenewed();
         }
 
-        protected override void Update()
+        protected override void Update(float dt)
         {
             if (this.CarriedBy != null)
             {
@@ -44,7 +44,7 @@ namespace Game.Engine.Core.Pickups
                 this.OnRenewed();
             }
 
-            base.Update();
+            base.Update(dt);
         }
 
         protected virtual void OnCooldownStart()
