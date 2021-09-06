@@ -304,9 +304,11 @@ bus.on("leaderboard", (lb) => {
 
 bus.on("themechange", () => {
     console.log('theme change');
-    container.loader.load();
-    refreshSprites();
-    initializeWorld();
+    container.loader.load()
+        .then(() => {
+            refreshSprites();
+            initializeWorld();
+        });
 });
 
 sizeCanvas();
