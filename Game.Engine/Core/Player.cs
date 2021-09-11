@@ -31,7 +31,6 @@
         public int ComboCounter { get; set; } = 0;
 
         public ControlInput ControlInput { get; set; }
-        private bool IsControlNew = false;
 
         public List<PlayerMessage> Messages { get; set; } = new List<PlayerMessage>();
 
@@ -43,12 +42,8 @@
 
         public bool IsInvulnerable { get; set; } = false;
         public bool Backgrounded { get; internal set; }
-        public bool IsShielded { get; set; } = false;
-
         public long SpawnTime;
-        public int SpawnInvulnerableTime => World.Hook.SpawnInvulnerabilityTime;
         public long InvulnerableUntil = 0;
-        public bool DisableSpawnInvulnerability { get; set; } = false;
 
         public Sprites ShipSprite { get; set; }
         public string Color { get; set; }
@@ -101,9 +96,6 @@
             // if we haven't started shooting, then update the aiming with the latest packet
             if (!CummulativeShootRequested)
                 this.ControlInput = input;
-
-            
-            this.IsControlNew = true;
         }
 
         public virtual void Create()
@@ -123,9 +115,8 @@
                     Player = this.ToAuditModelPlayer()
                 }, World);*/
 
-
-                if (!DisableSpawnInvulnerability)
-                    SetInvulnerability(SpawnInvulnerableTime, true);
+                InvulnerableUntil = World.Time + World.Hook.ShieldTimeMS;
+                IsInvulnerable = true;
 
                 SpawnTime = World.Time;
             }
@@ -166,7 +157,7 @@
         {
             //Console.WriteLine("Control: " + this.ControlPackets);
             this.ControlPackets = 0;
-            if (this.IsControlNew && this.IsAlive && this.Fleet != null)
+            if (this.IsAlive && this.Fleet != null)
             {
                 if (float.IsNaN(ControlInput.Position.X) || float.IsNaN(ControlInput.Position.Y))
                     ControlInput.Position = new System.Numerics.Vector2(0, 0);
@@ -187,13 +178,10 @@
                     if (parsed?.magic != null)
                         JsonConvert.PopulateObject(parsed.magic, this);
                 }
-                
 
                 if (this.Backgrounded)
                     Fleet.AimTarget = Vector2.Zero;
             }
-
-            this.IsControlNew = false;
         }
 
         public string Name { get; set; }
@@ -210,26 +198,6 @@
         public static List<Player> GetWorldPlayers(World world)
         {
             return world.Players;
-        }
-
-        public void SetInvulnerability(int duration, bool isShield = false)
-        {
-            if (duration == 0)
-            {
-                InvulnerableUntil = 0;
-                IsInvulnerable = false;
-                isShield = false;
-            }
-            else
-            {
-                InvulnerableUntil = World.Time + duration;
-                IsInvulnerable = true;
-                IsShielded = isShield;
-
-                if (isShield && Fleet != null)
-                    foreach (var ship in Fleet.Ships)
-                        ship.ShieldStrength = World.Hook.ShieldStrength;
-            }
         }
 
         public void Cleanup()
@@ -250,15 +218,9 @@
 
             if (IsInvulnerable)
             {
-                if (!this.Fleet.FiringWeapon && CummulativeShootRequested && this.Fleet.ShootCooldownStatus == 1)
-                    IsInvulnerable = false;
-
-                if (World.Time > InvulnerableUntil)
-                    IsInvulnerable = false;
-
-                if (!IsInvulnerable)
+                if (this.Fleet.WeaponFiredCount > 0 || World.Time > InvulnerableUntil)
                 {
-                    IsShielded = false;
+                    IsInvulnerable = false;
 
                     foreach (var ship in Fleet?.Ships)
                         ship.ShieldStrength = 0;

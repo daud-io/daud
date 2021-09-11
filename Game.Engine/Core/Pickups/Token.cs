@@ -31,7 +31,7 @@
             Mode = 0;
 
             TokenGroup = new ActorGroup(world);
-            TokenGroup.ZIndex = 300;
+            TokenGroup.ZIndex = 150;
             TokenGroup.GroupType = GroupTypes.Token;
             this.Group = TokenGroup;
 

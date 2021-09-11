@@ -86,13 +86,13 @@
     "boost": {
       "url": "thruster_cyan.png",
       "offset": {
-        "x": -140,
+        "x": -150,
         "y": 0
       },
       "rotate": 6,
       "size": 2.56,
       "animated": {
-        "speed": 50,
+        "speed": 25,
         "size": 64,
         "count": 29
       },

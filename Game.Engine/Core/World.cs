@@ -136,6 +136,8 @@
                 // calculate the new game time
                 PreviousTime = Time;
                 Time = (uint)((start.Ticks - OffsetTicks) / 10000);
+
+                //Console.WriteLine($"start: {start} dt:{dt} time: {Time}");
                 
                 foreach (var player in Player.GetWorldPlayers(this).ToList())
                     player.ControlCharacter();
@@ -207,10 +209,10 @@
             InitializeSystemActor<Advertisement>();
             InitializeSystemActor<ObstacleTender>();
             InitializeSystemActor<AdvanceRetreat>();
+            InitializeSystemActor<TeamColors>();
             
             //InitializeSystemActor<CaptureTheFlag>();
             //InitializeSystemActor<Sumo>();
-            //InitializeSystemActor<TeamColors>();
             //InitializeSystemActor<RoyaleMode>();
         }
 
@@ -354,6 +356,8 @@
                 var interval = TimeSpan.FromMilliseconds(Hook.StepTime);
                 var nextTick = DateTime.Now + interval;
                 var lastRun = DateTime.Now;
+                var dt = 0d;
+
                 while (!PendingDestruction)
                 {
                     while ( DateTime.Now < nextTick )
@@ -367,16 +371,20 @@
                     lock(Bodies)
                     {
                         var now = DateTime.Now;
-                        var dt = now.Subtract(lastRun).TotalMilliseconds;
+                        dt += now.Subtract(lastRun).TotalMilliseconds;
+                        lastRun = DateTime.Now;
 
-                        if (dt > 0)
+                        while (dt > 3d)
                         {
-                            this.Step((float)dt);
-                            lastRun = DateTime.Now;
-                            lock(Connections)
-                                foreach (var connection in Connections)
-                                    connection.StepSyncInGameLoop();
+                            var gamePhysicsStepTime = Math.Min(dt, Hook.StepTime);
+                            dt -= gamePhysicsStepTime;
+
+                            this.Step((float)gamePhysicsStepTime);
                         }
+
+                        lock(Connections)
+                            foreach (var connection in Connections)
+                                connection.StepSyncInGameLoop();
                     }
                 }
             }

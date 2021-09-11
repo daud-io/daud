@@ -124,7 +124,7 @@
 
         public int PlayerCountGracePeriodMS { get; set; } = 15000;
         public int FleetWeaponStackDepth { get; set; } = 1;
-        public int SpawnInvulnerabilityTime { get; set; } = 3000;
+        public int ShieldTimeMS { get; set; } = 3000;
 
 
         public static readonly string[] AllColors = new[] {
@@ -243,7 +243,7 @@
                    SpawnLocation.Equals(hook.SpawnLocation) &&
                    PlayerCountGracePeriodMS == hook.PlayerCountGracePeriodMS &&
                    FleetWeaponStackDepth == hook.FleetWeaponStackDepth &&
-                   SpawnInvulnerabilityTime == hook.SpawnInvulnerabilityTime &&
+                   ShieldTimeMS == hook.ShieldTimeMS &&
                    Name == hook.Name &&
                    Description == hook.Description &&
                    Instructions == hook.Instructions &&
@@ -338,7 +338,7 @@
             hash.Add(SpawnLocation);
             hash.Add(PlayerCountGracePeriodMS);
             hash.Add(FleetWeaponStackDepth);
-            hash.Add(SpawnInvulnerabilityTime);
+            hash.Add(ShieldTimeMS);
             hash.Add(Name);
             hash.Add(Description);
             hash.Add(Instructions);

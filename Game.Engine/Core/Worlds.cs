@@ -15,9 +15,10 @@
             if (!gameConfiguration.NoWorlds)
             {
                 
-                AddWorld(FFA(), "default");
                 //AddWorld(FFA(), "default2");
                 AddWorld(PartyCity(), "partycity");
+                AddWorld(FFA(), "ffa");
+                AddWorld(Team(), "team");
                 //AddWorld(PartyCity(), "partycity2");
                 
 
@@ -40,7 +41,21 @@
             hook.Mesh.MeshURL = "wwwroot/dist/assets/base/models/ffa.glb";
             hook.WorldSize = 5000;
 
-            return new World(hook, GameConfiguration, "default");
+            return new World(hook, GameConfiguration, "ffa");
+        }
+
+        private static World Team()
+        {
+            var hook = Hook.Default;
+            hook.Name = "Team";
+            hook.TeamMode = true;
+            hook.Description = "Teams Arena";
+            hook.Mesh.Enabled = true;
+            hook.Mesh.MeshURL = "wwwroot/dist/assets/base/models/ffa.glb";
+            hook.WorldSize = 5000;
+            hook.AllowedColors = Hook.TeamColors;
+
+            return new World(hook, GameConfiguration, "team");
         }
 
         private static World PartyCity()
@@ -53,6 +68,7 @@
             hook.PickupSeekers *= 4;
             hook.PickupShields *= 4;
             hook.Mesh.MeshURL = "wwwroot/dist/assets/base/models/partycity.glb";
+            hook.WorldSize = 5000;
 
             return new World(hook, GameConfiguration, "partycity");
         }

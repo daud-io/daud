@@ -2,33 +2,38 @@ import { GameContainer } from "./gameContainer";
 
 import { ClientBody } from "./cache";
 import { TextureDefinition } from "./loader";
-import { Sprite } from "@babylonjs/core";
+import { Color4, ParticleSystem, PointerDragBehavior, Sprite, Vector3, WorleyNoise3DBlock } from "@babylonjs/core";
 import { projectObject } from "./interpolator";
 
 export class TextureLayer {
-    private sprite: Sprite | undefined;
-    emitter: any | undefined;
+    private readonly sprite: Sprite | undefined;
+    private readonly particleSystem?: ParticleSystem;
+    private readonly emitter: any | undefined;
 
-    lastTime: number;
+    private readonly textureDefinition: TextureDefinition;
 
-    textureDefinition: TextureDefinition;
-
-    offset: { x: number; y: number };
-    aspectRatio: number;
+    private readonly offset: { x: number; y: number };
+    private readonly aspectRatio: number;
 
     constructor(container: GameContainer, clientBody: ClientBody, textureName: string) {
-        this.lastTime = 0;
         this.offset = { x: 0, y: 0 };
         this.aspectRatio = 1;
 
         let textureDefinition = container.loader.getTextureDefinition(textureName);
         this.textureDefinition = textureDefinition;
 
-        if (textureDefinition.emitter) {
-            /*this.emitter = new Emitter(container.bodyGroup, textures, textureDefinition.emitter);
-            this.emitter.emit = true;
-            if (textureDefinition.size)
-                this.scale = textureDefinition.size;*/
+        if (textureDefinition.particleTexture) {
+            /*this.particleSystem = new ParticleSystem(textureName, 1000, container.scene);
+            this.particleSystem.blendMode = ParticleSystem.BLENDMODE_ADD;
+            this.particleSystem.particleTexture = textureDefinition.particleTexture;
+            this.particleSystem.maxSize = textureDefinition.emitter?.size?.max;
+            this.particleSystem.minSize = textureDefinition.emitter?.size?.min;
+            this.particleSystem.maxEmitPower = 500;
+            this.particleSystem.maxLifeTime = 1
+            this.particleSystem.emitRate = 100;
+            this.particleSystem.direction1 = new Vector3(-1, 0, -1);
+            this.particleSystem.direction2 = new Vector3(1, 0, 1);
+            this.particleSystem.start(1);*/
         } else {
             if (textureDefinition.spriteManager)
             {
@@ -39,8 +44,10 @@ export class TextureLayer {
                 this.updateFromBody(clientBody);
 
                 if (textureDefinition.animated) {
-                    this.sprite.playAnimation(0, textureDefinition.animated.count, true, textureDefinition.animated.speed);
+                    this.sprite.playAnimation(0, textureDefinition.animated.count-1, textureDefinition.animated.loop ?? false, textureDefinition.animated.speed);
                 }
+                if (this.textureDefinition.tint)
+                    this.sprite.color = Color4.FromHexString(this.textureDefinition.tint);
 
                 if (this.textureDefinition.width == undefined || this.textureDefinition.height == undefined)
                     console.log(`TextureDefinition[${textureName}] is missing height/width`);
@@ -86,8 +93,11 @@ export class TextureLayer {
     tick(time: number, body: ClientBody) {
         this.updateFromBody(body);
 
-        if (this.emitter) {
-            /*let scale = this.textureDefinition.emitter.scale;
+        if (this.particleSystem) {
+            this.particleSystem.emitter = new Vector3(body.Position.x, body.zIndex, body.Position.y);
+            /*
+
+            let scale = this.textureDefinition.emitter.scale;
             let speed = this.textureDefinition.emitter.speed;
 
             if (scale && speed)
@@ -104,8 +114,6 @@ export class TextureLayer {
             if (this.lastTime > 0)
                 this.emitter.update((time - this.lastTime) * 0.001);*/
         }
-
-        this.lastTime = time;
     }
 
     setZIndex(z: number): void {
@@ -114,8 +122,6 @@ export class TextureLayer {
 
     destroy(): void {
         this.sprite?.dispose();
-        this.emitter?.dispose();
-        this.sprite = undefined;
-        this.emitter = undefined;
+        this.particleSystem?.dispose()
     }
 }

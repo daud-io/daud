@@ -30,13 +30,22 @@
         protected bool IsOOB = false;
         public long TimeDeath = 0;
 
+        public int ShieldStrength { get; set; }
+        public long ShieldExpiration { get; internal set; }
+
         public Ship(World world): base(world)
         {
             Size = 70;
             Drag = World.Hook.Drag;
         }
 
-        public int ShieldStrength { get; set; }
+        public override void Destroy()
+        {
+            base.Destroy();
+
+            if (Fleet?.Ships?.Contains(this) ?? false)
+                Fleet.Ships.Remove(this);
+        }
 
         public Sprites BulletSprite
         {
@@ -56,14 +65,6 @@
                     default: return Sprites.bullet;
                 }
             }
-        }
-
-        public override void Destroy()
-        {
-            base.Destroy();
-
-            if (Fleet?.Ships?.Contains(this) ?? false)
-                Fleet.Ships.Remove(this);
         }
         
         public void Die(Player player, Fleet fleet, ShipWeaponBullet bullet)
@@ -96,23 +97,16 @@
                 var fleet = bullet?.OwnedByFleet;
                 var player = fleet?.Owner;
 
-                var takesDamage = true;
-                if (this.Fleet?.Owner?.IsShielded ?? false)
+                var takesDamage = !Fleet?.Owner?.IsInvulnerable ?? true;
+                if (takesDamage && ShieldStrength > 0)
                 {
-                    if (this.ShieldStrength == 0)
-                        takesDamage = true;
+                    if (projectedBody is ShipWeaponSeeker)
+                        ShieldStrength = 0;
                     else
-                    {
-                        if (projectedBody is ShipWeaponSeeker)
-                            this.ShieldStrength = 0;
-                        else
-                            this.ShieldStrength--;
+                        ShieldStrength--;
 
-                        takesDamage = false;
-                    }
+                    takesDamage = false;
                 }
-                else
-                    takesDamage = !this.Fleet?.Owner?.IsInvulnerable ?? true;
 
                 if (takesDamage)
                     Die(player, fleet, bullet);
@@ -176,6 +170,9 @@
 
             if (TimeDeath > 0 && World.Time > TimeDeath)
                 Die(null, null, null);
+
+            if (ShieldStrength > 0 && World.Time > ShieldExpiration)
+                ShieldStrength = 0;
 
             var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * (ThrustAmount / 40f);
 

@@ -1,7 +1,7 @@
 ﻿import { RenderedObject } from "../renderedObject";
 import { Fleet } from "./fleet";
 import { GameContainer } from "../gameContainer";
-import { ClientBody, ClientGroup, getGroup } from "../cache";
+import { ClientBody, ClientGroup } from "../cache";
 
 export type TokenData ={
     FleetID: number | undefined;
@@ -62,7 +62,7 @@ export class Token extends RenderedObject {
         {
             if (this.tokenData.FleetID)
             {
-                let group = getGroup(this.tokenData.FleetID);
+                let group = this.container.cache.getGroup(this.tokenData.FleetID);
                 this.fleet = group?.renderer;
                 this.fleet?.addPowerup("haste");
             }

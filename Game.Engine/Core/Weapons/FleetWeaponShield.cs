@@ -4,10 +4,11 @@
     {
         public bool IsOffense => false;
         public bool IsDefense => true;
+        public bool CausesCooldown => true;
 
         public void FireFrom(Fleet fleet)
         {
-            fleet.Owner?.SetInvulnerability(fleet.World.Hook.SpawnInvulnerabilityTime, true);
+            fleet.ActivateShields();
         }
     }
 }

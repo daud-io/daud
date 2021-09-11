@@ -190,56 +190,13 @@
       "height": 44,
       "size": 0.02,
       "emitter": {
-        "alpha": {
-          "start": 1,
-          "end": 0
-        },
-        "scale": {
-          "start": 0.14,
-          "end": 0.001,
-          "minimumScaleMultiplier": 1
-        },
-        "color": {
-          "start": "#dbc72c",
-          "end": "#4f4f4f"
-        },
-        "speed": {
-          "start": 200,
-          "end": 50,
-          "minimumSpeedMultiplier": 1
-        },
-        "acceleration": {
-          "x": 0,
-          "y": 0
-        },
-        "maxSpeed": 0,
-        "startRotation": {
-          "min": 0,
-          "max": 360
-        },
-        "noRotation": false,
-        "rotationSpeed": {
-          "min": 0,
-          "max": 0
+        "size": {
+          "min": 1,
+          "max": 50
         },
         "lifetime": {
-          "min": 0.2,
-          "max": 0.8
-        },
-        "blendMode": "normal",
-        "frequency": 0.01,
-        "emitterLifetime": -1,
-        "maxParticles": 500,
-        "pos": {
-          "x": 0,
-          "y": 0
-        },
-        "addAtBack": false,
-        "spawnType": "circle",
-        "spawnCircle": {
-          "x": 0,
-          "y": 0,
-          "r": 0
+          "min": 0.1,
+          "max": 0.5
         }
       }
     },
@@ -305,7 +262,7 @@
     "boost": {
       "url": "thruster.png",
       "offset": {
-        "x": -140,
+        "x": -260,
         "y": 0
       },
       "rotate": 6,
@@ -322,7 +279,7 @@
       "url": "shield.png",
       "size": 2.56,
       "animated": {
-        "speed": 50,
+        "speed": 33,
         "loop": true,
         "size": 64,
         "count": 90
@@ -335,11 +292,13 @@
       "url": "shield.png",
       "size": 2.56,
       "animated": {
-        "speed": 50,
+        "speed": 33,
         "loop": true,
         "size": 64,
         "count": 90
-      }
+      },
+      "width": 64,
+      "height": 64
     },
     "offenseupgrade": {
       "url": "circles.png",
@@ -350,7 +309,7 @@
         "size": 72,
         "count": 11
       },
-      "tint": 16711680,
+      "tint": "#FF6666FF",
       "width": 72,
       "height": 72
     },
@@ -364,7 +323,7 @@
         "size": 72,
         "count": 11
       },
-      "tint": 6711039,
+      "tint": "#6666FFFF",
       "width": 72,
       "height": 72
     },

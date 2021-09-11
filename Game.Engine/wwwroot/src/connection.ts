@@ -15,7 +15,6 @@ import { NetSpawn } from "./daud-net/net-spawn";
 import { NetControlInput } from "./daud-net/net-control-input";
 import { NetEvent } from "./daud-net/net-event";
 import { NetLeaderboard } from "./daud-net/net-leaderboard";
-import { brickProceduralTexturePixelShader } from "@babylonjs/procedural-textures/brick/brickProceduralTexture.fragment";
 
 export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
 export type LeaderboardType = {
@@ -29,7 +28,6 @@ export type LeaderboardType = {
     };
 };
 export class Connection {
-    onView?: (view: NetWorldView) => void;
     reloading = false;
     disconnecting = false;
     connected = false;
@@ -53,9 +51,7 @@ export class Connection {
     lastControlPacket: Uint8Array = new Uint8Array(0);
     earliestOffset: number = -1;
 
-    constructor(onView?: (view: NetWorldView) => void) {
-        this.onView = onView;
-
+    constructor() {
         setInterval(() => {
             this.statBytesDownPerSecond = this.statBytesDown;
             this.statBytesUpPerSecond = this.statBytesUp;
@@ -296,7 +292,6 @@ export class Connection {
     }
 
     handleNetWorldView(view: NetWorldView): void {
-
         const offset = performance.now() - view.time();
 
         if (this.earliestOffset == -1)
@@ -304,8 +299,7 @@ export class Connection {
         else
             this.earliestOffset = Math.min(this.earliestOffset, offset);
 
-        if (this.onView)
-            this.onView(view);
+        bus.emit("worldview", view);
     }
 
     handleNetPing(message: NetPing): void {
@@ -315,12 +309,8 @@ export class Connection {
         if (this.latency < this.minimumLatency || this.minimumLatency == -1) {
             this.minimumLatency = this.latency;
         }
-
-        let offset = Settings.latencyOffset;
-        if (Settings.latencyMode == "server")
-            offset += -this.minimumLatency / 2;
-            
-        this.serverClockOffset = this.earliestOffset + offset;
+        
+        this.serverClockOffset = this.earliestOffset;
 
         setTimeout(() => {
             if (this.connected) {

@@ -34,8 +34,10 @@ export class Leaderboard
     }
 
     
-    getOut(entry: LeaderboardEntry, position: Vector2, rank?: number, entryIsSelf?: boolean, extra?: string) {
-        const angle = -Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x);
+    getOut(entry: LeaderboardEntry, position: Vector2 | null, rank?: number, entryIsSelf?: boolean) {
+        const angle = position != null && entryIsSelf !== true
+            ? -Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x)
+            : null;
 
         let color;
         if (entry.Color === "blue") {
@@ -48,8 +50,7 @@ export class Leaderboard
         return html`
             <tr style=${styles}>
                 <td style="width:25px">${rank ? rank + "." : ""}</td>
-                ${extra ? html`<td style="width:25px">${extra}</td>` : ""}
-                <td style=${`width:28px;height:28px;background:${color}`}><img class="arrow" src="/img/arrow.png" style=${`transform:rotate(${angle}rad)`}></img></td>
+                <td style=${`width:28px;height:28px;background:${color}`}>${angle ? html`<img class="arrow" src="/img/arrow.png" style=${`transform:rotate(${angle}rad)`}></img>`: ""}</td>
                 <td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>
                 <td class="name">${entry.Name}</td>
                 <td class="score">${entry.Score}</td>
@@ -78,7 +79,7 @@ export class Leaderboard
                 const extra = (data.Entries[i].ModeData.advance * 10).toFixed(1);
 
                 if (i < 10 || entryIsSelf) {
-                    out.push(this.getOut(data.Entries[i], position, i + 1, entryIsSelf, extra));
+                    out.push(this.getOut(data.Entries[i], position, i + 1, entryIsSelf));
                 }
             }
             render(
@@ -93,12 +94,15 @@ export class Leaderboard
             const outC: Hole[] = [];
 
             data.Entries.forEach((entry, i) => {
-                const template = this.getOut(entry, position);
+                const entryIsSelf = data.Entries[i].FleetID == fleetID;
                 if (i == 0 || i == 1) {
+                    const template = this.getOut(entry, null, undefined, entryIsSelf);
                     outC.push(template);
                 } else if (entry.Color == "cyan") {
+                    const template = this.getOut(entry, position, undefined, entryIsSelf);
                     outL.push(template);
                 } else {
+                    const template = this.getOut(entry, position, undefined, entryIsSelf);
                     outR.push(template);
                 }
             });

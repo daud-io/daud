@@ -1,22 +1,24 @@
-import { SpriteManager } from "@babylonjs/core";
+import { ParticleSystem, SpriteManager, Texture } from "@babylonjs/core";
 import { GameContainer } from "./gameContainer";
 import { Settings } from "./settings";
 import { SpriteLibrary } from "./spriteLibrary";
 import bus from "./bus";
+import { defaultVertexDeclaration } from "@babylonjs/core/Shaders/ShadersInclude/defaultVertexDeclaration";
 
 export type TextureDefinition = {
     extends: string;
     url: string;
-    animated?: { size: number; count: number; speed: number };
+    animated?: { size: number; count: number; speed: number, loop: boolean };
     emitter: any;
     offset?: { x: number; y: number };
     rotate?: number;
-    tint?: number;
+    tint?: string;
     size: number;
     width: number;
     height: number;
     abstract: boolean;
     spriteManager?: SpriteManager;
+    particleTexture?: Texture;
 };
 export type SpriteDefinition = {
     extends: string;
@@ -73,7 +75,15 @@ export class Loader {
                     /*if (def.rotate)
                         tex.rotate = def.rotate;*/
 
-                } else {
+                }
+                else if (def.emitter)
+                {
+                    def.particleTexture = new Texture(def.url, container.scene);
+                    def.particleTexture.hasAlpha = true;
+                    
+                }
+                else
+                {
                     def.spriteManager = new SpriteManager(
                         `texture-${textureKey}`, def.url, 1000,
                         {
@@ -149,7 +159,6 @@ export class Loader {
         await Promise.all(proms);
         this.progressEl.style.display = "none";
     }
-    
 }
 
 interface IObject {

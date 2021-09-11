@@ -1,4 +1,5 @@
 import { LeaderboardType } from "./connection";
+import { NetWorldView } from "./daud-net/net-world-view";
 import { ServerWorld } from "./lobby";
 
 const events = {
@@ -8,7 +9,8 @@ const events = {
     leaderboard: [] as ((leaderboard: LeaderboardType) => void)[],
     loaded: [] as (() => void)[],
     hook: [] as ((hook: any) => void)[],
-    themechange: [] as (() => void)[]
+    themechange: [] as (() => void)[],
+    worldview: [] as ((worldview: NetWorldView) => void)[]
 };
 
 type Magic = any; // The type is valid, but typescript can't understand that yet

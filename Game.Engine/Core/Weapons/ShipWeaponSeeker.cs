@@ -8,9 +8,11 @@ namespace Game.Engine.Core.Weapons
     public class ShipWeaponSeeker : ShipWeaponBullet
     {
         public Ship DeclaredTarget { get; private set; } = null;
+
         public ShipWeaponSeeker(World world, Ship ship): base(world, ship)
         {
             Interlocked.Increment(ref World.ProjectileCount);
+            
         }
 
         public override void FireFrom(Ship ship, ActorGroup group)

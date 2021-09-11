@@ -13,7 +13,12 @@
 
         protected override void EquipFleet(Fleet fleet)
         {
-            fleet.PushStackWeapon(new FleetWeaponGeneric<ShipWeaponSeeker>(fleet.World) { IsOffense = true });
+            fleet.PushStackWeapon(new FleetWeaponGeneric<ShipWeaponSeeker>(fleet.World) {
+                IsOffense = true,
+                CausesCooldown = true
+            });
+
+            fleet.ShootCooldownTime = World.Time;
         }
     }
 }

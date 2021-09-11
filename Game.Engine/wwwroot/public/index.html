@@ -16,6 +16,7 @@
     <meta name="keywords" content="best space fighter game, space io game, space combat browser game, Daud, sapce1 spaceone space1.io spaceone.io" />
   
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-56531396-2"></script>
+
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -38,7 +39,7 @@
       <h4 id="error_message">Unable to connect to the server! Please check your internet connection or the server maybe under maintenance.</h4>
     </div>
 
-    <div id="gameArea" class="noselect aspectratio">
+    <div id="gameArea" class="noselect">
       <canvas id="gameCanvas"></canvas>
 
       <div id="plusScoreContainer"></div>
@@ -100,8 +101,6 @@
 
       <table id="chat" style="display:none;">
         <tr>
-          <th>⏰</th>
-          <th>waiting</th>
         </tr>
       </table>
 
@@ -244,8 +243,8 @@
           <label
             >Theme
             <select id="settingsTheme">
-              <option value="bitty">Default</option>
               <option value="original">Original Daud</option>
+              <option value="bitty">Bitty</option>
               <option value="retro">Space1 Theme</option>
             </select>
           </label>
@@ -276,15 +275,6 @@
 
           <h4>Controls</h4>
 
-          <label
-            >Mouse Sensitivity
-            <select id="settingsMouseScale">
-              <option value="1">Sensitive</option>
-              <option value="4">Medium</option>
-              <option value="10">Straight-Shooter</option>
-            </select>
-          </label>
-
           <label for="settingsBandwidth"
             >Bandwidth
             <select id="settingsBandwidth">
@@ -294,43 +284,9 @@
             </select>
           </label>
 
-          <label for="settingsLatencyMode"
-            >Latency Mode
-            <select id="settingsLatencyMode">
-              <option value="server">Server (default)</option>
-              <option value="offset">Client (experimental)</option>
-            </select>
-          </label>
-
-          <label for="settingsLatencyOffset"
-            >Latency Offset
-            <select id="settingsLatencyOffset">
-              <option value="-80">-80ms</option>
-              <option value="-60">-60ms</option>
-              <option value="-40">-40ms</option>
-              <option value="-20">-20ms</option>
-              <option value="0">Zero (default)</option>
-              <option value="20">+20ms</option>
-              <option value="40">+40ms</option>
-              <option value="60">+60ms</option>
-              <option value="80">+80ms</option>
-              <option value="100">+100ms</option>
-              <option value="120">+120ms</option>
-              <option value="150">+150ms</option>
-              <option value="200">+200ms</option>
-              <option value="250">+250ms</option>
-            </select>
-          </label>
-
           <label class="checkbox"
             >Show Hints
             <input type="checkbox" id="settingsShowHints" />
-            <span class="checkmark"></span>
-          </label>
-
-          <label class="checkbox"
-            >Show Background
-            <input type="checkbox" id="settingsShowBackground" />
             <span class="checkmark"></span>
           </label>
         </div>

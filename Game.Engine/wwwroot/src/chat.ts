@@ -16,7 +16,7 @@ export class ChatOverlay {
             this.chat.innerHTML += `<tr><td>${(i + 1) % 10}</td><td>${this.messages[i]}</td></tr>`;
         }
 
-        this.container.scene.onKeyboardObservable.add((kbInfo, eventState) => this.onKey(kbInfo));
+        //this.container.scene.onKeyboardObservable.add((kbInfo, eventState) => this.onKey(kbInfo));
     }
 
     onKey(kbInfo: KeyboardInfo)

@@ -31,7 +31,7 @@ export function findBestServer(servers: string[], next: (bestServer: string) => 
     }, 2500);
 }
 function pingServer(worldKey: string): void {
-    const connection = new Connection(undefined);
+    const connection = new Connection();
     connection.bandwidthThrottle = 1;
     connection.autoReload = false;
     connection.connect(worldKey);

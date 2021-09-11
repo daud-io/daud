@@ -3,7 +3,7 @@ import { ServerWorld } from "./lobby";
 import Cookies from "js-cookie";
 import { Picker } from "emoji-picker-element";
 import { GameContainer } from "./gameContainer";
-import { DeviceSourceManager, DeviceType, Matrix, Plane, PointerInput, Scene, Vector3 } from "@babylonjs/core";
+import { Constants, DeviceSourceManager, DeviceType, Matrix, Plane, PointerInput, Scene, Vector3 } from "@babylonjs/core";
 import '@babylonjs/inspector';
 import bus from "./bus";
 
@@ -105,12 +105,36 @@ export function registerContainer(container: GameContainer): void {
     Controls.dsm = new DeviceSourceManager(container.engine);
 }
 
-
 export function updateControlAim()
 {
     const container = Controls.container;
     Controls.shoot = false;
     Controls.boost = false;
+
+    const kbd = Controls.dsm?.getDeviceSource(DeviceType.Keyboard);
+    if (kbd)
+    {
+        if (kbd.getInput(116) === 1
+            || kbd.getInput(83) === 1)
+        {
+            Controls.boost = true;
+            console.log("boost by kbd");
+        }
+
+
+        if (kbd.getInput(32) === 1)
+            Controls.shoot = true;
+
+        /*if (kbd.getInput(73) === 1
+            && kbd.getInput(Constants.INPUT_CTRL_KEY) === 1)
+        {
+            container?.scene.debugLayer.show({
+                embedMode: true,
+            });
+        }*/
+    }
+    else
+        console.log("no keyboard");
 
     const mouse = Controls.dsm?.getDeviceSource(DeviceType.Mouse);
     if (mouse)
@@ -119,24 +143,6 @@ export function updateControlAim()
             Controls.shoot = true;
         if (mouse.getInput(PointerInput.RightClick) === 1)
             Controls.boost = true;
-    }
-
-    const kbd = Controls.dsm?.getDeviceSource(DeviceType.Keyboard);
-    if (kbd)
-    {
-        if (kbd.getInput(116) === 1)
-            Controls.boost = true;
-        if (kbd.getInput(83) === 1)
-            Controls.boost = true;
-
-        if (kbd.getInput(32) === 1)
-            Controls.shoot = true;
-
-        if (kbd.getInput(68) === 1)
-            container?.scene.debugLayer.show({
-                embedMode: true,
-            });
-        
     }
 
     if (container)
@@ -155,7 +161,7 @@ export function updateControlAim()
                 Controls.mouseY = pos.z - container.cameraPosition.y;
             }
         }
-        container.scene.onPointerDown
+        
     }
 }
 

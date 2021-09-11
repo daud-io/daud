@@ -8,6 +8,8 @@
         public bool IsOffense { get; set; }
         public bool IsDefense { get; set; }
 
+        public bool CausesCooldown {get; set; } = true;
+
         public FleetWeaponGeneric(World world, Action<T> configure = null)
         {
         }

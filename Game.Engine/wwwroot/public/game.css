@@ -14,9 +14,11 @@ body {
     width: 100%;
     height: 100%;
     margin: 0;
+    padding: 0;
+    overflow: hidden;
+
     background-color: black;
     text-align: center;
-    overflow: hidden;
     font-family: var(--font-family);
     color: white;
     display: flex;
@@ -31,12 +33,18 @@ body {
     max-width: 177.78vh; /* 16/9 = 1.778 */
     margin: auto;
 }
+
 #gameArea {
+    width: 100%;
+    height: 100%;
+    touch-action: none;
     position: relative;
 }
+
 #gameCanvas {
     width: 100%;
     height: 100%;
+    touch-action: none;
 }
 
 #error {

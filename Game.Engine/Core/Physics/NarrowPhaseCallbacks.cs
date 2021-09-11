@@ -109,7 +109,6 @@ namespace Game.Engine.Physics
             pairMaterial.MaximumRecoveryVelocity = 4f;
             pairMaterial.SpringSettings = new SpringSettings(13, 0);
 
-
             try
             {
                 var worldBodyA = World.Bodies[pair.A.BodyHandle];

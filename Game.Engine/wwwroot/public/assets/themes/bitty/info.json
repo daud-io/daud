@@ -20,11 +20,11 @@
       "url": "thruster_cyan.png",
       "size": 2.5,
       "offset": {
-        "x": -150,
+        "x": -120,
         "y": 0
       },
       "animated": {
-        "speed": 50,
+        "speed": 25,
         "loop": true,
         "size": 64,
         "count": 29

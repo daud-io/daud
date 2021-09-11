@@ -17,6 +17,7 @@
         public float Drag { get => World.Hook.Drag; }
 
         public bool Consumed { get; set; }
+
         private Vector2 Reference = Vector2.Zero;
 
         public ShipWeaponBullet(World world, Ship ship): base(world)
