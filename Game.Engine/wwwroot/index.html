@@ -246,9 +246,21 @@
                                 </span>
                             </div>
                         </div>
+                        <div id="popupDaud" class="change-log-overlay" hidden style="z-index:5;">
+                            <div id="daudBack" class="invisible-change-log-back"></div>
+                            <div id="daudPopup" class="change-log-popup" style="height:auto;">
+                                <div class="header">
+                                    <div id="daudClose" class="close">✕</div>
+                                    <div class="title">Welcome to our BETA TEST site</div>
+                                </div>
+                                <span id="daudContent">
+                                    <iframe style="width:100%;height:100%; overflow: visible;" src="https://daud.io/spaceone/space1.html"></iframe>
+                                </span>
+                            </div>
+                        </div>
                         <div class="blue-box-border visibility" style="display: inline-block; font-size: 1em; padding: 1em; margin-top: 3em;">
                             <i class="fa fa-info-circle" style="margin-right: 0.3em;"></i>
-                            <span>This remake is still in development. <a href="https://discord.gg/5ak5FsU" target="_blank" style="color: #3d78ff;">Join here</a> for more info.</span>
+                            <span>This remake is still in development. <a id="betainfo" href="#">Click here</a> for more info.</span>
                         </div>
                     </div>
                     <input type="button" id="arenas" class="button1" value="Game Modes" hidden />

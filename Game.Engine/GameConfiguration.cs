@@ -17,7 +17,7 @@
 
         public bool NoWorlds { get; set; } = false;
 
-        public bool RegistryEnabled { get; set; }
+        public bool RegistryEnabled { get; set; } = false;
         public string RegistryUri { get; set; }
         public string RegistryUserKey { get; set; }
         public string RegistryPassword { get; set; }

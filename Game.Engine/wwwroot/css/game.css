@@ -457,7 +457,6 @@ body {
 }
 .change-log-popup .header {
     background: #000;
-    position: fixed;
     width: inherit;
     height: 60px;
 }
@@ -1278,4 +1277,13 @@ footer .div_add_blocked {
     -moz-box-shadow: 0px 0px 30px 0px #c0186f;
     box-shadow: 0px 0px 30px 0px #c0186f;
     animation: none;
+}
+
+#betainfo
+{
+    color: white
+}
+#betainfo:visited
+{
+    color: white
 }
