@@ -118,23 +118,19 @@ export function updateControlAim()
             || kbd.getInput(83) === 1)
         {
             Controls.boost = true;
-            console.log("boost by kbd");
         }
-
 
         if (kbd.getInput(32) === 1)
             Controls.shoot = true;
 
-        /*if (kbd.getInput(73) === 1
+        if (kbd.getInput(73) === 1
             && kbd.getInput(Constants.INPUT_CTRL_KEY) === 1)
         {
             container?.scene.debugLayer.show({
                 embedMode: true,
             });
-        }*/
+        }
     }
-    else
-        console.log("no keyboard");
 
     const mouse = Controls.dsm?.getDeviceSource(DeviceType.Mouse);
     if (mouse)

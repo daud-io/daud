@@ -19,7 +19,15 @@ window.setInterval(() => {
     hintbox.innerText = texts[index % texts.length];
     index++;
 }, 6000);
-bus.on("settings", () => {
-    if (Settings.showHints) hintbox.style.display = "";
-    else hintbox.style.display = "none";
-});
+
+function setVisible()
+{
+    if (Settings.showHints)
+        hintbox.style.display = "";
+    else
+        hintbox.style.display = "none";
+}
+
+bus.on("settings", () => setVisible());
+setVisible();
+

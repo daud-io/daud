@@ -33,6 +33,8 @@ export class Connection {
     connected = false;
     framesPerSecond = 0;
     viewsPerSecond = 0;
+    viewCPU = 0;
+    statViewCPUPerSecond = 0;
     updatesPerSecond = 0;
     statBytesUp = 0;
     statBytesDown = 0;
@@ -55,9 +57,11 @@ export class Connection {
         setInterval(() => {
             this.statBytesDownPerSecond = this.statBytesDown;
             this.statBytesUpPerSecond = this.statBytesUp;
+            this.statViewCPUPerSecond = this.viewCPU;
 
             this.statBytesUp = 0;
             this.statBytesDown = 0;
+            this.viewCPU = 0;
         }, 1000);
     }
 
@@ -114,6 +118,7 @@ export class Connection {
             this.onClose(event);
         };
     }
+    
     sendPing(): void {
         const builder = new Builder(0);
 
@@ -299,7 +304,10 @@ export class Connection {
         else
             this.earliestOffset = Math.min(this.earliestOffset, offset);
 
+        const worldviewStart = performance.now();
         bus.emit("worldview", view);
+        this.viewCPU += performance.now() - worldviewStart;
+        
     }
 
     handleNetPing(message: NetPing): void {

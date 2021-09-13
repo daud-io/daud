@@ -1,4 +1,5 @@
-﻿import { NetWorldView } from './daud-net/net-world-view'
+﻿import "./hintbox";
+import { NetWorldView } from './daud-net/net-world-view'
 import { ClientBody } from "./cache";
 import { projectObject } from "./interpolator";
 import { Minimap } from "./minimap";
@@ -9,7 +10,6 @@ import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { firstLoad, joinWorld } from "./lobby";
 import { GameContainer } from "./gameContainer";
-import "./hintbox";
 import bus from "./bus";
 import { Cache } from "./cache";
 
@@ -26,6 +26,7 @@ let frameCounter = 0;
 let isSpectating = false;
 let joiningWorld = false;
 let spawnOnView = false;
+let cooldownProgressValue = 0;
 
 const container = new GameContainer(document.getElementById("gameCanvas") as HTMLCanvasElement);
 const minimap = new Minimap(container);
@@ -97,8 +98,7 @@ bus.on("worldview", (newView: NetWorldView) => {
     setPlayerCount(newView.playercount());
     setSpectatorCount(newView.spectatorcount());
 
-    progress.value = newView.cooldownshoot();
-
+    cooldownProgressValue = newView.cooldownshoot();
     cameraPositionFromServer = Cache.bodyFromServer(newView.camera()!);
 
     if (spawnOnView) {
@@ -106,6 +106,10 @@ bus.on("worldview", (newView: NetWorldView) => {
         doSpawn();
     }
 });
+
+setInterval(() => {
+    progress.value = cooldownProgressValue;
+}, 100);
 
 function doSpawn() {
     if ("ontouchstart" in document.documentElement) {
@@ -168,7 +172,7 @@ function updateStats() {
     connection.framesPerSecond = frameCounter;
     connection.viewsPerSecond = container.viewCounter;
     connection.updatesPerSecond = container.updateCounter;
-    setPerf(connection.latency, connection.minimumLatency, frameCounter);
+    setPerf(connection.latency, connection.minimumLatency, frameCounter, connection.statViewCPUPerSecond);
 
     frameCounter = 0;
     container.viewCounter = 0;
@@ -275,9 +279,7 @@ container.engine.runRenderLoop(() => {
 });
 
 bus.on('loaded', () => {
-    
+    console.log("done loading");
     var loadingElement = document.querySelector(".loading");
     if (loadingElement) loadingElement.classList.remove("loading");
-
-
 });

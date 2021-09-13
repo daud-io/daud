@@ -78,7 +78,13 @@
 
         public void SetControl(ControlInput input)
         {
-            Interlocked.Increment(ref this.ControlPackets);
+            
+            var packetNumber = Interlocked.Increment(ref this.ControlPackets);
+            if (packetNumber == 1)
+            {
+                CummulativeBoostRequested = false;
+                CummulativeShootRequested = false;
+            }
 
             if (input.BoostRequested)
                 CummulativeBoostRequested = true;
@@ -166,9 +172,6 @@
 
                 Fleet.BoostRequested = CummulativeBoostRequested;
                 Fleet.ShootRequested = CummulativeShootRequested;
-
-                CummulativeBoostRequested = false;
-                CummulativeShootRequested = false;
 
                 Fleet.CustomData = ControlInput.CustomData;
 

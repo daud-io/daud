@@ -58,57 +58,11 @@ export class Cache
     }
 
     onWorldView(newView: NetWorldView): void {
-        const updatesLength = newView.updatesLength();
-        const updates: NetBody[] = [];
-        for (let u = 0; u < updatesLength; u++) updates.push(newView.updates(u)!);
-    
-        const groupsLength = newView.groupsLength();
-        const groups: NetGroup[] = [];
-        for (let u = 0; u < groupsLength; u++) groups.push(newView.groups(u)!);
-    
-        const deletes: number[] = [];
+
         const deletesLength = newView.deletesLength();
-        for (let d = 0; d < deletesLength; d++) deletes.push(newView.deletes(d)!);
-    
-        const groupDeletes: number[] = [];
-        const groupDeletesLength = newView.groupdeletesLength();
-        for (let d = 0; d < groupDeletesLength; d++) groupDeletes.push(newView.groupdeletes(d)!);
-    
-        this.update(updates, deletes, groups, groupDeletes, this.container.fleetID);
-    
-        this.container.updateCounter += updatesLength;
-        this.container.viewCounter++;
-    }
-
-    onWorldJoin(): void {
-        this.bodies.forEach((body) => {
-            if (body && body.renderer) body.renderer.destroy();
-        });
-    
-        this.groups.forEach((group) => {
-            if (group && group.renderer) group.renderer.destroy();
-        });
-    
-        this.bodies.clear();
-        this.groups.clear();
-    }
-
-    refreshSprites(): void {
-        this.bodies.forEach((body) => {
-            if (body && body.renderer) body.renderer.refresh();
-        });
-    }
-
-    update(updates: NetBody[], deletes: number[], newGroups: NetGroup[], groupDeletes: number[], myFleetID: number): void {
-        if (!this.container)
-            throw "update before container";
-    
-        //const start = performance.now();
-    
-        // delete objects that should no longer exist
-        for (const deleteKey of deletes) {
-            const key = `b-${deleteKey}`;
-    
+        for (let d = 0; d < deletesLength; d++)
+        {
+            const key = `b-${newView.deletes(d)!}`;
             const body = this.bodies.get(key);
             if (body) {
                 const group = this.groups.get(`g-${body.body.Group}`);
@@ -119,22 +73,21 @@ export class Cache
             this.bodies.delete(key);
         }
     
-        // delete groups that should no longer exist
-        for (const deleteKey of groupDeletes) {
-            const key = `g-${deleteKey}`;
+        const groupDeletesLength = newView.groupdeletesLength();
+        for (let d = 0; d < groupDeletesLength; d++)
+        {
+            const key = `g-${newView.groupdeletes(d)!}`;
             const group = this.groups.get(key);
             if (!group) console.log("group delete on object not in cache");
-    
-            // console.log(`deleting group: ${key}`);
-    
             if (group && group.renderer) group.renderer.destroy();
             this.groups.delete(key);
         }
-    
-        // update groups that should be here
-        for (const group of newGroups) {
+
+        const groupsLength = newView.groupsLength();
+        for (let u = 0; u < groupsLength; u++)
+        {
+            let group = newView.groups(u)!;
             let existing = this.groups.get(`g-${group.group()}`);
-    
             if (!existing) {
                 const clientGroup = this.groupFromServer(group);
                 if (clientGroup.Type == 1) clientGroup.renderer = new Fleet(this.container);
@@ -149,11 +102,14 @@ export class Cache
                 existing.CustomData = cd ? JSON.parse(cd) : cd;
             }
     
-            if (existing.renderer) existing.renderer.update(existing, myFleetID);
+            if (existing.renderer) existing.renderer.update(existing, this.container.fleetID);
         }
-    
-        // update objects that should be here
-        for (const update of updates) {
+
+        const updatesLength = newView.updatesLength();
+        for (let u = 0; u < updatesLength; u++)
+        {
+            // update objects that should be here
+            const update = newView.updates(u)!  
             const existing = this.bodies.get(`b-${update.id()}`);
     
             if (existing) {
@@ -228,7 +184,27 @@ export class Cache
             }
         }
     
-        //console.log("cache update: " + (performance.now() - start).toString());
+        this.container.updateCounter += updatesLength;
+        this.container.viewCounter++;
+    }
+
+    onWorldJoin(): void {
+        this.bodies.forEach((body) => {
+            if (body && body.renderer) body.renderer.destroy();
+        });
+    
+        this.groups.forEach((group) => {
+            if (group && group.renderer) group.renderer.destroy();
+        });
+    
+        this.bodies.clear();
+        this.groups.clear();
+    }
+
+    refreshSprites(): void {
+        this.bodies.forEach((body) => {
+            if (body && body.renderer) body.renderer.refresh();
+        });
     }
     
     tick(gameTime: number): void {
@@ -239,7 +215,6 @@ export class Cache
             if (group.renderer) group.renderer.tick(gameTime);
         });
     }
-
     
     groupFromServer(group: NetGroup): ClientGroup {
         let customData = group.customdata();

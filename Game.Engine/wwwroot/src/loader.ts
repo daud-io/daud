@@ -154,6 +154,9 @@ export class Loader {
             p.then(() => {
                 d++;
                 this.progressEl.value = 255 * (d / proms.length);
+
+                
+                console.log('this.progressEl.value = ' + this.progressEl.value);
             });
         }
         await Promise.all(proms);

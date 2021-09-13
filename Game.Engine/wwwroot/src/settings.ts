@@ -75,6 +75,9 @@ export function loadSettings(): void {
     bandwidth.value = String(Settings.bandwidth);
     logLength.value = String(Settings.logLength);
     nameSize.value = String(Settings.nameSize);
+
+    console.log("settings loaded");
+    bus.emit("settings");
 }
 
 const gear = document.getElementById("gear")!;
