@@ -44,3 +44,12 @@ $("#instructions").click(function(){
 $("#instructionsClose, #instructionsBack").click(function(){
     $("#popupInstructions").fadeOut(500);
 });
+$("#daudClose, #daudBack").click(function(){
+    $("#popupDaud").fadeOut(500);
+});
+
+$("#betainfo").click(function(){
+    $("#popupDaud").fadeIn(500);
+});
+
+$("#popupDaud").fadeIn(500);

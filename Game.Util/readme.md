@@ -24,11 +24,11 @@ Copyright (C) Microsoft Corporation. All rights reserved.
   Restore completed in 2.55 sec for C:\code\IOGame\Game.Robots\Game.Robots.csproj.
   Restore completed in 2.55 sec for C:\code\IOGame\Game.Util\Game.Util.csproj.
 C:\Program Files\dotnet\sdk\2.1.401\Sdks\Microsoft.NET.Sdk\targets\Microsoft.PackageDependencyResolution.targets(198,5): message NETSDK1062: Unable to use package assets cache due to I/O error. This can occur when the same project is built more than once in parallel. Performance may be degraded, but the build result will not be impacted. [C:\code\IOGame\Game.Robots\Game.Robots.csproj]
-  Game.API.Common -> C:\code\IOGame\Game.API.Common\bin\Debug\netcoreapp2.1\Game.API.Common.dll
-  Game.Engine.Networking.FlatBuffers -> C:\code\IOGame\Game.Engine.Networking.FlatBuffers\bin\Debug\netcoreapp2.1\Game.Engine.Networking.FlatBuffers.dll
-  Game.API.Client -> C:\code\IOGame\Game.API.Client\bin\Debug\netcoreapp2.1\Game.API.Client.dll
-  Game.Robots -> C:\code\IOGame\Game.Robots\bin\Debug\netcoreapp2.1\Game.Robots.dll
-  Game.Util -> C:\code\IOGame\Game.Util\bin\Debug\netcoreapp2.1\Game.Util.dll
+  Game.API.Common -> C:\code\IOGame\Game.API.Common\bin\Debug\netcoreapp5.0\Game.API.Common.dll
+  Game.Engine.Networking.FlatBuffers -> C:\code\IOGame\Game.Engine.Networking.FlatBuffers\bin\Debug\netcoreapp5.0\Game.Engine.Networking.FlatBuffers.dll
+  Game.API.Client -> C:\code\IOGame\Game.API.Client\bin\Debug\netcoreapp5.0\Game.API.Client.dll
+  Game.Robots -> C:\code\IOGame\Game.Robots\bin\Debug\netcoreapp5.0\Game.Robots.dll
+  Game.Util -> C:\code\IOGame\Game.Util\bin\Debug\netcoreapp5.0\Game.Util.dll
 
 Build succeeded.
     0 Warning(s)
