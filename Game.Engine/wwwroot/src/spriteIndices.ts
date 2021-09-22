@@ -58,5 +58,6 @@ export const spriteIndices = [
     "wormhole",
     "boom",
     "haste_powerup",
-    "sportsball"
+    "sportsball",
 ];
+

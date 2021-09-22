@@ -38,7 +38,7 @@
             hook.Name = "FFA";
             hook.Description = "Free-For-All: Kill the bad guys... they are all bad.";
             hook.Mesh.Enabled = true;
-            hook.Mesh.MeshURL = "wwwroot/dist/assets/base/models/ffa.glb";
+            hook.Mesh.MeshURL = "wwwroot/public/models/ffa.glb";
             hook.WorldSize = 5000;
 
             return new World(hook, GameConfiguration, "ffa");
@@ -51,7 +51,7 @@
             hook.TeamMode = true;
             hook.Description = "Teams Arena";
             hook.Mesh.Enabled = true;
-            hook.Mesh.MeshURL = "wwwroot/dist/assets/base/models/ffa.glb";
+            hook.Mesh.MeshURL = "wwwroot/public/models/ffa.glb";
             hook.WorldSize = 5000;
             hook.AllowedColors = Hook.TeamColors;
 
@@ -67,7 +67,7 @@
             hook.Fishes *= 4;
             hook.PickupSeekers *= 4;
             hook.PickupShields *= 4;
-            hook.Mesh.MeshURL = "wwwroot/dist/assets/base/models/partycity.glb";
+            hook.Mesh.MeshURL = "wwwroot/public/models/partycity.glb";
             hook.WorldSize = 5000;
 
             return new World(hook, GameConfiguration, "partycity");

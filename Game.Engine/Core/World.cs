@@ -192,7 +192,7 @@
             }
             catch(Exception e)
             {
-                Console.WriteLine("Exception in server game loop:" + e.Message);
+                Console.WriteLine("Exception in server game loop:" + e);
             }
             finally
             {

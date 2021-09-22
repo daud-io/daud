@@ -1,5 +1,5 @@
 ﻿import "./hintbox";
-import { NetWorldView } from './daud-net/net-world-view'
+import { NetWorldView } from "./daud-net/net-world-view";
 import { ClientBody } from "./cache";
 import { projectObject } from "./interpolator";
 import { Minimap } from "./minimap";
@@ -10,8 +10,11 @@ import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { firstLoad, joinWorld } from "./lobby";
 import { GameContainer } from "./gameContainer";
-import bus from "./bus";
+import * as bus from "./bus";
+import "./events";
 import { Cache } from "./cache";
+import "./assets/game.css";
+
 
 const spawnButton = document.getElementById("spawn") as HTMLButtonElement;
 const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
@@ -28,13 +31,47 @@ let joiningWorld = false;
 let spawnOnView = false;
 let cooldownProgressValue = 0;
 
-const container = new GameContainer(document.getElementById("gameCanvas") as HTMLCanvasElement);
+const canvas = document.getElementById("gameCanvas") as any;
+if (!canvas)
+    throw "no canvas";
+
+var container: GameContainer = new GameContainer(<HTMLCanvasElement>canvas);
 const minimap = new Minimap(container);
 
 registerContainer(container);
 
-async function initialize():Promise<void>
-{
+let spectateNextDebounce = false;
+// Game Loop
+container.engine.runRenderLoop(() => {
+    frameCounter++;
+    container.scene.render();
+
+    if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
+        gameTime = performance.now() - connection.serverClockOffset;
+        //console.log(gameTime);
+
+        projectObject(cameraPositionFromServer, gameTime);
+        container.positionCamera(cameraPositionFromServer.Position);
+        container.cache.tick(gameTime);
+
+        let spectateControl = "";
+        if (isSpectating) {
+            if (spectateNextDebounce && !Controls.shoot) {
+                spectateNextDebounce = false;
+            }
+            if (!spectateNextDebounce && Controls.shoot) {
+                spectateControl = "action:next";
+                spectateNextDebounce = true;
+            } else spectateControl = "spectating";
+        }
+
+        updateControlAim();
+
+        connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, spectateControl, Controls.customData);
+    }
+});
+
+async function initialize(): Promise<void> {
     await container.loader.load();
     await firstLoad();
 }
@@ -45,27 +82,22 @@ bus.on("dead", () => {
     document.body.classList.remove("alive");
     document.body.classList.add("spectating");
     document.body.classList.add("dead");
-    if (connection.hook.AllowedColors)
-        setCurrentWorld().allowedColors = connection.hook.AllowedColors;
+    if (connection.hook.AllowedColors) setCurrentWorld().allowedColors = connection.hook.AllowedColors;
 
     initializeWorld();
     isSpectating = true;
 });
 
 bus.on("worldview", (newView: NetWorldView) => {
-
     gameTime = connection.currentWorldTime();
 
     isAlive = newView.isalive();
     container.fleetID = newView.fleetid();
 
-    if (!isAlive && connection.hook != null)
-    {
-        buttonSpectate.disabled = spawnButton.disabled = (connection.hook.CanSpawn === false);
+    if (!isAlive && connection.hook != null) {
+        buttonSpectate.disabled = spawnButton.disabled = connection.hook.CanSpawn === false;
     }
-    if (isAlive)
-        isSpectating = false;
-
+    if (isAlive) isSpectating = false;
 
     const announcementsLength = newView.announcementsLength();
     for (let u = 0; u < announcementsLength; u++) {
@@ -84,7 +116,7 @@ bus.on("worldview", (newView: NetWorldView) => {
 
             if (extra) extra = JSON.parse(extra);
             if (announcement.type() == "announce" && announcement.text() == "Launch now to join the next game!") {
-                container.sounds.beep.play();
+                //container.sounds.beep.play();
             }
             log.addEntry({
                 type: announcement.type()!,
@@ -125,6 +157,7 @@ function doSpawn() {
     document.body.classList.remove("spectating");
     document.body.classList.add("alive");
     connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
+
     container.focus();
 }
 
@@ -180,10 +213,10 @@ function updateStats() {
 }
 setInterval(updateStats, 1000);
 
-const query = new URLSearchParams(window.location.search);
-if (query.has("spectate") && query.get("spectate") !== "0") {
-    startSpectate(true);
-}
+//const query = new URLSearchParams(window.location.search);
+//if (query.has("spectate") && query.get("spectate") !== "0") {
+//startSpectate(true);
+//}
 
 // clicking enter in nick causes fleet spawn
 const nick = document.getElementById("nick") as HTMLInputElement;
@@ -216,7 +249,7 @@ bus.on("worldjoin", (worldKey, world) => {
     setCurrentWorld(world);
     initializeWorld(world);
     connection.disconnect();
-    connection.connect(worldKey);
+    //connection.connect(worldKey);
 });
 
 bus.on("leaderboard", (lb) => {
@@ -224,62 +257,21 @@ bus.on("leaderboard", (lb) => {
 });
 
 bus.on("themechange", () => {
-    console.log('theme change');
-    container.loader.load()
-        .then(() => {
-            container.cache.refreshSprites();
-            initializeWorld();
-        });
+    console.log("theme change");
+    container.loader.load().then(() => {
+        container.cache.refreshSprites();
+        initializeWorld();
+    });
 });
 
 window.addEventListener("resize", () => {
     container.resize();
 });
 
-let spectateNextDebounce = false;
-// Game Loop
-container.engine.runRenderLoop(() => {
-    frameCounter++;
-
-    if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
-        gameTime = performance.now() - connection.serverClockOffset;
-        //console.log(gameTime);
-
-        projectObject(cameraPositionFromServer, gameTime);
-        container.positionCamera(cameraPositionFromServer.Position);
-        container.cache.tick(gameTime);
-        container.scene.render()
-
-        let spectateControl = "";
-        if (isSpectating) {
-            if (spectateNextDebounce && !Controls.shoot)
-            {
-                spectateNextDebounce = false;
-            }
-            if (!spectateNextDebounce && Controls.shoot)
-            {
-                spectateControl = "action:next";
-                spectateNextDebounce = true;
-            }
-            else
-                spectateControl = "spectating";
-        }
-        
-        updateControlAim();
-        
-        connection.sendControl(
-            Controls.boost,
-            Controls.shoot || Controls.autofire,
-            Controls.mouseX,
-            Controls.mouseY,
-            spectateControl,
-            Controls.customData
-        );
-    }
-});
-
-bus.on('loaded', () => {
+bus.on("loaded", () => {
     console.log("done loading");
     var loadingElement = document.querySelector(".loading");
     if (loadingElement) loadingElement.classList.remove("loading");
 });
+
+bus.emit("pageReady");

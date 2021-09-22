@@ -3,9 +3,9 @@ import { Fleet } from "./fleet";
 import { GameContainer } from "../gameContainer";
 import { ClientBody, ClientGroup } from "../cache";
 
-export type TokenData ={
+export type TokenData = {
     FleetID: number | undefined;
-}
+};
 export class Token extends RenderedObject {
     fleet: Fleet | undefined;
     bodyID: string;
@@ -16,7 +16,7 @@ export class Token extends RenderedObject {
         super(container, clientBody);
         this.fleet = undefined;
         this.bodyID = `b-${clientBody.ID}`;
-        this.group = group;        
+        this.group = group;
         this.tokenData = this.defaultTokenData();
     }
 
@@ -30,47 +30,36 @@ export class Token extends RenderedObject {
         return modes;
     }
 
-    defaultTokenData()
-    {
+    defaultTokenData() {
         return { FleetID: undefined };
     }
 
-    updateGroupData()
-    {
-        if (this.group.CustomData != this.tokenData)
-        {
-            if (this.group.CustomData)
-                this.tokenData = this.group.CustomData as TokenData;
-            else
-                this.tokenData = this.defaultTokenData();
+    updateGroupData() {
+        if (this.group.CustomData != this.tokenData) {
+            if (this.group.CustomData) this.tokenData = this.group.CustomData as TokenData;
+            else this.tokenData = this.defaultTokenData();
         }
     }
 
     destroy() {
-        //if (this.fleet) 
-            //this.fleet.deleteShip(this.bodyID);
+        //if (this.fleet)
+        //this.fleet.deleteShip(this.bodyID);
 
         super.destroy();
     }
 
     update() {
-        
         super.update();
         this.updateGroupData();
-    
-        if (this.tokenData.FleetID != this.fleet?.ID)
-        {
-            if (this.tokenData.FleetID)
-            {
+
+        if (this.tokenData.FleetID != this.fleet?.ID) {
+            if (this.tokenData.FleetID) {
                 let group = this.container.cache.getGroup(this.tokenData.FleetID);
                 this.fleet = group?.renderer;
                 this.fleet?.addPowerup("haste");
-            }
-            else
-            {
-                if (this.fleet)
-                    this.fleet.removePowerup("haste");
-                    
+            } else {
+                if (this.fleet) this.fleet.removePowerup("haste");
+
                 this.fleet = undefined;
             }
         }
@@ -83,3 +72,4 @@ export class Token extends RenderedObject {
         }*/
     }
 }
+

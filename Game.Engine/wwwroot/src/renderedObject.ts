@@ -16,8 +16,7 @@ export class RenderedObject {
     constructor(container: GameContainer, clientBody: ClientBody) {
         this.textureLayers = {};
 
-        if (!container)
-            throw "bad container";
+        if (!container) throw "bad container";
 
         this.container = container;
         this.body = clientBody;
@@ -27,14 +26,12 @@ export class RenderedObject {
         this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(clientBody.Sprite);
     }
 
-    decodeOrderedModes(mode:number) {
+    decodeOrderedModes(mode: number) {
         return ["default"];
     }
 
     destroy(): void {
-
-        for(let key in this.textureLayers)
-        {
+        for (let key in this.textureLayers) {
             let textureLayer = this.textureLayers[key];
             textureLayer.destroy();
         }
@@ -46,8 +43,7 @@ export class RenderedObject {
         if (this.body) {
             projectObject(this.body, time);
 
-            for(let key in this.textureLayers)
-            {
+            for (let key in this.textureLayers) {
                 let textureLayer = this.textureLayers[key];
                 textureLayer.tick(time, this.body);
             }
@@ -63,37 +59,31 @@ export class RenderedObject {
     update(): void {
         let dirty = false;
 
-        if (this.currentSpriteName != this.body.Sprite)
-        {
+        if (this.currentSpriteName != this.body.Sprite) {
             this.destroy();
             this.currentSpriteName = this.body.Sprite;
             this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(this.currentSpriteName);
             dirty = true;
         }
 
-        if(this.currentMode != this.body.Mode) 
-        {
+        if (this.currentMode != this.body.Mode) {
             this.currentMode = this.body.Mode;
             dirty = true;
         }
 
-        if (dirty)
-            this.updateTextureLayers();
+        if (dirty) this.updateTextureLayers();
     }
 
-    getOrderedTextures() : string[] {
+    getOrderedTextures(): string[] {
         const modes = this.decodeOrderedModes(this.currentMode);
         const textures = new Array<string>();
-        for (let i=0; i< modes.length; i++)
-        {
+        for (let i = 0; i < modes.length; i++) {
             let mode = modes[i];
             let textureList = <string[]>[];
             let namedMode = this.baseSpriteDefinition.modes?.[mode];
-            textureList = namedMode?.split(' ') ?? [];
+            textureList = namedMode?.split(" ") ?? [];
 
-            for(let t in textureList)
-                if (textures.indexOf(textureList[t]) == -1)
-                    textures.push(textureList[t]);
+            for (let t in textureList) if (textures.indexOf(textureList[t]) == -1) textures.push(textureList[t]);
         }
 
         return textures;
@@ -101,15 +91,13 @@ export class RenderedObject {
 
     updateTextureLayers() {
         const textures = this.getOrderedTextures();
-        
+
         for (let i = 0; i < textures.length; i++) {
             var textureName = textures[i];
 
-            let textureLayer = this.textureLayers[textureName]
-                ?? new TextureLayer(this.container, this.body, textureName);
+            let textureLayer = this.textureLayers[textureName] ?? new TextureLayer(this.container, this.body, textureName);
 
-            if (textureLayer != null)
-            {
+            if (textureLayer != null) {
                 let zIndex = this.body.zIndex;
                 if (zIndex == 0) zIndex = 250;
 

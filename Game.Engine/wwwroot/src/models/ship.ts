@@ -28,8 +28,7 @@ export class Ship extends RenderedObject {
 
         if ((mode & 2) != 0) modes.push("invulnerable");
 
-        if (this.fleet?.extraModes)
-            modes.push(...this.fleet?.extraModes);
+        if (this.fleet?.extraModes) modes.push(...this.fleet?.extraModes);
 
         return modes;
     }
@@ -51,3 +50,4 @@ export class Ship extends RenderedObject {
         }
     }
 }
+

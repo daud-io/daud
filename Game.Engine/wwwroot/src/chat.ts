@@ -2,6 +2,7 @@ import { KeyboardEventTypes, KeyboardInfo } from "@babylonjs/core/Events";
 import { EventState } from "@babylonjs/core/Misc";
 import { GameContainer } from "./gameContainer";
 
+
 export class ChatOverlay {
     container: GameContainer;
     chat: HTMLElement;
@@ -11,7 +12,7 @@ export class ChatOverlay {
         this.container = container;
 
         this.chat = document.getElementById("chat")!;
-        
+
         for (let i = 0; i < this.messages.length; i++) {
             this.chat.innerHTML += `<tr><td>${(i + 1) % 10}</td><td>${this.messages[i]}</td></tr>`;
         }
@@ -19,8 +20,7 @@ export class ChatOverlay {
         //this.container.scene.onKeyboardObservable.add((kbInfo, eventState) => this.onKey(kbInfo));
     }
 
-    onKey(kbInfo: KeyboardInfo)
-    {
+    onKey(kbInfo: KeyboardInfo) {
         switch (kbInfo.type) {
             case KeyboardEventTypes.KEYDOWN:
                 const e = kbInfo.event;
@@ -33,9 +33,9 @@ export class ChatOverlay {
                     message.time = Date.now();
                     this.chat.classList.remove("open");
                 }
-                                
+
                 break;
-        }        
+        }
     }
 }
 
@@ -43,4 +43,3 @@ export const message = {
     txt: "",
     time: Date.now(),
 };
-

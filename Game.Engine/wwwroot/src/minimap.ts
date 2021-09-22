@@ -54,7 +54,6 @@ export class Minimap {
         */
     }
     drawMinimap(position: Vector2, color: keyof typeof colors, self: boolean, rank: number, isCTF: boolean, worldSize: number): void {
-
         /*
 
         const minimapX = ((position.x + worldSize) / 2 / worldSize) * minimapSize;
@@ -95,3 +94,5 @@ export class Minimap {
         */
     }
 }
+
+

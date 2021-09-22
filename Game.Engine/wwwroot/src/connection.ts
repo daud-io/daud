@@ -1,8 +1,7 @@
-﻿
-import { Settings } from "./settings";
+﻿import { Settings } from "./settings";
 import { addSecretShips } from "./controls";
 import { getToken } from "./discord";
-import bus from "./bus";
+import * as bus from "./bus";
 import { Vector2 } from "@babylonjs/core";
 import { NetWorldView } from "./daud-net/net-world-view";
 import { NetPing } from "./daud-net/net-ping";
@@ -15,6 +14,7 @@ import { NetSpawn } from "./daud-net/net-spawn";
 import { NetControlInput } from "./daud-net/net-control-input";
 import { NetEvent } from "./daud-net/net-event";
 import { NetLeaderboard } from "./daud-net/net-leaderboard";
+
 
 export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
 export type LeaderboardType = {
@@ -118,7 +118,7 @@ export class Connection {
             this.onClose(event);
         };
     }
-    
+
     sendPing(): void {
         const builder = new Builder(0);
 
@@ -209,16 +209,10 @@ export class Connection {
 
         this.send(builder.asUint8Array());
         console.log("spawned");
+        bus.emit("spawn", name ?? "", ship ?? "");
     }
 
-    sendControl(
-        boost: boolean,
-        shoot: boolean,
-        x: number,
-        y: number,
-        spectateControl: string,
-        customDataJson: string
-    ): void {
+    sendControl(boost: boolean, shoot: boolean, x: number, y: number, spectateControl: string, customDataJson: string): void {
         const builder = new Builder(0);
 
         let spectateString: number | undefined = undefined;
@@ -248,15 +242,13 @@ export class Connection {
         if (this.lastControlPacket.length != newControlPacket.length) {
             this.send(newControlPacket);
             this.lastControlPacket = newControlPacket;
-        }
-        else
+        } else
             for (let i = 0; i < newControlPacket.length; i++)
                 if (newControlPacket[i] != this.lastControlPacket[i]) {
                     this.send(newControlPacket);
                     this.lastControlPacket = newControlPacket;
                     break;
                 }
-
     }
 
     send(databuffer: Uint8Array): void {
@@ -269,6 +261,7 @@ export class Connection {
     onOpen(): void {
         this.connected = true;
         console.log("connected");
+        bus.emit("connected", this);
         this.sendPing();
         this.sendAuthenticate(getToken());
 
@@ -299,15 +292,12 @@ export class Connection {
     handleNetWorldView(view: NetWorldView): void {
         const offset = performance.now() - view.time();
 
-        if (this.earliestOffset == -1)
-            this.earliestOffset = offset;
-        else
-            this.earliestOffset = Math.min(this.earliestOffset, offset);
+        if (this.earliestOffset == -1) this.earliestOffset = offset;
+        else this.earliestOffset = Math.min(this.earliestOffset, offset);
 
         const worldviewStart = performance.now();
         bus.emit("worldview", view);
         this.viewCPU += performance.now() - worldviewStart;
-        
     }
 
     handleNetPing(message: NetPing): void {
@@ -317,7 +307,7 @@ export class Connection {
         if (this.latency < this.minimumLatency || this.minimumLatency == -1) {
             this.minimumLatency = this.latency;
         }
-        
+
         this.serverClockOffset = this.earliestOffset;
 
         setTimeout(() => {
@@ -335,7 +325,7 @@ export class Connection {
 
         if (eventObject.type == "hook") {
             this.hook = eventObject.data;
-            bus.emit('hook', this.hook);
+            bus.emit("hook", this.hook);
         }
 
         if (eventObject.data.roles) addSecretShips(eventObject.data.roles);
@@ -391,18 +381,17 @@ export class Connection {
 
         switch (messageType) {
             case AllMessages.NetWorldView:
-                this.handleNetWorldView(quantum.message(new NetWorldView()))
+                this.handleNetWorldView(quantum.message(new NetWorldView()));
                 break;
             case AllMessages.NetPing:
-                this.handleNetPing(quantum.message(new NetPing()))
+                this.handleNetPing(quantum.message(new NetPing()));
                 break;
             case AllMessages.NetEvent:
-                this.handleNetEvent(quantum.message(new NetEvent()))
+                this.handleNetEvent(quantum.message(new NetEvent()));
                 break;
             case AllMessages.NetLeaderboard:
-                this.handleNetLeaderboard(quantum.message(new NetLeaderboard()))
+                this.handleNetLeaderboard(quantum.message(new NetLeaderboard()));
                 break;
-
         }
     }
 }

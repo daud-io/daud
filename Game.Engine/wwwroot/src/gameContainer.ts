@@ -1,4 +1,12 @@
-import { Color3, CubeTexture, DirectionalLight, Engine, FreeCamera, HemisphericLight, Matrix, Mesh, MeshBuilder, PointLight, Quaternion, Scene, SceneLoader, ShadowGenerator, StandardMaterial, Texture, Vector2, Vector3 } from "@babylonjs/core";
+import {
+    Color3,
+    Engine,
+    FreeCamera,
+    HemisphericLight,
+    Scene,
+    Vector2,
+    Vector3,
+} from "@babylonjs/core";
 import { Loader } from "./loader";
 import { AdvancedDynamicTexture } from "@babylonjs/gui";
 import { Leaderboard } from "./leaderboard";
@@ -23,7 +31,7 @@ export class GameContainer {
 
     readonly cache: Cache;
     updateCounter: number = 0;
-    viewCounter:number = 0;
+    viewCounter: number = 0;
     canvas: HTMLCanvasElement;
 
     constructor(canvas: HTMLCanvasElement) {
@@ -31,7 +39,7 @@ export class GameContainer {
         this.canvas = canvas;
         this.engine = new Engine(canvas, true);
         this.scene = new Scene(this.engine);
-        this.scene.ambientColor = Color3.White()
+        this.scene.ambientColor = Color3.White();
         this.loader = new Loader(this);
         this.worldMeshLoader = new WorldMeshLoader(this);
         this.cache = new Cache(this);
@@ -40,36 +48,31 @@ export class GameContainer {
         this.guiTexture = this.setupGUI();
         this.leaderboard = new Leaderboard(this);
         this.sounds = new Sounds(this);
-        
+
         this.positionCamera(Vector2.Zero());
         this.setupLights();
     }
 
-    focus()
-    {
+    focus() {
         this.canvas.focus();
     }
 
-    setupGUI(): AdvancedDynamicTexture
-    {
+    setupGUI(): AdvancedDynamicTexture {
         return AdvancedDynamicTexture.CreateFullscreenUI("UI");
     }
 
-    setupCamera(): FreeCamera
-    {
+    setupCamera(): FreeCamera {
         const camera = new FreeCamera("Camera", new Vector3(0, this.cameraHeight, 0), this.scene);
         camera.maxZ = 20000;
         return camera;
     }
 
-    setupLights()
-    {
+    setupLights() {
         var light = new HemisphericLight("containerLight", new Vector3(0, 1, 0), this.scene);
         light.intensity *= 0.3;
     }
 
-    positionCamera(serverPosition: Vector2)
-    {
+    positionCamera(serverPosition: Vector2) {
         this.cameraHeight = 4000;
         this.cameraPosition.x = serverPosition.x * 0.2 + this.cameraPosition.x * 0.8;
         this.cameraPosition.y = serverPosition.y * 0.2 + this.cameraPosition.y * 0.8;

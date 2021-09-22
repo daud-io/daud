@@ -1,9 +1,6 @@
 ﻿import { bestServer, findBestServer, save } from "./router";
 import { html, render, Hole } from "uhtml";
-import bus from "./bus";
-
-const worldsWrapper = document.getElementById("worldsWrapper")!;
-const worldList = document.getElementById("worldList")!;
+import * as bus from "./bus";
 
 export type ServerWorld = {
     world: string;
@@ -21,8 +18,42 @@ export type ServerWorld = {
     isDefault: boolean;
 };
 
+var worldsWrapper:HTMLElement;
+var worldList:HTMLElement;
 let allWorlds: Record<string, ServerWorld> = {};
-let refreshIntervalHandle = 0;
+var refreshIntervalHandle:NodeJS.Timer;
+
+function buildList(response: ServerWorld[]) {
+    allWorlds = {};
+
+    const options: Hole[] = [];
+    for (const world of response) {
+        allWorlds[world.world] = world;
+
+        options.push(
+            html`<tbody
+                id=${world.world + "_row"}
+                onclick=${(e: MouseEvent) => {
+                    if ((e.target as HTMLElement).tagName == "BUTTON") joinWorld(world.world);
+                    else selectRow(world.world);
+                }}
+                class=${"worldrow" + (world.players ? "" : " empty")}
+            >
+                <tr>
+                    <td><button>Join</button> (<span id=${world.world + "_playercount"}>${world.players}</span>)</td>
+                    <td id="second-world-td"><b>${world.name}</b>: ${world.description}</td>
+                </tr>
+                ${world.instructions
+                    ? html`<tr class="details">
+                        <td colspan="3" .innerHTML=${world.instructions}></td>
+                    </tr>`
+                    : ""}
+            </tbody>`
+        );
+    }
+
+    render(worldList, html`${options}`);
+}
 
 function selectRow(selectedWorld: string) {
     for (const world in allWorlds) {
@@ -32,41 +63,40 @@ function selectRow(selectedWorld: string) {
     }
 }
 
-function buildList(response: ServerWorld[]) {
-    allWorlds = {};
-
-    const options: Hole[] = [];
-    for (const world of response) {
-        allWorlds[world.world] = world;
-
-    options.push(
-        html`<tbody
-            id=${world.world + "_row"}
-            onclick=${(e: MouseEvent) => {
-                if ((e.target as HTMLElement).tagName == "BUTTON") joinWorld(world.world);
-                else selectRow(world.world);
-            }}
-            class=${"worldrow" + (world.players ? "" : " empty")}
-        >
-            <tr>
-                <td><button>Join</button> (<span id=${world.world + "_playercount"}>${world.players}</span>)</td>
-                <td id="second-world-td"><b>${world.name}</b>: ${world.description}</td>
-            </tr>
-            ${world.instructions
-                ? html`<tr class="details">
-                      <td colspan="3" .innerHTML=${world.instructions}></td>
-                  </tr>`
-                : ""}
-        </tbody>`);
-    }
-
-    render(worldList, html`${options}`);
-}
 
 let showing = false;
+function hide() {
+    worldsWrapper.classList.add("closed");
+    document.body.classList.remove("lobby");
+    showing = false;
+    clearInterval(refreshIntervalHandle);
+}
+
+function show() {
+    document.body.classList.add("lobby");
+    showing = true;
+    refreshIntervalHandle = setInterval(refreshList, 1000);
+}
+
+bus.on("pageReady", () => {
+
+    worldsWrapper = document.getElementById("worldsWrapper")!;
+    worldList = document.getElementById("worldList")!;
+
+    document.getElementById("wcancel")!.addEventListener("click", () => {
+        if (showing) hide();
+    });
+
+    document.getElementById("arenas")!.addEventListener("click", (e) => {
+        show();
+        refreshList();
+        worldsWrapper.classList.remove("closed");
+        e.preventDefault();
+        return false;
+    });
+});
 
 export async function firstLoad(): Promise<void> {
-
     console.log("firstload calling refreshlist");
     await refreshList();
     console.log();
@@ -76,21 +106,19 @@ export async function firstLoad(): Promise<void> {
     const worldConnect = url.get("world") || "default";
 
     //If user manually sets a particular host via params
-    if (hostName) {
-        joinWorld(`${hostName}/${worldConnect}`);
-        return;
-    }
+    //if (hostName) {
+    //    joinWorld(`${hostName}/${worldConnect}`);
+    //    return;
+    //}
 
     for (const worldKey in allWorlds) {
         const world = allWorlds[worldKey];
-        if (world.isDefault)
-        {
+        if (world.isDefault) {
             console.log("joining default world from lobby list");
             joinWorld(worldKey);
             return;
         }
     }
-    
 
     if (bestServer) {
         // If there is a cookie saved with the best server.
@@ -101,7 +129,6 @@ export async function firstLoad(): Promise<void> {
             if (allWorlds[best]) {
                 best = best = best.split("/")[0] + "/";
                 save(best);
-
             } else {
                 joinWorld(`us.daud.io/${worldConnect}`);
             }
@@ -123,33 +150,8 @@ export async function refreshList(): Promise<void> {
     buildList(response);
 }
 
-
-function hide() {
-    worldsWrapper.classList.add("closed");
-    document.body.classList.remove("lobby");
-    showing = false;
-    clearInterval(refreshIntervalHandle);
-}
-
-function show() {
-    document.body.classList.add("lobby");
-    showing = true;
-    refreshIntervalHandle = setInterval(refreshList, 1000);
-}
-
 export function joinWorld(worldKey: string): void {
     bus.emit("worldjoin", worldKey, allWorlds[worldKey]);
     hide();
 }
 
-document.getElementById("wcancel")!.addEventListener("click", () => {
-    if (showing) hide();
-});
-
-document.getElementById("arenas")!.addEventListener("click", (e) => {
-    show();
-    refreshList();
-    worldsWrapper.classList.remove("closed");
-    e.preventDefault();
-    return false;
-});

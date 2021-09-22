@@ -1,64 +1,108 @@
 ﻿import { VirtualJoystick } from "./virtualjoystick";
 import { ServerWorld } from "./lobby";
-import Cookies from "js-cookie";
+import { Cookies } from "./cookies";
 import { Picker } from "emoji-picker-element";
 import { GameContainer } from "./gameContainer";
 import { Constants, DeviceSourceManager, DeviceType, Matrix, Plane, PointerInput, Scene, Vector3 } from "@babylonjs/core";
-import '@babylonjs/inspector';
-import bus from "./bus";
+import * as bus from "./bus";
 
-const emojiContainer = document.getElementById("emoji-container")!;
-const picker = new Picker();
-emojiContainer.appendChild(picker as HTMLElement);
-picker.addEventListener("emoji-click", (e) => {
-    Cookies.set("emoji", (Controls.emoji = emojiTrigger.innerText = e.detail.unicode || ""));
-    emojiContainer.classList.remove("open");
-});
 
-const autofTgg = document.getElementById("autofireToggle")!;
-const emojiTrigger = document.getElementById("emoji-trigger")!;
 const secretShips = ["ship_secret", "ship_zed"];
 
-document.addEventListener("click", (event) => {
-    if (event.target == emojiTrigger) emojiContainer.classList.toggle("open");
-    else if (!emojiContainer.contains(event.target as Node)) {
+
+var refreshSelectedStyle:() => void;
+var shipSelectorSwitch:HTMLElement;
+
+bus.on("pageReady", function () {
+    /*const emojiContainer = document.getElementById("emoji-container")!;
+    const picker = new Picker();
+    emojiContainer.appendChild(picker as HTMLElement);
+    picker.addEventListener("emoji-click", (e) => {
+        Cookies.set("emoji", (Controls.emoji = emojiTrigger.innerText = e.detail.unicode || ""));
         emojiContainer.classList.remove("open");
-    }
-});
-
-const isMobile = "ontouchstart" in document.documentElement;
-let joystick: VirtualJoystick;
-
-if (isMobile) {
-    document.getElementById("nipple-controls")!.style.display = "unset";
-    joystick = new VirtualJoystick({
-        container: document.getElementById("nipple-zone")!,
+    });*/
+    
+    const autofTgg = document.getElementById("autofireToggle")!;
+    // const emojiTrigger = document.getElementById("emoji-trigger")!;
+    
+    // document.addEventListener("click", (event) => {
+    //     if (event.target == emojiTrigger) emojiContainer.classList.toggle("open");
+    //     else if (!emojiContainer.contains(event.target as Node)) {
+    //         emojiContainer.classList.remove("open");
+    //     }
+    // });
+    
+    shipSelectorSwitch = document.getElementById("shipSelectorSwitch")!;
+    
+    refreshSelectedStyle = () => {
+        const options = Array.from(shipSelectorSwitch.children);
+    
+        for (const option of options) {
+            if (option.getAttribute("data-color") == Controls.ship) option.classList.add("selected");
+            else option.classList.remove("selected");
+        }
+    };
+    
+    shipSelectorSwitch.addEventListener("click", (e) => {
+        Controls.ship = (e.target as HTMLElement).getAttribute("data-color")!;
+        save();
+        refreshSelectedStyle();
     });
-}
+    
+    const nick = document.querySelector("#nick") as HTMLInputElement;
+    nick.addEventListener("input", () => {
+        Controls.nick = nick.value;
+        save();
+    });
 
-const shipSelectorSwitch = document.getElementById("shipSelectorSwitch")!;
+    window.addEventListener("keydown", ({ key }) => {
+        //if (key.toLowerCase() == "s") Controls.boost = true;
+        //if (key == " ") Controls.shoot = true;
+    
+        if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
+            // Autofire
+            if (!Controls.autofire) {
+                Controls.autofire = true;
+                autofTgg.innerHTML = "ON";
+            } else {
+                Controls.autofire = false;
+                autofTgg.innerHTML = "OFF";
+            }
+        }
+    });
+    
+    window.addEventListener("keyup", ({ key }) => {
+        //if (key.toLowerCase() == "s") Controls.boost = false;
+        //if (key == " ") Controls.shoot = false;
+    });
+    
+    document.body.addEventListener("contextmenu", (e) => {
+        if (document.body.classList.contains("alive")) {
+            e.preventDefault();
+            return false;
+        }
+    });
 
-const refreshSelectedStyle = () => {
-    const options = Array.from(shipSelectorSwitch.children);
+    const savedNick = Cookies.get("nick");
+    const savedColor = Cookies.get("color");
+    const savedEmoji = Cookies.get("emoji");
 
-    for (const option of options) {
-        if (option.getAttribute("data-color") == Controls.ship) option.classList.add("selected");
-        else option.classList.remove("selected");
+    if (savedNick != undefined) {
+        Controls.nick = savedNick;
+        nick.value = savedNick;
     }
-};
 
-shipSelectorSwitch.addEventListener("click", (e) => {
-    Controls.ship = (e.target as HTMLElement).getAttribute("data-color")!;
-    save();
-    refreshSelectedStyle();
+    if (savedColor != undefined) {
+        Controls.color = savedColor;
+        refreshSelectedStyle();
+    }
+
+    if (savedEmoji != undefined) {
+        Controls.emoji = savedEmoji;
+        //emojiTrigger.innerText = savedEmoji;
+    }
 });
 
-const nick = document.querySelector("#nick") as HTMLInputElement;
-nick.addEventListener("input", () => {
-    Controls.nick = nick.value;
-
-    save();
-});
 
 export const Controls = {
     emoji: "🥚",
@@ -79,9 +123,7 @@ export const Controls = {
 };
 
 export function registerContainer(container: GameContainer): void {
-
     container.scene.onPointerObservable.add((pointerInfo) => {
-
         /*switch (pointerInfo.type) {
             case PointerEventTypes.POINTERDOWN:
                 if (pointerInfo.event.button == 2)
@@ -105,63 +147,39 @@ export function registerContainer(container: GameContainer): void {
     Controls.dsm = new DeviceSourceManager(container.engine);
 }
 
-export function updateControlAim()
-{
+export function updateControlAim() {
     const container = Controls.container;
     Controls.shoot = false;
     Controls.boost = false;
 
     const kbd = Controls.dsm?.getDeviceSource(DeviceType.Keyboard);
-    if (kbd)
-    {
-        if (kbd.getInput(116) === 1
-            || kbd.getInput(83) === 1)
-        {
+    if (kbd) {
+        if (kbd.getInput(116) === 1 || kbd.getInput(83) === 1) {
             Controls.boost = true;
         }
 
-        if (kbd.getInput(32) === 1)
-            Controls.shoot = true;
-
-        if (kbd.getInput(73) === 1
-            && kbd.getInput(Constants.INPUT_CTRL_KEY) === 1)
-        {
-            container?.scene.debugLayer.show({
-                embedMode: true,
-            });
-        }
+        if (kbd.getInput(32) === 1) Controls.shoot = true;
     }
 
     const mouse = Controls.dsm?.getDeviceSource(DeviceType.Mouse);
-    if (mouse)
-    {
-        if (mouse.getInput(PointerInput.LeftClick) === 1)
-            Controls.shoot = true;
-        if (mouse.getInput(PointerInput.RightClick) === 1)
-            Controls.boost = true;
+    if (mouse) {
+        if (mouse.getInput(PointerInput.LeftClick) === 1) Controls.shoot = true;
+        if (mouse.getInput(PointerInput.RightClick) === 1) Controls.boost = true;
     }
 
-    if (container)
-    {
-        if (Controls.screenMouseX != container.scene.pointerX
-            || Controls.screenMouseY != container.scene.pointerY)
-        {
-
+    if (container) {
+        if (Controls.screenMouseX != container.scene.pointerX || Controls.screenMouseY != container.scene.pointerY) {
             Controls.screenMouseX = container.scene.pointerX;
             Controls.screenMouseY = container.scene.pointerY;
             const ray = container.scene.createPickingRay(Controls.screenMouseX, Controls.screenMouseY, Matrix.Identity(), container.camera);
-            const pos = ray.intersectsAxis('y', 100);
-            if (pos)
-            {
+            const pos = ray.intersectsAxis("y", 100);
+            if (pos) {
                 Controls.mouseX = pos.x - container.cameraPosition.x;
                 Controls.mouseY = pos.z - container.cameraPosition.y;
             }
         }
-        
     }
 }
-
-
 
 let currentWorld: ServerWorld;
 export function setCurrentWorld(world?: ServerWorld): ServerWorld {
@@ -173,11 +191,9 @@ export function initializeWorld(world: ServerWorld = currentWorld): void {
     const selector = document.getElementById("shipSelectorSwitch")!;
     while (selector.firstChild) selector.removeChild(selector.firstChild);
 
-
     for (let i = 0; i < colors.length; i++) {
         const selectorImage = new Image();
-        if (Controls.container)
-            selectorImage.src = Controls.container.loader.getTextureDefinition(colors[i])?.url;
+        if (Controls.container) selectorImage.src = Controls.container.loader.getTextureDefinition(colors[i])?.url!!;
 
         if (selectorImage) {
             selector.appendChild(selectorImage);
@@ -206,33 +222,6 @@ export function addSecretShips(roles: string[]): void {
         if (ship) ship.style.display = "inline-block";
     }
 }
-window.addEventListener("keydown", ({ key }) => {
-    //if (key.toLowerCase() == "s") Controls.boost = true;
-    //if (key == " ") Controls.shoot = true;
-
-    if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
-        // Autofire
-        if (!Controls.autofire) {
-            Controls.autofire = true;
-            autofTgg.innerHTML = "ON";
-        } else {
-            Controls.autofire = false;
-            autofTgg.innerHTML = "OFF";
-        }
-    }
-});
-
-window.addEventListener("keyup", ({ key }) => {
-    //if (key.toLowerCase() == "s") Controls.boost = false;
-    //if (key == " ") Controls.shoot = false;
-});
-
-document.body.addEventListener("contextmenu", (e) => {
-    if (document.body.classList.contains("alive")) {
-        e.preventDefault();
-        return false;
-    }
-});
 
 function save() {
     const cookieOptions = { expires: 300 };
@@ -241,21 +230,3 @@ function save() {
     Cookies.set("color", Controls.color!, cookieOptions);
 }
 
-const savedNick = Cookies.get("nick");
-const savedColor = Cookies.get("color");
-const savedEmoji = Cookies.get("emoji");
-
-if (savedNick != undefined) {
-    Controls.nick = savedNick;
-    nick.value = savedNick;
-}
-
-if (savedColor != undefined) {
-    Controls.color = savedColor;
-    refreshSelectedStyle();
-}
-
-if (savedEmoji != undefined) {
-    Controls.emoji = savedEmoji;
-    emojiTrigger.innerText = savedEmoji;
-}

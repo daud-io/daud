@@ -1,4 +1,4 @@
-import Cookies from "js-cookie";
+import { Cookies } from "./cookies";
 import { Connection } from "./connection";
 
 type Server = { worldKey: string; latency: number };
@@ -43,3 +43,4 @@ function pingServer(worldKey: string): void {
         connection.disconnect();
     }, 1000);
 }
+

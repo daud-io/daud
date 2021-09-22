@@ -1,5 +1,5 @@
 ﻿import { html, render } from "uhtml";
-import bus from "./bus";
+import * as bus from "./bus";
 import { Settings } from "./settings";
 const logElement = document.getElementById("log")!;
 const bigLog = document.getElementById("bigLog")!;
@@ -16,7 +16,7 @@ type LogType = { type: string; text: string; pointsDelta: number; extraData: any
 
 const data: { time: Date; entry: LogType }[] = [];
 let lastDisplay: number;
-let logElHide: number, comboMsgHide: number, bigLogHide: number;
+let logElHide: NodeJS.Timeout, comboMsgHide: NodeJS.Timeout, bigLogHide: NodeJS.Timeout;
 export function addEntry(entry: LogType): void {
     data.push({ time: new Date(), entry });
     while (data.length > Settings.logLength) data.shift();

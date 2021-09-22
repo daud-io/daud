@@ -2,7 +2,7 @@ import { spriteIndices } from "./spriteIndices";
 import { RenderedObject } from "./renderedObject";
 import { Fleet } from "./models/fleet";
 import { GameContainer } from "./gameContainer";
-import bus from "./bus";
+import * as bus from "./bus";
 import { Ship } from "./models/ship";
 import { Token } from "./models/token";
 import { Vector2 } from "@babylonjs/core";
@@ -41,16 +41,13 @@ type ClientRendered = {
     renderer?: RenderedObject;
 };
 
-
-export class Cache
-{
+export class Cache {
     static readonly VELOCITY_SCALE_FACTOR = 5000.0;
     readonly container: GameContainer;
     readonly bodies: Map<string, ClientRendered> = new Map();
     readonly groups: Map<string, ClientGroup> = new Map();
 
-    constructor(container: GameContainer)
-    {
+    constructor(container: GameContainer) {
         this.container = container;
 
         bus.on("worldjoin", () => this.onWorldJoin());
@@ -58,10 +55,8 @@ export class Cache
     }
 
     onWorldView(newView: NetWorldView): void {
-
         const deletesLength = newView.deletesLength();
-        for (let d = 0; d < deletesLength; d++)
-        {
+        for (let d = 0; d < deletesLength; d++) {
             const key = `b-${newView.deletes(d)!}`;
             const body = this.bodies.get(key);
             if (body) {
@@ -69,13 +64,12 @@ export class Cache
                 if (group && group.renderer) group.renderer.deleteShip(key);
                 if (body.renderer) body.renderer.destroy();
             }
-    
+
             this.bodies.delete(key);
         }
-    
+
         const groupDeletesLength = newView.groupdeletesLength();
-        for (let d = 0; d < groupDeletesLength; d++)
-        {
+        for (let d = 0; d < groupDeletesLength; d++) {
             const key = `g-${newView.groupdeletes(d)!}`;
             const group = this.groups.get(key);
             if (!group) console.log("group delete on object not in cache");
@@ -84,8 +78,7 @@ export class Cache
         }
 
         const groupsLength = newView.groupsLength();
-        for (let u = 0; u < groupsLength; u++)
-        {
+        for (let u = 0; u < groupsLength; u++) {
             let group = newView.groups(u)!;
             let existing = this.groups.get(`g-${group.group()}`);
             if (!existing) {
@@ -101,17 +94,16 @@ export class Cache
                 const cd = group.customdata();
                 existing.CustomData = cd ? JSON.parse(cd) : cd;
             }
-    
+
             if (existing.renderer) existing.renderer.update(existing, this.container.fleetID);
         }
 
         const updatesLength = newView.updatesLength();
-        for (let u = 0; u < updatesLength; u++)
-        {
+        for (let u = 0; u < updatesLength; u++) {
             // update objects that should be here
-            const update = newView.updates(u)!  
+            const update = newView.updates(u)!;
             const existing = this.bodies.get(`b-${update.id()}`);
-    
+
             if (existing) {
                 existing.body.Size = update.size() * 5;
                 existing.body.Sprite = spriteIndices[update.sprite()];
@@ -125,65 +117,61 @@ export class Cache
                 const velocity = update.velocity()!;
                 existing.body.Momentum.x = velocity.x() / Cache.VELOCITY_SCALE_FACTOR;
                 existing.body.Momentum.y = velocity.y() / Cache.VELOCITY_SCALE_FACTOR;
-    
+
                 if (update.group() != existing.body.Group) {
                     const oldGroup = this.groups.get(`g-${existing.body.Group}`);
                     if (oldGroup) oldGroup.renderer!.deleteShip(`b-${update.id()}`);
                     existing.body.Group = update.group();
                 }
-    
+
                 existing.body.zIndex = 0;
-    
-                if (update.group() != 0)
-                {
-                    let group = this.groups.get(`g-${update.group()}`);  
+
+                if (update.group() != 0) {
+                    let group = this.groups.get(`g-${update.group()}`);
                     if (group) existing.body.zIndex = group.ZIndex || 0;
-                } 
-    
+                }
+
                 if (existing.renderer) existing.renderer.update();
             }
-    
+
             if (!existing) {
-                var renderer = <RenderedObject|undefined>undefined;
+                var renderer = <RenderedObject | undefined>undefined;
                 const clientBody = Cache.bodyFromServer(update);
-    
+
                 const group = this.groups.get(`g-${clientBody.Group}`);
-    
+
                 clientBody.zIndex = group?.ZIndex || 0;
-    
+
                 const groupType = group?.Type ?? -1;
-    
-                switch (groupType)
-                {
+
+                switch (groupType) {
                     case 0: // fish
                         break;
-    
+
                     case 1: // fleets
-                        if (group?.renderer instanceof Fleet)
-                        {
+                        if (group?.renderer instanceof Fleet) {
                             var ship = new Ship(this.container, clientBody, group);
                             renderer = ship;
                             group.renderer.addShip(`b-${clientBody.ID}`, ship);
                         }
                         break;
-    
+
                     case 6: // tokens
                         renderer = new Token(this.container, clientBody, group!);
                         break;
-    
                 }
-    
+
                 if (!renderer) renderer = new RenderedObject(this.container, clientBody);
-                
+
                 if (renderer) renderer.update();
-    
+
                 this.bodies.set(`b-${clientBody.ID}`, {
                     body: clientBody,
                     renderer,
                 });
             }
         }
-    
+
         this.container.updateCounter += updatesLength;
         this.container.viewCounter++;
     }
@@ -192,11 +180,11 @@ export class Cache
         this.bodies.forEach((body) => {
             if (body && body.renderer) body.renderer.destroy();
         });
-    
+
         this.groups.forEach((group) => {
             if (group && group.renderer) group.renderer.destroy();
         });
-    
+
         this.bodies.clear();
         this.groups.clear();
     }
@@ -206,7 +194,7 @@ export class Cache
             if (body && body.renderer) body.renderer.refresh();
         });
     }
-    
+
     tick(gameTime: number): void {
         this.bodies.forEach((body) => {
             if (body.renderer) body.renderer.tick(gameTime);
@@ -215,7 +203,7 @@ export class Cache
             if (group.renderer) group.renderer.tick(gameTime);
         });
     }
-    
+
     groupFromServer(group: NetGroup): ClientGroup {
         let customData = group.customdata();
         if (customData) customData = JSON.parse(customData);
@@ -229,8 +217,7 @@ export class Cache
         };
     }
 
-    getGroup(groupID: number): ClientGroup | undefined
-    {
+    getGroup(groupID: number): ClientGroup | undefined {
         return this.groups.get(`g-${groupID}`);
     }
 
@@ -238,10 +225,10 @@ export class Cache
         const originalPosition = body.originalposition()!;
         const momentum = body.velocity()!;
         const groupID = body.group();
-    
+
         const spriteIndex = body.sprite();
         const spriteName = spriteIndices[spriteIndex];
-    
+
         return {
             ID: body.id(),
             DefinitionTime: body.definitiontime(),

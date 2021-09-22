@@ -40,21 +40,15 @@ export class Fleet {
         this.ID = groupUpdate.ID;
 
         this.chat = groupUpdate?.CustomData?.chat || undefined;
-
     }
 
-    addPowerup(powerMode: string)
-    {
+    addPowerup(powerMode: string) {
         this.extraModes.push(powerMode);
-        for(let id in this.ships)
-            this.ships[id].updateTextureLayers();
-        
+        for (let id in this.ships) this.ships[id].updateTextureLayers();
     }
-    removePowerup(powerMode: string)
-    {
-        this.extraModes = this.extraModes.filter(obj => obj !== powerMode);
-        for(let id in this.ships)
-            this.ships[id].updateTextureLayers();
+    removePowerup(powerMode: string) {
+        this.extraModes = this.extraModes.filter((obj) => obj !== powerMode);
+        for (let id in this.ships) this.ships[id].updateTextureLayers();
     }
 
     tick(time: number): void {
@@ -73,10 +67,11 @@ export class Fleet {
         }
 
         const offsetY = 0;
-        this.text.moveToVector3(new Vector3(accX / count, 120, (accY / count + offsetY)), this.container.scene);
+        this.text.moveToVector3(new Vector3(accX / count, 120, accY / count + offsetY), this.container.scene);
     }
 
     destroy(): void {
         this.container.guiTexture.removeControl(this.text);
     }
 }
+

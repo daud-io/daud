@@ -35,8 +35,7 @@ export class TextureLayer {
             this.particleSystem.direction2 = new Vector3(1, 0, 1);
             this.particleSystem.start(1);*/
         } else {
-            if (textureDefinition.spriteManager)
-            {
+            if (textureDefinition.spriteManager) {
                 this.sprite = new Sprite(textureName, textureDefinition.spriteManager);
                 this.sprite.position.y = 0;
 
@@ -44,15 +43,12 @@ export class TextureLayer {
                 this.updateFromBody(clientBody);
 
                 if (textureDefinition.animated) {
-                    this.sprite.playAnimation(0, textureDefinition.animated.count-1, textureDefinition.animated.loop ?? false, textureDefinition.animated.speed);
+                    this.sprite.playAnimation(0, textureDefinition.animated.count - 1, textureDefinition.animated.loop ?? false, textureDefinition.animated.speed);
                 }
-                if (this.textureDefinition.tint)
-                    this.sprite.color = Color4.FromHexString(this.textureDefinition.tint);
+                if (this.textureDefinition.tint) this.sprite.color = Color4.FromHexString(this.textureDefinition.tint);
 
-                if (this.textureDefinition.width == undefined || this.textureDefinition.height == undefined)
-                    console.log(`TextureDefinition[${textureName}] is missing height/width`);
-                else
-                    this.aspectRatio = this.textureDefinition.width/this.textureDefinition.height;
+                if (this.textureDefinition.width == undefined || this.textureDefinition.height == undefined) console.log(`TextureDefinition[${textureName}] is missing height/width`);
+                else this.aspectRatio = this.textureDefinition.width / this.textureDefinition.height;
             }
         }
 
@@ -71,21 +67,20 @@ export class TextureLayer {
     updateFromBody(body: ClientBody) {
         if (this.sprite) {
             if (this.offset.x != 0 || this.offset.y != 0) {
-                this.sprite.position.x = (body.Position.x + (this.offset.x * Math.cos(body.Angle) - this.offset.y * Math.sin(body.Angle)));
-                this.sprite.position.z = (body.Position.y + (this.offset.y * Math.cos(body.Angle) + this.offset.x * Math.sin(body.Angle)));
-            }
-            else
-            {
+                this.sprite.position.x = body.Position.x + (this.offset.x * Math.cos(body.Angle) - this.offset.y * Math.sin(body.Angle));
+                this.sprite.position.z = body.Position.y + (this.offset.y * Math.cos(body.Angle) + this.offset.x * Math.sin(body.Angle));
+            } else {
                 this.sprite.position.x = body.Position.x;
                 this.sprite.position.z = body.Position.y;
             }
 
             let extraRotation = 0;
-            if (this.textureDefinition.rotate)
-                extraRotation = -Math.PI/2;
+            if (this.textureDefinition.rotate) extraRotation = -Math.PI / 2;
 
-            this.sprite.angle = (body.Angle + extraRotation);
-            this.sprite.height = this.textureDefinition.size * body.Size; 
+            this.sprite.angle = body.Angle + extraRotation;
+            if (this.textureDefinition.size)
+                this.sprite.height = this.textureDefinition.size * body.Size;
+                
             this.sprite.width = this.sprite.height * this.aspectRatio;
         }
     }
@@ -122,6 +117,7 @@ export class TextureLayer {
 
     destroy(): void {
         this.sprite?.dispose();
-        this.particleSystem?.dispose()
+        this.particleSystem?.dispose();
     }
 }
+

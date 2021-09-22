@@ -1,14 +1,11 @@
 ﻿import { LeaderboardType, LeaderboardEntry } from "./connection";
 import { html, render, Hole } from "uhtml";
-import bus from "./bus";
+import * as bus from "./bus";
 import { Vector2 } from "@babylonjs/core";
 import { GameContainer } from "./gameContainer";
 
-
-
-export class Leaderboard
-{
-    recordName: string = '';
+export class Leaderboard {
+    recordName: string = "";
     recordScore: number = 0;
 
     record = document.getElementById("record")!;
@@ -17,8 +14,7 @@ export class Leaderboard
     leaderboardCenter = document.getElementById("leaderboard-center")!;
     container: GameContainer;
 
-    constructor(container: GameContainer)
-    {
+    constructor(container: GameContainer) {
         this.container = container;
 
         bus.on("worldjoin", () => {
@@ -29,15 +25,11 @@ export class Leaderboard
             this.leaderboardCenter.style.height = "";
         });
 
-        bus.on("leaderboard", lb => this.update(lb, container.cameraPosition, container.fleetID));
-        
+        bus.on("leaderboard", (lb) => this.update(lb, container.cameraPosition, container.fleetID));
     }
 
-    
     getOut(entry: LeaderboardEntry, position: Vector2 | null, rank?: number, entryIsSelf?: boolean) {
-        const angle = position != null && entryIsSelf !== true
-            ? -Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x)
-            : null;
+        const angle = position != null && entryIsSelf !== true ? -Math.atan2(entry.Position.y - position.y, entry.Position.x - position.x) : null;
 
         let color;
         if (entry.Color === "blue") {
@@ -47,16 +39,15 @@ export class Leaderboard
         }
 
         const styles = entryIsSelf ? "background-color: rgba(255,255,255,0.1)" : "";
-        return html`
-            <tr style=${styles}>
-                <td style="width:25px">${rank ? rank + "." : ""}</td>
-                <td style=${`width:28px;height:28px;background:${color}`}>${angle ? html`<img class="arrow" src="/img/arrow.png" style=${`transform:rotate(${angle}rad)`}></img>`: ""}</td>
-                <td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>
-                <td class="name">${entry.Name}</td>
-                <td class="score">${entry.Score}</td>
-            </tr>`;
+        return html` <tr style=${styles}>
+            <td style="width:25px">${rank ? rank + "." : ""}</td>
+            <td style=${`width:28px;height:28px;background:${color}`}>${angle ? html`<img class="arrow" src="/img/arrow.png" style=${`transform:rotate(${angle}rad)`}></img>` : ""}</td>
+            <td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>
+            <td class="name">${entry.Name}</td>
+            <td class="score">${entry.Score}</td>
+        </tr>`;
     }
-    
+
     update(data: LeaderboardType, position: Vector2, fleetID: number): void {
         if (data.Record && (this.recordName != data.Record.Name || this.recordScore != data.Record.Score)) {
             this.recordName = data.Record.Name;
@@ -223,5 +214,4 @@ export class Leaderboard
         }
     }
 }
-
 

@@ -1,55 +1,47 @@
-import { GameContainer } from './gameContainer';
-import bus from "./bus";
+import { GameContainer } from "./gameContainer";
+import * as bus from "./bus";
 import "@babylonjs/loaders/glTF";
 import { AbstractMesh, Node, PBRMaterial, SceneLoader, Vector3 } from "@babylonjs/core";
-import { GLTFFileLoader } from '@babylonjs/loaders';
+import { GLTFFileLoader } from "@babylonjs/loaders";
 
 export class WorldMeshLoader {
     container: GameContainer;
     loadedFile: string | null;
 
-    constructor(container:GameContainer) {
+    constructor(container: GameContainer) {
         this.container = container;
         this.loadedFile = null;
 
         bus.on("hook", (hook) => this.onHook(hook));
     }
 
-    onHook(hook:any)
-    {
-        if (!hook.Mesh) // old server/hook
+    onHook(hook: any) {
+        if (!hook.Mesh)
+            // old server/hook
             return;
 
-        if (hook.Mesh.MeshURL != this.loadedFile)
-        {
-            if (this.loadedFile != null)
-                this.unloadMeshes();
+        if (hook.Mesh.MeshURL != this.loadedFile) {
+            if (this.loadedFile != null) this.unloadMeshes();
 
-            if (hook.Mesh.Enabled != null)
-            {
+            if (hook.Mesh.Enabled != null) {
                 this.loadedFile = <string>hook.Mesh.MeshURL;
                 this.loadGLB(this.loadedFile);
             }
         }
     }
 
-    unloadMeshes()
-    {
+    unloadMeshes() {
         var scene = this.container.scene;
-        
-        while(scene.meshes.length)
-            scene.meshes[0].dispose();
-            //this.container.scene.removeMesh(scene.meshes[0]);
+
+        while (scene.meshes.length) scene.meshes[0].dispose();
+        //this.container.scene.removeMesh(scene.meshes[0]);
     }
 
-    recurseNodesAfterLoad(node: Node)
-    {
+    recurseNodesAfterLoad(node: Node) {
         const extras = node.metadata?.gltf?.extras;
 
-        if (extras != null)
-        {
-            if (extras.hidden == "true")
-            {
+        if (extras != null) {
+            if (extras.hidden == "true") {
                 console.log(`deleting hidden node: ${node.name}`);
                 node.dispose();
                 return;
@@ -75,22 +67,19 @@ export class WorldMeshLoader {
             */
         }
 
-        node.getChildren().forEach(child => this.recurseNodesAfterLoad(child));
+        node.getChildren().forEach((child) => this.recurseNodesAfterLoad(child));
     }
-    
-    loadGLB(worldMesh: string)
-    {
+
+    loadGLB(worldMesh: string) {
         SceneLoader.ShowLoadingScreen = false;
         //const plugin = <GLTFFileLoader>SceneLoader.Append("/api/v1/world/mesh/", worldMesh, this.container.scene);
         const plugin = <GLTFFileLoader>SceneLoader.Append("/api/v1/world/mesh/", worldMesh, this.container.scene, () => {
-
-            this.container.scene.rootNodes.forEach(rootNode => {
+            this.container.scene.rootNodes.forEach((rootNode) => {
                 this.recurseNodesAfterLoad(rootNode);
             });
 
-            this.container.scene.lights.forEach(light => {
-                if (light.name != "containerLight")
-                {
+            this.container.scene.lights.forEach((light) => {
+                if (light.name != "containerLight") {
                     light.dispose();
                     //light.intensity *= 10;
                     //light.shadowEnabled = true;
@@ -101,38 +90,30 @@ export class WorldMeshLoader {
         });
 
         plugin.onMeshLoadedObservable.add((mesh, state) => {
-            if (mesh.name == "__root__")
-            {
+            if (mesh.name == "__root__") {
                 mesh.scaling = new Vector3(10 * mesh.scaling.x, 10 * mesh.scaling.y, 10 * mesh.scaling.z);
                 mesh.rotate(new Vector3(0, 1, 0), Math.PI);
             }
 
-
             let pbr = mesh.material as PBRMaterial;
-            if (pbr)
-            {
+            if (pbr) {
                 const extras = pbr?.metadata?.gltf?.extras;
-                if (extras)
-                {
-                    if (extras.alpha)
-                    {
-                        if (extras.alpha == "image")
-                        {
+                if (extras) {
+                    if (extras.alpha) {
+                        if (extras.alpha == "image") {
                             console.log(`Material change: ${pbr.name} to alpha from image`);
                             pbr.alphaMode = 1; // ALPHA_ADD
-                            pbr.transparencyMode = 1 // ALPHA_TEST
+                            pbr.transparencyMode = 1; // ALPHA_TEST
                             pbr.albedoTexture.hasAlpha = true;
                         }
-                    
-                        if (!isNaN(+extras.alpha))
-                        {
+
+                        if (!isNaN(+extras.alpha)) {
                             console.log(`Material change: ${pbr.name} alpha:${extras.alpha}`);
                             pbr.alpha = Number(extras.alpha);
                             pbr.transparencyMode = 2; //ALPHA_BLEND
                             pbr.alphaMode = 2; // ALPHA_COMBINE
                         }
                     }
-
                 }
                 //pbr.maxSimultaneousLights = 12;
             }
@@ -143,9 +124,7 @@ export class WorldMeshLoader {
 
         plugin.onParsedObservable.add(() => {
             var l = this.container.scene.lights;
-
-            
         });
-        
     }
 }
+

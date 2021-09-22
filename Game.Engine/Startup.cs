@@ -21,6 +21,7 @@
     using Elasticsearch.Net;
     using Nest;
     using Nest.JsonNetSerializer;
+    using Microsoft.AspNetCore.Http.Features;
 
     public class Startup
     {
@@ -126,6 +127,7 @@
             app.UseStaticFiles(new StaticFileOptions
             {
                 ServeUnknownFileTypes = true,
+                HttpsCompression = HttpsCompressionMode.Compress,
                 DefaultContentType = "text/plain",
                 OnPrepareResponse = context =>
                 {
