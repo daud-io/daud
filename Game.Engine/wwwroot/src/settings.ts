@@ -3,23 +3,21 @@ import * as bus from "./bus";
 
 bus.on("pageReady", () => Settings.initialize());
 
-export class Settings
-{
-    static theme:string = "";
-    static bandwidth:number = 100;
-    static logLength:number =  4;
-    static showHints:boolean = true;
-    static nameSize:number = 48;
+export class Settings {
+    static theme: string = "";
+    static bandwidth: number = 100;
+    static logLength: number = 4;
+    static showHints: boolean = true;
+    static nameSize: number = 48;
 
-    private static themeSelectorEL:HTMLSelectElement;
-    private static showHintsEL:HTMLInputElement;
-    private static bandwidthEL:HTMLInputElement;
-    private static logLengthEL:HTMLInputElement;
-    private static nameSizeEL:HTMLInputElement;
-    private static gearEL:HTMLElement;
+    private static themeSelectorEL: HTMLSelectElement;
+    private static showHintsEL: HTMLInputElement;
+    private static bandwidthEL: HTMLInputElement;
+    private static logLengthEL: HTMLInputElement;
+    private static nameSizeEL: HTMLInputElement;
+    private static gearEL: HTMLElement;
 
-    static initialize()
-    {
+    static initialize() {
         this.themeSelectorEL = document.getElementById("settingsTheme") as HTMLSelectElement;
         this.showHintsEL = document.getElementById("settingsShowHints") as HTMLInputElement;
         this.bandwidthEL = document.getElementById("settingsBandwidth") as HTMLInputElement;
@@ -33,7 +31,7 @@ export class Settings
             bus.emit("themechange");
         }
         this.themeSelectorEL.onchange = themeChange;
-        
+
         this.showHintsEL.onchange = () => {
             Settings.showHints = this.showHintsEL.checked;
             Settings.saveSettings();
@@ -50,7 +48,7 @@ export class Settings
             Settings.nameSize = Number(this.nameSizeEL.value);
             Settings.saveSettings();
         };
-        
+
         document.getElementById("settings")!.addEventListener("click", () => {
             this.gearEL.classList.remove("closed");
         });
@@ -62,13 +60,23 @@ export class Settings
     }
 
     static saveSettings() {
+        const json = JSON.stringify(
+            {
+                theme: Settings.theme,
+                bandwidth: Settings.bandwidth,
+                logLength: Settings.logLength,
+                showHints: Settings.showHints,
+                nameSize: Settings.nameSize
+            });
+            
+        console.log('saving settings: ' + json);
+        Cookies.set("settings", json, { expires: 300 });
         bus.emit("settings");
-        Cookies.set("settings", Settings, { expires: 300 });
     }
 
     static loadSettings(): void {
         const savedSettings = JSON.parse(Cookies.get("settings") || "false");
-    
+
         if (savedSettings) {
             // copying value by value because cookies can be old versions
             // any values NOT in the cookie will remain defined with the new defaults
@@ -76,7 +84,7 @@ export class Settings
                 Settings[key] = savedSettings[key];
             }
         }
-    
+
         switch (Settings.theme) {
             case "":
                 Settings.theme = "original";
@@ -88,13 +96,13 @@ export class Settings
                 Settings.theme = "retro";
                 break;
         }
-    
+
         this.themeSelectorEL.value = Settings.theme;
         this.showHintsEL.checked = Settings.showHints;
         this.bandwidthEL.value = String(Settings.bandwidth);
         this.logLengthEL.value = String(Settings.logLength);
         this.nameSizeEL.value = String(Settings.nameSize);
-    
+
         console.log("settings loaded");
         bus.emit("settings");
     }

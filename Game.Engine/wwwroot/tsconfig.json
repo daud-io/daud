@@ -4,7 +4,7 @@
         "allowSyntheticDefaultImports": true,
         "resolveJsonModule": true,
         "esModuleInterop": true,
-        "module": "esnext",
+        "module": "es2020",
         "rootDir": "src",
         "strict": true,
         "noImplicitAny": false,

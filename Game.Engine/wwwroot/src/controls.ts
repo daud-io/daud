@@ -14,23 +14,23 @@ var refreshSelectedStyle:() => void;
 var shipSelectorSwitch:HTMLElement;
 
 bus.on("pageReady", function () {
-    /*const emojiContainer = document.getElementById("emoji-container")!;
+    const emojiContainer = document.getElementById("emoji-container")!;
     const picker = new Picker();
     emojiContainer.appendChild(picker as HTMLElement);
     picker.addEventListener("emoji-click", (e) => {
         Cookies.set("emoji", (Controls.emoji = emojiTrigger.innerText = e.detail.unicode || ""));
         emojiContainer.classList.remove("open");
-    });*/
+    });
     
     const autofTgg = document.getElementById("autofireToggle")!;
-    // const emojiTrigger = document.getElementById("emoji-trigger")!;
+    const emojiTrigger = document.getElementById("emoji-trigger")!;
     
-    // document.addEventListener("click", (event) => {
-    //     if (event.target == emojiTrigger) emojiContainer.classList.toggle("open");
-    //     else if (!emojiContainer.contains(event.target as Node)) {
-    //         emojiContainer.classList.remove("open");
-    //     }
-    // });
+    document.addEventListener("click", (event) => {
+        if (event.target == emojiTrigger) emojiContainer.classList.toggle("open");
+        else if (!emojiContainer.contains(event.target as Node)) {
+            emojiContainer.classList.remove("open");
+        }
+    });
     
     shipSelectorSwitch = document.getElementById("shipSelectorSwitch")!;
     

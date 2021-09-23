@@ -35,7 +35,7 @@ bus.on("spawn", (name: string, ship: string) => {
 bus.on("dead", () => {
     alive += Date.now() - spawnTime;
 
-    (<any>window).push({
+    (<any>window).dataLayer.push({
         event: "dead",
         alive: alive,
         ping: connection ? connection.minimumLatency : null,

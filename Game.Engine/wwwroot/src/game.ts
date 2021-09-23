@@ -249,7 +249,7 @@ bus.on("worldjoin", (worldKey, world) => {
     setCurrentWorld(world);
     initializeWorld(world);
     connection.disconnect();
-    //connection.connect(worldKey);
+    connection.connect(worldKey);
 });
 
 bus.on("leaderboard", (lb) => {

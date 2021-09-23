@@ -22,6 +22,7 @@
     using Nest;
     using Nest.JsonNetSerializer;
     using Microsoft.AspNetCore.Http.Features;
+    using Microsoft.AspNetCore.StaticFiles;
 
     public class Startup
     {
@@ -123,12 +124,17 @@
             if (config.AllowCORS)
                 app.UseCors();
 
+            // Set up custom content types - associating file extension to MIME type
+            var mimeProvider = new FileExtensionContentTypeProvider();
+            mimeProvider.Mappings[".ts"] = "text/javascript";
+
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 ServeUnknownFileTypes = true,
                 HttpsCompression = HttpsCompressionMode.Compress,
                 DefaultContentType = "text/plain",
+                ContentTypeProvider = mimeProvider,
                 OnPrepareResponse = context =>
                 {
                     context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
