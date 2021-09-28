@@ -1,5 +1,6 @@
 ﻿namespace Game.Engine.Core.SystemActors
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -147,15 +148,17 @@
         private void ConfigureMeshes()
         {
             var hook = World.Hook;
-
             if (World.Hook.Mesh.Enabled)
             {
+
+                var activatedURL = new Uri(new Uri($"https://{World.GameConfiguration.PublicURL}"), $"/api/v1/world/mesh/{World.WorldKey}/server.glb").ToString();
                 var newURL = World.Hook.Mesh.MeshURL;
-                if (newURL != loadedURL && newURL != $"{World.WorldKey}/server.glb")
+                
+                if (newURL != loadedURL && newURL != activatedURL)
                 {
                     this.UnloadMeshes();
                     LoadGLB(newURL);
-                    World.Hook.Mesh.MeshURL = $"{World.WorldKey}/server.glb";
+                    World.Hook.Mesh.MeshURL = activatedURL;
                 }
             }
         }

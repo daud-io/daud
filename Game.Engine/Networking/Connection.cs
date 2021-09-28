@@ -137,6 +137,9 @@
         {
             try
             {
+                if (this.Bandwidth == 0)
+                    return;
+                    
                 if (Player != null)
                 {
                     var netWorldView = new NetWorldView();

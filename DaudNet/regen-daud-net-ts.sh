@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./flatc -o ../Game.Engine/wwwroot/src/ --ts game.fbs
+./flatc -o ../Client/src/ --ts game.fbs

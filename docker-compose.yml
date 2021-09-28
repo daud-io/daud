@@ -1,9 +1,16 @@
 version: '3'
 
 services:
-  game:
+  server:
     build:
       context: .
+    ports:
+      - "5100:5100"
+  client:
+    image: andylippitt/daud-client:d7
+    build:
+      context: ./Client/
+      
 
     ports:
-      - "8080:80"
+      - "80:80" 

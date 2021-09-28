@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "lib": ["DOM", "ESNext", "DOM.Iterable", "ScriptHost"],
+        "allowSyntheticDefaultImports": true,
+        "resolveJsonModule": true,
+        "importHelpers": false,
+        "esModuleInterop": true,
+        "module": "es2020",
+        "rootDir": "src",
+        "strict": true,
+        "noImplicitAny": false,
+        "skipLibCheck": true,
+        "target": "esnext",
+        "moduleResolution": "node",
+        "isolatedModules": true
+    },
+    "include": [
+        "src", "types"
+    ]
+}
