@@ -5,8 +5,13 @@ const styleTag = document.createElement('style');
 styleTag.innerHTML = css;
 
 const bootElement = document.getElementById('boot')!;
-const baseURL = bootElement.attributes['data-static-url-base'].value
-    ?? document.body.attributes['data-static-url-base'].value;
+let baseURL = bootElement.attributes['data-static-url-base']?.value;
+if (!baseURL || baseURL == '')
+    baseURL = document.body.attributes['data-static-url-base']?.value;
+
+if (!baseURL || baseURL == '')
+    baseURL = location.href;
+
 document.body.attributes['data-static-url-base'] = baseURL;
 
 bootElement.outerHTML = html;

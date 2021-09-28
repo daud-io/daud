@@ -73,6 +73,7 @@ container.engine.runRenderLoop(() => {
 async function initialize(): Promise<void> {
     await container.loader.load();
     console.log('container loaded');
+    bus.emit('gameReady');
 }
 
 initialize();

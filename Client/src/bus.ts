@@ -3,6 +3,7 @@ import { NetWorldView } from "./daud-net/net-world-view";
 import { ServerWorld } from "./registry";
 
 const events = {
+    gameReady: [] as (() => void)[],
     pageReady: [] as (() => void)[],
     worldjoin: [] as ((connect: string, world: ServerWorld) => void)[],
     connected: [] as ((connection: Connection) => void)[],

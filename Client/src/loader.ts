@@ -26,14 +26,14 @@ export type SpriteDefinition = {
 
 export class Loader {
     container: GameContainer;
-    progressEl: HTMLProgressElement;
+    //progressEl: HTMLProgressElement;
 
     spriteDefinitions: Record<string, SpriteDefinition> = {};
     textureDefinitions: Record<string, TextureDefinition> = {};
 
     constructor(container: GameContainer) {
         this.container = container;
-        this.progressEl = document.getElementById("loader") as HTMLProgressElement;
+        ///this.progressEl = document.getElementById("loader") as HTMLProgressElement;
     }
 
     getTextureDefinition(textureName: string): TextureDefinition {
@@ -141,16 +141,16 @@ export class Loader {
 
     async allProgress<T>(proms: Promise<T>[]): Promise<void> {
         let d = 0;
-        this.progressEl.style.display = "";
-        this.progressEl.value = 0;
+        //this.progressEl.style.display = "";
+        //this.progressEl.value = 0;
         for (const p of proms) {
             p.then(() => {
                 d++;
-                this.progressEl.value = 255 * (d / proms.length);
+                //this.progressEl.value = 255 * (d / proms.length);
             });
         }
         await Promise.all(proms);
-        this.progressEl.style.display = "none";
+        //this.progressEl.style.display = "none";
     }
 }
 

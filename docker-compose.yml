@@ -7,7 +7,7 @@ services:
     ports:
       - "5100:5100"
   client:
-    image: andylippitt/daud-client:d7
+    image: andylippitt/daud-client:d12
     build:
       context: ./Client/
       

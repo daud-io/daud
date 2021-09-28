@@ -126,17 +126,23 @@ export class Landing {
 
     private static async launch(connect: string) : Promise<void>{
         this.hide();
-        if (!this.gameLoaded)
-        {
-            await import('./game');
-            this.gameLoaded = true;
-        }
 
         this.clearHosts();
         if (this.currentConnect != connect)
         {
             this.currentConnect = connect;
-            bus.emit("worldjoin", connect, this.worlds[connect]);
+            if (!this.gameLoaded)
+            {
+                bus.on('gameReady', () => {
+                    this.gameLoaded = true;
+                    bus.emit("worldjoin", connect, this.worlds[connect]);
+                });
+
+                await import('./game');
+            }
+            else
+                bus.emit("worldjoin", connect, this.worlds[connect]);
+
         }
     }
 
