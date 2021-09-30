@@ -1,11 +1,12 @@
 ﻿namespace Game.Engine.Core.Weapons
 {
-    using Game.Engine.Core.Maps;
     using System;
     using System.Linq;
     using System.Numerics;
+    using System.Threading;
+    using Game.Engine.Physics;
 
-    public class ShipWeaponBullet : ActorBody, IShipWeapon
+    public class ShipWeaponBullet : WorldBody, IShipWeapon
     {
         public Fleet OwnedByFleet { get; set; }
         public long TimeDeath { get; set; }
@@ -16,48 +17,38 @@
         public float Drag { get => World.Hook.Drag; }
 
         public bool Consumed { get; set; }
+
         private Vector2 Reference = Vector2.Zero;
 
-        public ShipWeaponBullet()
+        public ShipWeaponBullet(World world, Ship ship): base(world)
         {
-            CausesCollisions = true;
+            this.OwnedByFleet = ship.Fleet;
+            Interlocked.Increment(ref World.ProjectileCount);
         }
 
-        public override void Think()
+        protected override void Update(float dt)
         {
-            base.Think();
+            Angle = MathF.Atan2(LinearVelocity.Y, LinearVelocity.X);
+            AngularVelocity = 0;
 
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount * 10;
+            if (World.Time >= TimeDeath || Consumed)
+                Die();
 
-            if (World.Hook.EinsteinCoefficient > 0)
-                Momentum = thrust + (World.Hook.EinsteinCoefficient * Reference);
-            else
-                Momentum = thrust;
-
-
-            if (World.Time >= TimeDeath)
-                PendingDestruction = true;
-        }
-
-        protected override void Collided(ICollide otherObject)
-        {
-            TimeDeath = World.Time;
+            base.Update(dt);
         }
 
         public virtual void FireFrom(Ship ship, ActorGroup group)
         {
             var r = new Random();
-            World = ship.World;
             var bulletOrigin = ship.Position
                 + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
 
             var momentum =
                 new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle))
-                * Vector2.Distance(ship.Momentum, Vector2.Zero);
-
+                * Vector2.Distance(ship.LinearVelocity, Vector2.Zero);
 
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife);
-            this.Momentum = momentum;
+            this.LinearVelocity = momentum;
             this.Position = bulletOrigin;
 
             if (World.Hook.PrecisionBullets && ship.Fleet != null)
@@ -78,35 +69,41 @@
 
                 this.Angle = MathF.Atan2(toTarget.Y, toTarget.X)
                     + noise;
+
+                this.AngularVelocity = 0;
             }
             else
+            {
                 this.Angle = ship.Angle;
+                this.AngularVelocity = 0;
+            }
 
-            this.Reference = ship.Fleet.FleetMomentum;
-            this.OwnedByFleet = ship.Fleet;
+            this.Reference = ship.Fleet.FleetVelocity;
             this.Sprite = ship.BulletSprite;
             this.Size = 20;
             this.Color = ship.Color;
             this.ThrustAmount = ship.Fleet.Ships.Count() * ship.Fleet.ShotThrustM + ship.Fleet.ShotThrustB;
             this.TimeBirth = World.Time;
             this.Group = group;
+
+            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * ThrustAmount * 10;
+
+            if (World.Hook.EinsteinCoefficient > 0)
+                LinearVelocity = thrust + (World.Hook.EinsteinCoefficient * Reference);
+            else
+                LinearVelocity = thrust;
+
         }
 
-        public virtual void FireFrom(TileBase tile, float angle)
+        public override void Destroy()
         {
-            World = tile.World;
-
-            this.TimeDeath = World.Time + (long)(World.Hook.BulletLife);
-            this.Position = tile.Position;
-            this.Angle = angle;
-            this.Sprite = API.Common.Sprites.bullet;
-            this.Size = 20;
-            this.Color = "green";
-            this.ThrustAmount = 1 * World.Hook.ShotThrustM + World.Hook.ShotThrustB;
-            this.TimeBirth = World.Time;
-            this.Group = tile.WorldMap.WeaponGroup;
+            Interlocked.Decrement(ref World.ProjectileCount);
+            base.Destroy();
         }
 
-        public bool Active => this.Exists;
+        bool IShipWeapon.Active()
+        {
+            return this.Exists;
+        }
     }
 }

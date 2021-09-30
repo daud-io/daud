@@ -1,8 +1,6 @@
 ﻿namespace Game.Engine.Controllers
 {
-    using Game.API.Client;
     using Game.API.Common.Models;
-    using Game.API.Common.Models.Auditing;
     using Game.API.Common.Security;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
@@ -10,8 +8,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
-    using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -64,66 +60,16 @@
             }
         }
 
-        [
-            AllowAnonymous,
-            HttpGet,
-            Route("suggestion")
-        ]
-        public async Task<string> SuggestDomainsAsync(string configuredName = null)
-        {
-            if (configuredName != null)
-                return configuredName;
-            else
-                return await RecommendHostNameAsync();
-        }
-
-        private async Task<string> RecommendHostNameAsync()
-        {
-            // I should probably support some kind of x-forwarded for headers etc.
-            var ipAddress = ControllerContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-
-            if (Config.DisableSuggestionLookup)
-                return ipAddress;
-
-            try
-            {
-
-                var entry = await Dns.GetHostEntryAsync(ipAddress);
-                var apiClient = new APIClient(new Uri($"http://{ipAddress}"));
-
-                var cts = new CancellationTokenSource();
-                cts.CancelAfter(2000);
-                var server = await apiClient.Server.ServerGetAsync(cts.Token);
-                if (server == null)
-                {
-                    Console.WriteLine($"Suggesting localhost to {ipAddress}");
-                    return "localhost";
-                }
-            }
-            catch (Exception)
-            {
-                Console.WriteLine($"Suggesting localhost to {ipAddress}");
-                return "localhost";
-            }
-
-            var address = $"daud-{ipAddress.Replace(".", "-")}.sslip.io";
-            Console.WriteLine($"Suggesting {address} to {ipAddress}");
-
-            return address;
-        }
 
         [
             AllowAnonymous,
             HttpPost,
             Route("report")
         ]
-        public async Task<bool> PostReportAsync([FromBody]RegistryReport registryReport)
+        public Task<bool> PostReportAsync([FromBody]RegistryReport registryReport)
         {
             if (registryReport != null)
             {
-                if (registryReport.URL == null)
-                    registryReport.URL = await RecommendHostNameAsync();
-
                 var url = registryReport.URL;
                 lock (Reports)
                 {
@@ -133,11 +79,11 @@
                     else
                         Reports.Add(url, registryReport);
 
-                    return true;
+                    return Task.FromResult(true);
                 }
             }
             else
-                return false;
+                return Task.FromResult(false);
         }
 
         [

@@ -1,0 +1,252 @@
+﻿<div id="gameArea" class="noselect" style="display:none;">
+  <canvas id="gameCanvas"></canvas>
+  <div id="plusScoreContainer"></div>
+
+  <div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
+  <!--<small id="minimapTip">Press M to toggle the minimap</small>-->
+
+  <div id="bigLog"></div>
+  <div id="comboMessage"></div>
+
+  <div id="ctf_arena" class="hide">
+    <span id="ctf_cyan">
+      <span class="flag_status">
+        <span class="home">Home</span>
+        <span class="taken">Taken</span>
+      </span>
+    </span>
+    <span id="ctf_red">
+      <span class="flag_status">
+        <span class="home">Home</span>
+        <span class="taken">Taken</span>
+      </span>
+    </span>
+  </div>
+
+  <div id="spectatecontrols">
+    <div id="deathScreen">
+      <div id="hintbox"></div>
+      <hr />
+      <table>
+        <tr>
+          <td>High score:</td>
+          <td id="deathScreenScore"></td>
+        </tr>
+        <tr>
+          <td>Game time:</td>
+          <td id="deathScreenGameTime"></td>
+        </tr>
+        <tr>
+          <td>Kills:</td>
+          <td id="deathScreenKills"></td>
+        </tr>
+        <tr>
+          <td>Max combo kill:</td>
+          <td id="deathScreenMaxKillStreak"></td>
+        </tr>
+      </table>
+      <hr />
+    </div>
+    <button id="stop_spectating">Menu</button>
+    <button id="spawnSpectate">Launch</button>
+  </div>
+  
+
+  <table id="leaderboard" cellspacing="0"></table>
+  <table id="leaderboard-left" cellspacing="0"></table>
+  <table id="leaderboard-center" cellspacing="0"></table>
+
+  <progress id="cooldown" value="0" max="255"></progress>
+
+  <div class="stats">
+    <div id="log"></div>
+    <div id="hud">fps: 0 - players: 0 - ping: 0</div>
+    <div id="record">record: - 0</div>
+  </div>
+</div>
+
+
+<div id="error" style="display:none;">
+  <h4 id="error_message">Unable to connect to the server! Please check your internet connection or the server maybe
+    under maintenance.</h4>
+</div>
+
+<div id="lobby">
+  <h1>
+    <img id="logo" src="img/header.png" width="560" height="186" draggable="false" alt="DAUD.io logo" />
+  </h1>
+  <div>
+    <div id="worlds">
+      <a href="#" rel="nofollow,noindex" class="world pending" data-connect="us.daud.io/partycity">
+        <img src="img/worlds/partycity.png" />
+        <div class="explain">
+          
+          <div class="title">Party City - USA</div>
+          <span>
+            Multiplayer Battle with other fleets in a wild map with lots of laughs
+          </span>
+        </div>
+        <button class='playnow'>Play Now</button>
+        <div class="worldstats">
+          <div class="location">USA</div>
+          <div class="ping"><span class='us-daud-io-ping'>---</span></div>
+          <div class="players">players: <span class='us-daud-io-partycity-players'>--</span></div>
+        </div>
+      </a>
+      <a href="#" rel="nofollow,noindex" class="world pending" data-connect="de.daud.io/partycity">
+        <img src="img/worlds/partycity.png" />
+        <div class="explain">
+          <div class="title">Party City - EU</div>
+          <span>
+            Multiplayer Battle with other fleets in a wild map with lots of laughs
+          </span>
+        </div>
+        <button class='playnow'>Play Now</button>
+        <div class="worldstats">
+          <div class="location">Germany</div>
+          <div class="ping"><span class='de-daud-io-ping'>---</span></div>
+          <div class="players">players: <span class='de-daud-io-partycity-players'>--</span></div>
+        </div>
+      </a>
+      <a href="#" rel="nofollow,noindex" class="world pending" data-connect="de.daud.io/ffa">
+        <img src="/img/worlds/bot.png" />
+        <div class="explain">
+          <div class="title">Training Bot</div>
+          <span>
+            Learn the moves with an AI trainer
+          </span>
+        </div>
+        <button class='playnow'>Play Now</button>
+        <div class="worldstats">
+          <div class="location">Germany</div>
+          <div class="ping"><span class='de-daud-io-ping'>---</span></div>
+          <div class="players">players: <span class='de-daud-io-ffa-players'>--</span></div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>
+<div id='spawnscreen' class="spawnscreen" style="display:none;">
+  <div class="controls">
+    <img id="logo" src="img/header.png" width="560" height="186" draggable="false" alt="DAUD.io logo" />
+    <div id="shipSelectorSwitch"></div>
+    <button id="emoji-trigger">🥚</button>
+    <input placeholder="nickname" id="nick" maxlength="15" ondragstart="return false;" ondrop="return false;" />
+    <br />
+    <div id="emoji-container"></div>
+    <div>
+      <button id="spawn">Launch</button>
+      <button id="spectate">Watch</button>
+    </div>
+    <button id="arenas">Game Modes <span style="font-weight: bolder; color:red">*</span></button>
+  </div>
+  <div class="hidden-mobile">
+    <div>
+      <div id="controls_instructions">
+        <img src="img/controls.png" width="215" height="121" />
+      </div>
+
+      <div id="spectate_container">
+        <button id="settings">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="text-icon">
+            <path fill-rule="evenodd"
+              d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+              clip-rule="evenodd" />
+          </svg>
+          Settings
+        </button>
+        <button id="dauth"><img src="img/discord-icon.png" />Login</button>
+
+      </div>
+    </div>
+  </div>
+  <div id="gear" class="closed">
+    <div id="settingsContainer">
+      <div class="close-button" id="settingsClose">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd"
+            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+            clip-rule="evenodd" />
+        </svg>
+      </div>
+      <h1>Settings</h1>
+      <h4>Display</h4>
+      <label>Theme
+        <select id="settingsTheme">
+          <option value="original">Original Daud</option>
+          <option value="bitty">Bitty</option>
+          <option value="retro">Space1 Theme</option>
+        </select>
+      </label>
+
+      <label>Name Size
+        <select id="settingsNameSize">
+          <option value="20">Tiny</option>
+          <option value="32">Smaller</option>
+          <option value="48">Small</option>
+          <option value="64">Medium</option>
+          <option value="72">Big</option>
+          <option value="96">Woah</option>
+        </select>
+      </label>
+
+      <label>Log Length
+        <select id="settingsLog">
+          <option value="0">None</option>
+          <option value="1">1 Line</option>
+          <option value="2">2 Lines</option>
+          <option value="3">3 Lines</option>
+          <option value="4">4 Lines</option>
+          <option value="10">Historian</option>
+        </select>
+      </label>
+
+      <h4>Controls</h4>
+
+      <label for="settingsBandwidth">Bandwidth
+        <select id="settingsBandwidth">
+          <option value="100">High</option>
+          <option value="50">Medium</option>
+          <option value="25">Low</option>
+        </select>
+      </label>
+
+      <label class="checkbox">Show Hints
+        <input type="checkbox" id="settingsShowHints" />
+        <span class="checkmark"></span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<div id="links">
+  <ul>
+    <li><a href="https://daud.io/faq" target="_top">How to Play?</a></li>
+    <li><a href="https://daud.io/partners" target="_top">More Games</a></li>
+    <li><a href="https://daud.io/contact" target="_top">Contact</a></li>
+  </ul>
+</div>
+
+<div id="touchoverlay">
+
+</div>
+
+<div id="touchwarn" class="closed">
+  <div id="touchwarnContainer">
+    <div class="close-button" id="touchwarnClose">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd"
+          d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+          clip-rule="evenodd" />
+      </svg>
+    </div>
+    <h1>Warning: Touchscreen</h1>
+    <img src="img/controls.png" />
+    <div>
+    <em>This game is best experienced with a mouse!</em>
+  </div>
+    <p>
+      Our support for touchscreens is a work in progress<br />
+      Please check back soon!
+    </p>
+</div>

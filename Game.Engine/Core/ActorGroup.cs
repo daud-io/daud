@@ -2,9 +2,15 @@
 {
     public class ActorGroup : Group, IActor
     {
-        public World World = null;
-
         public bool PendingDestruction { get; set; } = false;
+
+        public ActorGroup(World world): base(world)
+        {
+            this.ID = world.GenerateObjectID();
+            World.Actors.Add(this);
+            World.Groups.Add(this);
+            Exists = true;
+        }
 
         public virtual void Destroy()
         {
@@ -16,26 +22,14 @@
             }
         }
 
-        public virtual void Init(World world)
-        {
-            World = world;
-            this.ID = world.GenerateObjectID();
-            world.Actors.Add(this);
-            world.Groups.Add(this);
-
-            this.Exists = true;
-        }
-
-        public virtual void Think()
+        public virtual void Think(float dt)
         {
         }
 
-        public virtual void CreateDestroy()
+        public void Cleanup()
         {
             if (PendingDestruction)
-            {
                 Destroy();
-            }
         }
     }
 }

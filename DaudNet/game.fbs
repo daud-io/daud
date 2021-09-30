@@ -1,0 +1,150 @@
+﻿namespace DaudNet;
+
+union AllMessages
+{
+	NetWorldView,
+	NetSpawn,
+	NetEvent,
+	NetControlInput,
+	NetPing,
+	NetLeaderboard,
+    NetExit,
+    NetAuthenticate
+}
+
+table NetLeaderboard
+{
+	fleetid	: uint;
+	type	: string;
+	entries	: [NetLeaderboardEntry];
+	record	: NetLeaderboardEntry;
+	modedata: string;
+}
+
+table NetLeaderboardEntry
+{
+	fleetid	: uint;
+	name	: string;
+	score	: int;
+	color	: string;
+	position: Vec2;
+	token	: bool;
+	modedata: string;
+}
+
+table NetSpawn
+{
+	name	: string;
+	ship	: string;
+	color	: string;
+	token	: string;
+}
+
+table NetExit
+{
+	code	: int;
+}
+
+table NetControlInput
+{
+	angle:float;
+	x: float;
+	y: float;
+	boost:bool;
+	shoot:bool;
+    spectatecontrol:string;
+    customdata:string;
+}
+
+table NetEvent 
+{
+    type:string;
+    data:string;
+}
+
+table NetPing
+{
+	time:uint;
+    latency:uint = 0;
+    fps:uint = 0;
+    vps:uint = 0;
+    ups:uint = 0;
+    cs:uint = 0;
+    backgrounded:bool = false;
+    bandwidththrottle:uint;
+	clienttime:uint = 0;
+}
+
+table NetWorldView
+{
+	time:uint;
+	camera:NetBody;
+    fleetid:uint;
+	isalive:bool = true;
+	updates:[NetBody];
+	deletes:[uint];
+    groups:[NetGroup];
+	groupdeletes:[uint];
+	announcements:[NetAnnouncement];
+    playercount:uint;
+    spectatorcount:uint;
+    cooldownshoot:ubyte;
+    cooldownboost:ubyte;
+    worldsize:ushort;
+    customdata:string;
+}
+
+table NetGroup
+{
+    group:uint;
+    type:ubyte;
+    caption:string;
+    zindex:uint;
+    owner:uint;
+    color:string;
+    customdata:string;
+}
+
+struct Vec2
+{
+	x:short;
+	y:short;
+}
+
+// note: this is a struct not table
+// adding to it adds to every instance
+// also, it comprises about 95% of the bandwidth
+// modify it very carefully
+struct NetBody
+{
+	id:uint;
+	definitiontime:uint;
+	originalposition:Vec2;
+	velocity:Vec2;
+	originalangle:byte;
+	angularvelocity:byte;
+	size:ubyte;
+	sprite:ushort;
+	mode:ubyte;
+    group:uint;
+}
+
+table NetAnnouncement
+{
+	text:string;
+    type:string;
+    pointsdelta:int;
+    extradata:string;
+}
+
+table NetAuthenticate
+{
+	token:string;
+}
+
+table NetQuantum
+{
+	message: AllMessages;
+}
+
+root_type NetQuantum;

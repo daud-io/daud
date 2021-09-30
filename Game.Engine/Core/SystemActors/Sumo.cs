@@ -6,41 +6,19 @@
     using System.Linq;
     using System.Numerics;
 
-    public class Sumo : IActor
+    public class Sumo : SystemActorBase
     {
-        private World World = null;
         private RingBody Ring = null;
 
-        void IActor.CreateDestroy()
+        public Sumo(World world): base(world)
         {
-            if (World.Hook.SumoMode && Ring == null)
-            {
-                Ring = new Sumo.RingBody(new Vector2(0, 0), World.Hook.SumoRingSize);
-                Ring.Init(World);
-
-                World.GetActor<SpawnLocationsActor>().GeneratorAdd("sumo", this.FleetSpawnPosition);
-                World.Hook.SpawnLocationMode = "sumo";
-            }
-
-            if (!World.Hook.SumoMode && Ring != null)
-            {
-                Ring.Destroy();
-                World.FleetSpawnPositionGenerator = null;
-            }
+            
         }
 
-        void IActor.Destroy()
+        public override void Destroy()
         {
             if (Ring != null)
                 Ring.Destroy();
-
-            World.Actors.Remove(this);
-        }
-
-        void IActor.Init(World world)
-        {
-            World = world;
-            World.Actors.Add(this);
         }
 
         public Vector2 FleetSpawnPosition(Fleet fleet)
@@ -77,7 +55,7 @@
                 .First().Point;
         }
 
-        void IActor.Think()
+        protected override void CycleThink()
         {
             if (Ring != null)
                 foreach (var player in Player.GetWorldPlayers(World))
@@ -90,13 +68,27 @@
                                 fleet.AbandonShip(ship);
                     }
                 }
+
+            if (World.Hook.SumoMode && Ring == null)
+            {
+                Ring = new Sumo.RingBody(World, new Vector2(0, 0), World.Hook.SumoRingSize);
+
+                World.GetActor<SpawnLocationsActor>().GeneratorAdd("sumo", this.FleetSpawnPosition);
+                World.Hook.SpawnLocationMode = "sumo";
+            }
+
+            if (!World.Hook.SumoMode && Ring != null)
+            {
+                Ring.Destroy();
+                World.FleetSpawnPositionGenerator = null;
+            }                
         }
 
-        private class RingBody : ActorBody
+        private class RingBody : WorldBody
         {
             private const float SPEED_SPINNING = 0.001f;
 
-            public RingBody(Vector2 position, int size)
+            public RingBody(World world, Vector2 position, int size): base(world)
             {
                 this.Position = position;
                 this.Sprite = Sprites.ctf_base;

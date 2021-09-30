@@ -1,0 +1,102 @@
+{
+    "sprites": {
+        "ctf_base": {
+            "modes": {
+                "default": "ctf_base"
+            }
+        },
+        "ctf_flag_base": {
+            "abstract": true
+        },
+        "ctf_flag_blue": {
+            "extends": "ctf_flag_base",
+            "modes": {
+                "default": "ctf_flag_blue"
+            }
+        },
+        "ctf_flag_red": {
+            "extends": "ctf_flag_base",
+            "modes": {
+                "default": "ctf_flag_red"
+            }
+        }
+    },
+    "textures": {
+        "ctf_base": {
+            "url": "ctf_base.png",
+            "size": 3.072,
+            "width": 1024,
+            "height": 1024
+        },
+        "ctf_flag_base": {
+            "abstract": true,
+            "animated": {
+                "speed": 50,
+                "loop": true,
+                "size": 128,
+                "count": 6
+            },
+            "size": 1.92,
+            "width": 128,
+            "height": 128
+        },
+        "ctf_flag_blue": {
+            "extends": "ctf_flag_base",
+            "url": "ctf_flag_blue.png",
+            "size": 1
+        },
+        "ctf_flag_red": {
+            "extends": "ctf_flag_base",
+            "url": "ctf_flag_red.png",
+            "size": 1
+        },
+        "ctf_arrow_blue": {
+            "url": "ctf_arrow_blue.png"
+        },
+        "ctf_arrow_red": {
+            "url": "ctf_arrow_blue.png"
+        },
+        "ctf_score_stripes": {
+            "url": "ctf_score_stripes.png"
+        },
+        "ctf_score_final": {
+            "url": "ctf_score_final.png"
+        },
+        "ctf_score_final_red": {
+            "url": "ctf_score_final_red.png"
+        },
+        "ctf_score_final_blue": {
+            "url": "ctf_score_final_blue.png"
+        },
+        "ctf_score_left_0": {
+            "url": "ctf_score_left_0.png"
+        },
+        "ctf_score_left_1": {
+            "url": "ctf_score_left_1.png"
+        },
+        "ctf_score_left_2": {
+            "url": "ctf_score_left_2.png"
+        },
+        "ctf_score_left_3": {
+            "url": "ctf_score_left_3.png"
+        },
+        "ctf_score_left_4": {
+            "url": "ctf_score_left_4.png"
+        },
+        "ctf_score_right_0": {
+            "url": "ctf_score_right_0.png"
+        },
+        "ctf_score_right_1": {
+            "url": "ctf_score_right_1.png"
+        },
+        "ctf_score_right_2": {
+            "url": "ctf_score_right_2.png"
+        },
+        "ctf_score_right_3": {
+            "url": "ctf_score_right_3.png"
+        },
+        "ctf_score_right_4": {
+            "url": "ctf_score_right_4.png"
+        }
+    }
+}

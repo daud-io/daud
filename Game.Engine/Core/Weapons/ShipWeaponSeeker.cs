@@ -1,30 +1,33 @@
 ﻿using System;
 using System.Linq;
 using System.Numerics;
+using System.Threading;
 
 namespace Game.Engine.Core.Weapons
 {
-    public class ShipWeaponSeeker : ShipWeaponBullet, ICollide
+    public class ShipWeaponSeeker : ShipWeaponBullet
     {
-
         public Ship DeclaredTarget { get; private set; } = null;
+
+        public ShipWeaponSeeker(World world, Ship ship): base(world, ship)
+        {
+            Interlocked.Increment(ref World.ProjectileCount);
+            
+        }
 
         public override void FireFrom(Ship ship, ActorGroup group)
         {
             base.FireFrom(ship, group);
 
-            this.Momentum /= 2.0f;
+            this.LinearVelocity /= 2.0f;
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife * World.Hook.SeekerLifeMultiplier);
             this.Sprite = API.Common.Sprites.seeker;
             this.Size = 100;
-
         }
 
-        public override void Think()
+        protected override void Update(float dt)
         {
-            var originalMomentum = Momentum;
-
-            base.Think();
+            var originalMomentum = LinearVelocity;
 
             Ship target = null;
             if (World.Time > TimeBirth + World.Hook.SeekerCycle)
@@ -55,7 +58,7 @@ namespace Game.Engine.Core.Weapons
             float thrustAngle = 0;
             if (target != null)
             {
-                var delta = (target.Position + (target.Momentum * World.Hook.SeekerLead)) - Position;
+                var delta = (target.Position + (target.LinearVelocity * World.Hook.SeekerLead)) - Position;
                 thrustAngle = MathF.Atan2(delta.Y, delta.X);
 
                 Angle = thrustAngle;
@@ -64,47 +67,56 @@ namespace Game.Engine.Core.Weapons
             else
                 thrustAngle = Angle;
 
-            var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount * World.Hook.SeekerThrustMultiplier;
-            Momentum = (originalMomentum + thrust) * Drag;
+            var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount/40 * World.Hook.SeekerThrustMultiplier;
+            LinearVelocity = (originalMomentum + thrust * dt) * (1-Drag*dt);
+
+            base.Update(dt);
         }
 
-        public virtual void CollisionExecute(Body projectedBody)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             var bullet = projectedBody as ShipWeaponBullet;
             var fleet = bullet?.OwnedByFleet;
             var player = fleet?.Owner;
-            bullet.Consumed = true;
 
-            this.Consumed = true;
-            this.PendingDestruction = true;
+            if (bullet != null && !bullet.Consumed && !this.Consumed)
+            {
+                bullet.Consumed = true;
+                this.Consumed = true;
+                this.Die();
+            }
         }
 
-        public bool IsCollision(Body projectedBody)
+        public override CollisionResponse CanCollide(WorldBody projectedBody)
         {
-            if (PendingDestruction)
-                return false;
+            if (Consumed)
+                return new CollisionResponse(false);
 
             if (projectedBody is ShipWeaponBullet bullet)
             {
                 // avoid "piercing" shots
                 if (bullet.Consumed)
-                    return false;
+                    return new CollisionResponse(false);
 
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.OwnedByFleet)
-                    return false;
+                    return new CollisionResponse(false);
 
                 // team mode ensures that bullets of like colors do no harm
                 if (World.Hook.TeamMode && bullet.Color == this.Color)
-                    return false;
+                    return new CollisionResponse(false);
 
-                // did it actually hit
-                if ((Vector2.Distance(projectedBody.Position, this.Position)
-                        <= this.Size + projectedBody.Size))
-                    return true;
+                return new CollisionResponse(true, false);
             }
 
-            return false;
+            return new CollisionResponse(false);
         }
+
+        public override void Destroy()
+        {
+            Interlocked.Decrement(ref World.ProjectileCount);
+            base.Destroy();
+        }
+
     }
 }

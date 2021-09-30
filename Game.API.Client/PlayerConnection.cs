@@ -2,8 +2,7 @@
 {
     using Game.API.Common;
     using Game.API.Common.Models;
-    using Game.Engine.Networking.FlatBuffers;
-    using FlatBuffers;
+    using DaudNet;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -12,6 +11,8 @@
     using System.Numerics;
     using System.Threading;
     using System.Threading.Tasks;
+    using FlatSharp;
+    using FlatSharp.Attributes;
 
     public class PlayerConnection : IDisposable
     {
@@ -92,10 +93,10 @@
         private Task HandleNetEvent(NetEvent netEvent)
         {
 
-            switch (netEvent.Type)
+            switch (netEvent.type)
             {
                 case "hook":
-                    this.Hook = JsonConvert.DeserializeObject<Hook>(netEvent.Data);
+                    this.Hook = JsonConvert.DeserializeObject<Hook>(netEvent.data);
                     break;
             }
             return Task.FromResult(true);
@@ -111,73 +112,55 @@
 
         private async Task SendPingAsync()
         {
-            var builder = new FlatBufferBuilder(1);
-            PingSent = DateTime.Now;
-            var ping = NetPing.CreateNetPing(builder, bandwidthThrottle: 100, latency: Latency);
-            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetPing, ping.Value);
-            builder.Finish(q.Value);
-
-            await SendAsync(builder.DataBuffer, default(CancellationToken));
+            await SendAsync(new NetPing
+            {
+                bandwidththrottle = 100,
+                latency = Latency
+            });
         }
 
         public async Task SendControlInputAsync()
         {
-            var builder = new FlatBufferBuilder(1);
-
-            StringOffset customOffset = new StringOffset();
-
-            if (CustomData != null)
+            await SendAsync(new NetControlInput
             {
-                customOffset = builder.CreateString(CustomData);
-            }
-
-            NetControlInput.StartNetControlInput(builder);
-
-            NetControlInput.AddAngle(builder, 0);
-            NetControlInput.AddBoost(builder, ControlIsBoosting);
-            NetControlInput.AddX(builder, ControlAimTarget.X);
-            NetControlInput.AddY(builder, ControlAimTarget.Y);
-            NetControlInput.AddShoot(builder, ControlIsShooting);
-            if (CustomData != null)
-                NetControlInput.AddCustomData(builder, customOffset);
-            var controlInput = NetControlInput.EndNetControlInput(builder);
-
-            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetControlInput, controlInput.Value);
-            builder.Finish(q.Value);
-
-            await SendAsync(builder.DataBuffer, default(CancellationToken));
+                angle = 0,
+                boost = ControlIsBoosting,
+                x = ControlAimTarget.X,
+                y = ControlAimTarget.Y,
+                shoot = ControlIsShooting,
+                customdata = CustomData
+            });
+            
             CustomData = null;
         }
 
-        private Leaderboard.Entry EntryFromNetEntry(NetLeaderboardEntry? entry)
+        private Leaderboard.Entry EntryFromNetEntry(NetLeaderboardEntry entry)
         {
-            return entry != null
-                ? new Leaderboard.Entry
-                {
-                    Color = entry?.Color,
-                    FleetID = entry?.FleetID ?? 0,
-                    ModeData = entry?.ModeData != null ? JsonConvert.DeserializeObject(entry?.ModeData) : null,
-                    Name = entry?.Name,
-                    Position = new Vector2(entry?.Position?.X ?? 0, entry?.Position?.Y ?? 0),
-                    Score = entry?.Score ?? 0,
-                    Token = (entry?.Token ?? false).ToString()
-                }
-                : null;
+            return new Leaderboard.Entry
+            {
+                Color = entry?.color,
+                FleetID = entry?.fleetid ?? 0,
+                ModeData = entry?.modedata != null ? JsonConvert.DeserializeObject(entry?.modedata) : null,
+                Name = entry?.name,
+                Position = new Vector2(entry?.position?.x ?? 0, entry?.position?.y ?? 0),
+                Score = entry?.score ?? 0,
+                Token = (entry?.token ?? false).ToString()
+            };
         }
 
         private async Task HandleNetLeaderboard(NetLeaderboard netLeaderboard)
         {
-            var entryCount = netLeaderboard.EntriesLength;
+            var entryCount = netLeaderboard.entries.Count;
             var leaderboard = new Leaderboard
             {
-                ArenaRecord = EntryFromNetEntry(netLeaderboard.Record),
+                ArenaRecord = EntryFromNetEntry(netLeaderboard.record),
                 Entries = new List<Leaderboard.Entry>()
             };
 
             for (var i = 0; i < entryCount; i++)
-                leaderboard.Entries.Add(EntryFromNetEntry(netLeaderboard.Entries(i)));
+                leaderboard.Entries.Add(EntryFromNetEntry(netLeaderboard.entries[i]));
 
-            leaderboard.Type = netLeaderboard.Type;
+            leaderboard.Type = netLeaderboard.type;
 
             Leaderboard = leaderboard;
 
@@ -189,86 +172,70 @@
         {
             var updates = new List<Body>();
 
-            for (int i = 0; i < netWorldView.UpdatesLength; i++)
+            for (int i = 0; i < netWorldView.updates.Count; i++)
             {
-                var netBodyNullable = netWorldView.Updates(i);
-                if (netBodyNullable.HasValue)
+                var netBody = netWorldView.updates[i];
+                updates.Add(new Body
                 {
-                    var netBody = netBodyNullable.Value;
+                    ID = netBody.id,
+                    DefinitionTime = netBody.definitiontime,
+                    OriginalPosition = FromNetVector(netBody.originalposition),
+                    Momentum = FromNetVectorVelocity(netBody.velocity),
 
-                    updates.Add(new Body
-                    {
-                        ID = netBody.Id,
-                        DefinitionTime = netBody.DefinitionTime,
-                        OriginalPosition = FromNetVector(netBody.OriginalPosition),
-                        Momentum = FromNetVectorVelocity(netBody.Velocity),
+                    OriginalAngle = netBody.originalangle,
+                    AngularVelocity = netBody.angularvelocity,
 
-                        OriginalAngle = netBody.OriginalAngle,
-                        AngularVelocity = netBody.AngularVelocity,
+                    Size = netBody.size,
+                    Sprite = (Sprites)netBody.sprite,
 
-                        Size = netBody.Size,
-                        Sprite = (Sprites)netBody.Sprite,
-
-                        GroupID = netBody.Group
-                    });
-                }
+                    GroupID = netBody.group
+                });
             }
 
             var deletes = new List<uint>();
-            for (int i = 0; i < netWorldView.DeletesLength; i++)
-                deletes.Add(netWorldView.Deletes(i));
+            for (int i = 0; i < netWorldView.deletes.Count; i++)
+                deletes.Add(netWorldView.deletes[i]);
 
             var groupDeletes = new List<uint>();
-            for (int i = 0; i < netWorldView.GroupDeletesLength; i++)
-                groupDeletes.Add(netWorldView.GroupDeletes(i));
+            for (int i = 0; i < netWorldView.groupdeletes.Count; i++)
+                groupDeletes.Add(netWorldView.groupdeletes[i]);
 
             var groups = new List<Group>();
-            for (int i = 0; i < netWorldView.GroupsLength; i++)
+            for (int i = 0; i < netWorldView.groups.Count; i++)
             {
-                var netGroupNullable = netWorldView.Groups(i);
-                if (netGroupNullable.HasValue)
+                var group = netWorldView.groups[i];
+                groups.Add(new Group
                 {
-                    var group = netGroupNullable.Value;
-
-                    groups.Add(new Group
-                    {
-                        ID = group.Group,
-                        Caption = group.Caption,
-                        Type = (GroupTypes)group.Type,
-                        ZIndex = group.Zindex,
-                        Owner = group.Owner,
-                        Color = group.Color,
-                        CustomData = group.CustomData
-                    });
-                }
+                    ID = group.group,
+                    Caption = group.caption,
+                    Type = (GroupTypes)group.type,
+                    ZIndex = group.zindex,
+                    Owner = group.owner,
+                    Color = group.color,
+                    CustomData = group.customdata
+                });
             }
 
-            Cache.Update(updates, deletes, groups, groupDeletes, netWorldView.Time);
+            Cache.Update(updates, deletes, groups, groupDeletes, netWorldView.time);
 
-            Position = FromNetVector(netWorldView.Camera.Value.OriginalPosition);
+            Position = FromNetVector(netWorldView.camera.originalposition);
 
-            IsAlive = netWorldView.IsAlive;
-            FleetID = netWorldView.FleetID;
-            GameTime = netWorldView.Time;
-            WorldSize = netWorldView.WorldSize;
-            CooldownBoost = netWorldView.CooldownBoost / 255f;
-            CooldownShoot = netWorldView.CooldownShoot / 255f;
+            IsAlive = netWorldView.isalive;
+            FleetID = netWorldView.fleetid;
+            GameTime = netWorldView.time;
+            WorldSize = netWorldView.worldsize;
+            CooldownBoost = netWorldView.cooldownboost / 255f;
+            CooldownShoot = netWorldView.cooldownshoot / 255f;
 
-            if (netWorldView.AnnouncementsLength > 0)
-            {
-                for (var i = 0; i < netWorldView.AnnouncementsLength; i++)
+            foreach (var announcement in netWorldView.announcements)
+                Announcements.Enqueue(new Announcement
                 {
-                    var announcement = netWorldView.Announcements(i);
+                    Type = announcement.type,
+                    Text = announcement.text,
+                    PointsDelta = announcement.pointsdelta,
+                    ExtraData = announcement.extradata
+                });
 
-                    Announcements.Enqueue(new Announcement
-                    {
-                        Type = announcement.Value.Type,
-                        Text = announcement.Value.Text,
-                        PointsDelta = announcement.Value.PointsDelta,
-                        ExtraData = announcement.Value.ExtraData
-                    });
-                }
-            }
 
             if (OnView != null)
                 await OnView();
@@ -280,8 +247,8 @@
 
             return new Vector2
             {
-                X = vec2.X / VELOCITY_SCALE_FACTOR,
-                Y = vec2.Y / VELOCITY_SCALE_FACTOR
+                X = vec2.x / VELOCITY_SCALE_FACTOR,
+                Y = vec2.y / VELOCITY_SCALE_FACTOR
             };
 
         }
@@ -290,19 +257,14 @@
         {
             return new Vector2
             {
-                X = vec2.X,
-                Y = vec2.Y
+                X = vec2.x,
+                Y = vec2.y
             };
         }
 
         public async Task SendExitAsync()
         {
-            var builder = new FlatBufferBuilder(1);
-            var exit = NetExit.CreateNetExit(builder);
-            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetExit, exit.Value);
-            builder.Finish(q.Value);
-
-            await SendAsync(builder.DataBuffer, default);
+            await SendAsync(new NetExit());
         }
 
         public void CacheClear()
@@ -313,27 +275,21 @@
         public async Task SpawnAsync(string name, string sprite, string color)
         {
             //CacheClear();
-            var builder = new FlatBufferBuilder(1);
-
-            var stringName = builder.CreateString(name ?? string.Empty);
-            var stringSprite = builder.CreateString(sprite ?? string.Empty);
-            var stringColor = builder.CreateString(color ?? string.Empty);
-
-            NetSpawn.StartNetSpawn(builder);
-            NetSpawn.AddName(builder, stringName);
-            NetSpawn.AddShip(builder, stringSprite);
-            NetSpawn.AddColor(builder, stringColor);
-
-            var spawn = NetSpawn.EndNetSpawn(builder);
-            var q = NetQuantum.CreateNetQuantum(builder, AllMessages.NetSpawn, spawn.Value);
-            builder.Finish(q.Value);
-
-            await SendAsync(builder.DataBuffer, default(CancellationToken));
+            await SendAsync(new NetSpawn
+            {
+                name = name,
+                ship = sprite,
+                color = color
+            });
         }
 
-        private async Task SendAsync(ByteBuffer byteBuffer, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task SendAsync(object message, CancellationToken cancellationToken = default(CancellationToken))
         {
-            var buffer = byteBuffer.ToSizedArray();
+            
+            int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(message);
+            byte[] buffer = new byte[maxBytesNeeded];
+            int bytesWritten = FlatBufferSerializer.Default.Serialize(message, buffer);
+
             await WebsocketSendingSemaphore.WaitAsync();
             try
             {
@@ -365,26 +321,27 @@
 
         private async Task HandleIncomingMessage(NetQuantum netQuantum)
         {
-            switch (netQuantum.MessageType)
+
+            switch (netQuantum.message.Kind)
             {
-                case AllMessages.NetEvent:
-                    await HandleNetEvent(netQuantum.Message<NetEvent>().Value);
+                case AllMessages.ItemKind.NetEvent:
+                    await HandleNetEvent(netQuantum.message.NetEvent);
                     break;
 
-                case AllMessages.NetPing:
-                    await HandleNetPing(netQuantum.Message<NetPing>().Value);
+                case AllMessages.ItemKind.NetPing:
+                    await HandleNetPing(netQuantum.message.NetPing);
                     break;
 
-                case AllMessages.NetWorldView:
-                    await HandleNetWorldView(netQuantum.Message<NetWorldView>().Value);
+                case AllMessages.ItemKind.NetWorldView:
+                    await HandleNetWorldView(netQuantum.message.NetWorldView);
                     break;
 
-                case AllMessages.NetLeaderboard:
-                    await HandleNetLeaderboard(netQuantum.Message<NetLeaderboard>().Value);
+                case AllMessages.ItemKind.NetLeaderboard:
+                    await HandleNetLeaderboard(netQuantum.message.NetLeaderboard);
                     break;
 
                 default:
-                    //Console.WriteLine("Received other: " + netQuantum.MessageType.ToString());
+                    Console.WriteLine("Received other: " + netQuantum.message.Kind.ToString());
                     break;
             }
         }
@@ -428,8 +385,7 @@
                             if (result.EndOfMessage)
                             {
                                 var bytes = ms.GetBuffer();
-                                var dataBuffer = new ByteBuffer(bytes);
-                                var quantum = NetQuantum.GetRootAsNetQuantum(dataBuffer);
+                                var quantum = FlatBufferSerializer.Default.Parse<NetQuantum>(bytes);
 
                                 await onReceive(quantum);
 

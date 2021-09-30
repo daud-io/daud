@@ -1,0 +1,177 @@
+{
+  "sprites":
+  {
+    "bg": {
+      "abstract": true,
+      "layerSpeeds": [0.4],
+      "layerTextures": ["bg1"],
+      "scale": [4]
+    }
+  },
+  "textures":
+  {
+    "bg1": {
+      "url": "bg.png",
+      "size": 1,
+      "width": 828,
+      "height": 600
+    },
+    "boost": {
+      "url": "thruster_cyan.png",
+      "size": 2.5,
+      "offset": {
+        "x": -120,
+        "y": 0
+      },
+      "animated": {
+        "speed": 25,
+        "loop": true,
+        "size": 64,
+        "count": 29
+      },
+      "width": 64,
+      "height": 64,
+      "rotate": 6
+    },
+    "ship": {
+      "size": 2.5,
+      "abstract": true,
+      "width": 1024,
+      "height": 1024
+    },
+    "ship0": {
+      "extends": "ship",
+      "url": "ship0.png"
+    },
+    "ship_gray": {
+      "extends": "ship",
+      "url": "ship_gray.png"
+    },
+    "ship_flash": {
+      "extends": "ship",
+      "url": "ship_flash.png"
+    },
+    "thruster_cyan": {
+      "extends": "boost",
+      "url": "thruster_cyan.png"
+    },
+    "ship_cyan": {
+      "extends": "ship",
+      "url": "ship_cyan.png"
+    },
+    "thruster_blue": {
+      "extends": "boost",
+      "url": "thruster_blue.png"
+    },
+    "ship_blue": {
+      "extends": "ship",
+      "url": "ship_blue.png"
+    },
+    "thruster_green": {
+      "extends": "boost",
+      "url": "thruster_green.png"
+    },
+    "ship_green": {
+      "extends": "ship",
+      "url": "ship_green.png"
+    },
+    "thruster_orange": {
+      "extends": "boost",
+      "url": "thruster_orange.png"
+    },
+    "ship_orange": {
+      "extends": "ship",
+      "url": "ship_orange.png"
+    },
+    "thruster_pink": {
+      "extends": "boost",
+      "url": "thruster_pink.png"
+    },
+    "ship_pink": {
+      "extends": "ship",
+      "url": "ship_pink.png"
+    },
+    "thruster_red": {
+      "extends": "boost",
+      "url": "thruster_red.png"
+    },
+    "ship_red": {
+      "extends": "ship",
+      "url": "ship_red.png"
+    },
+    "thruster_yellow": {
+      "extends": "boost",
+      "url": "thruster_yellow.png"
+    },
+    "ship_yellow": {
+      "extends": "ship",
+      "url": "ship_yellow.png"
+    },
+    "ship_secret": {
+      "extends": "ship",
+      "url": "ship_secret.png"
+    },
+    "ship_zed": {
+      "extends": "ship",
+      "url": "ship_zed.png"
+    },
+    "bullet": {
+      "url": "bullet_cyan.png",
+      "size": 5,
+      "width": 584,
+      "height": 288
+    },
+    "bullet_cyan": {
+      "extends": "bullet",
+      "url": "bullet_cyan.png"
+    },
+    "bullet_blue": {
+      "extends": "bullet",
+      "url": "bullet_blue.png"
+    },
+    "bullet_green": {
+      "extends": "bullet",
+      "url": "bullet_green.png"
+    },
+    "bullet_orange": {
+      "extends": "bullet",
+      "url": "bullet_orange.png"
+    },
+    "bullet_pink": {
+      "extends": "bullet",
+      "url": "bullet_pink.png"
+    },
+    "bullet_red": {
+      "extends": "bullet",
+      "url": "bullet_red.png"
+    },
+    "bullet_yellow": {
+      "extends": "bullet",
+      "url": "bullet_yellow.png"
+    },
+    "obstacle": {
+      "url": "obstacle.png",
+      "size": 2.3,
+      "width": 752,
+      "height": 752
+    },
+    "seeker": {
+      "url": "seeker.png",
+      "size": 0.64,
+      "width": 1088,
+      "height": 240
+    },
+    "seeker_pickup": {
+      "url": "seeker_pickup.png",
+      "size": 1,
+      "width": 75,
+      "height": 51
+    },
+    "fish": {
+      "url": "fish.png",
+      "size": 2,
+      "width": 1024,
+      "height": 1024
+    }
+  }
+}

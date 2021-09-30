@@ -12,7 +12,6 @@
     {
         public virtual float ShotCooldownTimeM { get => World.Hook.ShotCooldownTimeM; }
         public virtual float ShotCooldownTimeB { get => World.Hook.ShotCooldownTimeB; }
-        public virtual int ShotCooldownTimeShark { get => World.Hook.ShotCooldownTimeShark; }
         public virtual float ShotThrustM { get => World.Hook.ShotThrustM; }
         public virtual float ShotThrustB { get => World.Hook.ShotThrustB; }
         public virtual float BaseThrustM { get => World.Hook.BaseThrustM; }
@@ -21,7 +20,6 @@
 
         public virtual int SpawnShipCount { get => World.Hook.SpawnShipCount; }
 
-        public virtual bool BossMode { get => World.Hook.BossMode && World.Hook.BossModeSprites.Contains(this.Owner.ShipSprite); }
 
         public Player Owner { get; set; }
 
@@ -39,7 +37,6 @@
         public Vector2 AimTarget { get; set; }
 
         public List<Ship> Ships { get; set; } = new List<Ship>();
-        public List<Ship> NewShips { get; set; } = new List<Ship>();
 
         public List<ShipWeaponBullet> NewBullets { get; set; } = new List<ShipWeaponBullet>();
 
@@ -47,12 +44,10 @@
         public Stack<IFleetWeapon> WeaponStack { get; set; } = new Stack<IFleetWeapon>();
 
         public Vector2 FleetCenter = Vector2.Zero;
-        public Vector2 FleetMomentum = Vector2.Zero;
+        public Vector2 FleetVelocity = Vector2.Zero;
 
         public float Burden { get; set; } = 0f;
-        public bool Shark { get; set; } = false;
-        public bool LastTouchedLeft { get; set; } = false;
-        public bool FiringWeapon { get; private set; } = false;
+        public uint WeaponFiredCount { get; private set; } = 0;
 
         public Vector2? SpawnLocation { get; set; } = null;
         public int ShipSize { get; set; } = 70;
@@ -89,14 +84,30 @@
             }
         }
 
-        private void Die(Player player)
+        public Fleet(World world, Player owner):base(world)
+        {
+            this.Owner = owner;
+            this.GroupType = GroupTypes.Fleet;
+            this.ZIndex = 100;
+
+            this.BaseWeapon = new FleetWeaponGeneric<ShipWeaponBullet>(World);
+
+            if (SpawnLocation != null)
+                FleetCenter = SpawnLocation.Value;
+            else
+                FleetCenter = world.ChooseSpawnPoint("fleet", this);
+
+            for (int i = 0; i < SpawnShipCount; i++)
+                this.AddShip();
+
+        }
+
+        public void Die(Player player)
         {
             World.Scoring.FleetDied(player, Owner, this);
-
             this.Owner.Die(player);
 
             PendingDestruction = true;
-            NewShips.Clear();
         }
 
         public override void Destroy()
@@ -109,18 +120,17 @@
 
         public void ShipDeath(Player player, Ship ship, ShipWeaponBullet bullet)
         {
-            if (!Ships.Where(s => !s.PendingDestruction).Any())
+            if (!Ships.Where(s => s.Exists && !s.PendingDestruction).Any())
                 Die(player);
         }
 
         public void KilledShip(Ship killedShip)
         {
-            var random = new Random();
             var threshold = Ships.Count * World.Hook.ShipGainBySizeM + World.Hook.ShipGainBySizeB;
-            if (random.NextDouble() < threshold)
+            if (World.Random.NextDouble() < threshold)
                 if (Ships?.Any() ?? false)
                 {
-                    EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay);
+                    EarnedShips.Enqueue(World.Time + World.Hook.EarnedShipDelay +1);
                 }
         }
 
@@ -128,98 +138,20 @@
         {
             if (!this.Owner.IsAlive || this.PendingDestruction)
                 return;
-
-            var random = new Random();
-
-            var offset = new Vector2
-            (
-                random.Next(-20, 20),
-                random.Next(-20, 20)
-            );
-
-            var ship = new Ship()
+                
+            Ships.Add(new Ship(World)
             {
                 Fleet = this,
                 Sprite = this.Owner.ShipSprite,
                 Color = this.Owner.Color,
-                Size = ShipSize
-            };
-
-            if (this.Ships.Any())
-            {
-                var position = Vector2.Zero;
-                var momentum = Vector2.Zero;
-                var angle = 0f;
-                var count = 0;
-
-                foreach (var existingShip in this.Ships)
-                {
-                    position += existingShip.Position;
-                    momentum += existingShip.Momentum;
-                    angle += existingShip.Angle;
-                    count++;
-                }
-
-                ship.Position = position / count + offset;
-                ship.Momentum = momentum / count;
-                ship.Angle = angle / count;
-            }
-            else
-            {
-                ship.Position = FleetCenter + offset;
-            }
-
-            NewShips.Add(ship);
-        }
-
-        public override void Init(World world)
-        {
-            base.Init(world);
-            this.GroupType = GroupTypes.Fleet;
-            this.ZIndex = 100;
-
-            this.BaseWeapon = new FleetWeaponGeneric<ShipWeaponBullet>();
-
-            if (SpawnLocation != null)
-                FleetCenter = SpawnLocation.Value;
-            else
-                FleetCenter = world.RandomSpawnPosition(this);
-
-            for (int i = 0; i < SpawnShipCount; i++)
-                this.AddShip();
-        }
-
-        public override void CreateDestroy()
-        {
-            if (FiringWeapon)
-            {
-                var weapon = this.WeaponStack.Any()
-                    ? this.WeaponStack.Pop()
-                    : this.BaseWeapon;
-
-                weapon.FireFrom(this);
-                FiringWeapon = false;
-            }
-
-            while (EarnedShips.Any() && EarnedShips.Peek() < World.Time)
-            {
-                AddShip();
-                EarnedShips.Dequeue();
-            }
-
-            foreach (var ship in NewShips)
-            {
-                ship.Init(World);
-                Ships.Add(ship);
-            }
-            NewShips.Clear();
-
-            foreach (var bullet in NewBullets)
-                bullet.Init(World);
-
-            NewBullets.Clear();
-
-            base.CreateDestroy();
+                Size = ShipSize,
+                Position = this.FleetCenter + new Vector2
+                (
+                    World.Random.Next(-20, 20),
+                    World.Random.Next(-20, 20)
+                ),
+                LinearVelocity = FleetVelocity
+            });
         }
 
         public void Abandon()
@@ -239,6 +171,7 @@
             ship.Mode = 0;
             ship.AbandonedByFleet = this;
             ship.AbandonedTime = World.Time;
+            ship.ShieldStrength = 0;
 
             if (Ships.Contains(ship))
                 Ships.Remove(ship);
@@ -252,16 +185,17 @@
                 WeaponStack = new Stack<IFleetWeapon>(WeaponStack.TakeLast(World.Hook.FleetWeaponStackDepth));
         }
 
-        public override void Think()
+        public override void Think(float dt)
         {
-            var isShooting = ShootRequested && World.Time >= ShootCooldownTime;
+            base.Think(dt);
+
+            var isShooting = ShootRequested && (World.Time >= ShootCooldownTime);
             var isBoosting = World.Time < BoostUntil;
             var isBoostInitial = false;
 
             if (World.Time > BoostCooldownTime && BoostRequested && Ships.Count > 1)
             {
-                BoostCooldownTime = World.Time + (long)
-                    (World.Hook.BoostCooldownTimeM * Ships.Count + World.Hook.BoostCooldownTimeB);
+                BoostCooldownTime = World.Time + (long)(World.Hook.BoostCooldownTimeM * Ships.Count + World.Hook.BoostCooldownTimeB);
                 BoostCooldownTimeStart = World.Time;
 
                 BoostUntil = World.Time + World.Hook.BoostDuration;
@@ -275,77 +209,91 @@
             }
 
             FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
-            FleetMomentum = FleetMath.FleetMomentum(this.Ships);
+            FleetVelocity = FleetMath.FleetMomentum(this.Ships);
 
-            foreach (var ship in Ships)
-            {
-                var shipTargetVector = FleetCenter + AimTarget - ship.Position;
-
-                // todo: this dirties the ship body every cycle
-                ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
-
-                Flocking.Flock(ship);
-                Snaking.Snake(ship);
-                Ringing.Ring(ship);
-
-                ship.ThrustAmount = isBoosting
-                    ? BoostThrust * (1 - Burden)
-                    : (BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
-
-                ship.Drag = isBoosting
-                    ? 1.0f
-                    : World.Hook.Drag;
-
-                ship.Mode = (byte)
-                    (
-                        (isBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
-                        | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
-                        | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
-                        | (!Owner.IsShielded && Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
-                        | (Owner.IsShielded && ship.ShieldStrength > 0 ? ShipModeEnum.shield : ShipModeEnum.none)
-                    );
-
-                if (isBoostInitial)
-                    if (ship.Momentum != Vector2.Zero)
-                        ship.Momentum += Vector2.Normalize(ship.Momentum) * World.Hook.BoostSpeed;
-            }
-
-            if (isShooting)
-            {
-                ShootCooldownTime = World.Time + (Shark ? ShotCooldownTimeShark : (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB));
-                ShootCooldownTimeStart = World.Time;
-
-                FiringWeapon = true;
-            }
-
-            if (World.Time > BoostCooldownTime)
-                BoostCooldownStatus = 1;
-            else
-                BoostCooldownStatus = (float)
-                    (World.Time - BoostCooldownTimeStart) / (BoostCooldownTime - BoostCooldownTimeStart);
-
-            if (World.Time > ShootCooldownTime)
-                ShootCooldownStatus = 1;
-            else
-                ShootCooldownStatus = (float)
-                    (World.Time - ShootCooldownTimeStart) / (ShootCooldownTime - ShootCooldownTimeStart);
-
-            if (MathF.Abs(FleetCenter.X) > World.Hook.WorldSize &&
-                FleetCenter.X < 0 != LastTouchedLeft &&
-                World.Hook.Name == "Sharks and Minnows" &&
-                !Owner.IsInvulnerable &&
-                !Shark)
-            {
-                LastTouchedLeft = FleetCenter.X < 0;
-                Owner.IsInvulnerable = true;
-                Owner.SpawnTime = World.Time;
-                Owner.Score++;
-            }
-
-            if (!Ships.Where(s => !s.PendingDestruction).Any()
-                && !NewShips.Any())
+            bool killedTooBig = false;
+            
+            if (!Ships.Where(s => s.Exists && !s.PendingDestruction).Any())
                 Die(null);
+            else
+            {
+                foreach (var ship in Ships.ToList())
+                {
+                    var shipTargetVector = FleetCenter + AimTarget - ship.Position;
+
+                    ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
+                    ship.AngularVelocity = 0;
+
+                    Flocking.Flock(ship);
+
+                    ship.ThrustAmount = isBoosting
+                        ? BoostThrust * (1 - Burden)
+                        : (BaseThrustM * Ships.Count + BaseThrustB) * (1 - Burden);
+
+                    ship.Drag = isBoosting
+                        ? 0f
+                        : World.Hook.Drag;
+
+                    ship.Mode = (byte)
+                        (
+                            (isBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
+                            | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
+                            | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
+                            | (Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
+                            | (ship.ShieldStrength > 0 ? ShipModeEnum.shield : ShipModeEnum.none)
+                        );
+
+                    if (isBoostInitial)
+                        if (ship.LinearVelocity != Vector2.Zero)
+                            ship.LinearVelocity += Vector2.Normalize(ship.LinearVelocity) * World.Hook.BoostSpeed;
+
+                    if (!killedTooBig && Vector2.Distance(ship.Position, FleetCenter) > 1500)
+                    {
+                        killedTooBig = true; // only do it once per tick
+                        AbandonShip(ship);
+                    }
+                }
+
+                if (isShooting)
+                {
+                    var weapon = this.WeaponStack.Any()
+                        ? this.WeaponStack.Pop()
+                        : this.BaseWeapon;
+
+                    weapon.FireFrom(this);
+                    this.WeaponFiredCount++;
+
+                    ShootCooldownTime = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
+                    ShootCooldownTimeStart = World.Time;
+                }
+
+                if (World.Time > BoostCooldownTime)
+                    BoostCooldownStatus = 1;
+                else
+                    BoostCooldownStatus = (float)
+                        (World.Time - BoostCooldownTimeStart) / (BoostCooldownTime - BoostCooldownTimeStart);
+
+                if (World.Time > ShootCooldownTime)
+                    ShootCooldownStatus = 1;
+                else
+                    ShootCooldownStatus = (float)
+                        (World.Time - ShootCooldownTimeStart) / (ShootCooldownTime - ShootCooldownTimeStart);
+
+                while (EarnedShips.Any() && EarnedShips.Peek() < World.Time)
+                {
+                    AddShip();
+                    EarnedShips.Dequeue();
+                }
+            }
         }
 
+        public void ActivateShields()
+        {
+            foreach (var ship in this.Ships)
+            {
+                ship.ShieldExpiration = World.Time + World.Hook.ShieldTimeMS;
+                ship.ShieldStrength = this.World.Hook.ShieldStrength;
+            }
+        }
     }
 }

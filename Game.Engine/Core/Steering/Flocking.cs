@@ -39,7 +39,7 @@
                 return vec;
             }
             else
-                return Vector2.Zero;
+                return Vector2.Zero ;
         }
 
         public static Vector2 Separation(IEnumerable<Ship> ships, Ship ship, int minimumDistance)
@@ -68,7 +68,7 @@
             var accumulator = Vector2.Zero;
             foreach (var shipOther in ships)
                 if (shipOther != ship)
-                    accumulator += shipOther.Momentum;
+                    accumulator += shipOther.LinearVelocity;
 
             return accumulator / (ships.Count() - 1);
         }
@@ -87,6 +87,13 @@
             var shipFlockingVector =
                 (hook.FlockCohesion * Flocking.Cohesion(fleet.Ships, ship, hook.FlockCohesionMaximumDistance))
                 + (hook.FlockSeparation * Flocking.Separation(fleet.Ships, ship, hook.FlockSeparationMinimumDistance));
+
+            if (shipFlockingVector == Vector2.Zero)
+            {
+                //don't let flocking be zero, that means we're on top of each other
+                var r = new Random();
+                shipFlockingVector = new Vector2((float)r.NextDouble(), (float)r.NextDouble());
+            }
 
             var steeringVector = new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle));
             steeringVector += hook.FlockWeight * shipFlockingVector;

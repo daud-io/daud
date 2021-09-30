@@ -3,47 +3,40 @@
     using Game.API.Common;
     using System.Numerics;
 
-    public class Flag : ActorBody
+    public class Flag : WorldBody
     {
         public readonly Team Team;
         private readonly Base Base;
 
-        private ActorGroup FlagGroup = new ActorGroup();
+        private ActorGroup FlagGroup;
         public Fleet CarriedBy = null;
 
-        public Flag(Sprites flagSprite, Team team, Base b)
+        public Flag(World world, Sprites flagSprite, Team team, Base b): base(world)
         {
             Size = 260;
             Team = team;
             Base = b;
             Sprite = flagSprite;
-            CausesCollisions = true;
-        }
 
-        public override void Init(World world)
-        {
-            base.Init(world);
-
-            FlagGroup.Init(world);
+            FlagGroup = new ActorGroup(world);
             FlagGroup.ZIndex = 200;
             this.Group = FlagGroup;
             Position = world.RandomPosition();
-        }
 
+        }
         public override void Destroy()
         {
             base.Destroy();
             FlagGroup.Destroy();
         }
 
-        public override void Think()
+        protected override void Update(float dt)
         {
-            base.Think();
 
             if (!(CarriedBy?.PendingDestruction ?? true))
             {
                 this.Position = CarriedBy.FleetCenter;
-                this.Momentum = CarriedBy.FleetMomentum;
+                this.LinearVelocity = CarriedBy.FleetVelocity;
 
                 //Console.WriteLine($"X:{CarriedBy.FleetMomentum.X} Y:{CarriedBy.FleetMomentum.Y}");
             }
@@ -55,14 +48,16 @@
                 }
 
                 CarriedBy = null;
-                this.Momentum = new Vector2(0, 0);
+                this.LinearVelocity = new Vector2(0, 0);
 
                 if (World.DistanceOutOfBounds(this.Position) > 0 &&
                     this.Position != Vector2.Zero)
-                    this.Momentum = Vector2.Normalize(-this.Position) * 0.1f;
+                    this.LinearVelocity = Vector2.Normalize(-this.Position) * 0.1f;
                 else
-                    this.Momentum = Vector2.Zero;
+                    this.LinearVelocity = Vector2.Zero;
             }
+
+            base.Update(dt);
         }
 
         public void ReturnToBase()
@@ -76,13 +71,13 @@
             this.CarriedBy = null;
         }
 
-        protected override void Collided(ICollide otherObject)
+        public override void CollisionExecute(WorldBody otherObject)
         {
             if (otherObject is Ship ship)
             {
                 var fleet = ship.Fleet;
 
-                if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
+                if (CarriedBy == null && fleet != null)
                 {
                     if (fleet.Owner.Color == Team.ColorName)
                     {
@@ -100,7 +95,7 @@
                 }
             }
 
-            base.Collided(otherObject);
+            base.CollisionExecute(otherObject);
         }
     }
 }

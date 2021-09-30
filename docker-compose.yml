@@ -1,9 +1,15 @@
 version: '3'
 
 services:
-  game:
+  server:
+    image: andylippitt/daud:a41
     build:
       context: .
-
     ports:
-      - "8080:80"
+      - "5100:5100"
+  client:
+    image: andylippitt/daud-client:d15
+    build:
+      context: ./Client/
+    ports:
+      - "80:80" 

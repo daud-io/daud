@@ -3,44 +3,24 @@
     using Game.Engine.Core.Pickups;
     using System.Collections.Generic;
 
-    public class ObstacleTender : IActor
+    public class ObstacleTender : SystemActorBase
     {
-        private World World = null;
-
         private readonly List<IActor> Flock = new List<IActor>();
-
-        public void Think()
+        public ObstacleTender(World world): base(world)
         {
+            Flock.Add(new GenericTender<Obstacle>(world, () => World.Hook.Obstacles));
+            Flock.Add(new GenericTender<Fish>(world, () => World.Hook.Fishes));
+            Flock.Add(new GenericTender<PickupSeeker>(world, () => World.Hook.PickupSeekers));
+            Flock.Add(new GenericTender<PickupShield>(world, () => World.Hook.PickupShields));
+            Flock.Add(new GenericTender<HasteToken>(world, () => World.Hook.Tokens));
         }
 
-        public void Init(World world)
+        public override void Destroy()
         {
-            this.World = world;
-            this.World.Actors.Add(this);
-
-            Flock.Add(new GenericTender<Obstacle>(() => World.Hook.Obstacles));
-            Flock.Add(new GenericTender<Fish>(() => World.Hook.Fishes));
-            Flock.Add(new GenericTender<PickupSeeker>(() => World.Hook.PickupSeekers));
-            Flock.Add(new GenericTender<PickupShield>(() => World.Hook.PickupShields));
-            Flock.Add(new GenericTender<Wormhole>(() => World.Hook.Wormholes));
-            Flock.Add(new GenericTender<PickupRobotGun>(() => World.Hook.PickupRobotGuns));
-            Flock.Add(new GenericTender<HasteToken>(() => World.Hook.Tokens));
-
-
-            foreach (var element in Flock)
-                element.Init(world);
-        }
-
-        public void Destroy()
-        {
-            this.World.Actors.Remove(this);
-
             foreach (var element in Flock)
                 element.Destroy();
-        }
 
-        public void CreateDestroy()
-        {
+            base.Destroy();
         }
     }
 }

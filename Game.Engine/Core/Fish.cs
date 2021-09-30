@@ -1,7 +1,6 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.API.Common;
-    using Game.API.Common.Models;
     using Game.Engine.Core.Steering;
     using System;
     using System.Linq;
@@ -9,42 +8,27 @@
 
     public class Fish : Ship
     {
-        private long SleepUntil = 0;
-
-        public Fish()
+        public Fish(World world) : base(world)
         {
+            this.Mass = 10;
+            
             Size = 70;
             Sprite = Sprites.fish;
-        }
-
-        public override void Init(World world)
-        {
-            World = world;
-            Randomize();
-            base.Init(world);
-        }
-
-        public void Randomize()
-        {
-            var r = new Random();
-            Position = World.RandomPosition();
-            Angle = (float)r.NextDouble() * MathF.PI * 2;
+            CycleMS = World.Hook.FishCycle;
+            
+            Position = World.ChooseSpawnPoint("fish", this);
+            Angle = (float)World.Random.NextDouble() * MathF.PI * 2;
             ThrustAmount = World.Hook.FishThrust;
         }
 
-        public override void Think()
+        protected override void Update(float dt)
         {
-            if (SleepUntil < World.Time)
-            {
-                Flock();
-                base.Think();
-                SleepUntil = World.Time + World.Hook.FishCycle;
-            }
+            base.Update(dt);
+            Flock();
         }
 
         private void Flock()
         {
-            var oobVectorWeight = World.Hook.FishOOBWeight;
             var ships = World.BodiesNear(Position, World.Hook.FishFlockCohesionMaximumDistance)
                 .OfType<Ship>();
 
@@ -60,18 +44,13 @@
                     + (World.Hook.FishFlockSeparation
                         * Flocking.Separation(ships, this, World.Hook.FishFlockSeparationMinimumDistance));
 
-            if (IsOOB)
-            {
-                if (Position != Vector2.Zero)
-                    oobVector = Vector2.Normalize(-Position) * oobVectorWeight;
-            }
-
             var steeringVector =
                 new Vector2(MathF.Cos(Angle), MathF.Sin(Angle))
                 + World.Hook.FishFlockWeight * flockingVector
                 + oobVector;
 
             Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+            AngularVelocity = 0;
         }
     }
 }

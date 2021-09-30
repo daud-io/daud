@@ -1,3 +1,4 @@
 #!/bin/bash
 
-dotnet ~/code/daud.io/daud/Game.Util/bin/Debug/netcoreapp5.0/Game.Util.dll "$@"
+DIR=`dirname $(readlink -f $0)`
+dotnet run --project $DIR/../Game.Util.csproj -- "$@"

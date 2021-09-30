@@ -36,6 +36,7 @@
 
             var builder = WebHost.CreateDefaultBuilder(args);
 
+
             var configContext = Configuration<GameConfiguration>.Load("config");
 
             builder.UseConfiguration(configContext.ConfigurationRoot);

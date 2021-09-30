@@ -60,6 +60,7 @@
         shield_pickup,
         wormhole,
         boom,
-        haste_powerup
+        haste_powerup,
+        sportsball
     }
 }

@@ -4,7 +4,6 @@
     using Game.API.Common.Models;
     using Game.API.Common.Security;
     using Game.Engine.Core;
-    using Game.Engine.Core.SystemActors;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Cors;
     using Microsoft.AspNetCore.Mvc;
@@ -29,19 +28,6 @@
 
         }
 
-        [HttpPost, Route("map")]
-        public bool SetMap([FromBody] MapModel mapModel, string worldKey)
-        {
-            var world = Worlds.Find(worldKey);
-            if (world != null)
-            {
-                world.GetActor<MapActor>().SetMap(mapModel);
-                return true;
-            }
-            else
-                return false;
-        }
-
         [HttpPut]
         public async Task<string> Create(string worldKey, string hookJson)
         {
@@ -59,10 +45,7 @@
                     publicURL = suggestion;
             }
 
-            var world = new World(hook, GameConfiguration)
-            {
-                WorldKey = worldKey
-            };
+            var world = new World(hook, GameConfiguration, worldKey);
 
             Worlds.AddWorld(world);
 
@@ -103,9 +86,19 @@
         public bool Reset(string worldName = null)
         {
             var world = Worlds.Find(worldName);
-            world.GetActor<RoomReset>().Reset = true;
+            //world.GetActor<RoomReset>().Reset = true;
 
             return true;
+        }
+
+
+        [AllowAnonymous, HttpGet, Route("mesh/{worldKey}/{id}"), EnableCors("AllowAllOrigins")]
+        public async Task<IActionResult> GetMesh(string worldKey, string id)
+        {
+            this.SuppressWrapper=true;
+            var world = Worlds.Find(worldKey);
+            var mesh = await world.MeshLoader.GetMeshStreamAsync(id);
+            return File(mesh, "model/gltf-binary", "server.glb");
         }
 
         [AllowAnonymous, HttpGet, Route("all"), EnableCors("AllowAllOrigins")]

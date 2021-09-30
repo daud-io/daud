@@ -5,7 +5,6 @@
     using Game.API.Authentication;
     using Game.API.Client;
     using Game.API.Common.Security;
-    using Game.Engine.Auditing;
     using Game.Engine.Authentication;
     using Game.Engine.ChatBot;
     using Game.Engine.Core;
@@ -17,10 +16,12 @@
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;
-    using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
     using Elasticsearch.Net;
     using Nest;
     using Nest.JsonNetSerializer;
+    using Microsoft.AspNetCore.Http.Features;
+    using Microsoft.AspNetCore.StaticFiles;
+    using Microsoft.AspNetCore.Server.Kestrel.Core;
 
     public class Startup
     {
@@ -28,6 +29,10 @@
         {
             var config = LoadConfiguration(services);
             services.AddSingleton<GameConfiguration>(config);
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
 
             services.AddTransient<Networking.Connection>();
 
@@ -120,13 +125,19 @@
                 app.UseHttpsRedirection();
 
             if (config.AllowCORS)
-                app.UseCors();
+                app.UseCors("AllowAllOrigins");
+
+            // Set up custom content types - associating file extension to MIME type
+            var mimeProvider = new FileExtensionContentTypeProvider();
+            mimeProvider.Mappings[".ts"] = "text/javascript";
 
             app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
                 ServeUnknownFileTypes = true,
+                HttpsCompression = HttpsCompressionMode.Compress,
                 DefaultContentType = "text/plain",
+                ContentTypeProvider = mimeProvider,
                 OnPrepareResponse = context =>
                 {
                     context.Context.Response.Headers.Add("Cache-Control", "no-cache, no-store");
@@ -140,7 +151,7 @@
             });
             app.UseGameWebsocketHandler();
 
-            RemoteEventLog.Initialize(config, registryClient);
+            //RemoteEventLog.Initialize(config, registryClient);
             Worlds.Initialize(config);
 
             if (config.RegistryEnabled)

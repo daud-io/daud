@@ -5,9 +5,9 @@
     using System;
     using System.Numerics;
 
-    public class Token : ActorBody
+    public class Token : WorldBody
     {
-        private ActorGroup TokenGroup = new ActorGroup();
+        private ActorGroup TokenGroup;
         public Fleet CarriedBy = null;
 
         public bool ExpiringSoon = false;
@@ -23,22 +23,15 @@
             expiring = 2
         }
 
-        public Token()
+        public Token(World world): base(world)
         {
             Size = 200;
 
             Sprite = Sprites.haste_powerup;
-            CausesCollisions = true;
-
             Mode = 0;
-        }
 
-        public override void Init(World world)
-        {
-            base.Init(world);
-
-            TokenGroup.Init(world);
-            TokenGroup.ZIndex = 300;
+            TokenGroup = new ActorGroup(world);
+            TokenGroup.ZIndex = 150;
             TokenGroup.GroupType = GroupTypes.Token;
             this.Group = TokenGroup;
 
@@ -51,9 +44,8 @@
             TokenGroup.Destroy();
         }
 
-        public override void Think()
+        protected override void Update(float dt)
         {
-            base.Think();
 
             bool carried = 
                     CarriedBy != null
@@ -62,7 +54,7 @@
             if (carried)
             {
                 this.Position = CarriedBy.FleetCenter;
-                this.Momentum = CarriedBy.FleetMomentum;
+                this.LinearVelocity = CarriedBy.FleetVelocity;
             }
             else
             {
@@ -72,9 +64,9 @@
                 
                 if (World.DistanceOutOfBounds(this.Position) > 0 &&
                     this.Position != Vector2.Zero)
-                    this.Momentum = Vector2.Normalize(-this.Position) * 0.1f;
+                    this.LinearVelocity = Vector2.Normalize(-this.Position) * 0.1f;
                 else
-                    this.Momentum = Vector2.Zero;
+                    this.LinearVelocity = Vector2.Zero;
             }
 
             this.Mode = (byte)
@@ -82,6 +74,8 @@
                     (carried ? TokenModeEnum.carried : TokenModeEnum.none)
                     | (this.ExpiringSoon ? TokenModeEnum.expiring : TokenModeEnum.none)
                 );
+
+            base.Update(dt);
         }
 
         protected void Drop()
@@ -91,13 +85,25 @@
             CarriedBy = null;
         }
 
-        protected override void Collided(ICollide otherObject)
+        public override CollisionResponse CanCollide(WorldBody otherObject)
         {
             if (otherObject is Ship ship)
             {
                 var fleet = ship.Fleet;
 
-                if (CarriedBy == null && fleet != null && !(fleet.Owner is Robot))
+                if (CarriedBy == null && fleet != null)
+                    return new CollisionResponse(true, false);
+            }
+
+            return base.CanCollide(otherObject);
+        }
+        public override void CollisionExecute(WorldBody otherObject)
+        {
+            if (otherObject is Ship ship)
+            {
+                var fleet = ship.Fleet;
+
+                if (CarriedBy == null && fleet != null)
                 {
                     CarriedBy = fleet;
                     this.SetFleetID(CarriedBy.ID);
@@ -105,7 +111,7 @@
                 }
             }
 
-            base.Collided(otherObject);
+            base.CollisionExecute(otherObject);
         }
 
         protected void SetFleetID(uint? id)

@@ -1,7 +1,7 @@
 ﻿namespace Game.Engine.Networking
 {
+    using Game.API.Common;
     using Game.Engine.Core;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
@@ -11,19 +11,18 @@
         private readonly Dictionary<long, BucketBody> Bodies = new Dictionary<long, BucketBody>();
         private readonly Dictionary<long, BucketGroup> Groups = new Dictionary<long, BucketGroup>();
 
-        public void Update(IEnumerable<Body> bodies, uint time)
+        public void Update(IEnumerable<WorldBody> bodies, uint time)
         {
-
             // update cache items and flag missing ones as stale
             UpdateLocalBodies(bodies);
 
             // project the current bodies and calculate errors
             foreach (var bucket in Bodies.Values)
-                bucket.Project(time);
+                if(!bucket.Stale)
+                    bucket.Project(time);
 
             foreach (var bucket in Groups.Values)
                 bucket.CalculateError();
-
         }
 
         public IEnumerable<BucketBody> BodiesByError()
@@ -44,32 +43,7 @@
                 .OrderByDescending(b => b.Error);
         }
 
-        private void UpdateLocalGroups(IEnumerable<Group> groups)
-        {
-            foreach (var bucket in Groups.Values)
-                bucket.Stale = true;
-
-            foreach (var obj in groups)
-            {
-                BucketGroup bucket = null;
-
-                if (Groups.ContainsKey(obj.ID))
-                {
-                    Groups[obj.ID].Stale = false;
-                }
-                else
-                {
-                    bucket = new BucketGroup
-                    {
-                        GroupUpdated = obj,
-                        Stale = false
-                    };
-                    Groups.Add(obj.ID, bucket);
-                }
-            }
-        }
-
-        private void UpdateLocalBodies(IEnumerable<Body> bodies)
+        private void UpdateLocalBodies(IEnumerable<WorldBody> bodies)
         {
             foreach (var bucket in Groups.Values)
                 bucket.Stale = true;
@@ -79,32 +53,33 @@
 
             foreach (var obj in bodies)
             {
-                if (Bodies.ContainsKey(obj.ID))
+                if (obj == null || !obj.Exists)
+                    continue;
+
+                BucketBody bucket;
+                if (!Bodies.TryGetValue(obj.ID, out bucket))
                 {
-                    Bodies[obj.ID].Stale = false;
-                    Bodies[obj.ID].BodyUpdated = obj;
-                }
-                else
-                {
-                    var bucket = new BucketBody
+                    bucket = new BucketBody()
                     {
-                        BodyUpdated = obj,
                         Stale = false
                     };
                     Bodies.Add(obj.ID, bucket);
                 }
+
+                bucket.Stale = false;
+                bucket.ReadBody(obj);
 
                 if (obj.Group != null)
                     if (Groups.ContainsKey(obj.Group.ID))
                         Groups[obj.Group.ID].Stale = false;
                     else
                     {
-                        var bucket = new BucketGroup
+                        var bucketGroup = new BucketGroup
                         {
                             GroupUpdated = obj.Group,
                             Stale = false
                         };
-                        Groups.Add(obj.Group.ID, bucket);
+                        Groups.Add(obj.Group.ID, bucketGroup);
                     }
             }
         }
@@ -113,7 +88,7 @@
         {
             var stale = Bodies.Values.Where(b => b.Stale).ToList();
             foreach (var b in stale)
-                Bodies.Remove(b.BodyUpdated.ID);
+                Bodies.Remove(b.ID);
 
             return stale;
         }
@@ -152,42 +127,47 @@
 
         public class BucketBody
         {
-            public Body BodyUpdated { get; set; }
-            public Body BodyClient { get; set; }
+            //public WorldBody Body { get; set; }
+
+            public Vector2 Position;
+            public Vector2 LinearVelocity;
+            public float AngularVelocity;
+            public float Angle;
+            public int Size = 0;
+            public byte Mode = 0;
+            public Sprites Sprite;
+
+            public uint GroupID = 0;
+            public uint ID = 0;
+
+            public uint ClientUpdatedTime { get; set;}
 
             public float Error { get; set; }
             public bool Stale { get; set; }
 
-            private const int DISTANCE_THRESHOLD = 2;
-            private const float WEIGHT_DISTANCE = 1;
-            private const float WEIGHT_ANGLE = 10;
-            private const float WEIGHT_SPRITE = 1;
-            private const float WEIGHT_SIZE = 1;
-            private const float WEIGHT_MODE = 1;
-            private const float WEIGHT_MISSING = float.MaxValue;
+            public void UpdateSent(uint time)
+            {
+                ClientUpdatedTime = time;
+            }
+
+            public void ReadBody(WorldBody body)
+            {
+                Position = body.Position;
+                LinearVelocity = body.LinearVelocity;
+                AngularVelocity = body.AngularVelocity;
+                Angle = body.Angle;
+                Size = body.Size;
+                Mode = body.Mode;
+                Sprite = body.Sprite;
+                GroupID = body.Group?.ID ?? 0;
+                ID = body.ID;
+            }
 
             public void Project(uint time)
             {
-                if (BodyClient != null)
-                {
-                    if (BodyClient.DefinitionTime == BodyUpdated.DefinitionTime)
-                        Error = 0;
-                    else
-                    {
-                        BodyClient.Project(time);
-                        var distance = Vector2.Distance(BodyClient.Position, BodyUpdated.Position);
-                        Error =
-                            distance > DISTANCE_THRESHOLD
-                                ? WEIGHT_DISTANCE * distance
-                                : 0
-                            + WEIGHT_ANGLE * Math.Abs(BodyClient.Angle - BodyUpdated.Angle)
-                            + WEIGHT_SIZE * Math.Abs(BodyClient.Size - BodyUpdated.Size)
-                            + WEIGHT_MODE * Math.Abs(BodyClient.Mode - BodyUpdated.Mode)
-                            + WEIGHT_SPRITE * (BodyClient.Sprite != BodyUpdated.Sprite ? 1 : 0);
-                    }
-                }
-                else
-                    Error = WEIGHT_MISSING;
+                Error = time - ClientUpdatedTime;
+                if (Error == 0)
+                    Error = 1;
             }
         }
     }

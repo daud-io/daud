@@ -4,44 +4,42 @@
     using Game.Engine.Core.Weapons;
     using System.Numerics;
 
-    public class StartingBlock : ActorBody, ICollide
+    public class StartingBlock : WorldBody
     {
         public RoyaleMode ParentGame;
 
-        public StartingBlock()
+        public StartingBlock(World world) : base(world)
         {
             Size = 200;
             AngularVelocity = 0.01f;
             Sprite = Sprites.ctf_base;
-            CausesCollisions = true;
-
-        }
-
-        public override void Init(World world)
-        {
-            base.Init(world);
             Position = world.RandomPosition();
         }
 
-        void ICollide.CollisionExecute(Body projectedBody)
-        {
-            ParentGame.StartCountdown();
-        }
-
-        bool ICollide.IsCollision(Body projectedBody)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             if (projectedBody is ShipWeaponBullet bullet)
             {
+
                 if (ParentGame.World.AdvertisedPlayerCount > 1)
-                    return true;
-
-                var player = bullet?.OwnedByFleet?.Owner;
-
-                if (player != null)
-                    player.SendMessage("Wait for at least 2 players, then shoot this thing to start.");
+                    ParentGame.StartCountdown();
+                else
+                {
+                    var player = bullet?.OwnedByFleet?.Owner;
+                    if (player != null)
+                        player.SendMessage("Wait for at least 2 players, then shoot this thing to start.");
+                }
             }
+        }
 
-            return false;
+        public override CollisionResponse CanCollide(WorldBody otherBody)
+        {
+            CollisionResponse response = new CollisionResponse();
+
+            if (otherBody is ShipWeaponBullet)
+                response.CanCollide = true;
+
+            return response;
         }
     }
 }

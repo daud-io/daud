@@ -23,7 +23,7 @@
         [HttpGet, AllowAnonymous]
         public Server Get()
         {
-            var world = Worlds.Find();
+            var world = Worlds.Find("default");
 
             return new Server
             {

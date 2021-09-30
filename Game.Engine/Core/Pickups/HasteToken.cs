@@ -15,24 +15,16 @@ namespace Game.Engine.Core.Pickups
         public uint CooldownUntil = 0;
         public int EffectMSRemaining = 0;
 
-        public HasteToken()
+        public HasteToken(World world) : base(world)
         {
             Size = SpriteSize;
 
             Sprite = Sprites.haste_powerup;
-            CausesCollisions = true;
-        }
-
-        public override void Init(World world)
-        {
-            base.Init(world);
             OnRenewed();
         }
 
-        public override void Think()
+        protected override void Update(float dt)
         {
-            base.Think();
-
             if (this.CarriedBy != null)
             {
                 this.EffectMSRemaining -= this.World.Hook.StepTime;
@@ -51,6 +43,8 @@ namespace Game.Engine.Core.Pickups
                 Cooldown = false;
                 this.OnRenewed();
             }
+
+            base.Update(dt);
         }
 
         protected virtual void OnCooldownStart()

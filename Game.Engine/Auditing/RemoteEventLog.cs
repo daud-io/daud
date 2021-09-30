@@ -1,6 +1,6 @@
 ﻿namespace Game.Engine.Auditing
 {
-    using Game.API.Client;
+/*    using Game.API.Client;
     using Game.API.Common.Models.Auditing;
     using Game.Engine.Core;
     using System;
@@ -40,7 +40,7 @@
 
         public static void SendEvent(AuditEventBase auditEvent, World world)
         {
-            auditEvent.WorldKey = world.WorldKey;
+            *auditEvent.WorldKey = world.WorldKey;
             auditEvent.AdvertisedPlayerCount = world.AdvertisedPlayerCount;
             auditEvent.GameID = world.GameID;
             auditEvent.GameTime = world.Time;
@@ -74,5 +74,5 @@
             catch (Exception)
             { }
         }
-    }
+    }*/
 }

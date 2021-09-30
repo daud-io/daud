@@ -3,20 +3,22 @@
     using Game.API.Common;
     using Game.Engine.Core.Pickups;
     using Game.Engine.Core.Weapons;
+    using Game.Engine.Physics;
     using System;
     using System.Numerics;
 
-    public class Ship : ActorBody, ICollide
+    public class Ship : WorldBody
     {
-        public virtual int HealthHitCost { get => World.Hook.HealthHitCost; }
-        public virtual int MaxHealth { get => World.Hook.MaxHealth; }
-        public virtual float HealthRegenerationPerFrame { get => World.Hook.HealthRegenerationPerFrame; }
-
-        public Fleet Fleet { get; set; }
-
-        public float Health { get; set; }
-        public int SizeMinimum { get; set; }
-        public int SizeMaximum { get; set; }
+        public Fleet Fleet { 
+            get 
+            {
+                return this.Group as Fleet;
+            }
+            set
+            {
+                this.Group = value;
+            }
+        }
 
         public float ThrustAmount { get; set; }
         public float Drag { get; set; }
@@ -28,15 +30,22 @@
         protected bool IsOOB = false;
         public long TimeDeath = 0;
 
-        public float? ThrustOverride { get; set; } = null;
-        public float? SteeringOverride { get; set; } = null;
+        public int ShieldStrength { get; set; }
+        public long ShieldExpiration { get; internal set; }
 
-        public Ship()
+        public Ship(World world): base(world)
         {
             Size = 70;
+            Drag = World.Hook.Drag;
         }
 
-        public int ShieldStrength { get; set; }
+        public override void Destroy()
+        {
+            base.Destroy();
+
+            if (Fleet?.Ships?.Contains(this) ?? false)
+                Fleet.Ships.Remove(this);
+        }
 
         public Sprites BulletSprite
         {
@@ -57,125 +66,104 @@
                 }
             }
         }
-
-        public override void Init(World world)
-        {
-            base.Init(world);
-
-            Health = MaxHealth;
-            Drag = World.Hook.Drag;
-
-            this.Group = this.Fleet;
-        }
-
-        public override void Destroy()
-        {
-            if (!(this is Fish)
-                && !(this.Sprite == Sprites.ship_gray)
-            )
-                Boom.FromShip(this);
-
-            base.Destroy();
-
-            if (Fleet?.Ships?.Contains(this) ?? false)
-                Fleet.Ships.Remove(this);
-        }
-
+        
         public void Die(Player player, Fleet fleet, ShipWeaponBullet bullet)
         {
             if (player != null)
                 World.Scoring.ShipDied(player, this.Fleet?.Owner, this);
 
             fleet?.KilledShip(this);
+            base.Die();
 
-            PendingDestruction = true;
+            if (!(this.GetType() == typeof(Fish))
+                && !this.Abandoned)
+                Boom.FromShip(this);
 
             if (this.Fleet != null)
                 this.Fleet.ShipDeath(player, this, bullet);
         }
 
-        public virtual void CollisionExecute(Body projectedBody)
+        public override void CollisionExecute(WorldBody projectedBody)
         {
             if (projectedBody is ShipWeaponBullet bullet)
             {
-                var fleet = bullet?.OwnedByFleet;
-                var player = fleet?.Owner;
+                if (this.PendingDestruction)
+                    return;
+                if (bullet.Consumed || this.PendingDestruction)
+                    return;
+                
                 bullet.Consumed = true;
 
-                var takesDamage = true;
-                if (this.Fleet?.Owner?.IsShielded ?? false)
-                {
-                    if (this.ShieldStrength == 0)
-                        takesDamage = true;
-                    else
-                    {
-                        if (projectedBody is ShipWeaponSeeker)
-                            this.ShieldStrength = 0;
-                        else
-                            this.ShieldStrength--;
+                var fleet = bullet?.OwnedByFleet;
+                var player = fleet?.Owner;
 
-                        takesDamage = false;
-                    }
+                var takesDamage = !Fleet?.Owner?.IsInvulnerable ?? true;
+                if (takesDamage && ShieldStrength > 0)
+                {
+                    if (projectedBody is ShipWeaponSeeker)
+                        ShieldStrength = 0;
+                    else
+                        ShieldStrength--;
+
+                    takesDamage = false;
                 }
-                else
-                    takesDamage = !this.Fleet?.Owner?.IsInvulnerable ?? true;
 
                 if (takesDamage)
-                {
-                    Health -= HealthHitCost;
-
-                    if (Health <= 0)
-                        Die(player, fleet, bullet);
-                }
+                    Die(player, fleet, bullet);
             }
         }
 
-        public bool IsCollision(Body projectedBody)
+        public override CollisionResponse CanCollide(WorldBody projectedBody)
         {
             if (PendingDestruction)
-                return false;
+                return new CollisionResponse(false);
+
+            // ship-to-ship collisions
+            /*if (projectedBody is Ship ship)
+                if (ship.Fleet != null && this.Fleet != null && this.Fleet != ship.Fleet)
+                    return new CollisionResponse(true, true);*/
+
 
             if (projectedBody is ShipWeaponBullet bullet)
             {
-                // avoid "piercing" shots
+                //if (projectedBody is ShipWeaponSeeker && this.Abandoned)
+                //    return new CollisionResponse(false);
+
                 if (bullet.Consumed)
-                    return false;
+                    return new CollisionResponse(false);
 
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.Fleet)
-                    return false;
+                    return new CollisionResponse(false);
 
                 // if it came from this fleet
                 if (bullet.OwnedByFleet == this?.AbandonedByFleet
                     && World.Time < (this.AbandonedTime + World.Hook.AbandonBuffer))
-                    return false;
+                    return new CollisionResponse(false);
 
                 // team mode ensures that bullets of like colors do no harm
                 if (World.Hook.TeamMode && bullet.Color == this.Color)
-                    return false;
+                    return new CollisionResponse(false);
 
-                // did it actually hit
-                if ((Vector2.Distance(projectedBody.Position, this.Position)
-                        <= this.Size + projectedBody.Size))
-                    return true;
+                return new CollisionResponse(true, false);
             }
 
             if (!this.Abandoned)
             {
+                // TODO: do we still need this beast?
                 if (projectedBody is PickupBase
                     || projectedBody is HasteToken
                     || projectedBody is SystemActors.CTF.Base
                     || projectedBody is SystemActors.CTF.Flag)
-                    return ((Vector2.Distance(projectedBody.Position, this.Position)
-                            <= this.Size + projectedBody.Size));
+
+                    return new CollisionResponse(true, false);;
             }
 
-            return false;
+            return base.CanCollide(projectedBody);
         }
 
-        public override void Think()
+        protected override void Update(float dt)
         {
-            base.Think();
 
             if (Abandoned && TimeDeath == 0)
                 TimeDeath = World.Time + 20000;
@@ -183,34 +171,14 @@
             if (TimeDeath > 0 && World.Time > TimeDeath)
                 Die(null, null, null);
 
-            Health = Math.Max(Math.Min(Health, MaxHealth), 0) + HealthRegenerationPerFrame;
-            //Size = (int)(SizeMinimum + (Health / MaxHealth) * (SizeMaximum - SizeMinimum));
+            if (ShieldStrength > 0 && World.Time > ShieldExpiration)
+                ShieldStrength = 0;
 
-            DoOutOfBoundsRules();
+            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * (ThrustAmount / 40f);
 
-            if (SteeringOverride != null)
-                Angle = SteeringOverride.Value;
+            LinearVelocity = (LinearVelocity + (thrust * dt)) * (1f - Drag*dt);
 
-            var thrust = new Vector2(MathF.Cos(Angle), MathF.Sin(Angle)) * (ThrustOverride ?? ThrustAmount);
-
-            Momentum = (Momentum + thrust) * Drag;
-
-        }
-
-        private void DoOutOfBoundsRules()
-        {
-            var oob = World.DistanceOutOfBounds(Position);
-
-            IsOOB = oob > 0;
-
-            if (oob > World.Hook.OutOfBoundsBorder)
-                this.Momentum *= 1 - (oob / World.Hook.OutOfBoundsDecayDistance);
-
-            if (oob > World.Hook.OutOfBoundsDeathLine)
-            {
-                //Console.WriteLine("ship dying oob");
-                Die(null, null, null);
-            }
+            base.Update(dt);
         }
     }
 }

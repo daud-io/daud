@@ -1,19 +1,14 @@
 ﻿namespace Game.Engine.Core.SystemActors
 {
-    using System.Linq;
-
     public abstract class SystemActorBase : IActor
     {
         public World World = null;
         protected long SleepUntil = 0;
         protected int CycleMS = 1000;
-        private bool RunningThisStep = false;
-
-
-        public virtual void CreateDestroy()
+        public SystemActorBase(World world)
         {
-            if (RunningThisStep)
-                CycleCreateDestroy();
+            this.World = world;
+            this.World.Actors.Add(this);
         }
 
         public virtual void Destroy()
@@ -21,27 +16,20 @@
             this.World.Actors.Remove(this);
         }
 
-        public virtual void Init(World world)
-        {
-            this.World = world;
-            this.World.Actors.Add(this);
-        }
-
         protected virtual void CycleThink() { }
-        protected virtual void CycleCreateDestroy() { }
-
-        public virtual void Think()
+        public virtual void Think(float dt)
         {
             if (World != null && World.Time > SleepUntil)
             {
-                RunningThisStep = true;
                 CycleThink();
 
                 if (World != null)
                     SleepUntil = World.Time + CycleMS;
             }
-            else
-                RunningThisStep = false;
+        }
+
+        public void Cleanup()
+        {
         }
     }
 }

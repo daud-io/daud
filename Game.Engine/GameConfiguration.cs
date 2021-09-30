@@ -28,5 +28,7 @@
 
         public string ElasticSearchURI { get; set; }
         public bool DisableSuggestionLookup { get; set; } = false;
+
+        public string TelemetryFile { get; set; } = null;
     }
 }

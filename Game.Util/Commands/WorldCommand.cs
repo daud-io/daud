@@ -1,11 +1,9 @@
 ﻿namespace Game.Util.Commands
 {
     using Game.API.Common.Models;
-    using Google.Cloud.Firestore.V1;
     using McMaster.Extensions.CommandLineUtils;
     using Newtonsoft.Json;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Numerics;
@@ -139,11 +137,10 @@
 
                 var mapOffset = new Vector2(-(map.Width * Size) / 2, -(map.Height * Size) / 2);
 
-                if (spawnLocation != null)
-                    await API.World.PostHookAsync(new
-                    {
-                        SpawnLocation = spawnLocation / map.TileWidth * Size + mapOffset
-                    }, WorldKey);
+                await API.World.PostHookAsync(new
+                {
+                    SpawnLocation = spawnLocation / map.TileWidth * Size + mapOffset
+                }, WorldKey);
 
                 if (groundLayer != null)
                 {

@@ -55,6 +55,10 @@ spec:
             value: "{{ .Values.daud.administratorPassword }}"
           - name: config__NoWorlds
             value: "{{ .Values.daud.noWorlds }}"
+          - name: config__AllowCORS
+            value: "{{ .Values.daud.allowCORS }}"
+          - name: config__TelemetryFile
+            value: "{{ .Values.daud.telemetryFile }}"
 
           {{- if .Values.discord.guildID }}
           # discord
@@ -87,11 +91,11 @@ spec:
 {{- if .Values.probes.enabled }}
           livenessProbe:
             httpGet:
-              path: /
+              path: /api/v1/health
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /api/v1/health
               port: http
 {{- end }}
           resources:

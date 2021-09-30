@@ -4,28 +4,28 @@
     <TargetFramework>netcoreapp5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="BepuPhysics" Version="2.3.0" />
+    <PackageReference Include="CjClutter.ObjLoader" Version="1.0.0" />
     <PackageReference Include="FlatBuffers.Core" Version="1.12.0" />
-    <!--  <PackageReference Include="Docker.DotNet" Version="3.125.4" /> -->
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.2" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.0" />
     <PackageReference Include="RBush" Version="2.0.46" />
+    <PackageReference Include="SharpGLTF.Core" Version="1.0.0-alpha0023" />
     <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
     <PackageReference Include="Discord.Net" Version="2.2.0" />
     <PackageReference Include="NEST" Version="7.10.1" />
     <PackageReference Include="NEST.JsonNetSerializer" Version="7.10.1" />
-    <!-- <PackageReference Include="DnsClient" Version="1.3.2" /> -->
-    <!-- <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" /> -->
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Game.API.Client\Game.API.Client.csproj" />
     <ProjectReference Include="..\Game.API.Common\Game.API.Common.csproj" />
-    <ProjectReference Include="..\Game.Engine.Networking.FlatBuffers\Game.Engine.Networking.FlatBuffers.csproj" />
     <ProjectReference Include="..\Game.Util\Game.Util.csproj" />
   </ItemGroup>
 
