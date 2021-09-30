@@ -3,7 +3,6 @@
     using Game.API.Common;
     using Game.API.Common.Models;
     using Game.API.Common.Models.Auditing;
-    using Game.Engine.Auditing;
     using Game.Engine.Networking;
     using Newtonsoft.Json;
     using System;
@@ -52,8 +51,8 @@
         public bool AuthenticationStarted { get; set; }
         public List<string> Roles { get; set; } = null;
         public string LoginName { get; set; }
-        
-        public string Avatar {get; set;}
+
+        public string Avatar { get; set; }
 
         public bool PendingDestruction { get; set; } = false;
         private bool IsSpawning = false;
@@ -78,7 +77,7 @@
 
         public void SetControl(ControlInput input)
         {
-            
+
             var packetNumber = Interlocked.Increment(ref this.ControlPackets);
             if (packetNumber == 1)
             {
@@ -161,30 +160,39 @@
 
         internal void ControlCharacter()
         {
-            //Console.WriteLine("Control: " + this.ControlPackets);
-            this.ControlPackets = 0;
-            if (this.IsAlive && this.Fleet != null)
+            try
             {
-                if (float.IsNaN(ControlInput.Position.X) || float.IsNaN(ControlInput.Position.Y))
-                    ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
-                Fleet.AimTarget = ControlInput.Position;
-
-                Fleet.BoostRequested = CummulativeBoostRequested;
-                Fleet.ShootRequested = CummulativeShootRequested;
-
-                Fleet.CustomData = ControlInput.CustomData;
-
-                if (Fleet.CustomData != null)
+                //Console.WriteLine("Control: " + this.ControlPackets);
+                this.ControlPackets = 0;
+                if (this.IsAlive && this.Fleet != null && this.ControlInput != null)
                 {
-                    var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });
-                    if (parsed?.magic != null)
-                        JsonConvert.PopulateObject(parsed.magic, this);
-                }
+                    if (float.IsNaN(ControlInput.Position.X) || float.IsNaN(ControlInput.Position.Y))
+                        ControlInput.Position = new System.Numerics.Vector2(0, 0);
 
-                if (this.Backgrounded)
-                    Fleet.AimTarget = Vector2.Zero;
+                    Fleet.AimTarget = ControlInput.Position;
+
+                    Fleet.BoostRequested = CummulativeBoostRequested;
+                    Fleet.ShootRequested = CummulativeShootRequested;
+
+                    Fleet.CustomData = ControlInput.CustomData;
+
+                    if (Fleet.CustomData != null)
+                    {
+                        var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });
+                        if (parsed?.magic != null)
+                            JsonConvert.PopulateObject(parsed.magic, this);
+                    }
+
+                    if (this.Backgrounded)
+                        Fleet.AimTarget = Vector2.Zero;
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception in ControlCharachter: " + e);
+            }
+
         }
 
         public string Name { get; set; }

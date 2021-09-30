@@ -42,6 +42,11 @@ export class Connection {
     statBytesUpPerSecond = 0;
     latency = 0;
     minimumLatency = -1;
+    minimumLatencyNext = -1;
+    minimumLatencyStart = -1;
+    maximumLatencyNext = 0;
+    minimumLatencyWindow = 30000;
+    latencyWindowFirst = true;
     serverClockOffset = -1;
     simulateLatency = 0;
     socket?: WebSocket;
@@ -53,6 +58,8 @@ export class Connection {
     lastControlPacket: Uint8Array = new Uint8Array(0);
     earliestOffset: number = -1;
     pingMode: boolean = false;
+    connectionTime: number = 0;
+    ripple: number = 0;
 
     constructor() {
         setInterval(() => {
@@ -64,6 +71,28 @@ export class Connection {
             this.statBytesDown = 0;
             this.viewCPU = 0;
         }, 1000);
+
+
+        setInterval(() => {
+            if (this.connected) {
+                this.sendPing();
+            }
+
+            if (this.minimumLatencyStart < performance.now())
+            {
+                console.log('new latency window: ' + this.minimumLatencyNext);
+                this.minimumLatencyStart = performance.now() + this.minimumLatencyWindow;
+                if (this.minimumLatencyNext != -1)
+                {
+                    this.minimumLatency = this.minimumLatencyNext;
+                    this.ripple = Math.max(this.maximumLatencyNext - this.minimumLatencyNext, 0);
+                    this.latencyWindowFirst = false;
+                }
+
+                this.minimumLatencyNext = -1;
+                this.maximumLatencyNext = 0;
+            }
+        }, 500);
     }
 
     disconnect(): void {
@@ -94,6 +123,7 @@ export class Connection {
         this.serverClockOffset = -1;
         this.minimumLatency = -1;
         this.earliestOffset = -1;
+        this.latencyWindowFirst = true;
 
         if (this.socket) {
             this.socket.onclose = null;
@@ -264,6 +294,7 @@ export class Connection {
     onOpen(): void {
         this.connected = true;
         console.log("connected");
+        this.connectionTime = performance.now();
         bus.emit("connected", this);
         this.sendPing();
 
@@ -307,20 +338,21 @@ export class Connection {
     }
 
     handleNetPing(message: NetPing): void {
+        if (message.clienttime() < this.connectionTime)
+            return;
+
         this.statPongCount++;
 
         this.latency = performance.now() - message.clienttime();
-        if (this.latency < this.minimumLatency || this.minimumLatency == -1) {
-            this.minimumLatency = this.latency;
+        if (this.latency < this.minimumLatencyNext || this.minimumLatencyNext == -1) {
+            this.minimumLatencyNext = this.latency;
+            if (this.latencyWindowFirst)
+                this.minimumLatency = this.minimumLatencyNext;
         }
+        if (this.latency > this.maximumLatencyNext)
+            this.maximumLatencyNext = this.latency;
 
         this.serverClockOffset = this.earliestOffset;
-
-        setTimeout(() => {
-            if (this.connected) {
-                this.sendPing();
-            }
-        }, 250);
     }
 
     handleNetEvent(message: NetEvent): void {
@@ -331,8 +363,7 @@ export class Connection {
 
         if (eventObject.type == "hook") {
             this.hook = eventObject.data;
-            if (this.pingMode != true)
-                bus.emit("hook", this.hook);
+            bus.emit("hook", this.hook);
         }
 
         if (eventObject.data.roles) addSecretShips(eventObject.data.roles);

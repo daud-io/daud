@@ -21,6 +21,7 @@
     using Nest.JsonNetSerializer;
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.StaticFiles;
+    using Microsoft.AspNetCore.Server.Kestrel.Core;
 
     public class Startup
     {
@@ -28,6 +29,10 @@
         {
             var config = LoadConfiguration(services);
             services.AddSingleton<GameConfiguration>(config);
+            services.Configure<KestrelServerOptions>(options =>
+            {
+                options.AllowSynchronousIO = true;
+            });
 
             services.AddTransient<Networking.Connection>();
 

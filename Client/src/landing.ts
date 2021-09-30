@@ -16,7 +16,9 @@ export class Landing {
 
     static gameLoaded:boolean = false;
 
-    static readonly pingEnabled:boolean = false;
+    static pingEnabled:boolean = false;
+    static touchWarned:boolean = false;
+    static firstLoad:boolean = true;;
 
     static tryAddConnection(host: Host): void {
         if (!this.pingEnabled)
@@ -28,6 +30,17 @@ export class Landing {
             connection.connect(connect);
 
             this.connections[host.url] = connection;
+        }
+    }
+
+    static touchwarn() {
+        if (!this.touchWarned)
+        {
+            this.touchWarned = true;
+
+            setTimeout(() => {
+                document.getElementById('touchwarn')?.classList.remove('closed');
+            }, 500);
         }
     }
 
@@ -52,6 +65,9 @@ export class Landing {
     }
 
     static checkHosts(): void {
+        if (!this.pingEnabled || !this.visible)
+            return;
+    
         for (let hostname in this.connections) {
             const connection = this.connections[hostname];
 
@@ -102,6 +118,14 @@ export class Landing {
     }
 
     static show() {
+        if (!this.firstLoad)
+        {
+            this.pingEnabled = true;
+            document.getElementById('worlds')?.classList.add('pingenabled');
+        }
+
+        this.firstLoad=false;
+
         this.checkRegistry();
         window.document.body.classList.add('landing');
         this.setElementDisplay('gameArea', 'none');
@@ -154,20 +178,31 @@ export class Landing {
         const world = (<HTMLElement>(e.target))?.closest('.world');
         const connect = world?.attributes.getNamedItem('data-connect')?.value;
         
+        e.preventDefault();
+
         if (connect)
             this.launch(connect);
             
     }
 
     static async initialize(): Promise<void> {
-        //this.timer = window.setInterval(() => this.checkHosts(), 500);
+        this.timer = window.setInterval(() => this.checkHosts(), 500);
 
         document.body.classList.add('dead');
         
+        document.getElementById('worlds')?.addEventListener("touchend", () => this.touchwarn());
         document.getElementById('worlds')?.addEventListener("click", (e) => this.onWorldClick(e));
         document.getElementById('arenas')?.addEventListener("click", (e) => this.onArenasClick(e));
 
         this.show();
+
+        document.getElementById("touchwarn")!.addEventListener("click", () => {
+            document.getElementById('touchwarn')?.classList.add('closed');
+        });
+        document.getElementById("touchwarnClose")!.addEventListener("click", () => {
+            document.getElementById('touchwarn')?.classList.add('closed');
+        });
+
 
     }
 }

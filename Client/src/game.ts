@@ -12,6 +12,7 @@ import { GameContainer } from "./gameContainer";
 import * as bus from "./bus";
 import "./events";
 import { Cache } from "./cache";
+import { Telemetry } from "./telemetry";
 
 const spawnButton = document.getElementById("spawn") as HTMLButtonElement;
 const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
@@ -193,15 +194,21 @@ document.addEventListener("keydown", ({ code }) => {
     }
 });
 
+
+
 function updateStats() {
     connection.framesPerSecond = frameCounter;
     connection.viewsPerSecond = container.viewCounter;
     connection.updatesPerSecond = container.updateCounter;
     setPerf(connection.latency, connection.minimumLatency, frameCounter, connection.statViewCPUPerSecond);
 
+    if (Telemetry.shouldSend())
+        Telemetry.send(container, connection);
+
     frameCounter = 0;
     container.viewCounter = 0;
     container.updateCounter = 0;
+    
 }
 setInterval(updateStats, 1000);
 
@@ -233,9 +240,9 @@ bus.on("worldjoin", (connect, world) => {
         spawnOnView = true;
     }
 
+    connection.disconnect();
     setCurrentWorld(world);
     initializeWorld(world);
-    connection.disconnect();
     connection.connect(connect);
 });
 

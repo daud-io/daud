@@ -10,6 +10,7 @@ export class PingConnection {
     minimumLatency = -1;
     socket?: WebSocket;
     pingSent?: number;
+    pongCount: number = 0;
 
     disconnect(): void {
         if (this.socket) {
@@ -81,6 +82,7 @@ export class PingConnection {
     }
 
     handleNetPing(message: NetPing): void {
+        this.pongCount++;
         this.latency = performance.now() - message.clienttime();
         if (this.latency < this.minimumLatency || this.minimumLatency == -1) {
             this.minimumLatency = this.latency;

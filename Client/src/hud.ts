@@ -13,9 +13,9 @@ function update(): void {
     hudh.innerText = `fps: ${framesPerSecond || 0} - \
                           players: ${playerCount || 0} - \
                           spectators: ${spectatorCount || 0} - \
-                          cpu: ${viewCPU || 0} - \
-                          ping: ${latency || 0} min:${minlatency}`;
+                          ping: ${latency || 0}`;
 }
+
 export function setPerf(l: number, ml: number, f: number, cpu: number): void {
     viewCPU = Math.floor(cpu * 10);
     if (latency == Math.floor(l) && framesPerSecond == f) return;

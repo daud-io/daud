@@ -5,6 +5,8 @@ daud:
   publicURL: ""
   administratorPassword: ""
   noWorlds: true
+  allowCORS: false
+  telemetryFile: ""
 
 discord:
   guildID: ""

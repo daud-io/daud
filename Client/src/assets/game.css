@@ -3,7 +3,7 @@
     --font-family: sans-serif, system-ui;
 }
 
-@media (max-width: 1150px) {
+@media (max-width: 720px) {
     .hidden-mobile {
         display: none;
     }
@@ -27,6 +27,35 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#touchwarn.closed {
+    display: none;
+}
+
+#touchwarn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    width: max(1440px, 100%);
+    height: max(810px, 100%);
+    background: rgba(32, 32, 64, 0.8);
+    z-index: 5;
+    overflow-y: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#touchwarnContainer {
+    position: relative;
+    padding: 1em;
+    background: rgba(16, 16, 32, 0.9);
+    border: solid black 2px;
+    border-radius: 10px;
+    text-align: center;
 }
 
 #lobby {
@@ -86,6 +115,23 @@ body {
     order: 5;
 }
 
+#lobby #worlds .world.pending .playnow
+{
+    background: #666;
+    box-shadow: 0px 4px 0px #444, 0px 0px 20px 3px #444;
+    color: black;
+}
+
+#lobby #worlds .world .playnow
+{
+    background: #08a3ff;
+    border: none;
+    box-shadow: 0px 4px 0px #2e55bb, 0px 0px 20px 3px #2e55bb;
+    color: white;
+    margin: 0px 15px;
+
+}
+
 #lobby #worlds .world
 {
     text-decoration: none;
@@ -113,8 +159,6 @@ body {
 
 #lobby #worlds .world.pending .worldstats {
     color: #777;
-    flex-grow:1;
-
 }
 #lobby #worlds .world .explain
 {
@@ -127,6 +171,11 @@ body {
     font-size: 2em;
     margin-top: 2px;
     margin-bottom: 2px;
+}
+
+#lobby #worlds.pingenabled .world .ping
+{
+    display:block;
 }
 
 #lobby #worlds .world .ping
@@ -158,7 +207,7 @@ body {
     display: flex;
     flex-direction: column;
     text-align: right;
-    width: 150px;
+    width: 90px;
     font-size: 0.7em;
     margin-top: 2px;
 }
@@ -711,31 +760,6 @@ table {
     border: solid white;
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
-}
-
-#worldList .empty {
-    color: #eee;
-    background-color: #222;
-}
-
-#worldList .details {
-    display: none;
-}
-
-#worldList .selected .details td {
-    border: solid 1px white;
-    padding: 3px;
-}
-
-#worldList .selected .details {
-    display: table-row;
-}
-
-#worldList .details img {
-    float: right;
-    width: 100px;
-    height: 100px;
-    margin: 10px;
 }
 
 .spectating #fullPageCard,
