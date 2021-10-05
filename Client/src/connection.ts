@@ -103,7 +103,7 @@ export class Connection {
     }
     connect(worldKey?: string): void {
         console.log("connecting to " + worldKey);
-        let url: string = window.location.protocol === "http:" ? "ws:" : "wss:";
+        let url: string = window.location.protocol === "http:" ? "wss:" : "wss:";
         let hostname = "daud.io";
 
         if (worldKey) {
@@ -124,9 +124,14 @@ export class Connection {
         this.minimumLatency = -1;
         this.earliestOffset = -1;
         this.latencyWindowFirst = true;
+        this.minimumLatencyStart = -1;
+        this.minimumLatencyNext = -1;
+        this.maximumLatencyNext = 0;
+
 
         if (this.socket) {
             this.socket.onclose = null;
+            this.socket.onmessage = null;
             this.socket.close();
         }
 
@@ -143,6 +148,7 @@ export class Connection {
 
         this.socket.onopen = () => {
             document.body.classList.remove("connectionerror");
+
             this.onOpen();
         };
         this.socket.onclose = (event) => {
@@ -316,6 +322,7 @@ export class Connection {
             if (event.reason != "Normal closure") {
                 this.reloading = true;
             }
+            console.log('reconnecting');
 
             this.connect();
         }

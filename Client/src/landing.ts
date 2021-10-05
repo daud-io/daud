@@ -12,18 +12,18 @@ export class Landing {
     static visible: boolean = true;
     static lastRegistryCheck: number = 0;
 
-    static currentConnect:string;
+    static currentConnect: string;
 
-    static gameLoaded:boolean = false;
+    static gameLoaded: boolean = false;
 
-    static pingEnabled:boolean = false;
-    static touchWarned:boolean = false;
-    static firstLoad:boolean = true;;
+    static pingEnabled: boolean = false;
+    static touchWarned: boolean = false;
+    static firstLoad: boolean = true;;
 
     static tryAddConnection(host: Host): void {
         if (!this.pingEnabled)
             return;
-            
+
         if (!this.connections[host.url] && !this.history[host.url]) {
             const connect = `${host.url}/${host.worlds[0].worldKey}`;
             const connection = new PingConnection();
@@ -34,8 +34,7 @@ export class Landing {
     }
 
     static touchwarn() {
-        if (!this.touchWarned)
-        {
+        if (!this.touchWarned) {
             this.touchWarned = true;
 
             setTimeout(() => {
@@ -54,7 +53,7 @@ export class Landing {
             host.worlds.forEach(world => {
                 const connect = `${host.url}/${world.worldKey}`;
                 this.worlds[connect] = world;
-                
+
                 document.querySelectorAll(`.${host.url.replaceAll('.', '-')}-${world.worldKey}-players`).forEach(e => {
                     e.innerHTML = `${world.advertisedPlayers}`;
 
@@ -65,9 +64,10 @@ export class Landing {
     }
 
     static checkHosts(): void {
+        console.log('checkhosts');
         if (!this.pingEnabled || !this.visible)
             return;
-    
+
         for (let hostname in this.connections) {
             const connection = this.connections[hostname];
 
@@ -81,9 +81,9 @@ export class Landing {
             if (!this.connections[hostname])
                 this.updateHost(hostname, this.history[hostname])
 
-        if (performance.now() - this.lastRegistryCheck > 5000)
-        {
+        if (performance.now() - this.lastRegistryCheck > 5000) {
             this.lastRegistryCheck = performance.now();
+            console.log('checkhosts: checkRegistry');
             this.checkRegistry();
         }
 
@@ -92,15 +92,13 @@ export class Landing {
     static updateHost(hostname: string, latency: number): void {
         document.querySelectorAll(`.${hostname.replaceAll('.', '-')}-ping`).forEach(e => {
             var worldClasses = e.closest(".world")?.classList;
-            if (worldClasses)
-            {
-                var bucket:string = latency == -1 ? 'pending' : 
+            if (worldClasses) {
+                var bucket: string = latency == -1 ? 'pending' :
                     latency < 50 ? 'fast' :
-                    latency < 120 ? 'medium' :
-                    'slow'
+                        latency < 120 ? 'medium' :
+                            'slow'
 
-                if (!worldClasses.contains(bucket))
-                {
+                if (!worldClasses.contains(bucket)) {
                     worldClasses.remove('fast', 'medium', 'slow', 'pending');
                     worldClasses.add(bucket);
                 }
@@ -118,13 +116,12 @@ export class Landing {
     }
 
     static show() {
-        if (!this.firstLoad)
-        {
+        if (!this.firstLoad) {
             this.pingEnabled = true;
             document.getElementById('worlds')?.classList.add('pingenabled');
         }
 
-        this.firstLoad=false;
+        this.firstLoad = false;
 
         this.checkRegistry();
         window.document.body.classList.add('landing');
@@ -148,15 +145,13 @@ export class Landing {
             element.style.display = styleDisplayValue;
     }
 
-    private static async launch(connect: string) : Promise<void>{
+    private static async launch(connect: string): Promise<void> {
         this.hide();
 
         this.clearHosts();
-        if (this.currentConnect != connect)
-        {
+        if (this.currentConnect != connect) {
             this.currentConnect = connect;
-            if (!this.gameLoaded)
-            {
+            if (!this.gameLoaded) {
                 bus.on('gameReady', () => {
                     this.gameLoaded = true;
                     bus.emit("worldjoin", connect, this.worlds[connect]);
@@ -177,34 +172,39 @@ export class Landing {
     private static onWorldClick(e: Event) {
         const world = (<HTMLElement>(e.target))?.closest('.world');
         const connect = world?.attributes.getNamedItem('data-connect')?.value;
-        
+
+        console.log('world click');
         e.preventDefault();
 
         if (connect)
             this.launch(connect);
-            
+
     }
 
     static async initialize(): Promise<void> {
-        this.timer = window.setInterval(() => this.checkHosts(), 500);
+        try {
+            this.timer = window.setInterval(() => this.checkHosts(), 500);
 
-        document.body.classList.add('dead');
-        
-        document.getElementById('worlds')?.addEventListener("touchend", () => this.touchwarn());
-        document.getElementById('worlds')?.addEventListener("click", (e) => this.onWorldClick(e));
-        document.getElementById('arenas')?.addEventListener("click", (e) => this.onArenasClick(e));
+            document.body.classList.add('dead');
 
-        this.show();
+            document.getElementById('worlds')?.addEventListener("touchend", () => this.touchwarn());
+            document.getElementById('worlds')?.addEventListener("click", (e) => this.onWorldClick(e));
+            document.getElementById('arenas')?.addEventListener("click", (e) => this.onArenasClick(e));
 
-        document.getElementById("touchwarn")!.addEventListener("click", () => {
-            document.getElementById('touchwarn')?.classList.add('closed');
-        });
-        document.getElementById("touchwarnClose")!.addEventListener("click", () => {
-            document.getElementById('touchwarn')?.classList.add('closed');
-        });
+            this.show();
 
-
+            document.getElementById("touchwarn")!.addEventListener("click", () => {
+                document.getElementById('touchwarn')?.classList.add('closed');
+            });
+            document.getElementById("touchwarnClose")!.addEventListener("click", () => {
+                document.getElementById('touchwarn')?.classList.add('closed');
+            });
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 }
 
 Landing.initialize();
+

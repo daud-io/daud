@@ -1,26 +1,28 @@
+import legacy from '@vitejs/plugin-legacy'
 import { defineConfig } from "vite";
-import { minifyHtml } from "vite-plugin-html";
 import path from 'path';
 
 export default defineConfig({
   assetsInclude: [
     'src/assets/**/*.png'
   ],
-  plugins: [minifyHtml()],
-  build: {
-    rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html')
-      }
-    },
-    lib: {
-      formats: ['es'],
-      entry: path.resolve(__dirname, 'src/boot.ts'),
-      name: 'daud',
-      fileName: (format) => `daud-boot.${format}.js`
-    }
+  build:
+  {
+    //sourcemap: true
   },
+  plugins: [legacy({
+    targets: ['ie >= 11'],
+    additionalLegacyPolyfills: [
+      'regenerator-runtime/runtime',
+      '@webcomponents/webcomponentsjs',
+      'core-js'
+    ]
+  })],
   server: {
+    hmr: {
+      host: "andy-desktop",
+      port: 3501
+    },
     proxy: {
       "/api": "https://daud.io",
     },

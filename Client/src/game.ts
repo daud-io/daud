@@ -33,7 +33,7 @@ const canvas = document.getElementById("gameCanvas") as any;
 if (!canvas)
     throw "no canvas";
 
-var container: GameContainer = new GameContainer(<HTMLCanvasElement>canvas);
+var container: GameContainer = new GameContainer(<HTMLCanvasElement>canvas, connection);
 const minimap = new Minimap(container);
 
 registerContainer(container);
@@ -53,21 +53,6 @@ container.engine.runRenderLoop(() => {
         container.cache.tick(gameTime);
         if (container.ready)
             container.scene.render();
-
-        let spectateControl = "";
-        if (isSpectating) {
-            if (spectateNextDebounce && !Controls.shoot) {
-                spectateNextDebounce = false;
-            }
-            if (!spectateNextDebounce && Controls.shoot) {
-                spectateControl = "action:next";
-                spectateNextDebounce = true;
-            } else spectateControl = "spectating";
-        }
-
-        updateControlAim();
-
-        connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, spectateControl, Controls.customData);
     }
 });
 
@@ -208,7 +193,7 @@ function updateStats() {
     frameCounter = 0;
     container.viewCounter = 0;
     container.updateCounter = 0;
-    
+
 }
 setInterval(updateStats, 1000);
 
@@ -240,9 +225,9 @@ bus.on("worldjoin", (connect, world) => {
         spawnOnView = true;
     }
 
-    connection.disconnect();
     setCurrentWorld(world);
     initializeWorld(world);
+    connection.disconnect();
     connection.connect(connect);
 });
 

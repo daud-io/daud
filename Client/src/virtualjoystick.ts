@@ -1,14 +1,6 @@
 function getRatio(): [number, number] {
-    let width: number;
-    let height: number;
-    if ((window.innerWidth * 9) / 16 < window.innerHeight) {
-        width = window.innerWidth;
-        height = (width * 9) / 16;
-    } else {
-        height = window.innerHeight;
-        width = (height * 16) / 9;
-    }
-
+    let width: number = window.innerWidth;
+    let height: number = window.innerHeight;
     return [Math.floor(width), Math.floor(height)];
 }
 
@@ -136,7 +128,7 @@ export class VirtualJoystick {
 
     private onTouchStart = (event: TouchEvent) => {
         // if there is already a touch inprogress do nothing
-        if (this.touchIdx !== null) return;
+        if (this.touchIdx !== undefined) return;
 
         event.preventDefault();
         // get the first who changed
@@ -172,7 +164,7 @@ export class VirtualJoystick {
 
     private onTouchMove = (event: TouchEvent) => {
         // if there is no touch in progress, do nothing
-        if (this.touchIdx === null) return;
+        if (this.touchIdx === undefined) return;
 
         // try to find our touch event
         const touchList = event.changedTouches;

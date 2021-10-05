@@ -15,6 +15,7 @@ import { WorldMeshLoader } from "./worldMeshLoader";
 import { Sounds } from "./sounds";
 import { Cache } from "./cache";
 import * as bus from "./bus";
+import { Connection } from "./connection";
 
 export class GameContainer {
     scene: Scene;
@@ -37,7 +38,10 @@ export class GameContainer {
     viewCounter: number = 0;
     canvas: HTMLCanvasElement;
 
-    constructor(canvas: HTMLCanvasElement) {
+    connection: Connection;
+
+    constructor(canvas: HTMLCanvasElement, connection: Connection) {
+        this.connection = connection;
         this.baseURL = document.body.attributes['data-static-url-base'];
         this.canvas = canvas;
         this.engine = new Engine(canvas, true);

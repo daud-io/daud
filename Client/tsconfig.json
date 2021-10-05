@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "lib": ["DOM", "ESNext", "DOM.Iterable", "ScriptHost"],
+        "lib": ["DOM", "esnext", "ScriptHost"],
         "allowSyntheticDefaultImports": true,
         "resolveJsonModule": true,
         "importHelpers": false,
@@ -10,7 +10,7 @@
         "strict": true,
         "noImplicitAny": false,
         "skipLibCheck": true,
-        "target": "esnext",
+        "target": "es5",
         "moduleResolution": "node",
         "isolatedModules": true
     },
