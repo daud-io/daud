@@ -64,7 +64,7 @@
         private int ControlPackets = 0;
 
         public Vector2? SpawnLocation { get; set; } = null;
-        public Vector2? SpawnMomentum { get; set; } = null;
+        public Vector2? SpawnVelocity { get; set; } = null;
 
         private string UserColor = null;
 
@@ -381,7 +381,7 @@
                 MaxCombo = this.MaxCombo,
 
                 Position = this.Fleet?.FleetCenter,
-                Momentum = this.Fleet?.FleetVelocity
+                Velocity = this.Fleet?.FleetVelocity
             };
         }
     }

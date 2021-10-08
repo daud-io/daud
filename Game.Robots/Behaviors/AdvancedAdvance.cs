@@ -36,10 +36,10 @@
                         var ratio = (float)(closestOpponent.Ships.Count) / fleet.Ships.Count;
                         if (ratio > 0 && ratio < AdvanceThreshold)
                         {
-                            TargetPoint = closestOpponent.Center + closestOpponent.Momentum * LookAheadMS;
+                            TargetPoint = closestOpponent.Center + closestOpponent.Velocity * LookAheadMS;
 
                             bool isClosing =
-                                Vector2.Distance(fleet.Center + fleet.Momentum * LookAheadMS, TargetPoint)
+                                Vector2.Distance(fleet.Center + fleet.Velocity * LookAheadMS, TargetPoint)
                                 - Vector2.Distance(fleet.Center, TargetPoint) > 100;
 
                             if (ratio < BoostThreshold 

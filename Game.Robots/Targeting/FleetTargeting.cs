@@ -34,7 +34,7 @@
                         hook: this.Robot.HookComputer,
                         fromPosition: this.Robot.Position,
                         targetPosition: f.Center,
-                        targetMomentum: f.Momentum,
+                        targetMomentum: f.Velocity,
                         fleetSize: this.Robot.SensorFleets.MyFleet?.Ships.Count ?? 0,
                         timeToImpact: out int interceptTime
                     );

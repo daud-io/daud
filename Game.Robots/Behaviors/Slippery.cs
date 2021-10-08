@@ -34,7 +34,7 @@
                         if (FleetsOfConcern == null)
                             FleetsOfConcern = new List<Fleet>();
                         FleetsOfConcern.Add(fleet);
-                        var angle = CalculateIntercept(fleet, myFleet.Center, myFleet.Momentum);
+                        var angle = CalculateIntercept(fleet, myFleet.Center, myFleet.Velocity);
                         FiringInterceptAngles.Add(fleet, angle);
                     }
                 }
@@ -63,7 +63,7 @@
         {
             var myFleet = this.Robot.SensorFleets.MyFleet;
 
-            var projectedFleetCenter = fleet.Center + fleet.Momentum * projectedIntoFutureMS;
+            var projectedFleetCenter = fleet.Center + fleet.Velocity * projectedIntoFutureMS;
 
             var interceptPoint = RoboMath.FiringIntercept(this.Robot.HookComputer,
                 projectedFleetCenter, position, momentum, myFleet.Ships.Count);

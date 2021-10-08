@@ -32,7 +32,7 @@
             }
         }
 
-        public Vector2 Momentum
+        public Vector2 Velocity
         {
             get
             {
@@ -47,10 +47,10 @@
                     return Vector2.Zero;
             }
         }
-        public void SetMomentumAndPos(Vector2 po, Vector2 mo)
+        public void SetVelocityAndPos(Vector2 po, Vector2 mo)
         {
             Vector2 curpo = po - this.Center;
-            Vector2 curmo = mo - this.Momentum;
+            Vector2 curmo = mo - this.Velocity;
             foreach (var s in this.Ships)
             {
                 s.Momentum = s.Momentum + curmo;

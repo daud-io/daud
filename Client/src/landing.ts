@@ -64,7 +64,6 @@ export class Landing {
     }
 
     static checkHosts(): void {
-        console.log('checkhosts');
         if (!this.pingEnabled || !this.visible)
             return;
 

@@ -30,7 +30,7 @@
                 {
                     for (var i = 0; i < steps; i++)
                     {
-                        var momentum = Robot.SensorFleets.MyFleet.Momentum;
+                        var momentum = Robot.SensorFleets.MyFleet.Velocity;
                         var position = RoboMath.ShipThrustProjection(Robot.HookComputer,
                             Robot.Position,
                             ref momentum,

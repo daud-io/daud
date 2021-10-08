@@ -14,7 +14,7 @@
 
         public Vector2 OriginalPosition { get; set; }
         public Vector2 Position { get; set; }
-        public Vector2 Momentum { get; set; }
+        public Vector2 Velocity { get; set; }
 
         public int Size { get; set; }
         public Sprites Sprite { get; set; }
@@ -35,7 +35,7 @@
         {
             var timeDelta = (time - this.DefinitionTime);
 
-            Position = Vector2.Add(OriginalPosition, Vector2.Multiply(Momentum, timeDelta));
+            Position = Vector2.Add(OriginalPosition, Vector2.Multiply(Velocity, timeDelta));
 
             Angle = OriginalAngle + timeDelta * AngularVelocity;
         }

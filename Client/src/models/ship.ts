@@ -5,11 +5,11 @@ import { ClientBody, ClientGroup } from "../cache";
 
 export class Ship extends RenderedObject {
     fleet: Fleet | undefined;
-    bodyID: string;
+    bodyID: number;
     constructor(container: GameContainer, clientBody: ClientBody, group: ClientGroup) {
         super(container, clientBody);
         this.fleet = group?.renderer;
-        this.bodyID = `b-${clientBody.ID}`;
+        this.bodyID = clientBody.ID;
         this.fleet?.addShip(this.bodyID, this);
     }
 

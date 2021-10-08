@@ -27,7 +27,7 @@ namespace Game.Engine.Core.Weapons
 
         protected override void Update(float dt)
         {
-            var originalMomentum = LinearVelocity;
+            var originalVelocity = LinearVelocity;
 
             Ship target = null;
             if (World.Time > TimeBirth + World.Hook.SeekerCycle)
@@ -49,7 +49,7 @@ namespace Game.Engine.Core.Weapons
                                 : 1
                         )
                     .ThenBy(s => Vector2.Distance(s.Position, Position))
-                    .Where(s => Vector2.Dot(originalMomentum, s.Position - Position) > 0)
+                    .Where(s => Vector2.Dot(originalVelocity, s.Position - Position) > 0)
                     .FirstOrDefault();
 
                 DeclaredTarget = target;
@@ -68,7 +68,7 @@ namespace Game.Engine.Core.Weapons
                 thrustAngle = Angle;
 
             var thrust = new Vector2(MathF.Cos(thrustAngle), MathF.Sin(thrustAngle)) * ThrustAmount/40 * World.Hook.SeekerThrustMultiplier;
-            LinearVelocity = (originalMomentum + thrust * dt) * (1-Drag*dt);
+            LinearVelocity = (originalVelocity + thrust * dt) * (1-Drag*dt);
 
             base.Update(dt);
         }

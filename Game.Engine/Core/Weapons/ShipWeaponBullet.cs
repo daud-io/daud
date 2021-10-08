@@ -43,12 +43,12 @@
             var bulletOrigin = ship.Position
                 + new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle)) * ship.Size;
 
-            var momentum =
+            var velocity =
                 new Vector2(MathF.Cos(ship.Angle), MathF.Sin(ship.Angle))
                 * Vector2.Distance(ship.LinearVelocity, Vector2.Zero);
 
             this.TimeDeath = World.Time + (long)(World.Hook.BulletLife);
-            this.LinearVelocity = momentum;
+            this.LinearVelocity = velocity;
             this.Position = bulletOrigin;
 
             if (World.Hook.PrecisionBullets && ship.Fleet != null)

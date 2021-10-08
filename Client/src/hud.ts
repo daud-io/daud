@@ -13,6 +13,7 @@ function update(): void {
     hudh.innerText = `fps: ${framesPerSecond || 0} - \
                           players: ${playerCount || 0} - \
                           spectators: ${spectatorCount || 0} - \
+                          cpu: ${viewCPU || 0} - \
                           ping: ${latency || 0}`;
 }
 

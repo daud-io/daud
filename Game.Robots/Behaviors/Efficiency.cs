@@ -18,7 +18,7 @@
         {
             if (Robot.SensorFleets.MyFleet != null)
             {
-                var momentum = Robot.SensorFleets.MyFleet.Momentum;
+                var momentum = Robot.SensorFleets.MyFleet.Velocity;
                 TargetAngle = MathF.Atan2(momentum.Y, momentum.X);
                 Scale = momentum.Length();
             }

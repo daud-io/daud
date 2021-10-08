@@ -31,7 +31,7 @@
 
                     if (distance >= MinimumRange && distance <= MaximumRange)
                     {
-                        averageMomentum += fleet.Momentum;
+                        averageMomentum += fleet.Velocity;
                         count++;
                     }
                 }

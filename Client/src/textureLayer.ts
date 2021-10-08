@@ -14,6 +14,7 @@ export class TextureLayer {
 
     private readonly offset: { x: number; y: number };
     private readonly aspectRatio: number;
+    lastBodySize: number = -1;
 
     constructor(container: GameContainer, clientBody: ClientBody, textureName: string) {
         this.offset = { x: 0, y: 0 };
@@ -39,8 +40,6 @@ export class TextureLayer {
                 this.sprite = new Sprite(textureName, textureDefinition.spriteManager);
                 this.sprite.position.y = 0;
 
-                projectObject(clientBody, clientBody.DefinitionTime);
-                this.updateFromBody(clientBody);
 
                 if (textureDefinition.animated) {
                     this.sprite.playAnimation(0, textureDefinition.animated.count - 1, textureDefinition.animated.loop ?? false, textureDefinition.animated.speed);
@@ -49,6 +48,9 @@ export class TextureLayer {
 
                 if (this.textureDefinition.width == undefined || this.textureDefinition.height == undefined) console.log(`TextureDefinition[${textureName}] is missing height/width`);
                 else this.aspectRatio = this.textureDefinition.width / this.textureDefinition.height;
+
+                projectObject(clientBody, clientBody.DefinitionTime);
+                this.updateFromBody(clientBody);
             }
         }
 
@@ -78,10 +80,16 @@ export class TextureLayer {
             if (this.textureDefinition.rotate) extraRotation = -Math.PI / 2;
 
             this.sprite.angle = body.Angle + extraRotation;
-            if (this.textureDefinition.size)
-                this.sprite.height = this.textureDefinition.size * body.Size;
+
+            if (this.lastBodySize != body.Size)
+            {
+                this.lastBodySize = body.Size;
                 
-            this.sprite.width = this.sprite.height * this.aspectRatio;
+                if (this.textureDefinition.size)
+                    this.sprite.height = this.textureDefinition.size * body.Size;
+                    
+                this.sprite.width = this.sprite.height * this.aspectRatio;
+            }
         }
     }
 

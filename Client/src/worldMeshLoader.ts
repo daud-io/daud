@@ -1,8 +1,9 @@
 import { GameContainer } from "./gameContainer";
 import * as bus from "./bus";
 import "@babylonjs/loaders/glTF";
-import { AbstractMesh, Node, PBRMaterial, SceneLoader, Vector3 } from "@babylonjs/core";
+import { AbstractMesh, Light, Node, PBRMaterial, SceneLoader, Vector3 } from "@babylonjs/core";
 import { GLTFFileLoader } from "@babylonjs/loaders";
+import { Settings } from "./settings";
 
 export class WorldMeshLoader {
     container: GameContainer;
@@ -91,15 +92,22 @@ export class WorldMeshLoader {
                 this.recurseNodesAfterLoad(rootNode);
             });
 
+
+            const deleteLights:Light[] = [];
+
             this.container.scene.lights.forEach((light) => {
                 if (light.name != "containerLight") {
-                    light.dispose();
+                    deleteLights.push(light);
                     //light.intensity *= 10;
                     //light.shadowEnabled = true;
                     //var gen = new ShadowGenerator(1024, <IShadowLight>light);
                     //gen.addShadowCaster()
                 }
             });
+
+            for(let i in deleteLights)
+                deleteLights[i].dispose();
+
 
             this.container.ready = true;            
         });
@@ -113,7 +121,7 @@ export class WorldMeshLoader {
             let pbr = mesh.material as PBRMaterial;
             if (pbr) {
                 const extras = pbr?.metadata?.gltf?.extras;
-                if (extras) {
+                if (Settings.graphics == "high" && extras) {
                     if (extras.alpha) {
                         if (extras.alpha == "image") {
                             console.log(`Material change: ${pbr.name} to alpha from image`);

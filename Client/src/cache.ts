@@ -9,6 +9,8 @@ import { Vector2 } from "@babylonjs/core";
 import { NetBody } from "./daud-net/net-body";
 import { NetGroup } from "./daud-net/net-group";
 import { NetWorldView } from "./daud-net/net-world-view";
+import { Vec2 } from "./daud-net/vec2";
+import { ByteBuffer } from "flatbuffers";
 
 export type ClientBody = {
     ID: number;
@@ -20,7 +22,7 @@ export type ClientBody = {
     Group: number;
     OriginalAngle: number;
     AngularVelocity: number;
-    Momentum: Vector2;
+    Velocity: Vector2;
     OriginalPosition: Vector2;
     zIndex: number;
     Position: Vector2;
@@ -37,6 +39,8 @@ export type ClientGroup = {
 };
 
 type ClientRendered = {
+    lastUpdate: NetBody;
+    group?: ClientGroup;
     body: ClientBody;
     renderer?: RenderedObject;
 };
@@ -44,8 +48,8 @@ type ClientRendered = {
 export class Cache {
     static readonly VELOCITY_SCALE_FACTOR = 5000.0;
     readonly container: GameContainer;
-    readonly bodies: Map<string, ClientRendered> = new Map();
-    readonly groups: Map<string, ClientGroup> = new Map();
+    readonly bodies: Map<number, ClientRendered> = new Map();
+    readonly groups: Map<number, ClientGroup> = new Map();
 
     constructor(container: GameContainer) {
         this.container = container;
@@ -57,10 +61,10 @@ export class Cache {
     onWorldView(newView: NetWorldView): void {
         const deletesLength = newView.deletesLength();
         for (let d = 0; d < deletesLength; d++) {
-            const key = `b-${newView.deletes(d)!}`;
+            const key = newView.deletes(d)!;
             const body = this.bodies.get(key);
             if (body) {
-                const group = this.groups.get(`g-${body.body.Group}`);
+                const group = this.groups.get(body.body.Group);
                 if (group && group.renderer) group.renderer.deleteShip(key);
                 if (body.renderer) body.renderer.destroy();
             }
@@ -70,7 +74,7 @@ export class Cache {
 
         const groupDeletesLength = newView.groupdeletesLength();
         for (let d = 0; d < groupDeletesLength; d++) {
-            const key = `g-${newView.groupdeletes(d)!}`;
+            const key = newView.groupdeletes(d)!;
             const group = this.groups.get(key);
             if (!group) console.log("group delete on object not in cache");
             if (group && group.renderer) group.renderer.destroy();
@@ -78,94 +82,125 @@ export class Cache {
         }
 
         const groupsLength = newView.groupsLength();
+        const group:NetGroup = new NetGroup();
+
         for (let u = 0; u < groupsLength; u++) {
-            let group = newView.groups(u)!;
-            let existing = this.groups.get(`g-${group.group()}`);
+            newView.groups(u, group)!;
+            let existing = this.groups.get(group.group());
             if (!existing) {
                 const clientGroup = this.groupFromServer(group);
                 if (clientGroup.Type == 1) clientGroup.renderer = new Fleet(this.container);
-                this.groups.set(`g-${clientGroup.ID}`, clientGroup);
+                this.groups.set(clientGroup.ID, clientGroup);
                 existing = clientGroup;
             } else {
-                existing.ID = group.group();
+                //existing.ID = group.group();
                 existing.Caption = group.caption()!;
-                existing.Type = group.type();
+                //existing.Type = group.type();
                 existing.ZIndex = group.zindex();
-                const cd = group.customdata();
-                existing.CustomData = cd ? JSON.parse(cd) : cd;
+                //const cd = group.customdata();
+                //existing.CustomData = cd ? JSON.parse(cd) : cd;
             }
 
             if (existing.renderer) existing.renderer.update(existing, this.container.fleetID);
         }
 
         const updatesLength = newView.updatesLength();
+        const tmpVec2:Vec2 = new Vec2();
+        const tmpVec2Compare:Vec2 = new Vec2();
+        const update:NetBody = new NetBody();
+
         for (let u = 0; u < updatesLength; u++) {
             // update objects that should be here
-            const update = newView.updates(u)!;
-            const existing = this.bodies.get(`b-${update.id()}`);
+            newView.updates(u, update)!;
+            const existing = this.bodies.get(update.id());
 
             if (existing) {
-                existing.body.Size = update.size() * 5;
-                existing.body.Sprite = spriteIndices[update.sprite()];
+
+                const lastUpdate = existing.lastUpdate;
+
+                if (update.size() != lastUpdate.size())
+                    existing.body.Size = update.size() * 5;
+
+                if (update.sprite() != lastUpdate.sprite())
+                    existing.body.Sprite = spriteIndices[update.sprite()];
+
                 existing.body.Mode = update.mode();
                 existing.body.DefinitionTime = update.definitiontime();
-                existing.body.OriginalAngle = (update.originalangle() / 127) * Math.PI;
-                existing.body.AngularVelocity = update.angularvelocity() / 10000;
-                const originalPosition = update.originalposition()!;
-                existing.body.OriginalPosition.x = originalPosition.x();
-                existing.body.OriginalPosition.y = originalPosition.y();
-                const velocity = update.velocity()!;
-                existing.body.Momentum.x = velocity.x() / Cache.VELOCITY_SCALE_FACTOR;
-                existing.body.Momentum.y = velocity.y() / Cache.VELOCITY_SCALE_FACTOR;
+                if (update.originalangle() != lastUpdate.originalangle())
+                    existing.body.OriginalAngle = (update.originalangle() / 127) * Math.PI;
+
+                if (update.angularvelocity() != lastUpdate.angularvelocity())
+                    existing.body.AngularVelocity = update.angularvelocity() / 10000;
+
+                update.originalposition(tmpVec2)!;
+                existing.body.OriginalPosition.x = tmpVec2.x();
+                existing.body.OriginalPosition.y = tmpVec2.y();
+
+                update.velocity(tmpVec2);
+                lastUpdate.velocity(tmpVec2Compare);
+                
+                if (tmpVec2.x() != tmpVec2Compare.x()
+                    || tmpVec2.y() != tmpVec2Compare.y())
+                {
+                    existing.body.Velocity.x = tmpVec2.x() / Cache.VELOCITY_SCALE_FACTOR;
+                    existing.body.Velocity.y = tmpVec2.y() / Cache.VELOCITY_SCALE_FACTOR;
+                }
 
                 if (update.group() != existing.body.Group) {
-                    const oldGroup = this.groups.get(`g-${existing.body.Group}`);
-                    if (oldGroup) oldGroup.renderer!.deleteShip(`b-${update.id()}`);
+                    const oldGroup = existing.group;
+                    if (oldGroup && oldGroup.renderer)
+                        oldGroup.renderer.deleteShip(update.id());
+
                     existing.body.Group = update.group();
+
+                    if (update.group() != 0)
+                        existing.group = this.groups.get(update.group());
+                    else
+                        existing.group = undefined;
+    
                 }
 
-                existing.body.zIndex = 0;
+                if (existing.group != null)
+                    existing.body.zIndex = existing.group.ZIndex || 0;
 
-                if (update.group() != 0) {
-                    let group = this.groups.get(`g-${update.group()}`);
-                    if (group) existing.body.zIndex = group.ZIndex || 0;
-                }
+                existing.renderer?.update();
 
-                if (existing.renderer) existing.renderer.update();
+                newView.updates(u, existing.lastUpdate);
             }
 
             if (!existing) {
                 var renderer = <RenderedObject | undefined>undefined;
                 const clientBody = Cache.bodyFromServer(update);
 
-                const group = this.groups.get(`g-${clientBody.Group}`);
+                const group = this.groups.get(clientBody.Group);
 
                 clientBody.zIndex = group?.ZIndex || 0;
 
                 const groupType = group?.Type ?? -1;
 
                 switch (groupType) {
-                    case 0: // fish
-                        break;
-
                     case 1: // fleets
                         if (group?.renderer instanceof Fleet) {
                             var ship = new Ship(this.container, clientBody, group);
                             renderer = ship;
-                            group.renderer.addShip(`b-${clientBody.ID}`, ship);
+                            group.renderer.addShip(clientBody.ID, ship);
                         }
                         break;
 
                     case 6: // tokens
                         renderer = new Token(this.container, clientBody, group!);
                         break;
+                    
+                    case 0: // fish
+                    default:
+                        renderer = new RenderedObject(this.container, clientBody);
+                        break;
                 }
-
-                if (!renderer) renderer = new RenderedObject(this.container, clientBody);
-
-                if (renderer) renderer.update();
-
-                this.bodies.set(`b-${clientBody.ID}`, {
+                
+                renderer?.update();
+                
+                this.bodies.set(clientBody.ID, {
+                    lastUpdate: newView.updates(u)!,
                     body: clientBody,
                     renderer,
                 });
@@ -174,6 +209,9 @@ export class Cache {
 
         this.container.updateCounter += updatesLength;
         this.container.viewCounter++;
+        this.container.connection.cacheSize = this.bodies.size;
+
+        //console.log(this.groups.size);
     }
 
     onWorldJoin(): void {
@@ -218,12 +256,12 @@ export class Cache {
     }
 
     getGroup(groupID: number): ClientGroup | undefined {
-        return this.groups.get(`g-${groupID}`);
+        return this.groups.get(groupID);
     }
 
     static bodyFromServer(body: NetBody): ClientBody {
         const originalPosition = body.originalposition()!;
-        const momentum = body.velocity()!;
+        const velocity = body.velocity()!;
         const groupID = body.group();
 
         const spriteIndex = body.sprite();
@@ -239,7 +277,7 @@ export class Cache {
             Group: groupID,
             OriginalAngle: (body.originalangle() / 127) * Math.PI,
             AngularVelocity: body.angularvelocity() / 10000,
-            Momentum: new Vector2(momentum.x() / Cache.VELOCITY_SCALE_FACTOR, momentum.y() / Cache.VELOCITY_SCALE_FACTOR),
+            Velocity: new Vector2(velocity.x() / Cache.VELOCITY_SCALE_FACTOR, velocity.y() / Cache.VELOCITY_SCALE_FACTOR),
             OriginalPosition: new Vector2(originalPosition.x(), originalPosition.y()),
             Position: new Vector2(0, 0),
             Angle: (body.originalangle() / 127) * Math.PI,

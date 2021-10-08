@@ -209,7 +209,7 @@
             }
 
             FleetCenter = FleetMath.FleetCenterNaive(this.Ships);
-            FleetVelocity = FleetMath.FleetMomentum(this.Ships);
+            FleetVelocity = FleetMath.FleetVelocity(this.Ships);
 
             bool killedTooBig = false;
             

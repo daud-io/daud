@@ -41,7 +41,7 @@
                     existing.OriginalAngle = update.OriginalAngle;
                     existing.AngularVelocity = update.AngularVelocity;
                     existing.OriginalPosition = update.OriginalPosition;
-                    existing.Momentum = update.Momentum;
+                    existing.Velocity = update.Velocity;
                     
                     existing.Size = update.Size;
                     existing.Sprite = update.Sprite;

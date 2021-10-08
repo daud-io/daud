@@ -22,7 +22,7 @@
             return accumlator;
         }
 
-        public static Vector2 FleetMomentum(IEnumerable<Ship> ships, Ship except = null)
+        public static Vector2 FleetVelocity(IEnumerable<Ship> ships, Ship except = null)
         {
             Vector2 accumlator = Vector2.Zero;
             int count = 0;

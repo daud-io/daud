@@ -68,7 +68,7 @@
 
             CustomData = JsonConvert.SerializeObject(new
             {
-                spots = SensorFleets.Others?.Select(f => RoboMath.FiringIntercept(HookComputer, this.Position, f.Center, f.Momentum, this.SensorFleets.MyFleet?.Ships.Count ?? 0))
+                spots = SensorFleets.Others?.Select(f => RoboMath.FiringIntercept(HookComputer, this.Position, f.Center, f.Velocity, this.SensorFleets.MyFleet?.Ships.Count ?? 0))
             });
 
             await base.AliveAsync();
@@ -87,7 +87,7 @@
                     HookComputer,
                     this.Position,
                     f.Center,
-                    f.Momentum,
+                    f.Velocity,
                     this.SensorFleets.MyFleet?.Ships.Count ?? 0
                 )
             );

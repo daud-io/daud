@@ -63,15 +63,19 @@
         {
             protected async override Task ExecuteAsync()
             {
-                var connection = new PlayerConnection(API.BaseURL.ToString(), "default");
+                var connection = new PlayerConnection(API.BaseURL.ToString(), "ffa");
 
                 var cts = new CancellationTokenSource();
                 
                 for (int i=0; i<1000; i++)
                 {
                     Console.WriteLine($"Spawn #: {i+1}");
+                    
                     await connection.ConnectAsync(cts.Token);
+                    await Task.Delay(1000);
+
                     await connection.SpawnAsync("Testing", "ship_red", "red");
+                    await Task.Delay(1000);
                     connection.Dispose();
                 }
             }

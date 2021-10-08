@@ -25,9 +25,9 @@
             {
                 foreach (var other in Robot.SensorFleets.Others)
                 {
-                    var dist = Vector2.Distance(other.Center + other.Momentum * LookAheadMS, position);
+                    var dist = Vector2.Distance(other.Center + other.Velocity * LookAheadMS, position);
                     if (dist < ActiveRange)
-                        accumulator -= Vector2.Dot(other.Center + other.Momentum * LookAheadMS - position, new Vector2(MathF.Cos(angle), MathF.Sin(angle))) / dist / dist / dist;
+                        accumulator -= Vector2.Dot(other.Center + other.Velocity * LookAheadMS - position, new Vector2(MathF.Cos(angle), MathF.Sin(angle))) / dist / dist / dist;
 
                 }
             }

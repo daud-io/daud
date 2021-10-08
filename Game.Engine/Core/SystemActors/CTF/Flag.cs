@@ -38,7 +38,6 @@
                 this.Position = CarriedBy.FleetCenter;
                 this.LinearVelocity = CarriedBy.FleetVelocity;
 
-                //Console.WriteLine($"X:{CarriedBy.FleetMomentum.X} Y:{CarriedBy.FleetMomentum.Y}");
             }
             else
             {

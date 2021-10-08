@@ -36,7 +36,7 @@ namespace Game.Robots
         public TreeState ProjectClone(int time, float angle, bool stay)
         {
             Fleet newF = this.Fleet.Clone();
-            var momentum = newF.Momentum;
+            var momentum = newF.Velocity;
             var position = RoboMath.ShipThrustProjection(TRobot.HookComputer,
                 newF.Center,
                 ref momentum,
@@ -46,7 +46,7 @@ namespace Game.Robots
             );
             if (!stay)
             {
-                newF.SetMomentumAndPos(position, momentum);
+                newF.SetVelocityAndPos(position, momentum);
             }
 
             TreeState ns = new TreeState(OffsetMS + time, newF, TRobot);

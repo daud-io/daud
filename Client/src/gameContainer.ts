@@ -17,6 +17,9 @@ import { Cache } from "./cache";
 import * as bus from "./bus";
 import { Connection } from "./connection";
 
+// import "@babylonjs/core/Debug/debugLayer";
+// import "@babylonjs/inspector";
+
 export class GameContainer {
     scene: Scene;
     readonly engine: Engine;
@@ -28,7 +31,6 @@ export class GameContainer {
     cameraPosition: Vector2 = Vector2.Zero();
     cameraHeight: number = 0;
 
-    readonly guiTexture: AdvancedDynamicTexture;
     readonly loader: Loader;
     ready: boolean = false;
     fleetID: number = 0;
@@ -39,11 +41,14 @@ export class GameContainer {
     canvas: HTMLCanvasElement;
 
     connection: Connection;
+    light?: HemisphericLight;
+    boundingRect: DOMRect;
 
     constructor(canvas: HTMLCanvasElement, connection: Connection) {
         this.connection = connection;
         this.baseURL = document.body.attributes['data-static-url-base'];
         this.canvas = canvas;
+        this.boundingRect = this.canvas.getBoundingClientRect();
         this.engine = new Engine(canvas, true);
         this.scene = new Scene(this.engine);
         this.scene.ambientColor = Color3.White();
@@ -53,12 +58,13 @@ export class GameContainer {
         this.cache = new Cache(this);
 
         this.camera = this.setupCamera();
-        this.guiTexture = this.setupGUI();
         this.leaderboard = new Leaderboard(this);
         this.sounds = new Sounds(this);
 
         this.positionCamera(Vector2.Zero());
         this.setupLights();
+
+        //this.scene.debugLayer.show();
 
         bus.on("worldjoin", () => {
             while (this.scene.meshes.length) this.scene.meshes[0].dispose();
@@ -90,10 +96,6 @@ export class GameContainer {
         this.canvas.focus();
     }
 
-    setupGUI(): AdvancedDynamicTexture {
-        return AdvancedDynamicTexture.CreateFullscreenUI("UI");
-    }
-
     setupCamera(): FreeCamera {
         this.cameraHeight = 4000;
         const camera = new FreeCamera("containerCamera", new Vector3(0, this.cameraHeight, 0), this.scene);
@@ -105,8 +107,8 @@ export class GameContainer {
     }
 
     setupLights() {
-        var light = new HemisphericLight("containerLight", new Vector3(0, 1, 0), this.scene);
-        light.intensity *= 0.3;
+        this.light = new HemisphericLight("containerLight", new Vector3(0, 1, 0), this.scene);
+        this.light.intensity *= 0.3;
     }
 
     positionCamera(serverPosition: Vector2) {
@@ -119,5 +121,6 @@ export class GameContainer {
 
     resize() {
         this.engine.resize();
+        this.boundingRect = this.canvas.getBoundingClientRect();
     }
 }

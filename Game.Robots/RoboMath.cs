@@ -141,12 +141,12 @@
             var path = destination - start;
             var pLen = path.Length();
             var bS = bullet.Position;
-            var bM = bullet.Momentum;
+            var bM = bullet.Velocity;
             var targetPosition = start;
             var fromPosition = bS;
             var toTarget = targetPosition - fromPosition;
 
-            var bulletSpeed = bullet.Momentum.Length();
+            var bulletSpeed = bullet.Velocity.Length();
             var targetMomentum = (destination - start) / ((float)maxTime);
 
             var a = Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);

@@ -32,10 +32,10 @@
                       {
                           Fleet = f,
                           Distance = (this.Robot.Position - f.Center).Length(),
-                          FrontDistance = Vector2.Dot(this.Robot.Position - f.Center, myFleet.Momentum / myFleet.Momentum.Length()),
-                          BackDistance = -Vector2.Dot(this.Robot.Position - f.Center, myFleet.Momentum / myFleet.Momentum.Length()),
-                          LeftDistance = Vector2.Dot(this.Robot.Position - f.Center, new Vector2(myFleet.Momentum.Y, -myFleet.Momentum.X) / myFleet.Momentum.Length()),
-                          RightDistance = -Vector2.Dot(this.Robot.Position - f.Center, new Vector2(myFleet.Momentum.Y, -myFleet.Momentum.X) / myFleet.Momentum.Length()),
+                          FrontDistance = Vector2.Dot(this.Robot.Position - f.Center, myFleet.Velocity / myFleet.Velocity.Length()),
+                          BackDistance = -Vector2.Dot(this.Robot.Position - f.Center, myFleet.Velocity / myFleet.Velocity.Length()),
+                          LeftDistance = Vector2.Dot(this.Robot.Position - f.Center, new Vector2(myFleet.Velocity.Y, -myFleet.Velocity.X) / myFleet.Velocity.Length()),
+                          RightDistance = -Vector2.Dot(this.Robot.Position - f.Center, new Vector2(myFleet.Velocity.Y, -myFleet.Velocity.X) / myFleet.Velocity.Length()),
                       };
                   }).Select(f =>
                   {
@@ -64,13 +64,13 @@
                     var distance = Vector2.Distance(fleet.Center, this.Robot.Position);
                     if (distance <= MaximumRange && distance >= MinimumRange)
                     {
-                        accumulator += (fleet.Center + (fleet.Momentum * (1.0f)) * LookAheadMS);
+                        accumulator += (fleet.Center + (fleet.Velocity * (1.0f)) * LookAheadMS);
                         count += 1.0f;
                         n += 1;
                     }
                 }
                 if (accumulator != Vector2.Zero && count > 0)
-                    TargetPoint = accumulator / ((float)count) + (this.Robot.SensorFleets.MyFleet == null ? Vector2.Zero : this.Robot.SensorFleets.MyFleet.Momentum * LookAheadMS);
+                    TargetPoint = accumulator / ((float)count) + (this.Robot.SensorFleets.MyFleet == null ? Vector2.Zero : this.Robot.SensorFleets.MyFleet.Velocity * LookAheadMS);
             }
         }
 

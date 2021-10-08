@@ -25,7 +25,7 @@
                 {
                     ID = b.ID,
                     Angle = b.Angle,
-                    Momentum = b.Momentum,
+                    Momentum = b.Velocity,
                     Position = b.Position,
                     Size = b.Size
                 }).ToList();

@@ -115,7 +115,7 @@
                     HookComputer,
                     this.Position,
                     f.Center,
-                    f.Momentum,
+                    f.Velocity,
                     this.SensorFleets.MyFleet?.Ships.Count ?? 0
                 )
             );

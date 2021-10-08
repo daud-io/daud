@@ -137,37 +137,29 @@ export const Controls = {
     container: undefined as GameContainer | undefined,
     color: undefined as string | undefined,
     ship: "ship_green",
-
-
-
 };
 
+let spectateNextDebounce = false;
 function sendControl()
 {
     let spectateControl = "";
 
-    // if (isSpectating) {
-    //     if (spectateNextDebounce && !Controls.shoot) {
-    //         spectateNextDebounce = false;
-    //     }
-    //     if (!spectateNextDebounce && Controls.shoot) {
-    //         spectateControl = "action:next";
-    //         spectateNextDebounce = true;
-    //     } else spectateControl = "spectating";
-    // }
+    if (document.body.classList.contains("spectating"))
+    {
+        if (spectateNextDebounce && !Controls.shoot) {
+            spectateNextDebounce = false;
+        }
+        if (!spectateNextDebounce && Controls.shoot) {
+            spectateControl = "action:next";
+            spectateNextDebounce = true;
+        } else spectateControl = "spectating";
+    }
 
     if (Controls.container)
         Controls.container.connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, spectateControl, Controls.customData);
 }
 
 export function registerContainer(container: GameContainer): void {
-    const getMousePos = (canvas: HTMLCanvasElement, { clientX, clientY }: MouseEvent) => {
-        const rect = canvas.getBoundingClientRect();
-        return {
-            x: clientX - rect.left,
-            y: clientY - rect.top,
-        };
-    };
     if (isMobile) {
         joystick.onMoved(() => {
             const cx = container.canvas.width / 2;
@@ -230,10 +222,9 @@ export function registerContainer(container: GameContainer): void {
                     break;
 
                 case PointerEventTypes.POINTERMOVE:
-                    var mousePos = getMousePos(container.canvas, pointerInfo.event);
-
-                    Controls.screenMouseX = mousePos.x;
-                    Controls.screenMouseY = mousePos.y;
+                    const rect = container.boundingRect;
+                    Controls.screenMouseX = pointerInfo.event.clientX - rect.left;
+                    Controls.screenMouseY = pointerInfo.event.clientY - rect.top;
                     const ray = container.scene.createPickingRay(Controls.screenMouseX, Controls.screenMouseY, Matrix.Identity(), container.camera);
                     const pos = ray.intersectsAxis("y", 100);
                     if (pos) {

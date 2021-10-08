@@ -32,12 +32,12 @@
             Parallel.For(0, N, i =>
             {
                 var bS = bullet[i].Position;
-                var bM = bullet[i].Momentum;
+                var bM = bullet[i].Velocity;
 
                 var fromPosition = bS;
                 var toTarget = targetPosition - fromPosition;
 
-                var bulletSpeed = bullet[i].Momentum.Length();
+                var bulletSpeed = bullet[i].Velocity.Length();
                 var targetMomentum = (destination - start) / ((float)maxTime);
 
                 var a = Vector2.Dot(targetMomentum, targetMomentum) - (bulletSpeed * bulletSpeed);

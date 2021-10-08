@@ -9,6 +9,7 @@ export class Settings {
     static logLength: number = 4;
     static showHints: boolean = true;
     static nameSize: number = 48;
+    static graphics: string = "low";
 
     private static themeSelectorEL: HTMLSelectElement;
     private static showHintsEL: HTMLInputElement;
@@ -16,8 +17,10 @@ export class Settings {
     private static logLengthEL: HTMLInputElement;
     private static nameSizeEL: HTMLInputElement;
     private static gearEL: HTMLElement;
+    private static graphicsSelectorEL: HTMLSelectElement;
 
     static initialize() {
+        this.graphicsSelectorEL = document.getElementById('settingsGraphics') as HTMLSelectElement;
         this.themeSelectorEL = document.getElementById("settingsTheme") as HTMLSelectElement;
         this.showHintsEL = document.getElementById("settingsShowHints") as HTMLInputElement;
         this.bandwidthEL = document.getElementById("settingsBandwidth") as HTMLInputElement;
@@ -25,13 +28,19 @@ export class Settings {
         this.nameSizeEL = document.getElementById("settingsNameSize") as HTMLInputElement;
         this.gearEL = document.getElementById("gear")!;
 
+        this.graphicsSelectorEL.onchange = () => {
+            Settings.graphics = this.graphicsSelectorEL.value;
+            Settings.saveSettings();
+        };
+
         async function themeChange() {
             Settings.theme = Settings.themeSelectorEL.value;
             Settings.saveSettings();
             bus.emit("themechange");
         }
-        this.themeSelectorEL.onchange = themeChange;
 
+        this.themeSelectorEL.onchange = themeChange;
+        
         this.showHintsEL.onchange = () => {
             Settings.showHints = this.showHintsEL.checked;
             Settings.saveSettings();

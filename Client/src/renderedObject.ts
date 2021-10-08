@@ -20,10 +20,11 @@ export class RenderedObject {
 
         this.container = container;
         this.body = clientBody;
-        this.currentSpriteName = "";
-        this.currentMode = -1;
 
         this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(clientBody.Sprite);
+        this.currentSpriteName = this.body.Sprite;
+        this.currentMode = this.body.Mode
+        this.updateTextureLayers();
     }
 
     decodeOrderedModes(mode: number) {
@@ -67,6 +68,7 @@ export class RenderedObject {
         }
 
         if (this.currentMode != this.body.Mode) {
+            console.log('changing mode');
             this.currentMode = this.body.Mode;
             dirty = true;
         }

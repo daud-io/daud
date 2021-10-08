@@ -3,19 +3,23 @@ import { defineConfig } from "vite";
 import path from 'path';
 
 export default defineConfig({
-  assetsInclude: [
-    'src/assets/**/*.png'
-  ],
   build:
   {
+    // rollupOptions: {
+    //   output: {
+    //     entryFileNames: `assets/[name].js`,
+    //     chunkFileNames: `assets/[name].js`,
+    //     assetFileNames: `assets/[name].[ext]`
+    //   }
+    // }    
     //sourcemap: true
   },
   plugins: [legacy({
     targets: ['ie >= 11'],
     additionalLegacyPolyfills: [
-      'regenerator-runtime/runtime',
       '@webcomponents/webcomponentsjs',
-      'core-js'
+      'core-js',
+      'regenerator-runtime/runtime',
     ]
   })],
   server: {

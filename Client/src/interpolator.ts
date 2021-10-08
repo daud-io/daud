@@ -17,7 +17,7 @@ export function projectObject(object: ClientBody, time: number): void {
         object.Angle = angleLerp(object.Angle, object.OriginalAngle, 0.7);
     else object.Angle = object.OriginalAngle + timeShift * object.AngularVelocity;
 
-    object.Position.x = Math.floor(object.OriginalPosition.x + timeShift * object.Momentum.x);
-    object.Position.y = Math.floor(object.OriginalPosition.y + timeShift * object.Momentum.y);
+    object.Position.x = Math.floor(object.OriginalPosition.x + timeShift * object.Velocity.x);
+    object.Position.y = Math.floor(object.OriginalPosition.y + timeShift * object.Velocity.y);
 }
 

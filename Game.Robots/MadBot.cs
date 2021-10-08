@@ -101,7 +101,7 @@
             var bangle = 0.0f;
             if (SensorFleets.MyFleet != null)
             {
-                bangle = MathF.Atan2(this.SensorFleets.MyFleet.Momentum.Y, this.SensorFleets.MyFleet.Momentum.X);
+                bangle = MathF.Atan2(this.SensorFleets.MyFleet.Velocity.Y, this.SensorFleets.MyFleet.Velocity.X);
             }
             (var finalRing, var angle, var boost) = ContextRingBlending.Blend(contexts, false);
             var combined = new ContextRing(this.Steps);
@@ -167,7 +167,7 @@
 
                         if (SensorFleets.MyFleet != null)
                         {
-                            ShootAt(SensorFleets.MyFleet.Momentum);
+                            ShootAt(SensorFleets.MyFleet.Velocity);
                         }
                     }
                 }
@@ -192,7 +192,7 @@
                     HookComputer,
                     this.Position,
                     f.Center,
-                    f.Momentum,
+                    f.Velocity,
                     this.SensorFleets.MyFleet?.Ships.Count ?? 0
                 )
             );

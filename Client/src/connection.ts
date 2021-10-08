@@ -14,7 +14,7 @@ import { NetSpawn } from "./daud-net/net-spawn";
 import { NetControlInput } from "./daud-net/net-control-input";
 import { NetEvent } from "./daud-net/net-event";
 import { NetLeaderboard } from "./daud-net/net-leaderboard";
-
+import { AdvancedDynamicTexture } from "@babylonjs/gui";
 
 export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
 export type LeaderboardType = {
@@ -27,6 +27,8 @@ export type LeaderboardType = {
         Token: boolean;
     };
 };
+
+
 export class Connection {
     reloading = false;
     disconnecting = false;
@@ -60,6 +62,14 @@ export class Connection {
     pingMode: boolean = false;
     connectionTime: number = 0;
     ripple: number = 0;
+    earliestOffsetNext: number = -1;
+    builder: Builder = new Builder(1024);
+    cacheSize: number = 0;
+
+    viewBuffer: Uint8Array;
+    viewBufferSpace: number;
+    viewBufferContents: { offset: number, length: number }[] = [];
+
 
     constructor() {
         setInterval(() => {
@@ -78,21 +88,24 @@ export class Connection {
                 this.sendPing();
             }
 
-            if (this.minimumLatencyStart < performance.now())
-            {
+            if (this.minimumLatencyStart < performance.now()) {
                 console.log('new latency window: ' + this.minimumLatencyNext);
                 this.minimumLatencyStart = performance.now() + this.minimumLatencyWindow;
-                if (this.minimumLatencyNext != -1)
-                {
+                if (this.minimumLatencyNext != -1) {
                     this.minimumLatency = this.minimumLatencyNext;
                     this.ripple = Math.max(this.maximumLatencyNext - this.minimumLatencyNext, 0);
                     this.latencyWindowFirst = false;
+                    this.earliestOffset = this.earliestOffsetNext;
                 }
 
+                this.earliestOffsetNext = -1;
                 this.minimumLatencyNext = -1;
                 this.maximumLatencyNext = 0;
             }
-        }, 500);
+        }, 250);
+
+        this.viewBuffer = new Uint8Array(5 * 1024 * 1024);
+        this.viewBufferSpace = this.viewBuffer.length;
     }
 
     disconnect(): void {
@@ -123,6 +136,7 @@ export class Connection {
         this.serverClockOffset = -1;
         this.minimumLatency = -1;
         this.earliestOffset = -1;
+        this.earliestOffsetNext = -1;
         this.latencyWindowFirst = true;
         this.minimumLatencyStart = -1;
         this.minimumLatencyNext = -1;
@@ -157,137 +171,125 @@ export class Connection {
     }
 
     sendPing(): void {
-        const builder = new Builder(0);
+        this.builder.clear();
 
-        NetPing.startNetPing(builder);
+        NetPing.startNetPing(this.builder);
         this.pingSent = performance.now();
 
-        NetPing.addTime(builder, this.pingSent);
-        NetPing.addClienttime(builder, this.pingSent);
-        NetPing.addLatency(builder, this.latency);
-        NetPing.addVps(builder, this.viewsPerSecond);
-        NetPing.addUps(builder, this.updatesPerSecond);
-        NetPing.addFps(builder, this.framesPerSecond);
-        NetPing.addCs(builder, 0);
-        NetPing.addBackgrounded(builder, this.framesPerSecond < 1);
-        NetPing.addBandwidththrottle(builder, this.bandwidthThrottle);
+        NetPing.addTime(this.builder, this.pingSent);
+        NetPing.addClienttime(this.builder, this.pingSent);
+        NetPing.addLatency(this.builder, this.latency);
+        NetPing.addVps(this.builder, this.viewsPerSecond);
+        NetPing.addUps(this.builder, this.updatesPerSecond);
+        NetPing.addFps(this.builder, this.framesPerSecond);
+        NetPing.addCs(this.builder, this.cacheSize);
+        NetPing.addBackgrounded(this.builder, this.framesPerSecond < 1);
+        NetPing.addBandwidththrottle(this.builder, this.bandwidthThrottle);
 
-        const ping = NetPing.endNetPing(builder);
+        const ping = NetPing.endNetPing(this.builder);
 
-        NetQuantum.startNetQuantum(builder);
-        NetQuantum.addMessageType(builder, AllMessages.NetPing);
-        NetQuantum.addMessage(builder, ping);
-        const quantum = NetQuantum.endNetQuantum(builder);
+        NetQuantum.startNetQuantum(this.builder);
+        NetQuantum.addMessageType(this.builder, AllMessages.NetPing);
+        NetQuantum.addMessage(this.builder, ping);
+        const quantum = NetQuantum.endNetQuantum(this.builder);
 
-        builder.finish(quantum);
+        this.builder.finish(quantum);
 
-        this.send(builder.asUint8Array());
+        this.send(this.builder.asUint8Array());
     }
 
     sendExit(): void {
-        const builder = new Builder(0);
+        this.builder.clear();
+        NetExit.startNetExit(this.builder);
+        NetExit.addCode(this.builder, 0);
+        const exitmessage = NetExit.endNetExit(this.builder);
 
-        NetExit.startNetExit(builder);
+        NetQuantum.startNetQuantum(this.builder);
+        NetQuantum.addMessageType(this.builder, AllMessages.NetExit);
+        NetQuantum.addMessage(this.builder, exitmessage);
+        const quantum = NetQuantum.endNetQuantum(this.builder);
 
-        NetExit.addCode(builder, 0);
-        const exitmessage = NetExit.endNetExit(builder);
+        this.builder.finish(quantum);
 
-        NetQuantum.startNetQuantum(builder);
-        NetQuantum.addMessageType(builder, AllMessages.NetExit);
-        NetQuantum.addMessage(builder, exitmessage);
-        const quantum = NetQuantum.endNetQuantum(builder);
-
-        builder.finish(quantum);
-
-        this.send(builder.asUint8Array());
+        this.send(this.builder.asUint8Array());
     }
 
     sendAuthenticate(token: string): void {
         if (token != '')
             return;
-        const builder = new Builder(0);
 
-        const stringToken = builder.createString(token || "");
+        this.builder.clear();
 
-        NetAuthenticate.startNetAuthenticate(builder);
-        NetAuthenticate.addToken(builder, stringToken);
-        const auth = NetAuthenticate.endNetAuthenticate(builder);
+        const stringToken = this.builder.createString(token || "");
 
-        NetQuantum.startNetQuantum(builder);
-        NetQuantum.addMessageType(builder, AllMessages.NetAuthenticate);
-        NetQuantum.addMessage(builder, auth);
-        const quantum = NetQuantum.endNetQuantum(builder);
+        NetAuthenticate.startNetAuthenticate(this.builder);
+        NetAuthenticate.addToken(this.builder, stringToken);
+        const auth = NetAuthenticate.endNetAuthenticate(this.builder);
 
-        builder.finish(quantum);
+        NetQuantum.startNetQuantum(this.builder);
+        NetQuantum.addMessageType(this.builder, AllMessages.NetAuthenticate);
+        NetQuantum.addMessage(this.builder, auth);
+        const quantum = NetQuantum.endNetQuantum(this.builder);
 
-        this.send(builder.asUint8Array());
+        this.builder.finish(quantum);
+
+        this.send(this.builder.asUint8Array());
         console.log("sent auth");
     }
 
     sendSpawn(name?: string, color?: string, ship?: string, token?: string): void {
-        const builder = new Builder(0);
+        this.builder.clear();
 
-        const stringColor = builder.createString(color || "gray");
-        const stringName = builder.createString(name || "");
-        const stringShip = builder.createString(ship || "ship_gray");
-        const stringToken = builder.createString(token || "");
+        const stringColor = this.builder.createString(color || "gray");
+        const stringName = this.builder.createString(name || "");
+        const stringShip = this.builder.createString(ship || "ship_gray");
+        const stringToken = this.builder.createString(token || "");
 
-        NetSpawn.startNetSpawn(builder);
-        NetSpawn.addColor(builder, stringColor);
-        NetSpawn.addName(builder, stringName);
-        NetSpawn.addShip(builder, stringShip);
-        NetSpawn.addToken(builder, stringToken);
-        const spawn = NetSpawn.endNetSpawn(builder);
+        NetSpawn.startNetSpawn(this.builder);
+        NetSpawn.addColor(this.builder, stringColor);
+        NetSpawn.addName(this.builder, stringName);
+        NetSpawn.addShip(this.builder, stringShip);
+        NetSpawn.addToken(this.builder, stringToken);
+        const spawn = NetSpawn.endNetSpawn(this.builder);
 
-        NetQuantum.startNetQuantum(builder);
-        NetQuantum.addMessageType(builder, AllMessages.NetSpawn);
-        NetQuantum.addMessage(builder, spawn);
-        const quantum = NetQuantum.endNetQuantum(builder);
+        NetQuantum.startNetQuantum(this.builder);
+        NetQuantum.addMessageType(this.builder, AllMessages.NetSpawn);
+        NetQuantum.addMessage(this.builder, spawn);
+        const quantum = NetQuantum.endNetQuantum(this.builder);
 
-        builder.finish(quantum);
+        this.builder.finish(quantum);
 
-        this.send(builder.asUint8Array());
+        this.send(this.builder.asUint8Array());
         console.log("spawned");
         bus.emit("spawn", name ?? "", ship ?? "");
     }
 
     sendControl(boost: boolean, shoot: boolean, x: number, y: number, spectateControl: string, customDataJson: string): void {
-        const builder = new Builder(0);
+        this.builder.clear();
 
         let spectateString: number | undefined = undefined;
         let customDataJsonString: number | undefined = undefined;
 
-        if (spectateControl) spectateString = builder.createString(spectateControl);
-        if (customDataJson) customDataJsonString = builder.createString(customDataJson);
+        if (spectateControl) spectateString = this.builder.createString(spectateControl);
+        if (customDataJson) customDataJsonString = this.builder.createString(customDataJson);
 
-        NetControlInput.startNetControlInput(builder);
-        NetControlInput.addBoost(builder, boost);
-        NetControlInput.addShoot(builder, shoot);
-        NetControlInput.addX(builder, x);
-        NetControlInput.addY(builder, y);
-        if (spectateString) NetControlInput.addSpectatecontrol(builder, spectateString);
-        if (customDataJsonString) NetControlInput.addCustomdata(builder, customDataJsonString);
+        NetControlInput.startNetControlInput(this.builder);
+        NetControlInput.addBoost(this.builder, boost);
+        NetControlInput.addShoot(this.builder, shoot);
+        NetControlInput.addX(this.builder, x);
+        NetControlInput.addY(this.builder, y);
+        if (spectateString) NetControlInput.addSpectatecontrol(this.builder, spectateString);
+        if (customDataJsonString) NetControlInput.addCustomdata(this.builder, customDataJsonString);
 
-        const input = NetControlInput.endNetControlInput(builder);
+        const input = NetControlInput.endNetControlInput(this.builder);
 
-        NetQuantum.startNetQuantum(builder);
-        NetQuantum.addMessageType(builder, AllMessages.NetControlInput);
-        NetQuantum.addMessage(builder, input);
-        const quantum = NetQuantum.endNetQuantum(builder);
+        NetQuantum.startNetQuantum(this.builder);
+        NetQuantum.addMessageType(this.builder, AllMessages.NetControlInput);
+        NetQuantum.addMessage(this.builder, input);
+        const quantum = NetQuantum.endNetQuantum(this.builder);
 
-        builder.finish(quantum);
-
-        const newControlPacket = builder.asUint8Array();
-        if (this.lastControlPacket.length != newControlPacket.length) {
-            this.send(newControlPacket);
-            this.lastControlPacket = newControlPacket;
-        } else
-            for (let i = 0; i < newControlPacket.length; i++)
-                if (newControlPacket[i] != this.lastControlPacket[i]) {
-                    this.send(newControlPacket);
-                    this.lastControlPacket = newControlPacket;
-                    break;
-                }
+        this.builder.finish(quantum);
+        this.send(this.builder.asUint8Array());
     }
 
     send(databuffer: Uint8Array): void {
@@ -304,8 +306,7 @@ export class Connection {
         bus.emit("connected", this);
         this.sendPing();
 
-        if (!this.pingMode)
-        {
+        if (!this.pingMode) {
             this.sendAuthenticate(getToken());
 
             if (this.reloading) {
@@ -329,19 +330,54 @@ export class Connection {
         this.disconnecting = false;
     }
 
-    currentWorldTime(): number {
-        return performance.now() - this.serverClockOffset;
+    handleNetWorldViewBuffer(newView: Uint8Array): void {
+        while (this.viewBufferSpace < newView.length) {
+            const addedCapacity = this.viewBuffer.length;
+            this.viewBufferSpace += addedCapacity;
+            let newBuffer = new Uint8Array(this.viewBuffer.length + addedCapacity);
+            newBuffer.set(this.viewBuffer, 0);
+            this.viewBuffer = newBuffer;
+        }
+
+        var contentsHeader = {
+            offset: this.viewBuffer.length - this.viewBufferSpace,
+            length: newView.length
+        };
+
+        this.viewBufferContents.push(contentsHeader);
+        this.viewBuffer.set(newView, contentsHeader.offset);
+        this.viewBufferSpace -= contentsHeader.length;
     }
+
+    dispatchWorldViews() {
+        for (let i in this.viewBufferContents) {
+            const header = this.viewBufferContents[i];
+            const data = this.viewBuffer.subarray(header.offset, header.offset + header.length);
+            const buf = new ByteBuffer(data);
+            const quantum = NetQuantum.getRootAsNetQuantum(buf);
+            this.handleNetWorldView(quantum.message(new NetWorldView()));
+        }
+        this.viewBufferContents.length = 0;
+        this.viewBufferSpace = this.viewBuffer.length;
+    }
+
 
     handleNetWorldView(view: NetWorldView): void {
         const offset = performance.now() - view.time();
 
-        if (this.earliestOffset == -1) this.earliestOffset = offset;
-        else this.earliestOffset = Math.min(this.earliestOffset, offset);
+        if (offset < this.earliestOffsetNext || this.earliestOffsetNext == -1) {
+            this.earliestOffsetNext = offset;
+
+            if (this.latencyWindowFirst)
+                this.earliestOffset = offset;
+        }
+
+        this.serverClockOffset = this.earliestOffset;
 
         const worldviewStart = performance.now();
         bus.emit("worldview", view);
         this.viewCPU += performance.now() - worldviewStart;
+
     }
 
     handleNetPing(message: NetPing): void {
@@ -358,11 +394,10 @@ export class Connection {
         }
         if (this.latency > this.maximumLatencyNext)
             this.maximumLatencyNext = this.latency;
-
-        this.serverClockOffset = this.earliestOffset;
     }
 
     handleNetEvent(message: NetEvent): void {
+        console.log('hook');
         const eventObject = {
             type: message.type()!,
             data: JSON.parse(message.data()!),
@@ -416,7 +451,9 @@ export class Connection {
         });
     }
 
+
     onMessage(event: MessageEvent): void {
+
         const data = new Uint8Array(event.data);
         const buf = new ByteBuffer(data);
         const quantum = NetQuantum.getRootAsNetQuantum(buf);
@@ -426,6 +463,7 @@ export class Connection {
 
         switch (messageType) {
             case AllMessages.NetWorldView:
+                //this.handleNetWorldViewBuffer(data);
                 this.handleNetWorldView(quantum.message(new NetWorldView()));
                 break;
             case AllMessages.NetPing:

@@ -112,16 +112,16 @@
 
         private async Task SendPingAsync()
         {
-            await SendAsync(new NetPing
+            await SendAsync(new AllMessages(new NetPing
             {
                 bandwidththrottle = 100,
                 latency = Latency
-            });
+            }));
         }
 
         public async Task SendControlInputAsync()
         {
-            await SendAsync(new NetControlInput
+            await SendAsync(new AllMessages(new NetControlInput
             {
                 angle = 0,
                 boost = ControlIsBoosting,
@@ -129,7 +129,7 @@
                 y = ControlAimTarget.Y,
                 shoot = ControlIsShooting,
                 customdata = CustomData
-            });
+            }));
             
             CustomData = null;
         }
@@ -180,7 +180,7 @@
                     ID = netBody.id,
                     DefinitionTime = netBody.definitiontime,
                     OriginalPosition = FromNetVector(netBody.originalposition),
-                    Momentum = FromNetVectorVelocity(netBody.velocity),
+                    Velocity = FromNetVectorVelocity(netBody.velocity),
 
                     OriginalAngle = netBody.originalangle,
                     AngularVelocity = netBody.angularvelocity,
@@ -227,14 +227,15 @@
             CooldownBoost = netWorldView.cooldownboost / 255f;
             CooldownShoot = netWorldView.cooldownshoot / 255f;
 
-            foreach (var announcement in netWorldView.announcements)
-                Announcements.Enqueue(new Announcement
-                {
-                    Type = announcement.type,
-                    Text = announcement.text,
-                    PointsDelta = announcement.pointsdelta,
-                    ExtraData = announcement.extradata
-                });
+            if (netWorldView.announcements != null)
+                foreach (var announcement in netWorldView.announcements)
+                    Announcements.Enqueue(new Announcement
+                    {
+                        Type = announcement.type,
+                        Text = announcement.text,
+                        PointsDelta = announcement.pointsdelta,
+                        ExtraData = announcement.extradata
+                    });
 
 
             if (OnView != null)
@@ -264,7 +265,7 @@
 
         public async Task SendExitAsync()
         {
-            await SendAsync(new NetExit());
+            await SendAsync(new AllMessages(new NetExit()));
         }
 
         public void CacheClear()
@@ -275,20 +276,24 @@
         public async Task SpawnAsync(string name, string sprite, string color)
         {
             //CacheClear();
-            await SendAsync(new NetSpawn
+            await SendAsync(new AllMessages(new NetSpawn
             {
                 name = name,
                 ship = sprite,
                 color = color
-            });
+            }));
         }
 
-        private async Task SendAsync(object message, CancellationToken cancellationToken = default(CancellationToken))
+        private async Task SendAsync(AllMessages message, CancellationToken cancellationToken = default(CancellationToken))
         {
+            var q = new NetQuantum
+            {
+                message = message
+            };
             
-            int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(message);
+            int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(q);
             byte[] buffer = new byte[maxBytesNeeded];
-            int bytesWritten = FlatBufferSerializer.Default.Serialize(message, buffer);
+            int bytesWritten = FlatBufferSerializer.Default.Serialize(q, buffer);
 
             await WebsocketSendingSemaphore.WaitAsync();
             try
