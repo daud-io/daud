@@ -5,13 +5,15 @@ import path from 'path';
 export default defineConfig({
   build:
   {
-    // rollupOptions: {
-    //   output: {
-    //     entryFileNames: `assets/[name].js`,
-    //     chunkFileNames: `assets/[name].js`,
-    //     assetFileNames: `assets/[name].[ext]`
-    //   }
-    // }    
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'babylon': [
+            '@babylonjs/core',
+          ]
+        }
+      }
+    }
     //sourcemap: true
   },
   plugins: [legacy({

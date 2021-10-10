@@ -19,7 +19,7 @@ export class Leaderboard {
     constructor(container: GameContainer) {
         this.container = container;
 
-        this.arrowURL = new URL('img/arrow.png', this.container.baseURL).toString();
+        this.arrowURL = `${this.container.baseURL}img/arrow.png`;
 
         bus.on("worldjoin", () => {
             render(this.leaderboard, html``);
@@ -45,7 +45,7 @@ export class Leaderboard {
         const styles = entryIsSelf ? "background-color: rgba(255,255,255,0.1)" : "";
         return html` <tr style=${styles}>
             <td style="width:25px">${rank ? rank + "." : ""}</td>
-            <td style=${`width:28px;height:28px;background:${color}`}>${angle ? html`<img class="arrow" src="${this.arrowURL}" style=${`transform:rotate(${angle}rad)`}></img>` : ""}</td>
+            <td style=${`width:28px;height:28px;background:${color}`}>${angle ? html`<div class="arrow" style=${`transform:rotate(${angle}rad)`}>➤</div>` : ""}</td>
             <td style="width:5px" class="blue">${entry.Token ? "✓" : ""}</td>
             <td class="name">${entry.Name}</td>
             <td class="score">${entry.Score}</td>

@@ -151,7 +151,7 @@
             if (World.Hook.Mesh.Enabled)
             {
 
-                var activatedURL = new Uri(new Uri($"https://{World.GameConfiguration.PublicURL}"), $"/api/v1/world/mesh/{World.WorldKey}/server.glb").ToString();
+                var activatedURL = new Uri(new Uri(World.GameConfiguration.PublicURL), $"/api/v1/world/mesh/{World.WorldKey}/server.glb").ToString();
                 var newURL = World.Hook.Mesh.MeshURL;
                 
                 if (newURL != loadedURL && newURL != activatedURL)

@@ -114,23 +114,18 @@ export class Connection {
             this.socket.close();
         }
     }
-    connect(worldKey?: string): void {
-        console.log("connecting to " + worldKey);
-        let url: string = window.location.protocol === "http:" ? "wss:" : "wss:";
-        let hostname = "daud.io";
-
-        if (worldKey) {
-            const worldKeyParse = worldKey.match(/^(.*?)\/(.*)$/);
-            if (worldKeyParse) {
-                hostname = worldKeyParse[1];
-                worldKey = worldKeyParse[2];
-            }
+    connect(worldKey: string): void {
+        const worldKeyParse = worldKey.match(/^(.*)\/(.*?)$/);
+        if (!worldKeyParse)
+        {
+            throw "bad world key";
         }
-
-        url += `//${hostname}/api/v1/connect?`;
-
-        if (worldKey)
-            url += `world=${encodeURIComponent(worldKey)}&`;
+        
+        let hostname = worldKeyParse[1];
+        if (hostname.indexOf('://') == -1)
+            hostname = "wss://" + hostname;
+        let worldName = worldKeyParse[2];
+        let url = `${hostname}/api/v1/connect?world=${encodeURIComponent(worldName)}&`;
 
         this.hook = null;
         this.serverClockOffset = -1;
@@ -323,9 +318,9 @@ export class Connection {
             if (event.reason != "Normal closure") {
                 this.reloading = true;
             }
-            console.log('reconnecting');
+            //console.log('reconnecting');
 
-            this.connect();
+            //this.connect();
         }
         this.disconnecting = false;
     }
@@ -397,7 +392,6 @@ export class Connection {
     }
 
     handleNetEvent(message: NetEvent): void {
-        console.log('hook');
         const eventObject = {
             type: message.type()!,
             data: JSON.parse(message.data()!),

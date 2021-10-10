@@ -10,7 +10,11 @@ export class Settings {
     static showHints: boolean = true;
     static nameSize: number = 48;
     static graphics: string = "low";
+    static pointerlock: boolean = false;
+    static fullscreen: boolean = false;
 
+    private static pointerLockEL: HTMLInputElement;
+    private static fullscreenEL: HTMLInputElement;
     private static themeSelectorEL: HTMLSelectElement;
     private static showHintsEL: HTMLInputElement;
     private static bandwidthEL: HTMLInputElement;
@@ -23,6 +27,8 @@ export class Settings {
         this.graphicsSelectorEL = document.getElementById('settingsGraphics') as HTMLSelectElement;
         this.themeSelectorEL = document.getElementById("settingsTheme") as HTMLSelectElement;
         this.showHintsEL = document.getElementById("settingsShowHints") as HTMLInputElement;
+        this.pointerLockEL = document.getElementById("settingsPointerLock") as HTMLInputElement;
+        this.fullscreenEL = document.getElementById("settingsFullscreen") as HTMLInputElement;
         this.bandwidthEL = document.getElementById("settingsBandwidth") as HTMLInputElement;
         this.logLengthEL = document.getElementById("settingsLog") as HTMLInputElement;
         this.nameSizeEL = document.getElementById("settingsNameSize") as HTMLInputElement;
@@ -30,6 +36,15 @@ export class Settings {
 
         this.graphicsSelectorEL.onchange = () => {
             Settings.graphics = this.graphicsSelectorEL.value;
+            Settings.saveSettings();
+        };
+
+        this.pointerLockEL.onchange = () => {
+            Settings.fullscreen = this.pointerLockEL.checked;
+            Settings.saveSettings();
+        };
+        this.fullscreenEL.onchange = () => {
+            Settings.fullscreen = this.fullscreenEL.checked;
             Settings.saveSettings();
         };
 
@@ -41,6 +56,18 @@ export class Settings {
 
         this.themeSelectorEL.onchange = themeChange;
         
+        this.showHintsEL.onchange = () => {
+            Settings.showHints = this.showHintsEL.checked;
+            Settings.saveSettings();
+        };
+        this.pointerLockEL.onchange = () => {
+            Settings.pointerlock = this.pointerLockEL.checked;
+            Settings.saveSettings();
+        };
+        this.fullscreenEL.onchange = () => {
+            Settings.fullscreen = this.fullscreenEL.checked;
+            Settings.saveSettings();
+        };
         this.showHintsEL.onchange = () => {
             Settings.showHints = this.showHintsEL.checked;
             Settings.saveSettings();
@@ -71,6 +98,9 @@ export class Settings {
     static saveSettings() {
         const json = JSON.stringify(
             {
+                pointerlock: Settings.pointerlock,
+                fullscreen: Settings.fullscreen,
+                graphics: Settings.graphics,
                 theme: Settings.theme,
                 bandwidth: Settings.bandwidth,
                 logLength: Settings.logLength,
@@ -106,11 +136,15 @@ export class Settings {
                 break;
         }
 
+        this.pointerLockEL.checked = Settings.pointerlock;
+        this.fullscreenEL.checked = Settings.fullscreen;
+        this.graphicsSelectorEL.value = Settings.graphics;
         this.themeSelectorEL.value = Settings.theme;
         this.showHintsEL.checked = Settings.showHints;
         this.bandwidthEL.value = String(Settings.bandwidth);
         this.logLengthEL.value = String(Settings.logLength);
         this.nameSizeEL.value = String(Settings.nameSize);
+        
 
         console.log("settings loaded");
         bus.emit("settings");

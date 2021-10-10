@@ -186,7 +186,7 @@ export class Landing {
 
             document.body.classList.add('dead');
 
-            document.getElementById('worlds')?.addEventListener("touchend", () => this.touchwarn());
+            //document.getElementById('worlds')?.addEventListener("touchend", () => this.touchwarn());
             document.getElementById('worlds')?.addEventListener("click", (e) => this.onWorldClick(e));
             document.getElementById('arenas')?.addEventListener("click", (e) => this.onArenasClick(e));
 

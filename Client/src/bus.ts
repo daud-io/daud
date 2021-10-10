@@ -8,6 +8,7 @@ const events = {
     worldjoin: [] as ((connect: string, world: ServerWorld) => void)[],
     connected: [] as ((connection: Connection) => void)[],
     dead: [] as (() => void)[],
+    alive: [] as (() => void)[],
     spawn: [] as ((name: string, ship: string) => void)[],
     settings: [] as (() => void)[],
     leaderboard: [] as ((leaderboard: LeaderboardType) => void)[],
@@ -15,6 +16,8 @@ const events = {
     hook: [] as ((hook: any) => void)[],
     themechange: [] as (() => void)[],
     worldview: [] as ((worldview: NetWorldView) => void)[],
+    update: [] as (() => void)[],
+    prerender: [] as ((time: number) => void)[]
 };
 
 type Magic = any; // The type is valid, but typescript can't understand that yet

@@ -72,7 +72,6 @@ export function addEntry(entry: LogType): void {
 }
 
 function deathStats(lastData: LogType) {
-    bus.emit("dead");
     document.getElementById("deathScreen")!.style.display = "block";
     document.getElementById("deathScreenScore")!.innerHTML = lastData.extraData.score;
     document.getElementById("deathScreenKills")!.innerHTML = lastData.extraData.kills;

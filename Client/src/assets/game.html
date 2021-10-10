@@ -130,6 +130,22 @@
           <div class="players">players: <span class='de-daud-io-ffa-players'>--</span></div>
         </div>
       </a>
+      <a href="#" rel="nofollow,noindex" class="world pending" data-connect="ws://localhost:5100/ffa">
+        <img src="/img/worlds/bot.png" />
+        <div class="explain">
+          <div class="title">local debug</div>
+          <span>
+            Learn the moves with an AI trainer
+          </span>
+        </div>
+        <button class='playnow'>Play Now</button>
+        <div class="worldstats">
+          <div class="location">Germany</div>
+          <div class="ping"><span class='localhost-ping'>---</span></div>
+          <div class="players">players: <span class='localhost-ffa-players'>--</span></div>
+        </div>
+      </a>
+      
     </div>
   </div>
 </div>
@@ -149,6 +165,29 @@
   </div>
   <div class="hidden-mobile">
     <div>
+      <div id="changelog" data-version="2">
+        <h4>Changelog</h4>
+        <table>
+          <tr>
+            <td class="date"><em>10/08/2021</em></td>
+            <td>Chromebook/Greenville update! Faster, smoother and less memory.</td>
+          </tr>
+          <tr>
+            <td class="date">8/23/2021</td>
+            <td>Strange new dimensions have been discovered</td>
+          </tr>
+          <tr>
+            <td class="date">7/26/2021</td>
+            <td>Balanced chasing vs. running with EinsteinCoefficient</td>
+          </tr>
+          <tr>
+            <td class="date">12/12/2020</td>
+            <td>Improved renderer, new ui.</td>
+          </tr>
+        </table>
+      </div>
+
+
       <div id="controls_instructions">
         <img src="img/controls.png" width="215" height="121" />
       </div>
@@ -230,6 +269,15 @@
         <input type="checkbox" id="settingsShowHints" />
         <span class="checkmark"></span>
       </label>
+
+      <label class="checkbox">Mouse Pointlock
+        <input type="checkbox" id="settingsPointerLock" />
+        <span class="checkmark"></span>
+      </label>
+      <label class="checkbox">Fullscreen on spawn
+        <input type="checkbox" id="settingsFullscreen" />
+        <span class="checkmark"></span>
+      </label>
     </div>
   </div>
 </div>
@@ -243,7 +291,6 @@
 </div>
 
 <div id="touchoverlay">
-
 </div>
 
 <div id="touchwarn" class="closed">

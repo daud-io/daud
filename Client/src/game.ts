@@ -5,7 +5,7 @@ import { projectObject } from "./interpolator";
 import { Minimap } from "./minimap";
 import { setPerf, setPlayerCount, setSpectatorCount } from "./hud";
 import * as log from "./log";
-import { Controls, initializeWorld, updateControlAim, registerContainer, setCurrentWorld } from "./controls";
+import { Controls, registerContainer} from "./controls";
 import { Connection } from "./connection";
 import { getToken } from "./discord";
 import { GameContainer } from "./gameContainer";
@@ -14,7 +14,8 @@ import "./events";
 import { Cache } from "./cache";
 import { Telemetry } from "./telemetry";
 import { Fleet } from "./models/fleet";
-import { ScreenSpaceCurvaturePostProcess, Vector2 } from "@babylonjs/core";
+import { Matrix, ScreenSpaceCurvaturePostProcess, Vector2 } from "@babylonjs/core";
+import { Settings } from "./settings";
 
 const spawnButton = document.getElementById("spawn") as HTMLButtonElement;
 const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
@@ -22,7 +23,6 @@ const progress = document.getElementById("cooldown") as HTMLProgressElement;
 const connection = new Connection();
 
 let cameraPositionFromServer: ClientBody;
-let isAlive: boolean;
 let gameTime: number;
 let worldSize = 1000;
 let frameCounter = 0;
@@ -46,6 +46,7 @@ container.engine.runRenderLoop(() => {
     if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
         gameTime = performance.now() - connection.serverClockOffset;
         container.cache.tick(gameTime);
+        bus.emit('prerender', gameTime);
 
         let newCamera:Vector2|null = null;
         
@@ -82,18 +83,12 @@ bus.on("dead", () => {
     document.body.classList.remove("alive");
     document.body.classList.add("spectating");
     document.body.classList.add("dead");
-
-    /*if (connection.hook.AllowedColors)
-        setCurrentWorld().allowedColors = connection.hook.AllowedColors;*/
-
-    initializeWorld();
 });
 
 bus.on("worldview", (newView: NetWorldView) => {
-    isAlive = newView.isalive();
     container.fleetID = newView.fleetid();
 
-    if (!isAlive && connection.hook != null)
+    if (!container.alive && connection.hook != null)
         buttonSpectate.disabled = spawnButton.disabled = connection.hook.CanSpawn === false;
 
     cameraPositionFromServer = Cache.bodyFromServer(newView.camera()!);
@@ -145,12 +140,26 @@ function doSpawn() {
     document.body.classList.remove("spectating");
     document.body.classList.add("alive");
     connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
-
     container.focus();
 }
 
-spawnButton.addEventListener("click", doSpawn);
-buttonSpectate.addEventListener("click", doSpawn);
+function onLaunchClick(e:MouseEvent) {
+    spawnOnView = true;
+
+    if (Settings.pointerlock)
+    {
+        container.engine.enterPointerlock();
+        Controls.screenMouseX = container.engine.getRenderWidth()/2;
+        Controls.screenMouseY = container.engine.getRenderHeight()/2;
+        Controls.mouseX = 0;
+        Controls.mouseY = 0;
+    }
+
+}
+
+buttonSpectate.addEventListener("click", onLaunchClick);
+spawnButton.addEventListener("click", onLaunchClick);
+
 
 function startSpectate(hideButton = false) {
     document.body.classList.add("spectating");
@@ -174,6 +183,18 @@ document.getElementById("stop_spectating")!.addEventListener("click", () => {
     deathScreen.style.display = "";
 });
 
+document.addEventListener('pointerlockchange', (event) => {
+    if (document.pointerLockElement !== container.canvas &&
+        (<any>document).mozPointerLockElement !== container.canvas)
+    {
+        container.pointerLocked = false;
+        if (document.body.classList.contains("alive"))
+            connection.sendExit();
+    }
+    else
+        container.pointerLocked = true;
+});
+
 document.addEventListener("keydown", ({ code, key }) => {
     if (
         code == "Escape"
@@ -181,7 +202,7 @@ document.addEventListener("keydown", ({ code, key }) => {
     ) {
         if (document.body.classList.contains("alive")) {
             connection.sendExit();
-        } else if (!isAlive && !deathScreen.style.display) {
+        } else if (!container.alive && !deathScreen.style.display) {
             stopSpectate();
         } else {
             deathScreen.style.display = "";
@@ -236,8 +257,6 @@ bus.on("worldjoin", (connect, world) => {
         spawnOnView = true;
     }
 
-    setCurrentWorld(world);
-    initializeWorld(world);
     connection.disconnect();
     connection.connect(connect);
 });
@@ -247,10 +266,8 @@ bus.on("leaderboard", (lb) => {
 });
 
 bus.on("themechange", () => {
-    console.log("theme change");
     container.loader.load().then(() => {
         container.cache.refreshSprites();
-        initializeWorld();
     });
 });
 

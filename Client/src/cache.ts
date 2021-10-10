@@ -211,6 +211,8 @@ export class Cache {
         this.container.viewCounter++;
         this.container.connection.cacheSize = this.bodies.size;
 
+        bus.emit('update');
+
         //console.log(this.groups.size);
     }
 

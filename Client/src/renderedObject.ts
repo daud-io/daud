@@ -12,6 +12,7 @@ export class RenderedObject {
     textureLayers: Record<string, TextureLayer>;
 
     baseSpriteDefinition: SpriteDefinition;
+    currentZIndex: number;
 
     constructor(container: GameContainer, clientBody: ClientBody) {
         this.textureLayers = {};
@@ -24,6 +25,8 @@ export class RenderedObject {
         this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(clientBody.Sprite);
         this.currentSpriteName = this.body.Sprite;
         this.currentMode = this.body.Mode
+        this.currentZIndex = this.body.zIndex;
+        
         this.updateTextureLayers();
     }
 
@@ -68,8 +71,13 @@ export class RenderedObject {
         }
 
         if (this.currentMode != this.body.Mode) {
-            console.log('changing mode');
             this.currentMode = this.body.Mode;
+            dirty = true;
+        }
+
+        if (this.currentZIndex != this.body.zIndex)
+        {
+            this.currentZIndex = this.body.zIndex;
             dirty = true;
         }
 

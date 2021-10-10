@@ -1,9 +1,3 @@
-function getRatio(): [number, number] {
-    let width: number = window.innerWidth;
-    let height: number = window.innerHeight;
-    return [Math.floor(width), Math.floor(height)];
-}
-
 // Inspired by https://github.com/jeromeetienne/virtualjoystick.js
 export class VirtualJoystick {
     private container: HTMLElement;
@@ -83,15 +77,8 @@ export class VirtualJoystick {
     private onDown(x: number, y: number) {
         this.pressed = true;
 
-        const [width, height] = getRatio();
-        let dx = width / 2 - x;
-        let dy = height / 2 - y;
-        const len = Math.hypot(dx, dy);
-        dx *= 100 / len;
-        dy *= 100 / len;
-
-        this.baseX = x + dx;
-        this.baseY = y + dy;
+        this.baseX = x;
+        this.baseY = y;
         this.baseEl.style.display = "";
         this.move(this.baseEl.style, this.baseX - this.baseEl.width / 2, this.baseY - this.baseEl.height / 2);
 
@@ -135,12 +122,7 @@ export class VirtualJoystick {
         const touch = event.changedTouches[0];
         // set the touchIdx of this joystick
         this.touchIdx = touch.identifier;
-
-        // forward the action
-        const [width, height] = getRatio();
-        const x = touch.clientX - (window.innerWidth - width) / 2;
-        const y = touch.clientY - (window.innerHeight - height) / 2;
-        return this.onDown(x, y);
+        return this.onDown(touch.clientX, touch.clientY);
     };
 
     private onTouchEnd = (event: TouchEvent) => {
@@ -176,11 +158,7 @@ export class VirtualJoystick {
         const touch = touchList[i];
         console.log(touchList, i);
         event.preventDefault();
-
-        const [width, height] = getRatio();
-        const x = touch.clientX - (window.innerWidth - width) / 2;
-        const y = touch.clientY - (window.innerHeight - height) / 2;
-        return this.onMove(x, y);
+        return this.onMove(touch.clientX, touch.clientY);
     };
 
     private buildJoystickBase() {

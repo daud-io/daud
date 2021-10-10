@@ -345,17 +345,27 @@ a {
     width: 304px;
 }
 
+#changelog td
+{
+    padding: 4px;
+}
+
 #changelog h4 {
     margin: 0 0 3px 3px;
 }
 
+#changelog .date, 
+#changelog .date em {
+    color: #fff;
+    size: 0.6em;
+    padding-right: 10px;
+}
+
 #changelog .date {
-    color: #aaaaaa;
-    padding-right: 2em;
+    color: #aaa;
 }
 
 #controls_instructions {
-    width: 240px;
     padding: 16px;
 }
 
@@ -833,10 +843,11 @@ table {
     padding: 0;
 }
 .arrow {
-    width: 18px;
-    height: 18px;
-    margin: auto;
     display: block;
+    text-align: center;
+    transform-origin: center;
+    text-shadow: rgb(0, 0, 0) 1px 0px 0px, rgb(0, 0, 0) 0.540302px 0.841471px 0px, rgb(0, 0, 0) -0.416147px 0.909297px 0px, rgb(0, 0, 0) -0.989992px 0.14112px 0px, rgb(0, 0, 0) -0.653644px -0.756802px 0px, rgb(0, 0, 0) 0.283662px -0.958924px 0px, rgb(0, 0, 0) 0.96017px -0.279415px 0px;
+    
 }
 .blue {
     color: cyan;

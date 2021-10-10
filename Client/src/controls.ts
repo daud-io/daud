@@ -1,5 +1,4 @@
 ﻿import { VirtualJoystick } from "./virtualjoystick";
-import { ServerWorld } from "./registry";
 import { Cookies } from "./cookies";
 import { Picker } from "emoji-picker-element";
 import { GameContainer } from "./gameContainer";
@@ -68,8 +67,13 @@ bus.on("pageReady", function () {
     window.addEventListener("keydown", ({ key }) => {
         if (key.toLowerCase() == "s") {
             Controls.boostKeyboard = true;
+            sendControl();
         }
-        if (key == " ") Controls.shootKeyboard = true;
+        if (key == " ")
+        {
+            Controls.shootKeyboard = true;
+            sendControl();
+        }
 
         if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
             // Autofire
@@ -84,8 +88,16 @@ bus.on("pageReady", function () {
     });
 
     window.addEventListener("keyup", ({ key }) => {
-        if (key.toLowerCase() == "s") Controls.boostKeyboard = false;
-        if (key == " ") Controls.shootKeyboard = false;
+        if (key.toLowerCase() == "s")
+        {
+            Controls.boostKeyboard = false;
+            sendControl();
+        }
+        if (key == " ")
+        {
+            Controls.shootKeyboard = false;
+            sendControl();
+        }
     });
 
     document.body.addEventListener("contextmenu", (e) => {
@@ -155,8 +167,8 @@ function sendControl()
         } else spectateControl = "spectating";
     }
 
-    if (Controls.container)
-        Controls.container.connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, spectateControl, Controls.customData);
+    
+    Controls.container?.connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, spectateControl, Controls.customData);
 }
 
 export function registerContainer(container: GameContainer): void {
@@ -164,9 +176,17 @@ export function registerContainer(container: GameContainer): void {
         joystick.onMoved(() => {
             const cx = container.canvas.width / 2;
             const cy = container.canvas.height / 2;
-            Controls.mouseX = joystick.deltaX() * 10 + cx;
-            Controls.mouseY = -1 * joystick.deltaY() * 10 + cy;
-            sendControl();
+            Controls.screenMouseX = joystick.deltaX() * 10 + cx;
+            Controls.screenMouseY = joystick.deltaY() * 10 + cy;
+
+            const ray = container.scene.createPickingRay(Controls.screenMouseX, Controls.screenMouseY, Matrix.Identity(), container.camera);
+            const pos = ray.intersectsAxis("y", 100);
+            if (pos) {
+                Controls.mouseX = pos.x - container.cameraPosition.x;
+                Controls.mouseY = pos.z - container.cameraPosition.y;
+                sendControl();
+            }
+
             //Controls.angle = Math.atan2(joystick.deltaY(), joystick.deltaX());
         });
         const shootEl = document.getElementById("shoot")!;
@@ -223,8 +243,24 @@ export function registerContainer(container: GameContainer): void {
 
                 case PointerEventTypes.POINTERMOVE:
                     const rect = container.boundingRect;
-                    Controls.screenMouseX = pointerInfo.event.clientX - rect.left;
-                    Controls.screenMouseY = pointerInfo.event.clientY - rect.top;
+
+                    if (container.pointerLocked)
+                    {
+                        Controls.screenMouseX += pointerInfo.event.movementX;
+                        Controls.screenMouseY += pointerInfo.event.movementY;
+
+                        if (true)
+                        {
+                            Controls.screenMouseX = Math.max(Math.min(Controls.screenMouseX, container.engine.getRenderWidth()), 0);
+                            Controls.screenMouseY = Math.max(Math.min(Controls.screenMouseY, container.engine.getRenderHeight()), 0);
+                        }
+                    }
+                    else
+                    {
+                        Controls.screenMouseX = pointerInfo.event.clientX - rect.left;
+                        Controls.screenMouseY = pointerInfo.event.clientY - rect.top;
+                    }
+
                     const ray = container.scene.createPickingRay(Controls.screenMouseX, Controls.screenMouseY, Matrix.Identity(), container.camera);
                     const pos = ray.intersectsAxis("y", 100);
                     if (pos) {
@@ -261,16 +297,14 @@ export function registerContainer(container: GameContainer): void {
     Controls.container = container;
 }
 
-export function updateControlAim() {
-}
 
-let currentWorld: ServerWorld;
-export function setCurrentWorld(world?: ServerWorld): ServerWorld {
-    return (currentWorld = world || currentWorld);
-}
+function setupShipSelector()
+{
+    const colors = Controls.container?.connection?.hook?.allowedColors;
 
-export function initializeWorld(world: ServerWorld = currentWorld): void {
-    const colors = world.hook.allowedColors;
+    if (!colors)
+        return;
+
     const selector = document.getElementById("shipSelectorSwitch")!;
     while (selector.firstChild) selector.removeChild(selector.firstChild);
 
@@ -296,6 +330,15 @@ export function initializeWorld(world: ServerWorld = currentWorld): void {
     }
     refreshSelectedStyle();
 }
+
+bus.on("themechange", () => {
+    setupShipSelector();
+});
+
+bus.on('hook', (hook) => {
+
+    setupShipSelector();
+});
 
 export function addSecretShips(roles: string[]): void {
     if (roles.includes("Player")) {

@@ -9,13 +9,16 @@ import {
     Vector3,
 } from "@babylonjs/core";
 import { Loader } from "./loader";
-import { AdvancedDynamicTexture } from "@babylonjs/gui";
 import { Leaderboard } from "./leaderboard";
 import { WorldMeshLoader } from "./worldMeshLoader";
 import { Sounds } from "./sounds";
 import { Cache } from "./cache";
 import * as bus from "./bus";
 import { Connection } from "./connection";
+import { Reticle } from "./reticle";
+import { AllMessages } from "./daud-net/all-messages";
+import { NetWorldView } from "./daud-net/net-world-view";
+
 
 // import "@babylonjs/core/Debug/debugLayer";
 // import "@babylonjs/inspector";
@@ -27,6 +30,8 @@ export class GameContainer {
     readonly worldMeshLoader: WorldMeshLoader;
     readonly sounds: Sounds;
     readonly baseURL: string;
+
+    readonly reticle: Reticle;
     camera: FreeCamera;
     cameraPosition: Vector2 = Vector2.Zero();
     cameraHeight: number = 0;
@@ -43,6 +48,8 @@ export class GameContainer {
     connection: Connection;
     light?: HemisphericLight;
     boundingRect: DOMRect;
+    pointerLocked: boolean = false;
+    alive: boolean = false;
 
     constructor(canvas: HTMLCanvasElement, connection: Connection) {
         this.connection = connection;
@@ -52,7 +59,7 @@ export class GameContainer {
         this.engine = new Engine(canvas, true);
         this.scene = new Scene(this.engine);
         this.scene.ambientColor = Color3.White();
-        this.scene.clearColor = new Color4(0,0,0,1);
+        this.scene.clearColor = new Color4(0, 0, 0, 1);
         this.loader = new Loader(this);
         this.worldMeshLoader = new WorldMeshLoader(this);
         this.cache = new Cache(this);
@@ -64,17 +71,17 @@ export class GameContainer {
         this.positionCamera(Vector2.Zero());
         this.setupLights();
 
+        this.reticle = new Reticle(this);
+
         //this.scene.debugLayer.show();
 
         bus.on("worldjoin", () => {
             while (this.scene.meshes.length) this.scene.meshes[0].dispose();
-            let skipped=0;
-            while (this.scene.rootNodes.length - skipped > 0)
-            {
-                const nextNode = this.scene.rootNodes[0+skipped];
+            let skipped = 0;
+            while (this.scene.rootNodes.length - skipped > 0) {
+                const nextNode = this.scene.rootNodes[0 + skipped];
 
-                switch(nextNode.name)
-                {
+                switch (nextNode.name) {
                     case "containerLight":
                     case "containerCamera":
                         skipped++;
@@ -89,6 +96,21 @@ export class GameContainer {
             this.ready = false;
             this.scene.render();
         });
+
+        bus.on("worldview", (newView: NetWorldView) => {
+            const newAlive = newView.isalive();
+            if (this.alive && !newAlive)
+                bus.emit('dead');
+            if (!this.alive && newAlive)
+                bus.emit('alive');
+
+            this.alive = newAlive;
+        });
+        
+        bus.on("dead", () => {
+            this.alive = false;
+        });
+        bus.emit("dead");
 
     }
 
