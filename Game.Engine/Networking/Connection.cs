@@ -246,7 +246,6 @@
 
                         netWorldView.customdata = this.FollowFleet?.CustomData;
 
-                        var players = Player.GetWorldPlayers(World);
                         netWorldView.playercount = (uint)World.AdvertisedPlayerCount;
                         netWorldView.spectatorcount = (uint)World.SpectatorCount;
                         netWorldView.cooldownboost = (byte)((Player?.Fleet?.BoostCooldownStatus * 255) ?? 0);
@@ -266,17 +265,16 @@
                             netWorldView.fleetid = 0;
 
 
-                        var newHash = World.Hook.GetHashCode();
-                        if (HookHash != newHash)
+                        if (HookHash != World.HookHash)
                         {
+
                             this.Events.Enqueue(new BroadcastEvent
                             {
                                 EventType = "hook",
                                 Data = JsonConvert.SerializeObject(World.Hook)
                             });
+                            HookHash = World.HookHash;
                         }
-
-                        HookHash = newHash;
                     }
 
                     await this.SendAsync(new AllMessages(netWorldView), cancellationToken);

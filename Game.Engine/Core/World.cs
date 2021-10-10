@@ -36,6 +36,7 @@
         public uint LastTimingReport = 0;
 
         public Hook Hook { get; set; } = null;
+        public int HookHash { get; private set; } = 0;
 
         // lists of bodies, groups in the world
         readonly internal ConcurrentDictionary<BodyHandle, WorldBody> Bodies = new ConcurrentDictionary<BodyHandle, WorldBody>();
@@ -185,8 +186,8 @@
 
                 }
                 bodyImpacts.Count = 0;
-
                 ActorsCleanup();
+                this.HookHash = this.Hook.GetHashCode();
 
                 CheckTimings(start);
             }
@@ -239,7 +240,7 @@
                 else if (elapsed > Hook.StepTime * 0.5f)
                     Console.WriteLine($"** 50% processing time warning: {elapsed}");
 
-                if (Time - LastTimingReport > 20000)
+                if (Time - LastTimingReport > 100)
                 {
                     LastTimingReport = Time;
                     Console.WriteLine($"{WorldKey} {elapsed}");
@@ -249,6 +250,7 @@
 
         private void ActorsThink(float dt)
         {
+
             foreach (var actor in Actors.ToList())
                 actor.Think(dt);
         }

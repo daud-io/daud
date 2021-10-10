@@ -36,6 +36,7 @@
             Client.DefaultRequestHeaders.Accept.Add(
                 new MediaTypeWithQualityHeaderValue("application/json")
             );
+            Client.DefaultRequestHeaders.Add("Connection", "close");
 
             Client.DefaultRequestHeaders.ExpectContinue = false;
         }

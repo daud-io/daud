@@ -3,6 +3,7 @@
     using Game.API.Client;
     using McMaster.Extensions.CommandLineUtils;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -61,21 +62,53 @@
         [Command("stress")]
         class Stress : CommandBase
         {
+            [Argument(0)]
+            public string World { get; set; }
+
+            [Option]
+            public bool ConnectionThrash { get; set; } = false;
+
+            [Option]
+            public bool SlowConsumer { get; set; } = false;
+
+
             protected async override Task ExecuteAsync()
             {
-                var connection = new PlayerConnection(API.BaseURL.ToString(), "ffa");
+                var tasks = new List<Task>();
+                if (ConnectionThrash)
+                    tasks.Add(DoConnectionThrash());
 
-                var cts = new CancellationTokenSource();
-                
-                for (int i=0; i<1000; i++)
+                if (SlowConsumer)
+                    tasks.Add(DoSlowConsumer());
+
+                await Task.WhenAll(tasks);
+            }
+
+
+            private async Task DoSlowConsumer()
+            {
+
+
+                var connection = new PlayerConnection(API.BaseURL.ToString(), this.World);
+                await connection.ConnectAsync();
+                await connection.ListenAsync();
+                connection.OnView = async () =>
                 {
-                    Console.WriteLine($"Spawn #: {i+1}");
-                    
-                    await connection.ConnectAsync(cts.Token);
-                    await Task.Delay(1000);
+                    // start blocking
+                    await Task.Delay(100000);
 
+                };
+            }
+
+            private async Task DoConnectionThrash()
+            {
+                var connection = new PlayerConnection(API.BaseURL.ToString(), this.World);
+                for (int i = 0; i < 1000; i++)
+                {
+                    Console.WriteLine($"Spawn #: {i + 1}");
+
+                    await connection.ConnectAsync();
                     await connection.SpawnAsync("Testing", "ship_red", "red");
-                    await Task.Delay(1000);
                     connection.Dispose();
                 }
             }
