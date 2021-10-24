@@ -14,7 +14,7 @@ bus.on("pageReady", () => {
     const spawn = document.getElementById("spawn") as HTMLButtonElement;
     const dauth = document.getElementById("dauth") as HTMLButtonElement;
     dauth.addEventListener("click", () => {
-        window.location.assign(`https://discordapp.com/api/oauth2/authorize?response_type=token&client_id=514844767511642112&scope=identify&redirect_uri=${encodeURIComponent(window.location.origin)}`);
+        window.location.assign(`https://discordapp.com/api/oauth2/authorize?response_type=token&client_id=524285465793396741&scope=identify&redirect_uri=${encodeURIComponent(window.location.origin)}`);
     });
 
     if (token) {
@@ -29,7 +29,7 @@ bus.on("pageReady", () => {
             Cookies.set("auth_token", token, cookieOptions);
         }
     } else if (window.frameElement) {
-        spawn.innerText = "Launch!";
+        spawn.innerText = "Play";
         spawn.style.width = "370px";
         dauth.style.display = "none";
     }

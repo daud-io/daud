@@ -1,0 +1,34 @@
+{
+  "RingDebugEnabled": false,
+  "BoostThreshold": 16,
+  "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
+  "AttackFleets": true,
+  "Name": "simple.bot",
+  "Sprite": "ship_green",
+  "Color": "green",
+  "Steps": 6,
+  "ContextRingBlending": {
+    "BlurSteps": 0,
+    "BlurAmount": 0,
+    "BlurResolutionMultiplier": 1
+  },
+
+  "Behaviors": [
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.NavigateToPoint,Game.Robots",
+      "LookAheadMS": 100,
+      "BehaviorWeight": 0.1,
+      "Cycle": 1000
+    },
+
+    {
+      "BehaviorTypeName": "Game.Robots.Behaviors.Separation,Game.Robots",
+      "LookAheadMS": 100,
+      "BehaviorWeight": 10000.0,
+      "Cycle": 250,
+      "Config": {
+        "ActiveRange": 400
+      }
+    }
+  ]
+}

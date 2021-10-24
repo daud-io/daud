@@ -3,7 +3,6 @@ import { NetWorldView } from "./daud-net/net-world-view";
 import { ClientBody } from "./cache";
 import { projectObject } from "./interpolator";
 import { Minimap } from "./minimap";
-import { setPerf, setPlayerCount, setSpectatorCount } from "./hud";
 import * as log from "./log";
 import { Controls, registerContainer} from "./controls";
 import { Connection } from "./connection";
@@ -22,13 +21,15 @@ const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonEle
 const progress = document.getElementById("cooldown") as HTMLProgressElement;
 const connection = new Connection();
 
-let cameraPositionFromServer: ClientBody;
+let cameraPositionFromServer: Vector2 = new Vector2();
 let gameTime: number;
 let worldSize = 1000;
 let frameCounter = 0;
 let joiningWorld = false;
 let spawnOnView = false;
 let cooldownProgressValue = 0;
+
+
 
 const canvas = document.getElementById("gameCanvas") as any;
 if (!canvas)
@@ -46,7 +47,8 @@ container.engine.runRenderLoop(() => {
     if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
         gameTime = performance.now() - connection.serverClockOffset;
         container.cache.tick(gameTime);
-        bus.emit('prerender', gameTime);
+        //bus.emit('prerender', gameTime);
+        bus.emitPrerender(gameTime);
 
         let newCamera:Vector2|null = null;
         
@@ -58,14 +60,19 @@ container.engine.runRenderLoop(() => {
         }
         if (newCamera == null)
         {
-            projectObject(cameraPositionFromServer, gameTime);
-            newCamera = cameraPositionFromServer.Position;
+            if (container.alive)
+                console.log('warn: alive but no fleet to for camera');
+                
+            newCamera = cameraPositionFromServer;
         }
 
         container.positionCamera(newCamera);
         
         if (container.ready)
             container.scene.render();
+
+        //bus.emit('postrender', gameTime);
+        bus.emitPostrender(gameTime);
     }
 
     connection.dispatchWorldViews();
@@ -91,7 +98,8 @@ bus.on("worldview", (newView: NetWorldView) => {
     if (!container.alive && connection.hook != null)
         buttonSpectate.disabled = spawnButton.disabled = connection.hook.CanSpawn === false;
 
-    cameraPositionFromServer = Cache.bodyFromServer(newView.camera()!);
+    
+    Cache.positionFromServerBody(newView.camera()!, cameraPositionFromServer);
 
     const announcementsLength = newView.announcementsLength();
     for (let u = 0; u < announcementsLength; u++) {
@@ -120,10 +128,7 @@ bus.on("worldview", (newView: NetWorldView) => {
         }
     }
 
-    setPlayerCount(newView.playercount());
-    setSpectatorCount(newView.spectatorcount());
-
-    cooldownProgressValue = newView.cooldownshoot();
+    //cooldownProgressValue = newView.cooldownshoot();
 
     if (spawnOnView) {
         spawnOnView = false;
@@ -131,9 +136,9 @@ bus.on("worldview", (newView: NetWorldView) => {
     }
 });
 
- setInterval(() => {
+/* setInterval(() => {
      progress.value = cooldownProgressValue;
- }, 200);
+ }, 200);*/
 
 function doSpawn() {
     document.body.classList.remove("dead");
@@ -145,20 +150,26 @@ function doSpawn() {
 
 function onLaunchClick(e:MouseEvent) {
     spawnOnView = true;
-
     if (Settings.pointerlock)
-    {
-        container.engine.enterPointerlock();
-        Controls.screenMouseX = container.engine.getRenderWidth()/2;
-        Controls.screenMouseY = container.engine.getRenderHeight()/2;
-        Controls.mouseX = 0;
-        Controls.mouseY = 0;
-    }
+        Controls.requestPointerLock();
 
 }
 
 buttonSpectate.addEventListener("click", onLaunchClick);
 spawnButton.addEventListener("click", onLaunchClick);
+
+document.addEventListener("selectstart", (e) => {
+    e.preventDefault();
+    return false;
+});
+
+document.addEventListener("selectstart", (e) => {
+    e.preventDefault();
+    e.cancelBubble = true;
+});
+document.getElementById('nick')?.addEventListener("selectstart", (e) => {
+    e.cancelBubble = true;
+});
 
 
 function startSpectate(hideButton = false) {
@@ -183,18 +194,6 @@ document.getElementById("stop_spectating")!.addEventListener("click", () => {
     deathScreen.style.display = "";
 });
 
-document.addEventListener('pointerlockchange', (event) => {
-    if (document.pointerLockElement !== container.canvas &&
-        (<any>document).mozPointerLockElement !== container.canvas)
-    {
-        container.pointerLocked = false;
-        if (document.body.classList.contains("alive"))
-            connection.sendExit();
-    }
-    else
-        container.pointerLocked = true;
-});
-
 document.addEventListener("keydown", ({ code, key }) => {
     if (
         code == "Escape"
@@ -211,13 +210,10 @@ document.addEventListener("keydown", ({ code, key }) => {
     }
 });
 
-
-
 function updateStats() {
     connection.framesPerSecond = frameCounter;
     connection.viewsPerSecond = container.viewCounter;
     connection.updatesPerSecond = container.updateCounter;
-    setPerf(connection.latency, connection.minimumLatency, frameCounter, connection.statViewCPUPerSecond);
 
     //if (Telemetry.shouldSend())
         //Telemetry.send(container, connection);
@@ -282,3 +278,10 @@ bus.on("loaded", () => {
 });
 
 bus.emit("pageReady");
+
+
+
+(<any>window).connect = (world:string) =>
+{
+    bus.emit("worldjoin", world, null!);
+}

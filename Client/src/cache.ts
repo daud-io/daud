@@ -10,7 +10,6 @@ import { NetBody } from "./daud-net/net-body";
 import { NetGroup } from "./daud-net/net-group";
 import { NetWorldView } from "./daud-net/net-world-view";
 import { Vec2 } from "./daud-net/vec2";
-import { ByteBuffer } from "flatbuffers";
 
 export type ClientBody = {
     ID: number;
@@ -48,71 +47,129 @@ type ClientRendered = {
 export class Cache {
     static readonly VELOCITY_SCALE_FACTOR = 5000.0;
     readonly container: GameContainer;
-    readonly bodies: Map<number, ClientRendered> = new Map();
-    readonly groups: Map<number, ClientGroup> = new Map();
+
+    bodyKeys: Number[] = [];
+    groupKeys: Number[] = [];
+    bodies: Array<ClientRendered> = [];
+    groups: Array<ClientGroup> = [];
+
+    messageBuffers = {
+        group: new NetGroup(),
+        tmpVec2: new Vec2(),
+        tmpVec2Compare: new Vec2(),
+        update: new NetBody()
+    };
 
     constructor(container: GameContainer) {
         this.container = container;
 
-        bus.on("worldjoin", () => this.onWorldJoin());
+        bus.on("connected", () => this.onConnected());
         bus.on("worldview", (view) => this.onWorldView(view));
     }
 
+    deleteBody(key:number)
+    {
+        const index = this.bodyKeys.indexOf(key);
+        if (index > -1)
+        {
+            this.bodyKeys.splice(index, 1);
+            this.bodies.splice(index, 1);
+        }
+    }
+
+    deleteGroup(key:number)
+    {
+        const index = this.groupKeys.indexOf(key);
+        if (index > -1)
+        {
+            this.groupKeys.splice(index, 1);
+            this.groups.splice(index, 1);
+        }
+    }
+
+    addGroup(id: number, clientGroup: ClientGroup) {
+        this.groups.push(clientGroup);
+        this.groupKeys.push(id);
+    }
+
+    addBody(id: number, clientRendered: ClientRendered) {
+        this.bodies.push(clientRendered);
+        this.bodyKeys.push(id);
+    }
+
+    getBody(id: number): ClientRendered|undefined
+    {
+        const index = this.bodyKeys.indexOf(id);
+        if (index > -1)
+            return this.bodies[index];
+        else
+            return undefined;
+    }
+
+    getGroup(id: number): ClientGroup|undefined
+    {
+        const index = this.groupKeys.indexOf(id);
+        if (index > -1)
+            return this.groups[index];
+        else
+            return undefined;
+    }
+
     onWorldView(newView: NetWorldView): void {
+
         const deletesLength = newView.deletesLength();
         for (let d = 0; d < deletesLength; d++) {
             const key = newView.deletes(d)!;
-            const body = this.bodies.get(key);
+            const body = this.getBody(key);
             if (body) {
-                const group = this.groups.get(body.body.Group);
-                if (group && group.renderer) group.renderer.deleteShip(key);
-                if (body.renderer) body.renderer.destroy();
+                const group = this.getGroup(body.body.Group);
+                group?.renderer?.deleteShip(key);
+                body.renderer?.dispose();
             }
 
-            this.bodies.delete(key);
+            this.deleteBody(key);
         }
 
         const groupDeletesLength = newView.groupdeletesLength();
         for (let d = 0; d < groupDeletesLength; d++) {
             const key = newView.groupdeletes(d)!;
-            const group = this.groups.get(key);
+            const group = this.getGroup(key);
             if (!group) console.log("group delete on object not in cache");
-            if (group && group.renderer) group.renderer.destroy();
-            this.groups.delete(key);
+            if (group && group.renderer) group.renderer.dispose();
+
+            this.deleteGroup(key);
         }
 
         const groupsLength = newView.groupsLength();
-        const group:NetGroup = new NetGroup();
+        const group:NetGroup = this.messageBuffers.group;
 
         for (let u = 0; u < groupsLength; u++) {
             newView.groups(u, group)!;
-            let existing = this.groups.get(group.group());
+            let existing = this.getGroup(group.group());
             if (!existing) {
                 const clientGroup = this.groupFromServer(group);
-                if (clientGroup.Type == 1) clientGroup.renderer = new Fleet(this.container);
-                this.groups.set(clientGroup.ID, clientGroup);
+                if (clientGroup.Type == 1)
+                    clientGroup.renderer = new Fleet(this.container);
+                
+                this.addGroup(clientGroup.ID, clientGroup);
                 existing = clientGroup;
             } else {
-                //existing.ID = group.group();
                 existing.Caption = group.caption()!;
-                //existing.Type = group.type();
                 existing.ZIndex = group.zindex();
-                //const cd = group.customdata();
-                //existing.CustomData = cd ? JSON.parse(cd) : cd;
             }
 
-            if (existing.renderer) existing.renderer.update(existing, this.container.fleetID);
+            existing.renderer?.update(existing, this.container.fleetID);
         }
 
         const updatesLength = newView.updatesLength();
-        const tmpVec2:Vec2 = new Vec2();
-        const tmpVec2Compare:Vec2 = new Vec2();
-        const update:NetBody = new NetBody();
+        const update:NetBody = this.messageBuffers.update;
+        const tmpVec2:Vec2  = this.messageBuffers.tmpVec2;
+        const tmpVec2Compare:Vec2 = this.messageBuffers.tmpVec2Compare;
 
         for (let u = 0; u < updatesLength; u++) {
             // update objects that should be here
             newView.updates(u, update)!;
-            const existing = this.bodies.get(update.id());
+            const existing = this.getBody(update.id());
 
             if (existing) {
 
@@ -154,7 +211,7 @@ export class Cache {
                     existing.body.Group = update.group();
 
                     if (update.group() != 0)
-                        existing.group = this.groups.get(update.group());
+                        existing.group = this.getGroup(update.group());
                     else
                         existing.group = undefined;
     
@@ -172,7 +229,7 @@ export class Cache {
                 var renderer = <RenderedObject | undefined>undefined;
                 const clientBody = Cache.bodyFromServer(update);
 
-                const group = this.groups.get(clientBody.Group);
+                const group = this.getGroup(clientBody.Group);
 
                 clientBody.zIndex = group?.ZIndex || 0;
 
@@ -198,8 +255,7 @@ export class Cache {
                 }
                 
                 renderer?.update();
-                
-                this.bodies.set(clientBody.ID, {
+                this.addBody(clientBody.ID, {
                     lastUpdate: newView.updates(u)!,
                     body: clientBody,
                     renderer,
@@ -209,39 +265,33 @@ export class Cache {
 
         this.container.updateCounter += updatesLength;
         this.container.viewCounter++;
-        this.container.connection.cacheSize = this.bodies.size;
-
-        bus.emit('update');
+        this.container.connection.cacheSize = this.bodies.length;
 
         //console.log(this.groups.size);
     }
+    onConnected(): void {
+        for(let i=0; i<this.bodies.length; i++)
+            this.bodies[i]?.renderer?.dispose();
 
-    onWorldJoin(): void {
-        this.bodies.forEach((body) => {
-            if (body && body.renderer) body.renderer.destroy();
-        });
+        for(let i=0; i<this.groups.length; i++)
+            this.groups[i]?.renderer?.dispose();
 
-        this.groups.forEach((group) => {
-            if (group && group.renderer) group.renderer.destroy();
-        });
-
-        this.bodies.clear();
-        this.groups.clear();
+        this.bodies.length = 0;
+        this.groups.length = 0;
+        this.bodyKeys.length = 0;
+        this.groupKeys.length = 0;
     }
 
     refreshSprites(): void {
-        this.bodies.forEach((body) => {
-            if (body && body.renderer) body.renderer.refresh();
-        });
+        for(let i=0; i<this.bodies.length; i++)
+            this.bodies[i]?.renderer?.refresh();
     }
 
     tick(gameTime: number): void {
-        this.bodies.forEach((body) => {
-            if (body.renderer) body.renderer.tick(gameTime);
-        });
-        this.groups.forEach((group) => {
-            if (group.renderer) group.renderer.tick(gameTime);
-        });
+        for(let i=0; i<this.bodies.length; i++)
+            this.bodies[i].renderer?.tick(gameTime);
+        for(let i=0; i<this.groups.length; i++)
+            this.groups[i].renderer?.tick(gameTime);
     }
 
     groupFromServer(group: NetGroup): ClientGroup {
@@ -255,10 +305,6 @@ export class Cache {
             ZIndex: group.zindex(),
             CustomData: customData,
         };
-    }
-
-    getGroup(groupID: number): ClientGroup | undefined {
-        return this.groups.get(groupID);
     }
 
     static bodyFromServer(body: NetBody): ClientBody {
@@ -285,5 +331,12 @@ export class Cache {
             Angle: (body.originalangle() / 127) * Math.PI,
             zIndex: 0,
         };
+    }
+
+    static vectorBuffer: Vec2 = new Vec2();
+    static positionFromServerBody(body: NetBody, position: Vector2): void {
+        body.originalposition(Cache.vectorBuffer)!;
+        position.x = Cache.vectorBuffer.x();
+        position.y = Cache.vectorBuffer.y();
     }
 }

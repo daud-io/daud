@@ -6,7 +6,7 @@ function shortAngleDist(a0: number, a1: number): number {
     return ((2 * da) % max) - da;
 }
 
-function angleLerp(a0: number, a1: number, t: number): number {
+export function angleLerp(a0: number, a1: number, t: number): number {
     return a0 + shortAngleDist(a0, a1) * t;
 }
 

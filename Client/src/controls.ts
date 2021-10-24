@@ -2,7 +2,6 @@
 import { Cookies } from "./cookies";
 import { Picker } from "emoji-picker-element";
 import { GameContainer } from "./gameContainer";
-import { Matrix, PointerEventTypes } from "@babylonjs/core";
 import * as bus from "./bus";
 
 const secretShips = ["ship_secret", "ship_zed"];
@@ -67,12 +66,12 @@ bus.on("pageReady", function () {
     window.addEventListener("keydown", ({ key }) => {
         if (key.toLowerCase() == "s") {
             Controls.boostKeyboard = true;
-            sendControl();
+            sendControlPacket();
         }
         if (key == " ")
         {
             Controls.shootKeyboard = true;
-            sendControl();
+            sendControlPacket();
         }
 
         if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
@@ -84,6 +83,7 @@ bus.on("pageReady", function () {
                 Controls.autofire = false;
                 autofTgg.innerHTML = "OFF";
             }
+            sendControlPacket();
         }
     });
 
@@ -91,12 +91,12 @@ bus.on("pageReady", function () {
         if (key.toLowerCase() == "s")
         {
             Controls.boostKeyboard = false;
-            sendControl();
+            sendControlPacket();
         }
         if (key == " ")
         {
             Controls.shootKeyboard = false;
-            sendControl();
+            sendControlPacket();
         }
     });
 
@@ -129,8 +129,12 @@ bus.on("pageReady", function () {
 
 
 export const Controls = {
+    container: undefined as GameContainer | undefined,
+
     emoji: "🥚",
     nick: "unknown",
+
+    dirty: false,
 
     boostPointer: false,
     boostKeyboard: false,
@@ -141,166 +145,218 @@ export const Controls = {
     get shoot() { return Controls.shootPointer || Controls.shootKeyboard; },
 
     autofire: false,
-    customData: undefined as any,
+
+    previousMouseX: 0,
+    previousMouseY: 0,
+
     mouseX: 0,
     mouseY: 0,
     screenMouseX: 0,
     screenMouseY: 0,
-    container: undefined as GameContainer | undefined,
+    pointerSpeed: 0,
+
     color: undefined as string | undefined,
     ship: "ship_green",
+
+    spectateControl: "" as string | undefined,
+    spectateDebounce: false,
+
+    requestPointerLock()
+    {
+        console.log('requesting lock');
+        if (Controls.container)
+        {
+            const canvas = Controls.container.canvas;
+            const requestPointerLock = 
+                canvas.requestPointerLock ||
+                canvas.mozRequestPointerLock ||
+                canvas.webkitRequestPointerLock;
+
+            // Ask the browser to lock the pointer)
+            requestPointerLock.apply(canvas);
+        }
+    }
 };
 
-let spectateNextDebounce = false;
-function sendControl()
-{
-    let spectateControl = "";
 
-    if (document.body.classList.contains("spectating"))
+bus.on('postrender', (gametime) => {
+    if (Controls.dirty)
     {
-        if (spectateNextDebounce && !Controls.shoot) {
-            spectateNextDebounce = false;
+        Controls.dirty = false;
+            
+        if (!Controls.container?.alive)
+        {
+            Controls.spectateControl = undefined;
+
+            if (Controls.spectateDebounce && !Controls.shoot) {
+                Controls.spectateDebounce = false;
+            }
+            
+            if (!Controls.spectateDebounce && Controls.shoot) {
+                Controls.spectateControl = "action:next";
+                Controls.spectateDebounce = true;
+            }
         }
-        if (!spectateNextDebounce && Controls.shoot) {
-            spectateControl = "action:next";
-            spectateNextDebounce = true;
-        } else spectateControl = "spectating";
+
+        //console.log('sendControl');
+        sendControlPacket();
     }
 
-    
-    Controls.container?.connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, spectateControl, Controls.customData);
+    Controls.pointerSpeed += Math.abs(Controls.mouseX-Controls.previousMouseX) + Math.abs(Controls.mouseY-Controls.previousMouseY);
+    Controls.pointerSpeed *= 0.9;
+
+    Controls.previousMouseX = Controls.mouseX;
+    Controls.previousMouseY = Controls.mouseY;
+});
+
+function sendControlPacket()
+{
+    Controls.container?.connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, Controls.spectateControl);
+}
+
+function pointerUp(this: HTMLCanvasElement, ev: PointerEvent): any
+{
+    if (ev.buttons != undefined)
+    {
+        Controls.boostPointer = (ev.buttons & 2) == 2;
+        Controls.shootPointer = (ev.buttons & 1) == 1;
+    }
+    else
+    {
+        switch (ev.button)
+        {
+            case 2:
+                Controls.boostPointer = false;
+                break;
+            case 1:
+                Controls.shootPointer = false;
+                break;
+        }
+    }
+    sendControlPacket();
+}
+function pointerDown(this: HTMLCanvasElement, ev: PointerEvent): any
+{
+    if (ev.buttons != undefined)
+    {
+        Controls.boostPointer = (ev.buttons & 2) == 2;
+        Controls.shootPointer = (ev.buttons & 1) == 1;
+    }
+    else
+    {
+        switch (ev.button)
+        {
+            case 2:
+                Controls.boostPointer = true;
+                break;
+            case 1:
+                Controls.shootPointer = true;
+                break;
+        }
+    }
+    sendControlPacket();
+}
+
+
+let lastMove = 0;
+function mouseMove(this: any, ev: MouseEvent): any
+{
+    const rect:DOMRect = Controls.container!.boundingRect;
+    let scale = 3;
+
+    if (Controls.container!.pointerLocked)
+    {
+        //console.log(`${performance.now()-lastMove} ${Controls.mouseX} ${Controls.mouseY}`);
+        Controls.mouseX += ev.movementX * scale;
+        Controls.mouseY -= ev.movementY * scale;
+        Controls.mouseX = Math.max(Math.min(Controls.mouseX, rect.width*scale), -rect.width*scale);
+        Controls.mouseY = Math.max(Math.min(Controls.mouseY, rect.height*scale), -rect.height*scale);
+    }
+    else
+    {
+        Controls.mouseX =  scale*(ev.clientX - rect.width/2);
+        Controls.mouseY = -scale*(ev.clientY - rect.height/2);
+    }
+
+    // setting dirty here instead of sending packet because if we miss this event alone, and pick up the next one within 1/60, that's fine.
+    Controls.dirty = true;
 }
 
 export function registerContainer(container: GameContainer): void {
+    Controls.container = container;
+
     if (isMobile) {
         joystick.onMoved(() => {
             const cx = container.canvas.width / 2;
             const cy = container.canvas.height / 2;
-            Controls.screenMouseX = joystick.deltaX() * 10 + cx;
-            Controls.screenMouseY = joystick.deltaY() * 10 + cy;
-
-            const ray = container.scene.createPickingRay(Controls.screenMouseX, Controls.screenMouseY, Matrix.Identity(), container.camera);
-            const pos = ray.intersectsAxis("y", 100);
-            if (pos) {
-                Controls.mouseX = pos.x - container.cameraPosition.x;
-                Controls.mouseY = pos.z - container.cameraPosition.y;
-                sendControl();
-            }
-
-            //Controls.angle = Math.atan2(joystick.deltaY(), joystick.deltaX());
+            Controls.mouseX = joystick.deltaX() * 10 + cx;
+            Controls.mouseY = -1 * joystick.deltaY() * 10 + cy;
+            Controls.dirty = true;
         });
         const shootEl = document.getElementById("shoot")!;
         const boostEl = document.getElementById("boost")!;
         shootEl.addEventListener("touchstart", () => {
             Controls.shootPointer = true;
-            sendControl();
-        });
+            sendControlPacket();
+        }, {passive: true});
         shootEl.addEventListener("touchend", () => {
             Controls.shootPointer = false;
-            sendControl();
-        });
+            sendControlPacket();
+        }, {passive: true});
         boostEl.addEventListener("touchstart", () => {
             Controls.boostPointer = true;
-            sendControl();
-        });
+            sendControlPacket();
+        }, {passive: true});
         boostEl.addEventListener("touchend", () => {
             Controls.boostPointer = false;
-            sendControl();
-        });
+            sendControlPacket();
+        }, {passive: true});
     } else {
-        container.scene.onPointerObservable.add((pointerInfo) => {
-            let dirty = false;
 
-            if (pointerInfo.event.buttons != undefined) {
-                Controls.boostPointer = (pointerInfo.event.buttons & 2) == 2;
-                Controls.shootPointer = (pointerInfo.event.buttons & 1) == 1;
-            }
+        container.scene.onPrePointerObservable.add((pointerInfo) => {
+            pointerInfo.skipOnPointerObservable = true;
+        });        
 
-            switch (pointerInfo.type) {
-                case PointerEventTypes.POINTERDOWN:
-                    pointerInfo.event as MouseEvent;
-
-                    if (pointerInfo.event.buttons == undefined) {
-                        if (pointerInfo.event.button == 2)
-                            Controls.boostPointer = true;
-
-                        if (pointerInfo.event.button == 1)
-                            Controls.shootPointer = true;
-                    }
-                    dirty = true;
-                    break;
-
-                case PointerEventTypes.POINTERUP:
-                    if (pointerInfo.event.buttons == undefined) {
-                        if (pointerInfo.event.button == 2)
-                            Controls.boostPointer = false;
-
-                        if (pointerInfo.event.button == 1)
-                            Controls.shootPointer = false;
-                    }
-                    dirty = true;
-                    break;
-
-                case PointerEventTypes.POINTERMOVE:
-                    const rect = container.boundingRect;
-
-                    if (container.pointerLocked)
-                    {
-                        Controls.screenMouseX += pointerInfo.event.movementX;
-                        Controls.screenMouseY += pointerInfo.event.movementY;
-
-                        if (true)
-                        {
-                            Controls.screenMouseX = Math.max(Math.min(Controls.screenMouseX, container.engine.getRenderWidth()), 0);
-                            Controls.screenMouseY = Math.max(Math.min(Controls.screenMouseY, container.engine.getRenderHeight()), 0);
-                        }
-                    }
-                    else
-                    {
-                        Controls.screenMouseX = pointerInfo.event.clientX - rect.left;
-                        Controls.screenMouseY = pointerInfo.event.clientY - rect.top;
-                    }
-
-                    const ray = container.scene.createPickingRay(Controls.screenMouseX, Controls.screenMouseY, Matrix.Identity(), container.camera);
-                    const pos = ray.intersectsAxis("y", 100);
-                    if (pos) {
-                        Controls.mouseX = pos.x - container.cameraPosition.x;
-                        Controls.mouseY = pos.z - container.cameraPosition.y;
-                        dirty = true;
-                    }
-                    break;
-
-                case PointerEventTypes.POINTERWHEEL:
-                    //console.log("POINTER WHEEL");
-                    break;
-                case PointerEventTypes.POINTERPICK:
-                    //console.log("POINTER PICK");
-                    break;
-                case PointerEventTypes.POINTERTAP:
-                    //console.log("POINTER TAP");
-                    break;
-                case PointerEventTypes.POINTERDOUBLETAP:
-                    //console.log("POINTER DOUBLE-TAP");
-                    break;
-            }
-
-            if (dirty)
-                sendControl();
-        });
-
-        container.canvas.addEventListener("contextmenu", (e) => {
-            e.preventDefault();
-            return false;
-        });
+        Controls.container?.canvas.addEventListener("mousemove", mouseMove, {passive: true});
+        Controls.container?.canvas.addEventListener("pointerup", pointerUp, {passive: true});
+        Controls.container?.canvas.addEventListener("pointerdown", pointerDown, {passive: true});
+        Controls.container?.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); return false; });
     }
 
-    Controls.container = container;
 }
+
+bus.on("dead", () => {
+    if (Controls.container?.pointerLocked)
+        document.exitPointerLock();
+});
+
+document.addEventListener('pointerlockchange', (event) => {
+    if (Controls.container)
+    {
+        if ((<any>document).pointerLockElement !== Controls.container?.canvas &&
+            (<any>document).mozPointerLockElement !== Controls.container?.canvas  &&
+            (<any>document).webkitPointerLockElement !== Controls.container?.canvas)
+        {
+            console.log('unlocked');
+            Controls.container.pointerLocked = false;
+            if (Controls.container.alive)
+                Controls.container.connection.sendExit();
+        }
+        else
+        {
+            console.log('locked');
+            Controls.container.pointerLocked = true;
+            Controls.mouseX = 0;
+            Controls.mouseY = 0;
+        }
+    }
+});
+
 
 
 function setupShipSelector()
 {
-    const colors = Controls.container?.connection?.hook?.allowedColors;
+    const colors = Controls.container?.connection?.hook?.AllowedColors;
 
     if (!colors)
         return;
@@ -336,7 +392,6 @@ bus.on("themechange", () => {
 });
 
 bus.on('hook', (hook) => {
-
     setupShipSelector();
 });
 

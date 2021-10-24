@@ -2,13 +2,13 @@ version: '3'
 
 services:
   server:
-    image: andylippitt/daud:a42
+    image: andylippitt/daud:dev
     build:
-      context: .
+      context: ./Server/
     ports:
       - "5100:5100"
   client:
-    image: andylippitt/daud-client:d23
+    image: andylippitt/daud-client:dev
     build:
       context: ./Client/
     ports:

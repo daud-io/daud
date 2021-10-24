@@ -1,11 +1,4 @@
-@media (max-width: 720px) {
-    .hidden-mobile {
-        display: none;
-    }
-    #lobby #worlds .world .worldstats {
-        display: none !important;
-    }
-}
+
 
 html,
 body {
@@ -114,7 +107,6 @@ body {
 #lobby #worlds .world.pending .playnow
 {
     background: #666;
-    box-shadow: 0px 4px 0px #444, 0px 0px 20px 3px #444;
     color: black;
 }
 
@@ -122,7 +114,6 @@ body {
 {
     background: #08a3ff;
     border: none;
-    box-shadow: 0px 4px 0px #2e55bb, 0px 0px 20px 3px #2e55bb;
     color: white;
     margin: 0px 15px;
 
@@ -297,6 +288,7 @@ body {
     height: 100%;
     top: 0;
     left: 0;
+    overflow: hidden;
 }
 
 #deathScreen {
@@ -444,10 +436,6 @@ input[type="text"]:hover {
     border: 2px solid #455b87;
 }
 
-#spawn {
-    width: 177px;
-}
-
 #dauth img {
     width: 17px;
     height: 17px;
@@ -461,12 +449,12 @@ input[type="text"]:hover {
     background-color: inherit;
 }
 
+#spawn,
 #spectate {
-    width: 177px;
+    width: 140px;
 }
-
 #arenas {
-    width: 370px;
+    width: 300px;
 }
 #spawn {
     background: #08a3ff;
@@ -487,7 +475,7 @@ input[type="text"]:hover {
     padding: 5px 0;
     font-size: 2rem;
     color: white;
-    width: 20rem;
+    width: 18rem;
     font-family: sans-serif, system-ui;
     background: #1f2b3d;
     border-radius: 10px;
@@ -496,6 +484,7 @@ input[type="text"]:hover {
 #shipSelectorSwitch {
     margin-bottom: 24px;
     height: 80px;
+    overflow: hidden;
 }
 
 #shipSelectorSwitch .circle {
@@ -1051,4 +1040,63 @@ input[type="button"]:disabled {
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+.warn-icon
+{
+    display: none;
+    position: absolute;
+    left: 10px;
+    width: 50px;
+    height: 50px;
+}
+
+.warn-icon.active
+{
+    display: unset;
+}
+
+#netwarn
+{
+    top: 300px;
+}
+
+#cpuwarn
+{
+    top: 380px;
+}
+
+
+@media (max-width: 970px) {
+    .hidden-mobile {
+        display: none;
+    }
+    #lobby #worlds .world .worldstats {
+        display: none !important;
+    }
+
+    #logo {
+        max-height: 20vh;
+        width: unset;
+    }
+
+}
+
+@media (max-width: 360px) {
+    .hidden-mobile {
+        display: none;
+    }
+    #lobby #worlds .world .worldstats {
+        display: none !important;
+    }
+    #logo {
+        width: 100vw;
+        max-height: 20hv;
+        height: unset;
+    }
+
+    .spawnscreen .controls
+    {
+        width: 100vw;
+    }
 }

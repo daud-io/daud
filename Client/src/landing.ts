@@ -1,6 +1,25 @@
-﻿import * as bus from "./bus";
+﻿import 'whatwg-fetch';
+import * as bus from "./bus";
 import { PingConnection } from "./pingconnection";
 import { Host, Registry, ServerWorld } from './registry';
+
+if (!Element.prototype.matches) {
+    Element.prototype.matches = (<any>Element.prototype).msMatchesSelector || 
+                (<any>Element.prototype).webkitMatchesSelector;
+}
+
+if (!Element.prototype.closest) {
+Element.prototype.closest = function(s:string) {
+    var el:any = this;
+
+    do {
+    if (Element.prototype.matches.call(el, s)) return el;
+        el = el.parentElement || el.parentNode;
+    } while (el !== null && el.nodeType === 1);
+    return null;
+};
+}
+
 
 export class Landing {
     static worlds: Record<string, ServerWorld> = {};
@@ -17,7 +36,6 @@ export class Landing {
     static gameLoaded: boolean = false;
 
     static pingEnabled: boolean = false;
-    static touchWarned: boolean = false;
     static firstLoad: boolean = true;;
 
     static tryAddConnection(host: Host): void {
@@ -30,16 +48,6 @@ export class Landing {
             connection.connect(connect);
 
             this.connections[host.url] = connection;
-        }
-    }
-
-    static touchwarn() {
-        if (!this.touchWarned) {
-            this.touchWarned = true;
-
-            setTimeout(() => {
-                document.getElementById('touchwarn')?.classList.remove('closed');
-            }, 500);
         }
     }
 
@@ -186,18 +194,10 @@ export class Landing {
 
             document.body.classList.add('dead');
 
-            //document.getElementById('worlds')?.addEventListener("touchend", () => this.touchwarn());
             document.getElementById('worlds')?.addEventListener("click", (e) => this.onWorldClick(e));
             document.getElementById('arenas')?.addEventListener("click", (e) => this.onArenasClick(e));
 
             this.show();
-
-            document.getElementById("touchwarn")!.addEventListener("click", () => {
-                document.getElementById('touchwarn')?.classList.add('closed');
-            });
-            document.getElementById("touchwarnClose")!.addEventListener("click", () => {
-                document.getElementById('touchwarn')?.classList.add('closed');
-            });
         }
         catch (e) {
             console.log(e);

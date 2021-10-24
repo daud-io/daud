@@ -1,6 +1,5 @@
 import html from './assets/game.html?raw';
 import './assets/game.css';
-import 'whatwg-fetch';
 
 window.console.log('boot.ts: after core-js');
 

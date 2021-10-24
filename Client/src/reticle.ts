@@ -1,4 +1,3 @@
-import { Settings } from "./settings";
 import { GameContainer } from "./gameContainer";
 import { RenderedObject } from "./renderedObject";
 import { ClientBody, ClientGroup } from "./cache";
@@ -10,25 +9,30 @@ export class Reticle {
     container: GameContainer;
     reticle?: RenderedObject;
     reticleBody!: ClientBody;
+    showAlways: boolean;
 
     constructor(container: GameContainer) {
         this.container = container;
+        this.showAlways = false;
 
         bus.on('prerender', (time) => this.prerender(time));
     }
 
     prerender(time: number) {
-        if (this.container.pointerLocked && !this.reticle) {
+        
+        if ((this.container.pointerLocked || this.showAlways) && !this.reticle) {
+            console.log('creating reticle');
             this.reticleBody = this.setupReticleBody();
             this.reticle = new RenderedObject(this.container, this.reticleBody);
         }
 
-        if (!this.container.pointerLocked && this.reticle) {
-            this.reticle.destroy();
+        if (!this.showAlways && !this.container.pointerLocked && this.reticle) {
+            console.log('destroying reticle');
+            this.reticle.dispose();
             this.reticle = undefined;
         }
 
-        if (this.container.pointerLocked && this.reticle) {
+        if (this.reticle) {
             this.reticle.body.DefinitionTime = time;
             this.reticle.body.OriginalPosition.x = Controls.mouseX + this.container.cameraPosition.x;
             this.reticle.body.OriginalPosition.y = Controls.mouseY + this.container.cameraPosition.y;
@@ -41,10 +45,10 @@ export class Reticle {
         return {
             ID: 0,
             DefinitionTime: 0,
-            Size: 100,
+            Size: 50,
             Sprite: 'reticle',
             Mode: 0,
-            Color: 'green',
+            Color: 'red',
             Group: 0,
             OriginalAngle: 0,
             AngularVelocity: 0,

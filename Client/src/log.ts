@@ -18,6 +18,7 @@ const data: { time: Date; entry: LogType }[] = [];
 let lastDisplay: number;
 let logElHide: NodeJS.Timeout, comboMsgHide: NodeJS.Timeout, bigLogHide: NodeJS.Timeout;
 export function addEntry(entry: LogType): void {
+
     data.push({ time: new Date(), entry });
     while (data.length > Settings.logLength) data.shift();
 
@@ -83,8 +84,8 @@ function deathStats(lastData: LogType) {
 }
 
 window.addEventListener("keydown", ({ key }) => {
-    if (key.toLowerCase() == "l") logElement.style.visibility = "";
+    if (key?.toLowerCase() == "l") logElement.style.visibility = "";
 });
 window.addEventListener("keyup", ({ key }) => {
-    if (key.toLowerCase() == "l") logElement.style.visibility = logElement.style.visibility = Date.now() - lastDisplay > 6000 ? "hidden" : "";
+    if (key?.toLowerCase() == "l") logElement.style.visibility = logElement.style.visibility = Date.now() - lastDisplay > 6000 ? "hidden" : "";
 });

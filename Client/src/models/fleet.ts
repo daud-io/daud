@@ -2,8 +2,7 @@
 import { GameContainer } from "../gameContainer";
 import { ClientGroup, ClientBody } from "../cache";
 import { Ship } from "./ship";
-import { TextBlock } from "@babylonjs/gui";
-import { Color3, DynamicTexture, Mesh, MeshBuilder, StandardMaterial, Vector2, Vector3 } from "@babylonjs/core";
+import { DynamicTexture, Mesh, MeshBuilder, StandardMaterial, Vector2, Vector3 } from "@babylonjs/core";
 
 export class Fleet {
     container: GameContainer;
@@ -20,10 +19,13 @@ export class Fleet {
     textureLabel: DynamicTexture;
     materialLabel: StandardMaterial;
 
+    fleetCenter: Vector2;
+
     constructor(container: GameContainer) {
         this.container = container;
         this.ID = undefined;
         this.ships = {};
+        this.fleetCenter = Vector2.Zero();
 
         this.labelMesh = MeshBuilder.CreatePlane("fleet label", {
             width: this.textureWidth,
@@ -98,8 +100,15 @@ export class Fleet {
             count++;
         }
 
+        if (Number.isNaN(accX) || Number.isNaN(accY))
+            console.log('warn: NaN fleet center!');
+
         if (count > 0)
-            return new Vector2(accX / count, accY / count);
+        {
+            this.fleetCenter.x = accX / count;
+            this.fleetCenter.y = accY / count;
+            return this.fleetCenter;
+        }
         else
             return null;
 
@@ -112,14 +121,14 @@ export class Fleet {
         const offsetY = 0;
         if (center != null)
         {
-            this.labelMesh.position.set(center.x, 150, center.y + offsetY);
+            this.labelMesh.position.set(center.x, 200, center.y + offsetY);
             this.labelMesh.isVisible = true;
         }
         else
             this.labelMesh.isVisible = false;
     }
 
-    destroy(): void {
+    dispose(): void {
         this.labelMesh.dispose();
         this.materialLabel.dispose();
         this.textureLabel.dispose();

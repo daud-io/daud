@@ -44,6 +44,8 @@ export class VirtualJoystick {
 
         this.container.addEventListener("touchstart", this.onTouchStart, false);
         this.container.addEventListener("touchend", this.onTouchEnd, false);
+        this.container.addEventListener("touchcancel", this.onTouchEnd, false);
+
         this.container.addEventListener("touchmove", this.onTouchMove, false);
     }
 
@@ -156,7 +158,7 @@ export class VirtualJoystick {
         // if touch event with the proper identifier isnt found, do nothing
         if (i === touchList.length) return;
         const touch = touchList[i];
-        console.log(touchList, i);
+        //console.log(touchList, i);
         event.preventDefault();
         return this.onMove(touch.clientX, touch.clientY);
     };
