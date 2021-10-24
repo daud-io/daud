@@ -3,6 +3,7 @@ import { Cookies } from "./cookies";
 import { Picker } from "emoji-picker-element";
 import { GameContainer } from "./gameContainer";
 import * as bus from "./bus";
+import { Matrix } from "@babylonjs/core";
 
 const secretShips = ["ship_secret", "ship_zed"];
 
@@ -286,9 +287,27 @@ export function registerContainer(container: GameContainer): void {
     Controls.container = container;
 
     if (isMobile) {
+        joystick.onExtraTap((x: number, y: number) => {
+            const ray = container.scene.createPickingRay(x, y, Matrix.Identity(), container.camera);
+            const pos = ray.intersectsAxis("y", 100);
+            if (pos) {
+                let previousMouseX = Controls.mouseX;
+                let previousMouseY = Controls.mouseY;
+                let previousShootPointer = Controls.shootPointer;
+
+                Controls.mouseX = pos.x - container.cameraPosition.x;
+                Controls.mouseY = pos.z - container.cameraPosition.y;
+                Controls.shootPointer = true;
+                sendControlPacket();
+                Controls.shootPointer = previousShootPointer;
+                Controls.mouseX = previousMouseX;
+                Controls.mouseY = previousMouseY;
+            }
+        });
         joystick.onMoved(() => {
-            const cx = container.canvas.width / 2;
-            const cy = container.canvas.height / 2;
+            const cx = container.boundingRect.width/2;
+            const cy = container.boundingRect.height/2;
+
             Controls.mouseX = joystick.deltaX() * 10 + cx;
             Controls.mouseY = -1 * joystick.deltaY() * 10 + cy;
             Controls.dirty = true;

@@ -39,7 +39,7 @@
                 return vec;
             }
             else
-                return Vector2.Zero ;
+                return Vector2.Zero;
         }
 
         public static Vector2 Separation(IEnumerable<Ship> ships, Ship ship, int minimumDistance)

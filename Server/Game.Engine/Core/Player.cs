@@ -58,8 +58,8 @@
         private bool IsSpawning = false;
 
         public string IP { get; set; } = null;
-
         private bool CummulativeBoostRequested = false;
+
         private bool CummulativeShootRequested = false;
         private int ControlPackets = 0;
 

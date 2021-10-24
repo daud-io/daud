@@ -91,7 +91,7 @@
         public float FishFlockSeparation { get; set; } = 100;
         public int FishFlockSeparationMinimumDistance { get; set; } = 200;
         public float FishFlockWeight { get; set; } = 1;
-        public int FishCycle { get; set; } = 100;
+        public int FishCycle { get; set; } = 400;
 
 
         public float FlockAlignment { get; set; } = 0.35f;
@@ -112,7 +112,7 @@
         public float ShipGainBySizeM { get; set; } = -0.034f;
         public float ShipGainBySizeB { get; set; } = 1.03f;
 
-        public int StepTime { get; set; } = 80;
+        public int StepTime { get; set; } = 20;
 
         public int PickupShields { get; set; } = 3;
         public int ShieldStrength { get; set; } = 3;

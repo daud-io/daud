@@ -161,13 +161,13 @@ export class Landing {
             if (!this.gameLoaded) {
                 bus.on('gameReady', () => {
                     this.gameLoaded = true;
-                    bus.emit("worldjoin", connect, this.worlds[connect]);
+                    bus.emit("worldjoin", connect);
                 });
 
                 await import('./game');
             }
             else
-                bus.emit("worldjoin", connect, this.worlds[connect]);
+                bus.emit("worldjoin", connect);
 
         }
     }

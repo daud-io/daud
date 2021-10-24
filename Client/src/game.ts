@@ -246,8 +246,8 @@ document.body.addEventListener("keydown", (e) => {
     //}
 });
 
-bus.on("worldjoin", (connect, world) => {
-    console.log(`onWorldJoin: ${connect} ${world}`);
+bus.on("worldjoin", (connect) => {
+    console.log(`onWorldJoin: ${connect}`);
     if (joiningWorld) {
         joiningWorld = false;
         spawnOnView = true;
@@ -283,5 +283,5 @@ bus.emit("pageReady");
 
 (<any>window).connect = (world:string) =>
 {
-    bus.emit("worldjoin", world, null!);
+    bus.emit("worldjoin", world);
 }

@@ -5,7 +5,7 @@ import { ServerWorld } from "./registry";
 const events = {
     gameReady: [] as (() => void)[],
     pageReady: [] as (() => void)[],
-    worldjoin: [] as ((connect: string, world: ServerWorld) => void)[],
+    worldjoin: [] as ((connect: string) => void)[],
     connected: [] as ((connection: Connection) => void)[],
     dead: [] as (() => void)[],
     alive: [] as (() => void)[],

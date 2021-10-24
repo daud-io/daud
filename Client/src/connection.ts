@@ -131,16 +131,6 @@ export class Connection {
         let worldName = worldKeyParse[2];
         let url = `${hostname}/api/v1/connect?world=${encodeURIComponent(worldName)}&`;
 
-        this.hook = null;
-        this.serverClockOffset = -1;
-        this.minimumLatency = -1;
-        this.earliestOffset = -1;
-        this.earliestOffsetNext = -1;
-        this.latencyWindowFirst = true;
-        this.minimumLatencyStart = -1;
-        this.minimumLatencyNext = -1;
-        this.maximumLatencyNext = 0;
-
 
         if (this.socket) {
             this.socket.onclose = null;
@@ -151,6 +141,16 @@ export class Connection {
         this.socket = new WebSocket(url);
         
         this.socket.binaryType = "arraybuffer";
+
+        this.hook = null;
+        this.serverClockOffset = -1;
+        this.minimumLatency = -1;
+        this.earliestOffset = -1;
+        this.earliestOffsetNext = -1;
+        this.latencyWindowFirst = true;
+        this.minimumLatencyStart = -1;
+        this.minimumLatencyNext = -1;
+        this.maximumLatencyNext = 0;
 
         this.socket.onmessage = (event) => {
             this.onMessage(event);

@@ -30,45 +30,26 @@
             volley.Color = fleet.Color;
 
             for (var i = 0; i < fleet.Ships.Count; i++)
+            {
+                var shipWeapon = Activator.CreateInstance(typeof(T), fleet.World, fleet.Ships[i]) as IShipWeapon;
+                shipWeapon.FireFrom(fleet.Ships[i], volley);
+                configure?.Invoke(shipWeapon);
+                volley.NewWeapons.Add(shipWeapon);
 
-                volley.FiringSequence.Add(
-                    new Tuple<Ship, long>(
-                        fleet.Ships[i],
-                        fleet.World.Time + i * fleet.World.Hook.FiringSequenceDelay
-                    )
-                );
+
+                // volley.FiringSequence.Add(
+                //     new Tuple<Ship, long>(
+                //         fleet.Ships[i],
+                //         fleet.World.Time + i * fleet.World.Hook.FiringSequenceDelay
+                //     )
+                // );
+
+            }
         }
 
         public override void Think(float dt)
         {
             base.Think(dt);
-
-            var fired = new List<Tuple<Ship, long>>();
-            foreach (var pair in FiringSequence)
-            {
-                var ship = pair.Item1;
-                var fireBy = pair.Item2;
-
-                if (
-                    ship.Exists
-                    && !ship.PendingDestruction
-                    && !ship.Abandoned
-                    && ship.Fleet != null
-                    && fireBy <= ship.World.Time
-                    && fireBy > 0)
-                {
-
-                    var shipWeapon = Activator.CreateInstance(typeof(T), World, ship) as IShipWeapon;
-                    shipWeapon.FireFrom(ship, this);
-                    Configure?.Invoke(shipWeapon);
-
-                    this.NewWeapons.Add(shipWeapon);
-                    fired.Add(pair);
-                }
-            }
-
-            FiringSequence = FiringSequence.Except(fired).ToList();
-            fired.Clear();
 
             this.PendingDestruction =
                 this.PendingDestruction
