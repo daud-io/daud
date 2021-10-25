@@ -65,7 +65,7 @@ export class Connection {
     builder: Builder = new Builder(1024);
     cacheSize: number = 0;
 
-    viewBuffer: Uint8Array[] = [];
+    viewBuffer: ByteBuffer[] = [];
 
     messageBuffers = {
         Quantum: new NetQuantum(),
@@ -329,7 +329,7 @@ export class Connection {
         this.disconnecting = false;
     }
 
-    handleNetWorldViewBuffer(newView: Uint8Array): void {
+    handleNetWorldViewBuffer(newView: ByteBuffer): void {
         this.viewBuffer.push(newView);
         // if we are backgrounds, fps=0, we can't buffer forever
         if (this.viewBuffer.length > 200)
@@ -341,10 +341,11 @@ export class Connection {
         {
             let start = performance.now();
             for (let i=0; i<this.viewBuffer.length; i++) {
-                const buf = new ByteBuffer(this.viewBuffer[i]);
+                const buf = this.viewBuffer[i];
                 const quantum = NetQuantum.getRootAsNetQuantum(buf);
                 this.handleNetWorldView(quantum.message(new NetWorldView()));
             }
+            
             //console.log(`dispatched ${this.viewBuffer.length} in ${performance.now()-start}`);
             this.viewBuffer.length = 0;
         }
@@ -456,7 +457,7 @@ export class Connection {
 
         switch (messageType) {
             case AllMessages.NetWorldView:
-                this.handleNetWorldViewBuffer(byteArray);
+                this.handleNetWorldViewBuffer(buffer);
                 //this.handleNetWorldView(quantum.message(this.messageBuffers.WorldView));
                 break;
             case AllMessages.NetPing:

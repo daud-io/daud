@@ -14,7 +14,7 @@
         public void Update(IEnumerable<WorldBody> bodies, uint time)
         {
             // update cache items and flag missing ones as stale
-            UpdateLocalBodies(bodies);
+            UpdateLocalBodies(bodies, time);
 
             // project the current bodies and calculate errors
             foreach (var bucket in Bodies.Values)
@@ -43,7 +43,7 @@
                 .OrderByDescending(b => b.Error);
         }
 
-        private void UpdateLocalBodies(IEnumerable<WorldBody> bodies)
+        private void UpdateLocalBodies(IEnumerable<WorldBody> bodies, uint time)
         {
             foreach (var bucket in Groups.Values)
                 bucket.Stale = true;
@@ -67,7 +67,7 @@
                 }
 
                 bucket.Stale = false;
-                bucket.ReadBody(obj);
+                bucket.ReadBody(obj, time);
 
                 if (obj.Group != null)
                     if (Groups.ContainsKey(obj.Group.ID))
@@ -128,7 +128,7 @@
         public class BucketBody
         {
             //public WorldBody Body { get; set; }
-
+            public uint DefinitionTime;
             public Vector2 Position;
             public Vector2 LinearVelocity;
             public float AngularVelocity;
@@ -150,8 +150,9 @@
                 ClientUpdatedTime = time;
             }
 
-            public void ReadBody(WorldBody body)
+            public void ReadBody(WorldBody body, uint time)
             {
+                DefinitionTime = time;
                 Position = body.Position;
                 LinearVelocity = body.LinearVelocity;
                 AngularVelocity = body.AngularVelocity;

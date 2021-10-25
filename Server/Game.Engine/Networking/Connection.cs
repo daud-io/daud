@@ -186,7 +186,7 @@
                                 netWorldView.updates.Add(new NetBody
                                 {
                                     id = update.ID,
-                                    definitiontime = update.ClientUpdatedTime,
+                                    definitiontime = update.DefinitionTime,
                                     originalposition = new Vec2
                                     {
                                         x = (short)update.Position.X,

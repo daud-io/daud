@@ -262,6 +262,13 @@ function pointerDown(this: HTMLCanvasElement, ev: PointerEvent): any
 let lastMove = 0;
 function mouseMove(this: any, ev: MouseEvent): any
 {
+
+    if (ev.buttons != undefined)
+    {
+        Controls.boostPointer = (ev.buttons & 2) == 2;
+        Controls.shootPointer = (ev.buttons & 1) == 1;
+    }
+
     const rect:DOMRect = Controls.container!.boundingRect;
     let scale = 3;
 
@@ -279,8 +286,7 @@ function mouseMove(this: any, ev: MouseEvent): any
         Controls.mouseY = -scale*(ev.clientY - rect.height/2);
     }
 
-    // setting dirty here instead of sending packet because if we miss this event alone, and pick up the next one within 1/60, that's fine.
-    Controls.dirty = true;
+    sendControlPacket();
 }
 
 export function registerContainer(container: GameContainer): void {
