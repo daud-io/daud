@@ -14,7 +14,7 @@
             
             Size = 70;
             Sprite = Sprites.fish;
-            CycleMS = World.Hook.FishCycle;
+            CycleMS = World.Hook.FishCycle + world.Random.Next(World.Hook.FishCycle/2);
             
             Position = World.ChooseSpawnPoint("fish", this);
             Angle = (float)World.Random.NextDouble() * MathF.PI * 2;
@@ -30,26 +30,71 @@
 
         private void Flock()
         {
-            var ships = World.BodiesNear(Position, World.Hook.FishFlockCohesionMaximumDistance)
-                .OfType<Ship>();
 
             var flockingVector = Vector2.Zero;
 
-            if (ships.Count() > 1)
+            int count = 0;
+            Vector2 exclusiveCenter = Vector2.Zero;
+            Vector2 separationAccumulator = Vector2.Zero;
+            Vector2 alignmentAccumulator = Vector2.Zero;
+
+
+            var thisShip = this;
+            World.BodiesNear(Position, World.Hook.FishFlockCohesionMaximumDistance, (body) =>
+            {
+                if (body is Ship otherShip)
+                {
+                    if (otherShip != thisShip)
+                    {
+                        count++;
+
+                        var distance = Vector2.Distance(thisShip.Position, otherShip.Position);
+
+                        if (distance < World.Hook.FishFlockCohesionMaximumDistance)
+                            exclusiveCenter += otherShip.Position;
+
+                        if (distance < World.Hook.FishFlockSeparationMinimumDistance)
+                        {
+                            if (distance < 1)
+                                distance = 1;
+
+                            separationAccumulator += (thisShip.Position - otherShip.Position) / (distance * distance);
+                        }
+
+                        alignmentAccumulator += otherShip.LinearVelocity;
+                    }
+                }
+            });
+
+            Vector2 cohesion = Vector2.Zero;
+            Vector2 alignment = Vector2.Zero;
+            Vector2 separation = Vector2.Zero;
+
+            if (count > 0)
+            {
+                exclusiveCenter /= count;
+                var relative = exclusiveCenter - thisShip.Position;
+
+                if (relative != Vector2.Zero)
+                    cohesion = Vector2.Normalize(relative) * Vector2.Distance(thisShip.Position, exclusiveCenter);
+
+                alignment = alignmentAccumulator / (count);
+                separation = separationAccumulator;
+
                 flockingVector =
-                    (World.Hook.FishFlockCohesion
-                        * Flocking.Cohesion(ships, this, World.Hook.FishFlockCohesionMaximumDistance))
-                    + (World.Hook.FishFlockAlignment
-                        * Flocking.Alignment(ships, this))
-                    + (World.Hook.FishFlockSeparation
-                        * Flocking.Separation(ships, this, World.Hook.FishFlockSeparationMinimumDistance));
+                    (World.Hook.FishFlockCohesion * cohesion)
+                    + (World.Hook.FishFlockAlignment * alignment)
+                    + (World.Hook.FishFlockSeparation * separation);
 
-            var steeringVector =
-                new Vector2(MathF.Cos(Angle), MathF.Sin(Angle))
-                + flockingVector;
+                if (flockingVector != Vector2.Zero)
+                {
+                    var steeringVector =
+                        new Vector2(MathF.Cos(Angle), MathF.Sin(Angle))
+                        + flockingVector;
 
-            Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
-            AngularVelocity = 0;
+                    Angle = MathF.Atan2(steeringVector.Y, steeringVector.X);
+                }
+            }
         }
     }
 }

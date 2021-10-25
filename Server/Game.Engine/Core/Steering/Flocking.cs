@@ -8,12 +8,14 @@
 
     public static class Flocking
     {
-        public static Vector2 Cohesion(IEnumerable<Ship> ships, Ship ship, int maximumDistance)
+        public static Vector2 Cohesion(Ship[] ships, Ship ship, int maximumDistance)
         {
             var exclusiveCenter = Vector2.Zero;
             int shipsIncluded = 0;
-            foreach (var shipOther in ships)
+            for (int i=0; i < ships.Length; i++)
             {
+                var shipOther = ships[i];
+
                 if (shipOther != ship)
                 {
                     var distance = Vector2.Distance(ship.Position, shipOther.Position);
@@ -42,11 +44,12 @@
                 return Vector2.Zero;
         }
 
-        public static Vector2 Separation(IEnumerable<Ship> ships, Ship ship, int minimumDistance)
+        public static Vector2 Separation(Ship[] ships, Ship ship, int minimumDistance)
         {
             var accumulator = Vector2.Zero;
-            foreach (var shipOther in ships)
+            for (int i = 0; i < ships.Length; i++)
             {
+                var shipOther = ships[i];
                 if (shipOther != ship)
                 {
                     var distance = Vector2.Distance(ship.Position, shipOther.Position);
@@ -63,30 +66,32 @@
             return accumulator;
         }
 
-        public static Vector2 Alignment(IEnumerable<Ship> ships, Ship ship)
+        public static Vector2 Alignment(Ship[] ships, Ship ship)
         {
             var accumulator = Vector2.Zero;
-            foreach (var shipOther in ships)
+            for (int i = 0; i < ships.Length; i++)
+            {
+                var shipOther = ships[i];
                 if (shipOther != ship)
                     accumulator += shipOther.LinearVelocity;
+            }
 
-            return accumulator / (ships.Count() - 1);
+            return accumulator / (ships.Length - 1);
         }
 
-        public static void Flock(Ship ship)
+        public static void Flock(Ship ship, Ship[] fleetShips)
         {
             if (ship.World.Hook.FlockWeight == 0)
                 return;
 
-            var fleet = ship.Fleet;
             var hook = ship.World.Hook;
 
-            if (fleet?.Ships == null || fleet.Ships.Count < 2)
+            if (fleetShips.Length < 2)
                 return;
 
             var shipFlockingVector =
-                (hook.FlockCohesion * Flocking.Cohesion(fleet.Ships, ship, hook.FlockCohesionMaximumDistance))
-                + (hook.FlockSeparation * Flocking.Separation(fleet.Ships, ship, hook.FlockSeparationMinimumDistance));
+                (hook.FlockCohesion * Flocking.Cohesion(fleetShips, ship, hook.FlockCohesionMaximumDistance))
+                + (hook.FlockSeparation * Flocking.Separation(fleetShips, ship, hook.FlockSeparationMinimumDistance));
 
             if (shipFlockingVector == Vector2.Zero)
             {

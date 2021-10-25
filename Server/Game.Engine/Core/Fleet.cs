@@ -217,14 +217,15 @@
                 Die(null);
             else
             {
-                foreach (var ship in Ships.ToList())
+                var ships = Ships.ToArray();
+                foreach (var ship in ships)
                 {
                     var shipTargetVector = FleetCenter + AimTarget - ship.Position;
 
                     ship.Angle = MathF.Atan2(shipTargetVector.Y, shipTargetVector.X);
                     ship.AngularVelocity = 0;
 
-                    Flocking.Flock(ship);
+                    Flocking.Flock(ship, ships);
 
                     ship.ThrustAmount = isBoosting
                         ? BoostThrust * (1 - Burden)

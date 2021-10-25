@@ -315,6 +315,35 @@
             return list;
         }
 
+        public void BodiesNear(Vector2 point, int maximumDistance, Action<WorldBody> action)
+        {
+            if (InStep)
+                throw new Exception("BodiesNear In step");
+
+            var broadPhaseEnumerator = new BroadPhaseOverlapEnumerator
+            {
+                Pool = BufferPool,
+                References = new QuickList<CollidableReference>(64, BufferPool)
+            };
+
+            Simulation.BroadPhase.GetOverlaps(
+                new Vector3(point.X - maximumDistance / 2, -10, point.Y - maximumDistance / 2),
+                new Vector3(point.X + maximumDistance / 2, 10, point.Y + maximumDistance / 2),
+                ref broadPhaseEnumerator
+            );
+
+            for (int overlapIndex = 0; overlapIndex < broadPhaseEnumerator.References.Count; ++overlapIndex)
+            {
+                var handle = broadPhaseEnumerator.References[overlapIndex].BodyHandle;
+                var reference = Simulation.Bodies.GetBodyReference(handle);
+                if (reference.Exists)
+                    if (Bodies.TryGetValue(handle, out var body))
+                        action(body);
+            }
+
+            broadPhaseEnumerator.References.Dispose(BufferPool);
+        }
+
         public void BodyAdd(WorldBody body)
         {
             if (InStep)
@@ -397,6 +426,8 @@
                             
                         }
                     }
+
+                    interval = TimeSpan.FromMilliseconds(Hook.StepTime);
                 }
             }
             catch (Exception e)
@@ -458,3 +489,4 @@
         #endregion
     }
 }
+
