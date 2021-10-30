@@ -12,18 +12,12 @@ var shipSelectorSwitch: HTMLElement;
 
 const isMobile = "ontouchstart" in document.documentElement;
 let joystick: VirtualJoystick;
-if (isMobile) {
-    document.getElementById("nipple-controls")!.style.display = "unset";
-    joystick = new VirtualJoystick({
-        container: document.getElementById("nipple-zone")!,
-    });
-}
 
 bus.on("pageReady", function () {
-
-    const autofTgg = document.getElementById("autofireToggle")!;
     const emojiTrigger = document.getElementById("emoji-trigger")!;
     const emojiContainer = document.getElementById("emoji-container")!;
+
+    document.getElementById("autofireContainer")!.addEventListener('touchstart', () => Controls.toggleAutofire());
 
     // old ie browser, avoid the problem with no emoji picker
     if ((<any>window).crypto) {
@@ -67,37 +61,27 @@ bus.on("pageReady", function () {
     window.addEventListener("keydown", ({ key }) => {
         if (key.toLowerCase() == "s") {
             Controls.boostKeyboard = true;
-            sendControlPacket();
+            Controls.dirty = true;;
         }
-        if (key == " ")
-        {
+        if (key == " ") {
             Controls.shootKeyboard = true;
-            sendControlPacket();
+            Controls.dirty = true;
         }
 
         if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
             // Autofire
-            if (!Controls.autofire) {
-                Controls.autofire = true;
-                autofTgg.innerHTML = "ON";
-            } else {
-                Controls.autofire = false;
-                autofTgg.innerHTML = "OFF";
-            }
-            sendControlPacket();
+            Controls.toggleAutofire();
         }
     });
 
     window.addEventListener("keyup", ({ key }) => {
-        if (key.toLowerCase() == "s")
-        {
+        if (key.toLowerCase() == "s") {
             Controls.boostKeyboard = false;
-            sendControlPacket();
+            Controls.dirty = true;
         }
-        if (key == " ")
-        {
+        if (key == " ") {
             Controls.shootKeyboard = false;
-            sendControlPacket();
+            Controls.dirty = true;
         }
     });
 
@@ -162,37 +146,58 @@ export const Controls = {
     spectateControl: "" as string | undefined,
     spectateDebounce: false,
 
-    requestPointerLock()
-    {
+    requestPointerLock() {
         console.log('requesting lock');
-        if (Controls.container)
-        {
+        if (Controls.container) {
             const canvas = Controls.container.canvas;
-            const requestPointerLock = 
-                canvas.requestPointerLock ||
-                canvas.mozRequestPointerLock ||
-                canvas.webkitRequestPointerLock;
-
             // Ask the browser to lock the pointer)
-            requestPointerLock.apply(canvas);
+            const promise = (<any>canvas).requestPointerLock({
+                unadjustedMovement: true,
+            });
+
+            if (!promise) {
+                console.log("disabling mouse acceleration is not supported");
+                return;
+            }
+
+            return promise
+                .then(() => console.log("pointer is locked"))
+                .catch((error) => {
+                    if (error.name === "NotSupportedError") {
+                        // Some platforms may not support unadjusted movement.
+                        // You can request again a regular pointer lock.
+                        return canvas.requestPointerLock();
+                    }
+                });
         }
+    },
+
+    toggleAutofire() {
+        const autofTgg = document.getElementById("autofireToggle")!;
+
+        if (!Controls.autofire) {
+            Controls.autofire = true;
+            autofTgg.innerHTML = "ON";
+        } else {
+            Controls.autofire = false;
+            autofTgg.innerHTML = "OFF";
+        }
+        Controls.dirty = true;
     }
 };
 
 
 bus.on('postrender', (gametime) => {
-    if (Controls.dirty)
-    {
+    if (Controls.dirty) {
         Controls.dirty = false;
-            
-        if (!Controls.container?.alive)
-        {
+
+        if (!Controls.container?.alive) {
             Controls.spectateControl = undefined;
 
             if (Controls.spectateDebounce && !Controls.shoot) {
                 Controls.spectateDebounce = false;
             }
-            
+
             if (!Controls.spectateDebounce && Controls.shoot) {
                 Controls.spectateControl = "action:next";
                 Controls.spectateDebounce = true;
@@ -203,96 +208,83 @@ bus.on('postrender', (gametime) => {
         sendControlPacket();
     }
 
-    Controls.pointerSpeed += Math.abs(Controls.mouseX-Controls.previousMouseX) + Math.abs(Controls.mouseY-Controls.previousMouseY);
+    Controls.pointerSpeed += Math.abs(Controls.mouseX - Controls.previousMouseX) + Math.abs(Controls.mouseY - Controls.previousMouseY);
     Controls.pointerSpeed *= 0.9;
 
     Controls.previousMouseX = Controls.mouseX;
     Controls.previousMouseY = Controls.mouseY;
 });
 
-function sendControlPacket()
-{
+function sendControlPacket() {
     Controls.container?.connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, Controls.spectateControl);
 }
 
-function pointerUp(this: HTMLCanvasElement, ev: PointerEvent): any
-{
-    if (ev.buttons != undefined)
-    {
-        Controls.boostPointer = (ev.buttons & 2) == 2;
-        Controls.shootPointer = (ev.buttons & 1) == 1;
+function mouseUp(this: HTMLCanvasElement, ev: MouseEvent): any {
+    
+    switch (ev.button) {
+        case 2:
+            Controls.boostPointer = false;
+            break;
+        case 0:
+            Controls.shootPointer = false;
+            break;
     }
-    else
-    {
-        switch (ev.button)
-        {
-            case 2:
-                Controls.boostPointer = false;
-                break;
-            case 1:
-                Controls.shootPointer = false;
-                break;
-        }
-    }
-    sendControlPacket();
-}
-function pointerDown(this: HTMLCanvasElement, ev: PointerEvent): any
-{
-    if (ev.buttons != undefined)
-    {
-        Controls.boostPointer = (ev.buttons & 2) == 2;
-        Controls.shootPointer = (ev.buttons & 1) == 1;
-    }
-    else
-    {
-        switch (ev.button)
-        {
-            case 2:
-                Controls.boostPointer = true;
-                break;
-            case 1:
-                Controls.shootPointer = true;
-                break;
-        }
-    }
-    sendControlPacket();
+    Controls.dirty = true;
 }
 
-
-let lastMove = 0;
-function mouseMove(this: any, ev: MouseEvent): any
-{
-
-    if (ev.buttons != undefined)
-    {
-        Controls.boostPointer = (ev.buttons & 2) == 2;
-        Controls.shootPointer = (ev.buttons & 1) == 1;
+function mouseDown(this: HTMLCanvasElement, ev: MouseEvent): any {
+    switch (ev.button) {
+        case 2:
+            Controls.boostPointer = true;
+            break;
+        case 0:
+            Controls.shootPointer = true;
+            break;
     }
+    Controls.dirty = true;
+}
 
-    const rect:DOMRect = Controls.container!.boundingRect;
-    let scale = 3;
+function mouseMove(this: any, ev: MouseEvent): any {
+    const rect: DOMRect = Controls.container!.boundingRect;
+    let scale = 1.5;
 
-    if (Controls.container!.pointerLocked)
-    {
-        //console.log(`${performance.now()-lastMove} ${Controls.mouseX} ${Controls.mouseY}`);
+    if (Controls.container!.pointerLocked) {
+    
         Controls.mouseX += ev.movementX * scale;
         Controls.mouseY -= ev.movementY * scale;
-        Controls.mouseX = Math.max(Math.min(Controls.mouseX, rect.width*scale), -rect.width*scale);
-        Controls.mouseY = Math.max(Math.min(Controls.mouseY, rect.height*scale), -rect.height*scale);
+        Controls.mouseX = Math.max(Math.min(Controls.mouseX, rect.width * scale), -rect.width * scale);
+        Controls.mouseY = Math.max(Math.min(Controls.mouseY, rect.height * scale), -rect.height * scale);
     }
-    else
-    {
-        Controls.mouseX =  scale*(ev.clientX - rect.width/2);
-        Controls.mouseY = -scale*(ev.clientY - rect.height/2);
+    else {
+        const container = Controls.container!;
+        const ray = container.scene.createPickingRay(ev.clientX, ev.clientY, Matrix.Identity(), container.camera);
+        const pos = ray.intersectsAxis("y", 100);
+        if (pos) {
+            Controls.mouseX = pos.x - container.cameraPosition.x;
+            Controls.mouseY = pos.z - container.cameraPosition.y;
+        }
     }
 
-    sendControlPacket();
+    Controls.dirty = true;
 }
 
 export function registerContainer(container: GameContainer): void {
     Controls.container = container;
 
     if (isMobile) {
+
+        if (isMobile) {
+            document.getElementById("nipple-controls")!.style.display = "unset";
+            joystick = new VirtualJoystick({
+                container: document.getElementById("nipple-zone")!,
+            });
+        
+            document.body.classList.add('touchscreen');
+    
+            Controls.container!.touchscreen = true;
+            Controls.toggleAutofire();
+        }
+    
         joystick.onExtraTap((x: number, y: number) => {
             const ray = container.scene.createPickingRay(x, y, Matrix.Identity(), container.camera);
             const pos = ray.intersectsAxis("y", 100);
@@ -311,8 +303,8 @@ export function registerContainer(container: GameContainer): void {
             }
         });
         joystick.onMoved(() => {
-            const cx = container.boundingRect.width/2;
-            const cy = container.boundingRect.height/2;
+            const cx = container.boundingRect.width / 2;
+            const cy = container.boundingRect.height / 2;
 
             Controls.mouseX = joystick.deltaX() * 10 + cx;
             Controls.mouseY = -1 * joystick.deltaY() * 10 + cy;
@@ -322,29 +314,29 @@ export function registerContainer(container: GameContainer): void {
         const boostEl = document.getElementById("boost")!;
         shootEl.addEventListener("touchstart", () => {
             Controls.shootPointer = true;
-            sendControlPacket();
-        }, {passive: true});
+            Controls.dirty = true;
+        }, { passive: true });
         shootEl.addEventListener("touchend", () => {
             Controls.shootPointer = false;
-            sendControlPacket();
-        }, {passive: true});
+            Controls.dirty = true;
+        }, { passive: true });
         boostEl.addEventListener("touchstart", () => {
             Controls.boostPointer = true;
-            sendControlPacket();
-        }, {passive: true});
+            Controls.dirty = true;
+        }, { passive: true });
         boostEl.addEventListener("touchend", () => {
             Controls.boostPointer = false;
-            sendControlPacket();
-        }, {passive: true});
+            Controls.dirty = true;
+        }, { passive: true });
     } else {
 
         container.scene.onPrePointerObservable.add((pointerInfo) => {
             pointerInfo.skipOnPointerObservable = true;
-        });        
+        });
 
-        Controls.container?.canvas.addEventListener("mousemove", mouseMove, {passive: true});
-        Controls.container?.canvas.addEventListener("pointerup", pointerUp, {passive: true});
-        Controls.container?.canvas.addEventListener("pointerdown", pointerDown, {passive: true});
+        Controls.container?.canvas.addEventListener("mousemove", mouseMove, { passive: true });
+        Controls.container?.canvas.addEventListener("mouseup", mouseUp, { passive: true });
+        Controls.container?.canvas.addEventListener("mousedown", mouseDown, { passive: true });
         Controls.container?.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); return false; });
     }
 
@@ -356,19 +348,16 @@ bus.on("dead", () => {
 });
 
 document.addEventListener('pointerlockchange', (event) => {
-    if (Controls.container)
-    {
+    if (Controls.container) {
         if ((<any>document).pointerLockElement !== Controls.container?.canvas &&
-            (<any>document).mozPointerLockElement !== Controls.container?.canvas  &&
-            (<any>document).webkitPointerLockElement !== Controls.container?.canvas)
-        {
+            (<any>document).mozPointerLockElement !== Controls.container?.canvas &&
+            (<any>document).webkitPointerLockElement !== Controls.container?.canvas) {
             console.log('unlocked');
             Controls.container.pointerLocked = false;
             if (Controls.container.alive)
                 Controls.container.connection.sendExit();
         }
-        else
-        {
+        else {
             console.log('locked');
             Controls.container.pointerLocked = true;
             Controls.mouseX = 0;
@@ -379,8 +368,7 @@ document.addEventListener('pointerlockchange', (event) => {
 
 
 
-function setupShipSelector()
-{
+function setupShipSelector() {
     const colors = Controls.container?.connection?.hook?.AllowedColors;
 
     if (!colors)

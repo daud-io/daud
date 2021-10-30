@@ -49,6 +49,8 @@ export class GameContainer {
     boundingRect: DOMRect;
     pointerLocked: boolean = false;
     alive: boolean = false;
+    touchscreen: boolean = false;
+    backgrounded: boolean = false;
 
     constructor(canvas: HTMLCanvasElement, connection: Connection) {
         this.connection = connection;

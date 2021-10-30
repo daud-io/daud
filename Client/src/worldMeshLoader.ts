@@ -14,6 +14,7 @@ export class WorldMeshLoader {
         this.loadedFile = null;
 
         bus.on("hook", (hook) => this.onHook(hook));
+        bus.on("disconnected", () => this.unloadMeshes());
     }
 
     onHook(hook: any) {
@@ -26,12 +27,14 @@ export class WorldMeshLoader {
 
             if (hook.Mesh.Enabled !== null) {
                 this.loadedFile = <string>hook.Mesh.MeshURL;
+                console.log('worldMeshLoader: loading mesh');
                 this.loadGLB(this.loadedFile);
             }
         }
         else
         {
-            console.log('meshless hook exit');
+            console.log(hook.Mesh);
+            console.log('worldMeshLoader: meshless hook exit');
             this.container.ready = true;
         }
 
@@ -41,6 +44,8 @@ export class WorldMeshLoader {
         var scene = this.container.scene;
 
         while (scene.meshes.length) scene.meshes[0].dispose();
+        this.loadedFile = null;
+        console.log('worldMeshLoader: unloading meshes');
         //this.container.scene.removeMesh(scene.meshes[0]);
     }
 

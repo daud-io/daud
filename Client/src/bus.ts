@@ -7,6 +7,7 @@ const events = {
     pageReady: [] as (() => void)[],
     worldjoin: [] as ((connect: string) => void)[],
     connected: [] as ((connection: Connection) => void)[],
+    disconnected: [] as (() => void)[],
     dead: [] as (() => void)[],
     alive: [] as (() => void)[],
     spawn: [] as ((name: string, ship: string) => void)[],
