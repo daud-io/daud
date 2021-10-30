@@ -255,7 +255,8 @@ function mouseMove(this: any, ev: MouseEvent): any {
         Controls.mouseX = Math.max(Math.min(Controls.mouseX, rect.width * scale), -rect.width * scale);
         Controls.mouseY = Math.max(Math.min(Controls.mouseY, rect.height * scale), -rect.height * scale);
     }
-    else {
+    else
+    {
         const container = Controls.container!;
         const ray = container.scene.createPickingRay(ev.clientX, ev.clientY, Matrix.Identity(), container.camera);
         const pos = ray.intersectsAxis("y", 100);
@@ -306,8 +307,8 @@ export function registerContainer(container: GameContainer): void {
             const cx = container.boundingRect.width / 2;
             const cy = container.boundingRect.height / 2;
 
-            Controls.mouseX = joystick.deltaX() * 10 + cx;
-            Controls.mouseY = -1 * joystick.deltaY() * 10 + cy;
+            Controls.mouseX = joystick.deltaX() * 10;
+            Controls.mouseY = -1 * joystick.deltaY() * 10;
             Controls.dirty = true;
         });
         const shootEl = document.getElementById("shoot")!;
