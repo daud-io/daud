@@ -19,6 +19,7 @@ import { Reticle } from "./reticle";
 import { HUD } from "./hud";
 import { AllMessages } from "./daud-net/all-messages";
 import { NetWorldView } from "./daud-net/net-world-view";
+//import "@babylonjs/inspector";
 
 export class GameContainer {
     scene: Scene;
