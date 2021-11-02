@@ -4,7 +4,6 @@
     using Game.API.Common.Security;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using Nest;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -15,19 +14,16 @@
     {
         private readonly GameConfiguration Config;
         
-        private readonly ElasticClient ElasticClient;
         private static Dictionary<string, RegistryReport> Reports = new Dictionary<string, RegistryReport>();
         private DateTime LastCleaning = DateTime.MinValue;
         private const int MAX_AGE = 10000;
 
         public RegistryController(
             ISecurityContext securityContext,
-            GameConfiguration config,
-            ElasticClient elasticClient
+            GameConfiguration config
         ) : base(securityContext)
         {
             this.Config = config;
-            this.ElasticClient = elasticClient;
         }
 
         [
@@ -93,21 +89,6 @@
         ]
         public bool PostEvents([FromBody]IEnumerable<object> events)
         {
-            if (Config.ElasticSearchURI == null)
-                return false;
-
-            var waitHandle = new CountdownEvent(1);
-
-            var bulkAll = ElasticClient.BulkAll(events, e => e.Size(1000));
-
-            bulkAll.Subscribe(new BulkAllObserver(
-                onNext: (b) => { Console.Write("."); },
-                onError: (e) => { throw e; },
-                onCompleted: () => waitHandle.Signal()
-            ));
-
-            waitHandle.Wait();
-
             return true;
         }
     }

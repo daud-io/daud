@@ -71,9 +71,13 @@
             [Option]
             public bool SlowConsumer { get; set; } = false;
 
+            [Option("--spectators")]
+            public int Spectators { get; set; } = 0;
 
             protected async override Task ExecuteAsync()
             {
+                ThreadPool.SetMinThreads(50, 50);
+
                 var tasks = new List<Task>();
                 if (ConnectionThrash)
                     tasks.Add(DoConnectionThrash());
@@ -81,14 +85,36 @@
                 if (SlowConsumer)
                     tasks.Add(DoSlowConsumer());
 
+                if (Spectators > 0)
+                    tasks.Add(StartSpectators());
+
                 await Task.WhenAll(tasks);
             }
 
+            private Task StartSpectators()
+            {
+                var tasks = new List<Task>();
+                for (int i = 0; i < Spectators; i++)
+                    tasks.Add(this.Spectate());
+
+                return Task.WhenAll(tasks);
+            }
+
+            private async Task Spectate()
+            {
+                var connection = new PlayerConnection(API.BaseURL.ToString(), this.World);
+
+                connection.OnConnected = async () =>
+                {
+                    connection.ControlSpectate = "spectating";
+                    await connection.SendControlInputAsync();
+                    await connection.ListenAsync();
+                };
+                await connection.ConnectAsync();
+            }
 
             private async Task DoSlowConsumer()
             {
-
-
                 var connection = new PlayerConnection(API.BaseURL.ToString(), this.World);
                 await connection.ConnectAsync();
                 await connection.ListenAsync();
@@ -96,7 +122,6 @@
                 {
                     // start blocking
                     await Task.Delay(100000);
-
                 };
             }
 

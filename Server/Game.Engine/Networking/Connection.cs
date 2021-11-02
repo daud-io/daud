@@ -13,6 +13,7 @@
     using System.Linq;
     using System.Net.WebSockets;
     using System.Numerics;
+
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
@@ -21,6 +22,8 @@
 
     public class Connection : IDisposable
     {
+        private byte[] SendBuffer = new byte[64 * 1024];
+        private byte[] ReceiveBuffer = new byte[64 * 1024];
         private Vector2 CameraPosition;
         private Vector2 CameraLinearVelocity;
 
@@ -76,7 +79,7 @@
         {
             return new Vec2
             {
-                x = (short)vector.X, 
+                x = (short)vector.X,
                 y = (short)vector.Y
             };
         }
@@ -122,7 +125,7 @@
             var size = 6000;
 
             (this.CameraPosition, this.CameraLinearVelocity) = DefineCamera();
-            
+
             lock (this.BodyCache)
             {
                 BodyCache.Update(
@@ -141,13 +144,13 @@
                 {
                     var netWorldView = new NetWorldView();
 
-                    lock(BodyCache)
+                    lock (BodyCache)
                     {
 
                         if (this.Bandwidth > 0
                             && !this.Backgrounded)
                         {
-                        
+
                             var updates = BodyCache.BodiesByError();
                             var updateBodies = updates.Take((int)this.Bandwidth * 2);
                             var updatedGroups = BodyCache.GroupsByError().ToList();
@@ -182,7 +185,7 @@
                             foreach (var update in updateBodies)
                             {
                                 update.UpdateSent(World.Time);
-                                
+
                                 netWorldView.updates.Add(new NetBody
                                 {
                                     id = update.ID,
@@ -344,11 +347,11 @@
                 message = message
             };
 
-            int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(q);
-            byte[] buffer = new byte[maxBytesNeeded];
-            int bytesWritten = FlatBufferSerializer.Default.Serialize(q, buffer);
-
             await WebsocketSendingSemaphore.WaitAsync();
+
+            int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(q);
+            int bytesWritten = FlatBufferSerializer.Default.Serialize(q, SendBuffer);
+
             try
             {
                 if (Socket.State == WebSocketState.Open)
@@ -356,7 +359,7 @@
                     var start = DateTime.Now;
 
                     await Socket.SendAsync(
-                        buffer,
+                        SendBuffer,
                         WebSocketMessageType.Binary,
                         endOfMessage: true,
                         cancellationToken: cancellationToken);
@@ -368,7 +371,7 @@
                     throw new Exception("Connection is closed, cannot write");
                 }
             }
-            catch(WebSocketException)
+            catch (WebSocketException)
             {
                 // client disconnected
             }
@@ -377,7 +380,7 @@
                 WebsocketSendingSemaphore.Release();
             }
         }
- 
+
         private async Task HandlePingAsync(NetPing ping)
         {
             this.Backgrounded = ping.backgrounded;
@@ -565,12 +568,12 @@
 
             //await SendPingAsync()
 
-            lock(World.Connections)
+            lock (World.Connections)
                 World.Connections.Add(this);
 
             try
             {
-                
+
                 Player = World.CreatePlayer();
                 var forwardedFor = httpContext.Request.Headers["X-Forwarded-For"].FirstOrDefault();
                 Player.IP = forwardedFor ?? httpContext.Connection.RemoteIpAddress.ToString();
@@ -584,7 +587,7 @@
             }
             finally
             {
-                lock(World.Connections)
+                lock (World.Connections)
                     World.Connections.Remove(this);
 
                 if (Player != null)
@@ -599,43 +602,25 @@
         {
             try
             {
-                var buffer = new byte[1024 * 4];
-                WebSocketReceiveResult result = new WebSocketReceiveResult(0, WebSocketMessageType.Binary, false);
+                int receiveIndex = 0;
+                bool done = false;
 
-                while (!result.CloseStatus.HasValue && Socket.State == WebSocketState.Open)
+                while (!done)
                 {
-                    int maxlength = 1024 * 1024 * 1;
-                    using (var ms = new MemoryStream())
+                    var result = await Socket.ReceiveAsync(new Memory<byte>(ReceiveBuffer, receiveIndex, ReceiveBuffer.Length - receiveIndex), cancellationToken);
+                    receiveIndex += result.Count;
+
+                    if (result.EndOfMessage)
                     {
-                        while (!result.EndOfMessage && !Socket.CloseStatus.HasValue && ms.Length < maxlength)
-                        {
-                            result = await Socket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
-                            ms.Write(buffer, 0, result.Count);
-                        }
-
-                        if (result.MessageType == WebSocketMessageType.Close)
-                        {
-                            await Socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Normal closure", cancellationToken);
-                        }
-
-                        if (!result.CloseStatus.HasValue)
-                        {
-                            if (result.EndOfMessage)
-                            {
-                                var bytes = ms.GetBuffer();
-                                var quantum = FlatBufferSerializer.Default.Parse<NetQuantum>(bytes);
-
-                                await onReceive(quantum);
-
-                                result = new WebSocketReceiveResult(0, WebSocketMessageType.Text, false);
-                            }
-                        }
+                        await onReceive(FlatBufferSerializer.Default.Parse<NetQuantum>(ReceiveBuffer));
+                        receiveIndex = 0;
                     }
+                    done = !(Socket.State == WebSocketState.Open);
                 }
 
                 return true;
             }
-            catch (WebSocketException )
+            catch (WebSocketException)
             {
                 // client disconnected
                 return false;

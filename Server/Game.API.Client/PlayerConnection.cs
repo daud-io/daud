@@ -34,6 +34,7 @@
         public float CooldownShoot { get; set; }
 
         public string CustomData { get; set; }
+        public string ControlSpectate { get; set; } = null;
 
         public Vector2 ControlAimTarget { get; set; }
 
@@ -79,8 +80,10 @@
                     if (this.Socket != null && this.Socket.State == WebSocketState.Open)
                         await this.SendPingAsync();
                 }
-                catch (Exception)
-                { }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to send: {e}");
+                }
             }).Wait();
         }
 
@@ -115,7 +118,9 @@
             await SendAsync(new AllMessages(new NetPing
             {
                 bandwidththrottle = 100,
-                latency = Latency
+                latency = Latency,
+                fps = 60,
+                clienttime = 0
             }));
         }
 
@@ -128,6 +133,7 @@
                 x = ControlAimTarget.X,
                 y = ControlAimTarget.Y,
                 shoot = ControlIsShooting,
+                spectatecontrol = ControlSpectate,
                 customdata = CustomData
             }));
             
@@ -170,6 +176,7 @@
 
         private async Task HandleNetWorldView(NetWorldView netWorldView)
         {
+            
             var updates = new List<Body>();
 
             for (int i = 0; i < netWorldView.updates.Count; i++)

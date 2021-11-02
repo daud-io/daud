@@ -16,9 +16,6 @@
     using Newtonsoft.Json;
     using System;
     using System.Net.Http;
-    using Elasticsearch.Net;
-    using Nest;
-    using Nest.JsonNetSerializer;
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
@@ -74,18 +71,6 @@
 
             services
                 .AddSingleton<HttpClient>();
-
-            if (config.ElasticSearchURI != null)
-            {
-                // choose the appropriate IConnectionPool for your use case
-                var pool = new SingleNodeConnectionPool(new Uri(config.ElasticSearchURI));
-                var connectionSettings =
-                    new ConnectionSettings(pool, JsonNetSerializer.Default)
-                    .DefaultIndex("daud");
-                services.AddSingleton(new ElasticClient(connectionSettings));
-            }
-            else
-                services.AddSingleton(new ElasticClient());
 
         }
 

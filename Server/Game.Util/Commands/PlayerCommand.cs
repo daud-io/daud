@@ -12,6 +12,7 @@
     using System.IO;
     using System.Net;
     using System.Numerics;
+    using System.Threading;
     using System.Threading.Tasks;
 
     [Subcommand(typeof(Robots))]
@@ -68,6 +69,8 @@
 
             protected async override Task ExecuteAsync()
             {
+                ThreadPool.SetMinThreads(50, 50);
+
                 if (StartupDelay > 0)
                     await Task.Delay(StartupDelay);
 

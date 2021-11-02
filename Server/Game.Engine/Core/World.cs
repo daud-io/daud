@@ -15,6 +15,7 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Numerics;
     using System.Threading;
@@ -230,9 +231,20 @@
 
         private void CheckTimings(DateTime start)
         {
+            var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
+
+            if (Time - LastTimingReport > 1000)
+            {
+                LastTimingReport = Time;
+
+                ThreadPool.GetAvailableThreads(out int threadsAvailable, out int iocpAvailable);
+                ThreadPool.GetMinThreads(out int threadsMin, out int iocpMin);
+                
+                Console.WriteLine($"{WorldKey} {elapsed} threads:{ThreadPool.ThreadCount} {threadsAvailable}/{threadsMin} iocp:{iocpAvailable}/{iocpMin} iocp-pending:{ThreadPool.PendingWorkItemCount}");
+            }
+
             if (Time > 10000) // lets not get too excited if things slow down when initialized
             {
-                var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
                 if (elapsed > Hook.StepTime)
                     Console.WriteLine($"**** 100% processing time warning: {elapsed}");
                 else if (elapsed > Hook.StepTime * 0.8f)
@@ -240,11 +252,6 @@
                 else if (elapsed > Hook.StepTime * 0.5f)
                     Console.WriteLine($"** 50% processing time warning: {elapsed}");
 
-                if (Time - LastTimingReport > 100)
-                {
-                    LastTimingReport = Time;
-                    Console.WriteLine($"{WorldKey} {elapsed}");
-                }
             }
         }
 
@@ -384,50 +391,59 @@
         {
             try
             {
-                var interval = TimeSpan.FromMilliseconds(Hook.StepTime);
-                var nextTick = DateTime.Now + interval;
                 var lastRun = DateTime.Now;
                 var dt = 0d;
 
                 while (!PendingDestruction)
                 {
-                    while ( DateTime.Now < nextTick )
-                    {
-                        var delay = nextTick - DateTime.Now;
-                        if (delay.TotalMilliseconds > 0)
-                            Thread.Sleep(delay);
-                    }
-                    nextTick += interval; // Notice we're adding onto when the last tick was supposed to be, not when it is now
-
+                    var startLock = DateTime.Now;
                     lock(Bodies)
                     {
+                        if (DateTime.Now.Subtract(startLock).TotalMilliseconds > 2)
+                            Console.WriteLine("Slow lock acquisition");
+                        
                         var now = DateTime.Now;
                         dt += now.Subtract(lastRun).TotalMilliseconds;
-                        lastRun = DateTime.Now;
+                        lastRun = now;
 
-                        while (dt > 3d)
+                        int steps = 0;
+                        while (dt > Hook.StepTime)
                         {
-                            var gamePhysicsStepTime = Math.Min(dt, Hook.StepTime);
-                            dt -= gamePhysicsStepTime;
-
-                            this.Step((float)gamePhysicsStepTime);
+                            steps++;
+                            dt -= Hook.StepTime;
+                            this.Step(Hook.StepTime);
                         }
 
-                        var networkstart = DateTime.Now;
-
-                        lock(Connections)
-                            foreach (var connection in Connections)
-                                connection.StepSyncInGameLoop();
+                        if (steps > 0)
                         {
+                            if (steps > 2)
+                                Console.WriteLine($"flushing {steps}");
+
+                            var networkstart = DateTime.Now;
+                            lock (Connections)
+                                foreach (var connection in Connections)
+                                    connection.StepSyncInGameLoop();
+
                             if (DateTime.Now.Subtract(networkstart).TotalMilliseconds > 5)
-                            {
                                 Console.WriteLine($"slow network flush: {DateTime.Now.Subtract(networkstart).TotalMilliseconds}");
-                            }
-                            
                         }
                     }
 
-                    interval = TimeSpan.FromMilliseconds(Hook.StepTime);
+                    var nextTick = lastRun.AddMilliseconds(Hook.StepTime);
+                    var delta = nextTick - DateTime.Now;
+                    if (delta.TotalMilliseconds < 0)
+                        Console.WriteLine($"Late Tick: {delta.TotalMilliseconds}");
+
+                    if (delta.TotalMilliseconds > 10)
+                    {
+                        var sw = new Stopwatch();
+                        sw.Start();
+                        Thread.Sleep(5);
+                        sw.Stop();
+
+                        Console.WriteLine($"sleep {delta.TotalMilliseconds}: " + (sw.Elapsed.TotalMilliseconds));
+                    }
+
                 }
             }
             catch (Exception e)
