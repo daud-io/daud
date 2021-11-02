@@ -8,7 +8,7 @@ export class Settings {
     static bandwidth: number = 100;
     static logLength: number = 4;
     static showHints: boolean = true;
-    static lookAtPointer: boolean = true;
+    static lookAtPointer: boolean = false;
     static nameSize: number = 48;
     static graphics: string = "low";
     static pointerlock: boolean = false;

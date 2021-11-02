@@ -1,7 +1,5 @@
 ﻿import "./hintbox";
 import { NetWorldView } from "./daud-net/net-world-view";
-import { ClientBody } from "./cache";
-import { projectObject } from "./interpolator";
 import { Minimap } from "./minimap";
 import * as log from "./log";
 import { Controls, registerContainer} from "./controls";
@@ -11,14 +9,12 @@ import { GameContainer } from "./gameContainer";
 import * as bus from "./bus";
 import "./events";
 import { Cache } from "./cache";
-import { Telemetry } from "./telemetry";
 import { Fleet } from "./models/fleet";
-import { Matrix, ScreenSpaceCurvaturePostProcess, Vector2 } from "@babylonjs/core";
+import { Vector2 } from "@babylonjs/core";
 import { Settings } from "./settings";
 
 const spawnButton = document.getElementById("spawn") as HTMLButtonElement;
 const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
-const progress = document.getElementById("cooldown") as HTMLProgressElement;
 const connection = new Connection();
 
 let cameraPositionFromServer: Vector2 = new Vector2();
@@ -77,14 +73,6 @@ container.engine.runRenderLoop(() => {
 
     connection.dispatchWorldViews();
 });
-
-async function initialize(): Promise<void> {
-    await container.loader.load();
-    console.log('container loaded');
-    bus.emit('gameReady');
-}
-
-initialize();
 
 bus.on("dead", () => {
     document.body.classList.remove("alive");
@@ -146,12 +134,13 @@ function doSpawn() {
     document.body.classList.add("alive");
     connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
     container.focus();
+    if (Settings.pointerlock)
+        Controls.requestPointerLock();
+
 }
 
 function onLaunchClick(e:MouseEvent) {
     spawnOnView = true;
-    if (Settings.pointerlock)
-        Controls.requestPointerLock();
 
 }
 
@@ -222,13 +211,14 @@ function updateStats() {
     container.viewCounter = 0;
     container.updateCounter = 0;
 
+    const bg = container.backgrounded;
+    container.backgrounded = (connection.viewsPerSecond < 2);
+
+    // we WERE backgrounded, but not anymore
+    if(bg && !container.backgrounded)
+        connection.resetTimingWindow();
 }
 setInterval(updateStats, 1000);
-
-//const query = new URLSearchParams(window.location.search);
-//if (query.has("spectate") && query.get("spectate") !== "0") {
-//startSpectate(true);
-//}
 
 // clicking enter in nick causes fleet spawn
 const nick = document.getElementById("nick") as HTMLInputElement;
@@ -237,13 +227,6 @@ nick.addEventListener("keydown", (e) => {
         Controls.nick = nick.value;
         if (connection.hook.CanSpawn) doSpawn();
     }
-});
-
-// clicking enter in spectate mode causes fleet spawn
-document.body.addEventListener("keydown", (e) => {
-    //if (document.body.classList.contains("spectating") && e.key === "Enter") {
-    //    doSpawn();
-    //}
 });
 
 bus.on("worldjoin", (connect) => {
@@ -278,6 +261,15 @@ bus.on("loaded", () => {
 });
 
 bus.emit("pageReady");
+
+async function initialize(): Promise<void> {
+    await container.loader.load();
+    console.log('container loaded');
+    bus.emit('gameReady');
+}
+
+initialize();
+
 
 
 

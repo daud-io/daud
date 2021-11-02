@@ -1,30 +1,30 @@
 ﻿import 'whatwg-fetch';
 import * as bus from "./bus";
-import { PingConnection } from "./pingconnection";
+import { Connection } from './connection';
 import { Host, Registry, ServerWorld } from './registry';
 
 if (!Element.prototype.matches) {
-    Element.prototype.matches = (<any>Element.prototype).msMatchesSelector || 
-                (<any>Element.prototype).webkitMatchesSelector;
+    Element.prototype.matches = (<any>Element.prototype).msMatchesSelector ||
+        (<any>Element.prototype).webkitMatchesSelector;
 }
 
 if (!Element.prototype.closest) {
-Element.prototype.closest = function(s:string) {
-    var el:any = this;
+    Element.prototype.closest = function (s: string) {
+        var el: any = this;
 
-    do {
-    if (Element.prototype.matches.call(el, s)) return el;
-        el = el.parentElement || el.parentNode;
-    } while (el !== null && el.nodeType === 1);
-    return null;
-};
+        do {
+            if (Element.prototype.matches.call(el, s)) return el;
+            el = el.parentElement || el.parentNode;
+        } while (el !== null && el.nodeType === 1);
+        return null;
+    };
 }
 
 
 export class Landing {
     static worlds: Record<string, ServerWorld> = {};
 
-    static connections: Record<string, PingConnection> = {};
+    static connections: Record<string, Connection> = {};
     static history: Record<string, number> = {};
     static timer: number;
 
@@ -36,7 +36,9 @@ export class Landing {
     static gameLoaded: boolean = false;
 
     static pingEnabled: boolean = false;
-    static firstLoad: boolean = true;;
+    static firstLoad: boolean = true;
+
+    static entireUIHidden: boolean = true;
 
     static tryAddConnection(host: Host): void {
         if (!this.pingEnabled)
@@ -44,7 +46,8 @@ export class Landing {
 
         if (!this.connections[host.url] && !this.history[host.url]) {
             const connect = `${host.url}/${host.worlds[0].worldKey}`;
-            const connection = new PingConnection();
+            const connection = new Connection();
+            connection.pingMode = true;
             connection.connect(connect);
 
             this.connections[host.url] = connection;
@@ -97,7 +100,17 @@ export class Landing {
     }
 
     static updateHost(hostname: string, latency: number): void {
-        document.querySelectorAll(`.${hostname.replaceAll('.', '-')}-ping`).forEach(e => {
+        var url:URL;
+        try
+        {
+            url = new URL(hostname);
+        }
+        catch
+        {
+            url = new URL(`wss://${hostname}`);
+        }
+
+        document.querySelectorAll(`.${url.host.replaceAll('.', '-')}-ping`).forEach(e => {
             var worldClasses = e.closest(".world")?.classList;
             if (worldClasses) {
                 var bucket: string = latency == -1 ? 'pending' :
@@ -123,6 +136,8 @@ export class Landing {
     }
 
     static show() {
+        this.unhideUI();
+
         if (!this.firstLoad) {
             this.pingEnabled = true;
             document.getElementById('worlds')?.classList.add('pingenabled');
@@ -188,6 +203,35 @@ export class Landing {
 
     }
 
+    private static unhideUI()
+    {
+        if (this.entireUIHidden)
+        {
+            this.entireUIHidden = false;
+            document.body.style.display = "";
+        }
+    }
+
+    private static querystringConfig(): boolean {
+        try {
+            var params = (new URL(document.location?.toString()))?.searchParams;
+            if (params) {
+
+                let world = params.get("world");
+                if (world) {
+                    this.launch(world);
+                    this.unhideUI();
+                    
+                    return true;
+                }
+            }
+        }
+        catch (e) {
+            console.log(`exception while parsing querystring: ${e}`);
+        }
+        return false;
+    }
+
     static async initialize(): Promise<void> {
         try {
             this.timer = window.setInterval(() => this.checkHosts(), 500);
@@ -197,7 +241,8 @@ export class Landing {
             document.getElementById('worlds')?.addEventListener("click", (e) => this.onWorldClick(e));
             document.getElementById('arenas')?.addEventListener("click", (e) => this.onArenasClick(e));
 
-            this.show();
+            if (!this.querystringConfig())
+                this.show();
         }
         catch (e) {
             console.log(e);

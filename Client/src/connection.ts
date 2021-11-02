@@ -14,7 +14,6 @@ import { NetSpawn } from "./daud-net/net-spawn";
 import { NetControlInput } from "./daud-net/net-control-input";
 import { NetEvent } from "./daud-net/net-event";
 import { NetLeaderboard } from "./daud-net/net-leaderboard";
-import { AdvancedDynamicTexture } from "@babylonjs/gui";
 
 export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
 export type LeaderboardType = {
@@ -30,8 +29,6 @@ export type LeaderboardType = {
 
 
 export class Connection {
-    reloading = false;
-    disconnecting = false;
     connected = false;
     framesPerSecond = 0;
     viewsPerSecond = 0;
@@ -65,7 +62,7 @@ export class Connection {
     builder: Builder = new Builder(1024);
     cacheSize: number = 0;
 
-    viewBuffer: Uint8Array[] = [];
+    viewBuffer: ByteBuffer[] = [];
 
     messageBuffers = {
         Quantum: new NetQuantum(),
@@ -114,35 +111,12 @@ export class Connection {
 
     disconnect(): void {
         if (this.socket) {
-            this.disconnecting = true;
             this.socket.close();
         }
     }
-    connect(worldKey: string): void {
-        const worldKeyParse = worldKey.match(/^(.*)\/(.*?)$/);
-        if (!worldKeyParse)
-        {
-            throw "bad world key";
-        }
-        
-        let hostname = worldKeyParse[1];
-        if (hostname.indexOf('://') == -1)
-            hostname = "wss://" + hostname;
-        let worldName = worldKeyParse[2];
-        let url = `${hostname}/api/v1/connect?world=${encodeURIComponent(worldName)}&`;
 
-
-        if (this.socket) {
-            this.socket.onclose = null;
-            this.socket.onmessage = null;
-            this.socket.close();
-        }
-
-        this.socket = new WebSocket(url);
-        
-        this.socket.binaryType = "arraybuffer";
-
-        this.hook = null;
+    resetTimingWindow() {
+        console.log('reset timing window');
         this.serverClockOffset = -1;
         this.minimumLatency = -1;
         this.earliestOffset = -1;
@@ -151,23 +125,59 @@ export class Connection {
         this.minimumLatencyStart = -1;
         this.minimumLatencyNext = -1;
         this.maximumLatencyNext = 0;
+    }
 
-        this.socket.onmessage = (event) => {
-            this.onMessage(event);
-        };
+    connect(worldKey: string): void {
+        try
+        {
 
-        this.socket.onerror = () => {
-            document.body.classList.add("connectionerror");
-        };
+            var url:URL;
 
-        this.socket.onopen = () => {
-            document.body.classList.remove("connectionerror");
+            try
+            {
+                url = new URL(worldKey);
+            }
+            catch
+            {
+                url = new URL(`wss://${worldKey}`);
+            }
+            let apiURL = `${url.protocol}//${url.host}/api/v1/connect?world=${encodeURIComponent(url.pathname?.substr(1))}`;
 
-            this.onOpen();
-        };
-        this.socket.onclose = (event) => {
-            this.onClose(event);
-        };
+            if (this.socket) {
+                this.socket.onclose = null;
+                this.socket.onmessage = null;
+                this.socket.close();
+            }
+
+            this.socket = new WebSocket(apiURL);
+            this.socket.binaryType = "arraybuffer";
+
+            this.hook = null;
+
+            this.resetTimingWindow();
+
+            this.socket.onmessage = (event) => {
+                this.onMessage(event);
+            };
+
+            this.socket.onerror = () => {
+                document.body.classList.add("connectionerror");
+            };
+
+            this.socket.onopen = () => {
+                document.body.classList.remove("connectionerror");
+
+                this.onOpen();
+            };
+            this.socket.onclose = (event) => {
+                this.onClose(event);
+            };
+        }
+        catch(e)
+        {
+            console.log('bad connection string: ' + worldKey);
+        }
+
     }
 
     sendPing(): void {
@@ -307,29 +317,17 @@ export class Connection {
 
         if (!this.pingMode) {
             this.sendAuthenticate(getToken());
-
-            if (this.reloading) {
-                window.location.reload();
-                this.reloading = false;
-            }
         }
     }
 
     onClose(event: CloseEvent): void {
+        if (this.connected)
+            bus.emit("disconnected");
+            
         this.connected = false;
-
-        if (!this.disconnecting && this.autoReload) {
-            if (event.reason != "Normal closure") {
-                this.reloading = true;
-            }
-            //console.log('reconnecting');
-
-            //this.connect();
-        }
-        this.disconnecting = false;
     }
 
-    handleNetWorldViewBuffer(newView: Uint8Array): void {
+    handleNetWorldViewBuffer(newView: ByteBuffer): void {
         this.viewBuffer.push(newView);
         // if we are backgrounds, fps=0, we can't buffer forever
         if (this.viewBuffer.length > 200)
@@ -341,10 +339,11 @@ export class Connection {
         {
             let start = performance.now();
             for (let i=0; i<this.viewBuffer.length; i++) {
-                const buf = new ByteBuffer(this.viewBuffer[i]);
+                const buf = this.viewBuffer[i];
                 const quantum = NetQuantum.getRootAsNetQuantum(buf);
                 this.handleNetWorldView(quantum.message(new NetWorldView()));
             }
+            
             //console.log(`dispatched ${this.viewBuffer.length} in ${performance.now()-start}`);
             this.viewBuffer.length = 0;
         }
@@ -456,7 +455,7 @@ export class Connection {
 
         switch (messageType) {
             case AllMessages.NetWorldView:
-                this.handleNetWorldViewBuffer(byteArray);
+                this.handleNetWorldViewBuffer(buffer);
                 //this.handleNetWorldView(quantum.message(this.messageBuffers.WorldView));
                 break;
             case AllMessages.NetPing:

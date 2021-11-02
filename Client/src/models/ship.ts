@@ -4,6 +4,7 @@ import { GameContainer } from "../gameContainer";
 import { ClientBody, ClientGroup } from "../cache";
 import { Controls } from "../controls";
 import { angleLerp, projectObject } from "../interpolator";
+import { Settings } from "../settings";
 
 enum ShipModes
 {
@@ -58,7 +59,8 @@ export class Ship extends RenderedObject {
         if (this.body) {
             projectObject(this.body, time);
 
-            if (this.fleet?.ID == this.container.fleetID 
+            if (Settings.lookAtPointer
+                && this.fleet?.ID == this.container.fleetID 
                 && this.container.alive)
             {
                 let lookAtX = Controls.mouseX + this.container.cameraPosition.x;

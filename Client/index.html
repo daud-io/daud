@@ -5,9 +5,7 @@
   <meta charset="utf-8" />
   <link rel="preconnect" href="https://registry.daud.io" />
   <link rel="preconnect" href="https://www.googletagmanager.com" />
-  <link rel="preconnect" href="https://www.googletagmanager.com" />
   <link rel="canonical" href="https://daud.io/" />
-  <link rel='dns-prefetch' href='//www.googletagmanager.com' />
   <meta name="viewport"
     content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <title>DAUD.io | Play for free online!</title>
@@ -19,13 +17,13 @@
     content="Blast everyone with your space fleet in this new game - DAUD.io! Play for free online" />
   <meta property="og:url" content="https://daud.io" />
   <meta property="og:site_name" content="DAUD" />
-  <meta property="og:image" content="https://static.daud.io/img/DAUDThumb_1024.png" />
+  <meta property="og:image" content="/img/DAUDThumb_1024.png" />
   <meta property="og:image:width" content="1024" />
   <meta property="og:image:height" content="1024" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel='shortlink' href='https://daud.io/' />
 
-  <link rel="shortcut icon" type="image/png" href="./img/ship_icon.png" />
+  <link rel="shortcut icon" type="image/png" href="img/ship_icon.png" />
 
   <link rel="icon" href="/img/ship_icon.png" sizes="32x32" />
   <link rel="icon" href="/img/ship_icon.png" sizes="192x192" />
@@ -53,12 +51,11 @@
   <script async src="./src/landing.ts" type="module"></script>
 </head>
 
-<body>
+<body style="display:none;">
   <div id="gameArea" class="noselect" style="display:none;">
     <canvas id="gameCanvas"></canvas>
     <div id="plusScoreContainer"></div>
   
-    <div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
     <!--<small id="minimapTip">Press M to toggle the minimap</small>-->
   
     <div id="bigLog"></div>
@@ -126,7 +123,7 @@
       <div id="boost"></div>
     </div>
   </div>
-  
+
   <div id="error" style="display:none;">
     <h4 id="error_message">Unable to connect to the server! Please check your 
       internet connection or the server maybe under maintenance.</h4>
@@ -138,7 +135,7 @@
     </h1>
     <div>
       <div id="worlds">
-        <a href="#" rel="nofollow,noindex" class="world pending" data-connect="us.daud.io/partycity">
+        <a href="#" rel="nofollow,noindex" class="world pending" data-connect="wss://us.daud.io/partycity">
           <img src="img/worlds/partycity.png" />
           <div class="explain">
             
@@ -154,7 +151,7 @@
             <div class="players">players: <span class='us-daud-io-partycity-players'>--</span></div>
           </div>
         </a>
-        <a href="#" rel="nofollow,noindex" class="world pending" data-connect="de.daud.io/partycity">
+        <a href="#" rel="nofollow,noindex" class="world pending" data-connect="wss://de.daud.io/partycity">
           <img src="img/worlds/partycity.png" />
           <div class="explain">
             <div class="title">Party City - EU</div>
@@ -169,7 +166,7 @@
             <div class="players">players: <span class='de-daud-io-partycity-players'>--</span></div>
           </div>
         </a>
-        <a href="#" rel="nofollow,noindex" class="world pending" data-connect="ws://andy-desktop:5100/partycity">
+        <a href="#" rel="nofollow,noindex" class="world pending" data-connect="wss://de.daud.io/ffa">
           <img src="/img/worlds/bot.png" />
           <div class="explain">
             <div class="title">Training Bot</div>
@@ -203,33 +200,6 @@
     </div>
     <div class="hidden-mobile">
       <div>
-        <div id="changelog" data-version="2">
-          <h4>Changelog</h4>
-          <table>
-            <tr>
-              <td class="date"><em>10/21/2021</em></td>
-              <td>Pointerlock</td>
-            </tr>
-            <tr>
-              <td class="date"><em>10/08/2021</em></td>
-              <td>Chromebook/Greenville update! Faster, smoother and less memory.</td>
-            </tr>
-            <tr>
-              <td class="date">8/23/2021</td>
-              <td>Strange new dimensions have been discovered</td>
-            </tr>
-            <tr>
-              <td class="date">7/26/2021</td>
-              <td>Balanced chasing vs. running with EinsteinCoefficient</td>
-            </tr>
-            <tr>
-              <td class="date">12/12/2020</td>
-              <td>Improved renderer, new ui.</td>
-            </tr>
-          </table>
-        </div>
-  
-  
         <div id="controls_instructions">
           <img src="img/controls.png" width="215" height="121" />
         </div>
@@ -311,8 +281,8 @@
           <input type="checkbox" id="settingsShowHints" />
           <span class="checkmark"></span>
         </label>
-  
-        <label class="checkbox">Mouse Pointlock
+
+        <label class="checkbox">Mouse Pointerlock
           <input type="checkbox" id="settingsPointerLock" />
           <span class="checkmark"></span>
         </label>
@@ -340,6 +310,8 @@
   
   <div id="touchoverlay">
   </div>
+
+  <div id="autofireContainer">Autofire (E): <span id="autofireToggle">OFF</span></div>
 
   <img id="netwarn" class='warn-icon' src="/img/netwarn.png" />
   <img id="cpuwarn" class='warn-icon' src="/img/cpuwarn.png" />

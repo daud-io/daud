@@ -19,6 +19,7 @@ import { Reticle } from "./reticle";
 import { HUD } from "./hud";
 import { AllMessages } from "./daud-net/all-messages";
 import { NetWorldView } from "./daud-net/net-world-view";
+//import "@babylonjs/inspector";
 
 export class GameContainer {
     scene: Scene;
@@ -49,6 +50,8 @@ export class GameContainer {
     boundingRect: DOMRect;
     pointerLocked: boolean = false;
     alive: boolean = false;
+    touchscreen: boolean = false;
+    backgrounded: boolean = false;
 
     constructor(canvas: HTMLCanvasElement, connection: Connection) {
         this.connection = connection;

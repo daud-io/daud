@@ -52,8 +52,8 @@
         private void LoadNode(ModelRoot root, Node node)
         {
             Matrix4x4 transform = 
-                  Matrix4x4.CreateScale(new Vector3(1,1,-1)) // invert Z
-                * node.WorldMatrix
+                  node.WorldMatrix
+                * Matrix4x4.CreateScale(new Vector3(1,1,-1)) // invert Z
                 * Matrix4x4.CreateScale(new Vector3(10, 10, 10)); // scale
 
             if (node.Extras.Content != null)
@@ -149,9 +149,12 @@
         {
             var hook = World.Hook;
             if (World.Hook.Mesh.Enabled)
-            {
+            { 
+                Uri baseURI;
+                if (!Uri.TryCreate(World.GameConfiguration.PublicURL, UriKind.Absolute, out baseURI))
+                    baseURI = new Uri($"https://{World.GameConfiguration.PublicURL}");
 
-                var activatedURL = new Uri(new Uri(World.GameConfiguration.PublicURL), $"/api/v1/world/mesh/{World.WorldKey}/server.glb").ToString();
+                var activatedURL = new Uri(baseURI, $"/api/v1/world/mesh/{World.WorldKey}/server.glb").ToString();
                 var newURL = World.Hook.Mesh.MeshURL;
                 
                 if (newURL != loadedURL && newURL != activatedURL)

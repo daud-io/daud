@@ -122,13 +122,13 @@
                 {
                     ping = new
                     {
-                        you = 0,
-                        them = 0
+                        you = 0L,
+                        them = 0L
                     },
                     combo = new
                     {
                         text = null as string,
-                        score = 0
+                        score = 0L
                     },
                     stats = new
                     {

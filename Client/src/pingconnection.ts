@@ -18,29 +18,38 @@ export class PingConnection {
         }
     }
     connect(connectString: string): void {
-        let url: string = window.location.protocol === "http:" ? "wss:" : "wss:";
-        let hostname = "daud.io";
-        let worldKey = '';
+        try
+        {
+            var url:URL;
 
-        const worldKeyParse = connectString.match(/^(.*?)\/(.*)$/);
-        if (worldKeyParse) {
-            hostname = worldKeyParse[1];
-            worldKey = worldKeyParse[2];
+            try
+            {
+                url = new URL(connectString);
+            }
+            catch
+            {
+                url = new URL(`wss://${connectString}`);
+            }
+            let apiURL = `${url.protocol}//${url.host}/api/v1/connect?world=${encodeURIComponent(url.pathname?.substr(1))}`;
+            
+            this.minimumLatency = -1;
+
+            if (this.socket) {
+                this.socket.onclose = null;
+                this.socket.close();
+            }
+
+            this.socket = new WebSocket(apiURL);
+            this.socket.binaryType = "arraybuffer";
+            this.socket.onmessage = (event) => this.onMessage(event);
+            this.socket.onopen = () => this.onOpen();
+            this.socket.onclose = (event) => this.onClose(event);
         }
-        url += `//${hostname}/api/v1/connect?world=${encodeURIComponent(worldKey)}&`;
-
-        this.minimumLatency = -1;
-
-        if (this.socket) {
-            this.socket.onclose = null;
-            this.socket.close();
+        catch(e)
+        {
+            console.log('bad connection string: ' + connectString);
         }
 
-        this.socket = new WebSocket(url);
-        this.socket.binaryType = "arraybuffer";
-        this.socket.onmessage = (event) => this.onMessage(event);
-        this.socket.onopen = () => this.onOpen();
-        this.socket.onclose = (event) => this.onClose(event);
     }
 
     sendPing(): void {
