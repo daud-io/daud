@@ -321,7 +321,7 @@ export class Connection {
     }
 
     onClose(event: CloseEvent): void {
-        if (this.connected)
+        if (this.connected && !this.pingMode)
             bus.emit("disconnected");
             
         this.connected = false;

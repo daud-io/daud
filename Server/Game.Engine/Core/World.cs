@@ -293,33 +293,9 @@
 
         public IEnumerable<WorldBody> BodiesNear(Vector2 point, int maximumDistance)
         {
-            if (InStep)
-                throw new Exception("BodiesNear In step");
-
-            var broadPhaseEnumerator = new BroadPhaseOverlapEnumerator {
-                Pool = BufferPool,
-                References = new QuickList<CollidableReference>(16, BufferPool)
-            };
-
-            Simulation.BroadPhase.GetOverlaps(
-                new Vector3(point.X - maximumDistance / 2, -10, point.Y - maximumDistance / 2), 
-                new Vector3(point.X + maximumDistance / 2, 10, point.Y + maximumDistance / 2), 
-                ref broadPhaseEnumerator
-            );
-
-            var list = new WorldBody[broadPhaseEnumerator.References.Count];
-            for (int overlapIndex = 0; overlapIndex < broadPhaseEnumerator.References.Count; ++overlapIndex)
-            {
-                var handle = broadPhaseEnumerator.References[overlapIndex].BodyHandle;
-                var reference = Simulation.Bodies.GetBodyReference(handle);
-                if (reference.Exists)
-                    if (Bodies.TryGetValue(handle, out var body))
-                        list[overlapIndex] = body;
-            }
-
-            broadPhaseEnumerator.References.Dispose(BufferPool);
-
-            return list;
+            var bodies = new List<WorldBody>();
+            this.BodiesNear(point, maximumDistance, (body) => bodies.Add(body));
+            return bodies;  
         }
 
         public void BodiesNear(Vector2 point, int maximumDistance, Action<WorldBody> action)
@@ -429,19 +405,20 @@
                         }
                     }
 
+                    // calculate when the next server frame should be
                     var nextTick = lastRun.AddMilliseconds(Hook.StepTime);
                     var delta = nextTick - DateTime.Now;
                     if (delta.TotalMilliseconds < 0)
                         Console.WriteLine($"Late Tick: {delta.TotalMilliseconds}");
 
-                    if (delta.TotalMilliseconds > 10)
+                    if (delta.TotalMilliseconds > 1)
                     {
                         var sw = new Stopwatch();
                         sw.Start();
-                        Thread.Sleep(5);
+                        Thread.Sleep(delta);
                         sw.Stop();
-
-                        Console.WriteLine($"sleep {delta.TotalMilliseconds}: " + (sw.Elapsed.TotalMilliseconds));
+                        if (Math.Abs((sw.Elapsed - delta).TotalMilliseconds) > 3)
+                            Console.WriteLine($"sleep {delta.TotalMilliseconds}: " + (sw.Elapsed.TotalMilliseconds));
                     }
 
                 }

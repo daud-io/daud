@@ -11,123 +11,126 @@
         private readonly Dictionary<long, BucketBody> Bodies = new Dictionary<long, BucketBody>();
         private readonly Dictionary<long, BucketGroup> Groups = new Dictionary<long, BucketGroup>();
 
-        public void Update(IEnumerable<WorldBody> bodies, uint time)
+        public uint[] StaleGroups = new uint[1024];
+        public int StaleGroupCount;
+        public uint[] StaleBodies = new uint[1024];
+        public int StaleBodyCount = 0;
+        
+        public void PreUpdate()
         {
-            // update cache items and flag missing ones as stale
-            UpdateLocalBodies(bodies, time);
-
-            // project the current bodies and calculate errors
-            foreach (var bucket in Bodies.Values)
-                if(!bucket.Stale)
-                    bucket.Project(time);
-
             foreach (var bucket in Groups.Values)
-                bucket.CalculateError();
+                bucket.Stale = true;
+
+            foreach (var bucket in Bodies.Values)
+                bucket.Stale = true;
         }
 
         public IEnumerable<BucketBody> BodiesByError()
         {
-            // find the bodies with the largest error
-            return Bodies.Values
-                .Where(b => !b.Stale)
-                .Where(b => b.Error > 0)
-                .OrderByDescending(b => b.Error);
+            return Bodies.Values.Where(b => !b.Stale && b.Error > 0);
         }
 
         public IEnumerable<BucketGroup> GroupsByError()
         {
-            // find the bodies with the largest error
-            return Groups.Values
-                .Where(b => !b.Stale)
-                .Where(b => b.Error > 0)
-                .OrderByDescending(b => b.Error);
+            return Groups.Values.Where(b => !b.Stale && b.Error > 0);
         }
 
-        private void UpdateLocalBodies(IEnumerable<WorldBody> bodies, uint time)
+        public void UpdateCachedBody(WorldBody worldBody, uint time)
         {
-            foreach (var bucket in Groups.Values)
-                bucket.Stale = true;
+            if (worldBody == null || !worldBody.Exists)
+                return;
 
-            foreach (var bucket in Bodies.Values)
-                bucket.Stale = true;
-
-            foreach (var obj in bodies)
+            BucketBody bucket;
+            if (!Bodies.TryGetValue(worldBody.ID, out bucket))
             {
-                if (obj == null || !obj.Exists)
-                    continue;
-
-                BucketBody bucket;
-                if (!Bodies.TryGetValue(obj.ID, out bucket))
+                bucket = new BucketBody()
                 {
-                    bucket = new BucketBody()
-                    {
-                        Stale = false
-                    };
-                    Bodies.Add(obj.ID, bucket);
+                    Stale = false
+                };
+                Bodies.Add(worldBody.ID, bucket);
+            }
+
+            bucket.Stale = false;
+            bucket.ReadBody(worldBody, time);
+            
+            if (worldBody.Group != null)
+            {
+                BucketGroup group;
+                if (!Groups.TryGetValue(worldBody.Group.ID, out group))
+                {
+                    group = new BucketGroup();
+                    group.ID = worldBody.Group.ID;
+                    Groups.Add(group.ID, group);
                 }
 
-                bucket.Stale = false;
-                bucket.ReadBody(obj, time);
-
-                if (obj.Group != null)
-                    if (Groups.ContainsKey(obj.Group.ID))
-                        Groups[obj.Group.ID].Stale = false;
-                    else
-                    {
-                        var bucketGroup = new BucketGroup
-                        {
-                            GroupUpdated = obj.Group,
-                            Stale = false
-                        };
-                        Groups.Add(obj.Group.ID, bucketGroup);
-                    }
+                group.Stale = false;
+                group.ReadGroup(worldBody.Group, time);
             }
         }
 
-        public IEnumerable<BucketBody> CollectStaleBuckets()
+        public void CollectStaleBuckets()
         {
-            var stale = Bodies.Values.Where(b => b.Stale).ToList();
-            foreach (var b in stale)
-                Bodies.Remove(b.ID);
+            var original = this.StaleBodyCount;
+            foreach (var b in Bodies.Values)
+                if (b.Stale && this.StaleBodyCount < this.StaleBodies.Length)
+                    this.StaleBodies[this.StaleBodyCount++] = b.ID;
 
-            return stale;
+            for (int i=original; i<this.StaleBodyCount; i++)
+                Bodies.Remove(this.StaleBodies[i]);
         }
 
-        public IEnumerable<BucketGroup> CollectStaleGroups()
+        public void CollectStaleGroups()
         {
-            var stale = Groups.Values.Where(b => b.Stale).ToList();
-            foreach (var b in stale)
-                Groups.Remove(b.GroupUpdated.ID);
+            var original = this.StaleGroupCount;
 
-            return stale;
+            foreach (var b in Groups.Values)
+                if (b.Stale && this.StaleGroupCount < this.StaleGroups.Length)
+                    this.StaleGroups[this.StaleGroupCount++] = b.ID;
+
+            for (int i=original; i<this.StaleGroupCount; i++)
+                Groups.Remove(this.StaleGroups[i]);
         }
 
         public class BucketGroup
         {
-            public Group GroupUpdated { get; set; }
-            public Group GroupClient { get; set; }
+            public uint ID;
+            public string CustomData;
+            public string Color;
+            public string Caption;
+            public GroupTypes GroupType;
+            public uint OwnerID;
+            public uint ZIndex;
+
+
 
             public bool Stale { get; set; }
             public float Error { get; set; }
 
-            public void CalculateError()
+            public void ReadGroup(Group group, uint time)
             {
-                if (GroupClient == null
-                    || GroupClient.CustomData != GroupUpdated.CustomData
-                    || GroupClient.Color != GroupUpdated.Color
-                    || GroupClient.GroupType != GroupClient.GroupType
-                    || GroupClient.Caption != GroupClient.Caption
+                if (this.CustomData != group.CustomData
+                    || this.Color != group.Color
+                    || this.GroupType != group.GroupType
+                    || this.Caption != group.Caption
+                    || this.OwnerID != group.OwnerID
+                    || this.ZIndex != group.ZIndex
                     )
-
-                    Error = 1;
+                {
+                    this.Error = 1;
+                    this.CustomData = group.CustomData;
+                    this.Color = group.Color;
+                    this.Caption = group.Caption;
+                    this.GroupType = group.GroupType;
+                    this.OwnerID = group.OwnerID;
+                    this.ZIndex = group.ZIndex;
+                }
                 else
-                    Error = 0;
+                    this.Error = 0;
             }
         }
 
         public class BucketBody
         {
-            //public WorldBody Body { get; set; }
             public uint DefinitionTime;
             public Vector2 Position;
             public Vector2 LinearVelocity;
@@ -140,14 +143,15 @@
             public uint GroupID = 0;
             public uint ID = 0;
 
-            public uint ClientUpdatedTime { get; set;}
+            public uint ClientUpdatedTime;
 
-            public float Error { get; set; }
-            public bool Stale { get; set; }
+            public float Error = 0;
+            public bool Stale = false;
 
             public void UpdateSent(uint time)
             {
                 ClientUpdatedTime = time;
+                Error = 0;
             }
 
             public void ReadBody(WorldBody body, uint time)
@@ -162,10 +166,7 @@
                 Sprite = body.Sprite;
                 GroupID = body.Group?.ID ?? 0;
                 ID = body.ID;
-            }
 
-            public void Project(uint time)
-            {
                 Error = time - ClientUpdatedTime;
                 if (Error == 0)
                     Error = 1;
