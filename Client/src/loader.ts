@@ -22,6 +22,7 @@ export type TextureDefinition = {
 export type SpriteDefinition = {
     extends?: string;
     modes?: Record<string, string>;
+    textures?: TextureDefinition[];
 };
 
 export class Loader {

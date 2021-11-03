@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Game.Util": {
-      "commandName": "Project",
-      "commandLineArgs": "herd --file c:\\code\\iogame\\Samples\\Robots\\ConfigurableContextBot\\Monsters\\territory.json --world team"
-    }
-  }
-}

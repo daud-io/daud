@@ -9,7 +9,7 @@
     "build": "npx vite build",
     "format": "prettier --tab-width 4 --write \"**/*.{ts,js,css}\"",
     "lint": "eslint \"src/**/*.{ts,js}\"",
-    "watch": "npx vite"
+    "watch": "npx vite --host"
   },
   "dependencies": {
     "@babylonjs/gui": "^4.2.0",

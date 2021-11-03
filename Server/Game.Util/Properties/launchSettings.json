@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Game.Util": {
+      "commandName": "Project",
+      "commandLineArgs": "--context local server stress partycity --spectators 1"
+    }
+  }
+}

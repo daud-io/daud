@@ -13,6 +13,7 @@ export class VirtualJoystick {
     private pressed: boolean;
     private touchIdx?: number;
     private moved: (() => void)[] = [];
+    private extraTap: ((x: number, y: number) => void)[] = [];
     constructor(
         opts: {
             container?: HTMLElement;
@@ -44,6 +45,8 @@ export class VirtualJoystick {
 
         this.container.addEventListener("touchstart", this.onTouchStart, false);
         this.container.addEventListener("touchend", this.onTouchEnd, false);
+        this.container.addEventListener("touchcancel", this.onTouchEnd, false);
+
         this.container.addEventListener("touchmove", this.onTouchMove, false);
     }
 
@@ -115,7 +118,18 @@ export class VirtualJoystick {
 
     private onTouchStart = (event: TouchEvent) => {
         // if there is already a touch inprogress do nothing
-        if (this.touchIdx !== undefined) return;
+        if (this.touchIdx !== undefined) 
+        {
+            for (let i=0; i<event.changedTouches.length; i++)
+            {
+                const touch = event.changedTouches[i];
+                if (touch.identifier != this.touchIdx)
+                {
+                    this.dispatchExtraTap(touch.clientX, touch.clientY);
+                    return;
+                }
+            }
+        }
 
         event.preventDefault();
         // get the first who changed
@@ -156,7 +170,7 @@ export class VirtualJoystick {
         // if touch event with the proper identifier isnt found, do nothing
         if (i === touchList.length) return;
         const touch = touchList[i];
-        console.log(touchList, i);
+        //console.log(touchList, i);
         event.preventDefault();
         return this.onMove(touch.clientX, touch.clientY);
     };
@@ -206,6 +220,15 @@ export class VirtualJoystick {
     dispatchMoved(): void {
         for (const fn of this.moved) {
             fn();
+        }
+    }
+
+    onExtraTap(fct: (x: number, y: number) => void): void {
+        this.extraTap.push(fct);
+    }
+    dispatchExtraTap(x: number, y: number): void {
+        for (const fn of this.extraTap) {
+            fn(x,y);
         }
     }
 }

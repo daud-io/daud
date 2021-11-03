@@ -1,9 +1,6 @@
 ﻿import "./hintbox";
 import { NetWorldView } from "./daud-net/net-world-view";
-import { ClientBody } from "./cache";
-import { projectObject } from "./interpolator";
 import { Minimap } from "./minimap";
-import { setPerf, setPlayerCount, setSpectatorCount } from "./hud";
 import * as log from "./log";
 import { Controls, registerContainer} from "./controls";
 import { Connection } from "./connection";
@@ -12,23 +9,23 @@ import { GameContainer } from "./gameContainer";
 import * as bus from "./bus";
 import "./events";
 import { Cache } from "./cache";
-import { Telemetry } from "./telemetry";
 import { Fleet } from "./models/fleet";
-import { Matrix, ScreenSpaceCurvaturePostProcess, Vector2 } from "@babylonjs/core";
+import { Vector2 } from "@babylonjs/core";
 import { Settings } from "./settings";
 
 const spawnButton = document.getElementById("spawn") as HTMLButtonElement;
 const buttonSpectate = document.getElementById("spawnSpectate") as HTMLButtonElement;
-const progress = document.getElementById("cooldown") as HTMLProgressElement;
 const connection = new Connection();
 
-let cameraPositionFromServer: ClientBody;
+let cameraPositionFromServer: Vector2 = new Vector2();
 let gameTime: number;
 let worldSize = 1000;
 let frameCounter = 0;
 let joiningWorld = false;
 let spawnOnView = false;
 let cooldownProgressValue = 0;
+
+
 
 const canvas = document.getElementById("gameCanvas") as any;
 if (!canvas)
@@ -46,7 +43,8 @@ container.engine.runRenderLoop(() => {
     if (connection.serverClockOffset != -1 && cameraPositionFromServer) {
         gameTime = performance.now() - connection.serverClockOffset;
         container.cache.tick(gameTime);
-        bus.emit('prerender', gameTime);
+        //bus.emit('prerender', gameTime);
+        bus.emitPrerender(gameTime);
 
         let newCamera:Vector2|null = null;
         
@@ -58,26 +56,23 @@ container.engine.runRenderLoop(() => {
         }
         if (newCamera == null)
         {
-            projectObject(cameraPositionFromServer, gameTime);
-            newCamera = cameraPositionFromServer.Position;
+            if (container.alive)
+                console.log('warn: alive but no fleet to for camera');
+                
+            newCamera = cameraPositionFromServer;
         }
 
         container.positionCamera(newCamera);
         
         if (container.ready)
             container.scene.render();
+
+        //bus.emit('postrender', gameTime);
+        bus.emitPostrender(gameTime);
     }
 
     connection.dispatchWorldViews();
 });
-
-async function initialize(): Promise<void> {
-    await container.loader.load();
-    console.log('container loaded');
-    bus.emit('gameReady');
-}
-
-initialize();
 
 bus.on("dead", () => {
     document.body.classList.remove("alive");
@@ -91,7 +86,8 @@ bus.on("worldview", (newView: NetWorldView) => {
     if (!container.alive && connection.hook != null)
         buttonSpectate.disabled = spawnButton.disabled = connection.hook.CanSpawn === false;
 
-    cameraPositionFromServer = Cache.bodyFromServer(newView.camera()!);
+    
+    Cache.positionFromServerBody(newView.camera()!, cameraPositionFromServer);
 
     const announcementsLength = newView.announcementsLength();
     for (let u = 0; u < announcementsLength; u++) {
@@ -120,10 +116,7 @@ bus.on("worldview", (newView: NetWorldView) => {
         }
     }
 
-    setPlayerCount(newView.playercount());
-    setSpectatorCount(newView.spectatorcount());
-
-    cooldownProgressValue = newView.cooldownshoot();
+    //cooldownProgressValue = newView.cooldownshoot();
 
     if (spawnOnView) {
         spawnOnView = false;
@@ -131,9 +124,9 @@ bus.on("worldview", (newView: NetWorldView) => {
     }
 });
 
- setInterval(() => {
+/* setInterval(() => {
      progress.value = cooldownProgressValue;
- }, 200);
+ }, 200);*/
 
 function doSpawn() {
     document.body.classList.remove("dead");
@@ -141,24 +134,31 @@ function doSpawn() {
     document.body.classList.add("alive");
     connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
     container.focus();
+    if (Settings.pointerlock)
+        Controls.requestPointerLock();
+
 }
 
 function onLaunchClick(e:MouseEvent) {
     spawnOnView = true;
 
-    if (Settings.pointerlock)
-    {
-        container.engine.enterPointerlock();
-        Controls.screenMouseX = container.engine.getRenderWidth()/2;
-        Controls.screenMouseY = container.engine.getRenderHeight()/2;
-        Controls.mouseX = 0;
-        Controls.mouseY = 0;
-    }
-
 }
 
 buttonSpectate.addEventListener("click", onLaunchClick);
 spawnButton.addEventListener("click", onLaunchClick);
+
+document.addEventListener("selectstart", (e) => {
+    e.preventDefault();
+    return false;
+});
+
+document.addEventListener("selectstart", (e) => {
+    e.preventDefault();
+    e.cancelBubble = true;
+});
+document.getElementById('nick')?.addEventListener("selectstart", (e) => {
+    e.cancelBubble = true;
+});
 
 
 function startSpectate(hideButton = false) {
@@ -183,18 +183,6 @@ document.getElementById("stop_spectating")!.addEventListener("click", () => {
     deathScreen.style.display = "";
 });
 
-document.addEventListener('pointerlockchange', (event) => {
-    if (document.pointerLockElement !== container.canvas &&
-        (<any>document).mozPointerLockElement !== container.canvas)
-    {
-        container.pointerLocked = false;
-        if (document.body.classList.contains("alive"))
-            connection.sendExit();
-    }
-    else
-        container.pointerLocked = true;
-});
-
 document.addEventListener("keydown", ({ code, key }) => {
     if (
         code == "Escape"
@@ -211,13 +199,10 @@ document.addEventListener("keydown", ({ code, key }) => {
     }
 });
 
-
-
 function updateStats() {
     connection.framesPerSecond = frameCounter;
     connection.viewsPerSecond = container.viewCounter;
     connection.updatesPerSecond = container.updateCounter;
-    setPerf(connection.latency, connection.minimumLatency, frameCounter, connection.statViewCPUPerSecond);
 
     //if (Telemetry.shouldSend())
         //Telemetry.send(container, connection);
@@ -226,13 +211,14 @@ function updateStats() {
     container.viewCounter = 0;
     container.updateCounter = 0;
 
+    const bg = container.backgrounded;
+    container.backgrounded = (connection.viewsPerSecond < 2);
+
+    // we WERE backgrounded, but not anymore
+    if(bg && !container.backgrounded)
+        connection.resetTimingWindow();
 }
 setInterval(updateStats, 1000);
-
-//const query = new URLSearchParams(window.location.search);
-//if (query.has("spectate") && query.get("spectate") !== "0") {
-//startSpectate(true);
-//}
 
 // clicking enter in nick causes fleet spawn
 const nick = document.getElementById("nick") as HTMLInputElement;
@@ -243,15 +229,8 @@ nick.addEventListener("keydown", (e) => {
     }
 });
 
-// clicking enter in spectate mode causes fleet spawn
-document.body.addEventListener("keydown", (e) => {
-    //if (document.body.classList.contains("spectating") && e.key === "Enter") {
-    //    doSpawn();
-    //}
-});
-
-bus.on("worldjoin", (connect, world) => {
-    console.log(`onWorldJoin: ${connect} ${world}`);
+bus.on("worldjoin", (connect) => {
+    console.log(`onWorldJoin: ${connect}`);
     if (joiningWorld) {
         joiningWorld = false;
         spawnOnView = true;
@@ -282,3 +261,19 @@ bus.on("loaded", () => {
 });
 
 bus.emit("pageReady");
+
+async function initialize(): Promise<void> {
+    await container.loader.load();
+    console.log('container loaded');
+    bus.emit('gameReady');
+}
+
+initialize();
+
+
+
+
+(<any>window).connect = (world:string) =>
+{
+    bus.emit("worldjoin", world);
+}

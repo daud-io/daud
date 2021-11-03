@@ -8,12 +8,15 @@ export class Settings {
     static bandwidth: number = 100;
     static logLength: number = 4;
     static showHints: boolean = true;
+    static lookAtPointer: boolean = false;
     static nameSize: number = 48;
     static graphics: string = "low";
     static pointerlock: boolean = false;
     static fullscreen: boolean = false;
+    static MouseMode: string = "new";
 
     private static pointerLockEL: HTMLInputElement;
+    private static lookAtPointerEL: HTMLInputElement;
     private static fullscreenEL: HTMLInputElement;
     private static themeSelectorEL: HTMLSelectElement;
     private static showHintsEL: HTMLInputElement;
@@ -28,6 +31,7 @@ export class Settings {
         this.themeSelectorEL = document.getElementById("settingsTheme") as HTMLSelectElement;
         this.showHintsEL = document.getElementById("settingsShowHints") as HTMLInputElement;
         this.pointerLockEL = document.getElementById("settingsPointerLock") as HTMLInputElement;
+        this.lookAtPointerEL = document.getElementById("settingsLookAtPointer") as HTMLInputElement;
         this.fullscreenEL = document.getElementById("settingsFullscreen") as HTMLInputElement;
         this.bandwidthEL = document.getElementById("settingsBandwidth") as HTMLInputElement;
         this.logLengthEL = document.getElementById("settingsLog") as HTMLInputElement;
@@ -40,9 +44,13 @@ export class Settings {
         };
 
         this.pointerLockEL.onchange = () => {
-            Settings.fullscreen = this.pointerLockEL.checked;
+            Settings.pointerlock = this.pointerLockEL.checked;
             Settings.saveSettings();
         };
+        this.lookAtPointerEL.onchange = () => {
+            Settings.lookAtPointer = this.lookAtPointerEL.checked;
+            Settings.saveSettings();
+        };        
         this.fullscreenEL.onchange = () => {
             Settings.fullscreen = this.fullscreenEL.checked;
             Settings.saveSettings();
@@ -56,18 +64,6 @@ export class Settings {
 
         this.themeSelectorEL.onchange = themeChange;
         
-        this.showHintsEL.onchange = () => {
-            Settings.showHints = this.showHintsEL.checked;
-            Settings.saveSettings();
-        };
-        this.pointerLockEL.onchange = () => {
-            Settings.pointerlock = this.pointerLockEL.checked;
-            Settings.saveSettings();
-        };
-        this.fullscreenEL.onchange = () => {
-            Settings.fullscreen = this.fullscreenEL.checked;
-            Settings.saveSettings();
-        };
         this.showHintsEL.onchange = () => {
             Settings.showHints = this.showHintsEL.checked;
             Settings.saveSettings();
@@ -137,6 +133,7 @@ export class Settings {
         }
 
         this.pointerLockEL.checked = Settings.pointerlock;
+        this.lookAtPointerEL.checked = Settings.lookAtPointer;
         this.fullscreenEL.checked = Settings.fullscreen;
         this.graphicsSelectorEL.value = Settings.graphics;
         this.themeSelectorEL.value = Settings.theme;

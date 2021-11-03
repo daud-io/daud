@@ -3,16 +3,30 @@ import { projectObject } from "./interpolator";
 import { ClientBody, ClientGroup } from "./cache";
 import { TextureLayer } from "./textureLayer";
 import { SpriteDefinition } from "./loader";
+
+export class ObjectMode {
+    name: string;
+    visible: boolean;
+    layers?: TextureLayer[];
+
+    constructor(name:string)
+    {
+        this.name = name;
+        this.visible = false;
+    }
+};
+
 export class RenderedObject {
     container: GameContainer;
     body: ClientBody;
-    currentSpriteName: string;
-    currentMode: number;
 
+    modes: ObjectMode[];
     textureLayers: Record<string, TextureLayer>;
 
     baseSpriteDefinition: SpriteDefinition;
-    currentZIndex: number;
+    currentZIndex?: number;
+    currentSpriteName?: string;
+    currentMode?: number;
 
     constructor(container: GameContainer, clientBody: ClientBody) {
         this.textureLayers = {};
@@ -23,24 +37,35 @@ export class RenderedObject {
         this.body = clientBody;
 
         this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(clientBody.Sprite);
-        this.currentSpriteName = this.body.Sprite;
-        this.currentMode = this.body.Mode
-        this.currentZIndex = this.body.zIndex;
-        
-        this.updateTextureLayers();
+
+        this.modes = this.setupModes();
+        this.update();
     }
 
-    decodeOrderedModes(mode: number) {
-        return ["default"];
+    setupModes() : ObjectMode[]
+    {
+        return [
+            new ObjectMode("default")
+        ];
     }
 
-    destroy(): void {
+    updateMode(mode: number) {
+        this.modes[0].visible = true;
+        this.currentMode = mode;
+    }
+
+    resetTextureLayers(): void {
         for (let key in this.textureLayers) {
             let textureLayer = this.textureLayers[key];
-            textureLayer.destroy();
+            textureLayer.dispose();
         }
 
         this.textureLayers = {};
+        this.currentMode = -1;
+    }
+
+    dispose(): void {
+        this.resetTextureLayers();
     }
 
     tick(time: number): void {
@@ -49,7 +74,7 @@ export class RenderedObject {
 
             for (let key in this.textureLayers) {
                 let textureLayer = this.textureLayers[key];
-                textureLayer.tick(time, this.body);
+                textureLayer.prerender(time, this.body);
             }
         }
     }
@@ -60,69 +85,79 @@ export class RenderedObject {
         this.update();
     }
 
+    setupForSprite(spriteName: string)
+    {
+        this.modes = this.setupModes();
+        this.currentSpriteName = spriteName;
+        this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(this.currentSpriteName);
+
+        for(var i=0; i<this.modes.length; i++)
+        {
+            let mode = this.modes[i];
+            if (mode && !mode.layers)
+            {
+                mode.layers = [];
+                let textureList = this.baseSpriteDefinition.modes?.[mode.name]?.split(" ") ?? [];
+
+                for(let textureIndex=0; textureIndex<textureList.length; textureIndex++)
+                {
+                    var textureName = textureList[textureIndex];
+                    let textureLayer = this.textureLayers[textureName];
+                    if (textureLayer == null)
+                    {
+                        textureLayer = new TextureLayer(this.container, textureName);
+                        this.textureLayers[textureName] = textureLayer;
+                    }
+                    mode.layers.push(textureLayer);
+                }
+            }
+        }
+    }
+
     update(): void {
-        let dirty = false;
-
-        if (this.currentSpriteName != this.body.Sprite) {
-            this.destroy();
-            this.currentSpriteName = this.body.Sprite;
-            this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(this.currentSpriteName);
-            dirty = true;
+        if (this.currentSpriteName != this.body.Sprite)
+        {
+            this.resetTextureLayers();
+            this.setupForSprite(this.body.Sprite);
         }
 
-        if (this.currentMode != this.body.Mode) {
-            this.currentMode = this.body.Mode;
-            dirty = true;
-        }
+        this.updateTextureLayers();
 
+        if (this.currentMode != this.body.Mode)
+        {
+            this.updateMode(this.body.Mode);
+        }
+        
         if (this.currentZIndex != this.body.zIndex)
         {
             this.currentZIndex = this.body.zIndex;
-            dirty = true;
         }
 
-        if (dirty) this.updateTextureLayers();
-    }
-
-    getOrderedTextures(): string[] {
-        const modes = this.decodeOrderedModes(this.currentMode);
-        const textures = new Array<string>();
-        for (let i = 0; i < modes.length; i++) {
-            let mode = modes[i];
-            let textureList = <string[]>[];
-            let namedMode = this.baseSpriteDefinition.modes?.[mode];
-            textureList = namedMode?.split(" ") ?? [];
-
-            for (let t in textureList) if (textures.indexOf(textureList[t]) == -1) textures.push(textureList[t]);
-        }
-
-        return textures;
     }
 
     updateTextureLayers() {
-        const textures = this.getOrderedTextures();
+        for(let k in this.textureLayers)
+            this.textureLayers[k].visible = false;
 
-        for (let i = 0; i < textures.length; i++) {
-            var textureName = textures[i];
+        for(var i=0; i<this.modes.length; i++)
+        {
+            let mode = this.modes[i];
+            if (mode && mode.layers)
+            {
+                for(var layerIndex=0; layerIndex<mode.layers.length; layerIndex++)
+                {
+                    var layer = mode.layers[layerIndex];
 
-            let textureLayer = this.textureLayers[textureName] ?? new TextureLayer(this.container, this.body, textureName);
-
-            if (textureLayer != null) {
-                let zIndex = this.body.zIndex;
-                if (zIndex == 0) zIndex = 250;
-
-                textureLayer.setZIndex(zIndex - i + this.body.ID / 100000);
-
-                this.textureLayers[textureName] = textureLayer;
-            }
-        }
-
-        // remove any layers that are now unused
-        for (var key in this.textureLayers) {
-            if (textures.indexOf(key) == -1) {
-                let layer = this.textureLayers[key];
-                layer.destroy();
-                delete this.textureLayers[key];
+                    if (mode.visible)
+                    {
+                        let zIndex = this.body.zIndex;
+                        if (zIndex == 0)
+                            zIndex = 250;
+    
+                        layer.setZIndex(zIndex - i + this.body.ID / 100000);
+                        layer.visible = true;
+                    }
+                }
             }
         }
     }

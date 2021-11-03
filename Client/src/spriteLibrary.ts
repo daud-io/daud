@@ -16,12 +16,11 @@ export class SpriteLibrary {
 
     static async load(name: string): Promise<SpriteLibrary> {
 
-        const baseURL = document.body.attributes['data-static-url-base'];
         const librarybase: SpriteLibrary = 
             name == 'assets/base' ? infoBase
             : name == 'assets/themes/original' ? infoThemesOriginal
             : await window
-                .fetch(`${baseURL}${name}/info.json`)
+                .fetch(`/${name}/info.json`)
                 .then((response) => response.json())
                 .then(base => base as SpriteLibrary);
 
@@ -46,8 +45,7 @@ export class SpriteLibrary {
                 textures[textureName] = texture;
             }
             if (texture.url) {
-                const baseURL = document.body.attributes['data-static-url-base'];
-                texture.url = `${baseURL}${name}/${texture.url}`;
+                texture.url = `/${name}/${texture.url}`;
             } else {
                 let x = 1;
             }

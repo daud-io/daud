@@ -16,12 +16,10 @@ import { Cache } from "./cache";
 import * as bus from "./bus";
 import { Connection } from "./connection";
 import { Reticle } from "./reticle";
+import { HUD } from "./hud";
 import { AllMessages } from "./daud-net/all-messages";
 import { NetWorldView } from "./daud-net/net-world-view";
-
-
-// import "@babylonjs/core/Debug/debugLayer";
-// import "@babylonjs/inspector";
+//import "@babylonjs/inspector";
 
 export class GameContainer {
     scene: Scene;
@@ -29,9 +27,11 @@ export class GameContainer {
     readonly leaderboard: Leaderboard;
     readonly worldMeshLoader: WorldMeshLoader;
     readonly sounds: Sounds;
-    readonly baseURL: string;
+    readonly baseURL: string = '/';
 
     readonly reticle: Reticle;
+    readonly hud: HUD;
+
     camera: FreeCamera;
     cameraPosition: Vector2 = Vector2.Zero();
     cameraHeight: number = 0;
@@ -50,10 +50,11 @@ export class GameContainer {
     boundingRect: DOMRect;
     pointerLocked: boolean = false;
     alive: boolean = false;
+    touchscreen: boolean = false;
+    backgrounded: boolean = false;
 
     constructor(canvas: HTMLCanvasElement, connection: Connection) {
         this.connection = connection;
-        this.baseURL = document.body.attributes['data-static-url-base'];
         this.canvas = canvas;
         this.boundingRect = this.canvas.getBoundingClientRect();
         this.engine = new Engine(canvas, true);
@@ -72,6 +73,7 @@ export class GameContainer {
         this.setupLights();
 
         this.reticle = new Reticle(this);
+        this.hud = new HUD(this);
 
         //this.scene.debugLayer.show();
 
@@ -124,6 +126,8 @@ export class GameContainer {
         camera.maxZ = 20000;
         camera.upVector = new Vector3(0, 0, 1);
         camera.setTarget(new Vector3(this.cameraPosition.x, 0, this.cameraPosition.y));
+        this.scene.detachControl();
+        camera.detachControl();
 
         return camera;
     }
@@ -133,16 +137,16 @@ export class GameContainer {
         this.light.intensity *= 0.3;
     }
 
-    positionCamera(serverPosition: Vector2) {
-        this.cameraPosition.x = serverPosition.x * 0.2 + this.cameraPosition.x * 0.8;
-        this.cameraPosition.y = serverPosition.y * 0.2 + this.cameraPosition.y * 0.8;
-        this.camera.position = new Vector3(this.cameraPosition.x, this.cameraHeight, this.cameraPosition.y);
-
-        //console.log(this.camera.position);
+    positionCamera(newPosition: Vector2) {
+        this.cameraPosition.x = newPosition.x * 0.2 + this.cameraPosition.x * 0.8;
+        this.cameraPosition.y = newPosition.y * 0.2 + this.cameraPosition.y * 0.8;
+        this.camera.position.set(this.cameraPosition.x, this.cameraHeight, this.cameraPosition.y);
     }
 
     resize() {
+        console.log('resize');
         this.engine.resize();
         this.boundingRect = this.canvas.getBoundingClientRect();
+        //this.scene.onKeyboardObservable.add((kbInfo, eventState) => this.onKey(kbInfo));
     }
 }

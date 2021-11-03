@@ -41,11 +41,11 @@ export class Token extends RenderedObject {
         }
     }
 
-    destroy() {
+    dispose() {
         //if (this.fleet)
         //this.fleet.deleteShip(this.bodyID);
 
-        super.destroy();
+        super.dispose();
     }
 
     update() {

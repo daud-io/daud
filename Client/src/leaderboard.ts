@@ -53,6 +53,7 @@ export class Leaderboard {
     }
 
     update(data: LeaderboardType, position: Vector2, fleetID: number): void {
+
         if (data.Record && (this.recordName != data.Record.Name || this.recordScore != data.Record.Score)) {
             this.recordName = data.Record.Name;
             this.recordScore = data.Record.Score;

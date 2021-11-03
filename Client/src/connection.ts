@@ -1,5 +1,5 @@
 ﻿import { Settings } from "./settings";
-import { addSecretShips } from "./controls";
+import { addSecretShips, Controls } from "./controls";
 import { getToken } from "./discord";
 import * as bus from "./bus";
 import { Vector2 } from "@babylonjs/core";
@@ -14,7 +14,6 @@ import { NetSpawn } from "./daud-net/net-spawn";
 import { NetControlInput } from "./daud-net/net-control-input";
 import { NetEvent } from "./daud-net/net-event";
 import { NetLeaderboard } from "./daud-net/net-leaderboard";
-import { AdvancedDynamicTexture } from "@babylonjs/gui";
 
 export type LeaderboardEntry = { FleetID: number; Name: string; Color: string; Score: number; Position: Vector2; Token: boolean; ModeData: any };
 export type LeaderboardType = {
@@ -30,8 +29,6 @@ export type LeaderboardType = {
 
 
 export class Connection {
-    reloading = false;
-    disconnecting = false;
     connected = false;
     framesPerSecond = 0;
     viewsPerSecond = 0;
@@ -53,7 +50,6 @@ export class Connection {
     simulateLatency = 0;
     socket?: WebSocket;
     pingSent?: number;
-    bandwidthThrottle = Settings.bandwidth;
     autoReload = true;
     statPongCount = 0;
     hook: any = null;
@@ -66,9 +62,15 @@ export class Connection {
     builder: Builder = new Builder(1024);
     cacheSize: number = 0;
 
-    viewBuffer: Uint8Array;
-    viewBufferSpace: number;
-    viewBufferContents: { offset: number, length: number }[] = [];
+    viewBuffer: ByteBuffer[] = [];
+
+    messageBuffers = {
+        Quantum: new NetQuantum(),
+        WorldView: new NetWorldView(),
+        Ping: new NetPing(),
+        Event: new NetEvent(),
+        Leaderboard: new NetLeaderboard()
+    };
 
 
     constructor() {
@@ -104,30 +106,17 @@ export class Connection {
             }
         }, 250);
 
-        this.viewBuffer = new Uint8Array(5 * 1024 * 1024);
-        this.viewBufferSpace = this.viewBuffer.length;
+        bus.on('hook', (hook) => this.hook = hook);
     }
 
     disconnect(): void {
         if (this.socket) {
-            this.disconnecting = true;
             this.socket.close();
         }
     }
-    connect(worldKey: string): void {
-        const worldKeyParse = worldKey.match(/^(.*)\/(.*?)$/);
-        if (!worldKeyParse)
-        {
-            throw "bad world key";
-        }
-        
-        let hostname = worldKeyParse[1];
-        if (hostname.indexOf('://') == -1)
-            hostname = "wss://" + hostname;
-        let worldName = worldKeyParse[2];
-        let url = `${hostname}/api/v1/connect?world=${encodeURIComponent(worldName)}&`;
 
-        this.hook = null;
+    resetTimingWindow() {
+        console.log('reset timing window');
         this.serverClockOffset = -1;
         this.minimumLatency = -1;
         this.earliestOffset = -1;
@@ -136,33 +125,59 @@ export class Connection {
         this.minimumLatencyStart = -1;
         this.minimumLatencyNext = -1;
         this.maximumLatencyNext = 0;
+    }
 
+    connect(worldKey: string): void {
+        try
+        {
 
-        if (this.socket) {
-            this.socket.onclose = null;
-            this.socket.onmessage = null;
-            this.socket.close();
+            var url:URL;
+
+            try
+            {
+                url = new URL(worldKey);
+            }
+            catch
+            {
+                url = new URL(`wss://${worldKey}`);
+            }
+            let apiURL = `${url.protocol}//${url.host}/api/v1/connect?world=${encodeURIComponent(url.pathname?.substr(1))}`;
+
+            if (this.socket) {
+                this.socket.onclose = null;
+                this.socket.onmessage = null;
+                this.socket.close();
+            }
+
+            this.socket = new WebSocket(apiURL);
+            this.socket.binaryType = "arraybuffer";
+
+            this.hook = null;
+
+            this.resetTimingWindow();
+
+            this.socket.onmessage = (event) => {
+                this.onMessage(event);
+            };
+
+            this.socket.onerror = () => {
+                document.body.classList.add("connectionerror");
+            };
+
+            this.socket.onopen = () => {
+                document.body.classList.remove("connectionerror");
+
+                this.onOpen();
+            };
+            this.socket.onclose = (event) => {
+                this.onClose(event);
+            };
+        }
+        catch(e)
+        {
+            console.log('bad connection string: ' + worldKey);
         }
 
-        this.socket = new WebSocket(url);
-        this.socket.binaryType = "arraybuffer";
-
-        this.socket.onmessage = (event) => {
-            this.onMessage(event);
-        };
-
-        this.socket.onerror = () => {
-            document.body.classList.add("connectionerror");
-        };
-
-        this.socket.onopen = () => {
-            document.body.classList.remove("connectionerror");
-
-            this.onOpen();
-        };
-        this.socket.onclose = (event) => {
-            this.onClose(event);
-        };
     }
 
     sendPing(): void {
@@ -179,7 +194,7 @@ export class Connection {
         NetPing.addFps(this.builder, this.framesPerSecond);
         NetPing.addCs(this.builder, this.cacheSize);
         NetPing.addBackgrounded(this.builder, this.framesPerSecond < 1);
-        NetPing.addBandwidththrottle(this.builder, this.bandwidthThrottle);
+        NetPing.addBandwidththrottle(this.builder, Settings.bandwidth);
 
         const ping = NetPing.endNetPing(this.builder);
 
@@ -259,22 +274,21 @@ export class Connection {
         bus.emit("spawn", name ?? "", ship ?? "");
     }
 
-    sendControl(boost: boolean, shoot: boolean, x: number, y: number, spectateControl: string, customDataJson: string): void {
+    sendControl(boost: boolean, shoot: boolean, x: number, y: number, spectateControl: string|undefined): void {
         this.builder.clear();
 
         let spectateString: number | undefined = undefined;
-        let customDataJsonString: number | undefined = undefined;
 
-        if (spectateControl) spectateString = this.builder.createString(spectateControl);
-        if (customDataJson) customDataJsonString = this.builder.createString(customDataJson);
+        if (spectateControl)
+            spectateString = this.builder.createString(spectateControl);
 
         NetControlInput.startNetControlInput(this.builder);
         NetControlInput.addBoost(this.builder, boost);
         NetControlInput.addShoot(this.builder, shoot);
         NetControlInput.addX(this.builder, x);
         NetControlInput.addY(this.builder, y);
+        
         if (spectateString) NetControlInput.addSpectatecontrol(this.builder, spectateString);
-        if (customDataJsonString) NetControlInput.addCustomdata(this.builder, customDataJsonString);
 
         const input = NetControlInput.endNetControlInput(this.builder);
 
@@ -303,62 +317,47 @@ export class Connection {
 
         if (!this.pingMode) {
             this.sendAuthenticate(getToken());
-
-            if (this.reloading) {
-                window.location.reload();
-                this.reloading = false;
-            }
         }
     }
 
     onClose(event: CloseEvent): void {
+        if (this.connected && !this.pingMode)
+            bus.emit("disconnected");
+            
         this.connected = false;
-
-        if (!this.disconnecting && this.autoReload) {
-            if (event.reason != "Normal closure") {
-                this.reloading = true;
-            }
-            //console.log('reconnecting');
-
-            //this.connect();
-        }
-        this.disconnecting = false;
     }
 
-    handleNetWorldViewBuffer(newView: Uint8Array): void {
-        while (this.viewBufferSpace < newView.length) {
-            const addedCapacity = this.viewBuffer.length;
-            this.viewBufferSpace += addedCapacity;
-            let newBuffer = new Uint8Array(this.viewBuffer.length + addedCapacity);
-            newBuffer.set(this.viewBuffer, 0);
-            this.viewBuffer = newBuffer;
-        }
-
-        var contentsHeader = {
-            offset: this.viewBuffer.length - this.viewBufferSpace,
-            length: newView.length
-        };
-
-        this.viewBufferContents.push(contentsHeader);
-        this.viewBuffer.set(newView, contentsHeader.offset);
-        this.viewBufferSpace -= contentsHeader.length;
+    handleNetWorldViewBuffer(newView: ByteBuffer): void {
+        this.viewBuffer.push(newView);
+        // if we are backgrounds, fps=0, we can't buffer forever
+        if (this.viewBuffer.length > 200)
+            this.dispatchWorldViews();
     }
 
     dispatchWorldViews() {
-        for (let i in this.viewBufferContents) {
-            const header = this.viewBufferContents[i];
-            const data = this.viewBuffer.subarray(header.offset, header.offset + header.length);
-            const buf = new ByteBuffer(data);
-            const quantum = NetQuantum.getRootAsNetQuantum(buf);
-            this.handleNetWorldView(quantum.message(new NetWorldView()));
+        try
+        {
+            let start = performance.now();
+            for (let i=0; i<this.viewBuffer.length; i++) {
+                const buf = this.viewBuffer[i];
+                const quantum = NetQuantum.getRootAsNetQuantum(buf);
+                this.handleNetWorldView(quantum.message(new NetWorldView()));
+            }
+            
+            //console.log(`dispatched ${this.viewBuffer.length} in ${performance.now()-start}`);
+            this.viewBuffer.length = 0;
         }
-        this.viewBufferContents.length = 0;
-        this.viewBufferSpace = this.viewBuffer.length;
+        catch (e)
+        {
+            console.log('exception in dispatchWorlds');
+        }
+
     }
 
+    handleNetWorldView(view: NetWorldView, arrivalTime: number = -1): void {
 
-    handleNetWorldView(view: NetWorldView): void {
-        const offset = performance.now() - view.time();
+        if (arrivalTime==-1) arrivalTime = performance.now();
+        const offset = arrivalTime - view.time();
 
         if (offset < this.earliestOffsetNext || this.earliestOffsetNext == -1) {
             this.earliestOffsetNext = offset;
@@ -370,7 +369,8 @@ export class Connection {
         this.serverClockOffset = this.earliestOffset;
 
         const worldviewStart = performance.now();
-        bus.emit("worldview", view);
+        //bus.emit("worldview", view);
+        bus.emitWorldview(view);
         this.viewCPU += performance.now() - worldviewStart;
 
     }
@@ -398,6 +398,7 @@ export class Connection {
         };
 
         if (eventObject.type == "hook") {
+
             this.hook = eventObject.data;
             bus.emit("hook", this.hook);
         }
@@ -444,30 +445,27 @@ export class Connection {
             Record: recordModel,
         });
     }
-
-
     onMessage(event: MessageEvent): void {
 
-        const data = new Uint8Array(event.data);
-        const buf = new ByteBuffer(data);
-        const quantum = NetQuantum.getRootAsNetQuantum(buf);
+        var byteArray = new Uint8Array(event.data);
+        var buffer = new ByteBuffer(byteArray);
+        const quantum = NetQuantum.getRootAsNetQuantum(buffer, this.messageBuffers.Quantum);
         const messageType = quantum.messageType();
-
-        this.statBytesDown += data.byteLength;
+        this.statBytesDown += byteArray.length;
 
         switch (messageType) {
             case AllMessages.NetWorldView:
-                //this.handleNetWorldViewBuffer(data);
-                this.handleNetWorldView(quantum.message(new NetWorldView()));
+                this.handleNetWorldViewBuffer(buffer);
+                //this.handleNetWorldView(quantum.message(this.messageBuffers.WorldView));
                 break;
             case AllMessages.NetPing:
-                this.handleNetPing(quantum.message(new NetPing()));
+                this.handleNetPing(quantum.message(this.messageBuffers.Ping));
                 break;
             case AllMessages.NetEvent:
-                this.handleNetEvent(quantum.message(new NetEvent()));
+                this.handleNetEvent(quantum.message(this.messageBuffers.Event));
                 break;
             case AllMessages.NetLeaderboard:
-                this.handleNetLeaderboard(quantum.message(new NetLeaderboard()));
+                this.handleNetLeaderboard(quantum.message(this.messageBuffers.Leaderboard));
                 break;
         }
     }

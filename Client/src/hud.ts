@@ -1,37 +1,74 @@
-﻿const hudh = document.getElementById("hud")!;
+﻿import { GameContainer } from "./gameContainer";
+import * as bus from "./bus";
 
-let latency: number;
-let framesPerSecond: number;
-let playerCount: number;
-let spectatorCount: number;
-let minlatency: number;
-let viewCPU: number;
+export class HUD {
+    container: GameContainer;
+    hudEL: HTMLElement;
+    netwarnEL: HTMLElement;
+    cpuwarnEL: HTMLElement;
 
-let originalTitle = window.document.title;
+    cpuVisible: boolean = false;
+    netVisible: boolean = false;
 
-function update(): void {
-    hudh.innerText = `fps: ${framesPerSecond || 0} - \
-                          players: ${playerCount || 0} - \
-                          spectators: ${spectatorCount || 0} - \
-                          cpu: ${viewCPU || 0} - \
-                          ping: ${latency || 0}`;
+    playerCount: number = 0;
+    spectatorCount: number = 0;
+
+    originalTitle: string;
+
+    constructor(container: GameContainer) {
+        this.container = container;
+        this.originalTitle = window.document.title;
+        this.hudEL = document.getElementById("hud")!;
+        this.netwarnEL = document.getElementById("netwarn")!;
+        this.cpuwarnEL = document.getElementById("cpuwarn")!;
+
+        bus.on('worldview', (view) => {
+            this.playerCount = view.playercount();
+            this.spectatorCount = view.spectatorcount();
+        });
+
+        setInterval(() => this.update(), 1000);
+    }
+
+    update(): void {
+        window.document.title = this.playerCount > 0 ? `DAUD | (${this.playerCount})` : this.originalTitle;
+        var con = this.container.connection;
+        let text = `\
+            fps: ${con.framesPerSecond || 0} - \
+            players: ${this.playerCount || 0} - \
+            spectators: ${this.spectatorCount || 0} - \
+            cpu: ${Math.floor(con.viewCPU) || 0} - \
+            ping: ${Math.floor(con.latency) || 0} \
+        `;
+
+        let cpuwarn = false;
+        let netwarn = false;
+
+        if (con)
+        {
+            cpuwarn = con.viewCPU > 200;
+
+            netwarn = 
+               (con.latency > 200)
+            || (con.ripple > 50)
+            || ((con.socket?.bufferedAmount ?? 0) > 1024);
+        }
+
+        if (cpuwarn && !this.cpuVisible)
+            this.cpuwarnEL.classList.add('active');
+        if (!cpuwarn && this.cpuVisible)
+            this.cpuwarnEL.classList.remove('active');
+        this.cpuVisible = cpuwarn;
+
+        if (netwarn && !this.netVisible)
+            this.netwarnEL.classList.add('active');
+        if (!cpuwarn && this.netVisible)
+            this.netwarnEL.classList.remove('active');
+        this.netVisible = netwarn;
+
+
+        this.hudEL.innerText = text;
+    }
 }
 
-export function setPerf(l: number, ml: number, f: number, cpu: number): void {
-    viewCPU = Math.floor(cpu * 10);
-    if (latency == Math.floor(l) && framesPerSecond == f) return;
-    latency = Math.floor(l);
-    minlatency = Math.floor(ml);
-    framesPerSecond = f;
-    update();
-}
-export function setSpectatorCount(s: number): void {
-    if (spectatorCount == s) return;
-    spectatorCount = s;
-    update();
-}
-export function setPlayerCount(p: number): void {
-    if (p == playerCount) return;
-    playerCount = p;
-    window.document.title = playerCount > 0 ? `DAUD | (${playerCount})` : originalTitle;
-}
+
