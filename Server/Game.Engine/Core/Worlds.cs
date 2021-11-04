@@ -64,9 +64,9 @@
             hook.Name = "Party City";
             hook.Description = "Party City, what can we say?";
             hook.Mesh.Enabled = true;
-            //hook.Fishes *= 4;
-            //hook.PickupSeekers *= 4;
-            //hook.PickupShields *= 4;
+            hook.Fishes *= 4;
+            hook.PickupSeekers *= 4;
+            hook.PickupShields *= 4;
             hook.Mesh.MeshURL = "wwwroot/public/models/partycity.glb";
             hook.WorldSize = 10000;
 

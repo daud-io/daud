@@ -55,7 +55,6 @@ export class Connection {
     hook: any = null;
     lastControlPacket: Uint8Array = new Uint8Array(0);
     earliestOffset: number = -1;
-    pingMode: boolean = false;
     connectionTime: number = 0;
     ripple: number = 0;
     earliestOffsetNext: number = -1;
@@ -110,6 +109,12 @@ export class Connection {
     }
 
     disconnect(): void {
+        if (this.connected)
+        {
+            this.connected = false;
+            bus.emit("disconnected");
+        }
+
         if (this.socket) {
             this.socket.close();
         }
@@ -126,9 +131,10 @@ export class Connection {
         this.minimumLatencyNext = -1;
         this.maximumLatencyNext = 0;
     }
-    
+
     newTimingWindow() {
         console.log('new timing window');
+        this.minimumLatencyNext = -1;
         this.minimumLatencyStart = -1;
     }
 
@@ -318,19 +324,13 @@ export class Connection {
         this.connected = true;
         console.log("connected");
         this.connectionTime = performance.now();
-        if (!this.pingMode)
-            bus.emit("connected", this);
+        bus.emit("connected", this);
 
         this.sendPing();
-
-        if (!this.pingMode) {
-            this.sendAuthenticate(getToken());
-        }
+        this.sendAuthenticate(getToken());
     }
 
     onClose(): void {
-        if (this.connected && !this.pingMode)
-            bus.emit("disconnected");
             
         this.connected = false;
     }

@@ -26,7 +26,7 @@ export class WorldMeshLoader {
             if (this.loadedFile != null) this.unloadMeshes();
 
             if (hook.Mesh.Enabled !== null) {
-                this.loadedFile = <string>hook.Mesh.MeshURL;
+                this.loadedFile = <string>(hook.Mesh.MeshURL);
                 console.log('worldMeshLoader: loading mesh');
                 this.loadGLB(this.loadedFile);
             }
@@ -34,6 +34,8 @@ export class WorldMeshLoader {
         else
         {
             console.log(hook.Mesh);
+            console.log(this.loadedFile);
+            
             console.log('worldMeshLoader: meshless hook exit');
             this.container.ready = true;
         }

@@ -443,7 +443,7 @@
                         sw.Restart();
                         Thread.Sleep(delta);
                         sw.Stop();
-                        if (Math.Abs((sw.Elapsed - delta).TotalMilliseconds) > 3)
+                        if (Math.Abs((sw.Elapsed - delta).TotalMilliseconds) > 5)
                             Console.WriteLine($"sleep {delta.TotalMilliseconds}: " + (sw.Elapsed.TotalMilliseconds));
                     }
 
@@ -456,11 +456,6 @@
                 Console.WriteLine("Exception in WorldTickEntry: " + e);
             }
         }
-
-        
-
-
-
 
         public Vector2 ChooseSpawnPoint(string type, object obj)
         {

@@ -119,8 +119,6 @@ export const Controls = {
     emoji: "🥚",
     nick: "unknown",
 
-    dirty: false,
-
     boostPointer: false,
     boostKeyboard: false,
     get boost() { return Controls.boostPointer || Controls.boostKeyboard; },
@@ -182,32 +180,12 @@ export const Controls = {
             Controls.autofire = false;
             autofTgg.innerHTML = "OFF";
         }
-        Controls.dirty = true;
+        sendControlPacket();
     }
 };
 
 
 bus.on('postrender', (gametime) => {
-    if (Controls.dirty) {
-        Controls.dirty = false;
-
-        if (!Controls.container?.alive) {
-            Controls.spectateControl = undefined;
-
-            if (Controls.spectateDebounce && !Controls.shoot) {
-                Controls.spectateDebounce = false;
-            }
-
-            if (!Controls.spectateDebounce && Controls.shoot) {
-                Controls.spectateControl = "action:next";
-                Controls.spectateDebounce = true;
-            }
-        }
-
-        //console.log('sendControl');
-        sendControlPacket();
-    }
-
     Controls.pointerSpeed += Math.abs(Controls.mouseX - Controls.previousMouseX) + Math.abs(Controls.mouseY - Controls.previousMouseY);
     Controls.pointerSpeed *= 0.9;
 
@@ -232,7 +210,18 @@ function mouseUp(this: HTMLCanvasElement, ev: MouseEvent): any {
     sendControlPacket();
 }
 
+function spectateActionNext()
+{
+    Controls.spectateControl = "action:next";
+    sendControlPacket();
+    Controls.spectateControl = undefined;
+}
+
 function mouseDown(this: HTMLCanvasElement, ev: MouseEvent): any {
+
+    if (!Controls.container?.alive)
+        spectateActionNext();
+
     switch (ev.button) {
         case 2:
             Controls.boostPointer = true;

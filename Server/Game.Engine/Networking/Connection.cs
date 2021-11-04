@@ -328,8 +328,8 @@
             try
             {
                 SendQuantum.message = message;
-                FlatBufferSerializer.Default.GetMaxSize(SendQuantum);
-                FlatBufferSerializer.Default.Serialize(SendQuantum, SendBuffer);
+                NetQuantum.Serializer.GetMaxSize(SendQuantum);
+                NetQuantum.Serializer.Write(SendBuffer, SendQuantum);
 
                 if (Socket.State == WebSocketState.Open)
                 {
@@ -379,14 +379,14 @@
 
         private async ValueTask HandleIncomingMessage(NetQuantum quantum)
         {
-            switch (quantum.message.Kind)
+            switch (quantum.message?.Kind)
             {
                 case AllMessages.ItemKind.NetPing:
-                    await HandlePingAsync(quantum.message.NetPing);
+                    await HandlePingAsync(quantum.message?.NetPing);
                     break;
 
                 case AllMessages.ItemKind.NetSpawn:
-                    var spawn = quantum.message.NetSpawn;
+                    var spawn = quantum.message?.NetSpawn;
                     var color = "red";
 
                     Sprites shipSprite = Sprites.ship_red;
@@ -469,7 +469,7 @@
 
                     break;
                 case AllMessages.ItemKind.NetControlInput:
-                    var input = quantum.message.NetControlInput;
+                    var input = quantum.message?.NetControlInput;
 
                     Player?.SetControl(new Vector2(input.x, input.y), input.boost, input.shoot);
 
@@ -517,7 +517,7 @@
                     break;
 
                 case AllMessages.ItemKind.NetAuthenticate:
-                    var auth = quantum.message.NetAuthenticate;
+                    var auth = quantum.message?.NetAuthenticate;
                     if (Player != null)
                     {
                         Player.Token = auth.token;
@@ -583,7 +583,7 @@
 
                     if (result.EndOfMessage)
                     {
-                        await onReceive(FlatBufferSerializer.Default.Parse<NetQuantum>(ReceiveBuffer));
+                        await onReceive(NetQuantum.Serializer.Parse(ReceiveBuffer));
                         receiveIndex = 0;
                     }
                     done = !(Socket.State == WebSocketState.Open);

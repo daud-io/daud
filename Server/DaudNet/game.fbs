@@ -1,4 +1,5 @@
 ﻿namespace DaudNet;
+attribute "fs_serializer";
 
 union AllMessages
 {
@@ -12,7 +13,7 @@ union AllMessages
     NetAuthenticate
 }
 
-table NetLeaderboard
+table NetLeaderboard (fs_serializer)
 {
 	fleetid	: uint;
 	type	: string;
@@ -21,7 +22,7 @@ table NetLeaderboard
 	modedata: string;
 }
 
-table NetLeaderboardEntry
+table NetLeaderboardEntry (fs_serializer)
 {
 	fleetid	: uint;
 	name	: string;
@@ -32,7 +33,7 @@ table NetLeaderboardEntry
 	modedata: string;
 }
 
-table NetSpawn
+table NetSpawn (fs_serializer)
 {
 	name	: string;
 	ship	: string;
@@ -40,12 +41,12 @@ table NetSpawn
 	token	: string;
 }
 
-table NetExit
+table NetExit (fs_serializer)
 {
 	code	: int;
 }
 
-table NetControlInput
+table NetControlInput (fs_serializer)
 {
 	angle:float;
 	x: float;
@@ -56,13 +57,13 @@ table NetControlInput
     customdata:string;
 }
 
-table NetEvent 
+table NetEvent (fs_serializer)
 {
     type:string;
     data:string;
 }
 
-table NetPing
+table NetPing (fs_serializer)
 {
 	time:uint;
     latency:uint = 0;
@@ -75,7 +76,7 @@ table NetPing
 	clienttime:uint = 0;
 }
 
-table NetWorldView
+table NetWorldView (fs_serializer)
 {
 	time:uint;
 	camera:NetBody;
@@ -94,7 +95,7 @@ table NetWorldView
     customdata:string;
 }
 
-table NetGroup
+table NetGroup (fs_serializer)
 {
     group:uint;
     type:ubyte;
@@ -129,7 +130,7 @@ struct NetBody
     group:uint;
 }
 
-table NetAnnouncement
+table NetAnnouncement (fs_serializer)
 {
 	text:string;
     type:string;
@@ -137,12 +138,12 @@ table NetAnnouncement
     extradata:string;
 }
 
-table NetAuthenticate
+table NetAuthenticate (fs_serializer)
 {
 	token:string;
 }
 
-table NetQuantum
+table NetQuantum (fs_serializer)
 {
 	message: AllMessages;
 }

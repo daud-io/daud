@@ -298,9 +298,9 @@
                 message = message
             };
             
-            int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(q);
+            int maxBytesNeeded = NetQuantum.Serializer.GetMaxSize(q);
             byte[] buffer = new byte[maxBytesNeeded];
-            int bytesWritten = FlatBufferSerializer.Default.Serialize(q, buffer);
+            int bytesWritten = NetQuantum.Serializer.Write(buffer, q);
 
             await WebsocketSendingSemaphore.WaitAsync();
             try
@@ -333,27 +333,26 @@
 
         private async Task HandleIncomingMessage(NetQuantum netQuantum)
         {
-
-            switch (netQuantum.message.Kind)
+            switch (netQuantum.message?.Kind)
             {
                 case AllMessages.ItemKind.NetEvent:
-                    await HandleNetEvent(netQuantum.message.NetEvent);
+                    await HandleNetEvent(netQuantum.message?.NetEvent);
                     break;
 
                 case AllMessages.ItemKind.NetPing:
-                    await HandleNetPing(netQuantum.message.NetPing);
+                    await HandleNetPing(netQuantum.message?.NetPing);
                     break;
 
                 case AllMessages.ItemKind.NetWorldView:
-                    await HandleNetWorldView(netQuantum.message.NetWorldView);
+                    await HandleNetWorldView(netQuantum.message?.NetWorldView);
                     break;
 
                 case AllMessages.ItemKind.NetLeaderboard:
-                    await HandleNetLeaderboard(netQuantum.message.NetLeaderboard);
+                    await HandleNetLeaderboard(netQuantum.message?.NetLeaderboard);
                     break;
 
                 default:
-                    Console.WriteLine("Received other: " + netQuantum.message.Kind.ToString());
+                    Console.WriteLine("Received other: " + netQuantum.message?.Kind.ToString());
                     break;
             }
         }
@@ -397,7 +396,7 @@
                             if (result.EndOfMessage)
                             {
                                 var bytes = ms.GetBuffer();
-                                var quantum = FlatBufferSerializer.Default.Parse<NetQuantum>(bytes);
+                                var quantum = NetQuantum.Serializer.Parse(bytes);
 
                                 await onReceive(quantum);
 

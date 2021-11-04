@@ -1,9 +1,6 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0
+FROM mcr.microsoft.com/dotnet/sdk:5.0-bullseye-slim
 WORKDIR /app
 COPY . ./
-
-WORKDIR /app/Game.Engine
-RUN dotnet publish -c Release -o /app/out
 
 WORKDIR /app/Game.Engine
 RUN dotnet publish -c Release -o /app/out
@@ -11,7 +8,7 @@ RUN dotnet publish -c Release -o /app/out
 WORKDIR /app/Game.Util
 RUN dotnet publish -c Release -o /app/out
 
-FROM mcr.microsoft.com/dotnet/aspnet:5.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-bullseye-slim
 WORKDIR /app
 COPY --from=0  /app/out ./
 
