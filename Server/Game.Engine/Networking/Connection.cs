@@ -28,6 +28,7 @@
         private Vector2 CameraPosition;
         private Vector2 CameraLinearVelocity;
 
+
         private const float VELOCITY_SCALE_FACTOR = 5000;
 
         private readonly ILogger<Connection> Logger = null;
@@ -36,6 +37,8 @@
 
         public readonly AsyncAutoResetEvent WorldUpdateEvent;
         private WebSocket Socket = null;
+        private CancellationTokenSource cancellationTokenSource;
+        private CancellationToken cancellationToken;
 
         private World World = null;
         private Player Player = null;
@@ -62,32 +65,33 @@
 
         public Queue<BroadcastEvent> Events = new Queue<BroadcastEvent>();
 
-        private readonly NetWorldView netWorldView = new();
+        private readonly NetWorldView netWorldView;
         private readonly List<uint> deletes = new();
         private readonly List<uint> groupdeletes = new();
         private readonly List<NetBody> updates = new();
         private readonly List<NetGroup> groups = new();
+        private readonly NetBody CameraNetBody;
+
 
         public Connection(ILogger<Connection> logger)
         {
+            this.cancellationTokenSource = new();
+            this.cancellationToken = this.cancellationTokenSource.Token;
+
             this.Logger = logger;
-            this.WorldUpdateEvent = new AsyncAutoResetEvent();
+            this.CameraNetBody = new()
+            {
+                originalposition = new Vec2(),
+                velocity = new Vec2()
+            };
             this.netWorldView = new()
             {
                 deletes = deletes,
                 groupdeletes = groupdeletes,
                 updates = updates,
-                groups = groups
+                groups = groups,
+                camera = this.CameraNetBody
             };
-        }
-
-        public async ValueTask StartSynchronizing(CancellationToken cancellationToken)
-        {
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                await WorldUpdateEvent.WaitAsync(cancellationToken);
-                await StepAsync(cancellationToken);
-            }
         }
 
         private Vec2 FromPositionVector(Vector2 vector)
@@ -149,8 +153,9 @@
                     World.BodiesNear(CameraPosition, size, (body) => BodyCache.UpdateCachedBody(body, World.Time));
                     BodyCache.CollectStaleGroups();
                     BodyCache.CollectStaleBuckets();
+                    _ = this.StepAsync();
                 }
-                WorldUpdateEvent.Set();
+                
             }
             catch(Exception)
             {
@@ -160,14 +165,17 @@
 
         private void AbortConnection()
         {
+            this.cancellationTokenSource.Cancel();
             this.Aborted = true;
         }
 
-        public async ValueTask StepAsync(CancellationToken cancellationToken)
+        private bool InStep = false;
+        public async ValueTask StepAsync()
         {
+            if (InStep) return;
             try
             {
-
+                InStep = true;
                 this.netWorldView.deletes.Clear();
                 this.netWorldView.updates.Clear();
                 this.netWorldView.groupdeletes.Clear();
@@ -214,21 +222,12 @@
                 else
                     netWorldView.announcements = Array.Empty<NetAnnouncement>();
 
-                // define camera
-                netWorldView.camera = new NetBody
-                {
-                    definitiontime = World.Time,
-                    originalposition = new Vec2
-                    {
-                        x = (short)(this.CameraPosition.X),
-                        y = (short)(this.CameraPosition.Y)
-                    },
-                    velocity = new Vec2
-                    {
-                        x = (short)(this.CameraLinearVelocity.X * VELOCITY_SCALE_FACTOR),
-                        y = (short)(this.CameraLinearVelocity.Y * VELOCITY_SCALE_FACTOR)
-                    }
-                };
+
+                this.CameraNetBody.definitiontime = World.Time;
+                this.CameraNetBody.originalposition.x = (short)(this.CameraPosition.X);
+                this.CameraNetBody.originalposition.y = (short)(this.CameraPosition.Y);
+                this.CameraNetBody.velocity.x = (short)(this.CameraLinearVelocity.X * VELOCITY_SCALE_FACTOR);
+                this.CameraNetBody.velocity.y = (short)(this.CameraLinearVelocity.Y * VELOCITY_SCALE_FACTOR);
 
                 netWorldView.isalive = Player?.IsAlive ?? false;
                 netWorldView.time = World.Time;
@@ -253,7 +252,6 @@
                 else
                     netWorldView.fleetid = 0;
 
-
                 if (HookHash != World.HookHash)
                 {
 
@@ -264,7 +262,6 @@
                     });
                     HookHash = World.HookHash;
                 }
-
 
                 await this.SendAsync(new AllMessages(netWorldView), cancellationToken);
 
@@ -319,6 +316,10 @@
                 Console.Error.WriteLine(e.Message);
                 this.AbortConnection();
                 throw;
+            }
+            finally
+            {
+                InStep = false;
             }
         }
 
@@ -550,10 +551,10 @@
                 Player.IP = forwardedFor ?? httpContext.Connection.RemoteIpAddress.ToString();
                 Player.Connection = this;
 
-                var updateTask = StartSynchronizing(cancellationToken);
-                var readTask = StartReadAsync(this.HandleIncomingMessage, cancellationToken);
+                //var updateTask = StartSynchronizing(cancellationToken);
+                await StartReadAsync(this.HandleIncomingMessage, cancellationToken);
 
-                await Task.WhenAny(updateTask.AsTask(), readTask.AsTask());
+                //await Task.WhenAny(updateTask.AsTask(), readTask.AsTask());
 
             }
             finally

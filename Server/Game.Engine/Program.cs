@@ -32,7 +32,7 @@
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args)
         {
-            ThreadPool.SetMinThreads(50, 50);
+            //ThreadPool.SetMinThreads(50, 50);
 
             var builder = WebHost.CreateDefaultBuilder(args);
 
