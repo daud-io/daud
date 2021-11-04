@@ -228,7 +228,7 @@
 
             if (IsInvulnerable)
             {
-                if (this.Fleet.WeaponFiredCount > 0 || World.Time > InvulnerableUntil)
+                if (this.Fleet?.WeaponFiredCount > 0 || World.Time > InvulnerableUntil)
                 {
                     IsInvulnerable = false;
 

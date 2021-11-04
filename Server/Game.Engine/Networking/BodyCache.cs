@@ -63,8 +63,11 @@
                     Groups.Add(group.ID, group);
                 }
 
-                group.Stale = false;
-                group.ReadGroup(worldBody.Group, time);
+                if (group.Stale)
+                {
+                    group.Stale = false;
+                    group.ReadGroup(worldBody.Group, time);
+                }
             }
         }
 
@@ -101,9 +104,7 @@
             public uint OwnerID;
             public uint ZIndex;
 
-
-
-            public bool Stale { get; set; }
+            public bool Stale { get; set; } = true;
             public float Error { get; set; }
 
             public void ReadGroup(Group group, uint time)
@@ -124,8 +125,6 @@
                     this.OwnerID = group.OwnerID;
                     this.ZIndex = group.ZIndex;
                 }
-                else
-                    this.Error = 0;
             }
         }
 

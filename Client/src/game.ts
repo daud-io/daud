@@ -36,6 +36,7 @@ const minimap = new Minimap(container);
 
 registerContainer(container);
 
+
 // Game Loop
 container.engine.runRenderLoop(() => {
     frameCounter++;
@@ -57,7 +58,10 @@ container.engine.runRenderLoop(() => {
         if (newCamera == null)
         {
             if (container.alive)
-                console.log('warn: alive but no fleet to for camera');
+            {
+                let  i = 0;
+                //console.log(`warn: alive but no known fleet id:${container.fleetID}`);
+            }
                 
             newCamera = cameraPositionFromServer;
         }
@@ -216,7 +220,7 @@ function updateStats() {
 
     // we WERE backgrounded, but not anymore
     if(bg && !container.backgrounded)
-        connection.resetTimingWindow();
+        connection.newTimingWindow();
 }
 setInterval(updateStats, 1000);
 

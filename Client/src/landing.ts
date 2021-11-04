@@ -1,6 +1,6 @@
 ﻿import 'whatwg-fetch';
 import * as bus from "./bus";
-import { Connection } from './connection';
+import { Pinger } from './pinger';
 import { Host, Registry, ServerWorld } from './registry';
 
 if (!Element.prototype.matches) {
@@ -24,7 +24,7 @@ if (!Element.prototype.closest) {
 export class Landing {
     static worlds: Record<string, ServerWorld> = {};
 
-    static connections: Record<string, Connection> = {};
+    static connections: Record<string, Pinger> = {};
     static history: Record<string, number> = {};
     static timer: number;
 
@@ -46,8 +46,7 @@ export class Landing {
 
         if (!this.connections[host.url] && !this.history[host.url]) {
             const connect = `${host.url}/${host.worlds[0].worldKey}`;
-            const connection = new Connection();
-            connection.pingMode = true;
+            const connection = new Pinger();
             connection.connect(connect);
 
             this.connections[host.url] = connection;

@@ -63,7 +63,7 @@ export class Cache {
     constructor(container: GameContainer) {
         this.container = container;
 
-        bus.on("connected", () => this.onConnected());
+        bus.on("disconnected", () => this.onDisconnected());
         bus.on("worldview", (view) => this.onWorldView(view));
     }
 
@@ -133,6 +133,7 @@ export class Cache {
         const groupDeletesLength = newView.groupdeletesLength();
         for (let d = 0; d < groupDeletesLength; d++) {
             const key = newView.groupdeletes(d)!;
+            console.log(`delete group: ${key}`)
             const group = this.getGroup(key);
             if (!group) console.log("group delete on object not in cache");
             if (group && group.renderer) group.renderer.dispose();
@@ -147,6 +148,7 @@ export class Cache {
             newView.groups(u, group)!;
             let existing = this.getGroup(group.group());
             if (!existing) {
+                console.log(`new group ${group.group()} ${group.type()} ${group.caption()}`);
                 const clientGroup = this.groupFromServer(group);
                 if (clientGroup.Type == 1)
                     clientGroup.renderer = new Fleet(this.container);
@@ -230,6 +232,10 @@ export class Cache {
                 const clientBody = Cache.bodyFromServer(update);
 
                 const group = this.getGroup(clientBody.Group);
+                if (clientBody.Group != 0 && group == undefined)
+                {
+                    console.log('missing group while adding body');
+                }
 
                 clientBody.zIndex = group?.ZIndex || 0;
 
@@ -269,7 +275,8 @@ export class Cache {
 
         //console.log(this.groups.size);
     }
-    onConnected(): void {
+    onDisconnected(): void {
+        console.log('clearing cache');
         for(let i=0; i<this.bodies.length; i++)
             this.bodies[i]?.renderer?.dispose();
 

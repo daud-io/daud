@@ -29,7 +29,7 @@
         public int SpectatorCount { get; set; }
 
         // the canonical game time, in milliseconds, from world start
-        public uint PreviousTime { get; private set; } = 0;
+        public float FloatTime = 0;
         public uint Time { get; private set; } = 0;
 
         // offset between system clock and world start
@@ -40,7 +40,7 @@
         public int HookHash { get; private set; } = 0;
 
         // lists of bodies, groups in the world
-        readonly internal ConcurrentDictionary<BodyHandle, WorldBody> Bodies = new ConcurrentDictionary<BodyHandle, WorldBody>();
+        internal readonly Dictionary<BodyHandle, WorldBody> Bodies = new Dictionary<BodyHandle, WorldBody>();
         public List<Group> Groups = new List<Group>();
 
         // list of IActors in the world. Actors are things that think.
@@ -84,7 +84,7 @@
         internal int ProjectileCount;
 
         public bool PendingDestruction;
-        
+
         public World(Hook hook, GameConfiguration gameConfiguration, string worldKey)
         {
             this.GameConfiguration = gameConfiguration;
@@ -132,31 +132,38 @@
         // main entry to the world. This will be called every Hook.StepSize milliseconds, unless it's late. or early.
         public void Step(float dt)
         {
+            long tStart, tControl, tActors, tWrite, tPhysics, tRead, tCollisions, tCleanup, tHash;
+            tStart = Stopwatch.GetTimestamp();
             try
             {
-                var start = DateTime.Now;
-                // calculate the new game time
-                PreviousTime = Time;
-                Time = (uint)((start.Ticks - OffsetTicks) / 10000);
+                FloatTime += dt;
+                Time = (uint)FloatTime;
 
-                //Console.WriteLine($"start: {start} dt:{dt} time: {Time}");
+                //Console.WriteLine($"dt:{dt} time: {Time}");
                 
                 foreach (var player in Player.GetWorldPlayers(this).ToList())
                     player.ControlCharacter();
 
+                tControl = Stopwatch.GetTimestamp();
+
                 ActorsThink(dt);
+
+                tActors = Stopwatch.GetTimestamp();
                 WriteSimulation();
+                tWrite = Stopwatch.GetTimestamp();
 
                 InStep = true;
                 //this.Simulation.Timestep(dt, ThreadDispatcher);
                 this.Simulation.Timestep(dt);
                 InStep = false;
+                tPhysics = Stopwatch.GetTimestamp();
 
                 foreach (var body in Bodies.Values)
                 {
                     body.ReadSimulation();
                     body.IsInContact = false;
                 }
+                tRead = Stopwatch.GetTimestamp();
 
                 // execute collisions
                 ref var bodyImpacts = ref ((NarrowPhase<NarrowPhaseCallbacks>)Simulation.NarrowPhase).Callbacks.BodyImpacts;
@@ -187,10 +194,16 @@
 
                 }
                 bodyImpacts.Count = 0;
+
+                tCollisions = Stopwatch.GetTimestamp();
+
                 ActorsCleanup();
+                tCleanup = Stopwatch.GetTimestamp();
                 this.HookHash = this.Hook.GetHashCode();
 
-                CheckTimings(start);
+                tHash = Stopwatch.GetTimestamp();
+
+                StepTimings(tStart, tControl-tStart, tActors-tStart, tWrite-tStart, tPhysics-tStart, tRead-tStart, tCollisions-tStart, tCleanup-tStart, tHash-tStart);
             }
             catch(Exception e)
             {
@@ -229,21 +242,28 @@
             Activator.CreateInstance(typeof(T), this);
         }
 
-        private void CheckTimings(DateTime start)
+        private void StepTimings(long tStart, long tControl, long tActors, long tWrite, long tPhysics, long tRead, long tCollisions, long tCleanup, long tHash)
         {
-            var elapsed = DateTime.Now.Subtract(start).TotalMilliseconds;
+            float scale = 1_000_000;
+            //Console.WriteLine($"control:{tControl/scale:0.0}\tactors:{tActors/scale:0.0}\twrite:{tWrite/scale:0.0}\tphysics:{tPhysics/scale:0.0}\tread:{tRead/scale:0.0}\tcollisions:{tCollisions/scale:0.0}\tcleanup:{tCleanup/scale:0.0}\thash:{tHash/scale:0.0}");
+        }
 
-            if (Time - LastTimingReport > 1000)
+        private void CheckTimings(long tStart, long tLock, long tSteps, long tNet)
+        {
+            float scale = 1_000_000;
+            //Console.WriteLine($"lock:{tLock/scale:0.0}\tsteps:{tSteps/scale:0.0}\t net:{tNet/scale:0.0}");
+            
+            if (Time - LastTimingReport > 10000)
             {
                 LastTimingReport = Time;
 
-                ThreadPool.GetAvailableThreads(out int threadsAvailable, out int iocpAvailable);
+                /*ThreadPool.GetAvailableThreads(out int threadsAvailable, out int iocpAvailable);
                 ThreadPool.GetMinThreads(out int threadsMin, out int iocpMin);
                 
-                Console.WriteLine($"{WorldKey} {elapsed} threads:{ThreadPool.ThreadCount} {threadsAvailable}/{threadsMin} iocp:{iocpAvailable}/{iocpMin} iocp-pending:{ThreadPool.PendingWorkItemCount}");
+                Console.WriteLine($"{WorldKey} {elapsed} threads:{ThreadPool.ThreadCount} {threadsAvailable}/{threadsMin} iocp:{iocpAvailable}/{iocpMin} iocp-pending:{ThreadPool.PendingWorkItemCount}");*/
             }
 
-            if (Time > 10000) // lets not get too excited if things slow down when initialized
+            /*if (Time > 10000) // lets not get too excited if things slow down when initialized
             {
                 if (elapsed > Hook.StepTime)
                     Console.WriteLine($"**** 100% processing time warning: {elapsed}");
@@ -252,12 +272,14 @@
                 else if (elapsed > Hook.StepTime * 0.5f)
                     Console.WriteLine($"** 50% processing time warning: {elapsed}");
 
-            }
+            }*/
+
+
+            
         }
 
         private void ActorsThink(float dt)
         {
-
             foreach (var actor in Actors.ToList())
                 actor.Think(dt);
         }
@@ -332,16 +354,14 @@
             if (InStep)
                 throw new Exception("adding body during step");
             
-            Bodies.AddOrUpdate(body.BodyHandle, body, (h, b) => {
-                throw new Exception("Body already exists");
-            });
+            Bodies.Add(body.BodyHandle, body);
         }
 
         public void BodyRemove(WorldBody body)
         {
             if (InStep)
                 throw new Exception("removing body during step");
-            Bodies.TryRemove(body.BodyHandle, out var trash);
+            Bodies.Remove(body.BodyHandle, out var trash);
         }
 
         public float DistanceOutOfBounds(Vector2 position, int buffer = 0)
@@ -365,6 +385,8 @@
 
         private void WorldTickEntry()
         {
+            var sw = new Stopwatch();
+
             try
             {
                 var lastRun = DateTime.Now;
@@ -372,23 +394,27 @@
 
                 while (!PendingDestruction)
                 {
-                    var startLock = DateTime.Now;
+                    
+                    long tStart, tLock, tSteps, tNet;
+                    tStart = Stopwatch.GetTimestamp();
                     lock(Bodies)
                     {
-                        if (DateTime.Now.Subtract(startLock).TotalMilliseconds > 2)
-                            Console.WriteLine("Slow lock acquisition");
-                        
+                        tLock = Stopwatch.GetTimestamp();
+
                         var now = DateTime.Now;
                         dt += now.Subtract(lastRun).TotalMilliseconds;
                         lastRun = now;
 
                         int steps = 0;
-                        while (dt > Hook.StepTime)
+                        while (dt > 3)
                         {
                             steps++;
-                            dt -= Hook.StepTime;
-                            this.Step(Hook.StepTime);
+
+                            float thisStep = MathF.Min(Hook.StepTime, (float)dt);
+                            dt -= thisStep;
+                            this.Step(thisStep);
                         }
+                        tSteps = Stopwatch.GetTimestamp();
 
                         if (steps > 0)
                         {
@@ -403,6 +429,7 @@
                             if (DateTime.Now.Subtract(networkstart).TotalMilliseconds > 5)
                                 Console.WriteLine($"slow network flush: {DateTime.Now.Subtract(networkstart).TotalMilliseconds}");
                         }
+                        tNet = Stopwatch.GetTimestamp();
                     }
 
                     // calculate when the next server frame should be
@@ -413,14 +440,15 @@
 
                     if (delta.TotalMilliseconds > 1)
                     {
-                        var sw = new Stopwatch();
-                        sw.Start();
+                        sw.Restart();
                         Thread.Sleep(delta);
                         sw.Stop();
                         if (Math.Abs((sw.Elapsed - delta).TotalMilliseconds) > 3)
                             Console.WriteLine($"sleep {delta.TotalMilliseconds}: " + (sw.Elapsed.TotalMilliseconds));
                     }
 
+
+                    CheckTimings(tStart, tLock-tStart, tSteps-tStart, tNet-tStart);
                 }
             }
             catch (Exception e)
@@ -428,6 +456,11 @@
                 Console.WriteLine("Exception in WorldTickEntry: " + e);
             }
         }
+
+        
+
+
+
 
         public Vector2 ChooseSpawnPoint(string type, object obj)
         {

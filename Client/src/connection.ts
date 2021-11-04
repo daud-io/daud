@@ -126,6 +126,11 @@ export class Connection {
         this.minimumLatencyNext = -1;
         this.maximumLatencyNext = 0;
     }
+    
+    newTimingWindow() {
+        console.log('new timing window');
+        this.minimumLatencyStart = -1;
+    }
 
     connect(worldKey: string): void {
         try
@@ -144,6 +149,7 @@ export class Connection {
             let apiURL = `${url.protocol}//${url.host}/api/v1/connect?world=${encodeURIComponent(url.pathname?.substr(1))}`;
 
             if (this.socket) {
+                this.onClose();
                 this.socket.onclose = null;
                 this.socket.onmessage = null;
                 this.socket.close();
@@ -169,8 +175,8 @@ export class Connection {
 
                 this.onOpen();
             };
-            this.socket.onclose = (event) => {
-                this.onClose(event);
+            this.socket.onclose = () => {
+                this.onClose();
             };
         }
         catch(e)
@@ -312,7 +318,9 @@ export class Connection {
         this.connected = true;
         console.log("connected");
         this.connectionTime = performance.now();
-        bus.emit("connected", this);
+        if (!this.pingMode)
+            bus.emit("connected", this);
+
         this.sendPing();
 
         if (!this.pingMode) {
@@ -320,7 +328,7 @@ export class Connection {
         }
     }
 
-    onClose(event: CloseEvent): void {
+    onClose(): void {
         if (this.connected && !this.pingMode)
             bus.emit("disconnected");
             

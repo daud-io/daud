@@ -61,11 +61,11 @@ bus.on("pageReady", function () {
     window.addEventListener("keydown", ({ key }) => {
         if (key.toLowerCase() == "s") {
             Controls.boostKeyboard = true;
-            Controls.dirty = true;;
+            sendControlPacket();
         }
         if (key == " ") {
             Controls.shootKeyboard = true;
-            Controls.dirty = true;
+            sendControlPacket();
         }
 
         if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
@@ -77,11 +77,11 @@ bus.on("pageReady", function () {
     window.addEventListener("keyup", ({ key }) => {
         if (key.toLowerCase() == "s") {
             Controls.boostKeyboard = false;
-            Controls.dirty = true;
+            sendControlPacket();
         }
         if (key == " ") {
             Controls.shootKeyboard = false;
-            Controls.dirty = true;
+            sendControlPacket();
         }
     });
 
@@ -229,7 +229,7 @@ function mouseUp(this: HTMLCanvasElement, ev: MouseEvent): any {
             Controls.shootPointer = false;
             break;
     }
-    Controls.dirty = true;
+    sendControlPacket();
 }
 
 function mouseDown(this: HTMLCanvasElement, ev: MouseEvent): any {
@@ -241,7 +241,7 @@ function mouseDown(this: HTMLCanvasElement, ev: MouseEvent): any {
             Controls.shootPointer = true;
             break;
     }
-    Controls.dirty = true;
+    sendControlPacket();
 }
 
 function mouseMove(this: any, ev: MouseEvent): any {
@@ -266,7 +266,7 @@ function mouseMove(this: any, ev: MouseEvent): any {
         }
     }
 
-    Controls.dirty = true;
+    sendControlPacket();
 }
 
 export function registerContainer(container: GameContainer): void {
@@ -309,25 +309,25 @@ export function registerContainer(container: GameContainer): void {
 
             Controls.mouseX = joystick.deltaX() * 10;
             Controls.mouseY = -1 * joystick.deltaY() * 10;
-            Controls.dirty = true;
+            sendControlPacket();
         });
         const shootEl = document.getElementById("shoot")!;
         const boostEl = document.getElementById("boost")!;
         shootEl.addEventListener("touchstart", () => {
             Controls.shootPointer = true;
-            Controls.dirty = true;
+            sendControlPacket();
         }, { passive: true });
         shootEl.addEventListener("touchend", () => {
             Controls.shootPointer = false;
-            Controls.dirty = true;
+            sendControlPacket();
         }, { passive: true });
         boostEl.addEventListener("touchstart", () => {
             Controls.boostPointer = true;
-            Controls.dirty = true;
+            sendControlPacket();
         }, { passive: true });
         boostEl.addEventListener("touchend", () => {
             Controls.boostPointer = false;
-            Controls.dirty = true;
+            sendControlPacket();
         }, { passive: true });
     } else {
 

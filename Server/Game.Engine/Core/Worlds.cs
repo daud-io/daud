@@ -17,7 +17,7 @@
                 
                 //AddWorld(FFA(), "default2");
                 AddWorld(PartyCity(), "partycity");
-                AddWorld(FFA(), "ffa");
+                //AddWorld(FFA(), "ffa");
                 //AddWorld(Team(), "team");
                 //AddWorld(PartyCity(), "partycity2");
                 
@@ -64,11 +64,11 @@
             hook.Name = "Party City";
             hook.Description = "Party City, what can we say?";
             hook.Mesh.Enabled = true;
-            hook.Fishes *= 4;
-            hook.PickupSeekers *= 4;
-            hook.PickupShields *= 4;
+            //hook.Fishes *= 4;
+            //hook.PickupSeekers *= 4;
+            //hook.PickupShields *= 4;
             hook.Mesh.MeshURL = "wwwroot/public/models/partycity.glb";
-            hook.WorldSize = 5000;
+            hook.WorldSize = 10000;
 
             return new World(hook, GameConfiguration, "partycity");
         }

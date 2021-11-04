@@ -53,6 +53,7 @@
 
         public bool IsSpectating { get; set; } = false;
         public Fleet FollowFleet { get; private set; }
+        private bool Aborted = false;
 
         public Fleet SpectatingFleet = null;
 
@@ -123,16 +124,29 @@
         {
             var size = 6000;
 
-            (this.CameraPosition, this.CameraLinearVelocity) = DefineCamera();
-
-            lock (this.BodyCache)
+            try
             {
-                BodyCache.PreUpdate();
-                World.BodiesNear(CameraPosition, size, (body) => BodyCache.UpdateCachedBody(body, World.Time));
-                BodyCache.CollectStaleGroups();
-                BodyCache.CollectStaleBuckets();
+
+                (this.CameraPosition, this.CameraLinearVelocity) = DefineCamera();
+
+                lock (this.BodyCache)
+                {
+                    BodyCache.PreUpdate();
+                    World.BodiesNear(CameraPosition, size, (body) => BodyCache.UpdateCachedBody(body, World.Time));
+                    BodyCache.CollectStaleGroups();
+                    BodyCache.CollectStaleBuckets();
+                }
+                WorldUpdateEvent.Set();
             }
-            WorldUpdateEvent.Set();
+            catch(Exception)
+            {
+                this.AbortConnection();
+            }
+        }
+
+        private void AbortConnection()
+        {
+            this.Aborted = true;
         }
 
         public async Task StepAsync(CancellationToken cancellationToken)
@@ -144,7 +158,7 @@
                 List<BodyCache.BucketBody> updateBodies;
                 List<BodyCache.BucketGroup> updatedGroups;
 
-                if (this.Bandwidth > 0)
+                if (true)
                 {
                     lock(BodyCache)
                     {
@@ -171,6 +185,7 @@
 
                         updateBodies = BodyCache.BodiesByError().Take((int)this.Bandwidth * 2).ToList();
                         updatedGroups = BodyCache.GroupsByError().ToList();
+                        
                     }
 
                     netWorldView.groups = updatedGroups.Select(b =>
@@ -334,12 +349,13 @@
             }
             catch (WebSocketException)
             {
-                //Console.WriteLine(e);
+                this.AbortConnection();
                 throw;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Console.Error.WriteLine(e.Message);
+                this.AbortConnection();
                 throw;
             }
         }
@@ -609,7 +625,7 @@
                 int receiveIndex = 0;
                 bool done = false;
 
-                while (!done)
+                while (!done && !this.Aborted)
                 {
                     var result = await Socket.ReceiveAsync(new Memory<byte>(ReceiveBuffer, receiveIndex, ReceiveBuffer.Length - receiveIndex), cancellationToken);
                     receiveIndex += result.Count;
