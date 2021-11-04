@@ -24,6 +24,7 @@
     {
         private byte[] SendBuffer = new byte[64 * 1024];
         private byte[] ReceiveBuffer = new byte[64 * 1024];
+        private NetQuantum SendQuantum = new NetQuantum();
         private Vector2 CameraPosition;
         private Vector2 CameraLinearVelocity;
 
@@ -61,13 +62,26 @@
 
         public Queue<BroadcastEvent> Events = new Queue<BroadcastEvent>();
 
+        private readonly NetWorldView netWorldView = new();
+        private readonly List<uint> deletes = new();
+        private readonly List<uint> groupdeletes = new();
+        private readonly List<NetBody> updates = new();
+        private readonly List<NetGroup> groups = new();
+
         public Connection(ILogger<Connection> logger)
         {
             this.Logger = logger;
             this.WorldUpdateEvent = new AsyncAutoResetEvent();
+            this.netWorldView = new()
+            {
+                deletes = deletes,
+                groupdeletes = groupdeletes,
+                updates = updates,
+                groups = groups
+            };
         }
 
-        public async Task StartSynchronizing(CancellationToken cancellationToken)
+        public async ValueTask StartSynchronizing(CancellationToken cancellationToken)
         {
             while (!cancellationToken.IsCancellationRequested)
             {
@@ -149,89 +163,35 @@
             this.Aborted = true;
         }
 
-        public async Task StepAsync(CancellationToken cancellationToken)
+        public async ValueTask StepAsync(CancellationToken cancellationToken)
         {
             try
             {
-                var netWorldView = new NetWorldView();
 
-                List<BodyCache.BucketBody> updateBodies;
-                List<BodyCache.BucketGroup> updatedGroups;
+                this.netWorldView.deletes.Clear();
+                this.netWorldView.updates.Clear();
+                this.netWorldView.groupdeletes.Clear();
+                this.netWorldView.groups.Clear();
 
-                if (true)
+                lock (BodyCache)
                 {
-                    lock(BodyCache)
-                    {
-                        if (BodyCache.StaleBodyCount > 0)
-                        {
-                            netWorldView.deletes = new uint[BodyCache.StaleBodyCount];
-                            for(int i=0; i<BodyCache.StaleBodyCount; i++)
-                                netWorldView.deletes[i] = BodyCache.StaleBodies[i];
-                        }
-                        else
-                            netWorldView.deletes = Array.Empty<uint>();
+                    if (BodyCache.StaleBodyCount > 0)
+                        deletes.AddRange(BodyCache.StaleBodies.Take(BodyCache.StaleBodyCount));
 
-                        if (BodyCache.StaleGroupCount > 0)
-                        {
-                            netWorldView.groupdeletes = new uint[BodyCache.StaleGroupCount];
-                            for(int i=0; i<BodyCache.StaleGroupCount; i++)
-                                netWorldView.groupdeletes[i] = BodyCache.StaleGroups[i];
-                        }
-                        else
-                            netWorldView.groupdeletes = Array.Empty<uint>();
+                    if (BodyCache.StaleGroupCount > 0)
+                        groupdeletes.AddRange(BodyCache.StaleGroups.Take(BodyCache.StaleGroupCount));
 
-                        BodyCache.StaleBodyCount = 0;
-                        BodyCache.StaleGroupCount = 0;
+                    BodyCache.StaleBodyCount = 0;
+                    BodyCache.StaleGroupCount = 0;
 
-                        updateBodies = BodyCache.BodiesByError().Take((int)this.Bandwidth * 2).ToList();
-                        updatedGroups = BodyCache.GroupsByError().ToList();
-                        
-                    }
-
-                    netWorldView.groups = updatedGroups.Select(b =>
-                    {
-                        var group = new NetGroup
-                        {
-                            group = b.ID,
-                            type = (byte)b.GroupType,
-                            caption = b.Caption,
-                            zindex = b.ZIndex,
-                            owner = b.OwnerID,
-                            color = b.Color,
-                            customdata = b.CustomData
-                        };
-
-                        return group;
-                    }).ToArray();
-
-
-                    netWorldView.updates = new List<NetBody>();
-                    foreach (var update in updateBodies)
+                    var updatedBodies = BodyCache.BodiesByError().Take((int)this.Bandwidth * 2);
+                    foreach (var update in updatedBodies)
                     {
                         update.UpdateSent(World.Time);
-
-                        netWorldView.updates.Add(new NetBody
-                        {
-                            id = update.ID,
-                            definitiontime = update.DefinitionTime,
-                            originalposition = new Vec2
-                            {
-                                x = (short)update.Position.X,
-                                y = (short)update.Position.Y
-                            },
-                            velocity = new Vec2
-                            {
-                                x = (short)(update.LinearVelocity.X * VELOCITY_SCALE_FACTOR),
-                                y = (short)(update.LinearVelocity.Y * VELOCITY_SCALE_FACTOR)
-                            },
-                            originalangle = (sbyte)(update.Angle / MathF.PI * 127),
-                            angularvelocity = (sbyte)(update.AngularVelocity * 10000),
-                            size = (byte)(update.Size / 5),
-                            sprite = (ushort)update.Sprite,
-                            mode = update.Mode,
-                            group = update.GroupID
-                        });
+                        updates.Add(update.NetBody);
                     }
+
+                    groups.AddRange(BodyCache.GroupsByError().Select(b => b.NetGroup));
                 }
 
                 var messages = Player?.GetMessages();
@@ -251,6 +211,8 @@
 
                     }).ToList();
                 }
+                else
+                    netWorldView.announcements = Array.Empty<NetAnnouncement>();
 
                 // define camera
                 netWorldView.camera = new NetBody
@@ -360,26 +322,21 @@
             }
         }
 
-        private async Task SendAsync(AllMessages message, CancellationToken cancellationToken = default)
+        private async ValueTask SendAsync(AllMessages message, CancellationToken cancellationToken = default)
         {
-            var q = new NetQuantum
-            {
-                message = message
-            };
-
-            await WebsocketSendingSemaphore.WaitAsync();
-
-            int maxBytesNeeded = FlatBufferSerializer.Default.GetMaxSize(q);
-            int bytesWritten = FlatBufferSerializer.Default.Serialize(q, SendBuffer);
-
+            await WebsocketSendingSemaphore.WaitAsync(cancellationToken);
             try
             {
+                SendQuantum.message = message;
+                FlatBufferSerializer.Default.GetMaxSize(SendQuantum);
+                FlatBufferSerializer.Default.Serialize(SendQuantum, SendBuffer);
+
                 if (Socket.State == WebSocketState.Open)
                 {
                     var start = DateTime.Now;
 
                     await Socket.SendAsync(
-                        SendBuffer,
+                        new ReadOnlyMemory<byte>(SendBuffer),
                         WebSocketMessageType.Binary,
                         endOfMessage: true,
                         cancellationToken: cancellationToken);
@@ -401,7 +358,7 @@
             }
         }
 
-        private async Task HandlePingAsync(NetPing ping)
+        private async ValueTask HandlePingAsync(NetPing ping)
         {
             this.Backgrounded = ping.backgrounded;
             this.ClientFPS = ping.fps;
@@ -420,7 +377,7 @@
             await SendAsync(new AllMessages(ping));
         }
 
-        private async Task HandleIncomingMessage(NetQuantum quantum)
+        private async ValueTask HandleIncomingMessage(NetQuantum quantum)
         {
             switch (quantum.message.Kind)
             {
@@ -514,13 +471,7 @@
                 case AllMessages.ItemKind.NetControlInput:
                     var input = quantum.message.NetControlInput;
 
-                    Player?.SetControl(new ControlInput
-                    {
-                        Position = new Vector2(input.x, input.y),
-                        BoostRequested = input.boost,
-                        ShootRequested = input.shoot,
-                        CustomData = input.customdata
-                    });
+                    Player?.SetControl(new Vector2(input.x, input.y), input.boost, input.shoot);
 
                     if (input.spectatecontrol == "action:next")
                     {
@@ -576,7 +527,7 @@
             }
         }
 
-        public async Task ConnectAsync(HttpContext httpContext, WebSocket socket, CancellationToken cancellationToken = default(CancellationToken))
+        public async ValueTask ConnectAsync(HttpContext httpContext, WebSocket socket, CancellationToken cancellationToken = default(CancellationToken))
         {
             Socket = socket;
 
@@ -602,7 +553,7 @@
                 var updateTask = StartSynchronizing(cancellationToken);
                 var readTask = StartReadAsync(this.HandleIncomingMessage, cancellationToken);
 
-                await Task.WhenAny(updateTask, readTask);
+                await Task.WhenAny(updateTask.AsTask(), readTask.AsTask());
 
             }
             finally
@@ -618,7 +569,7 @@
             }
         }
 
-        private async Task<bool> StartReadAsync(Func<NetQuantum, Task> onReceive, CancellationToken cancellationToken = default(CancellationToken))
+        private async ValueTask<bool> StartReadAsync(Func<NetQuantum, ValueTask> onReceive, CancellationToken cancellationToken = default(CancellationToken))
         {
             try
             {

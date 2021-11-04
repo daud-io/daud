@@ -29,7 +29,7 @@
         public long LastKillTime { get; set; } = 0;
         public int ComboCounter { get; set; } = 0;
 
-        public ControlInput ControlInput { get; set; }
+        public Vector2 Position { get; set; } = Vector2.Zero;
 
         public List<PlayerMessage> Messages { get; set; } = new List<PlayerMessage>();
 
@@ -75,7 +75,7 @@
             PlayerID = Guid.NewGuid().ToString().Replace("-", "");
         }
 
-        public void SetControl(ControlInput input)
+        public void SetControl(Vector2 position, bool boost, bool shoot)
         {
             var packetNumber = Interlocked.Increment(ref this.ControlPackets);
             if (packetNumber == 1)
@@ -84,22 +84,22 @@
                 CummulativeShootRequested = false;
             }
 
-            if (input.BoostRequested)
+            if (boost)
                 CummulativeBoostRequested = true;
 
             // if we find a control packet that requests firing
-            if (input.ShootRequested)
+            if (shoot)
             {
                 // and it's the first one, then set the aim
                 if (!CummulativeShootRequested)
-                    this.ControlInput = input;
+                    this.Position = position;
 
                 CummulativeShootRequested = true;
             }
 
             // if we haven't started shooting, then update the aiming with the latest packet
             if (!CummulativeShootRequested)
-                this.ControlInput = input;
+                this.Position = position;
         }
 
         public virtual void Create()
@@ -164,24 +164,15 @@
 
                 //Console.WriteLine("Control: " + this.ControlPackets);
                 this.ControlPackets = 0;
-                if (this.IsAlive && this.Fleet != null && this.ControlInput != null)
+                if (this.IsAlive && this.Fleet != null)
                 {
-                    if (float.IsNaN(ControlInput.Position.X) || float.IsNaN(ControlInput.Position.Y))
-                        ControlInput.Position = new System.Numerics.Vector2(0, 0);
+                    if (float.IsNaN(Position.X) || float.IsNaN(Position.Y))
+                        Position = Vector2.Zero;
 
-                    Fleet.AimTarget = ControlInput.Position;
+                    Fleet.AimTarget = Position;
 
                     Fleet.BoostRequested = CummulativeBoostRequested;
                     Fleet.ShootRequested = CummulativeShootRequested;
-
-                    Fleet.CustomData = ControlInput.CustomData;
-
-                    if (Fleet.CustomData != null)
-                    {
-                        var parsed = JsonConvert.DeserializeAnonymousType(Fleet.CustomData, new { magic = null as string });
-                        if (parsed?.magic != null)
-                            JsonConvert.PopulateObject(parsed.magic, this);
-                    }
 
                     if (this.Backgrounded)
                         Fleet.AimTarget = Vector2.Zero;
@@ -191,7 +182,6 @@
             {
                 Console.WriteLine("Exception in ControlCharachter: " + e);
             }
-
         }
 
         public string Name { get; set; }

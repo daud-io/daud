@@ -1,7 +1,9 @@
 ﻿namespace Game.Engine.Networking
 {
+    using DaudNet;
     using Game.API.Common;
     using Game.Engine.Core;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Numerics;
@@ -40,8 +42,7 @@
             if (worldBody == null || !worldBody.Exists)
                 return;
 
-            BucketBody bucket;
-            if (!Bodies.TryGetValue(worldBody.ID, out bucket))
+            if (!Bodies.TryGetValue(worldBody.ID, out BucketBody bucket))
             {
                 bucket = new BucketBody()
                 {
@@ -55,12 +56,11 @@
             
             if (worldBody.Group != null)
             {
-                BucketGroup group;
-                if (!Groups.TryGetValue(worldBody.Group.ID, out group))
+                if (!Groups.TryGetValue(worldBody.Group.ID, out BucketGroup group))
                 {
                     group = new BucketGroup();
-                    group.ID = worldBody.Group.ID;
-                    Groups.Add(group.ID, group);
+                    Groups.Add(worldBody.Group.ID, group);
+                    group.Stale = true;
                 }
 
                 if (group.Stale)
@@ -76,7 +76,7 @@
             var original = this.StaleBodyCount;
             foreach (var b in Bodies.Values)
                 if (b.Stale && this.StaleBodyCount < this.StaleBodies.Length)
-                    this.StaleBodies[this.StaleBodyCount++] = b.ID;
+                    this.StaleBodies[this.StaleBodyCount++] = b.NetBody.id;
 
             for (int i=original; i<this.StaleBodyCount; i++)
                 Bodies.Remove(this.StaleBodies[i]);
@@ -88,7 +88,7 @@
 
             foreach (var b in Groups.Values)
                 if (b.Stale && this.StaleGroupCount < this.StaleGroups.Length)
-                    this.StaleGroups[this.StaleGroupCount++] = b.ID;
+                    this.StaleGroups[this.StaleGroupCount++] = b.NetGroup.group;
 
             for (int i=original; i<this.StaleGroupCount; i++)
                 Groups.Remove(this.StaleGroups[i]);
@@ -96,56 +96,44 @@
 
         public class BucketGroup
         {
-            public uint ID;
-            public string CustomData;
-            public string Color;
-            public string Caption;
-            public GroupTypes GroupType;
-            public uint OwnerID;
-            public uint ZIndex;
-
             public bool Stale { get; set; } = true;
             public float Error { get; set; }
+            public NetGroup NetGroup { get; internal set; }
+
+            public BucketGroup()
+            {
+                this.NetGroup = new();
+            }
 
             public void ReadGroup(Group group, uint time)
             {
-                if (this.CustomData != group.CustomData
-                    || this.Color != group.Color
-                    || this.GroupType != group.GroupType
-                    || this.Caption != group.Caption
-                    || this.OwnerID != group.OwnerID
-                    || this.ZIndex != group.ZIndex
-                    )
-                {
-                    this.Error = 1;
-                    this.CustomData = group.CustomData;
-                    this.Color = group.Color;
-                    this.Caption = group.Caption;
-                    this.GroupType = group.GroupType;
-                    this.OwnerID = group.OwnerID;
-                    this.ZIndex = group.ZIndex;
-                }
+                this.Error = 1;
+                this.NetGroup.group = group.ID;
+                this.NetGroup.type = (byte)group.GroupType;
+                this.NetGroup.caption = group.Caption;
+                this.NetGroup.zindex = group.ZIndex;
+                this.NetGroup.owner = group.OwnerID;
+                this.NetGroup.color = group.Color;
+                this.NetGroup.customdata = group.CustomData;
             }
         }
 
         public class BucketBody
         {
-            public uint DefinitionTime;
-            public Vector2 Position;
-            public Vector2 LinearVelocity;
-            public float AngularVelocity;
-            public float Angle;
-            public int Size = 0;
-            public byte Mode = 0;
-            public Sprites Sprite;
-
-            public uint GroupID = 0;
-            public uint ID = 0;
-
             public uint ClientUpdatedTime;
 
             public float Error = 0;
             public bool Stale = false;
+
+            public DaudNet.NetBody NetBody;
+            public BucketBody()
+            {
+                this.NetBody = new DaudNet.NetBody
+                {
+                    originalposition = new DaudNet.Vec2(),
+                    velocity = new DaudNet.Vec2()
+                };
+            }
 
             public void UpdateSent(uint time)
             {
@@ -155,16 +143,20 @@
 
             public void ReadBody(WorldBody body, uint time)
             {
-                DefinitionTime = time;
-                Position = body.Position;
-                LinearVelocity = body.LinearVelocity;
-                AngularVelocity = body.AngularVelocity;
-                Angle = body.Angle;
-                Size = body.Size;
-                Mode = body.Mode;
-                Sprite = body.Sprite;
-                GroupID = body.Group?.ID ?? 0;
-                ID = body.ID;
+                const float VELOCITY_SCALE_FACTOR = 5000;
+
+                this.NetBody.id = body.ID;
+                this.NetBody.definitiontime = time;
+                this.NetBody.originalposition.x = (short)body.Position.X;
+                this.NetBody.originalposition.y = (short)body.Position.Y;
+                this.NetBody.velocity.x = (short)(body.LinearVelocity.X * VELOCITY_SCALE_FACTOR);
+                this.NetBody.velocity.y = (short)(body.LinearVelocity.Y * VELOCITY_SCALE_FACTOR);
+                this.NetBody.originalangle = (sbyte)(body.Angle / MathF.PI * 127);
+                this.NetBody.angularvelocity = (sbyte)(body.AngularVelocity * 10000);
+                this.NetBody.size = (byte)(body.Size / 5);
+                this.NetBody.sprite = (ushort)body.Sprite;
+                this.NetBody.mode = body.Mode;
+                this.NetBody.group = body.Group?.ID ?? 0;
 
                 Error = time - ClientUpdatedTime;
                 if (Error == 0)

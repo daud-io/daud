@@ -141,7 +141,7 @@
 
                 //Console.WriteLine($"dt:{dt} time: {Time}");
                 
-                foreach (var player in Player.GetWorldPlayers(this).ToList())
+                foreach (var player in Player.GetWorldPlayers(this))
                     player.ControlCharacter();
 
                 tControl = Stopwatch.GetTimestamp();
