@@ -84,6 +84,9 @@
             }
         }
 
+        private bool HasOffensiveUpgrade = false;
+        private bool HasDefensiveUpgrade = false;
+
         public Fleet(World world, Player owner):base(world)
         {
             this.Owner = owner;
@@ -183,6 +186,9 @@
             WeaponStack.Push(weapon);
             if (WeaponStack.Count > World.Hook.FleetWeaponStackDepth)
                 WeaponStack = new Stack<IFleetWeapon>(WeaponStack.TakeLast(World.Hook.FleetWeaponStackDepth));
+
+            this.HasOffensiveUpgrade = WeaponStack.Any(w => w.IsOffense);
+            this.HasOffensiveUpgrade = WeaponStack.Any(w => w.IsDefense);
         }
 
         public override void Think(float dt)
@@ -238,8 +244,8 @@
                     ship.Mode = (byte)
                         (
                             (isBoosting ? ShipModeEnum.boost : ShipModeEnum.none)
-                            | (WeaponStack.Any(w => w.IsOffense) ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
-                            | (WeaponStack.Any(w => w.IsDefense) ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
+                            | (HasOffensiveUpgrade ? ShipModeEnum.offense_upgrade : ShipModeEnum.none)
+                            | (HasDefensiveUpgrade ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
                             | (Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
                             | (ship.ShieldStrength > 0 ? ShipModeEnum.shield : ShipModeEnum.none)
                         );
