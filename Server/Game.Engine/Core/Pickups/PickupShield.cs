@@ -14,6 +14,7 @@
         protected override void EquipFleet(Fleet fleet)
         {
             fleet.PushStackWeapon(new FleetWeaponShield());
+            fleet.ShootCooldownTime = World.Time;
         }
     }
 }

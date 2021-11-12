@@ -4,7 +4,6 @@
     {
         public bool IsOffense => false;
         public bool IsDefense => true;
-        public bool CausesCooldown => true;
 
         public void FireFrom(Fleet fleet)
         {

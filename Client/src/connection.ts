@@ -22,6 +22,7 @@ export type LeaderboardType = {
     Record: {
         Name: string;
         Color: string;
+
         Score: number;
         Token: boolean;
     };
@@ -30,6 +31,7 @@ export type LeaderboardType = {
 
 export class Connection {
     connected = false;
+    disconnecting = false;
     framesPerSecond = 0;
     viewsPerSecond = 0;
     viewCPU = 0;
@@ -44,7 +46,7 @@ export class Connection {
     minimumLatencyNext = -1;
     minimumLatencyStart = -1;
     maximumLatencyNext = 0;
-    minimumLatencyWindow = 30000;
+    minimumLatencyWindow = 5000;
     latencyWindowFirst = true;
     serverClockOffset = -1;
     simulateLatency = 0;
@@ -109,6 +111,7 @@ export class Connection {
     }
 
     disconnect(): void {
+        this.disconnecting = true;
         if (this.connected)
         {
             this.connected = false;
@@ -116,8 +119,12 @@ export class Connection {
         }
 
         if (this.socket) {
+            this.socket.onclose = null;
+            this.socket.onmessage = null;
             this.socket.close();
+            this.onClose();
         }
+        this.disconnecting = false;
     }
 
     resetTimingWindow() {
@@ -155,10 +162,7 @@ export class Connection {
             let apiURL = `${url.protocol}//${url.host}/api/v1/connect?world=${encodeURIComponent(url.pathname?.substr(1))}`;
 
             if (this.socket) {
-                this.onClose();
-                this.socket.onclose = null;
-                this.socket.onmessage = null;
-                this.socket.close();
+                this.disconnect();
             }
 
             this.socket = new WebSocket(apiURL);
@@ -173,12 +177,11 @@ export class Connection {
             };
 
             this.socket.onerror = () => {
-                document.body.classList.add("connectionerror");
+                this.socket?.close();
+                this.onClose();
             };
 
             this.socket.onopen = () => {
-                document.body.classList.remove("connectionerror");
-
                 this.onOpen();
             };
             this.socket.onclose = () => {
@@ -331,7 +334,13 @@ export class Connection {
     }
 
     onClose(): void {
-            
+        console.log('Unexpected disconnect');
+        if (!this.disconnecting)
+        {
+            bus.emit('disconnected');
+            bus.emit("connectionError");
+        }
+
         this.connected = false;
     }
 
@@ -463,8 +472,8 @@ export class Connection {
 
         switch (messageType) {
             case AllMessages.NetWorldView:
-                this.handleNetWorldViewBuffer(buffer);
-                //this.handleNetWorldView(quantum.message(this.messageBuffers.WorldView));
+                //this.handleNetWorldViewBuffer(buffer);
+                this.handleNetWorldView(quantum.message(this.messageBuffers.WorldView));
                 break;
             case AllMessages.NetPing:
                 this.handleNetPing(quantum.message(this.messageBuffers.Ping));

@@ -1,13 +1,14 @@
 import { GameContainer } from "./gameContainer";
 import * as bus from "./bus";
 import "@babylonjs/loaders/glTF";
-import { AbstractMesh, Light, Node, PBRMaterial, SceneLoader, Vector3 } from "@babylonjs/core";
+import { AbstractMesh, Light, Node, PBRMaterial, SceneLoader, Vector2, Vector3 } from "@babylonjs/core";
 import { GLTFFileLoader } from "@babylonjs/loaders";
 import { Settings } from "./settings";
 
 export class WorldMeshLoader {
     container: GameContainer;
     loadedFile: string | null;
+    scalingVector: Vector3 = new Vector3(10, 10, 10);
 
     constructor(container: GameContainer) {
         this.container = container;
@@ -18,6 +19,7 @@ export class WorldMeshLoader {
     }
 
     onHook(hook: any) {
+        console.log('meshloader new hook');
         if (!hook.Mesh)
             // old server/hook
             return;
@@ -28,6 +30,13 @@ export class WorldMeshLoader {
             if (hook.Mesh.Enabled !== null) {
                 this.loadedFile = <string>(hook.Mesh.MeshURL);
                 console.log('worldMeshLoader: loading mesh');
+                if (hook.Mesh.Scale)
+                {
+                    this.scalingVector.x = hook.Mesh.Scale.X;
+                    this.scalingVector.y = hook.Mesh.Scale.Y;
+                    this.scalingVector.z = hook.Mesh.Scale.Z;
+                }
+
                 this.loadGLB(this.loadedFile);
             }
         }
@@ -121,8 +130,8 @@ export class WorldMeshLoader {
 
         plugin.onMeshLoadedObservable.add((mesh, state) => {
             if (mesh.name == "__root__") {
-                mesh.scaling = new Vector3(10 * mesh.scaling.x, 10 * mesh.scaling.y, 10 * mesh.scaling.z);
                 mesh.rotate(new Vector3(0, 1, 0), Math.PI);
+                mesh.scaling = new Vector3(this.scalingVector.x * mesh.scaling.x, this.scalingVector.y * mesh.scaling.y, this.scalingVector.z * mesh.scaling.z);
             }
 
             let pbr = mesh.material as PBRMaterial;

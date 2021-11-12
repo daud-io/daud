@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net.Http;
     using System.Numerics;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
@@ -14,10 +15,13 @@
 
     public class WorldMeshLoader : SystemActorBase
     {
+        private static HttpClient httpLoader = new();
         private List<StaticHandle> Statics = new List<StaticHandle>();
 
         private bool DoubleTriangles = false;
         private string loadedURL;
+
+        private Vector3 ScaleVector = new Vector3(10, 10, 10);
 
         public WorldMeshLoader(World world) : base(world)
         {
@@ -54,7 +58,7 @@
             Matrix4x4 transform = 
                   node.WorldMatrix
                 * Matrix4x4.CreateScale(new Vector3(1,1,-1)) // invert Z
-                * Matrix4x4.CreateScale(new Vector3(10, 10, 10)); // scale
+                * Matrix4x4.CreateScale(this.ScaleVector); // scale
 
             if (node.Extras.Content != null)
             {
@@ -130,17 +134,25 @@
         private void LoadGLB(string newURL)
         {
             this.loadedURL = newURL;
-            var root = SharpGLTF.Schema2.ModelRoot.Load(newURL);
+            httpLoader.GetStreamAsync(newURL).ContinueWith(t => {
+                using var glbStream = t.Result;
+                using var ms = new MemoryStream();
+                    glbStream.CopyTo(ms);
+                ms.Seek(0, SeekOrigin.Begin);
 
-            foreach (var scene in root.LogicalScenes)
-                LoadScene(root, scene);
+                var root = SharpGLTF.Schema2.ModelRoot.ReadGLB(ms);
+                foreach (var scene in root.LogicalScenes)
+                    LoadScene(root, scene);
+            });
+            
         }
 
         private void UnloadMeshes()
         {
             foreach (var obj in Statics)
                 World.Simulation.Statics.Remove(obj);
-            
+
+            Statics.Clear();
             World.SpawnPoints.Clear();
             this.loadedURL = null;
         }
@@ -150,20 +162,17 @@
             var hook = World.Hook;
             if (World.Hook.Mesh.Enabled)
             { 
-                Uri baseURI;
-                if (!Uri.TryCreate(World.GameConfiguration.PublicURL, UriKind.Absolute, out baseURI))
-                    baseURI = new Uri($"https://{World.GameConfiguration.PublicURL}");
-
-                var activatedURL = new Uri(baseURI, $"/api/v1/world/mesh/{World.WorldKey}/server.glb").ToString();
                 var newURL = World.Hook.Mesh.MeshURL;
                 
-                if (newURL != loadedURL && newURL != activatedURL)
+                if (newURL != loadedURL)
                 {
                     this.UnloadMeshes();
+                    this.ScaleVector = World.Hook.Mesh.Scale;
                     LoadGLB(newURL);
-                    World.Hook.Mesh.MeshURL = activatedURL;
                 }
             }
+            else if (this.loadedURL != null)
+                this.UnloadMeshes();
         }
 
         protected override void CycleThink()

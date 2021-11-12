@@ -1,6 +1,5 @@
 import { Connection, LeaderboardType } from "./connection";
 import { NetWorldView } from "./daud-net/net-world-view";
-import { ServerWorld } from "./registry";
 
 const events = {
     gameReady: [] as (() => void)[],
@@ -8,6 +7,7 @@ const events = {
     worldjoin: [] as ((connect: string) => void)[],
     connected: [] as ((connection: Connection) => void)[],
     disconnected: [] as (() => void)[],
+    connectionError: [] as (() => void)[],
     dead: [] as (() => void)[],
     alive: [] as (() => void)[],
     spawn: [] as ((name: string, ship: string) => void)[],
@@ -19,6 +19,7 @@ const events = {
     worldview: [] as ((worldview: NetWorldView) => void)[],
     prerender: [] as ((time: number) => void)[],
     postrender: [] as ((time: number) => void)[]
+
 };
 
 type Magic = any; // The type is valid, but typescript can't understand that yet

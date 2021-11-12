@@ -1,47 +1,64 @@
 ﻿namespace Game.Engine.Core
 {
     using Game.API.Common.Models;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.Net.Http;
+    using System.Threading.Tasks;
 
     public static class Worlds
     {
         public static readonly Dictionary<string, World> AllWorlds = new Dictionary<string, World>();
         private static GameConfiguration GameConfiguration;
-        public static void Initialize(GameConfiguration gameConfiguration)
+        public async static Task Initialize(GameConfiguration gameConfiguration)
         {
             GameConfiguration = gameConfiguration;
 
+            if (gameConfiguration.WorldInitialization != null)
+            {
+                using var http = new HttpClient();
+                
+                foreach (var worldConfiguration in gameConfiguration.WorldInitialization)
+                {
+                    var hookJson = await http.GetStringAsync(worldConfiguration.HookURL);
+                    var hook = Hook.Default;
+                    JsonConvert.PopulateObject(hookJson, hook);
+
+                    var world = new World(hook, GameConfiguration, worldConfiguration.WorldKey);
+                    Worlds.AddWorld(world);
+                }
+            }
+            
             if (!gameConfiguration.NoWorlds)
             {
-                
-                //AddWorld(FFA(), "default2");
                 AddWorld(PartyCity(), "partycity");
-                //AddWorld(FFA(), "ffa");
-                //AddWorld(Team(), "team");
-                //AddWorld(PartyCity(), "partycity2");
-                
-
+                AddWorld(FFA(), "ffa");
             }
-
-            //AddWorld("duel", WorldDuel());
-            //AddWorld("team", WorldTeam());
-            //AddWorld("ctf", WorldCTF());
-            //AddWorld("robo", RoboTrainer());
-            //AddWorld("sumo", WorldSumo());
-            //AddWorld("royale", WorldRoyale());
-
         }
+        
         private static World FFA()
         {
             var hook = Hook.Default;
             hook.Name = "FFA";
             hook.Description = "Free-For-All: Kill the bad guys... they are all bad.";
             hook.Mesh.Enabled = true;
-            hook.Mesh.MeshURL = "wwwroot/public/models/ffa.glb";
+            hook.Mesh.MeshURL = "https://static.daud.io/worlds/ffa/ffa.glb";
             hook.WorldSize = 5000;
 
             return new World(hook, GameConfiguration, "ffa");
+        }
+        private static World Untitled()
+        {
+            var hook = Hook.Default;
+            hook.Name = "untitled";
+            hook.Description = "untitled";
+            hook.Mesh.Enabled = true;
+            hook.Mesh.MeshURL = "wwwroot/public/models/untitled.glb";
+            hook.Mesh.Scale = new System.Numerics.Vector3(100, 100, 100);
+            hook.WorldSize = 5000;
+
+            return new World(hook, GameConfiguration, "untitled");
         }
 
         private static World Team()

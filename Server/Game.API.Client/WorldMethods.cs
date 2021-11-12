@@ -45,6 +45,11 @@
                 });
         }
 
+        public async Task<IEnumerable<string>> ListAsync()
+        {
+            return await APIClient.APICallAsync<IEnumerable<string>>(HttpMethod.Get, APIEndpoint.WorldList);
+        }
+
         public async Task<bool> SetMap(string worldKey, MapModel mapModel, CancellationToken cancellationToken = default(CancellationToken))
         {
             return await APIClient.APICallAsync<bool>(

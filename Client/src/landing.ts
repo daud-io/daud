@@ -1,46 +1,41 @@
-﻿import 'whatwg-fetch';
+﻿import './fills';
 import * as bus from "./bus";
 import { Pinger } from './pinger';
 import { Host, Registry, ServerWorld } from './registry';
-
-if (!Element.prototype.matches) {
-    Element.prototype.matches = (<any>Element.prototype).msMatchesSelector ||
-        (<any>Element.prototype).webkitMatchesSelector;
-}
-
-if (!Element.prototype.closest) {
-    Element.prototype.closest = function (s: string) {
-        var el: any = this;
-
-        do {
-            if (Element.prototype.matches.call(el, s)) return el;
-            el = el.parentElement || el.parentNode;
-        } while (el !== null && el.nodeType === 1);
-        return null;
-    };
-}
-
-
+import './game';
+import { html, render, Hole, Tag } from "uhtml";
+import './pwa';
 export class Landing {
-    static worlds: Record<string, ServerWorld> = {};
+    worlds: Record<string, ServerWorld> = {};
 
-    static connections: Record<string, Pinger> = {};
-    static history: Record<string, number> = {};
-    static timer: number;
+    connections: Record<string, Pinger> = {};
+    history: Record<string, number> = {};
+    timer: number = -1;
 
-    static visible: boolean = true;
-    static lastRegistryCheck: number = 0;
+    visible: boolean = true;
+    lastRegistryCheck: number = 0;
 
-    static currentConnect: string;
+    currentConnect: string|undefined = undefined;
 
-    static gameLoaded: boolean = false;
+    gameLoaded: boolean = true;
 
-    static pingEnabled: boolean = false;
-    static firstLoad: boolean = true;
+    pingEnabled: boolean = false;
+    firstLoad: boolean = true;
 
-    static entireUIHidden: boolean = true;
+    entireUIHidden: boolean = true;
 
-    static tryAddConnection(host: Host): void {
+    primaryServers = ['us.daud.io', 'de.daud.io'];
+
+    constructor()
+    {
+        this.initialize();
+        bus.on('connectionError', () => {
+            this.currentConnect = undefined;
+            this.show();
+        });
+    }
+
+    tryAddConnection(host: Host): void {
         if (!this.pingEnabled)
             return;
 
@@ -53,8 +48,10 @@ export class Landing {
         }
     }
 
-    static async checkRegistry(): Promise<void> {
+    async checkRegistry(): Promise<void> {
         const hosts = await Registry.query();
+        const links = new Array<Hole>();
+
         hosts.forEach((host) => {
             if (host.worlds.length > 0) {
                 this.tryAddConnection(host);
@@ -63,17 +60,42 @@ export class Landing {
             host.worlds.forEach(world => {
                 const connect = `${host.url}/${world.worldKey}`;
                 this.worlds[connect] = world;
+                if (!world.hook.Hidden && this.primaryServers.indexOf(host.url) > -1)
+                {
+                    var button = (connect != this.currentConnect)
+                        ? html`<button class='playnow'>Play Now</button>`
+                        : html`<button class='playnow'>ACTIVE</button>`;
 
-                document.querySelectorAll(`.${host.url.replaceAll('.', '-')}-${world.worldKey}-players`).forEach(e => {
-                    e.innerHTML = `${world.advertisedPlayers}`;
-
-                    e.closest('.world')?.classList.remove('pending');
-                });
+                    var thumbnail = world.hook.thumbnail ?? 'img/worlds/openspace.png'
+                    
+                    links.push(html`
+                        <a href="#" rel="nofollow,noindex" class="world" data-connect="${connect}">
+                            <img src="${thumbnail}" />
+                            <div class="explain">
+                                <div class="title">${world.hook.name}</div>
+                                <span>
+                                    ${world.hook.description}
+                                </span>
+                            </div>
+                            ${button}
+                            <div class="worldstats">
+                                <div class="ping"><span class="${host.url.replaceAll('.', '-') + "-ping"}">---</span></div>
+                                <div class="players">players: ${world.advertisedPlayers}</div>
+                            </div>
+                        </a>
+                    `);
+                }
             });
         });
+
+        render(
+            document.getElementById('worlds')!,
+            html`${links}`
+        );
+
     }
 
-    static checkHosts(): void {
+    checkHosts(): void {
         if (!this.pingEnabled || !this.visible)
             return;
 
@@ -95,10 +117,9 @@ export class Landing {
             console.log('checkhosts: checkRegistry');
             this.checkRegistry();
         }
-
     }
 
-    static updateHost(hostname: string, latency: number): void {
+    updateHost(hostname: string, latency: number): void {
         var url:URL;
         try
         {
@@ -114,8 +135,8 @@ export class Landing {
             if (worldClasses) {
                 var bucket: string = latency == -1 ? 'pending' :
                     latency < 50 ? 'fast' :
-                        latency < 120 ? 'medium' :
-                            'slow'
+                    latency < 120 ? 'medium' :
+                    'slow'
 
                 if (!worldClasses.contains(bucket)) {
                     worldClasses.remove('fast', 'medium', 'slow', 'pending');
@@ -127,16 +148,18 @@ export class Landing {
         });
     }
 
-    static clearHosts(): void {
+    clearHosts(): void {
         for (let connect in this.connections)
             this.connections[connect]?.disconnect();
 
         this.connections = {};
     }
 
-    static show() {
+    show() {
+        console.log('landing show');
         this.unhideUI();
 
+        this.firstLoad = false;
         if (!this.firstLoad) {
             this.pingEnabled = true;
             document.getElementById('worlds')?.classList.add('pingenabled');
@@ -145,6 +168,7 @@ export class Landing {
         this.firstLoad = false;
 
         this.checkRegistry();
+        this.checkHosts();
         window.document.body.classList.add('landing');
         this.setElementDisplay('gameArea', 'none');
         this.setElementDisplay('spawnscreen', 'none');
@@ -152,7 +176,7 @@ export class Landing {
         this.visible = true;
     }
 
-    static hide() {
+    hide() {
         window.document.body.classList.remove('landing');
         this.setElementDisplay('gameArea', '');
         this.setElementDisplay('spawnscreen', '');
@@ -160,37 +184,33 @@ export class Landing {
         this.visible = false;
     }
 
-    private static setElementDisplay(id: string, styleDisplayValue: string) {
+    private setElementDisplay(id: string, styleDisplayValue: string) {
         const element = document.getElementById(id)
         if (element)
             element.style.display = styleDisplayValue;
     }
 
-    private static async launch(connect: string): Promise<void> {
+    private async launch(connect: string): Promise<void> {
         this.hide();
 
         this.clearHosts();
+
         if (this.currentConnect != connect) {
+
+            var url = (new URL(document.location?.toString()));
+            url?.searchParams.delete('world');
+            window.history.pushState({}, '', url);
+    
             this.currentConnect = connect;
-            if (!this.gameLoaded) {
-                bus.on('gameReady', () => {
-                    this.gameLoaded = true;
-                    bus.emit("worldjoin", connect);
-                });
-
-                await import('./game');
-            }
-            else
-                bus.emit("worldjoin", connect);
-
+            bus.emit("worldjoin", connect);
         }
     }
 
-    private static onArenasClick(e: Event) {
+    private onArenasClick(e: Event) {
         this.show();
     }
 
-    private static onWorldClick(e: Event) {
+    private onWorldClick(e: Event) {
         const world = (<HTMLElement>(e.target))?.closest('.world');
         const connect = world?.attributes.getNamedItem('data-connect')?.value;
 
@@ -202,7 +222,7 @@ export class Landing {
 
     }
 
-    private static unhideUI()
+    private unhideUI()
     {
         if (this.entireUIHidden)
         {
@@ -211,7 +231,7 @@ export class Landing {
         }
     }
 
-    private static querystringConfig(): boolean {
+    private querystringConfig(): boolean {
         try {
             var params = (new URL(document.location?.toString()))?.searchParams;
             if (params) {
@@ -231,7 +251,7 @@ export class Landing {
         return false;
     }
 
-    static async initialize(): Promise<void> {
+    async initialize(): Promise<void> {
         try {
             this.timer = window.setInterval(() => this.checkHosts(), 500);
 
@@ -249,5 +269,4 @@ export class Landing {
     }
 }
 
-Landing.initialize();
-
+new Landing();

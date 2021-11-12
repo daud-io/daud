@@ -11,12 +11,11 @@
         public string DiscordToken { get; set; } = null;
         public ulong? DiscordGuildID { get; set; } = null;
 
-        public bool ForceHTTPS { get; set; } = false;
-
         public bool AllowCORS { get; set; } = true;
 
         public bool NoWorlds { get; set; } = false;
 
+        public WorldConfiguration[] WorldInitialization { get; set; } = null;
         public bool RegistryEnabled { get; set; }
         public string RegistryUri { get; set; }
         public string RegistryUserKey { get; set; }
@@ -24,11 +23,13 @@
 
         public string PublicURL { get; set; }
 
-        public string DuelBotURL { get; set; } = "https://daud-discord.glitch.me/";
-
-        public string ElasticSearchURI { get; set; }
-        public bool DisableSuggestionLookup { get; set; } = false;
-
         public string TelemetryFile { get; set; } = null;
+
+        public class WorldConfiguration
+        {
+            public string WorldKey { get; set; }
+            public string HookURL { get; set; }
+
+        }
     }
 }

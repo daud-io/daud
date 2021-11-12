@@ -43,7 +43,7 @@ namespace Game.Engine.Physics
                 {
                     var worldBodyA = World.Bodies[a.BodyHandle];
                     var worldBodyB = World.Bodies[b.BodyHandle];
-
+                    
                     var responseAB = worldBodyA.CanCollide(worldBodyB);
                     var responseBA = worldBodyB.CanCollide(worldBodyA);
 
@@ -112,6 +112,11 @@ namespace Game.Engine.Physics
             {
                 var worldBodyA = World.Bodies[pair.A.BodyHandle];
                 var worldBodyB = World.Bodies[pair.B.BodyHandle];
+
+                if (worldBodyB == null)
+                {
+                    int i = 0;
+                }
 
                 var responseAB = worldBodyA.CanCollide(worldBodyB);
                 var responseBA = worldBodyB.CanCollide(worldBodyA);

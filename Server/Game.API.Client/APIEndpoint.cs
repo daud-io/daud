@@ -16,6 +16,7 @@
         public static APIEndpoint ServerPlayers { get => new APIEndpoint("/api/v1/server/players"); }
         public static APIEndpoint ServerHook { get => new APIEndpoint("/api/v1/server/hook"); }
         public static APIEndpoint World { get => new APIEndpoint("/api/v1/world"); }
+        public static APIEndpoint WorldList { get => new APIEndpoint("/api/v1/world/list"); }
         public static APIEndpoint WorldHook { get => new APIEndpoint("/api/v1/world/hook"); }
         public static APIEndpoint WorldReset { get => new APIEndpoint("/api/v1/world/reset"); }
         public static APIEndpoint WorldMap { get => new APIEndpoint("/api/v1/world/map"); }

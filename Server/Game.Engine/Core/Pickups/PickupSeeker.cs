@@ -14,8 +14,7 @@
         protected override void EquipFleet(Fleet fleet)
         {
             fleet.PushStackWeapon(new FleetWeaponGeneric<ShipWeaponSeeker>(fleet.World) {
-                IsOffense = true,
-                CausesCooldown = true
+                IsOffense = true
             });
 
             fleet.ShootCooldownTime = World.Time;

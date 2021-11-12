@@ -94,7 +94,9 @@ export class GameContainer {
                 }
 
             }
-            this.resize();
+
+            setTimeout(() => this.resize(), 0);
+
             this.ready = false;
             this.scene.render();
         });

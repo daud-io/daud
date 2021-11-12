@@ -19,6 +19,7 @@
     using Microsoft.AspNetCore.Http.Features;
     using Microsoft.AspNetCore.StaticFiles;
     using Microsoft.AspNetCore.Server.Kestrel.Core;
+    using System.Threading.Tasks;
 
     public class Startup
     {
@@ -106,9 +107,6 @@
 
             app.UseMvc();
 
-            if (config.ForceHTTPS)
-                app.UseHttpsRedirection();
-
             if (config.AllowCORS)
                 app.UseCors("AllowAllOrigins");
 
@@ -136,8 +134,7 @@
             });
             app.UseGameWebsocketHandler();
 
-            //RemoteEventLog.Initialize(config, registryClient);
-            Worlds.Initialize(config);
+            Task.Run(async () => await Worlds.Initialize(config));
 
             if (config.RegistryEnabled)
             {

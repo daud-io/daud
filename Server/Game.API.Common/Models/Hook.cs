@@ -25,6 +25,7 @@
         public class MeshConfiguration
         {
             public bool Enabled { get; set; } = false;
+            public Vector3 Scale { get; set; } = Vector3.One;
             public string MeshURL { get; set; } = null;
         }
 
@@ -57,7 +58,7 @@
 
         public float ShotCooldownTimeM { get; set; } = 20;
         public float ShotCooldownTimeB { get; set; } = 550;
-
+ 
         public float ShotThrustM { get; set; } = -0.006f;
         public float ShotThrustB { get; set; } = 0.22f;
 
@@ -146,6 +147,7 @@
         public string Name { get; set; } = "FFA";
         public string Description { get; set; } = null;
         public string Instructions { get; set; } = null;
+        public string Thumbnail { get; set; } = null;
 
         public bool Hidden { get; set; } = false;
         public string[] AllowedColors { get; set; }
@@ -247,6 +249,7 @@
                    Name == hook.Name &&
                    Description == hook.Description &&
                    Instructions == hook.Instructions &&
+                   Thumbnail == hook.Thumbnail &&
                    Hidden == hook.Hidden &&
                    EqualityComparer<string[]>.Default.Equals(AllowedColors, hook.AllowedColors) &&
                    Weight == hook.Weight &&
@@ -342,6 +345,7 @@
             hash.Add(Name);
             hash.Add(Description);
             hash.Add(Instructions);
+            hash.Add(Thumbnail);
             hash.Add(Hidden);
             hash.Add(AllowedColors);
             hash.Add(Weight);

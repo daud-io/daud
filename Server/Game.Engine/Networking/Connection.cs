@@ -3,13 +3,11 @@
     using Newtonsoft.Json;
     using Game.API.Common;
     using Game.Engine.Core;
-    using Game.Engine.Core.Steering;
     using Microsoft.AspNetCore.Http;
     using Microsoft.Extensions.Logging;
     using Nito.AsyncEx;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Net.WebSockets;
     using System.Numerics;
@@ -138,6 +136,18 @@
             return (position, linearVelocity);
         }
 
+        public async ValueTask StartSynchronizing()
+        {
+            var timer = new PeriodicTimer(TimeSpan.FromMilliseconds(World.Hook.StepTime));
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                await timer.WaitForNextTickAsync(cancellationToken);
+                await StepAsync();
+            }
+        }
+
+
         public void StepSyncInGameLoop()
         {
             var size = 6000;
@@ -153,7 +163,6 @@
                     World.BodiesNear(CameraPosition, size, (body) => BodyCache.UpdateCachedBody(body, World.Time));
                     BodyCache.CollectStaleGroups();
                     BodyCache.CollectStaleBuckets();
-                    _ = this.StepAsync();
                 }
                 
             }
@@ -330,14 +339,14 @@
             {
                 SendQuantum.message = message;
                 NetQuantum.Serializer.GetMaxSize(SendQuantum);
-                NetQuantum.Serializer.Write(SendBuffer, SendQuantum);
+                int bytes = NetQuantum.Serializer.Write(SendBuffer, SendQuantum);
 
                 if (Socket.State == WebSocketState.Open)
                 {
                     var start = DateTime.Now;
 
                     await Socket.SendAsync(
-                        new ReadOnlyMemory<byte>(SendBuffer),
+                        new ReadOnlyMemory<byte>(SendBuffer, 0, bytes),
                         WebSocketMessageType.Binary,
                         endOfMessage: true,
                         cancellationToken: cancellationToken);
@@ -551,11 +560,10 @@
                 Player.IP = forwardedFor ?? httpContext.Connection.RemoteIpAddress.ToString();
                 Player.Connection = this;
 
-                //var updateTask = StartSynchronizing(cancellationToken);
-                await StartReadAsync(this.HandleIncomingMessage, cancellationToken);
+                var updateTask = StartSynchronizing();
+                var readTask = StartReadAsync(this.HandleIncomingMessage, cancellationToken);
 
-                //await Task.WhenAny(updateTask.AsTask(), readTask.AsTask());
-
+                await Task.WhenAny(updateTask.AsTask(), readTask.AsTask());
             }
             finally
             {

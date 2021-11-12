@@ -188,7 +188,7 @@
                 WeaponStack = new Stack<IFleetWeapon>(WeaponStack.TakeLast(World.Hook.FleetWeaponStackDepth));
 
             this.HasOffensiveUpgrade = WeaponStack.Any(w => w.IsOffense);
-            this.HasOffensiveUpgrade = WeaponStack.Any(w => w.IsDefense);
+            this.HasDefensiveUpgrade = WeaponStack.Any(w => w.IsDefense);
         }
 
         public override void Think(float dt)
@@ -269,6 +269,8 @@
 
                     weapon.FireFrom(this);
                     this.WeaponFiredCount++;
+                    this.HasOffensiveUpgrade = WeaponStack.Any(w => w.IsOffense);
+                    this.HasDefensiveUpgrade = WeaponStack.Any(w => w.IsDefense);
 
                     ShootCooldownTime = World.Time + (int)(ShotCooldownTimeM * Ships.Count + ShotCooldownTimeB);
                     ShootCooldownTimeStart = World.Time;

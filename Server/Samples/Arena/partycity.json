@@ -1,0 +1,15 @@
+{
+  "worldSize": 10000,
+  "mesh": {
+    "enabled": true,
+    "meshURL": "https://static.daud.io/partycity.glb",
+    "scale": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    }
+  },
+  "name": "Party City",
+  "description": "Party City, what can we say?",
+  "weight": 0
+}

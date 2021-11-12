@@ -11,6 +11,7 @@
     [Subcommand(typeof(Create))]
     [Subcommand(typeof(Delete))]
     [Subcommand(typeof(Reset))]
+    [Subcommand(typeof(List))]
     [Command("world")]
     class WorldCommand : CommandBase
     {
@@ -21,19 +22,43 @@
             public string World { get; set; }
 
             [Argument(1)]
-            public string HookJSON { get; set; } = null;
+             public string HookJSON { get; set; } = null;
+
+
+            [Option("--url")]
+            public string Url { get; set; } = null;
 
             [Option]
             public string File { get; set; } = null;
 
             protected async override Task ExecuteAsync()
             {
-                var hook = JsonConvert.DeserializeObject(HookJSON ?? System.IO.File.ReadAllText(File));
-                hook = await API.World.PutWorldAsync(World, hook);
 
-                Console.WriteLine(hook);
+                if (Url != null)
+                    using (WebClient cln = new WebClient())
+                        HookJSON = await cln.DownloadStringTaskAsync(Url);
+
+                var hook = JsonConvert.DeserializeObject(HookJSON ?? System.IO.File.ReadAllText(File));
+
+                var worldKey = await API.World.PutWorldAsync(World, hook);
+
+                Console.WriteLine(worldKey);
             }
         }
+
+        [Command("list")]
+        class List : CommandBase
+        {
+            protected async override Task ExecuteAsync()
+            {
+                var keys = await API.World.ListAsync();
+                foreach (var key in keys)
+                {
+                    Console.WriteLine(key);
+                }
+            }
+        }
+
 
         [Command("delete")]
         class Delete : CommandBase

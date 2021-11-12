@@ -21,9 +21,9 @@
         }
 
         [HttpGet, AllowAnonymous]
-        public Server Get()
+        public Server Get(string worldKey)
         {
-            var world = Worlds.Find("default");
+            var world = Worlds.Find(worldKey);
 
             return new Server
             {

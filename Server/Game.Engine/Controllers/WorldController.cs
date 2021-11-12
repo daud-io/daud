@@ -12,7 +12,6 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Threading;
     using System.Threading.Tasks;
 
     public class WorldController : APIControllerBase
@@ -25,26 +24,15 @@
         {
             this.RegistryClient = registryClient;
             this.GameConfiguration = gameConfiguration;
-
         }
 
         [HttpPut]
-        public async Task<string> Create(string worldKey, string hookJson)
+        public string Create(string worldKey, string hookJson)
         {
             var hook = Game.API.Common.Models.Hook.Default;
 
             PatchJSONIntoHook(hook, hookJson);
             var publicURL = GameConfiguration.PublicURL ?? Request.Host.ToString();
-
-            if (GameConfiguration.RegistryEnabled)
-            {
-                var cts = new CancellationTokenSource();
-                cts.CancelAfter(15000);
-                var suggestion = await RegistryClient.Registry.SuggestAsync(GameConfiguration.PublicURL, cts.Token);
-                if (suggestion != "localhost")
-                    publicURL = suggestion;
-            }
-
             var world = new World(hook, GameConfiguration, worldKey);
 
             Worlds.AddWorld(world);
@@ -101,68 +89,11 @@
             return File(mesh, "model/gltf-binary", "server.glb");
         }
 
-        [AllowAnonymous, HttpGet, Route("all"), EnableCors("AllowAllOrigins")]
-        public async Task<IEnumerable<object>> GetWorlds(string worldName = null, bool allWorlds = false)
+        [AllowAnonymous, HttpGet, Route("list"), EnableCors("AllowAllOrigins")]
+        public IEnumerable<string> GetWorlds()
         {
-            var worlds = new List<object>();
 
-            if (GameConfiguration.RegistryEnabled)
-            {
-                bool first = true;
-                var serverWorlds = await RegistryClient.Registry.ListAsync();
-                worlds.AddRange(
-                    serverWorlds
-                        .SelectMany(server => server.Worlds.Select(world => new { server, world }))
-                        .OrderBy(s => s.world.Hook.Weight)
-                        .Select(s =>
-                        {
-                            bool isDefault = first;
-                            first = false;
-                            return
-                                new
-                                {
-                                    world = $"{s.server.URL}/{s.world.WorldKey}",
-                                    server = s.server.URL,
-                                    players = s.world.AdvertisedPlayers,
-                                    name = s.world.Hook.Name,
-                                    description = s.world.Hook.Description,
-                                    allowedColors = s.world.Hook.AllowedColors,
-                                    instructions = s.world.Hook.Instructions,
-                                    isDefault = isDefault
-                                };
-                        })
-                );
-            }
-
-            if (Request.HttpContext.Connection.LocalIpAddress.Equals(Request.HttpContext.Connection.RemoteIpAddress)
-                || !GameConfiguration.RegistryEnabled)
-            {
-                bool first = true;
-                worlds.AddRange(Worlds.AllWorlds
-                        .OrderBy(w => w.Value.Hook.Weight)
-                        .Select(s =>
-                        {
-                            bool isDefault = first;
-                            first = false;
-
-                            var name = s.Value.Hook.Name;
-                            var description = s.Value.Hook.Description;
-
-                            return new
-                            {
-                                world = $"{Request.Host}/{s.Value.WorldKey}",
-                                server = Request.Host,
-                                players = s.Value.AdvertisedPlayerCount,
-                                name = "Local: " + name,
-                                description,
-                                allowedColors = s.Value.Hook.AllowedColors,
-                                instructions = s.Value.Hook.Instructions,
-                                isDefault = isDefault
-                            };
-                        }));
-            }
-
-            return worlds;
+            return Worlds.AllWorlds.Select(w => w.Key);
         }
     }
 }

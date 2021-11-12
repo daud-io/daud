@@ -19,6 +19,7 @@
     using System.Linq;
     using System.Numerics;
     using System.Threading;
+    using System.Threading.Tasks;
 
     public class World : IDisposable
     {
@@ -28,8 +29,6 @@
         public int AdvertisedPlayerCount { get; set; }
         public int SpectatorCount { get; set; }
 
-        // the canonical game time, in milliseconds, from world start
-        public float FloatTime = 0;
         public uint Time { get; private set; } = 0;
 
         // offset between system clock and world start
@@ -130,14 +129,13 @@
 
         public bool InStep = false;
         // main entry to the world. This will be called every Hook.StepSize milliseconds, unless it's late. or early.
-        public void Step(float dt)
+        public void Step(int dt)
         {
             long tStart, tControl, tActors, tWrite, tPhysics, tRead, tCollisions, tCleanup, tHash;
             tStart = Stopwatch.GetTimestamp();
             try
             {
-                FloatTime += dt;
-                Time = (uint)FloatTime;
+                Time += (uint)dt;
 
                 //Console.WriteLine($"dt:{dt} time: {Time}");
                 
@@ -245,17 +243,21 @@
         private void StepTimings(long tStart, long tControl, long tActors, long tWrite, long tPhysics, long tRead, long tCollisions, long tCleanup, long tHash)
         {
             float scale = 1_000_000;
-            //Console.WriteLine($"control:{tControl/scale:0.0}\tactors:{tActors/scale:0.0}\twrite:{tWrite/scale:0.0}\tphysics:{tPhysics/scale:0.0}\tread:{tRead/scale:0.0}\tcollisions:{tCollisions/scale:0.0}\tcleanup:{tCleanup/scale:0.0}\thash:{tHash/scale:0.0}");
+            if (tHash/scale > 10)
+                Console.WriteLine($"control:{tControl/scale:0.0}\tactors:{tActors/scale:0.0}\twrite:{tWrite/scale:0.0}\tphysics:{tPhysics/scale:0.0}\tread:{tRead/scale:0.0}\tcollisions:{tCollisions/scale:0.0}\tcleanup:{tCleanup/scale:0.0}\thash:{tHash/scale:0.0}");
         }
 
         private void CheckTimings(long tStart, long tLock, long tSteps, long tNet)
         {
             float scale = 1_000_000;
-            //Console.WriteLine($"lock:{tLock/scale:0.0}\tsteps:{tSteps/scale:0.0}\t net:{tNet/scale:0.0}");
+            if (tNet/scale > 10)
+                Console.WriteLine($"lock:{tLock/scale:0.0}\tsteps:{tSteps/scale:0.0}\t net:{tNet/scale:0.0}");
+
             
             if (Time - LastTimingReport > 10000)
             {
                 LastTimingReport = Time;
+
 
                 /*ThreadPool.GetAvailableThreads(out int threadsAvailable, out int iocpAvailable);
                 ThreadPool.GetMinThreads(out int threadsMin, out int iocpMin);
@@ -394,7 +396,6 @@
 
                 while (!PendingDestruction)
                 {
-                    
                     long tStart, tLock, tSteps, tNet;
                     tStart = Stopwatch.GetTimestamp();
                     lock(Bodies)
@@ -410,7 +411,7 @@
                         {
                             steps++;
 
-                            float thisStep = MathF.Min(Hook.StepTime, (float)dt);
+                            int thisStep = Math.Min(Hook.StepTime, (int)Math.Floor(dt));
                             dt -= thisStep;
                             this.Step(thisStep);
                         }
@@ -455,7 +456,7 @@
             {
                 Console.WriteLine("Exception in WorldTickEntry: " + e);
             }
-        }
+        } 
 
         public Vector2 ChooseSpawnPoint(string type, object obj)
         {

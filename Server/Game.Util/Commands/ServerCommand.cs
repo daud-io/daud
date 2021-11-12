@@ -16,22 +16,6 @@
     [Command("server")]
     class ServerCommand : CommandBase
     {
-        private static string[] Worlds = new[]
-        {
-            "default",
-            "duel",
-            "team",
-            "ctf"
-        };
-
-        private static string[] WorldSelection(string world)
-        {
-            if (world == null)
-                return Worlds;
-            else
-                return new[] { world };
-        }
-
         [Command("get")]
         class Get : CommandBase
         {
@@ -143,18 +127,15 @@
         class Announce : CommandBase
         {
             [Argument(0)]
-            public string Message { get; set; } = null;
-
-            [Option]
             public string World { get; set; } = null;
+
+            [Argument(1)]
+            public string Message { get; set; } = null;
 
             protected async override Task ExecuteAsync()
             {
                 if (Message != null)
-                {
-                    foreach (var world in WorldSelection(World))
-                        await API.Server.AnnounceAsync(Message, world);
-                }
+                    await API.Server.AnnounceAsync(Message, World);
             }
         }
 
@@ -162,14 +143,14 @@
         class Connections : CommandBase
         {
             [Option]
-            public string World { get; set; } = null;
-
-            [Option]
             public bool IP { get; set; } = false;
 
             protected async override Task ExecuteAsync()
             {
-                foreach (var world in WorldSelection(World))
+
+                var worlds = await API.World.ListAsync();
+                
+                foreach (var world in worlds)
                 {
                     var connections = await API.Server.ConnectionsAsync(world);
 
