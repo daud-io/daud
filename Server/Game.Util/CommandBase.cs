@@ -110,11 +110,7 @@
                 Console.WriteLine($"==== {name} ====");
                 ConsoleTableBuilder
                    .From(dt)
-                   .WithOptions(new ConsoleTableBuilderOption
-                   {
-                       Delimiter = " ",
-                       TrimColumn = true
-                   })
+                   .TrimColumn(true)
                    .WithFormat(ConsoleTableBuilderFormat.Minimal)
                    .ExportAndWriteLine();
             }

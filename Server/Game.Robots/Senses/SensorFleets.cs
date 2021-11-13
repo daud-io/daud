@@ -51,6 +51,7 @@
 
             foreach (var fleet in AllVisibleFleets)
                 fleet.PendingDestruction = true;
+
             foreach (var fleet in newFleets)
             {
                 var existing = AllVisibleFleets.FirstOrDefault(f => f.ID == fleet.ID);
@@ -78,12 +79,19 @@
                         else
                             existing.Ships.Add(ship);
                     }
+
+                    // destruction is nigh
                     existing.Ships = existing.Ships.Where(s => !s.PendingDestruction).ToList();
                 }
                 else
                     AllVisibleFleets.Add(fleet);
             }
+
+            // destruction is nigh
             AllVisibleFleets = AllVisibleFleets.Where(f => !f.PendingDestruction).ToList();
+
+            foreach (var fleet in AllVisibleFleets)
+                fleet.CacheCenter();
 
             MyFleet = AllVisibleFleets.FirstOrDefault(f => f.ID == Robot.FleetID);
 
@@ -99,7 +107,7 @@
         public IEnumerable<Fleet> Others
         {
             get => MyFleet != null
-                ? AllVisibleFleets.Except(new[] { MyFleet })
+                ? AllVisibleFleets.Where(v => v != MyFleet)
                 : AllVisibleFleets;
         }
     }

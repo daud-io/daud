@@ -16,19 +16,26 @@
 
         public Dictionary<string, object> Notes { get; set; } = new Dictionary<string, object>();
 
+        Vector2 _center;
+
+        public void CacheCenter()
+        {
+            Vector2 acc = new Vector2(0, 0);
+
+            foreach (var ship in Ships)
+                acc += ship.Position;
+
+            if (Ships.Count > 0)
+                _center = acc / Ships.Count;
+            else
+                _center = Vector2.Zero;
+        }
+
         public Vector2 Center
         {
             get
             {
-                Vector2 acc = new Vector2(0, 0);
-
-                foreach (var ship in Ships)
-                    acc += ship.Position;
-
-                if (Ships.Count > 0)
-                    return acc / Ships.Count;
-                else
-                    return Vector2.Zero;
+                return _center;
             }
         }
 

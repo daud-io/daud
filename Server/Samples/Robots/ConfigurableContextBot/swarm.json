@@ -1,7 +1,7 @@
 {
-  "AttackFleets": true,
-  "AttackAbandoned": true,
-  "AttackFish": true,
+  "AttackFleets": false,
+  "AttackAbandoned": false,
+  "AttackFish": false,
   "Name": "🚀swarmy",
   "Color": "cyan",
   "Sprite": "ship_cyan",

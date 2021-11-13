@@ -2,7 +2,8 @@
   "profiles": {
     "Game.Util": {
       "commandName": "Project",
-      "commandLineArgs": "--context local server stress partycity --spectators 1"
+      "commandLineArgs": "--context local player robots --world team --file Server\\Samples\\Robots\\ConfigurableContextBot\\swarm.resolution.json --replicas 30",
+      "workingDirectory": "C:\\code\\daud"
     }
   }
 }
