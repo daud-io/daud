@@ -81,7 +81,7 @@
             {
                 Ring.Destroy();
                 World.FleetSpawnPositionGenerator = null;
-            }                
+            }
         }
 
         private class RingBody : WorldBody

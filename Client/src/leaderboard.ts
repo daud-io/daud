@@ -202,16 +202,16 @@ export class Leaderboard {
                 html`<tbody>
                     <tr>
                         <td class="flag">
-                            <img class="flag-arrow" src=${this.container.loader.getTextureDefinition("ctf_arrow_blue").url} style=${`transform:rotate(${cyanAngle}rad);right:-50px`}></img>
+                            <img class="flag-arrow" src=${this.container.loader.getTextureDefinition("ctf_arrow_blue").url} style=${`transform:rotate(${-1 * cyanAngle}rad);right:-50px`}></img>
                         </td>
-                        <td style="width:300px;position:rejative">
+                        <td style="width:300px;position:relative">
                             ${image("ctf_score_stripes")}
                             ${image(`ctf_score_left_${Math.min(cyanScore, 4)}`)}
                             ${image(`ctf_score_right_${Math.min(redScore, 4)}`)}
                             ${image(`ctf_score_final${cyanScore >= 5 ? "_blue" : redScore >= 5 ? "_red" : ""}`)}
                         </td>
                         <td class="flag">
-                            <img class="flag-arrow" src=${this.container.loader.getTextureDefinition("ctf_arrow_red").url} style=${`transform:rotate(${redAngle}rad);left:-50px`}></img>
+                            <img class="flag-arrow" src=${this.container.loader.getTextureDefinition("ctf_arrow_red").url} style=${`transform:rotate(${-1 * redAngle}rad);left:-50px`}></img>
                         </td>
                     </tr>
                     </tbody>`

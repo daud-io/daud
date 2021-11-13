@@ -66,6 +66,7 @@
         {
             try
             {
+                Console.WriteLine("reloading config");
                 string text = null;
                 if (ConfigurationFileName != null)
                 {

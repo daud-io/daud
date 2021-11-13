@@ -6,16 +6,19 @@
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Net.WebSockets;
     using System.Numerics;
     using System.Threading;
     using System.Threading.Tasks;
     using FlatSharp;
-    using FlatSharp.Attributes;
 
     public class PlayerConnection : IDisposable
     {
+        private byte[] SendBuffer = new byte[64 * 1024];
+        private byte[] ReceiveBuffer = new byte[64 * 1024];
+        private NetQuantum SendQuantum = new NetQuantum();
+        private bool Aborted = false;
+
         public APIClient APIClient { get; private set; }
         public string WorldKey { get; private set; }
         public long GameTime { get; private set; }
@@ -176,54 +179,8 @@
 
         private async Task HandleNetWorldView(NetWorldView netWorldView)
         {
-            
-            var updates = new List<Body>();
 
-            for (int i = 0; i < netWorldView.updates.Count; i++)
-            {
-                var netBody = netWorldView.updates[i];
-                updates.Add(new Body
-                {
-                    ID = netBody.id,
-                    DefinitionTime = netBody.definitiontime,
-                    OriginalPosition = FromNetVector(netBody.originalposition),
-                    Velocity = FromNetVectorVelocity(netBody.velocity),
-
-                    OriginalAngle = netBody.originalangle,
-                    AngularVelocity = netBody.angularvelocity,
-
-                    Size = netBody.size,
-                    Sprite = (Sprites)netBody.sprite,
-
-                    GroupID = netBody.group
-                });
-            }
-
-            var deletes = new List<uint>();
-            for (int i = 0; i < netWorldView.deletes.Count; i++)
-                deletes.Add(netWorldView.deletes[i]);
-
-            var groupDeletes = new List<uint>();
-            for (int i = 0; i < netWorldView.groupdeletes.Count; i++)
-                groupDeletes.Add(netWorldView.groupdeletes[i]);
-
-            var groups = new List<Group>();
-            for (int i = 0; i < netWorldView.groups.Count; i++)
-            {
-                var group = netWorldView.groups[i];
-                groups.Add(new Group
-                {
-                    ID = group.group,
-                    Caption = group.caption,
-                    Type = (GroupTypes)group.type,
-                    ZIndex = group.zindex,
-                    Owner = group.owner,
-                    Color = group.color,
-                    CustomData = group.customdata
-                });
-            }
-
-            Cache.Update(updates, deletes, groups, groupDeletes, netWorldView.time);
+            Cache.Update(netWorldView);
 
             Position = FromNetVector(netWorldView.camera.originalposition);
 
@@ -247,18 +204,6 @@
 
             if (OnView != null)
                 await OnView();
-        }
-
-        private Vector2 FromNetVectorVelocity(Vec2 vec2)
-        {
-            var VELOCITY_SCALE_FACTOR = 5000.0f;
-
-            return new Vector2
-            {
-                X = vec2.x / VELOCITY_SCALE_FACTOR,
-                Y = vec2.y / VELOCITY_SCALE_FACTOR
-            };
-
         }
 
         private Vector2 FromNetVector(Vec2 vec2)
@@ -369,48 +314,33 @@
         {
             try
             {
-                var buffer = new byte[1024 * 4];
-                WebSocketReceiveResult result = new WebSocketReceiveResult(0, WebSocketMessageType.Binary, false);
+                int receiveIndex = 0;
+                bool done = false;
 
-                while (!result.CloseStatus.HasValue && Socket.State == WebSocketState.Open)
+                while (!done && !this.Aborted)
                 {
-                    if (SimulateReceiveLatency > 0)
-                        await Task.Delay(SimulateReceiveLatency);
+                    var result = await Socket.ReceiveAsync(new Memory<byte>(ReceiveBuffer, receiveIndex, ReceiveBuffer.Length - receiveIndex), cancellationToken);
+                    receiveIndex += result.Count;
 
-                    int maxlength = 1024 * 1024 * 1;
-                    using (var ms = new MemoryStream())
+                    if (result.EndOfMessage)
                     {
-                        while (!result.EndOfMessage && !Socket.CloseStatus.HasValue && ms.Length < maxlength)
-                        {
-                            result = await Socket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
-                            ms.Write(buffer, 0, result.Count);
-                        }
-
-                        if (result.MessageType == WebSocketMessageType.Close)
-                        {
-                            await Socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Normal closure", cancellationToken);
-                        }
-
-                        if (!result.CloseStatus.HasValue)
-                        {
-                            if (result.EndOfMessage)
-                            {
-                                var bytes = ms.GetBuffer();
-                                var quantum = NetQuantum.Serializer.Parse(bytes);
-
-                                await onReceive(quantum);
-
-                                result = new WebSocketReceiveResult(0, WebSocketMessageType.Text, false);
-                            }
-                        }
+                        await onReceive(NetQuantum.Serializer.Parse(ReceiveBuffer));
+                        receiveIndex = 0;
                     }
+                    done = !(Socket.State == WebSocketState.Open);
                 }
 
                 return true;
             }
-            catch (Exception)
+            catch (WebSocketException)
             {
-                throw;
+                // client disconnected
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
             }
         }
 

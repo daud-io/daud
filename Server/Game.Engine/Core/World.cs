@@ -10,6 +10,7 @@
     using Game.API.Common.Models;
     using Game.Engine.Core.Scoring;
     using Game.Engine.Core.SystemActors;
+    using Game.Engine.Core.SystemActors.CTF;
     using Game.Engine.Networking;
     using Game.Engine.Physics;
     using System;
@@ -224,8 +225,8 @@
             InitializeSystemActor<AdvanceRetreat>();
             InitializeSystemActor<TeamColors>();
             
-            //InitializeSystemActor<CaptureTheFlag>();
-            //InitializeSystemActor<Sumo>();
+            InitializeSystemActor<CaptureTheFlag>();
+            InitializeSystemActor<Sumo>();
             //InitializeSystemActor<RoyaleMode>();
         }
 

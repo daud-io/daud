@@ -1,8 +1,8 @@
 {
-  "AttackFleets": false,
-  "AttackAbandoned": false,
-  "AttackFish": false,
-  "Name": "swarmy",
+  "AttackFleets": true,
+  "AttackAbandoned": true,
+  "AttackFish": true,
+  "Name": "🚀swarmy",
   "Color": "cyan",
   "Sprite": "ship_cyan",
   "BoostThreshold": 16,
@@ -18,7 +18,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.SeparationRel,Game.Robots",
       "LookAheadMS": 100,
-      "BehaviorWeight": 100.0,
+      "BehaviorWeight": 50.0,
       "Cycle": 100,
       "Plot": false,
       "Config": {
@@ -56,7 +56,7 @@
     {
       "BehaviorTypeName": "Game.Robots.Behaviors.TeamAlignment,Game.Robots",
       "LookAheadMS": 200,
-      "BehaviorWeight": 0.02,
+      "BehaviorWeight": 0.2,
       "Cycle": 0
     }
   ]

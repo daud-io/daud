@@ -5,23 +5,23 @@
 
     public class Body
     {
-        public uint ID { get; set; }
-        public long DefinitionTime { get; set; }
+        public uint ID;
+        public long DefinitionTime;
 
-        public float OriginalAngle { get; set; }
-        public float Angle { get; set; }
-        public float AngularVelocity { get; set; }
+        public float OriginalAngle;
+        public float Angle;
+        public float AngularVelocity;
 
-        public Vector2 OriginalPosition { get; set; }
-        public Vector2 Position { get; set; }
-        public Vector2 Velocity { get; set; }
+        public Vector2 OriginalPosition;
+        public Vector2 Position;
+        public Vector2 Velocity;
 
-        public int Size { get; set; }
-        public Sprites Sprite { get; set; }
+        public int Size;
+        public Sprites Sprite;
 
-        public uint GroupID { get; set; }
+        public uint GroupID;
 
-        public BodyCache Cache { get; set; }
+        public BodyCache Cache;
 
         public Group Group
         {

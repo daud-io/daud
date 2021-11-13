@@ -1,11 +1,27 @@
 ﻿namespace Game.API.Client
 {
     using System.Collections.Generic;
+    using System.Numerics;
+    using DaudNet;
+    using Game.API.Common;
 
     public class BodyCache
     {
         private readonly Dictionary<uint, Body> _bodies = new Dictionary<uint, Body>();
         private readonly Dictionary<uint, Group> _groups = new Dictionary<uint, Group>();
+
+
+        private Vector2 FromNetVectorVelocity(Vec2 vec2)
+        {
+            var VELOCITY_SCALE_FACTOR = 5000.0f;
+
+            return new Vector2
+            {
+                X = vec2.x / VELOCITY_SCALE_FACTOR,
+                Y = vec2.y / VELOCITY_SCALE_FACTOR
+            };
+
+        }
 
         public void Clear()
         {
@@ -14,61 +30,70 @@
         }
 
         public void Update(
-            IEnumerable<Body> updates,
-            IEnumerable<uint> deletes,
-            IEnumerable<Group> groups,
-            IEnumerable<uint> groupDeletes,
-            long time
+            NetWorldView netWorldView
         )
         {
-            foreach (var id in deletes)
-                if (_bodies.ContainsKey(id))
-                    _bodies.Remove(id);
-
-            foreach (var update in updates)
+            for (int i = 0; i < netWorldView.updates.Count; i++)
             {
-                if (!_bodies.ContainsKey(update.ID))
-                {
-                    _bodies.Add(update.ID, update);
-                    update.Cache = this;
-                }
-                else
-                {
-                    var existing = _bodies[update.ID];
+                var netBody = netWorldView.updates[i];
+                var id = netBody.id;
 
-                    existing.DefinitionTime = update.DefinitionTime;
-
-                    existing.OriginalAngle = update.OriginalAngle;
-                    existing.AngularVelocity = update.AngularVelocity;
-                    existing.OriginalPosition = update.OriginalPosition;
-                    existing.Velocity = update.Velocity;
-                    
-                    existing.Size = update.Size;
-                    existing.Sprite = update.Sprite;
-                    existing.GroupID = update.GroupID;
+                if (!_bodies.TryGetValue(netBody.id, out var body))
+                {
+                    body = new Body
+                    {
+                        ID = netBody.id
+                    };
+                    _bodies.Add(id, body);
+                    body.Cache = this;
                 }
+                body.DefinitionTime = netBody.definitiontime;
+
+                body.OriginalAngle = netBody.originalangle;
+                body.AngularVelocity = netBody.angularvelocity;
+                body.OriginalPosition.X = netBody.originalposition.x;
+                body.OriginalPosition.Y = netBody.originalposition.y;
+                body.Velocity = FromNetVectorVelocity(netBody.velocity);
+                
+                body.Size = netBody.size;
+                body.Sprite = (Sprites)netBody.sprite;
+                body.GroupID = netBody.group;
             }
 
-            foreach (var id in groupDeletes)
+            for (int i = 0; i < netWorldView.deletes.Count; i++)
+            {
+                var id = netWorldView.deletes[i];
+                if (_bodies.ContainsKey(id))
+                    _bodies.Remove(id);
+            }
+
+            for (int i = 0; i < netWorldView.groupdeletes.Count; i++)
+            {
+                var id = netWorldView.groupdeletes[i];
                 if (_groups.ContainsKey(id))
                     _groups.Remove(id);
+            }
 
-            foreach (var group in groups)
+            var groups = new List<Group>();
+            for (int i = 0; i < netWorldView.groups.Count; i++)
             {
-                if (!_groups.ContainsKey(group.ID))
-                    _groups.Add(group.ID, group);
-                else
+                var netGroup = netWorldView.groups[i];
+                if (!_groups.TryGetValue(netGroup.group, out var group))
                 {
-                    var existing = _groups[group.ID];
-                    existing.Color = group.Color;
-                    existing.Caption = group.Caption;
-                    existing.Type = group.Type;
-                    existing.ZIndex = group.ZIndex;
+                    group = new Group();
+                    group.ID = netGroup.group;
+                    _groups.Add(group.ID, group);
                 }
+                group.Caption = netGroup.caption;
+                group.Type = (GroupTypes)netGroup.type;
+                group.ZIndex = netGroup.zindex;
+                group.Owner = netGroup.owner;
+                group.Color = netGroup.color;
+                group.CustomData = netGroup.customdata;
             }
 
             foreach (var body in Bodies)
-                body.Project(time);
+                body.Project(netWorldView.time);
         }
 
         public IEnumerable<Body> Bodies

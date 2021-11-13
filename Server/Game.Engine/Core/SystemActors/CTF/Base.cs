@@ -37,11 +37,11 @@
 
         public override void CollisionExecute(WorldBody projectedBody)
         {
-            var flag = projectedBody as Flag;
-
-            this.Team.Scored();
-
-            flag.ReturnToBase();
+            if (projectedBody is Flag flag)
+            {
+                this.Team.Scored();
+                flag.ReturnToBase();
+            }
         }
 
         public override CollisionResponse CanCollide(WorldBody projectedBody)
@@ -67,6 +67,11 @@
                 }
 
                 return new CollisionResponse(true);
+            }
+            else
+            {
+                if (projectedBody is Ship)
+                    return new CollisionResponse(true);
             }
             return new CollisionResponse(false);
         }

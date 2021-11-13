@@ -8,14 +8,12 @@ export type TokenData = {
 };
 export class Token extends RenderedObject {
     fleet: Fleet | undefined;
-    bodyID: string;
     group: ClientGroup;
     tokenData: TokenData;
 
     constructor(container: GameContainer, clientBody: ClientBody, group: ClientGroup) {
         super(container, clientBody);
         this.fleet = undefined;
-        this.bodyID = `b-${clientBody.ID}`;
         this.group = group;
         this.tokenData = this.defaultTokenData();
     }
@@ -35,10 +33,11 @@ export class Token extends RenderedObject {
     }
 
     updateGroupData() {
-        if (this.group.CustomData != this.tokenData) {
-            if (this.group.CustomData) this.tokenData = this.group.CustomData as TokenData;
-            else this.tokenData = this.defaultTokenData();
-        }
+        if (this.group?.CustomData)
+            if (this.group.CustomData != this.tokenData) {
+                if (this.group.CustomData) this.tokenData = this.group.CustomData as TokenData;
+                else this.tokenData = this.defaultTokenData();
+            }
     }
 
     dispose() {
@@ -52,8 +51,8 @@ export class Token extends RenderedObject {
         super.update();
         this.updateGroupData();
 
-        if (this.tokenData.FleetID != this.fleet?.ID) {
-            if (this.tokenData.FleetID) {
+        if (this.tokenData?.FleetID != this.fleet?.ID) {
+            if (this.tokenData?.FleetID) {
                 let group = this.container.cache.getGroup(this.tokenData.FleetID);
                 this.fleet = group?.renderer;
                 this.fleet?.addPowerup("haste");

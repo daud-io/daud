@@ -101,7 +101,7 @@ export class Loader {
 
         // load all the libraries
         let library = await SpriteLibrary.load("assets/base");
-        //this.addLayer(library, await SpriteLibrary.load("assets/ctf"));
+        this.addLayer(library, await SpriteLibrary.load("assets/ctf"));
         this.addLayer(library, await SpriteLibrary.load("assets/themes/" + Settings.theme));
 
         this.spriteDefinitions = library.sprites;

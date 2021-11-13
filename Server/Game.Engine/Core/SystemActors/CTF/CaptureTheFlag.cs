@@ -192,8 +192,8 @@
 
             if (World.Hook.CTFMode && Flags.Count == 0)
             {
-                CreateTeam("cyan", Sprites.ctf_flag_blue, new Vector2(-World.Hook.WorldSize, -World.Hook.WorldSize));
-                CreateTeam("red", Sprites.ctf_flag_red, new Vector2(World.Hook.WorldSize, World.Hook.WorldSize));
+                CreateTeam("cyan", Sprites.ctf_flag_blue, new Vector2(-World.Hook.WorldSize, World.Hook.WorldSize));
+                CreateTeam("red", Sprites.ctf_flag_red, new Vector2(World.Hook.WorldSize, -World.Hook.WorldSize));
                 World.FleetSpawnPositionGenerator = this.FleetSpawnPosition;
                 World.LeaderboardGenerator = this.LeaderboardGenerator;
             }

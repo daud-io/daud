@@ -12,9 +12,13 @@
         "skipLibCheck": true,
         "target": "es5",
         "moduleResolution": "node",
-        "isolatedModules": true
+        "isolatedModules": true,
+        "types": [
+            "vite-plugin-pwa/client"
+        ]
     },
     "include": [
-        "src", "types"
+        "src",
+        "types"
     ]
 }
