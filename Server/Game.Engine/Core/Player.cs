@@ -77,29 +77,32 @@
 
         public void SetControl(Vector2 position, bool boost, bool shoot)
         {
-            var packetNumber = Interlocked.Increment(ref this.ControlPackets);
-            if (packetNumber == 1)
+            lock(this)
             {
-                CummulativeBoostRequested = false;
-                CummulativeShootRequested = false;
-            }
+                var packetNumber = Interlocked.Increment(ref this.ControlPackets);
+                if (packetNumber == 1)
+                {
+                    CummulativeBoostRequested = false;
+                    CummulativeShootRequested = false;
+                }
 
-            if (boost)
-                CummulativeBoostRequested = true;
+                if (boost)
+                    CummulativeBoostRequested = true;
 
-            // if we find a control packet that requests firing
-            if (shoot)
-            {
-                // and it's the first one, then set the aim
+                // if we find a control packet that requests firing
+                if (shoot)
+                {
+                    // and it's the first one, then set the aim
+                    if (!CummulativeShootRequested)
+                        this.Position = position;
+
+                    CummulativeShootRequested = true;
+                }
+
+                // if we haven't started shooting, then update the aiming with the latest packet
                 if (!CummulativeShootRequested)
                     this.Position = position;
-
-                CummulativeShootRequested = true;
             }
-
-            // if we haven't started shooting, then update the aiming with the latest packet
-            if (!CummulativeShootRequested)
-                this.Position = position;
         }
 
         public virtual void Create()
@@ -161,21 +164,23 @@
         {
             try
             {
-
-                //Console.WriteLine("Control: " + this.ControlPackets);
-                this.ControlPackets = 0;
-                if (this.IsAlive && this.Fleet != null)
+                lock(this)
                 {
-                    if (float.IsNaN(Position.X) || float.IsNaN(Position.Y))
-                        Position = Vector2.Zero;
+                    //Console.WriteLine("Control: " + this.ControlPackets);
+                    this.ControlPackets = 0;
+                    if (this.IsAlive && this.Fleet != null)
+                    {
+                        if (float.IsNaN(Position.X) || float.IsNaN(Position.Y))
+                            Position = Vector2.Zero;
 
-                    Fleet.AimTarget = Position;
+                        Fleet.AimTarget = Position;
 
-                    Fleet.BoostRequested = CummulativeBoostRequested;
-                    Fleet.ShootRequested = CummulativeShootRequested;
+                        Fleet.BoostRequested = CummulativeBoostRequested;
+                        Fleet.ShootRequested = CummulativeShootRequested;
 
-                    if (this.Backgrounded)
-                        Fleet.AimTarget = Vector2.Zero;
+                        if (this.Backgrounded)
+                            Fleet.AimTarget = Vector2.Zero;
+                    }
                 }
             }
             catch (Exception e)
