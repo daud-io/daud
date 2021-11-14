@@ -69,7 +69,6 @@
             Fleet nf = new Fleet();
             nf.Name = this.Name;
             nf.ID = this.ID;
-            nf.Sprite = this.Sprite;
             nf.Color = this.Color;
             nf.PendingDestruction = this.PendingDestruction;
             nf.Ships = new List<Ship>();

@@ -16,6 +16,8 @@
         public Fleet MyFleet { get; private set; }
         public Vector2 LastKnownCenter { get; set; }
 
+        public Fleet[] Others { get; set; } = Array.Empty<Fleet>();
+
         public SensorFleets(ContextRobot robot)
         {
             this.Robot = robot;
@@ -29,62 +31,52 @@
 
         public void Sense()
         {
-            var newFleets = Robot.Bodies
-                .Where(b => b.Group?.Type == GroupTypes.Fleet) // check the sprite
-                .GroupBy(b => b.Group)
-                .Select(g => new Fleet
-                {
-                    ID = g.Key.ID,
-                    Name = g.Key.Caption,
-                    Sprite = g.Select(b => b.Sprite).FirstOrDefault(),
-                    Color = g.Key.Color,
-                    Ships = g.Select(b => new Ship
-                    {
-                        ID = b.ID,
-                        Angle = b.Angle,
-                        Momentum = b.Velocity,
-                        Position = b.Position,
-                        Size = b.Size
-                    }).ToList()
-                })
-                .ToList();
-
             foreach (var fleet in AllVisibleFleets)
                 fleet.PendingDestruction = true;
+            
+            var fleetGroups = Robot.Bodies
+                .Where(b => b.Group?.Type == GroupTypes.Fleet) // check the sprite
+                .GroupBy(keySelector: b => b.Group);
 
-            foreach (var fleet in newFleets)
+            foreach (var ships in fleetGroups)
             {
-                var existing = AllVisibleFleets.FirstOrDefault(f => f.ID == fleet.ID);
-                if (existing != null)
+                var fleetGroup = ships.Key;
+                var fleet = AllVisibleFleets.FirstOrDefault(f => f.ID == fleetGroup.ID);
+                if (fleet == null)
                 {
-                    existing.Name = fleet.Name;
-                    existing.Sprite = fleet.Sprite;
-                    existing.Color = fleet.Color;
-                    existing.PendingDestruction = false;
-
-                    foreach (var ship in existing.Ships)
-                        ship.PendingDestruction = true;
-
-                    foreach (var ship in fleet.Ships)
+                    fleet = new Fleet
                     {
-                        var existingShip = existing.Ships.FirstOrDefault(s => s.ID == ship.ID);
-                        if (existingShip != null)
-                        {
-                            existingShip.Position = ship.Position;
-                            existingShip.Momentum = ship.Momentum;
-                            existingShip.Size = ship.Size;
-                            existingShip.Angle = ship.Angle;
-                            existingShip.PendingDestruction = false;
-                        }
-                        else
-                            existing.Ships.Add(ship);
+                        ID = fleetGroup.ID
+                    };
+                    AllVisibleFleets.Add(fleet);
+                }
+
+                fleet.Name = fleetGroup.Caption;
+                fleet.Color = fleetGroup.Color;
+                fleet.PendingDestruction = false;
+
+                foreach (var ship in fleet.Ships)
+                    ship.PendingDestruction = true;
+
+                foreach (var shipBody in ships)
+                {
+                    var ship = fleet.Ships.FirstOrDefault(s => s.ID == shipBody.ID);
+                    if (ship == null)
+                    {
+                        ship = new Ship();
+                        ship.ID = shipBody.ID;
+                        fleet.Ships.Add(ship);
                     }
 
-                    // destruction is nigh
-                    existing.Ships = existing.Ships.Where(s => !s.PendingDestruction).ToList();
+                    ship.Position = shipBody.Position;
+                    ship.Momentum = shipBody.Velocity;
+                    ship.Size = shipBody.Size;
+                    ship.Angle = shipBody.Angle;
+                    ship.PendingDestruction = false;
                 }
-                else
-                    AllVisibleFleets.Add(fleet);
+
+                // destruction is nigh
+                fleet.Ships = fleet.Ships.Where(s => !s.PendingDestruction).ToList();
             }
 
             // destruction is nigh
@@ -102,13 +94,10 @@
 
             if (MyFleet != null)
                 LastKnownCenter = MyFleet.Center;
-        }
 
-        public IEnumerable<Fleet> Others
-        {
-            get => MyFleet != null
-                ? AllVisibleFleets.Where(v => v != MyFleet)
-                : AllVisibleFleets;
+            Others = MyFleet != null
+                ? AllVisibleFleets.Where(v => v != MyFleet).ToArray()
+                : AllVisibleFleets.ToArray();
         }
     }
 }
