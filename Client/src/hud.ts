@@ -51,7 +51,8 @@ export class HUD {
             netwarn = 
                (con.latency > 200)
             || (con.ripple > 50)
-            || ((con.socket?.bufferedAmount ?? 0) > 1024);
+            //|| ((con.socket?.bufferedAmount ?? 0) > 1024)
+            ;
         }
 
         if (cpuwarn && !this.cpuVisible)

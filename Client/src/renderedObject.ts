@@ -28,6 +28,10 @@ export class RenderedObject {
     currentSpriteName?: string;
     currentMode?: number;
 
+    visible: boolean = true;
+    layersHidden: boolean = false;
+
+
     constructor(container: GameContainer, clientBody: ClientBody) {
         this.textureLayers = {};
 
@@ -70,12 +74,28 @@ export class RenderedObject {
 
     tick(time: number): void {
         if (this.body) {
-            projectObject(this.body, time);
+            if (this.visible)
+            {
+                if (this.layersHidden)
+                {
+                    this.updateMode(this.body.Mode);
+                    this.layersHidden = false;
+                }
 
-            for (let key in this.textureLayers) {
-                let textureLayer = this.textureLayers[key];
-                textureLayer.prerender(time, this.body);
+                projectObject(this.body, time);
+
+                for (let key in this.textureLayers) {
+                    let textureLayer = this.textureLayers[key];
+                    textureLayer.prerender(time, this.body);
+                }
             }
+            else
+            {
+                for (let key in this.textureLayers)
+                    this.textureLayers[key].visible = false;
+                this.layersHidden = true;
+            }
+
         }
     }
 

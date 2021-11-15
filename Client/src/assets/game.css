@@ -284,7 +284,7 @@ body {
 .dead.spectating .spawnscreen,
 .alive .spawnscreen,
 .dead #minimapTip {
-    visibility: hidden;
+    display: none;
 }
 
 .spawnscreen {
@@ -528,6 +528,7 @@ select {
 }
 
 #ctf_arena {
+    pointer-events: none;
     position: absolute;
     width: 100%;
     height: 100%;
@@ -784,6 +785,7 @@ table {
     display: none;
 }
 .stats {
+    pointer-events: none;
     font-family: sans-serif, system-ui;
     font-size: 8pt;
     position: absolute;
@@ -804,6 +806,7 @@ table {
 }
 
 #leaderboard {
+    pointer-events: none;
     top: 10px;
     right: 10px;
 }
@@ -930,6 +933,7 @@ progress[value="255"]::-webkit-progress-value {
     background: lime;
 }
 #bigLog {
+    pointer-events: none;
     position: absolute;
     top: 4em;
     left: 50%;
@@ -985,6 +989,7 @@ progress[value="255"]::-webkit-progress-value {
 }
 
 #comboMessage {
+    pointer-events: none;
     color: #ff5555;
     position: absolute;
     top: 4.5em;

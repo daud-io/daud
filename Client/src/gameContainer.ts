@@ -19,7 +19,15 @@ import { Reticle } from "./reticle";
 import { HUD } from "./hud";
 import { AllMessages } from "./daud-net/all-messages";
 import { NetWorldView } from "./daud-net/net-world-view";
+import { Supermap } from "./supermap";
+
 //import "@babylonjs/inspector";
+
+export enum CameraModes
+{
+    Default,
+    Supermap
+}
 
 export class GameContainer {
     scene: Scene;
@@ -31,10 +39,13 @@ export class GameContainer {
 
     readonly reticle: Reticle;
     readonly hud: HUD;
+    readonly supermap: Supermap;
 
     camera: FreeCamera;
     cameraPosition: Vector2 = Vector2.Zero();
     cameraHeight: number = 0;
+
+    cameraMode: CameraModes = CameraModes.Default;
 
     readonly loader: Loader;
     ready: boolean = false;
@@ -52,6 +63,7 @@ export class GameContainer {
     alive: boolean = false;
     touchscreen: boolean = false;
     backgrounded: boolean = false;
+    lastGameTime: number = 0;
 
     constructor(canvas: HTMLCanvasElement, connection: Connection) {
         this.connection = connection;
@@ -74,6 +86,7 @@ export class GameContainer {
 
         this.reticle = new Reticle(this);
         this.hud = new HUD(this);
+        this.supermap = new Supermap(this);
 
         //this.scene.debugLayer.show();
 
@@ -102,6 +115,8 @@ export class GameContainer {
         });
 
         bus.on("worldview", (newView: NetWorldView) => {
+            this.lastGameTime = newView.time();
+
             const newAlive = newView.isalive();
             if (this.alive && !newAlive)
                 bus.emit('dead');
@@ -140,9 +155,22 @@ export class GameContainer {
     }
 
     positionCamera(newPosition: Vector2) {
-        this.cameraPosition.x = newPosition.x * 0.2 + this.cameraPosition.x * 0.8;
-        this.cameraPosition.y = newPosition.y * 0.2 + this.cameraPosition.y * 0.8;
-        this.camera.position.set(this.cameraPosition.x, this.cameraHeight, this.cameraPosition.y);
+
+        switch (this.cameraMode)
+        {
+            case CameraModes.Default:
+                this.cameraPosition.x = newPosition.x * 0.2 + this.cameraPosition.x * 0.8;
+                this.cameraPosition.y = newPosition.y * 0.2 + this.cameraPosition.y * 0.8;
+                this.camera.position.set(this.cameraPosition.x, this.cameraHeight, this.cameraPosition.y);
+                break;
+
+            case CameraModes.Supermap:
+                this.cameraPosition.x = newPosition.x * 0.2 + this.cameraPosition.x * 0.8;
+                this.cameraPosition.y = newPosition.y * 0.2 + this.cameraPosition.y * 0.8;
+                this.camera.position.set(this.cameraPosition.x, this.cameraHeight * 5, this.cameraPosition.y);
+                break;
+        }
+
     }
 
     resize() {

@@ -18,7 +18,10 @@ const events = {
     themechange: [] as (() => void)[],
     worldview: [] as ((worldview: NetWorldView) => void)[],
     prerender: [] as ((time: number) => void)[],
-    postrender: [] as ((time: number) => void)[]
+    postrender: [] as ((time: number) => void)[],
+
+    mapShow: [] as (() => void)[],
+    mapHide: [] as (() => void)[],
 
 };
 

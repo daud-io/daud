@@ -129,7 +129,6 @@
             }
 
             IsStillPlaying = DeadSince > World.Time - World.Hook.PlayerCountGracePeriodMS;
-
         }
 
         public void Destroy()
@@ -166,7 +165,11 @@
             {
                 lock(this)
                 {
-                    //Console.WriteLine("Control: " + this.ControlPackets);
+                    if (this.ControlPackets > 1)
+                    {
+                        Console.WriteLine("Control: " + this.ControlPackets);
+                    }
+                    
                     this.ControlPackets = 0;
                     if (this.IsAlive && this.Fleet != null)
                     {
@@ -334,14 +337,18 @@
 
         public void SendMessage(string message, string type = "message", int pointsDelta = 0, object extraData = null)
         {
-            if (message != null && this.Messages != null)
-                this.Messages.Add(new PlayerMessage
-                {
-                    Type = type,
-                    Message = message,
-                    ExtraData = extraData,
-                    PointsDelta = pointsDelta
-                });
+            try
+            {
+                if (message != null && this.Messages != null)
+                    this.Messages.Add(new PlayerMessage
+                    {
+                        Type = type,
+                        Message = message,
+                        ExtraData = extraData,
+                        PointsDelta = pointsDelta
+                    });
+            }
+            catch (Exception) {}
         }
 
         public List<PlayerMessage> GetMessages()

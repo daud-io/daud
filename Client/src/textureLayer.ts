@@ -2,7 +2,7 @@ import { GameContainer } from "./gameContainer";
 
 import { ClientBody } from "./cache";
 import { TextureDefinition } from "./loader";
-import { Color4, ParticleSystem, PointerDragBehavior, Sprite, Vector3, WorleyNoise3DBlock } from "@babylonjs/core";
+import { Color4, Sprite } from "@babylonjs/core";
 
 export class TextureLayer {
     private readonly sprite: Sprite | undefined;

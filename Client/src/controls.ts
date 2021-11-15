@@ -68,6 +68,11 @@ bus.on("pageReady", function () {
             sendControlPacket();
         }
 
+        if (key.toLowerCase() == "m") {
+            bus.emit("mapShow");
+        }
+
+
         if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
             // Autofire
             Controls.toggleAutofire();
@@ -83,6 +88,11 @@ bus.on("pageReady", function () {
             Controls.shootKeyboard = false;
             sendControlPacket();
         }
+
+        if (key.toLowerCase() == "m") {
+            bus.emit("mapHide");
+        }
+
     });
 
     document.body.addEventListener("contextmenu", (e) => {
@@ -212,6 +222,7 @@ function mouseUp(this: HTMLCanvasElement, ev: MouseEvent): any {
 
 function spectateActionNext()
 {
+    console.log('spectate next');
     Controls.spectateControl = "action:next";
     sendControlPacket();
     Controls.spectateControl = undefined;

@@ -39,8 +39,8 @@
         {
             if (projectedBody is Flag flag)
             {
-                this.Team.Scored();
                 flag.ReturnToBase();
+                this.Team.Scored();
             }
         }
 

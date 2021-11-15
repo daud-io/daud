@@ -22,8 +22,8 @@
             FlagGroup.ZIndex = 200;
             this.Group = FlagGroup;
             Position = world.RandomPosition();
-
         }
+        
         public override void Destroy()
         {
             base.Destroy();

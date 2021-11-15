@@ -6,7 +6,7 @@ import { Controls } from "../controls";
 import { angleLerp, projectObject } from "../interpolator";
 import { Settings } from "../settings";
 
-enum ShipModes
+export enum ShipModes
 {
     shield,
     default,
