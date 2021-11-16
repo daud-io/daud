@@ -207,7 +207,7 @@ function sendControlPacket() {
     Controls.container?.connection.sendControl(Controls.boost, Controls.shoot || Controls.autofire, Controls.mouseX, Controls.mouseY, Controls.spectateControl);
 }
 
-function mouseUp(this: HTMLCanvasElement, ev: MouseEvent): any {
+function mouseUp(this: any, ev: MouseEvent): any {
     
     switch (ev.button) {
         case 2:
@@ -228,7 +228,7 @@ function spectateActionNext()
     Controls.spectateControl = undefined;
 }
 
-function mouseDown(this: HTMLCanvasElement, ev: MouseEvent): any {
+function mouseDown(this: any, ev: MouseEvent): any {
 
     if (!Controls.container?.alive)
         spectateActionNext();
@@ -335,10 +335,10 @@ export function registerContainer(container: GameContainer): void {
             pointerInfo.skipOnPointerObservable = true;
         });
 
-        Controls.container?.canvas.addEventListener("mousemove", mouseMove, { passive: true });
-        Controls.container?.canvas.addEventListener("mouseup", mouseUp, { passive: true });
-        Controls.container?.canvas.addEventListener("mousedown", mouseDown, { passive: true });
-        Controls.container?.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); return false; });
+        document.addEventListener("mousemove", mouseMove, { passive: true });
+        document.addEventListener("mouseup", mouseUp, { passive: true });
+        document.addEventListener("mousedown", mouseDown, { passive: true });
+        document.addEventListener("contextmenu", (e) => { e.preventDefault(); return false; });
     }
 
 }

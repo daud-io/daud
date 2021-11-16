@@ -165,11 +165,6 @@
             {
                 lock(this)
                 {
-                    if (this.ControlPackets > 1)
-                    {
-                        Console.WriteLine("Control: " + this.ControlPackets);
-                    }
-                    
                     this.ControlPackets = 0;
                     if (this.IsAlive && this.Fleet != null)
                     {

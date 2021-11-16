@@ -2,7 +2,7 @@ version: '3'
 
 services:
   server:
-    image: andylippitt/daud:dev
+    image: andylippitt/daud-server:dev
     build:
       context: ./Server/
     ports:
@@ -13,3 +13,7 @@ services:
       context: ./Client/
     ports:
       - "80:80" 
+  static:
+    image: andylippitt/daud-static:dev
+    build:
+      context: ./Static/

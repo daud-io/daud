@@ -204,7 +204,7 @@
                     var updatedBodies = BodyCache.BodiesByError().Take((int)this.Bandwidth * 2);
                     foreach (var update in updatedBodies)
                     {
-                        update.UpdateSent(World.Time);
+                        update.DoUpdate();
                         updates.Add(update.NetBody);
                     }
 

@@ -1,0 +1,17 @@
+{
+  "name": "Training Bot",
+  "description": "Learn the moves with an AI trainer",
+  "thumbnail": "https://static.daud.io/worlds/ffa/bot.png",
+  "weight": 0,
+
+  "worldSize": 5000,
+  "mesh": {
+    "enabled": true,
+    "meshURL": "https://static.daud.io/worlds/ffa/ffa.glb",
+    "scale": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    }
+  }
+}

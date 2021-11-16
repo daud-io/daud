@@ -1,0 +1,20 @@
+{
+  "name": "Mini City",
+  "description": "...",
+  "thumbnail": "https://static.daud.io/worlds/partycity/partycity.png",
+  "weight": 0,
+
+  "fishes": 35,
+  "pickupSeekers": 4,
+  "pickupShields": 3,
+  "worldSize": 10000,
+  "mesh": {
+    "enabled": true,
+    "meshURL": "https://static.daud.io/worlds/partycity/partycity.glb",
+    "scale": {
+      "x": 5,
+      "y": 10,
+      "z": 5
+    }
+  }
+}

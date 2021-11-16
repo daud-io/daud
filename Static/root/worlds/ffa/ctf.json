@@ -1,0 +1,19 @@
+{
+  "name": "Capture the Flag!",
+  "description": "CTF instructions go here",
+  "thumbnail": "https://static.daud.io/worlds/ffa/openspace.png",
+  "weight": 0,
+  
+  "ctfMode": true,
+  "allowedColors": ["ship_red", "ship_cyan"],
+  "worldSize": 5500,
+  "mesh": {
+    "enabled": true,
+    "meshURL": "https://static.daud.io/worlds/ffa/ffa.glb",
+    "scale": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    }
+  }
+}

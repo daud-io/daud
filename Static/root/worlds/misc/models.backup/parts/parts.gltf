@@ -1,0 +1,342 @@
+{
+  "asset": {
+    "generator": "Khronos glTF Blender I/O v1.6.16",
+    "version": "2.0"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "extras": {
+        "glTF2ExportSettings": {
+          "export_extras": 1,
+          "use_renderable": 1,
+          "use_visible": 1
+        }
+      },
+      "name": "Scene",
+      "nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "Light",
+      "rotation": [
+        0.16907575726509094,
+        0.7558803558349609,
+        -0.27217137813568115,
+        0.570947527885437
+      ],
+      "translation": [
+        33.57310104370117,
+        22.562915802001953,
+        -21.13289451599121
+      ]
+    },
+    {
+      "name": "Camera",
+      "rotation": [
+        0.483536034822464,
+        0.33687159419059753,
+        -0.20870360732078552,
+        0.7804827094078064
+      ],
+      "translation": [
+        12.620691299438477,
+        7.915450096130371,
+        12.88492488861084
+      ]
+    },
+    {
+      "mesh": 0,
+      "name": "Plane",
+      "scale": [
+        1000,
+        1,
+        1000
+      ],
+      "translation": [
+        0,
+        -1,
+        0
+      ]
+    },
+    {
+      "mesh": 1,
+      "name": "Walls",
+      "scale": [
+        100,
+        1,
+        100
+      ],
+      "translation": [
+        0,
+        10,
+        0
+      ]
+    },
+    {
+      "extras": {},
+      "name": "fish_spawn.001",
+      "translation": [
+        90.92900848388672,
+        0,
+        0
+      ]
+    },
+    {
+      "mesh": 2,
+      "name": "Walls.001",
+      "scale": [
+        100,
+        1,
+        100
+      ],
+      "translation": [
+        0,
+        10,
+        0
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "name": "Material.001",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 0.5
+      }
+    },
+    {
+      "doubleSided": true,
+      "name": "Material.003",
+      "pbrMetallicRoughness": {
+        "metallicFactor": 0,
+        "roughnessFactor": 0.5
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Plane",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1,
+            "TEXCOORD_0": 2
+          },
+          "indices": 3,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "Walls",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 4,
+            "NORMAL": 5,
+            "TEXCOORD_0": 6
+          },
+          "indices": 7,
+          "material": 1
+        }
+      ]
+    },
+    {
+      "name": "Walls.001",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 8,
+            "NORMAL": 9,
+            "TEXCOORD_0": 10
+          },
+          "indices": 11,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 4,
+      "max": [
+        1,
+        0,
+        1
+      ],
+      "min": [
+        -1,
+        0,
+        -1
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 4,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5123,
+      "count": 6,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 4,
+      "componentType": 5126,
+      "count": 768,
+      "max": [
+        1.1799405813217163,
+        20,
+        1.1304346323013306
+      ],
+      "min": [
+        -1.2439157962799072,
+        0,
+        -1.0812219381332397
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 5,
+      "componentType": 5126,
+      "count": 768,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 6,
+      "componentType": 5126,
+      "count": 768,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 7,
+      "componentType": 5123,
+      "count": 1152,
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 8,
+      "componentType": 5126,
+      "count": 748,
+      "max": [
+        0.7401934266090393,
+        20,
+        0.7342743873596191
+      ],
+      "min": [
+        -0.8253838419914246,
+        0,
+        -0.6403229236602783
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 9,
+      "componentType": 5126,
+      "count": 748,
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 10,
+      "componentType": 5126,
+      "count": 748,
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 11,
+      "componentType": 5123,
+      "count": 1434,
+      "type": "SCALAR"
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 48,
+      "byteOffset": 0
+    },
+    {
+      "buffer": 0,
+      "byteLength": 48,
+      "byteOffset": 48
+    },
+    {
+      "buffer": 0,
+      "byteLength": 32,
+      "byteOffset": 96
+    },
+    {
+      "buffer": 0,
+      "byteLength": 12,
+      "byteOffset": 128
+    },
+    {
+      "buffer": 0,
+      "byteLength": 9216,
+      "byteOffset": 140
+    },
+    {
+      "buffer": 0,
+      "byteLength": 9216,
+      "byteOffset": 9356
+    },
+    {
+      "buffer": 0,
+      "byteLength": 6144,
+      "byteOffset": 18572
+    },
+    {
+      "buffer": 0,
+      "byteLength": 2304,
+      "byteOffset": 24716
+    },
+    {
+      "buffer": 0,
+      "byteLength": 8976,
+      "byteOffset": 27020
+    },
+    {
+      "buffer": 0,
+      "byteLength": 8976,
+      "byteOffset": 35996
+    },
+    {
+      "buffer": 0,
+      "byteLength": 5984,
+      "byteOffset": 44972
+    },
+    {
+      "buffer": 0,
+      "byteLength": 2868,
+      "byteOffset": 50956
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "parts_data.bin",
+      "byteLength": 53824
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Team",
+  "description": "Teams in open space",
+  "thumbnail": "https://static.daud.io/worlds/ffa/openspace.png",
+  "weight": 0,
+  
+  "teamMode": true,
+  "allowedColors": ["ship_red", "ship_cyan"],
+  "worldSize": 5000,
+  "mesh": {
+    "enabled": true,
+    "meshURL": "https://static.daud.io/worlds/ffa/ffa.glb",
+    "scale": {
+      "x": 10,
+      "y": 10,
+      "z": 10
+    }
+  }
+}

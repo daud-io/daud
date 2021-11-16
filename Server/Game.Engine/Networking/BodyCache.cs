@@ -29,12 +29,16 @@
 
         public IEnumerable<BucketBody> BodiesByError()
         {
-            return Bodies.Values.Where(b => !b.Stale && b.Error > 0);
+            return Bodies.Values
+                .Where(b => !b.Stale && b.Error > 0)
+                .OrderByDescending(b => b.Error);
         }
 
         public IEnumerable<BucketGroup> GroupsByError()
         {
-            return Groups.Values.Where(b => !b.Stale && b.Error > 0);
+            return Groups.Values
+                .Where(b => !b.Stale && b.Error > 0)
+                .OrderByDescending(b => b.Error);
         }
 
         public void UpdateCachedBody(WorldBody worldBody, uint time)
@@ -107,14 +111,36 @@
 
             public void ReadGroup(Group group, uint time)
             {
-                this.Error = 1;
                 this.NetGroup.group = group.ID;
                 this.NetGroup.type = (byte)group.GroupType;
-                this.NetGroup.caption = group.Caption;
-                this.NetGroup.zindex = group.ZIndex;
-                this.NetGroup.owner = group.OwnerID;
-                this.NetGroup.color = group.Color;
-                this.NetGroup.customdata = group.CustomData;
+
+                if (this.NetGroup.caption != group.Caption)
+                {
+                    this.NetGroup.caption = group.Caption;
+                    Error++;
+                }
+
+                if (this.NetGroup.zindex != group.ZIndex)
+                {
+                    this.NetGroup.zindex = group.ZIndex;
+                    Error++;
+                }
+
+                if (this.NetGroup.owner != group.OwnerID)
+                {
+                    this.NetGroup.owner = group.OwnerID;
+                    Error++;
+                }
+                if (this.NetGroup.color != group.Color)
+                {
+                    this.NetGroup.color = group.Color;
+                    Error++;
+                }
+                if (this.NetGroup.customdata != group.CustomData)
+                {
+                    this.NetGroup.customdata = group.CustomData;
+                    Error++;
+                }
             }
         }
 
@@ -124,6 +150,17 @@
 
             public float Error = 0;
             public bool Stale = false;
+
+            private uint _Time;
+            private Vector2 _Position;
+            private Vector2 _LinearVelocity;
+            private float _Angle;
+            private float _AngularVelocity;
+            private int _Size;
+
+            private Sprites _Sprite;
+            private byte _Mode;
+            private uint _GroupID;
 
             public DaudNet.NetBody NetBody;
             public BucketBody()
@@ -135,32 +172,88 @@
                 };
             }
 
-            public void UpdateSent(uint time)
+            public void DoUpdate()
             {
-                ClientUpdatedTime = time;
+                const float VELOCITY_SCALE_FACTOR = 5000;
+
+                this.NetBody.definitiontime = _Time;
+                this.NetBody.originalposition.x = (short)_Position.X;
+                this.NetBody.originalposition.y = (short)_Position.Y;
+                this.NetBody.velocity.x = (short)(_LinearVelocity.X * VELOCITY_SCALE_FACTOR);
+                this.NetBody.velocity.y = (short)(_LinearVelocity.Y * VELOCITY_SCALE_FACTOR);
+                this.NetBody.originalangle = (sbyte)(_Angle / MathF.PI * 127);
+                this.NetBody.angularvelocity = (sbyte)(_AngularVelocity * 10000);
+                this.NetBody.size = (byte)(_Size / 5);
+                this.NetBody.sprite = (ushort)_Sprite;
+                this.NetBody.mode = _Mode;
+                this.NetBody.group = _GroupID;
+
+                ClientUpdatedTime = _Time;
                 Error = 0;
             }
 
             public void ReadBody(WorldBody body, uint time)
             {
-                const float VELOCITY_SCALE_FACTOR = 5000;
-
+                float newError = 0;
+                const float minimumDistanceSquared = 10*10;
+                const float minimumVelocityDeltaSquared = 0.01f;
+                const float minimumAngleDelta = MathF.PI/180f;
+                
+                _Time = time;
                 this.NetBody.id = body.ID;
-                this.NetBody.definitiontime = time;
-                this.NetBody.originalposition.x = (short)body.Position.X;
-                this.NetBody.originalposition.y = (short)body.Position.Y;
-                this.NetBody.velocity.x = (short)(body.LinearVelocity.X * VELOCITY_SCALE_FACTOR);
-                this.NetBody.velocity.y = (short)(body.LinearVelocity.Y * VELOCITY_SCALE_FACTOR);
-                this.NetBody.originalangle = (sbyte)(body.Angle / MathF.PI * 127);
-                this.NetBody.angularvelocity = (sbyte)(body.AngularVelocity * 10000);
-                this.NetBody.size = (byte)(body.Size / 5);
-                this.NetBody.sprite = (ushort)body.Sprite;
-                this.NetBody.mode = body.Mode;
-                this.NetBody.group = body.Group?.ID ?? 0;
 
-                Error = time - ClientUpdatedTime;
-                if (Error == 0)
-                    Error = 1;
+                if (_Position != body.Position)
+                {
+                    var dist = Vector2.DistanceSquared(_Position, body.Position);
+                    if (dist > minimumDistanceSquared)
+                        newError += 1;
+
+                    _Position = body.Position;
+                }
+
+                if(_LinearVelocity != body.LinearVelocity)
+                {
+                    var dist = Vector2.DistanceSquared(_LinearVelocity, body.LinearVelocity);
+                    if (dist > minimumVelocityDeltaSquared)
+                        newError += 1;
+                    _LinearVelocity = body.LinearVelocity;
+
+                }
+
+                if (_Angle != body.Angle)
+                {
+                    var dist = MathF.Abs(_Angle-body.Angle) % MathF.PI * 2;
+                    if (dist > minimumAngleDelta)
+                        newError++;
+
+                    _Angle = body.Angle;
+                }
+
+                if(_AngularVelocity != body.AngularVelocity)
+                {
+                    _AngularVelocity = body.AngularVelocity;
+                    newError++;
+                }
+
+                if (_Size != body.Size)
+                {
+                    _Size = body.Size;
+                    newError++;
+                }
+
+                if (_Sprite != body.Sprite)
+                {
+                    _Sprite = body.Sprite;
+                    newError++;
+                }
+
+                if (_GroupID != (body.Group?.ID ?? 0))
+                {
+                    _GroupID = body.Group?.ID ?? 0;
+                    newError++;
+                }
+
+                Error += newError;
             }
         }
     }
