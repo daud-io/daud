@@ -27,12 +27,17 @@
                 bucket.Stale = true;
         }
 
-        public IEnumerable<BucketBody> BodiesByError()
+        public IEnumerable<BucketBody> BodiesByError(uint max)
         {
-            return Bodies.Values
-                .Where(b => !b.Stale && b.Error > 0)
-                .OrderByDescending(b => b.Error);
-        }
+            if (Bodies.Count > max)
+                return Bodies.Values
+                    .Where(b => !b.Stale && b.Error > 0)
+                    .OrderByDescending(b => b.Error)
+                    .Take((int)max);
+            else
+                return Bodies.Values
+                    .Where(b => !b.Stale && b.Error > 0);
+}
 
         public IEnumerable<BucketGroup> GroupsByError()
         {
@@ -244,6 +249,12 @@
                 if (_Sprite != body.Sprite)
                 {
                     _Sprite = body.Sprite;
+                    newError++;
+                }
+
+                if (_Mode != body.Mode)
+                {
+                    _Mode = body.Mode;
                     newError++;
                 }
 

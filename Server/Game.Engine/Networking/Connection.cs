@@ -201,7 +201,7 @@
                     BodyCache.StaleBodyCount = 0;
                     BodyCache.StaleGroupCount = 0;
 
-                    var updatedBodies = BodyCache.BodiesByError().Take((int)this.Bandwidth * 2);
+                    var updatedBodies = BodyCache.BodiesByError(this.Bandwidth*2);
                     foreach (var update in updatedBodies)
                     {
                         update.DoUpdate();

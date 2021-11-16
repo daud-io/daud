@@ -21,9 +21,9 @@
                 var oobY = (MathF.Abs(position.Y) - Robot.WorldSize);
 
                 if (oobX > 0)
-                    accumulator -= 1;
+                    accumulator -= oobX;
                 if (oobY > 0)
-                    accumulator -= 1;
+                    accumulator -= oobY;
             }
 
             return accumulator;
