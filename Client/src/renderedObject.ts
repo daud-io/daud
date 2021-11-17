@@ -9,8 +9,7 @@ export class ObjectMode {
     visible: boolean;
     layers?: TextureLayer[];
 
-    constructor(name:string)
-    {
+    constructor(name: string) {
         this.name = name;
         this.visible = false;
     }
@@ -31,7 +30,6 @@ export class RenderedObject {
     visible: boolean = true;
     layersHidden: boolean = false;
 
-
     constructor(container: GameContainer, clientBody: ClientBody) {
         this.textureLayers = {};
 
@@ -46,8 +44,7 @@ export class RenderedObject {
         this.update();
     }
 
-    setupModes() : ObjectMode[]
-    {
+    setupModes(): ObjectMode[] {
         return [
             new ObjectMode("default")
         ];
@@ -74,28 +71,12 @@ export class RenderedObject {
 
     tick(time: number): void {
         if (this.body) {
-            if (this.visible)
-            {
-                if (this.layersHidden)
-                {
-                    this.updateMode(this.body.Mode);
-                    this.layersHidden = false;
-                }
+            projectObject(this.body, time);
 
-                projectObject(this.body, time);
-
-                for (let key in this.textureLayers) {
-                    let textureLayer = this.textureLayers[key];
-                    textureLayer.prerender(time, this.body);
-                }
+            for (let key in this.textureLayers) {
+                let textureLayer = this.textureLayers[key];
+                textureLayer.prerender(time, this.body);
             }
-            else
-            {
-                for (let key in this.textureLayers)
-                    this.textureLayers[key].visible = false;
-                this.layersHidden = true;
-            }
-
         }
     }
 
@@ -105,26 +86,21 @@ export class RenderedObject {
         this.update();
     }
 
-    setupForSprite(spriteName: string)
-    {
+    setupForSprite(spriteName: string) {
         this.modes = this.setupModes();
         this.currentSpriteName = spriteName;
         this.baseSpriteDefinition = this.container.loader.getSpriteDefinition(this.currentSpriteName);
 
-        for(var i=0; i<this.modes.length; i++)
-        {
+        for (var i = 0; i < this.modes.length; i++) {
             let mode = this.modes[i];
-            if (mode && !mode.layers)
-            {
+            if (mode && !mode.layers) {
                 mode.layers = [];
                 let textureList = this.baseSpriteDefinition.modes?.[mode.name]?.split(" ") ?? [];
 
-                for(let textureIndex=0; textureIndex<textureList.length; textureIndex++)
-                {
+                for (let textureIndex = 0; textureIndex < textureList.length; textureIndex++) {
                     var textureName = textureList[textureIndex];
                     let textureLayer = this.textureLayers[textureName];
-                    if (textureLayer == null)
-                    {
+                    if (textureLayer == null) {
                         textureLayer = new TextureLayer(this.container, textureName);
                         this.textureLayers[textureName] = textureLayer;
                     }
@@ -135,47 +111,44 @@ export class RenderedObject {
     }
 
     update(): void {
-        if (this.currentSpriteName != this.body.Sprite)
-        {
+        if (this.currentSpriteName != this.body.Sprite) {
             this.resetTextureLayers();
             this.setupForSprite(this.body.Sprite);
         }
 
         this.updateTextureLayers();
 
-        if (this.currentMode != this.body.Mode)
-        {
+        if (this.currentMode != this.body.Mode) {
             this.updateMode(this.body.Mode);
         }
-        
-        if (this.currentZIndex != this.body.zIndex)
-        {
+
+        if (this.currentZIndex != this.body.zIndex) {
             this.currentZIndex = this.body.zIndex;
         }
 
     }
 
+    extraZ(): number {
+        return 0;
+    }
+
     updateTextureLayers() {
-        for(let k in this.textureLayers)
+        for (let k in this.textureLayers)
             this.textureLayers[k].visible = false;
 
-        for(var i=0; i<this.modes.length; i++)
-        {
+        for (var i = 0; i < this.modes.length; i++) {
             let mode = this.modes[i];
-            if (mode && mode.layers)
-            {
-                for(var layerIndex=0; layerIndex<mode.layers.length; layerIndex++)
-                {
+            if (mode && mode.layers) {
+                for (var layerIndex = 0; layerIndex < mode.layers.length; layerIndex++) {
                     var layer = mode.layers[layerIndex];
 
-                    if (mode.visible)
-                    {
+                    if (mode.visible) {
                         let zIndex = this.body.zIndex;
                         if (zIndex == 0)
                             zIndex = 250;
-    
-                        layer.setZIndex(zIndex - i + this.body.ID / 100000);
-                        layer.visible = true;
+
+                        layer.setZIndex(zIndex + this.extraZ() - 2 * i);
+                        layer.visible = this.visible;
                     }
                 }
             }

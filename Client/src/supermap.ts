@@ -18,6 +18,7 @@ type MapObject =
 export class Supermap {
     container: GameContainer;
     mapObjects: Record<string, MapObject>;
+    visible: boolean = false;
 
     constructor(container: GameContainer) {
         this.container = container;
@@ -46,14 +47,13 @@ export class Supermap {
     }
 
     deleteMapObject(key: string) {
+        console.log('deleting obj');
         const obj = this.mapObjects[key];
+        obj?.renderedObject?.dispose();
         delete this.mapObjects[key];
-        obj.renderedObject?.dispose();
     }
 
     update(data: LeaderboardType): void {
-
-        return;
 
         for (var key in this.mapObjects) {
             var obj = this.mapObjects[key];
@@ -79,11 +79,11 @@ export class Supermap {
                                 ID: 0,
                                 DefinitionTime: this.container.lastGameTime,
                                 Size: 300,
-                                Sprite: 'ship_cyan',
+                                Sprite: 'ship_' + entry.Color,
                                 Mode: ShipModes.offenseupgrade,
                                 Color: entry.Color,
                                 Group: 0,
-                                OriginalAngle: -Math.PI/2,
+                                OriginalAngle: -Math.PI / 2,
                                 AngularVelocity: 0,
                                 Velocity: Vector2.Zero(),
                                 OriginalPosition: entry.Position,
@@ -92,10 +92,11 @@ export class Supermap {
                                 zIndex: 300
                             });
 
-                    
+
 
                     mapObj.renderedObject.body.OriginalPosition = entry.Position;
-                    mapObj.renderedObject.body.OriginalAngle = -Math.PI/2;
+                    mapObj.renderedObject.body.OriginalAngle = -Math.PI / 2;
+                    mapObj.renderedObject.visible = this.visible;
                     mapObj.renderedObject.update();
                     mapObj.renderedObject.tick(this.container.lastGameTime);
                     this.mapObjects[mapObjectID] = mapObj;
@@ -109,24 +110,38 @@ export class Supermap {
                 break;
         }
 
+        for (var key in this.mapObjects) {
+            var obj = this.mapObjects[key];
+            if (obj.stale)
+                this.deleteMapObject(key);
+        }        
     }
 
     show() {
         this.container.cameraMode = CameraModes.Supermap;
-        for(var key in this.mapObjects)
-        {
+        this.visible = true;
+        this.updateObjects();
+        console.log('show');
+    }
+
+    updateObjects()
+    {
+        for (var key in this.mapObjects) {
             var obj = this.mapObjects[key];
-            obj.renderedObject.visible = true;
+            obj.renderedObject.visible = this.visible;
+            obj.renderedObject.update();
+            obj.renderedObject.tick(this.container.lastGameTime);
         }
+
     }
 
     hide() {
+        console.log('hide');
+
         this.container.cameraMode = CameraModes.Default;
-        for(var key in this.mapObjects)
-        {
-            var obj = this.mapObjects[key];
-            obj.renderedObject.visible = false;
-        }
+        this.visible = false;
+        this.updateObjects();
+        
     }
 
     prerender(time: number) {

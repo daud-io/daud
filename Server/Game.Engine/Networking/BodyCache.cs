@@ -201,7 +201,7 @@
             {
                 float newError = 0;
                 const float minimumDistanceSquared = 10*10;
-                const float minimumVelocityDeltaSquared = 0.01f;
+                const float minimumVelocityDeltaSquared = 0.001f;
                 const float minimumAngleDelta = MathF.PI/180f;
                 
                 _Time = time;
@@ -218,9 +218,7 @@
 
                 if(_LinearVelocity != body.LinearVelocity)
                 {
-                    var dist = Vector2.DistanceSquared(_LinearVelocity, body.LinearVelocity);
-                    if (dist > minimumVelocityDeltaSquared)
-                        newError += 1;
+                    newError += 1;
                     _LinearVelocity = body.LinearVelocity;
 
                 }

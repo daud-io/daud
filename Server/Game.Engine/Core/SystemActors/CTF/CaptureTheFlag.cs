@@ -135,9 +135,13 @@
                 ? $"CTF: GAME OVER --- {team.ColorName} wins!!!"
                 : $"CTF: {team.ColorName} scored!";
 
-            foreach (var player in players)
-                player?.SendMessage(message);
+            InRoomAnnouncement(message);
+        }
 
+        private void InRoomAnnouncement(string message)
+        {
+            foreach (var player in Player.GetWorldPlayers(World))
+                player.SendMessage(message, type: "announce");
         }
 
         protected override void CycleThink()

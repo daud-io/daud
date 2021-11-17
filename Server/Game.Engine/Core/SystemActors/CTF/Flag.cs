@@ -13,7 +13,7 @@
 
         public Flag(World world, Sprites flagSprite, Team team, Base b): base(world)
         {
-            Size = 260;
+            Size = 300;
             Team = team;
             Base = b;
             Sprite = flagSprite;
@@ -70,18 +70,27 @@
             this.CarriedBy = null;
         }
 
+        public override CollisionResponse CanCollide(WorldBody otherBody)
+        {
+            if (otherBody is Ship ship)
+            {
+                var fleet = ship.Fleet;
+                if (this.CarriedBy == null)
+                    return new CollisionResponse(true, false);
+            }
+
+            return new CollisionResponse(false);
+        }
+
         public override void CollisionExecute(WorldBody otherObject)
         {
             if (otherObject is Ship ship)
             {
                 var fleet = ship.Fleet;
-
                 if (CarriedBy == null && fleet != null)
                 {
                     if (fleet.Owner.Color == Team.ColorName)
-                    {
                         ReturnToBase();
-                    }
                     else
                     {
                         CarriedBy = fleet;

@@ -29,7 +29,7 @@
 
         protected override void DefinePhysicsObject(float size, float mass)
         {
-            var shape = new Box(this.World.Hook.WorldSize * 2, 200, 200);
+            var shape = new Box(this.World.Hook.WorldSize * 2, 200, 200);  //todo: size
             var position2d = new Vector2(0, this.World.Hook.WorldSize);
 
             ShapeHandle = World.Simulation.Shapes.Add(shape);

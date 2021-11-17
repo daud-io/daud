@@ -55,10 +55,10 @@ export default defineConfig({
       ]
     })],
   server: {
-    /*hmr: {
+    hmr: {
       host: "andy-desktop",
       port: 3501
-    },*/
+    },
     proxy: {
       //"/api": "https://us.daud.io",
       "/api": "http://localhost:5100",

@@ -1,9 +1,9 @@
 {
   "RingDebugEnabled": false,
-  "AttackFleets": true,
+  "AttackFleets": false,
   "AttackAbandoned": false,
   "AttackFish": false,
-  "BoostThreshold": 10,
+  "BoostThreshold": 8,
   "RobotType": "Game.Robots.ConfigTurret,Game.Robots",
   "Steps": 64,
   "BlendingConfig": {

@@ -61,6 +61,7 @@ export class GameContainer {
     boundingRect: DOMRect;
     pointerLocked: boolean = false;
     alive: boolean = false;
+    spectating: boolean = false;
     touchscreen: boolean = false;
     backgrounded: boolean = false;
     lastGameTime: number = 0;
@@ -130,7 +131,6 @@ export class GameContainer {
             this.alive = false;
         });
         bus.emit("dead");
-
     }
 
     focus() {
@@ -146,12 +146,13 @@ export class GameContainer {
         this.scene.detachControl();
         camera.detachControl();
 
+
         return camera;
     }
 
     setupLights() {
         this.light = new HemisphericLight("containerLight", new Vector3(0, 1, 0), this.scene);
-        this.light.intensity *= 0.3;
+        this.light.intensity *= 0.4;
     }
 
     positionCamera(newPosition: Vector2) {

@@ -9,6 +9,7 @@ export class WorldMeshLoader {
     container: GameContainer;
     loadedFile: string | null;
     scalingVector: Vector3 = new Vector3(10, 10, 10);
+    translationVector: Vector3 = new Vector3(0, 0, 0);
 
     constructor(container: GameContainer) {
         this.container = container;
@@ -30,11 +31,19 @@ export class WorldMeshLoader {
             if (hook.Mesh.Enabled !== null) {
                 this.loadedFile = <string>(hook.Mesh.MeshURL);
                 console.log('worldMeshLoader: loading mesh');
+
                 if (hook.Mesh.Scale)
                 {
                     this.scalingVector.x = hook.Mesh.Scale.X;
                     this.scalingVector.y = hook.Mesh.Scale.Y;
                     this.scalingVector.z = hook.Mesh.Scale.Z;
+                }
+
+                if (hook.Mesh.Translation)
+                {
+                    this.translationVector.x = hook.Mesh.Translation.X;
+                    this.translationVector.y = hook.Mesh.Translation.Y;
+                    this.translationVector.z = hook.Mesh.Translation.Z;
                 }
 
                 this.loadGLB(this.loadedFile);
@@ -129,9 +138,10 @@ export class WorldMeshLoader {
         });
 
         plugin.onMeshLoadedObservable.add((mesh, state) => {
-            if (mesh.name == "__root__") {
-                mesh.rotate(new Vector3(0, 1, 0), Math.PI);
+            if (mesh.name == "__root__") { // this node is added by the gltf importer to change handedness
+                mesh.rotate(new Vector3(0, 1, 0), Math.PI); // rotate around Y axis because no one can agree on anything
                 mesh.scaling = new Vector3(this.scalingVector.x * mesh.scaling.x, this.scalingVector.y * mesh.scaling.y, this.scalingVector.z * mesh.scaling.z);
+                mesh.position = this.translationVector;
             }
 
             let pbr = mesh.material as PBRMaterial;

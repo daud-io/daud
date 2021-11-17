@@ -133,7 +133,7 @@ export class Cache {
         const groupDeletesLength = newView.groupdeletesLength();
         for (let d = 0; d < groupDeletesLength; d++) {
             const key = newView.groupdeletes(d)!;
-            console.log(`delete group: ${key}`)
+            //console.log(`delete group: ${key}`)
             const group = this.getGroup(key);
             if (!group) console.log("group delete on object not in cache");
             if (group && group.renderer) group.renderer.dispose();
@@ -148,7 +148,7 @@ export class Cache {
             newView.groups(u, group)!;
             let existing = this.getGroup(group.group());
             if (!existing) {
-                console.log(`new group ${group.group()} ${group.type()} ${group.caption()}`);
+                //console.log(`new group ${group.group()} ${group.type()} ${group.caption()}`);
                 const clientGroup = this.groupFromServer(group);
                 if (clientGroup.Type == 1)
                     clientGroup.renderer = new Fleet(this.container);

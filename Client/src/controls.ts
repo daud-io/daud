@@ -3,7 +3,7 @@ import { Cookies } from "./cookies";
 import { Picker } from "emoji-picker-element";
 import { GameContainer } from "./gameContainer";
 import * as bus from "./bus";
-import { Matrix } from "@babylonjs/core";
+import { ContainerAssetTask, Matrix, SubEmitter } from "@babylonjs/core";
 
 const secretShips = ["ship_secret", "ship_zed"];
 
@@ -59,44 +59,48 @@ bus.on("pageReady", function () {
     });
 
     window.addEventListener("keydown", ({ key }) => {
-        if (key.toLowerCase() == "s") {
-            Controls.boostKeyboard = true;
-            sendControlPacket();
-        }
-        if (key == " ") {
-            Controls.shootKeyboard = true;
-            sendControlPacket();
+        if (Controls.container?.alive) {
+            switch (key.toLowerCase()) {
+                case "s":
+                    Controls.boostKeyboard = true;
+                    sendControlPacket();
+                    break;
+                case " ":
+                    Controls.shootKeyboard = true;
+                    sendControlPacket();
+                    break;
+            }
         }
 
-        if (key.toLowerCase() == "m") {
-            bus.emit("mapShow");
-        }
-
-
-        if (key.toLowerCase() == "e" && document.body.classList.contains("alive")) {
-            // Autofire
-            Controls.toggleAutofire();
-        }
+        if (Controls.container?.alive || Controls.container?.spectating) {
+            switch (key.toLowerCase()) {
+                case "m":
+                    Controls.toggleMapView();
+                    break;
+                case "e":
+                    Controls.toggleAutofire();
+                    break;
+            }            
+        }     
     });
 
     window.addEventListener("keyup", ({ key }) => {
-        if (key.toLowerCase() == "s") {
-            Controls.boostKeyboard = false;
-            sendControlPacket();
+        if (Controls.container?.alive) {
+            switch (key.toLowerCase()) {
+                case "s":
+                    Controls.boostKeyboard = false;
+                    sendControlPacket();
+                    break;
+                case " ":
+                    Controls.shootKeyboard = false;
+                    sendControlPacket();
+                    break;
+}
         }
-        if (key == " ") {
-            Controls.shootKeyboard = false;
-            sendControlPacket();
-        }
-
-        if (key.toLowerCase() == "m") {
-            bus.emit("mapHide");
-        }
-
     });
 
     document.body.addEventListener("contextmenu", (e) => {
-        if (document.body.classList.contains("alive")) {
+        if (Controls.container?.alive) {
             e.preventDefault();
             return false;
         }
@@ -153,6 +157,7 @@ export const Controls = {
 
     spectateControl: "" as string | undefined,
     spectateDebounce: false,
+    mapView: false,
 
     requestPointerLock() {
         console.log('requesting lock');
@@ -191,9 +196,17 @@ export const Controls = {
             autofTgg.innerHTML = "OFF";
         }
         sendControlPacket();
+    },
+
+    toggleMapView() {
+        if (!Controls.mapView)
+            bus.emit('mapShow');
+        else
+            bus.emit('mapHide');
+
+        Controls.mapView = !Controls.mapView;
     }
 };
-
 
 bus.on('postrender', (gametime) => {
     Controls.pointerSpeed += Math.abs(Controls.mouseX - Controls.previousMouseX) + Math.abs(Controls.mouseY - Controls.previousMouseY);
@@ -208,7 +221,7 @@ function sendControlPacket() {
 }
 
 function mouseUp(this: any, ev: MouseEvent): any {
-    
+
     switch (ev.button) {
         case 2:
             Controls.boostPointer = false;
@@ -220,8 +233,7 @@ function mouseUp(this: any, ev: MouseEvent): any {
     sendControlPacket();
 }
 
-function spectateActionNext()
-{
+function spectateActionNext() {
     console.log('spectate next');
     Controls.spectateControl = "action:next";
     sendControlPacket();
@@ -249,14 +261,13 @@ function mouseMove(this: any, ev: MouseEvent): any {
     let scale = 1.5;
 
     if (Controls.container!.pointerLocked) {
-    
+
         Controls.mouseX += ev.movementX * scale;
         Controls.mouseY -= ev.movementY * scale;
         Controls.mouseX = Math.max(Math.min(Controls.mouseX, rect.width * scale), -rect.width * scale);
         Controls.mouseY = Math.max(Math.min(Controls.mouseY, rect.height * scale), -rect.height * scale);
     }
-    else
-    {
+    else {
         const container = Controls.container!;
         const ray = container.scene.createPickingRay(ev.clientX, ev.clientY, Matrix.Identity(), container.camera);
         const pos = ray.intersectsAxis("y", 100);
@@ -279,13 +290,13 @@ export function registerContainer(container: GameContainer): void {
             joystick = new VirtualJoystick({
                 container: document.getElementById("nipple-zone")!,
             });
-        
+
             document.body.classList.add('touchscreen');
-    
+
             Controls.container!.touchscreen = true;
             Controls.toggleAutofire();
         }
-    
+
         joystick.onExtraTap((x: number, y: number) => {
             const ray = container.scene.createPickingRay(x, y, Matrix.Identity(), container.camera);
             const pos = ray.intersectsAxis("y", 100);

@@ -82,6 +82,7 @@ bus.on("dead", () => {
     document.body.classList.remove("alive");
     document.body.classList.add("spectating");
     document.body.classList.add("dead");
+    container.spectating = true;
 });
 
 bus.on("worldview", (newView: NetWorldView) => {
@@ -135,6 +136,7 @@ bus.on("worldview", (newView: NetWorldView) => {
 function doSpawn() {
     document.body.classList.remove("dead");
     document.body.classList.remove("spectating");
+    container.spectating = false;
     document.body.classList.add("alive");
     connection.sendSpawn(Controls.emoji + Controls.nick, Controls.color, Controls.ship, getToken());
     container.focus();
@@ -168,6 +170,7 @@ document.getElementById('nick')?.addEventListener("selectstart", (e) => {
 function startSpectate(hideButton = false) {
     document.body.classList.add("spectating");
     document.body.classList.add("dead");
+    container.spectating = true;
 
     if (hideButton) {
         document.body.classList.add("spectate_only");
@@ -179,6 +182,7 @@ document.getElementById("spectate")!.addEventListener("click", () => startSpecta
 function stopSpectate() {
     document.body.classList.remove("spectating");
     document.body.classList.remove("spectate_only");
+    container.spectating = false;
 }
 
 const deathScreen = document.getElementById("deathScreen")!;

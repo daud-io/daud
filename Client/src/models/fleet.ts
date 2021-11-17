@@ -9,6 +9,7 @@ export class Fleet {
     ID?: number;
     
     ships: { [id: number]: Ship };
+    
     extraModes: string[];
 
     labelText: string = "";
@@ -20,6 +21,7 @@ export class Fleet {
     materialLabel: StandardMaterial;
 
     fleetCenter: Vector2;
+    shipCount: number = 0;
 
     constructor(container: GameContainer) {
         this.container = container;
@@ -95,6 +97,7 @@ export class Fleet {
 
         for (const shipkey in this.ships) {
             const ship = this.ships[shipkey];
+            ship.index = count;
             accX += ship.body.Position.x;
             accY += ship.body.Position.y;
             count++;
@@ -102,6 +105,8 @@ export class Fleet {
 
         if (Number.isNaN(accX) || Number.isNaN(accY))
             console.log('warn: NaN fleet center!');
+
+        this.shipCount = count;
 
         if (count > 0)
         {
@@ -115,13 +120,11 @@ export class Fleet {
     }
 
     tick(time: number): void {
-        //console.log(`Group: ${this.ID} ${this.caption} ${this.ships.length}`);
-
         const center = this.center();
         const offsetY = 0;
         if (center != null)
         {
-            this.labelMesh.position.set(center.x, 200, center.y + offsetY);
+            this.labelMesh.position.set(center.x, 100 + ((this.shipCount + 1) * 20), center.y + offsetY);
             this.labelMesh.isVisible = true;
         }
         else
@@ -134,4 +137,3 @@ export class Fleet {
         this.textureLabel.dispose();
     }
 }
-

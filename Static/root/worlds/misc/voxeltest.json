@@ -1,0 +1,16 @@
+{
+    "name": "VoxelTest",
+    "description": "testing... 1, 2, 3.",
+    "thumbnail": "https://static.daud.io/worlds/ffa/openspace.png",
+    "weight": 0,
+    "worldSize": 5000,
+    "mesh": {
+      "enabled": true,
+      "meshURL": "https://static.daud.io/worlds/misc/voxeltest.glb",
+      "scale": {
+        "x": 100,
+        "y": 100,
+        "z": 100
+      }
+    }
+  }

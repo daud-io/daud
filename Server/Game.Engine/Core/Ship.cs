@@ -153,11 +153,9 @@
             {
                 // TODO: do we still need this beast?
                 if (projectedBody is PickupBase
-                    || projectedBody is HasteToken
-                    || projectedBody is SystemActors.CTF.Base
-                    || projectedBody is SystemActors.CTF.Flag)
+                    || projectedBody is HasteToken)
 
-                    return new CollisionResponse(true, false);;
+                    return new CollisionResponse(true, false);
             }
 
             return base.CanCollide(projectedBody);

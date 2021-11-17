@@ -68,11 +68,7 @@
 
                 return new CollisionResponse(true);
             }
-            else
-            {
-                if (projectedBody is Ship)
-                    return new CollisionResponse(true);
-            }
+
             return new CollisionResponse(false);
         }
 

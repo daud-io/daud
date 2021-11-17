@@ -3,6 +3,7 @@
     "ship": {
       "abstract": true,
       "modes": {
+        "armed": "armed",
         "default": "ship",
         "defenseupgrade": "defenseupgrade",
         "offenseupgrade": "offenseupgrade",
@@ -193,6 +194,12 @@
       "width": 1,
       "height": 1,
       "size": 0.02
+    },
+    "armed": {
+      "url": "particle.png",
+      "height": 1,
+      "width": 1,
+      "size": 1
     },
     "boost": {
       "url": "thruster.png",

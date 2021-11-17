@@ -9,6 +9,7 @@ import { Settings } from "../settings";
 export enum ShipModes
 {
     shield,
+    armed,
     default,
     defenseupgrade,
     offenseupgrade,
@@ -19,6 +20,7 @@ export enum ShipModes
 export class Ship extends RenderedObject {
     fleet: Fleet | undefined;
     bodyID: number;
+    index: number = 0;
 
     constructor(container: GameContainer, clientBody: ClientBody, group: ClientGroup) {
         super(container, clientBody);
@@ -31,6 +33,7 @@ export class Ship extends RenderedObject {
     {
         return [
             new ObjectMode("shield"),
+            new ObjectMode("armed"),
             new ObjectMode("default"),
             new ObjectMode("defenseupgrade"),
             new ObjectMode("offenseupgrade"),
@@ -39,8 +42,14 @@ export class Ship extends RenderedObject {
         ];
     }
 
+    extraZ()
+    {
+        return this.index * 20;
+    }
+
     updateMode(mode: number) {
         this.modes[ShipModes.shield].visible = (mode & 16) != 0;
+        this.modes[ShipModes.armed].visible = (mode & 32) != 0;
         this.modes[ShipModes.default].visible = true;
         this.modes[ShipModes.defenseupgrade].visible = (mode & 4) != 0;
         this.modes[ShipModes.offenseupgrade].visible = (mode & 8) != 0;

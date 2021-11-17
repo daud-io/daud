@@ -62,7 +62,8 @@
             invulnerable = 2,
             defense_upgrade = 4,
             offense_upgrade = 8,
-            shield = 16
+            shield = 16,
+            armed = 32
         }
 
         public Sprites BulletSprite
@@ -248,6 +249,7 @@
                             | (HasDefensiveUpgrade ? ShipModeEnum.defense_upgrade : ShipModeEnum.none)
                             | (Owner.IsInvulnerable ? ShipModeEnum.invulnerable : ShipModeEnum.none)
                             | (ship.ShieldStrength > 0 ? ShipModeEnum.shield : ShipModeEnum.none)
+                            | (ShootCooldownTime <= World.Time ? ShipModeEnum.armed : ShipModeEnum.none)
                         );
 
                     if (isBoostInitial)

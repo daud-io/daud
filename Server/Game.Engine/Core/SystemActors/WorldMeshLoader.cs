@@ -21,7 +21,8 @@
         private bool DoubleTriangles = false;
         private string loadedURL;
 
-        private Vector3 ScaleVector = new Vector3(10, 10, 10);
+        private Vector3 ScaleVector = Vector3.One;
+        private Vector3 TranslationVector = Vector3.Zero;
 
         public WorldMeshLoader(World world) : base(world)
         {
@@ -109,7 +110,7 @@
 
                     Statics.Add(World.Simulation.Statics.Add(
                         new StaticDescription(
-                            new Vector3(0, -500, 0),
+                            this.TranslationVector,
                             new CollidableDescription(World.Simulation.Shapes.Add(mesh), 200f))));
                 }
 
@@ -168,6 +169,7 @@
                 {
                     this.UnloadMeshes();
                     this.ScaleVector = World.Hook.Mesh.Scale;
+                    this.TranslationVector = World.Hook.Mesh.Translation;
                     LoadGLB(newURL);
                 }
             }

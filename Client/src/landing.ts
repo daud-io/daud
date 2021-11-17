@@ -17,7 +17,7 @@ export class Landing {
 
     currentConnect: string|undefined = undefined;
 
-    gameLoaded: boolean = true;
+    gameLoaded: boolean = false;
 
     pingEnabled: boolean = false;
     firstLoad: boolean = true;
@@ -33,6 +33,14 @@ export class Landing {
             this.currentConnect = undefined;
             this.show();
         });
+
+        bus.on('gameReady', () => {
+            this.gameLoaded = true;
+            console.log('gameReady ', this.currentConnect);
+            if (this.currentConnect)
+                bus.emit("worldjoin", this.currentConnect);
+        });
+
     }
 
     tryAddConnection(host: Host): void {
@@ -195,14 +203,18 @@ export class Landing {
 
         this.clearHosts();
 
+        console.log('launch: ' + connect);
+
         if (this.currentConnect != connect) {
 
             var url = (new URL(document.location?.toString()));
             url?.searchParams.delete('world');
             window.history.pushState({}, '', url);
-    
+
             this.currentConnect = connect;
-            bus.emit("worldjoin", connect);
+
+            if (this.gameLoaded)
+                bus.emit("worldjoin", connect);
         }
     }
 
@@ -232,18 +244,26 @@ export class Landing {
     }
 
     private querystringConfig(): boolean {
+        
         try {
             var params = (new URL(document.location?.toString()))?.searchParams;
-            if (params) {
+            let connect:string|null = null;
 
-                let world = params.get("world");
-                if (world) {
-                    this.launch(world);
-                    this.unhideUI();
-                    
-                    return true;
-                }
+            if (params)
+                connect = params.get("world");
+
+            if (document.location.hash.startsWith("#ws"))
+                connect = document.location.hash.substring(1);
+            
+            if (connect) {
+                history.pushState("", document.title, window.location.pathname);
+
+                this.launch(connect);
+                this.unhideUI();
+                
+                return true;
             }
+
         }
         catch (e) {
             console.log(`exception while parsing querystring: ${e}`);

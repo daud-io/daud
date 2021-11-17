@@ -26,6 +26,7 @@
         {
             public bool Enabled { get; set; } = false;
             public Vector3 Scale { get; set; } = Vector3.One;
+            public Vector3 Translation { get; set; } = Vector3.Zero;
             public string MeshURL { get; set; } = null;
         }
 

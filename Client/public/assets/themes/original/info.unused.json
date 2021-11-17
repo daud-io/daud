@@ -1,5 +1,8 @@
 {
-  "sprites": {},
+  "sprites": {
+
+
+  },
   "textures": {
     "ship": {
       "size": 2.56,
@@ -10,6 +13,12 @@
     "ship0": {
       "url": "ship0.png",
       "extends": "ship"
+    },
+    "armed": {
+      "url": "ship_armed.png",
+      "size": 2.56,
+      "width": 128,
+      "height": 128
     },
     "ship_flash": {
       "url": "ship_flash.png",

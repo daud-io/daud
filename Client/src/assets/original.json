@@ -7,6 +7,12 @@
       "width": 128,
       "height": 128
     },
+    "armed": {
+      "size": 2.56,
+      "url": "ship_armed.png",
+      "width": 128,
+      "height": 128
+    },
     "ship0": {
       "url": "ship0.png",
       "extends": "ship"
