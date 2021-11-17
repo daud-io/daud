@@ -61,15 +61,18 @@ export class Landing {
         const links = new Array<Hole>();
 
         hosts.forEach((host) => {
-            if (host.worlds.length > 0) {
-                this.tryAddConnection(host);
-            }
+            let hostAdded = false;
 
             host.worlds.forEach(world => {
                 const connect = `${host.url}/${world.worldKey}`;
                 this.worlds[connect] = world;
                 if (!world.hook.Hidden && this.primaryServers.indexOf(host.url) > -1)
                 {
+                    if (!hostAdded)
+                        this.tryAddConnection(host);
+
+                    hostAdded = true;
+    
                     var button = (connect != this.currentConnect)
                         ? html`<button class='playnow'>Play Now</button>`
                         : html`<button class='playnow'>ACTIVE</button>`;

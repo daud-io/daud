@@ -208,6 +208,13 @@ export const Controls = {
     }
 };
 
+bus.on('spawn', () => {
+    Controls.boostPointer = false;
+    Controls.boostKeyboard = false;
+    Controls.shootPointer = false;
+    Controls.shootKeyboard = false;
+});
+
 bus.on('postrender', (gametime) => {
     Controls.pointerSpeed += Math.abs(Controls.mouseX - Controls.previousMouseX) + Math.abs(Controls.mouseY - Controls.previousMouseY);
     Controls.pointerSpeed *= 0.9;
@@ -346,10 +353,10 @@ export function registerContainer(container: GameContainer): void {
             pointerInfo.skipOnPointerObservable = true;
         });
 
-        document.addEventListener("mousemove", mouseMove, { passive: true });
-        document.addEventListener("mouseup", mouseUp, { passive: true });
-        document.addEventListener("mousedown", mouseDown, { passive: true });
-        document.addEventListener("contextmenu", (e) => { e.preventDefault(); return false; });
+        container.canvas.addEventListener("mousemove", mouseMove, { passive: true });
+        container.canvas.addEventListener("mouseup", mouseUp, { passive: true });
+        container.canvas.addEventListener("mousedown", mouseDown, { passive: true });
+        container.canvas.addEventListener("contextmenu", (e) => { e.preventDefault(); return false; });
     }
 
 }
